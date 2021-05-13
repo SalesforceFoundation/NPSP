@@ -1,79 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Haushalt-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Haushalt-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Haushalt-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Haushalt-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Haushalt-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Haushalt-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Haushalt-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Haushalt-Benennungseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Gibt die Anzahl der Kontakte an, die explizit in einem Namen aufgelistet werden sollen. Nach Erreichen dieses Werts wird der Namensüberlauf verwendet.</help>
-        <label>Anzahl Kontaktüberlauf</label>
-        <name>Contact_Overrun_Count__c</name>
-    </fields>
-    <fields>
-        <help>Das Format für die formelle Anrede des Haushalts.</help>
-        <label>Format der formellen Anrede</label>
-        <name>Formal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>Das Format, das für den Haushalt-Namen verwendet werden soll.</help>
-        <label>Format des Haushalt-Namens</label>
-        <name>Household_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Der Name einer Klasse, die die HH_INaming-Schnittstelle implementiert, die für die Benennung des Haushalts verwendet werden soll.</help>
-        <label>Implementierungsklasse</label>
-        <name>Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Das Format für die informelle Anrede des Haushalts.</help>
-        <label>Format der informellen Anrede</label>
-        <name>Informal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>Die Zeichenfolge zum Verbinden von Paaren in einem Namen. Zum Beispiel Johannes &amp; Jana oder Johannes und Jana.</help>
-        <label>Namensverbindung</label>
-        <name>Name_Connector__c</name>
-    </fields>
-    <fields>
-        <help>Die Zeichenfolge zum Ersetzen von langen Namenslisten.</help>
-        <label>Namensüberlauf</label>
-        <name>Name_Overrun__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Contact_Overrun_Count__c</name>
+    <help>[Specifies the number of Contacts to explicitly list in a name.  After that amount, the Name Overrun will be used.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Contact Overrun Count]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Formal_Greeting_Format__c</name>
+    <help>[The format to use for the Household Formal Greeting.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Formal Greeting Format]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Household_Name_Format__c</name>
+    <help>[The format to use for the Household Name.]o'介引户הаí先ร简а]</help>
+    <label>[Household Name Format]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Implementing_Class__c</name>
+    <help>[The name of a Class that implements the HH_INaming interface to use for Household Naming.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Implementing Class]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Informal_Greeting_Format__c</name>
+    <help>[The format to use for the Household Informal Greeting.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Informal Greeting Format]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Name_Connector__c</name>
+    <help>[The string to use to connect pairs in a name.  For example, John &amp; Jane, or John and Jane.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Name Connector]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Name_Overrun__c</name>
+    <help>[The string to use when replacing long lists of names.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Name Overrun]o'介引]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Household Naming Settings]gr''介引户הа]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Wenn Sie eine Opportunity für den Kontakt in dieser Beziehung erstellen, weist NPSP diese Opportunity-Kontaktrolle dem verbundenen Kontakt zu.</help>
-        <label>Verbundene Opportunity-Kontaktrolle</label>
-        <name>Related_Opportunity_Contact_Role__c</name>
-        <picklistValues>
-            <masterLabel>Soft Credit</masterLabel>
-            <translation>Soft Credit</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Solicitor</masterLabel>
-            <translation>Werber</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Tribute</masterLabel>
-            <translation>Anerkennung</translation>
-        </picklistValues>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Related_Opportunity_Contact_Role__c</name>
+    <help>[When you create an Opportunity for the Contact in this Relationship, NPSP assigns this Opportunity Contact Role to the Related Contact.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Related Opportunity Contact Role]o'介引户הаí先]</label>
+    <picklistValues>
+      <masterLabel>Soft Credit</masterLabel>
+      <translation>[Soft Credit]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Solicitor</masterLabel>
+      <translation>[Solicitor]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Tribute</masterLabel>
+      <translation>[Tribute]o']</translation>
+    </picklistValues>
+  </fields>
+</CustomObjectTranslation>

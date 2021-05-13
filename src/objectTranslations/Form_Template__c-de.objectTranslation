@@ -1,67 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Formularvorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Formularvorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Formularvorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Formularvorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Formularvorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Formularvorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Formularvorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Formularvorlagen</value>
-    </caseValues>
-    <fields>
-        <help>Die Kurzbeschreibung, die Benutzer für eine Vorlage eingeben können.</help>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Die Version des Spendeneintrags, die zum Erstellen dieser Vorlage verwendet wurde.</help>
-        <label>Formatversion</label>
-        <name>Format_Version__c</name>
-    </fields>
-    <fields>
-        <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
-        <label>Vorlagen-JSON</label>
-        <name>Template_JSON__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Form Template Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Name der Formularvorlage</nameFieldLabel>
+  <fields>
+    <name>Description__c</name>
+    <help>[The short description users can enter for a template.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Format_Version__c</name>
+    <help>[The version of Gift Entry used to create this template.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Format Version]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Template_JSON__c</name>
+    <help>[The sections and fields on this template, along with their order, requirements, and default values. Stored as JSON. Do not edit directly.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Template JSON]o'介]</label>
+  </fields>
+  <layouts>
+    <layout>Form Template Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Form Template Name]o'介引户]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Form Template Name]o'介引户]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Form Template]gr''介]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Form Templates]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,79 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Automatische Nummerierung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Automatische Nummerierungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Automatische Nummerierung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Automatische Nummerierungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Automatischen Nummerierung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Automatischen Nummerierungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Automatischen Nummerierung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Automatischen Nummerierungen</value>
-    </caseValues>
-    <fields>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Das Format für das automatisch nummerierte Feld, einschließlich der Anzahl der Stellen und, falls gewünscht, eines Präfixes.</help>
-        <label>Anzeigeformat</label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name des Felds, das die automatische Nummerierung enthält.</help>
-        <label>Feld-API-Name</label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Wenn diese Option ausgewählt ist, ist das Format für die automatische Nummerierung aktiv.</help>
-        <label>Aktiv</label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <help>Die höchste automatisch vergebene Nummer, die für dieses Format verwendet wird.</help>
-        <label>Maximal verwendete Nummer</label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name des Objekts für die automatisch vergebene Nummer.</help>
-        <label>Objekt-API-Name</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Die erste Nummer in der automatisch nummerierten Reihe.</help>
-        <label>Anfangsnummer</label>
-        <name>Starting_Number__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Name der automatischen Nummerierung</nameFieldLabel>
+  <fields>
+    <name>Description__c</name>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Display_Format__c</name>
+    <help>[The format for the auto-numbered field including number of digits and, if desired, a prefix.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Display Format]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Field_API_Name__c</name>
+    <help>[The API name of the field that contains the auto-number.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Field API Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>IsActive__c</name>
+    <help>[When selected, the auto-number format is active.]o'介引户הаí先ร简аน取]</help>
+    <label>[Active]o']</label>
+  </fields>
+  <fields>
+    <name>Max_Used_Number__c</name>
+    <help>[The highest auto-number used for this format.]o'介引户הаí先ร简аน]</help>
+    <label>[Max Used Number]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>[The API name of the object for the auto-number.]o'介引户הаí先ร简аน取]</help>
+    <label>[Object API Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Starting_Number__c</name>
+    <help>[The first number in the auto-numbered sequence.]o'介引户הаí先ร简аน取]</help>
+    <label>[Starting Number]o'介引]</label>
+  </fields>
+  <nameFieldLabel>[Auto-Number Name]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Auto-Number Name]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[AutoNumber]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[AutoNumbers]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

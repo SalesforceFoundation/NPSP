@@ -1,113 +1,113 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de implantación personalizable</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de implantaciones personalizables</value>
-    </caseValues>
-    <fields>
-        <help>Cuando se marcado, el trabajo nocturno Crédito duro cuenta (sin desfase) limita el número de cuentas para recalcularlas con oportunidades actualizadas recientemente en cuentas. Esto mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
-        <label>Crédito duro cuenta increm. sin desfase</label>
-        <name>AccountHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>JSON para el resultado de la implementación de CMT
-{ &quot;jobId&quot;: &quot;repsonse&quot; }</help>
-        <label>Resultado implementación de API de CMT</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en el trabajo de lote de totalización en organizaciones con muchos millones de cuentas, este parámetro especifica el número máximo de cuentas procesadas en cada lote.</help>
-        <label>LDV: Tamaño sección crédito duro cuenta</label>
-        <name>ChunkSize_Account_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en el trabajo de lote de totalización en organizaciones con muchos millones de contactos, especifica el número máximo de contactos procesados en cada lote.</help>
-        <label>LDV:Tamaño sección crédito duro contacto</label>
-        <name>ChunkSize_Contact_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en trabajo de lote de totalización en organizaciones con muchos millones de contactos, este parámetro especifica el número máximo de contactos procesados en cada lote.</help>
-        <label>LDV: Tam sección crédito blando contacto</label>
-        <name>ChunkSize_Contact_SoftCredit__c</name>
-    </fields>
-    <fields>
-        <help>Al marcarse, el trabajo nocturno Crédito duro contacto (sin desfase) limita contactos seleccionados para recalcularlos buscando contactos en oportunidades actualizadas recientemente. Mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
-        <label>Crédito duro contacto incre. sin desfase</label>
-        <name>ContactHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>Marque esta casilla para activar el nuevo motor de totalización personalizable de NPSP</help>
-        <label>Activar totalizaciones personalizables</label>
-        <name>Customizable_Rollups_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Marque esta casilla para evitar totalizaciones de créditos duros y blancos en cuentas y contactos para que solo procesen registros de cuentas y contactos que tengan registros Oportunidad o Función de contacto de oportunidad relacionados.</help>
-        <label>Desactivar filtro registros relacionados</label>
-        <name>Disable_Related_Records_Filter__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta.</help>
-        <label>Tamaño de lote de crédito duro de cuenta</label>
-        <name>Rollups_Account_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta utilizando el modo Desfase.</help>
-        <label>Tamaño de lote en modo desfase de cuenta</label>
-        <name>Rollups_Account_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Cuenta.</help>
-        <label>Tamaño de lote crédito blando de cuenta</label>
-        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Cuenta.</help>
-        <label>Tam. lote créd. blando contacto a cuenta</label>
-        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos duros en el objeto Contacto.</help>
-        <label>Tamaño lote de crédito duro de contacto</label>
-        <name>Rollups_Contact_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Contacto utilizando el modo Desfase.</help>
-        <label>Tamaño lote en modo desfase de contacto</label>
-        <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Contacto.</help>
-        <label>Tamaño lote de crédito blando contacto</label>
-        <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta contable general.</help>
-        <label>Tamaño de lote de CCG</label>
-        <name>Rollups_GAU_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Solo para sustitución de totalizaciones incrementales. Sustituye el campo para filtrar oportunidades relacionadas para las cuentas, contactos, CCG o DR se vuelven a calcular durante el trabajo por la noche. Toma como valor predeterminado SystemModStamp.</help>
-        <label>Incremental: Sust. campo Últimos N días</label>
-        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
-    </fields>
-    <fields>
-        <help>Solo para sustitución de totalizaciones incrementales. Sustituye el número de días utilizados para filtrar oportunidades relacionadas para determinar qué cuentas, contactos, CCG o DR se vuelven a calcular durante el trabajo programado por la noche.</help>
-        <label>Incremental: Sust. valor Últimos N días</label>
-        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
-    </fields>
-    <fields>
-        <help>Número máximo de oportunidades relacionadas en una cuenta o contacto permitidas en trabajos por lotes de totalización en modo de no desfase. Una cuenta o contacto con más de este número de oportunidades siempre se totalizará utilizando el modo Desfase.</help>
-        <label>Umbral de modo Desfase</label>
-        <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros de cuentas, contactos o CCG por lote para seleccionar en el procesamiento del modo Desfase</help>
-        <label>Tamaño de lote despachador modo Desfase</label>
-        <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+    <help>Cuando se marcado, el trabajo nocturno Crédito duro cuenta (sin desfase) limita el número de cuentas para recalcularlas con oportunidades actualizadas recientemente en cuentas. Esto mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
+    <label>Crédito duro cuenta increm. sin desfase</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>JSON para el resultado de la implementación de CMT
+{ "jobId": "repsonse" }</help>
+    <label>Resultado implementación de API de CMT</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    <help>Solo para sustitución de totalizaciones incrementales. Sustituye el campo para filtrar oportunidades relacionadas para las cuentas, contactos, CCG o DR se vuelven a calcular durante el trabajo por la noche. Toma como valor predeterminado SystemModStamp.</help>
+    <label>Incremental: Sust. campo Últimos N días</label>
+  </fields>
+  <fields>
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+    <help>Al marcarse, el trabajo nocturno Crédito duro contacto (sin desfase) limita contactos seleccionados para recalcularlos buscando contactos en oportunidades actualizadas recientemente. Mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
+    <label>Crédito duro contacto incre. sin desfase</label>
+  </fields>
+  <fields>
+    <name>Customizable_Rollups_Enabled__c</name>
+    <help>Marque esta casilla para activar el nuevo motor de totalización personalizable de NPSP</help>
+    <label>Activar totalizaciones personalizables</label>
+  </fields>
+  <fields>
+    <name>Disable_Related_Records_Filter__c</name>
+    <help>Marque esta casilla para evitar totalizaciones de créditos duros y blancos en cuentas y contactos para que solo procesen registros de cuentas y contactos que tengan registros Oportunidad o Función de contacto de oportunidad relacionados.</help>
+    <label>Desactivar filtro registros relacionados</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta.</help>
+    <label>Tamaño de lote de crédito duro de cuenta</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    <help>Solo para sustitución de totalizaciones incrementales. Sustituye el número de días utilizados para filtrar oportunidades relacionadas para determinar qué cuentas, contactos, CCG o DR se vuelven a calcular durante el trabajo programado por la noche.</help>
+    <label>Incremental: Sust. valor Últimos N días</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta utilizando el modo Desfase.</help>
+    <label>Tamaño de lote en modo desfase de cuenta</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Cuenta.</help>
+    <label>Tamaño de lote crédito blando de cuenta</label>
+  </fields>
+  <fields>
+    <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Cuenta.</help>
+    <label>Tam. lote créd. blando contacto a cuenta</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos duros en el objeto Contacto.</help>
+    <label>Tamaño lote de crédito duro de contacto</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Contacto utilizando el modo Desfase.</help>
+    <label>Tamaño lote en modo desfase de contacto</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes de créditos blandos en el objeto Contacto.</help>
+    <label>Tamaño lote de crédito blando contacto</label>
+  </fields>
+  <fields>
+    <name>Rollups_GAU_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Cuenta contable general.</help>
+    <label>Tamaño de lote de CCG</label>
+  </fields>
+  <fields>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    <help>Número máximo de oportunidades relacionadas en una cuenta o contacto permitidas en trabajos por lotes de totalización en modo de no desfase. Una cuenta o contacto con más de este número de oportunidades siempre se totalizará utilizando el modo Desfase.</help>
+    <label>Umbral de modo Desfase</label>
+  </fields>
+  <fields>
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
+    <help>Número de registros de cuentas, contactos o CCG por lote para seleccionar en el procesamiento del modo Desfase</help>
+    <label>Tamaño de lote despachador modo Desfase</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_HardCredit__c</name>
+    <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en el trabajo de lote de totalización en organizaciones con muchos millones de contactos, especifica el número máximo de contactos procesados en cada lote.</help>
+    <label>LDV:Tamaño sección crédito duro contacto</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Account_HardCredit__c</name>
+    <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en el trabajo de lote de totalización en organizaciones con muchos millones de cuentas, este parámetro especifica el número máximo de cuentas procesadas en cada lote.</help>
+    <label>LDV: Tamaño sección crédito duro cuenta</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_SoftCredit__c</name>
+    <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en trabajo de lote de totalización en organizaciones con muchos millones de contactos, este parámetro especifica el número máximo de contactos procesados en cada lote.</help>
+    <label>LDV: Tam sección crédito blando contacto</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de implantación personalizable</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de implantaciones personalizables</value>
+  </caseValues>
 </CustomObjectTranslation>

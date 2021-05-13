@@ -1,57 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>エラー設定</value>
-    </caseValues>
-    <fields>
-        <help>非同期ジョブエラーロガーの最近の実行を追跡するために使用されます</help>
-        <label>非同期エラーチェック最終実行</label>
-        <name>Async_Error_Check_Last_Run__c</name>
-    </fields>
-    <fields>
-        <help>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。組織に大量のレコードがあり、状態チェックがなかなか完了しない場合は、このオプションを選択してください。</help>
-        <label>レコードデータの状態チェックを無効化</label>
-        <name>DisableRecordDataHealthChecks__c</name>
-    </fields>
-    <fields>
-        <help>オンにすると、NPSP のエラー処理フレームワークが無効になります。</help>
-        <label>エラー処理の無効化</label>
-        <name>Disable_Error_Handling__c</name>
-    </fields>
-    <fields>
-        <help>オンになっていると、NPSP は自動的にデフォルトの定期的なジョブをスケジュールしません。これらの定期的なジョブは、積み上げ集計の計算、継続支援や住所 (季節性) の更新、エラー処理の実行を行います。</help>
-        <label>デフォルトの NPSP ジョブを自動スケジュールしない</label>
-        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    </fields>
-    <fields>
-        <help>オンにすると、管理パッケージコードのデバッグステートメントが有効になります。</help>
-        <label>デバッグの有効化</label>
-        <name>Enable_Debug__c</name>
-    </fields>
-    <fields>
-        <help>特定の種類のエラーに関する通知をシステムに表示する場合にオンにします。</help>
-        <label>エラー通知</label>
-        <name>Error_Notifications_On__c</name>
-    </fields>
-    <fields>
-        <help>通知を送信するユーザの種別を選択します。</help>
-        <label>エラー通知受信者</label>
-        <name>Error_Notifications_To__c</name>
-    </fields>
-    <fields>
-        <help>更新しないでください。Salesforce.org パイロットテストでのみ使用します。関連付けられている製品ライセンスが LMO にない組織でパイロットテストができるように、スクラッチ組織の PilotEnabled 機能パラメータの上書きの限定的なアクセスを許可します。</help>
-        <label>スクラッチ組織の上書き: PilotEnabled</label>
-        <name>OverrideFeature_PilotEnabled__c</name>
-    </fields>
-    <fields>
-        <help>重複レコードを許可するかどうかを管理する [重複ルール] の設定を考慮します。既存の設定を確認するには、[設定] の [重複ルール] に移動します。ルールの [作成のアクション] または [編集のアクション] 項目が [許可] に設定されている場合、重複は保存されます。</help>
-        <label>重複ルール設定の考慮</label>
-        <name>Respect_Duplicate_Rule_Settings__c</name>
-    </fields>
-    <fields>
-        <help>エラーをデータベースに保存する場合にオンにします。</help>
-        <label>エラーの保存</label>
-        <name>Store_Errors_On__c</name>
-    </fields>
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>非同期ジョブエラーロガーの最近の実行を追跡するために使用されます</help>
+    <label>非同期エラーチェック最終実行</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>オンにすると、NPSP のエラー処理フレームワークが無効になります。</help>
+    <label>エラー処理の無効化</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。組織に大量のレコードがあり、状態チェックがなかなか完了しない場合は、このオプションを選択してください。</help>
+    <label>レコードデータの状態チェックを無効化</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>オンになっていると、NPSP は自動的にデフォルトの定期的なジョブをスケジュールしません。これらの定期的なジョブは、積み上げ集計の計算、継続支援や住所 (季節性) の更新、エラー処理の実行を行います。</help>
+    <label>デフォルトの NPSP ジョブを自動スケジュールしない</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>オンにすると、管理パッケージコードのデバッグステートメントが有効になります。</help>
+    <label>デバッグの有効化</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>特定の種類のエラーに関する通知をシステムに表示する場合にオンにします。</help>
+    <label>エラー通知</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>通知を送信するユーザの種別を選択します。</help>
+    <label>エラー通知受信者</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>更新しないでください。Salesforce.org パイロットテストでのみ使用します。関連付けられている製品ライセンスが LMO にない組織でパイロットテストができるように、スクラッチ組織の PilotEnabled 機能パラメータの上書きの限定的なアクセスを許可します。</help>
+    <label>スクラッチ組織の上書き: PilotEnabled</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>重複レコードを許可するかどうかを管理する [重複ルール] の設定を考慮します。既存の設定を確認するには、[設定] の [重複ルール] に移動します。ルールの [作成のアクション] または [編集のアクション] 項目が [許可] に設定されている場合、重複は保存されます。</help>
+    <label>重複ルール設定の考慮</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>エラーをデータベースに保存する場合にオンにします。</help>
+    <label>エラーの保存</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>エラー設定</value>
+  </caseValues>
 </CustomObjectTranslation>

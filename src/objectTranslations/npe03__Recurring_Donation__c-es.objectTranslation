@@ -1,301 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
-        <name>RD2_Entry_Form_Custom_Fields</name>
-    </fieldSets>
-    <fields>
-        <help>Los últimos cuatro dígitos de la cuenta bancaria empleada para esta transacción.</help>
-        <label>Últimos 4 de ACH</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
-        <label>Utilizar siempre último día del mes</label>
-        <name>Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <help>El mes de caducidad de la tarjeta empleada para esta donación recurrente.</help>
-        <label>Mes de caducidad de tarjeta</label>
-        <name>CardExpirationMonth__c</name>
-    </fields>
-    <fields>
-        <help>El año de caducidad de la tarjeta empleada para esta donación recurrente.</help>
-        <label>Año de caducidad de tarjeta</label>
-        <name>CardExpirationYear__c</name>
-    </fields>
-    <fields>
-        <help>Los últimos cuatro dígitos de la tarjeta empleada para esta donación recurrente.</help>
-        <label>Últimos 4 dígitos de tarjeta</label>
-        <name>CardLast4__c</name>
-    </fields>
-    <fields>
-        <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
-        <label>Motivo de estado</label>
-        <name>ClosedReason__c</name>
-        <picklistValues>
-            <masterLabel>Card Expired</masterLabel>
-            <translation>Tarjeta caducada</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Commitment Completed</masterLabel>
-            <translation>Compromiso completado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deceased Donor</masterLabel>
-            <translation>Donante fallecido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Financial Difficulty</masterLabel>
-            <translation>Dificultad financiera</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Longer Interested</masterLabel>
-            <translation>Ya no interesa</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Unknown</masterLabel>
-            <translation>Desconocido</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Identificador externo para la integración del servicio de pagos de Salesforce.org.</help>
-        <label>Id. de Recurrente de Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>El importe total de esta Donación recurrente para el año de calendario o fiscal corriente (solo lectura). Incluye Oportunidades Cerradas perdidas más cuotas futuras para el resto del año.</help>
-        <label>Valor de año corriente</label>
-        <name>CurrentYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. NOTA: Si se selecciona Utilizar siempre último día del mes, anula el valor de Día del mes.</help>
-        <label>Día del mes</label>
-        <name>Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>31</masterLabel>
-            <translation>31</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Evita la creación de la primera oportunidad de cuota para una nueva Donación recurrente, independientemente del parámetro Creación automática Oportunidad de cuota en Configuración de NPSP.</help>
-        <label>Desactivar cuota inicial</label>
-        <name>DisableFirstInstallment__c</name>
-    </fields>
-    <fields>
-        <help>Después de esta fecha, NPSP deja de crear cuotas para esta Donación recurrente y actualiza Estado a Cerrado.</help>
-        <label>Fecha de finalización</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
-        <label>Frecuencia de cuota</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>El último evento de Elevate realizado que da como resultado una actualización a esta donación recurrente.</help>
-        <label>Último evento de Elevate realizado</label>
-        <name>LastElevateEventPlayed__c</name>
-    </fields>
-    <fields>
-        <help>El importe esperado en total de esta Donación recurrente para el próximo año de calendario o fiscal (solo lectura).</help>
-        <label>Valor de año próximo</label>
-        <name>NextYearValue__c</name>
-    </fields>
-    <fields>
-        <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
-        <label>Método de pago</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Cheque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Tarjeta de crédito</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Seleccione Abierto para una Donación recurrente. Seleccione Fijo para una Donación recurrente que tiene un número específico de cuotas. Para Fijo también debe rellenar el campo Cantidad de cuotas planificadas.</help>
-        <label>Tipo de recurrencia</label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Fixed</masterLabel>
-            <translation>Fijo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Abierto</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La fecha en la que entra en vigor esa información de programación nueva o actualizada (Importe, Día del mes, etc.) para esta Donación recurrente. El valor predeterminado es la fecha actual.</help>
-        <label>Fecha efectiva</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Indica si esta Donación recurrente está en uso activamente, suspendida temporalmente o cerrada.</help>
-        <label>Estado</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Activo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Cerrado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Transcurrido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Paused</masterLabel>
-            <translation>En pausa</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>Cerrar donación recurrente</label>
-        <name>Close_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva oportunidad</label>
-        <name>New_Opportunity</name>
-    </quickActions>
-    <quickActions>
-        <label>Pausa</label>
-        <name>Pause</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Volver a calcular totales</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>Los últimos cuatro dígitos de la cuenta bancaria empleada para esta transacción.</help>
+    <label>Últimos 4 de ACH</label>
+  </fields>
+  <fields>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
+    <label>Utilizar siempre último día del mes</label>
+  </fields>
+  <fields>
+    <name>CardExpirationMonth__c</name>
+    <help>El mes de caducidad de la tarjeta empleada para esta donación recurrente.</help>
+    <label>Mes de caducidad de tarjeta</label>
+  </fields>
+  <fields>
+    <name>CardExpirationYear__c</name>
+    <help>El año de caducidad de la tarjeta empleada para esta donación recurrente.</help>
+    <label>Año de caducidad de tarjeta</label>
+  </fields>
+  <fields>
+    <name>CardLast4__c</name>
+    <help>Los últimos cuatro dígitos de la tarjeta empleada para esta donación recurrente.</help>
+    <label>Últimos 4 dígitos de tarjeta</label>
+  </fields>
+  <fields>
+    <name>ClosedReason__c</name>
+    <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
+    <label>Motivo de estado</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Tarjeta caducada</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Compromiso completado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Donante fallecido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Dificultad financiera</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>Ya no interesa</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Desconocido</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Identificador externo para la integración del servicio de pagos de Salesforce.org.</help>
+    <label>Id. de Recurrente de Elevate</label>
+  </fields>
+  <fields>
+    <name>CurrentYearValue__c</name>
+    <help>El importe total de esta Donación recurrente para el año de calendario o fiscal corriente (solo lectura). Incluye Oportunidades Cerradas perdidas más cuotas futuras para el resto del año.</help>
+    <label>Valor de año corriente</label>
+  </fields>
+  <fields>
+    <name>Day_of_Month__c</name>
+    <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. NOTA: Si se selecciona Utilizar siempre último día del mes, anula el valor de Día del mes.</help>
+    <label>Día del mes</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>DisableFirstInstallment__c</name>
+    <help>Evita la creación de la primera oportunidad de cuota para una nueva Donación recurrente, independientemente del parámetro Creación automática Oportunidad de cuota en Configuración de NPSP.</help>
+    <label>Desactivar cuota inicial</label>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>Después de esta fecha, NPSP deja de crear cuotas para esta Donación recurrente y actualiza Estado a Cerrado.</help>
+    <label>Fecha de finalización</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>Frecuencia de cuota junto con Período de cuota definen la programación de cuotas para esta Donación recurrente. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
+    <label>Frecuencia de cuota</label>
+  </fields>
+  <fields>
+    <name>LastElevateEventPlayed__c</name>
+    <help>El último evento de Elevate realizado que da como resultado una actualización a esta donación recurrente.</help>
+    <label>Último evento de Elevate realizado</label>
+  </fields>
+  <fields>
+    <name>NextYearValue__c</name>
+    <help>El importe esperado en total de esta Donación recurrente para el próximo año de calendario o fiscal (solo lectura).</help>
+    <label>Valor de año próximo</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
+    <label>Método de pago</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Tarjeta de crédito</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Cheque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>ACH</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringType__c</name>
+    <help>Seleccione Abierto para una Donación recurrente. Seleccione Fijo para una Donación recurrente que tiene un número específico de cuotas. Para Fijo también debe rellenar el campo Cantidad de cuotas planificadas.</help>
+    <label>Tipo de recurrencia</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Abierto</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Fijo</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>La fecha en la que entra en vigor esa información de programación nueva o actualizada (Importe, Día del mes, etc.) para esta Donación recurrente. El valor predeterminado es la fecha actual.</help>
+    <label>Fecha efectiva</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>Indica si esta Donación recurrente está en uso activamente, suspendida temporalmente o cerrada.</help>
+    <label>Estado</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Activo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Transcurrido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Cerrado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>En pausa</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Volver a calcular totales</label>
+  </webLinks>
+</CustomObjectTranslation>

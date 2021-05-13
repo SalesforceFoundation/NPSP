@@ -1,301 +1,281 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
-        <name>RD2_Entry_Form_Custom_Fields</name>
-    </fieldSets>
-    <fields>
-        <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
-        <label>Quatre derniers chiffres du code CCA</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
-        <label>Toujours utiliser dernier jour du mois</label>
-        <name>Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <help>Le mois d’expiration de la carte utilisée pour ce don récurrent.</help>
-        <label>Mois d’expiration de la carte</label>
-        <name>CardExpirationMonth__c</name>
-    </fields>
-    <fields>
-        <help>L’année d’expiration de la carte utilisée pour ce don récurrent.</help>
-        <label>Année d’expiration de la carte</label>
-        <name>CardExpirationYear__c</name>
-    </fields>
-    <fields>
-        <help>Les quatre derniers chiffres de la carte utilisée pour ce don récurrent.</help>
-        <label>Quatre derniers chiffres de la carte</label>
-        <name>CardLast4__c</name>
-    </fields>
-    <fields>
-        <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
-        <label>Motif du statut</label>
-        <name>ClosedReason__c</name>
-        <picklistValues>
-            <masterLabel>Card Expired</masterLabel>
-            <translation>Carte expirée</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Commitment Completed</masterLabel>
-            <translation>Engagement terminé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deceased Donor</masterLabel>
-            <translation>Donateur décédé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Financial Difficulty</masterLabel>
-            <translation>Difficulté financière</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Longer Interested</masterLabel>
-            <translation>N&apos;est plus intéressé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Unknown</masterLabel>
-            <translation>Inconnu</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Identifiant externe pour l’intégration du service de paiement Salesforce.org.</help>
-        <label>ID récurrent Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>Le montant total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal actuel (en lecture seule). Inclut les opportunités gagnées fermées plus les futurs versements pour le reste de l&apos;exercice fiscal.</help>
-        <label>Valeur annuelle actuelle</label>
-        <name>CurrentYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au jour sélect. du mois, indép. de la prochaine date de don. Si la case Toujours utiliser dernier jour du mois est sélect., elle remplacera la valeur Jour du mois.</help>
-        <label>Jour du mois</label>
-        <name>Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>31</masterLabel>
-            <translation>31</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Empêche la création de la première opportunité de versement pour un nouveau don récurrent, quel que soit le paramètre de Création auto d&apos;opportunité de versement dans les paramètres NPSP.</help>
-        <label>Désactiver le premier versement</label>
-        <name>DisableFirstInstallment__c</name>
-    </fields>
-    <fields>
-        <help>Après cette date, NPSP ne créera plus de versements pour ce don récurrent et mettra à jour le Statut sur Clôturé.</help>
-        <label>Date de fin</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>La Fréquence de versement et la Période de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
-        <label>Fréquence de versement</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Le dernier événement Elevate exécuté suite à la mise à jour de ce don récurrent.</help>
-        <label>Dernier événement Elevate exécuté</label>
-        <name>LastElevateEventPlayed__c</name>
-    </fields>
-    <fields>
-        <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal suivant (en lecture seule).</help>
-        <label>Valeur annuelle suivante</label>
-        <name>NextYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
-        <label>Mode de paiement</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>CCA</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Chèque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Carte de crédit</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Sélectionnez Ouvert pour un Don récurrent en cours. Sélectionnez Fixe pour un Don récurrent qui a un nombre spécifique de versements. Pour Fixe, vous devez également compléter le champ Nombre de versements prévus.</help>
-        <label>Type de récurrence</label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Fixed</masterLabel>
-            <translation>Fixe</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Ouvert</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s&apos;appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
-        <label>Date de début</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Indique si ce Don récurrent est activement utilisé, temporairement suspendu ou fermé.</help>
-        <label>Statut</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Actif</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Fermé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Écoulé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Paused</masterLabel>
-            <translation>Interrompu</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>Fermer le don récurrent</label>
-        <name>Close_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nouvelle opportunité</label>
-        <name>New_Opportunity</name>
-    </quickActions>
-    <quickActions>
-        <label>Interruption</label>
-        <name>Pause</name>
-    </quickActions>
-    <quickActions>
-        <label>Mise à jour rapide</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Recalculer des cumuls</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>Les quatre derniers chiffres du compte bancaire utilisé pour cette transaction.</help>
+    <label>Quatre derniers chiffres du code CCA</label>
+  </fields>
+  <fields>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au dernier jour du mois, indép. de la prochaine date de don. La période de versement doit être mens. ou trim., ou une période de versement personn. utilisant des mois.</help>
+    <label>Toujours utiliser dernier jour du mois</label>
+  </fields>
+  <fields>
+    <name>CardExpirationMonth__c</name>
+    <help>Le mois d’expiration de la carte utilisée pour ce don récurrent.</help>
+    <label>Mois d’expiration de la carte</label>
+  </fields>
+  <fields>
+    <name>CardExpirationYear__c</name>
+    <help>L’année d’expiration de la carte utilisée pour ce don récurrent.</help>
+    <label>Année d’expiration de la carte</label>
+  </fields>
+  <fields>
+    <name>CardLast4__c</name>
+    <help>Les quatre derniers chiffres de la carte utilisée pour ce don récurrent.</help>
+    <label>Quatre derniers chiffres de la carte</label>
+  </fields>
+  <fields>
+    <name>ClosedReason__c</name>
+    <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
+    <label>Motif du statut</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>Carte expirée</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>Engagement terminé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>Donateur décédé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>Difficulté financière</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>N'est plus intéressé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>Inconnu</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Identifiant externe pour l’intégration du service de paiement Salesforce.org.</help>
+    <label>ID récurrent Elevate</label>
+  </fields>
+  <fields>
+    <name>CurrentYearValue__c</name>
+    <help>Le montant total de ce Don récurrent pour le calendrier ou l'exercice fiscal actuel (en lecture seule). Inclut les opportunités gagnées fermées plus les futurs versements pour le reste de l'exercice fiscal.</help>
+    <label>Valeur annuelle actuelle</label>
+  </fields>
+  <fields>
+    <name>Day_of_Month__c</name>
+    <help>Définit les versements de dons mensuels futurs, mensuels personnalisés ou trimestriels au jour sélect. du mois, indép. de la prochaine date de don. Si la case Toujours utiliser dernier jour du mois est sélect., elle remplacera la valeur Jour du mois.</help>
+    <label>Jour du mois</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>31</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>DisableFirstInstallment__c</name>
+    <help>Empêche la création de la première opportunité de versement pour un nouveau don récurrent, quel que soit le paramètre de Création auto d'opportunité de versement dans les paramètres NPSP.</help>
+    <label>Désactiver le premier versement</label>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>Après cette date, NPSP ne créera plus de versements pour ce don récurrent et mettra à jour le Statut sur Clôturé.</help>
+    <label>Date de fin</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>La Fréquence de versement et la Période de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
+    <label>Fréquence de versement</label>
+  </fields>
+  <fields>
+    <name>LastElevateEventPlayed__c</name>
+    <help>Le dernier événement Elevate exécuté suite à la mise à jour de ce don récurrent.</help>
+    <label>Dernier événement Elevate exécuté</label>
+  </fields>
+  <fields>
+    <name>NextYearValue__c</name>
+    <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l'exercice fiscal suivant (en lecture seule).</help>
+    <label>Valeur annuelle suivante</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>Le mode de paiement pour ce don récurrent. NPSP copie automatiquement la valeur sélectionnée dans chaque enregistrement de Paiement.</help>
+    <label>Mode de paiement</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Carte de crédit</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Chèque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>CCA</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringType__c</name>
+    <help>Sélectionnez Ouvert pour un Don récurrent en cours. Sélectionnez Fixe pour un Don récurrent qui a un nombre spécifique de versements. Pour Fixe, vous devez également compléter le champ Nombre de versements prévus.</help>
+    <label>Type de récurrence</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Ouvert</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>Fixe</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>La date à partir de laquelle les informations nouvelles ou mises à jour sur ce calendrier (Montant, Jour du mois, etc.) s'appliquent pour ce Don récurrent. Le paramètre par défaut est la date actuelle.</help>
+    <label>Date de début</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>Indique si ce Don récurrent est activement utilisé, temporairement suspendu ou fermé.</help>
+    <label>Statut</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Actif</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Écoulé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Fermé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>Interrompu</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Recalculer des cumuls</label>
+  </webLinks>
+</CustomObjectTranslation>

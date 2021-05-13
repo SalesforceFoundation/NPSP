@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Naaminstellingen voor huishoudens</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Naaminstellingen voor huishoudens</value>
-    </caseValues>
-    <fields>
-        <help>Specificeert het aantal Contactpersonen die expliciet moeten worden opgenomen in een naam. Na dat aantal wordt de Naamoverschrijding gebruikt.</help>
-        <label>Telling Overschrijding Contactpersoon</label>
-        <name>Contact_Overrun_Count__c</name>
-    </fields>
-    <fields>
-        <help>Het formaat dat gebruikt wordt voor de Formele Begroeting voor Huishouden.</help>
-        <label>Formaat van Formele Begroeting</label>
-        <name>Formal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>Het formaat dat gebruikt wordt voor de Huishoudennaam.</help>
-        <label>Formaat Huishoudennaam</label>
-        <name>Household_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>De naam van een Klasse die de HH_INaming-interface implementeert voor Benoeming van Huishoudens.</help>
-        <label>Implementatieklasse</label>
-        <name>Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Het formaat dat gebruikt wordt voor de Informele Begroeting voor Huishoudens.</help>
-        <label>Formaat van Informele Begroeting</label>
-        <name>Informal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>De te gebruiken tekenreeks om paren te verbinden in een naam. Bijvoorbeeld, John &amp; Jane, of John en Jane.</help>
-        <label>Naamconnector</label>
-        <name>Name_Connector__c</name>
-    </fields>
-    <fields>
-        <help>De te gebruiken tekenreeks bij het vervangen van lange lijsten van namen.</help>
-        <label>Naamoverschrijding</label>
-        <name>Name_Overrun__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Contact_Overrun_Count__c</name>
+    <help>Specificeert het aantal Contactpersonen die expliciet moeten worden opgenomen in een naam. Na dat aantal wordt de Naamoverschrijding gebruikt.</help>
+    <label>Telling Overschrijding Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Formal_Greeting_Format__c</name>
+    <help>Het formaat dat gebruikt wordt voor de Formele Begroeting voor Huishouden.</help>
+    <label>Formaat van Formele Begroeting</label>
+  </fields>
+  <fields>
+    <name>Household_Name_Format__c</name>
+    <help>Het formaat dat gebruikt wordt voor de Huishoudennaam.</help>
+    <label>Formaat Huishoudennaam</label>
+  </fields>
+  <fields>
+    <name>Implementing_Class__c</name>
+    <help>De naam van een Klasse die de HH_INaming-interface implementeert voor Benoeming van Huishoudens.</help>
+    <label>Implementatieklasse</label>
+  </fields>
+  <fields>
+    <name>Informal_Greeting_Format__c</name>
+    <help>Het formaat dat gebruikt wordt voor de Informele Begroeting voor Huishoudens.</help>
+    <label>Formaat van Informele Begroeting</label>
+  </fields>
+  <fields>
+    <name>Name_Connector__c</name>
+    <help>De te gebruiken tekenreeks om paren te verbinden in een naam. Bijvoorbeeld, John &amp; Jane, of John en Jane.</help>
+    <label>Naamconnector</label>
+  </fields>
+  <fields>
+    <name>Name_Overrun__c</name>
+    <help>De te gebruiken tekenreeks bij het vervangen van lange lijsten van namen.</help>
+    <label>Naamoverschrijding</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Naaminstellingen voor huishoudens</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Naaminstellingen voor huishoudens</value>
+  </caseValues>
 </CustomObjectTranslation>

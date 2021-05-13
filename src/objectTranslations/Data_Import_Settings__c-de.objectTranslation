@@ -1,120 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Datenimporteinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Datenimporteinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Datenimporteinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Datenimporteinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Datenimporteinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Datenimporteinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Datenimporteinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Datenimporteinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Organisations-Account-Abgleich</help>
-        <label>Benutzerdef. eindeutige Account-Kennung</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, welche Regeln bei dem Versuch des Abgleichs von Accounts in Datenimportdatensätzen mit vorhandenen Accounts befolgt werden sollen.</help>
-        <label>Account-Abgleichsregeln</label>
-        <name>Account_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der NPSP-Datenimportdatensätze, die bei jedem Batch verarbeitet werden sollen.</help>
-        <label>Batch-Prozessgröße</label>
-        <name>Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>JSON für das CMT-Bereitstellungsergebnis
-{ &quot;jobId&quot;: &quot;response&quot; }</help>
-        <label>CMT-Ergebnis API-Bereitstellung</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>ID der Bereitstellung benutzerdefinierter Metadaten</help>
-        <label>CMT-Bereitstellungs-ID</label>
-        <name>CMT_Deployment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontaktabgleich</help>
-        <label>Benutzerdef. eindeutige Kontakt-Kennung</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, welche Regeln bei dem Versuch des Abgleichs von Kontakten in Datenimportdatensätzen mit vorhandenen Kontakten befolgt werden sollen.</help>
-        <label>Kontakt-Abgleichsregel</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Der Name der API für benutzerdefinierte Felddaten des Datenimport-Feldzuordnungssatzes, die standardmäßig verwendet werden soll.</help>
-        <label>Standard-Datenimport-Feldzuordnungssatz</label>
-        <name>Default_Data_Import_Field_Mapping_Set__c</name>
-    </fields>
-    <fields>
-        <help>Eing. d. Anz. an Tagen ab dem Spendendatum, die auf der Suche nach einer übereinst. Opp. O. Zahlung zu berücks. sind. Das Datenimp‘progr. wählt die übereinst. Opp. o. Zahl. aus, deren Datum in die Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
-        <label>Anzahl der Tage ab Spendendatum</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Definiert, wie das Datenimportprogramm die Spendenverdopplung handhaben soll. Sie müssen einen Wert auswählen.</help>
-        <label>Spendenverdopplungsverhalten</label>
-        <name>Donation_Matching_Behavior__c</name>
-    </fields>
-    <fields>
-        <help>Der Entwicklername einer Apex-Klasse, die die BDI_IMatching-Schnittstelle für Spenden implementiert. Ohne Angabe nimmt NPSP die Verdopplung vor.</help>
-        <label>Spendenverdoppl.-Implementierungsklasse</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, nach welchem Feld abgegl. werden soll, wenn vers. wird, Spenden in Datenimportdatensätzen gg vorhand. Opp. u. Zahl‘en abzugleichen. Klicken Sie zum Auswählen von mehr als nur einem Feld zusätzl. auf die Strg- oder die CMD-Taste.</help>
-        <label>Spendenverdopplungsregel</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Definiert die Weise, in der Felder des NPSP-Datenimport-Datensatzes anderen Objekten in Salesforce zugeordnet werden. Die Optionen sind &quot;Hilfetext&quot; oder &quot;Datenimport-Feldzuordnung&quot;.</help>
-        <label>Methode der Feldzuordnung</label>
-        <name>Field_Mapping_Method__c</name>
-    </fields>
-    <fields>
-        <help>Der Entwicklername einer Apex-Klasse, der die BDI_IPostProcess-Oberfläche für NPSP-Datenimport-Datensätze implementiert.</help>
-        <label>Nachverarbeitungs-Implementierungsklasse</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Bei Akt. berechn. NPSP die Spender-Stat‘en, wenn Spenden verarb. werden. Wenn nicht, werden die Spender-Stat‘en während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. Langsamer werden.</help>
-        <label>Spenden-Rollups mit Batch berechnen</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>[An optional Unique Id field to use for Organization Account matching]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Account Custom Unique ID]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Account_Matching_Rule__c</name>
+    <help>[Specifies which rule to follow when trying to match Accounts in Data Import records against existing Accounts.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Account Matching Rule]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Batch_Size__c</name>
+    <help>[The number of NPSP Data Import records to process in each batch.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Batch Process Size]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>[JSON for the CMT deployment result
+{ "jobId": "repsonse" }]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[CMT API Deployment Result]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>CMT_Deployment_ID__c</name>
+    <help>[ID of Custom Metadata deployment]o'介引户הаí先]</help>
+    <label>[CMT Deployment ID]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>[An optional Unique Id field to use for Contact matching]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Contact Custom Unique ID]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>[Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Contact Matching Rule]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
+    <help>[The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Default Data Import Field Mapping Set]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>[Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčن]</help>
+    <label>[Number of Days from Donation Date]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>[Defines how the Data Importer should handle matching Donations. You must choose a value.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Donation Matching Behavior]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>[The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Donation Matching Implementing Class]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>[Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹]</help>
+    <label>[Donation Matching Rule]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Field_Mapping_Method__c</name>
+    <help>[Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <label>[Field Mapping Method]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>[The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Post Process Implementing Class]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>[When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Calculate Donation Rollups with Batch]o'介引户הаí先ร简]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Settings]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

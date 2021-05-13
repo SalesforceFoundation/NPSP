@@ -1,104 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <fields>
-        <help>Der Betrag der Opportunity, der diesem Verwendungszweck zugewiesen ist. Lassen Sie das Feld bei prozentualen Zuweisungen leer.</help>
-        <label>Betrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>Die mit dieser Zuweisung verbundene Kampagne. Verwenden Sie dieses Feld, wenn Sie möchten, dass neue mit dieser Kampagne verbundene Opportunities in derselben Weise zugewiesen werden sollen.</help>
-        <label>Kampagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Der Verwendungszweck, dem diese Zuweisung zugeordnet ist. Für neue Zuweisungen sind nur Verwendungszwecke verfügbar, die als aktiv gekennzeichnet sind.</help>
-        <label>Verwendungszweck</label>
-        <lookupFilter>
-            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
-            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
-        </lookupFilter>
-        <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die Opportunity, der diese Zuweisung zugeordnet werden soll. NPSP fasst alle Opportunities in einer Phase, die &quot;abgeschlossen&quot; bzw. &quot;gewonnen“ ist, im Verwendungszweck dieser Zuweisung zusammen.</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Ordner einer Zahlung Zuweisungen zu.</help>
-        <label>Zahlung</label>
-        <name>Payment__c</name>
-        <relationshipLabel>Zahlungszuweisungen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Der Prozentsatz des Opportunity-Betrags, der dem Verwendungszweck dieser Zuweisung zugeordnet ist. Wenn Sie den Opportunity-Betrag später ändern, aktualisiert NPSP den Zuweisungsbetrag im Verwendungszweck.</help>
-        <label>Prozent</label>
-        <name>Percent__c</name>
-    </fields>
-    <fields>
-        <help>Die wiederkehrende Spende, der diese Zuweisung zugeordnet ist. NPSP ordnet automatisch alle mit der wiederkehrenden Spende verbundenen neuen Opportunities in derselben Weise zu.</help>
-        <label>Wiederkehrende Spende</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Allocation Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Name der Verwendungszweck-Zuweisung</nameFieldLabel>
-    <webLinks>
-        <label>Zuweisungen verwalten</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>[The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Amount]o']</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>[The Campaign associated with this Allocation. Use this field if you want new Opportunities associated with this Campaign to be allocated in the same way.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <relationshipLabel>[GAU Allocations]o'介引]</relationshipLabel>
+    <label>[Campaign]o'介]</label>
+  </fields>
+  <fields>
+    <name>General_Accounting_Unit__c</name>
+    <help>[The General Accounting Unit this Allocation is attributed to. Only General Accounting Units marked as active are available for new Allocations.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <relationshipLabel>[GAU Allocations]o'介引]</relationshipLabel>
+    <label>[General Accounting Unit]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>[The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation's General Accounting Unit.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <relationshipLabel>[GAU Allocations]o'介引]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Payment__c</name>
+    <help>[Attributes allocations to a Payment.]o'介引户הаí先ร]</help>
+    <relationshipLabel>[Payment Allocations]o'介引户]</relationshipLabel>
+    <label>[Payment]o']</label>
+  </fields>
+  <fields>
+    <name>Percent__c</name>
+    <help>[Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ]</help>
+    <label>[Percent]o']</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <help>[The Recurring Donation this Allocation is attributed to. NPSP automatically allocates all new Opportunities associated with the Recurring Donation in the same way.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذ]</help>
+    <relationshipLabel>[GAU Allocations]o'介引]</relationshipLabel>
+    <label>[Recurring Donation]o'介引户]</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Allocations</name>
+    <label>[Manage Allocations]o'介引户]</label>
+  </webLinks>
+  <layouts>
+    <layout>Allocation Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[GAU Allocation Name]o'介引户]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[GAU Allocation Name]o'介引户]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[GAU Allocation]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[GAU Allocations]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

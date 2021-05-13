@@ -1,114 +1,114 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de cumul personnalisable</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de cumul personnalisable</value>
-    </caseValues>
-    <fields>
-        <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des comptes limite les comptes sélectionnés pour le recalcul en recherchant des mises à jour d’opp. sur ces comptes. Cela améliore la performance du traitement de nuit des cumuls pers.</help>
-        <label>Non asym. crédit direct compte incrém.</label>
-        <name>AccountHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>JSON pour le résultat de déploiement CMT
-{ &quot;jobId&quot; : &quot;response&quot; }</help>
-        <label>Résultat de déploiement de l’API CMT</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de comptes, spécifiez le nombre max. de comptes traités dans chaque lot.</help>
-        <label>LDV : Taille bloc crédit direct compte</label>
-        <name>ChunkSize_Account_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de contacts, spécifiez le nombre max. de contacts traités dans chaque lot.</help>
-        <label>LDV : Taille bloc crédit direct contact</label>
-        <name>ChunkSize_Contact_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de contacts, spécifiez le nombre max. de contacts traités dans chaque lot.</help>
-        <label>LDV : Taille bloc crédit indir. contact</label>
-        <name>ChunkSize_Contact_SoftCredit__c</name>
-    </fields>
-    <fields>
-        <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des contacts limite le nbre de contacts sélect. pour le recalcul en recherchant les contacts dont les opp. ont été m à j. Cela améliore la perf du traitement nocturne des cumuls pers.</help>
-        <label>Non-asym. crédit direct contact incrém.</label>
-        <name>ContactHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>Cochez cette case pour activer le nouveau Moteur de cumuls personnalisables de NPSP</help>
-        <label>Activer les cumuls personnalisables</label>
-        <name>Customizable_Rollups_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Cochez cette case pour empêcher les cumuls de crédits directs et de crédits indirects sur les comptes et contacts de traiter uniquement les enreg. de comptes et de contacts qui ont des enreg. d’opp. associées existantes ou des rôles de contact d’opp.</help>
-        <label>Désactiver le filtre d’enreg. associés</label>
-        <name>Disable_Related_Records_Filter__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet compte.</help>
-        <label>Taille du lot du crédit direct du compte</label>
-        <name>Rollups_Account_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet compte à l’aide du mode asymétrie.</help>
-        <label>Taille du lot mode asymétrie du compte</label>
-        <name>Rollups_Account_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet compte.</help>
-        <label>Taille du lot crédit indirect du compte</label>
-        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet compte.</help>
-        <label>Taille lot créd. indirect compte contact</label>
-        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits directs dans l’objet contact.</help>
-        <label>Taille du lot crédit direct du contact</label>
-        <name>Rollups_Contact_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet contact à l’aide du mode asymétrie.</help>
-        <label>Taille du lot mode asymétrie du contact</label>
-        <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet contact.</help>
-        <label>Taille du lot crédit indirect du contact</label>
-        <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet Unité comptable générale.</help>
-        <label>Taille du lot UCG</label>
-        <name>Rollups_GAU_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Exclusiv. pour le Rempl. des cumuls incrém. Cette valeur remplace le champ utilisé pour filtrer les opp. associées pour déterminer les comptes, contacts, UCG ou RD recalculés pendant un traitement planifié de nuit. La valeur par défaut est SystemModStamp.</help>
-        <label>Incrém. : Rempl. champ N derniers jours</label>
-        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
-    </fields>
-    <fields>
-        <help>Exclusivement pour le Remplacement des cumuls incrémentiels. Cette valeur remplace le nbre de jours calculés utilisé pour filtrer les opp. associées afin de déterminer les comptes, contacts, UCG ou RD recalculés pendant un traitement planifié de nuit.</help>
-        <label>Incrém. : Rempl. valeur N derniers jours</label>
-        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
-    </fields>
-    <fields>
-        <help>Le nbre max. d’opp. associées sur un compte ou un contact autorisé dans les traitements par lots de cumuls en mode non-asymétrie. Un compte ou un contact avec un nbre plus élevé que ce nbre d’opp. associées sera toujours cumulé à l’aide du mode asymétrie.</help>
-        <label>Seuil mode asymétrie</label>
-        <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
-    </fields>
-    <fields>
-        <help>Nombre d’enregistrements UCG, de comptes ou de contacts par lots à sélectionner pour le traitement en mode asymétrie.</help>
-        <label>Taille du lot répartiteur mode asymétrie</label>
-        <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+    <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des comptes limite les comptes sélectionnés pour le recalcul en recherchant des mises à jour d’opp. sur ces comptes. Cela améliore la performance du traitement de nuit des cumuls pers.</help>
+    <label>Non asym. crédit direct compte incrém.</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>JSON pour le résultat de déploiement CMT
+{ "jobId" : "response" }</help>
+    <label>Résultat de déploiement de l’API CMT</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    <help>Exclusiv. pour le Rempl. des cumuls incrém. Cette valeur remplace le champ utilisé pour filtrer les opp. associées pour déterminer les comptes, contacts, UCG ou RD recalculés pendant un traitement planifié de nuit. La valeur par défaut est SystemModStamp.</help>
+    <label>Incrém. : Rempl. champ N derniers jours</label>
+  </fields>
+  <fields>
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+    <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des contacts limite le nbre de contacts sélect. pour le recalcul en recherchant les contacts dont les opp. ont été m à j. Cela améliore la perf du traitement nocturne des cumuls pers.</help>
+    <label>Non-asym. crédit direct contact incrém.</label>
+  </fields>
+  <fields>
+    <name>Customizable_Rollups_Enabled__c</name>
+    <help>Cochez cette case pour activer le nouveau Moteur de cumuls personnalisables de NPSP</help>
+    <label>Activer les cumuls personnalisables</label>
+  </fields>
+  <fields>
+    <name>Disable_Related_Records_Filter__c</name>
+    <help>Cochez cette case pour empêcher les cumuls de crédits directs et de crédits indirects sur les comptes et contacts de traiter uniquement les enreg. de comptes et de contacts qui ont des enreg. d’opp. associées existantes ou des rôles de contact d’opp.</help>
+    <label>Désactiver le filtre d’enreg. associés</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet compte.</help>
+    <label>Taille du lot du crédit direct du compte</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    <help>Exclusivement pour le Remplacement des cumuls incrémentiels. Cette valeur remplace le nbre de jours calculés utilisé pour filtrer les opp. associées afin de déterminer les comptes, contacts, UCG ou RD recalculés pendant un traitement planifié de nuit.</help>
+    <label>Incrém. : Rempl. valeur N derniers jours</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet compte à l’aide du mode asymétrie.</help>
+    <label>Taille du lot mode asymétrie du compte</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet compte.</help>
+    <label>Taille du lot crédit indirect du compte</label>
+  </fields>
+  <fields>
+    <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet compte.</help>
+    <label>Taille lot créd. indirect compte contact</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits directs dans l’objet contact.</help>
+    <label>Taille du lot crédit direct du contact</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet contact à l’aide du mode asymétrie.</help>
+    <label>Taille du lot mode asymétrie du contact</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet contact.</help>
+    <label>Taille du lot crédit indirect du contact</label>
+  </fields>
+  <fields>
+    <name>Rollups_GAU_Batch_Size__c</name>
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs dans l’objet Unité comptable générale.</help>
+    <label>Taille du lot UCG</label>
+  </fields>
+  <fields>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    <help>Le nbre max. d’opp. associées sur un compte ou un contact autorisé dans les traitements par lots de cumuls en mode non-asymétrie. Un compte ou un contact avec un nbre plus élevé que ce nbre d’opp. associées sera toujours cumulé à l’aide du mode asymétrie.</help>
+    <label>Seuil mode asymétrie</label>
+  </fields>
+  <fields>
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
+    <help>Nombre d’enregistrements UCG, de comptes ou de contacts par lots à sélectionner pour le traitement en mode asymétrie.</help>
+    <label>Taille du lot répartiteur mode asymétrie</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_HardCredit__c</name>
+    <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de contacts, spécifiez le nombre max. de contacts traités dans chaque lot.</help>
+    <label>LDV : Taille bloc crédit direct contact</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Account_HardCredit__c</name>
+    <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de comptes, spécifiez le nombre max. de comptes traités dans chaque lot.</help>
+    <label>LDV : Taille bloc crédit direct compte</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_SoftCredit__c</name>
+    <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de contacts, spécifiez le nombre max. de contacts traités dans chaque lot.</help>
+    <label>LDV : Taille bloc crédit indir. contact</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de cumul personnalisable</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de cumul personnalisable</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Objecttoewijzingsset voor gegevensimport</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Objecttoewijzingssets voor gegevensimport</value>
-    </caseValues>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Object Mapping Set Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <layouts>
+    <layout>Data Import Object Mapping Set Layout</layout>
+    <sections>
+      <label>Aangepaste koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Objecttoewijzingsset voor gegevensimport</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Objecttoewijzingssets voor gegevensimport</value>
+  </caseValues>
 </CustomObjectTranslation>

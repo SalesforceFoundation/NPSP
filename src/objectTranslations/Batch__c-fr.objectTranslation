@@ -1,50 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Lot</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Lots</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- BatchDetailView --></label>
-        <name>BatchDetailView</name>
-    </fieldSets>
-    <fields>
-        <label>Statut du lot</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Complete</masterLabel>
-            <translation>Terminé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>En cours</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Descriptif</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <label>Nombre d’éléments</label>
-        <name>Number_of_Items__c</name>
-    </fields>
-    <fields>
-        <help>Nom d’API de l’objet dont ceci est un lot.</help>
-        <label>Nom de l’objet</label>
-        <name>Object_Name__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Batch Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du lot</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Batch_Status__c</name>
+    <label>Statut du lot</label>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>En cours</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Complete</masterLabel>
+      <translation>Terminé</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Descriptif</label>
+  </fields>
+  <fields>
+    <name>Number_of_Items__c</name>
+    <label>Nombre d’éléments</label>
+  </fields>
+  <fields>
+    <name>Object_Name__c</name>
+    <help>Nom d’API de l’objet dont ceci est un lot.</help>
+    <label>Nom de l’objet</label>
+  </fields>
+  <layouts>
+    <layout>Batch Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du lot</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du lot</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Lot</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Lots</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,143 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Payment Wizard FS --></label>
-        <name>Payment_WizardFS</name>
-    </fieldSets>
-    <fields>
-        <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
-        <label>ACH コード</label>
-        <name>ACH_Code__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
-        <label>ACH の最後の 4 桁</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが承認された日時。</help>
-        <label>承認日</label>
-        <name>Authorized_Date__c</name>
-    </fields>
-    <fields>
-        <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
-        <label>承認 UTC タイムスタンプ</label>
-        <name>Authorized_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>この支払を支払済として設定したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
-        <label>バッチ番号</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
-        <label>カードの有効期限 (月)</label>
-        <name>Card_Expiration_Month__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの有効期限 (年)。</help>
-        <label>カードの有効期限 (年)</label>
-        <name>Card_Expiration_Year__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの最後の 4 桁。</help>
-        <label>カードの最後の 4 桁</label>
-        <name>Card_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードのカードネットワーク。</help>
-        <label>カードネットワーク</label>
-        <name>Card_Network__c</name>
-    </fields>
-    <fields>
-        <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
-        <label>支援者補償金額</label>
-        <name>Donor_Cover_Amount__c</name>
-    </fields>
-    <fields>
-        <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
-        <label>Elevate の元の支払 ID</label>
-        <name>Elevate_Original_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが却下された理由に関する詳細を提供します。</help>
-        <label>Elevate 支払 API 却下理由</label>
-        <name>Elevate_Payment_API_Declined_Reason__c</name>
-    </fields>
-    <fields>
-        <help>この Elevate に接続された支払レコードの API 状況値。</help>
-        <label>Elevate 支払 API 状況</label>
-        <name>Elevate_Payment_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが作成された日時。</help>
-        <label>Elevate 支払作成日</label>
-        <name>Elevate_Payment_Created_Date__c</name>
-    </fields>
-    <fields>
-        <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
-        <label>Elevate 支払作成 UTC タイムスタンプ</label>
-        <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>Elevate から取得した、このトランザクションの一意の ID。</help>
-        <label>Elevate 支払 ID</label>
-        <name>Elevate_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
-        <label>ゲートウェイ ID</label>
-        <name>Gateway_ID__c</name>
-    </fields>
-    <fields>
-        <help>支払ゲートウェイから取得した、このトランザクションの一意の ID。</help>
-        <label>ゲートウェイ支払 ID</label>
-        <name>Gateway_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが開始されたシステムの ID。</help>
-        <label>発生源 ID</label>
-        <name>Origin_ID__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが開始されたシステムの名前。</help>
-        <label>発生源名</label>
-        <name>Origin_Name__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
-        <label>発生源種別</label>
-        <name>Origin_Type__c</name>
-    </fields>
-    <fields>
-        <help>受領確認の日付。</help>
-        <label>支払受領確認日</label>
-        <name>Payment_Acknowledged_Date__c</name>
-    </fields>
-    <fields>
-        <help>この支払の受領確認の状況。</help>
-        <label>支払受領確認の状況</label>
-        <name>Payment_Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>承認済み</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>承認しない</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>承認予定</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>トランザクションの種別を示します。</help>
-        <label>種別</label>
-        <name>Type__c</name>
-    </fields>
-    <quickActions>
-        <label>クイック更新</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Code__c</name>
+    <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+    <label>ACH コード</label>
+  </fields>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+    <label>ACH の最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>Authorized_Date__c</name>
+    <help>トランザクションが承認された日時。</help>
+    <label>承認日</label>
+  </fields>
+  <fields>
+    <name>Authorized_UTC_Timestamp__c</name>
+    <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
+    <label>承認 UTC タイムスタンプ</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>この支払を支払済として設定したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
+    <label>バッチ番号</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Month__c</name>
+    <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
+    <label>カードの有効期限 (月)</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Year__c</name>
+    <help>このトランザクションで使用されたカードの有効期限 (年)。</help>
+    <label>カードの有効期限 (年)</label>
+  </fields>
+  <fields>
+    <name>Card_Last_4__c</name>
+    <help>このトランザクションで使用されたカードの最後の 4 桁。</help>
+    <label>カードの最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>Card_Network__c</name>
+    <help>このトランザクションで使用されたカードのカードネットワーク。</help>
+    <label>カードネットワーク</label>
+  </fields>
+  <fields>
+    <name>Donor_Cover_Amount__c</name>
+    <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+    <label>支援者補償金額</label>
+  </fields>
+  <fields>
+    <name>Elevate_Original_Payment_ID__c</name>
+    <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
+    <label>Elevate の元の支払 ID</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Declined_Reason__c</name>
+    <help>トランザクションが却下された理由に関する詳細を提供します。</help>
+    <label>Elevate 支払 API 却下理由</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Status__c</name>
+    <help>この Elevate に接続された支払レコードの API 状況値。</help>
+    <label>Elevate 支払 API 状況</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_Date__c</name>
+    <help>トランザクションが作成された日時。</help>
+    <label>Elevate 支払作成日</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
+    <label>Elevate 支払作成 UTC タイムスタンプ</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_ID__c</name>
+    <help>Elevate から取得した、このトランザクションの一意の ID。</help>
+    <label>Elevate 支払 ID</label>
+  </fields>
+  <fields>
+    <name>Gateway_ID__c</name>
+    <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
+    <label>ゲートウェイ ID</label>
+  </fields>
+  <fields>
+    <name>Gateway_Payment_ID__c</name>
+    <help>支払ゲートウェイから取得した、このトランザクションの一意の ID。</help>
+    <label>ゲートウェイ支払 ID</label>
+  </fields>
+  <fields>
+    <name>Origin_ID__c</name>
+    <help>トランザクションが開始されたシステムの ID。</help>
+    <label>発生源 ID</label>
+  </fields>
+  <fields>
+    <name>Origin_Name__c</name>
+    <help>トランザクションが開始されたシステムの名前。</help>
+    <label>発生源名</label>
+  </fields>
+  <fields>
+    <name>Origin_Type__c</name>
+    <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
+    <label>発生源種別</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledged_Date__c</name>
+    <help>受領確認の日付。</help>
+    <label>支払受領確認日</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledgment_Status__c</name>
+    <help>この支払の受領確認の状況。</help>
+    <label>支払受領確認の状況</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>承認予定</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>承認済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>承認しない</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>トランザクションの種別を示します。</help>
+    <label>種別</label>
+  </fields>
+</CustomObjectTranslation>

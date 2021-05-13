@@ -1,247 +1,251 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Programación de Donación recurrente</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Programaciones de Donaciones recurrentes</value>
-    </caseValues>
-    <fields>
-        <help>Establece si la programación de Donación recurrente está activa o inactiva en base a la fecha de finalización. Es de solo lectura.</help>
-        <label>Activo</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>La campaña asociada con la Donación recurrente cuando se creó este registro de programación.</help>
-        <label>Campaña relacionada</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Programaciones de Donación recurrente</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente.</help>
-        <label>Día del mes</label>
-        <name>DayOfMonth__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Último día del mes</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La fecha de finalización, si se requiere, para este registro de programación.</help>
-        <label>Fecha de Finalización de la Recurrencia</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>Para integración con servicios externos o almacenes de datos.</help>
-        <label>Id. de Programación externa</label>
-        <name>ExternalId__c</name>
-    </fields>
-    <fields>
-        <help>El importe de cada oportunidad de cuota.</help>
-        <label>Importe</label>
-        <name>InstallmentAmount__c</name>
-    </fields>
-    <fields>
-        <help>Define la programación de cuota para esta Donación recurrente junto con el Período de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
-        <label>Frecuencia de cuota</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Define la programación de cuota para esta Donación recurrente junto con la Frecuencia de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como &quot;cada 3 meses&quot;.</help>
-        <label>Frecuencia</label>
-        <name>InstallmentPeriod__c</name>
-        <picklistValues>
-            <masterLabel>1st and 15th</masterLabel>
-            <translation>El 1 y el 15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>Cada día</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>Mensual</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>Semanal</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yearly</masterLabel>
-            <translation>Anual</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Establezca cuándo el registro de programación representa el intervalo de fechas en pausa de Donación recurrente</help>
-        <label>Es Pausa</label>
-        <name>IsPause__c</name>
-    </fields>
-    <fields>
-        <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
-        <label>Método de pago</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Cheque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Tarjeta de crédito</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La Donación recurrente con la que este registro de programación está asociado.</help>
-        <label>Donación recurrente</label>
-        <name>RecurringDonation__c</name>
-        <relationshipLabel>Programaciones de Donación recurrente</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La fecha efectiva para este registro de programación.</help>
-        <label>Fecha efectiva</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Contiene detalles adicionales para la programación. Por ejemplo, un motivo de la pausa para una programación en pausa.</help>
-        <label>Motivo de estado</label>
-        <name>StatusReason__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Recurring Schedule Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Detalles de programación</label>
-            <section>Schedule Details</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Número de programación recurrente</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>Establece si la programación de Donación recurrente está activa o inactiva en base a la fecha de finalización. Es de solo lectura.</help>
+    <label>Activo</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>La campaña asociada con la Donación recurrente cuando se creó este registro de programación.</help>
+    <relationshipLabel>Programaciones de Donación recurrente</relationshipLabel>
+    <label>Campaña relacionada</label>
+  </fields>
+  <fields>
+    <name>DayOfMonth__c</name>
+    <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente.</help>
+    <label>Día del mes</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Último día del mes</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>La fecha de finalización, si se requiere, para este registro de programación.</help>
+    <label>Fecha de Finalización de la Recurrencia</label>
+  </fields>
+  <fields>
+    <name>ExternalId__c</name>
+    <help>Para integración con servicios externos o almacenes de datos.</help>
+    <label>Id. de Programación externa</label>
+  </fields>
+  <fields>
+    <name>InstallmentAmount__c</name>
+    <help>El importe de cada oportunidad de cuota.</help>
+    <label>Importe</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>Define la programación de cuota para esta Donación recurrente junto con el Período de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
+    <label>Frecuencia de cuota</label>
+  </fields>
+  <fields>
+    <name>InstallmentPeriod__c</name>
+    <help>Define la programación de cuota para esta Donación recurrente junto con la Frecuencia de cuota. Por ejemplo, si Período de cuota es Mensualmente y Frecuencia de cuota es 3, la programación se define como "cada 3 meses".</help>
+    <label>Frecuencia</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Mensual</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Anual</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Semanal</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Cada día</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>El 1 y el 15</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>IsPause__c</name>
+    <help>Establezca cuándo el registro de programación representa el intervalo de fechas en pausa de Donación recurrente</help>
+    <label>Es Pausa</label>
+  </fields>
+  <fields>
+    <name>StatusReason__c</name>
+    <help>Contiene detalles adicionales para la programación. Por ejemplo, un motivo de la pausa para una programación en pausa.</help>
+    <label>Motivo de estado</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
+    <label>Método de pago</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Tarjeta de crédito</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Cheque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>ACH</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringDonation__c</name>
+    <help>La Donación recurrente con la que este registro de programación está asociado.</help>
+    <relationshipLabel>Programaciones de Donación recurrente</relationshipLabel>
+    <label>Donación recurrente</label>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>La fecha efectiva para este registro de programación.</help>
+    <label>Fecha efectiva</label>
+  </fields>
+  <layouts>
+    <layout>Recurring Schedule Layout</layout>
+    <sections>
+      <label>Detalles de programación</label>
+      <section>Schedule Details</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Número de programación recurrente</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Número de programación recurrente</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Programación de Donación recurrente</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Programaciones de Donaciones recurrentes</value>
+  </caseValues>
 </CustomObjectTranslation>

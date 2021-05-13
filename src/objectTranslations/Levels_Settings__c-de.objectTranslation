@@ -1,57 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Ebeneneinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Ebeneneinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Ebeneneinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Ebeneneinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Ebeneneinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Ebeneneinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Ebeneneinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Ebeneneinstellungen</value>
-    </caseValues>
-    <fields>
-        <label>Startzeit letzter Auftrag: Account</label>
-        <name>LastJobStartTimeAccount__c</name>
-    </fields>
-    <fields>
-        <label>Startzeit letzter Auftrag: Kontakt</label>
-        <name>LastJobStartTimeContact__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die beim Neuberechnen der Ebenen verarbeitet werden sollen.</help>
-        <label>Ebenenzuweisung der Batch-Größe </label>
-        <name>Level_Assignment_Batch_Size__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>LastJobStartTimeAccount__c</name>
+    <label>[Last Job Start Time : Account]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>LastJobStartTimeContact__c</name>
+    <label>[Last Job Start Time : Contact]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Level_Assignment_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating levels.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Level Assignment Batch Size]o'介引户הаí]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Levels Settings]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

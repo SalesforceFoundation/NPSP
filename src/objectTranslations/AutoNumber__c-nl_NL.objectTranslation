@@ -1,47 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Automatisch nummer</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Automatische nummers</value>
-    </caseValues>
-    <fields>
-        <label>Beschrijving</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>De notatie voor het automatisch genummerde veld, inclusief het aantal cijfers en desgewenst een voorvoegsel.</help>
-        <label>Weergavenotatie</label>
-        <name>Display_Format__c</name>
-    </fields>
-    <fields>
-        <help>De API-naam van het veld waarin de automatische nummering wordt weergegeven.</help>
-        <label>Veld-API-naam</label>
-        <name>Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Als deze optie is geselecteerd, is automatisch genummerde notatie actief.</help>
-        <label>Actief</label>
-        <name>IsActive__c</name>
-    </fields>
-    <fields>
-        <help>Het hoogste automatisch gegenereerde nummer voor deze notatie.</help>
-        <label>Hoogste cijfer</label>
-        <name>Max_Used_Number__c</name>
-    </fields>
-    <fields>
-        <help>De API-naam van het object voor de automatische nummering.</help>
-        <label>Object-API-naam</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Het eerste cijfer in de automatisch genummerde reeks.</help>
-        <label>Begincijfer</label>
-        <name>Starting_Number__c</name>
-    </fields>
-    <gender>Neuter</gender>
-    <nameFieldLabel>Naam automatische nummering</nameFieldLabel>
+  <fields>
+    <name>Description__c</name>
+    <label>Beschrijving</label>
+  </fields>
+  <fields>
+    <name>Display_Format__c</name>
+    <help>De notatie voor het automatisch genummerde veld, inclusief het aantal cijfers en desgewenst een voorvoegsel.</help>
+    <label>Weergavenotatie</label>
+  </fields>
+  <fields>
+    <name>Field_API_Name__c</name>
+    <help>De API-naam van het veld waarin de automatische nummering wordt weergegeven.</help>
+    <label>Veld-API-naam</label>
+  </fields>
+  <fields>
+    <name>IsActive__c</name>
+    <help>Als deze optie is geselecteerd, is automatisch genummerde notatie actief.</help>
+    <label>Actief</label>
+  </fields>
+  <fields>
+    <name>Max_Used_Number__c</name>
+    <help>Het hoogste automatisch gegenereerde nummer voor deze notatie.</help>
+    <label>Hoogste cijfer</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>De API-naam van het object voor de automatische nummering.</help>
+    <label>Object-API-naam</label>
+  </fields>
+  <fields>
+    <name>Starting_Number__c</name>
+    <help>Het eerste cijfer in de automatisch genummerde reeks.</help>
+    <label>Begincijfer</label>
+  </fields>
+  <nameFieldLabel>Naam automatische nummering</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam automatische nummering</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Automatisch nummer</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Automatische nummers</value>
+  </caseValues>
 </CustomObjectTranslation>

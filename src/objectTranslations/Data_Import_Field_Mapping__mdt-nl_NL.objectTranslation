@@ -1,59 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Veldtoewijzing voor gegevensimport</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Veldtoewijzingen voor gegevensimport</value>
-    </caseValues>
-    <fields>
-        <help>De veldtoewijzingsset voor gegevensimport bevat deze veldtoewijzing.</help>
-        <label>Veldtoewijzingsset voor gegevensimport</label>
-        <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Geeft, indien ingeschakeld, aan dat deze record is verwijderd uit de gebruikersinterface Geavanceerd toewijzen voor gegevensimport en dat deze wordt genegeerd tijdens de verwerking van NPSP-gegevensimport.</help>
-        <label>Is verwijderd</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of het veld voor het object NPSP-gegevensimport een waarde moet bevatten. Wanneer dit verplicht is, zal de testuitvoering mislukken als dat veld geen waarde bevat.</help>
-        <label>Vereist?</label>
-        <name>Required__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation>Nee</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation>Ja</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De API-naam van het veld voor het object NPSP-gegevensimport.</help>
-        <label>API-naam van bronveld</label>
-        <name>Source_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>De API-naam van het veld voor het doelobject.</help>
-        <label>API-naam van doelveld</label>
-        <name>Target_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>De doel Objectgroep voor gegevensimport voor deze veldtoewijzing.</help>
-        <label>Toewijzing van doelobject</label>
-        <name>Target_Object_Mapping__c</name>
-        <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Field Mapping Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <help>De veldtoewijzingsset voor gegevensimport bevat deze veldtoewijzing.</help>
+    <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
+    <label>Veldtoewijzingsset voor gegevensimport</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <help>Geeft, indien ingeschakeld, aan dat deze record is verwijderd uit de gebruikersinterface Geavanceerd toewijzen voor gegevensimport en dat deze wordt genegeerd tijdens de verwerking van NPSP-gegevensimport.</help>
+    <label>Is verwijderd</label>
+  </fields>
+  <fields>
+    <name>Required__c</name>
+    <help>Geeft aan of het veld voor het object NPSP-gegevensimport een waarde moet bevatten. Wanneer dit verplicht is, zal de testuitvoering mislukken als dat veld geen waarde bevat.</help>
+    <label>Vereist?</label>
+    <picklistValues>
+      <masterLabel>Yes</masterLabel>
+      <translation>Ja</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No</masterLabel>
+      <translation>Nee</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Source_Field_API_Name__c</name>
+    <help>De API-naam van het veld voor het object NPSP-gegevensimport.</help>
+    <label>API-naam van bronveld</label>
+  </fields>
+  <fields>
+    <name>Target_Field_API_Name__c</name>
+    <help>De API-naam van het veld voor het doelobject.</help>
+    <label>API-naam van doelveld</label>
+  </fields>
+  <fields>
+    <name>Target_Object_Mapping__c</name>
+    <help>De doel Objectgroep voor gegevensimport voor deze veldtoewijzing.</help>
+    <relationshipLabel>Veldtoewijzingen voor gegevensimport</relationshipLabel>
+    <label>Toewijzing van doelobject</label>
+  </fields>
+  <layouts>
+    <layout>Data Import Field Mapping Layout</layout>
+    <sections>
+      <label>Aangepaste koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Veldtoewijzing voor gegevensimport</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Veldtoewijzingen voor gegevensimport</value>
+  </caseValues>
 </CustomObjectTranslation>

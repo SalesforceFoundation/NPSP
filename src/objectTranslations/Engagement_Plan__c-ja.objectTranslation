@@ -1,66 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>エンゲージメント計画</value>
-    </caseValues>
-    <fields>
-        <label>取引先</label>
-        <name>Account__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>キャンペーン</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>ケース</label>
-        <name>Case__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>完了した ToDo</label>
-        <name>Completed_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>取引先責任者</label>
-        <name>Contact__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>エンゲージメント計画テンプレート</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>商談</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>継続支援</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>エンゲージメント計画</relationshipLabel>
-    </fields>
-    <fields>
-        <label>状況</label>
-        <name>Status__c</name>
-    </fields>
-    <fields>
-        <label>EP ToDo 総数</label>
-        <name>Total_EP_Tasks__c</name>
-    </fields>
-    <fields>
-        <label>ToDo 総数</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <layouts>
-        <layout>Engagement Plan Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>エンゲージメント計画番号</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>取引先</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>キャンペーン</label>
+  </fields>
+  <fields>
+    <name>Case__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>ケース</label>
+  </fields>
+  <fields>
+    <name>Completed_Tasks__c</name>
+    <label>完了した ToDo</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>取引先責任者</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>エンゲージメント計画テンプレート</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>商談</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+    <label>継続支援</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>状況</label>
+  </fields>
+  <fields>
+    <name>Total_EP_Tasks__c</name>
+    <label>EP ToDo 総数</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>ToDo 総数</label>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>エンゲージメント計画番号</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>エンゲージメント計画番号</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>エンゲージメント計画</value>
+  </caseValues>
 </CustomObjectTranslation>

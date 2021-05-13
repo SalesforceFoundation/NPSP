@@ -1,94 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Adressüberprüfungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Adressüberprüfungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Adressüberprüfungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Adressüberprüfungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Adressüberprüfungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Adressüberprüfungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Adressüberprüfungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Adressüberprüfungseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Für die Adressenüberprüfung verwendeter URL</help>
-        <label>URL zur Adressenüberprüfung</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>Die Authentifizierungskennung</help>
-        <label>Authentifizierungskennung</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>Der Authentifizierungstoken</help>
-        <label>Authentifizierungstoken</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Für die Kontaktierung des Webservice und die Überprüfung der Adressen zuständige Salesforce-Klasse</help>
-        <label>Überprüfungsservice</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Aktiviert die automatische Adressenüberprüfung für neue Adressen</help>
-        <label>Automatische Überprüfung aktivieren</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Verhindert, dass die Cicero-API während der Überprüfung Adressen überschreibt.</help>
-        <label>Überschreiben der Adresse verhindern</label>
-        <name>Prevent_Address_Overwrite__c</name>
-    </fields>
-    <fields>
-        <help>Markiert zweideutige Adressen als ungültig, wenn die API mehr als eine Adresse zurückgibt. Wenn diese Option nicht ausgewählt ist, übernimmt Salesforce die erste vorgeschlagene Adresse als gültige Adresse.</help>
-        <label>Zweideutige Adressen ablehnen</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Callout-Zeitüberschreitung in Sekunden</help>
-        <label>Zeitüberschreitung</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, ob Sie den SmartyStreets-Service zur Adressenüberprüfung verwenden</help>
-        <label>ERSETZT – Verwenden von SmartyStreets</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>Für die Postleitzahlüberprüfung verwendeter URL</help>
-        <label>Endpunkt der Postleitzahlüberprüfung</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>[URL used for address verification.]o'介引户הаí先ร]</help>
+    <label>[Address Verification URL]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>[The Authentication ID.]o'介引户ה]</help>
+    <label>[Auth ID]o']</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>[The Authentication Token.]o'介引户הа]</help>
+    <label>[Auth Token]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>[Salesforce class responsible for contacting the web service and verifying addresses.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Verification Service]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>[Enables automatic address verification for new addresses.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Enable Automatic Verification]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Prevent_Address_Overwrite__c</name>
+    <help>[Prevents the Cicero API from overwriting Addresses during verification.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Prevent Address Overwrite]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>[Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะя]</help>
+    <label>[Reject Ambiguous Addresses]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>[Callout timeout in seconds.]o'介引户הаí]</help>
+    <label>[Timeout]o']</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>[Specifies whether or not you are using the SmartyStreets address verification service.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[DEPRECATED - Using SmartyStreets]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>[URL used for zip code verification.]o'介引户הаí先ร]</help>
+    <label>[Zipcode Verification Endpoint]o'介引户הаí]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Address Verification Settings]gr''介引户הаí]</value>
+  </caseValues>
 </CustomObjectTranslation>

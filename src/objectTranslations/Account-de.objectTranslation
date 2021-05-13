@@ -1,231 +1,208 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Manage Household Custom --></label>
-        <name>Manage_Household_Custom</name>
-    </fieldSets>
-    <fields>
-        <help>Der Batch, in dem dieser Account erstellt wurde.</help>
-        <label>Batch</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Accounts</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
-        <label>Finanzierungsfokus</label>
-        <name>Funding_Focus__c</name>
-        <picklistValues>
-            <masterLabel>Animal Welfare</masterLabel>
-            <translation>Tierhilfe</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Arts and Culture</masterLabel>
-            <translation>Kunst und Kultur</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Capacity Building</masterLabel>
-            <translation>Kapazitätsaufbau</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Education</masterLabel>
-            <translation>Bildung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Environmental</masterLabel>
-            <translation>Umwelt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Health Services</masterLabel>
-            <translation>Gesundheitswesen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Human Services</masterLabel>
-            <translation>Humandienstleistungen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Gibt an, dass diese Organisation eine Geldgeberorganisation ist. </help>
-        <label>Geldgeber</label>
-        <name>Grantmaker__c</name>
-    </fields>
-    <fields>
-        <help>Der Name des Administrators für Spendenverdopplungen im Unternehmen.</help>
-        <label>Administratorname Spendenverdopplung</label>
-        <name>Matching_Gift_Administrator_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der maximale Betrag, den das Unternehmen für jede Einzelspende verdoppelt.</help>
-        <label>Max. Betrag Spendenverdopplung</label>
-        <name>Matching_Gift_Amount_Max__c</name>
-    </fields>
-    <fields>
-        <help>Der kleinste Betrag, den das Unternehmen bei Einzelspenden verdoppelt.</help>
-        <label>Min. Betrag Spendenverdopplung</label>
-        <name>Matching_Gift_Amount_Min__c</name>
-    </fields>
-    <fields>
-        <help>Der maximale Betrag, den das Unternehmen pro Jahr mit einem Mitarbeiter abgleicht</help>
-        <label>Max. Spendenverdopplung/Jahr f. Mitarb.</label>
-        <name>Matching_Gift_Annual_Employee_Max__c</name>
-    </fields>
-    <fields>
-        <help>Weitere Anmerkungen zum Spendenverdopplungsprogramm des Unternehmens</help>
-        <label>Kommentare zu Spendenverdopplung</label>
-        <name>Matching_Gift_Comments__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, dass dies ein Unternehmen ist, das Spendenverdopplung anbietet.</help>
-        <label>Firma mit Spendenverdopplungsprogramm</label>
-        <name>Matching_Gift_Company__c</name>
-    </fields>
-    <fields>
-        <help>Die E-Mail-Adresse des Administrators für Spendenverdopplung im Unternehmen</help>
-        <label>E-Mail zur Spendenverdopplung</label>
-        <name>Matching_Gift_Email__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum, an dem die Informationen zur Spendenverdopplung zuletzt aktualisiert wurden</help>
-        <label>Info zu Spendenverdopplung aktualisiert</label>
-        <name>Matching_Gift_Info_Updated__c</name>
-    </fields>
-    <fields>
-        <help>Der Anteil einer Spende, den das Unternehmen verdoppelt.</help>
-        <label>Prozentsatz der verdoppelten Spenden</label>
-        <name>Matching_Gift_Percent__c</name>
-    </fields>
-    <fields>
-        <help>Die Telefonnummer des Administrators für Spendenverdopplung im Unternehmen</help>
-        <label>Telefonnummer Spendenverdopplung</label>
-        <name>Matching_Gift_Phone__c</name>
-    </fields>
-    <fields>
-        <help>Verwenden Sie dieses Feld, um etwaige Altersbeschränkungen dieses Unternehmens für Spendenverdopplung zu vermerken.</help>
-        <label>Stichtag für Spendenverdopplungs-Anfrage</label>
-        <name>Matching_Gift_Request_Deadline__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der Jahre, für die ein Mitglied dieses Haushalts eine Mitgliedschaft hatte (schreibgeschützt).</help>
-        <label>Zeitraum der Mitgliedschaft</label>
-        <name>Membership_Span__c</name>
-    </fields>
-    <fields>
-        <help>Der Mitgliedsch‘status dieses Haush., z. B. &quot;Aktuell&quot;, &quot;Abgelaufen&quot; o. &quot;Kulanzzeitraum&quot;. Der Wert basiert a. d. Ende der Mitgliedsch. u. der Kulanzzeit. Die Stand‘kulanzzeit wird i. d. NPSP-Einst‘en i. d. Haush.-Einstell‘en festgelegt. Schreibgesch. Feld.</help>
-        <label>Mitgliedschaftsstatus</label>
-        <name>Membership_Status__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der Kontakte, die Mitglieder in diesem Haushalt sind.</help>
-        <label>Anzahl der Haushalt-Mitglieder</label>
-        <name>Number_of_Household_Members__c</name>
-    </fields>
-    <layouts>
-        <layout>Household Layout</layout>
-        <sections>
-            <label>Adresse</label>
-            <section>Address</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Beschreibung</label>
-            <section>Description</section>
-        </sections>
-        <sections>
-            <label>Spendeninformationen</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Spendenbeträge gesamt</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Felder</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Mitgliedschaftsinformationen</label>
-            <section>Membership Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Organization Layout</layout>
-        <sections>
-            <label>Adresse</label>
-            <section>Address</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Beschreibung</label>
-            <section>Description</section>
-        </sections>
-        <sections>
-            <label>Spendeninformationen</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Spendenbeträge gesamt</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Felder</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Geldgeberinformationen</label>
-            <section>Grantmaking Information</section>
-        </sections>
-        <sections>
-            <label>Kommentare zu Spendenverdopplung</label>
-            <section>Matching Gift Comments</section>
-        </sections>
-        <sections>
-            <label>Informationen zur Spendenverdopplung</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Mitgliedschaftsinformationen</label>
-            <section>Membership Information</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Neue Adresse</label>
-        <name>New_Address</name>
-    </quickActions>
-    <quickActions>
-        <label>Neue Zugehörigkeit</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Household_Update</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Organization_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Haushalt verwalten</label>
-        <name>Manage_Household</name>
-    </webLinks>
-    <webLinks>
-        <label>Neue Spende</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+  <fields>
+    <name>Batch__c</name>
+    <help>[The batch this Account was created in.]o'介引户הаí先ร简]</help>
+    <relationshipLabel>[Accounts]o'介]</relationshipLabel>
+    <label>[Batch]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>CustomizableRollups_UseSkewMode__c</name>
+    <help>[When checked, Customizable Rollups will always use 'Skew Mode' to rollup Hard Credit and Soft Credits for this record.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Customizable Rollups: Force Skew Mode]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Funding_Focus__c</name>
+    <help>[The general program area(s) that this organization funds.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Funding Focus]o'介]</label>
+    <picklistValues>
+      <masterLabel>Animal Welfare</masterLabel>
+      <translation>[Animal Welfare]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Arts and Culture</masterLabel>
+      <translation>[Arts and Culture]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Capacity Building</masterLabel>
+      <translation>[Capacity Building]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Education</masterLabel>
+      <translation>[Education]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Environmental</masterLabel>
+      <translation>[Environmental]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Health Services</masterLabel>
+      <translation>[Health Services]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Human Services</masterLabel>
+      <translation>[Human Services]o'介引]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Grantmaker__c</name>
+    <help>[Indicates that this organization is a grantmaking organization.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Grantmaker]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Administrator_Name__c</name>
+    <help>[The name of the company's Matching Gift administrator.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Matching Gift Administrator Name]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Amount_Max__c</name>
+    <help>[The maximum amount the company will match on any single gift.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Matching Gift Amount Max]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Amount_Min__c</name>
+    <help>[The smallest amount the company will match on any single gift.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Matching Gift Amount Min]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Annual_Employee_Max__c</name>
+    <help>[The maximum amount the company will match each year for an employee.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Matching Gift Annual Employee Max]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Comments__c</name>
+    <help>[Additional notes about the company's Matching Gift program.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Matching Gift Comments]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Company__c</name>
+    <help>[Indicates that this company offers Matching Gifts.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Matching Gift Company]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Email__c</name>
+    <help>[Email of the company's Matching Gift administrator.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Matching Gift Email]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Info_Updated__c</name>
+    <help>[The date you last updated the Matching Gift information.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Matching Gift Info Updated]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Percent__c</name>
+    <help>[The portion of a gift the company will match.]o'介引户הаí先ร简аน]</help>
+    <label>[Matching Gift Percent]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Phone__c</name>
+    <help>[The phone number of the company's Matching Gift administrator.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Matching Gift Phone]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Request_Deadline__c</name>
+    <help>[Use this field to note any age restrictions this company places on Matching Gift eligibility.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Matching Gift Request Deadline]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Membership_Span__c</name>
+    <help>[The number of years that a member of this Household has had a Membership (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Membership Span]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Membership_Status__c</name>
+    <help>[The Membership status of this Household, for example, Current, Expired, or Grace Period. The value is based on Membership End Date and Grace Period. The Default Grace Period is set in NPSP Settings, under Household Settings. This field is read only.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčن]</help>
+    <label>[Membership Status]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Household_Members__c</name>
+    <help>[The number of Contacts who are members of this Household.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Number of Household Members]o'介引户הаí]</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Household</name>
+    <label>[Manage Household]o'介引]</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>[New Gift]o'介]</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>[Recalculate Rollups]o'介引户]</label>
+  </webLinks>
+  <layouts>
+    <layout>Organization Layout</layout>
+    <sections>
+      <label>[Fields]o']</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>[Address]o']</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>[Description]o'介引]</label>
+      <section>Description</section>
+    </sections>
+    <sections>
+      <label>[Donation Information]o'介引户ה]</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>[Donation Totals]o'介引]</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>[Membership Information]o'介引户ה]</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>[Grantmaking Information]o'介引户ה]</label>
+      <section>Grantmaking Information</section>
+    </sections>
+    <sections>
+      <label>[Matching Gift Information]o'介引户הа]</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>[Matching Gift Comments]o'介引户ה]</label>
+      <section>Matching Gift Comments</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Household Layout</layout>
+    <sections>
+      <label>[Fields]o']</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>[Address]o']</label>
+      <section>Address</section>
+    </sections>
+    <sections>
+      <label>[Description]o'介引]</label>
+      <section>Description</section>
+    </sections>
+    <sections>
+      <label>[Donation Information]o'介引户ה]</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>[Donation Totals]o'介引]</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>[Membership Information]o'介引户ה]</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
 </CustomObjectTranslation>

@@ -1,64 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Opportunity-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Opportunity-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Opportunity-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Opportunity-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Opportunity-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Opportunity-Benennungseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Opportunity-Benennungseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Opportunity-Benennungseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Gibt an, Ob diese Einstellung für einzelne Opportunities, Organisation-Opportunities oder beides gilt.</help>
-        <label>Zuschreibung</label>
-        <name>Attribution__c</name>
-    </fields>
-    <fields>
-        <help>Das Format für Datumsangaben, die in diesem Opportunity-Namen enthalten sind.</help>
-        <label>Datumsformat</label>
-        <name>Date_Format__c</name>
-    </fields>
-    <fields>
-        <help>Das Format für die Benennung der Opportunity.</help>
-        <label>Format des Opportunity-Namens</label>
-        <name>Opportunity_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Gibt den Opportunity-Datensatztyp an, für den dieses Benennungschema gilt.</help>
-        <label>Opportunity-Datensatztypen</label>
-        <name>Opportunity_Record_Types__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Attribution__c</name>
+    <help>[Whether this setting applies to individual opportunities, organizational opportunities, or both.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Attribution]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Date_Format__c</name>
+    <help>[The format for dates included in this opportunity name.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Date Format]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Name_Format__c</name>
+    <help>[The format to use for Opportunity naming.]o'介引户הаí先ร简а]</help>
+    <label>[Opportunity Name Format]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Record_Types__c</name>
+    <help>[Specifies the opportunity record type that this naming scheme is for.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Opportunity Record Types]o'介引户הа]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Opportunity Naming Settings]gr''介引户הаí]</value>
+  </caseValues>
 </CustomObjectTranslation>

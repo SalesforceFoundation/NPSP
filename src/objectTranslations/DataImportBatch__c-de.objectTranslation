@@ -1,238 +1,208 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport-Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimport-Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport-Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimport-Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport-Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimport-Batches</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport-Batch</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimport-Batches</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
-        <name>BatchGiftEntryTabColumns</name>
-    </fieldSets>
-    <fields>
-        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Organisations-Account-Abgleich</help>
-        <label>Benutzerdef. eindeutige Account-Kennung</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <label>Aktive Felder</label>
-        <name>Active_Fields__c</name>
-    </fields>
-    <fields>
-        <help>Die Standardwerte für einen Batch im Spendeneintrag. Bearbeiten Sie diese nicht direkt. Diese Werte sollten über die Benutzeroberfläche aktualisiert werden, auf der Sie Ihren Batch bearbeiten.</help>
-        <label>Batch-Standardwerte</label>
-        <name>Batch_Defaults__c</name>
-    </fields>
-    <fields>
-        <help>Eine optionale Beschreibung zu diesem Batch.</help>
-        <label>Batch-Beschreibung</label>
-        <name>Batch_Description__c</name>
-    </fields>
-    <fields>
-        <help>Die Version des Batch-Spendeneintrags-Features, das zum Erstellen dieses Batch verwendet wird.</help>
-        <label>Version des Batch-Spendeneintrags</label>
-        <name>Batch_Gift_Entry_Version__c</name>
-    </fields>
-    <fields>
-        <help>Der eindeutige, automatisch nummerierte Bezeichner für diesen Batch.</help>
-        <label>Batch-Nummer</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der jeweils in jedem Batch zu verarbeitenden Datensätze.</help>
-        <label>Batch-Prozessgröße</label>
-        <name>Batch_Process_Size__c</name>
-    </fields>
-    <fields>
-        <help>Der Batch-Status basiert auf dem Importstatus der NPSP-Datenimport-Datensätze im Batch. Wenn das Importieren eines Datensatzes fehlschlägt, ist der Status des gesamten Batches &quot;Fehler – Überprüfung erforderlich&quot;.</help>
-        <label>Batch-Status</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Abgeschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Failed - Needs Review</masterLabel>
-            <translation>Fehler – Überprüfung erforderlich</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Offen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Liste der API-Namen für die in der Spenden-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
-        <label>Spalten der Batchtabelle</label>
-        <name>Batch_Table_Columns__c</name>
-    </fields>
-    <fields>
-        <help>Ein optionales Feld mit einer eindeutigen Kennung zum Kontakt-Abgleich</help>
-        <label>Benutzerdef. eindeutige Kontakt-Kennung</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, welche Regel bei dem Versuch des Abgleichs von Kontakten in Datenimportdatensätzen mit vorhandenen Kontakten befolgt werden soll.</help>
-        <label>Kontakt-Abgleichsregel</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Geben Sie die Anzahl an Tagen ab dem Spendendatum ein, die auf der Suche nach einer übereinst. Opp. o. Zahl‘g zu berücks. sind. NPSP wählt die übereinst. Opp. o. Zahl‘g aus, deren Datum i. d. Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
-        <label>Anzahl der Tage ab Spendendatum</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Definiert, wie NPSP Spendenverdopplungen handhaben sollte.</help>
-        <label>Spendenverdopplungsverhalten</label>
-        <name>Donation_Matching_Behavior__c</name>
-        <picklistValues>
-            <masterLabel>Best Match</masterLabel>
-            <translation>Beste Übereinstimmung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Match or Create</masterLabel>
-            <translation>Beste Übereinstimmung oder Erstellen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Match</masterLabel>
-            <translation>Stimmen nicht überein</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Match</masterLabel>
-            <translation>Keine Übereinstimmung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match</masterLabel>
-            <translation>Einzelne Übereinstimmung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match or Create</masterLabel>
-            <translation>Einzelne Übereinstimmung oder Erstellen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Der Entwicklername einer Apex-Klasse, die die BDI_IMatching-Schnittstelle für Spenden implementiert. Ohne Angabe nimmt NPSP die Verdopplung vor.</help>
-        <label>Spendenverdoppl.-Implementierungsklasse</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, nach welchen Feldern abgeglichen werden soll, wenn versucht wird, Spenden in Batch-Datensätzen gegen vorhandene Opportunities und Zahlungen abzugleichen.</help>
-        <label>Spendenverdopplungsregel</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Die Zahl der Spenden, die in diesen Batch einzugeben erwartet wird.</help>
-        <label>Erwartete Anzahl an Spenden</label>
-        <name>Expected_Count_of_Gifts__c</name>
-    </fields>
-    <fields>
-        <help>Die erwartete Summe aller in diesen Batch eingetragenen Spenden.</help>
-        <label>Erwarteter Batch-Betrag insgesamt</label>
-        <name>Expected_Total_Batch_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Die Vorlage, die für den Spendeneintrag aus diesem Batch verwendet werden soll.</help>
-        <label>Formularvorlage</label>
-        <name>Form_Template__c</name>
-        <relationshipLabel>NPSP-Datenimportbatches</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Dieser Batch ist zur Verw. mit Batch-Spendeneintrag vorgesehen. Batches werden autom. als Spenden-Batches gekennz., wenn sie über eine Batch-Spendeneintrags-Registerkarte eingereicht werden. Manuelles Ändern dieses Felds kann unerwünschte Folgen haben.</help>
-        <label>Spenden-Batch</label>
-        <name>GiftBatch__c</name>
-    </fields>
-    <fields>
-        <help>Datum und Uhrzeit, wann der Batch zuletzt verarbeitet wurde.</help>
-        <label>Zuletzt verarbeitet am</label>
-        <name>Last_Processed_On__c</name>
-    </fields>
-    <fields>
-        <help>Der Entwicklername einer Apex-Klasse, der die BDI_IPostProcess-Oberfläche für NPSP-Batch-Datensätze implementiert.</help>
-        <label>Nachverarbeitungs-Implementierungsklasse</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Wenn dieses Kontrollkästchen aktiviert ist, wird der Batch automatisch basierend auf dem Zeitplan für den verbundenen Auftrag verarbeitet.</help>
-        <label>Mit geplantem Auftrag verarbeiten</label>
-        <name>Process_Using_Scheduled_Job__c</name>
-    </fields>
-    <fields>
-        <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld &quot;Zuletzt verarbeitet am&quot; angegebenen Datum nicht erfolgreich verarbeitet wurden.</help>
-        <label>Fehlerhafte Datensätze</label>
-        <name>Records_Failed__c</name>
-    </fields>
-    <fields>
-        <help>Zeigt die Anzahl der Datensätze an, die an dem im Feld &quot;Zuletzt verarbeitet am&quot; angegebenen Datum erfolgreich verarbeitet wurden.</help>
-        <label>Datensätze erfolgreich verarbeitet</label>
-        <name>Records_Successfully_Processed__c</name>
-    </fields>
-    <fields>
-        <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Spenden und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
-        <label>Übereinstimmung der Summen erforderlich</label>
-        <name>RequireTotalMatch__c</name>
-    </fields>
-    <fields>
-        <help>Bei Akt. berechn. NPSP die Spender-Rollups, wenn Spenden verarbeitet werden. Wenn nicht, werden die Spender-Rollups während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. langsamer werden.</help>
-        <label>Spenden-Rollups mit Batch berechnen</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>NPSP Data Import Batch Layout</layout>
-        <sections>
-            <label>Kontakt- und Account-Abgleich</label>
-            <section>Contact &amp; Account Matching</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Spendenverdopplung</label>
-            <section>Donation Matching</section>
-        </sections>
-        <sections>
-            <label>Erweiterbarkeit</label>
-            <section>Extensibility</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Batch-Name</nameFieldLabel>
-    <webLinks>
-        <label>Batch verarbeiten</label>
-        <name>Process_Batch</name>
-    </webLinks>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>[An optional Unique Id field to use for Organization Account matching]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Account Custom Unique ID]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Active_Fields__c</name>
+    <label>[Active Fields]o'介]</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>[The unique, auto-numbered identifier for this batch.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Batch Number]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Batch_Defaults__c</name>
+    <help>[The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Batch Defaults]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Batch_Table_Columns__c</name>
+    <help>[List of API names for fields included in the batch gift table. Stored as JSON.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Batch Table Columns]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Batch_Description__c</name>
+    <help>[An optional description about this batch.]o'介引户הаí先ร简а]</help>
+    <label>[Batch Description]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Batch_Gift_Entry_Version__c</name>
+    <help>[The version of the Batch Gift Entry feature used to create this Batch.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Batch Gift Entry Version]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Batch_Process_Size__c</name>
+    <help>[The number of records to process at a time in each batch.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Batch Process Size]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>[An optional Unique Id field to use for Contact matching]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Contact Custom Unique ID]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>[Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Contact Matching Rule]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>[Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Number of Days from Donation Date]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>[Defines how NPSP should handle matching Donations.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Donation Matching Behavior]o'介引户הа]</label>
+    <picklistValues>
+      <masterLabel>Do Not Match</masterLabel>
+      <translation>[Do Not Match]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Match</masterLabel>
+      <translation>[No Match]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match</masterLabel>
+      <translation>[Single Match]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match or Create</masterLabel>
+      <translation>[Single Match or Create]o'介引户ה]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match</masterLabel>
+      <translation>[Best Match]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match or Create</masterLabel>
+      <translation>[Best Match or Create]o'介引户ה]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>[The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Donation Matching Implementing Class]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>[Specifies which fields to match by when trying to match Donations in batch records against existing Opportunities and Payments.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Donation Matching Rule]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Expected_Count_of_Gifts__c</name>
+    <help>[The number of gifts that are expected to be entered in this Batch.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Expected Count of Gifts]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Expected_Total_Batch_Amount__c</name>
+    <help>[The expected total amount of all gifts entered in this Batch.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Expected Total Batch Amount]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Form_Template__c</name>
+    <help>[The Template to use for the gift entry form for this Batch.]o'介引户הаí先ร简аน取정úσ]</help>
+    <relationshipLabel>[NPSP Data Import Batches]o'介引户הа]</relationshipLabel>
+    <label>[Form Template]o'介]</label>
+  </fields>
+  <fields>
+    <name>GiftBatch__c</name>
+    <help>[This batch is intended for use with Batch Gift Entry. Batches are automatically marked as gift batches when they are set up through the Batch Gift Entry tab. Manually changing this field could have unintended consequences.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşр]</help>
+    <label>[Gift Batch]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Last_Processed_On__c</name>
+    <help>[The date and time when the batch was last processed.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Last Processed On]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>[The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP batch records.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Post Process Implementing Class]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Process_Using_Scheduled_Job__c</name>
+    <help>[When checked, the batch will be automatically processed based on the schedule for the associated job.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Process Using Scheduled Job]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Records_Failed__c</name>
+    <help>[Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Records Failed]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Records_Successfully_Processed__c</name>
+    <help>[Shows the number of records that were successfully processed on the date listed in the Last Processed On field.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Records Successfully Processed]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>RequireTotalMatch__c</name>
+    <help>[When checked, the total number of gifts and total amount must match the expected totals entered for the batch.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Require Expected Totals Match]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>[When checked, NPSP calculates donor rollups when donations are processed. If unchecked, donor rollups are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωt]</help>
+    <label>[Calculate Donation Rollups with Batch]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Batch_Status__c</name>
+    <help>[The Batch Status is based on the Import Status of the NPSP Data Import records within the batch. If one record fails to import, the status for the batch is "Failed - Needs Review."]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт]</help>
+    <label>[Batch Status]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>[Open]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>[Completed]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Failed - Needs Review</masterLabel>
+      <translation>[Failed - Needs Review]o'介引户ה]</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Process_Batch</name>
+    <label>[Process Batch]o'介]</label>
+  </webLinks>
+  <layouts>
+    <layout>NPSP Data Import Batch Layout</layout>
+    <sections>
+      <label>[Contact &amp; Account Matching]o'介引户הа]</label>
+      <section>Contact &amp; Account Matching</section>
+    </sections>
+    <sections>
+      <label>[Donation Matching]o'介引户]</label>
+      <section>Donation Matching</section>
+    </sections>
+    <sections>
+      <label>[Extensibility]o'介]</label>
+      <section>Extensibility</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Batch Name]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Batch Name]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Data Import Batch]gr''介引户ה]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Data Import Batches]gr''介引户הа]</value>
+  </caseValues>
 </CustomObjectTranslation>

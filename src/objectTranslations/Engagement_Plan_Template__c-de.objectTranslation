@@ -1,108 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <fields>
-        <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
-        <label>Fälligkeitsdatum autom. aktualisieren</label>
-        <name>Automatically_Update_Child_Task_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>Wem soll die Aufgabe zugewiesen werden, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird?</help>
-        <label>Standard-Empfänger</label>
-        <name>Default_Assignee__c</name>
-        <picklistValues>
-            <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation>Eigentümer des Objekts für den Engagementplan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation>Benutzer, der den Engagementplan erstellt</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>Beschreibung</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, ob Aufgaben mit einem Fälligkeitsdatum am Wochenende für den Freitag vor dem Wochenende oder den Montag danach geplant werden sollen. Dies gilt nur, wenn &quot;Wochenenden überspringen&quot; ausgewählt ist.</help>
-        <label>Neu planen für</label>
-        <name>Reschedule_To__c</name>
-        <picklistValues>
-            <masterLabel>Friday</masterLabel>
-            <translation>Freitag</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monday</masterLabel>
-            <translation>Montag</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Wenn diese Option ausgewählt ist, haben die in diesem Engagementplan erstellten Aufgaben keine Fälligkeitsdaten am Samstag oder Sonntag.</help>
-        <label>Wochenenden überspringen</label>
-        <name>Skip_Weekends__c</name>
-    </fields>
-    <fields>
-        <label>Engagementpläne insgesamt</label>
-        <name>Total_Engagement_Plans__c</name>
-    </fields>
-    <fields>
-        <label>Aufgaben insgesamt</label>
-        <name>Total_Tasks__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Engagement Plan Template Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Engagementplan-Vorlagenname</nameFieldLabel>
-    <webLinks>
-        <label>Vorlage verwalten</label>
-        <name>Manage_Template</name>
-    </webLinks>
+  <fields>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    <help>[Recalculates a child Task's due date based on when the parent Task was actually completed.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Automatically Update Child Task Due Date]o'介引户הаí先ร简а]</label>
+  </fields>
+  <fields>
+    <name>Default_Assignee__c</name>
+    <help>[When an Engagement Plan Task's Assigned To field is left blank, who should the Task be assigned to?]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةб]</help>
+    <label>[Default Assignee]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+      <translation>[Owner of Object for Engagement Plan]o'介引户הаí先ร]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>User Creating Engagement Plan</masterLabel>
+      <translation>[User Creating Engagement Plan]o'介引户הаí]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>[Description]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Reschedule_To__c</name>
+    <help>[Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <label>[Reschedule To]o'介]</label>
+    <picklistValues>
+      <masterLabel>Monday</masterLabel>
+      <translation>[Monday]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Friday</masterLabel>
+      <translation>[Friday]o']</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Skip_Weekends__c</name>
+    <help>[If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Skip Weekends]o'介]</label>
+  </fields>
+  <fields>
+    <name>Total_Engagement_Plans__c</name>
+    <label>[Total Engagement Plans]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>[Total Tasks]o'介引]</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Template</name>
+    <label>[Manage Template]o'介引]</label>
+  </webLinks>
+  <layouts>
+    <layout>Engagement Plan Template Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Engagement Plan Template Name]o'介引户הаí]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Engagement Plan Template Name]o'介引户הаí]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Template]gr''介引户הа]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Engagement Plan Templates]gr''介引户הа]</value>
+  </caseValues>
 </CustomObjectTranslation>

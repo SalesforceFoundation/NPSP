@@ -1,14 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>DÉPRÉCIÉ-Fonds</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>DÉPRÉCIÉ-Fonds</value>
-    </caseValues>
-    <gender>Masculine</gender>
-    <nameFieldLabel>DÉPRÉCIÉ-Nom du fonds</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <nameFieldLabel>DÉPRÉCIÉ-Nom du fonds</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>DÉPRÉCIÉ-Nom du fonds</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>DÉPRÉCIÉ-Fonds</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>DÉPRÉCIÉ-Fonds</value>
+  </caseValues>
 </CustomObjectTranslation>

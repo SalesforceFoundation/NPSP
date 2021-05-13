@@ -1,59 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de campo de importación de datos</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de campos de importaciones de datos</value>
-    </caseValues>
-    <fields>
-        <help>El conjunto de asignaciones de campos de importación de datos que contiene esta asignación de campos.</help>
-        <label>Conjunto asign. campos importación datos</label>
-        <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel>Asignaciones de campo importación datos</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Cuando se marca, indica que este registro se eliminó de la interfaz de usuario Asignación avanzada de importación de datos y se ignorará durante el procesamiento de Importación de datos de NPSP.</help>
-        <label>Está eliminado</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Indica si el campo del objeto Importación de datos de NPSP debe contener un valor. Cuando es obligatorio, Ejecución en seco fallará si ese campo no contiene un valor.</help>
-        <label>¿Obligatorio?</label>
-        <name>Required__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation>No</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation>Sí</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>El nombre de API del campo en el objeto Importación de datos de NPSP.</help>
-        <label>Nombre de API de campo de origen</label>
-        <name>Source_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API del campo en el objeto de destino.</help>
-        <label>Nombre de API de campo de destino</label>
-        <name>Target_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>El Grupos de objetos de importación de datos de destino para esta asignación de campos.</help>
-        <label>Asignación de objeto de destino</label>
-        <name>Target_Object_Mapping__c</name>
-        <relationshipLabel>Asignaciones de campo importación datos</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Field Mapping Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <help>El conjunto de asignaciones de campos de importación de datos que contiene esta asignación de campos.</help>
+    <relationshipLabel>Asignaciones de campo importación datos</relationshipLabel>
+    <label>Conjunto asign. campos importación datos</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <help>Cuando se marca, indica que este registro se eliminó de la interfaz de usuario Asignación avanzada de importación de datos y se ignorará durante el procesamiento de Importación de datos de NPSP.</help>
+    <label>Está eliminado</label>
+  </fields>
+  <fields>
+    <name>Required__c</name>
+    <help>Indica si el campo del objeto Importación de datos de NPSP debe contener un valor. Cuando es obligatorio, Ejecución en seco fallará si ese campo no contiene un valor.</help>
+    <label>¿Obligatorio?</label>
+    <picklistValues>
+      <masterLabel>Yes</masterLabel>
+      <translation>Sí</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No</masterLabel>
+      <translation>No</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Source_Field_API_Name__c</name>
+    <help>El nombre de API del campo en el objeto Importación de datos de NPSP.</help>
+    <label>Nombre de API de campo de origen</label>
+  </fields>
+  <fields>
+    <name>Target_Field_API_Name__c</name>
+    <help>El nombre de API del campo en el objeto de destino.</help>
+    <label>Nombre de API de campo de destino</label>
+  </fields>
+  <fields>
+    <name>Target_Object_Mapping__c</name>
+    <help>El Grupos de objetos de importación de datos de destino para esta asignación de campos.</help>
+    <relationshipLabel>Asignaciones de campo importación datos</relationshipLabel>
+    <label>Asignación de objeto de destino</label>
+  </fields>
+  <layouts>
+    <layout>Data Import Field Mapping Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Asignación de campo de importación de datos</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Asignaciones de campos de importaciones de datos</value>
+  </caseValues>
 </CustomObjectTranslation>

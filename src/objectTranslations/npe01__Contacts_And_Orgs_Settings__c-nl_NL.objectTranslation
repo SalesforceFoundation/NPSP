@@ -1,78 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Enkel voor systeemgebruik: naamruimte voor functionaliteit over verschillende pakketten heen</help>
-        <label>GEM-naamruimte</label>
-        <name>Advancement_Namespace__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer aangevinkt, maakt NPSP automatisch een Campagnelidrecord wanneer u een Opportunity maakt die een Primaire Contactpersoon en een Primaire Campagnebron heeft, of wanneer u die Opportunity bijwerkt naar een Gesloten/Gewonnen fase.</help>
-        <label>Automatisch Beheer Campagneleden</label>
-        <name>Automatic_Campaign_Member_Management__c</name>
-    </fields>
-    <fields>
-        <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Open of Gesloten/Verloren Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Indien leeg, gebruikt NPSP de eerste Niet Gereageerd-status.</help>
-        <label>Campagnelid Niet Gereageerd-Status</label>
-        <name>Campaign_Member_Non_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Gesloten/Gewonnen Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Als u dit veld leeg laat, gebruikt NPSP de eerste Gereageerd-status.</help>
-        <label>Campagnelid Gereageerd-Status</label>
-        <name>Campaign_Member_Responded_Status__c</name>
-    </fields>
-    <fields>
-        <help>De standaard Contactpersoonrol die automatisch wordt toegewezen aan de Primaire Contactpersoon voor de Opportunities wanneer de Account van de Opportunity GEEN Huishouden- of One-to-One-Account of Individuele Account is.</help>
-        <label>Contactpersoonrol voor Organisatie-Opp.</label>
-        <name>Contact_Role_for_Organizational_Opps__c</name>
-    </fields>
-    <fields>
-        <help>Schakelt meerdere regels en automatiseringen op betalingen en opportunities in om te verzekeren dat accountinggegevens volledig en consistent zijn.</help>
-        <label>Consistentie Accountinggegev. afdwingen</label>
-        <name>Enforce_Accounting_Data_Consistency__c</name>
-    </fields>
-    <fields>
-        <help>Als u deze instelling invult, maakt NPSP automatisch een Contactpersoonrolrecord aan voor Opportunities met een Gehonoreerde Contactpersoon.</help>
-        <label>Gehonoreerde Opp.contactpersoonrol</label>
-        <name>Honoree_Opportunity_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer aangevinkt, wordt Adresbeheer voor Huishoudenaccounts uitgeschakeld.</help>
-        <label>Huishoudenaccountadressen uitgeschakeld.</label>
-        <name>Household_Account_Addresses_Disabled__c</name>
-    </fields>
-    <fields>
-        <help>Bepaalt het maximale aantal toegestane Betalingen wanneer Betalingen voor een Opportunity worden gepland.</help>
-        <label>Maximale Aantal Betalingen</label>
-        <name>Max_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Als u deze instelling invult, maakt NPSP automatisch een Contactpersoonrolrecord aan voor Opportunities met een Contactpersoon ontvanger van meldingen.</help>
-        <label>Notific. Ontvanger Opp.contactpersoonrol</label>
-        <name>Notification_Recipient_Opp_Contact_Role__c</name>
-    </fields>
-    <fields>
-        <help>NPSP maakt automatisch Betalingsrecords voor Opportunities van alle recordtypes. Selecteer hier alle recordtypes waarvoor u geen automatische Betalingsrecords wenst. Klik op Control of Command om meer dan één recordtype te selecteren.</help>
-        <label>Uitgesloten Opportunityrecordtypen</label>
-        <name>Opp_RecTypes_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>NPSP maakt automatisch Betalingsrecords voor Opportunities met een van de waarden in de Typekeuzelijst. Selecteer hier alle Types waarvoor u geen automatische Betalingsrecords wenst. Klik op Control of Command om meer dan één Type te selecteren.</help>
-        <label>Uitgesloten Opportunitytypen</label>
-        <name>Opp_Types_Excluded_for_Payments__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer ingeschakeld, wordt Adresbeheer voor niet-Huishouden-Accounts zoals Organisatieaccounts ingeschakeld.</help>
-        <label>Organisatieaccountadressen Ingeschakeld</label>
-        <name>Organizational_Account_Addresses_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>NPSP stelt de fase van een Opportunity automatisch in op deze waarde wanneer het Ontvangen Betalingsbedrag gelijk is aan het Opportunitybedrag. Als er geen fase is geselecteerd, verandert de Opportunityfase niet wanneer betalingen zijn voltooid.</help>
-        <label>Opp.fase voor Wanneer Volledig Betaald</label>
-        <name>Payments_Auto_Close_Stage_Name__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer ingeschakeld, werkt een wijziging van één Contactpersoonveld of Accountadresveld het bestaande Adres bij, in plaats van een nieuw Adres te maken.</help>
-        <label>Adreswijziging Gezien Als Update</label>
-        <name>Simple_Address_Change_Treated_as_Update__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Advancement_Namespace__c</name>
+    <help>Enkel voor systeemgebruik: naamruimte voor functionaliteit over verschillende pakketten heen</help>
+    <label>GEM-naamruimte</label>
+  </fields>
+  <fields>
+    <name>Automatic_Campaign_Member_Management__c</name>
+    <help>Wanneer aangevinkt, maakt NPSP automatisch een Campagnelidrecord wanneer u een Opportunity maakt die een Primaire Contactpersoon en een Primaire Campagnebron heeft, of wanneer u die Opportunity bijwerkt naar een Gesloten/Gewonnen fase.</help>
+    <label>Automatisch Beheer Campagneleden</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+    <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Open of Gesloten/Verloren Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Indien leeg, gebruikt NPSP de eerste Niet Gereageerd-status.</help>
+    <label>Campagnelid Niet Gereageerd-Status</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Responded_Status__c</name>
+    <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Gesloten/Gewonnen Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Als u dit veld leeg laat, gebruikt NPSP de eerste Gereageerd-status.</help>
+    <label>Campagnelid Gereageerd-Status</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+    <help>De standaard Contactpersoonrol die automatisch wordt toegewezen aan de Primaire Contactpersoon voor de Opportunities wanneer de Account van de Opportunity GEEN Huishouden- of One-to-One-Account of Individuele Account is.</help>
+    <label>Contactpersoonrol voor Organisatie-Opp.</label>
+  </fields>
+  <fields>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+    <help>Schakelt meerdere regels en automatiseringen op betalingen en opportunities in om te verzekeren dat accountinggegevens volledig en consistent zijn.</help>
+    <label>Consistentie Accountinggegev. afdwingen</label>
+  </fields>
+  <fields>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+    <help>Als u deze instelling invult, maakt NPSP automatisch een Contactpersoonrolrecord aan voor Opportunities met een Gehonoreerde Contactpersoon.</help>
+    <label>Gehonoreerde Opp.contactpersoonrol</label>
+  </fields>
+  <fields>
+    <name>Household_Account_Addresses_Disabled__c</name>
+    <help>Wanneer aangevinkt, wordt Adresbeheer voor Huishoudenaccounts uitgeschakeld.</help>
+    <label>Huishoudenaccountadressen uitgeschakeld.</label>
+  </fields>
+  <fields>
+    <name>Max_Payments__c</name>
+    <help>Bepaalt het maximale aantal toegestane Betalingen wanneer Betalingen voor een Opportunity worden gepland.</help>
+    <label>Maximale Aantal Betalingen</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
+    <help>Als u deze instelling invult, maakt NPSP automatisch een Contactpersoonrolrecord aan voor Opportunities met een Contactpersoon ontvanger van meldingen.</help>
+    <label>Notific. Ontvanger Opp.contactpersoonrol</label>
+  </fields>
+  <fields>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+    <help>NPSP maakt automatisch Betalingsrecords voor Opportunities van alle recordtypes. Selecteer hier alle recordtypes waarvoor u geen automatische Betalingsrecords wenst. Klik op Control of Command om meer dan één recordtype te selecteren.</help>
+    <label>Uitgesloten Opportunityrecordtypen</label>
+  </fields>
+  <fields>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+    <help>NPSP maakt automatisch Betalingsrecords voor Opportunities met een van de waarden in de Typekeuzelijst. Selecteer hier alle Types waarvoor u geen automatische Betalingsrecords wenst. Klik op Control of Command om meer dan één Type te selecteren.</help>
+    <label>Uitgesloten Opportunitytypen</label>
+  </fields>
+  <fields>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+    <help>Wanneer ingeschakeld, wordt Adresbeheer voor niet-Huishouden-Accounts zoals Organisatieaccounts ingeschakeld.</help>
+    <label>Organisatieaccountadressen Ingeschakeld</label>
+  </fields>
+  <fields>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+    <help>NPSP stelt de fase van een Opportunity automatisch in op deze waarde wanneer het Ontvangen Betalingsbedrag gelijk is aan het Opportunitybedrag. Als er geen fase is geselecteerd, verandert de Opportunityfase niet wanneer betalingen zijn voltooid.</help>
+    <label>Opp.fase voor Wanneer Volledig Betaald</label>
+  </fields>
+  <fields>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+    <help>Wanneer ingeschakeld, werkt een wijziging van één Contactpersoonveld of Accountadresveld het bestaande Adres bij, in plaats van een nieuw Adres te maken.</help>
+    <label>Adreswijziging Gezien Als Update</label>
+  </fields>
+</CustomObjectTranslation>

@@ -1,310 +1,303 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-
-  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
-  <fields>
-    <label>Ersetzt:Immer letzten Tag des Monats verwenden</label>
-    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-  </fields>
-  <fields>
-    <label>Ersetzt:Ratenbetrag</label>
-    <name>npe03__Installment_Amount__c</name>
-  </fields>
-  <fields>
-    <label>Ersetzt:Status &quot;Unbefristet&quot;</label>
-    <name>npe03__Open_Ended_Status__c</name>
-  </fields>
-  <fields>
-    <label>Ersetzt:Zeitplantyp</label>
-    <name>npe03__Schedule_Type__c</name>
-  </fields>
-  <fields>
-    <label>Ersetzt:Gesamt</label>
-    <name>npe03__Total__c</name>
-  </fields>
-  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
   <fields>
     <name>npe03__Amount__c</name>
-    <help>Der Betrag für jede Raten-Opportunity.</help>
-    <label>Betrag</label>
+    <help>[The amount for each installment Opportunity.]o'介引户הаí先ร简аน]</help>
+    <label>[Amount]o']</label>
   </fields>
   <fields>
     <name>npe03__Date_Established__c</name>
-    <help>Das Datum der ersten Erfassung dieser wiederkehrenden Spende. Standardwert ist der aktuelle Tag.</help>
-    <label>Erstelldatum</label>
+    <help>[The initial inception date for this recurring donation. The default is the current date.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Date Established]o'介引]</label>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%ClosedReason__c</name>
-    <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
-    <label>Grund für Status</label>
+    <help>[The reason this Recurring Donation has its current Status value.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Status Reason]o'介]</label>
     <picklistValues>
       <masterLabel>Card Expired</masterLabel>
-      <translation>Karte abgelaufen</translation>
+      <translation>[Card Expired]o'介引]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Commitment Completed</masterLabel>
-      <translation>Engagement abgeschlossen</translation>
+      <translation>[Commitment Completed]o'介引户ה]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Deceased Donor</masterLabel>
-      <translation>Spender verstorben</translation>
+      <translation>[Deceased Donor]o'介引]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Financial Difficulty</masterLabel>
-      <translation>Finanzielle Schwierigkeiten</translation>
+      <translation>[Financial Difficulty]o'介引户ה]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>No Longer Interested</masterLabel>
-      <translation>Kein Interesse mehr</translation>
+      <translation>[No Longer Interested]o'介引户ה]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Unknown</masterLabel>
-      <translation>Unbekannt</translation>
+      <translation>[Unknown]o']</translation>
     </picklistValues>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-    <help>Legt den bestimmten Tag im Monat für künftige Raten-Opportunities bei monatlicher Ratenhäufigkeit fest. Wenn Sie 29 oder 30 auswählen, wird das Ratendatum in Monaten mit weniger Tagen auf den letzten Tag des Monats festgelegt.</help>
-    <label>Tag des Monats</label>
+    <help>[Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don't have that many days.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωt]</help>
+    <label>[Day of Month]o'介引]</label>
     <picklistValues>
       <masterLabel>1</masterLabel>
-      <translation>1</translation>
+      <translation>[1]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>2</masterLabel>
-      <translation>2</translation>
+      <translation>[2]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>3</masterLabel>
-      <translation>3</translation>
+      <translation>[3]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>4</masterLabel>
-      <translation>4</translation>
+      <translation>[4]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>5</masterLabel>
-      <translation>5</translation>
+      <translation>[5]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>6</masterLabel>
-      <translation>6</translation>
+      <translation>[6]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>7</masterLabel>
-      <translation>7</translation>
+      <translation>[7]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>8</masterLabel>
-      <translation>8</translation>
+      <translation>[8]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>9</masterLabel>
-      <translation>9</translation>
+      <translation>[9]o]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>10</masterLabel>
-      <translation>10</translation>
+      <translation>[10]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>11</masterLabel>
-      <translation>11</translation>
+      <translation>[11]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>12</masterLabel>
-      <translation>12</translation>
+      <translation>[12]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>13</masterLabel>
-      <translation>13</translation>
+      <translation>[13]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>14</masterLabel>
-      <translation>14</translation>
+      <translation>[14]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>15</masterLabel>
-      <translation>15</translation>
+      <translation>[15]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>16</masterLabel>
-      <translation>16</translation>
+      <translation>[16]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>17</masterLabel>
-      <translation>17</translation>
+      <translation>[17]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>18</masterLabel>
-      <translation>18</translation>
+      <translation>[18]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>19</masterLabel>
-      <translation>19</translation>
+      <translation>[19]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>20</masterLabel>
-      <translation>20</translation>
+      <translation>[20]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>21</masterLabel>
-      <translation>21</translation>
+      <translation>[21]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>22</masterLabel>
-      <translation>22</translation>
+      <translation>[22]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>23</masterLabel>
-      <translation>23</translation>
+      <translation>[23]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>24</masterLabel>
-      <translation>24</translation>
+      <translation>[24]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>25</masterLabel>
-      <translation>25</translation>
+      <translation>[25]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>26</masterLabel>
-      <translation>26</translation>
+      <translation>[26]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>27</masterLabel>
-      <translation>27</translation>
+      <translation>[27]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>28</masterLabel>
-      <translation>28</translation>
+      <translation>[28]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>29</masterLabel>
-      <translation>29</translation>
+      <translation>[29]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>30</masterLabel>
-      <translation>30</translation>
+      <translation>[30]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Last Day Of Month</masterLabel>
-      <translation>Letzter Tag des Monats</translation>
+      <translation>[Last Day Of Month]o'介引户]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>31</masterLabel>
-      <translation>31</translation>
+      <translation>[31]o']</translation>
     </picklistValues>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%RecurringType__c</name>
-    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Offen&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Festgelegt&quot; aus. Bei &quot;Festgelegt&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
-    <label>Wiederholungstyp</label>
+    <help>[Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ]</help>
+    <label>[Recurring Type]o'介引]</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
-      <translation>Offen</translation>
+      <translation>[Open]o'介引]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Fixed</masterLabel>
-      <translation>Festgelegt</translation>
+      <translation>[Fixed]o'介引户]</translation>
     </picklistValues>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%StartDate__c</name>
-    <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
-    <label>Inkrafttreten</label>
+    <help>[The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <label>[Effective Date]o'介引]</label>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Status__c</name>
-    <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
-    <label>Status</label>
+    <help>[Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Status]o']</label>
     <picklistValues>
       <masterLabel>Active</masterLabel>
-      <translation>Aktiv</translation>
+      <translation>[Active]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Lapsed</masterLabel>
-      <translation>Erloschen</translation>
+      <translation>[Lapsed]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Closed</masterLabel>
-      <translation>Geschlossen</translation>
+      <translation>[Closed]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Paused</masterLabel>
-      <translation>Aufschub</translation>
+      <translation>[Paused]o']</translation>
     </picklistValues>
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
-    <label>Ratenlaufzeit</label>
+    <help>[The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Installment Period]o'介引户]</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
-      <translation>Monatlich</translation>
+      <translation>[Monthly]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Yearly</masterLabel>
-      <translation>Jährlich</translation>
+      <translation>[Yearly]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Weekly</masterLabel>
-      <translation>Wöchentlich</translation>
+      <translation>[Weekly]o']</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>1st and 15th</masterLabel>
-      <translation>1. und 15.</translation>
+      <translation>[1st and 15th]o'介引]</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Quarterly</masterLabel>
-      <translation>Vierteljährlich</translation>
+      <translation>[Quarterly]o'介]</translation>
     </picklistValues>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
-    <label>Häufigkeit der Ratenzahlung</label>
+    <help>[The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Installment Frequency]o'介引户ה]</label>
   </fields>
   <fields>
     <name>npe03__Last_Payment_Date__c</name>
-    <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als &quot;Bezahlt&quot; gekennzeichnet wurde (schreibgeschützt).</help>
-    <label>Letztes Spendendatum</label>
+    <help>[NPSP calculates this value automatically based on the last time an installment Opportunity was marked paid (read only).]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Last Donation Date]o'介引户]</label>
   </fields>
   <fields>
     <name>npe03__Paid_Amount__c</name>
-    <help>Der für diese Wiederkehrende Spende bezahlte Gesamtbetrag. Berechnung automatisch als Gesamtbetrag aller Geschlossenen/gewonnenen Raten-Opportunities (schreibgeschützt).</help>
-    <label>Bezahlter Gesamtbetrag</label>
+    <help>[The total amount paid on this Recurring Donation. Calculated automatically as the total amount of all Closed/Won installment Opportunities (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <label>[Total Paid Amount]o'介引户]</label>
   </fields>
   <fields>
     <name>npe03__Total_Paid_Installments__c</name>
-    <help>Gesamtzahl der für diese Wiederkehrende Spende gezahlten Raten-Opportunities (schreibgeschützt).</help>
-    <label>Summe der bezahlten Raten</label>
+    <help>[Total number of installment Opportunities paid on this Recurring Donation (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Number Of Paid Installments]o'介引户הаí]</label>
   </fields>
   <fields>
     <name>npe03__Next_Payment_Date__c</name>
-    <help>Wird automatisch anhand des aktiven Zeitplans/der aktiven Zeitpläne für wiederkehrende Spenden berechnet. Schreibgeschützt.</help>
-    <label>Nächstes Spendendatum</label>
+    <help>[Calculated automatically using the active Recurring Schedule(s). Read only.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Next Donation Date]o'介引户]</label>
   </fields>
   <layouts>
     <layout>Enhanced Recurring Donations Layout</layout>
     <sections>
-      <label>Spenderinformationen</label>
+      <label>[Donor Information]o'介引户]</label>
       <section>Donor Information</section>
     </sections>
     <sections>
-      <label>Spendeninformationen</label>
+      <label>[Donation Information]o'介引户ה]</label>
       <section>Donation Information</section>
     </sections>
     <sections>
-      <label>Weitere Informationen</label>
+      <label>[Other Information]o'介引户]</label>
       <section>Other Information</section>
     </sections>
     <sections>
-      <label>Statistik</label>
+      <label>[Statistics]o'介引]</label>
       <section>Statistics</section>
     </sections>
     <sections>
-      <label>Benutzerdefinierte Links</label>
+      <label>[Custom Links]o'介引]</label>
       <section>Custom Links</section>
     </sections>
   </layouts>
-  </CustomObjectTranslation>
+  <nameFieldLabel>[Recurring Donation Name]o'介引户ה]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Recurring Donation Name]o'介引户ה]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Recurring Donation]gr''介引户]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Recurring Donations]gr''介引户]</value>
+  </caseValues>
+</CustomObjectTranslation>

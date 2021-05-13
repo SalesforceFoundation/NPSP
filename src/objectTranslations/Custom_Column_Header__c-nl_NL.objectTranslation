@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Aangepaste kolomkop</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Aangepaste kolomkop</value>
-    </caseValues>
-    <fields>
-        <help>De API-naam van het veld dat wordt weergegeven in de lijstweergave.</help>
-        <label>Veld-API-naam</label>
-        <name>Field_Api_Name__c</name>
-    </fields>
-    <fields>
-        <help>De positie van het veld in de lijstweergave.</help>
-        <label>Index</label>
-        <name>Index__c</name>
-    </fields>
-    <fields>
-        <help>De lijstweergave (bijvoorbeeld Batches of Sjablonen) die dit veld weergeeft.</help>
-        <label>Lijstnaam</label>
-        <name>List_Name__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Field_Api_Name__c</name>
+    <help>De API-naam van het veld dat wordt weergegeven in de lijstweergave.</help>
+    <label>Veld-API-naam</label>
+  </fields>
+  <fields>
+    <name>Index__c</name>
+    <help>De positie van het veld in de lijstweergave.</help>
+    <label>Index</label>
+  </fields>
+  <fields>
+    <name>List_Name__c</name>
+    <help>De lijstweergave (bijvoorbeeld Batches of Sjablonen) die dit veld weergeeft.</help>
+    <label>Lijstnaam</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Aangepaste kolomkop</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Aangepaste kolomkop</value>
+  </caseValues>
 </CustomObjectTranslation>

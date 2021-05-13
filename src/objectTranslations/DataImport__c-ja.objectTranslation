@@ -1,778 +1,846 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP データインポート</value>
-    </caseValues>
-    <fields>
-        <help>支援者が同意した Elevate Giving Page 同意メッセージ。</help>
-        <label>支払 ACH 同意メッセージ</label>
-        <name>ACH_Consent__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(取引先1)</label>
-        <name>Account1ImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(取引先1)</label>
-        <name>Account1Imported__c</name>
-        <relationshipLabel>NPSP データインポート (取引先1 インポート済み)</relationshipLabel>
-    </fields>
-    <fields>
-        <label>市区郡(取引先1)</label>
-        <name>Account1_City__c</name>
-    </fields>
-    <fields>
-        <label>国(取引先1)</label>
-        <name>Account1_Country__c</name>
-    </fields>
-    <fields>
-        <label>名前(取引先1)</label>
-        <name>Account1_Name__c</name>
-    </fields>
-    <fields>
-        <label>電話(取引先1)</label>
-        <name>Account1_Phone__c</name>
-    </fields>
-    <fields>
-        <label>都道府県(取引先1)</label>
-        <name>Account1_State_Province__c</name>
-    </fields>
-    <fields>
-        <label>町名・番地(取引先1)</label>
-        <name>Account1_Street__c</name>
-    </fields>
-    <fields>
-        <label>Web サイト(取引先1)</label>
-        <name>Account1_Website__c</name>
-    </fields>
-    <fields>
-        <label>郵便番号(取引先1)</label>
-        <name>Account1_Zip_Postal_Code__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(取引先2)</label>
-        <name>Account2ImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(取引先2)</label>
-        <name>Account2Imported__c</name>
-        <relationshipLabel>NPSP データインポート (取引先2 インポート済み)</relationshipLabel>
-    </fields>
-    <fields>
-        <label>市区郡(取引先2)</label>
-        <name>Account2_City__c</name>
-    </fields>
-    <fields>
-        <label>国(取引先2)</label>
-        <name>Account2_Country__c</name>
-    </fields>
-    <fields>
-        <label>名前(取引先2)</label>
-        <name>Account2_Name__c</name>
-    </fields>
-    <fields>
-        <label>電話(取引先2)</label>
-        <name>Account2_Phone__c</name>
-    </fields>
-    <fields>
-        <label>都道府県(取引先2)</label>
-        <name>Account2_State_Province__c</name>
-    </fields>
-    <fields>
-        <label>町名・番地(取引先2)</label>
-        <name>Account2_Street__c</name>
-    </fields>
-    <fields>
-        <label>Web サイト(取引先2)</label>
-        <name>Account2_Website__c</name>
-    </fields>
-    <fields>
-        <label>郵便番号(取引先2)</label>
-        <name>Account2_Zip_Postal_Code__c</name>
-    </fields>
-    <fields>
-        <help>この項目により、1 つのデータインポートレコードから動的な数のオブジェクトの動的な数のレコードを作成できます。追加オブジェクト情報は JSON 形式でここに保存されます。</help>
-        <label>追加オブジェクトの JSON</label>
-        <name>Additional_Object_JSON__c</name>
-    </fields>
-    <fields>
-        <help>レコードを処理した一括処理ジョブの ApexJobID。</help>
-        <label>ApexJobId</label>
-        <name>ApexJobId__c</name>
-    </fields>
-    <fields>
-        <label>キャンペーンメンバーの状況</label>
-        <name>Campaign_Member_Status__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(取引先責任者1)</label>
-        <name>Contact1ImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(取引先責任者1)</label>
-        <name>Contact1Imported__c</name>
-        <relationshipLabel>NPSP データインポート (Contact1 インポート済み)</relationshipLabel>
-    </fields>
-    <fields>
-        <label>その他のメール(取引先責任者1)</label>
-        <name>Contact1_Alternate_Email__c</name>
-    </fields>
-    <fields>
-        <label>誕生日(取引先責任者1)</label>
-        <name>Contact1_Birthdate__c</name>
-    </fields>
-    <fields>
-        <help>何に取引先責任者がオプトインしたかについての詳細を提供します。</help>
-        <label>同意メッセージ (取引先責任者1)</label>
-        <name>Contact1_Consent_Message__c</name>
-    </fields>
-    <fields>
-        <help>取引先責任者がオプトインに同意したかどうかを決定します。</help>
-        <label>同意オプトイン (取引先責任者1)</label>
-        <name>Contact1_Consent_Opt_In__c</name>
-    </fields>
-    <fields>
-        <label>名(取引先責任者1)</label>
-        <name>Contact1_Firstname__c</name>
-    </fields>
-    <fields>
-        <label>自宅電話(取引先責任者1)</label>
-        <name>Contact1_Home_Phone__c</name>
-    </fields>
-    <fields>
-        <label>姓(取引先責任者1)</label>
-        <name>Contact1_Lastname__c</name>
-    </fields>
-    <fields>
-        <label>携帯電話(取引先責任者1)</label>
-        <name>Contact1_Mobile_Phone__c</name>
-    </fields>
-    <fields>
-        <label>その他の電話(取引先責任者1)</label>
-        <name>Contact1_Other_Phone__c</name>
-    </fields>
-    <fields>
-        <label>個人メール(取引先責任者1)</label>
-        <name>Contact1_Personal_Email__c</name>
-    </fields>
-    <fields>
-        <label>メール連絡先(取引先責任者1)</label>
-        <name>Contact1_Preferred_Email__c</name>
-        <picklistValues>
-            <masterLabel>Alternate</masterLabel>
-            <translation>その他</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Personal</masterLabel>
-            <translation>取引先責任者</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Work</masterLabel>
-            <translation>勤務先</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>電話連絡先(取引先責任者1)</label>
-        <name>Contact1_Preferred_Phone__c</name>
-        <picklistValues>
-            <masterLabel>Home</masterLabel>
-            <translation>自宅</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Mobile</masterLabel>
-            <translation>携帯</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>その他</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Work</masterLabel>
-            <translation>勤務先</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>敬称(取引先責任者1)</label>
-        <name>Contact1_Salutation__c</name>
-    </fields>
-    <fields>
-        <label>役職(取引先責任者1)</label>
-        <name>Contact1_Title__c</name>
-    </fields>
-    <fields>
-        <label>勤務先メール(取引先責任者1)</label>
-        <name>Contact1_Work_Email__c</name>
-    </fields>
-    <fields>
-        <label>勤務先電話(取引先責任者1)</label>
-        <name>Contact1_Work_Phone__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(取引先責任者2)</label>
-        <name>Contact2ImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(取引先責任者2)</label>
-        <name>Contact2Imported__c</name>
-        <relationshipLabel>NPSP データインポート (Contact2 インポート済み)</relationshipLabel>
-    </fields>
-    <fields>
-        <label>その他のメール(取引先責任者2)</label>
-        <name>Contact2_Alternate_Email__c</name>
-    </fields>
-    <fields>
-        <label>誕生日(取引先責任者2)</label>
-        <name>Contact2_Birthdate__c</name>
-    </fields>
-    <fields>
-        <label>名(取引先責任者2)</label>
-        <name>Contact2_Firstname__c</name>
-    </fields>
-    <fields>
-        <label>自宅電話(取引先責任者2)</label>
-        <name>Contact2_Home_Phone__c</name>
-    </fields>
-    <fields>
-        <label>姓(取引先責任者2)</label>
-        <name>Contact2_Lastname__c</name>
-    </fields>
-    <fields>
-        <label>携帯電話(取引先責任者2)</label>
-        <name>Contact2_Mobile_Phone__c</name>
-    </fields>
-    <fields>
-        <label>その他の電話(取引先責任者2)</label>
-        <name>Contact2_Other_Phone__c</name>
-    </fields>
-    <fields>
-        <label>個人メール(取引先責任者2)</label>
-        <name>Contact2_Personal_Email__c</name>
-    </fields>
-    <fields>
-        <label>メール連絡先(取引先責任者2)</label>
-        <name>Contact2_Preferred_Email__c</name>
-        <picklistValues>
-            <masterLabel>Alternate</masterLabel>
-            <translation>その他</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Personal</masterLabel>
-            <translation>取引先責任者</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Work</masterLabel>
-            <translation>勤務先</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>電話連絡先(取引先責任者2)</label>
-        <name>Contact2_Preferred_Phone__c</name>
-        <picklistValues>
-            <masterLabel>Home</masterLabel>
-            <translation>自宅</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Mobile</masterLabel>
-            <translation>携帯</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>その他</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Work</masterLabel>
-            <translation>勤務先</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <label>敬称(取引先責任者2)</label>
-        <name>Contact2_Salutation__c</name>
-    </fields>
-    <fields>
-        <label>役職(取引先責任者2)</label>
-        <name>Contact2_Title__c</name>
-    </fields>
-    <fields>
-        <label>勤務先メール(取引先責任者2)</label>
-        <name>Contact2_Work_Email__c</name>
-    </fields>
-    <fields>
-        <label>勤務先電話(取引先責任者2)</label>
-        <name>Contact2_Work_Phone__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(支援キャンペーン)</label>
-        <name>DonationCampaignImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>支援キャンペーンソース</label>
-        <name>DonationCampaignImported__c</name>
-        <relationshipLabel>NPSP データインポート</relationshipLabel>
-    </fields>
-    <fields>
-        <label>インポート状況(支援)</label>
-        <name>DonationImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(支援)</label>
-        <name>DonationImported__c</name>
-        <relationshipLabel>NPSP データインポート (Opportunity1 インポート済み)</relationshipLabel>
-    </fields>
-    <fields>
-        <label>金額(支援)</label>
-        <name>Donation_Amount__c</name>
-    </fields>
-    <fields>
-        <label>キャンペーン名</label>
-        <name>Donation_Campaign_Name__c</name>
-    </fields>
-    <fields>
-        <label>日付(支援)</label>
-        <name>Donation_Date__c</name>
-    </fields>
-    <fields>
-        <label>説明(支援)</label>
-        <name>Donation_Description__c</name>
-    </fields>
-    <fields>
-        <help>支援が「取引先責任者1」からの個人支援であるか、「取引先1」からの団体支援であるかを指定します。</help>
-        <label>支援者(支援)</label>
-        <name>Donation_Donor__c</name>
-        <picklistValues>
-            <masterLabel>Account1</masterLabel>
-            <translation>取引先 1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Contact1</masterLabel>
-            <translation>取引先責任者 1</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>この支援商談のリンク先である、Elevate 内の継続支援の一意の外部 ID。</help>
-        <label>Elevate 継続 ID (支援)</label>
-        <name>Donation_Elevate_Recurring_ID__c</name>
-    </fields>
-    <fields>
-        <label>会員レベル(支援)</label>
-        <name>Donation_Member_Level__c</name>
-    </fields>
-    <fields>
-        <label>会員期限(支援)</label>
-        <name>Donation_Membership_End_Date__c</name>
-    </fields>
-    <fields>
-        <label>会員状況(支援)</label>
-        <name>Donation_Membership_Origin__c</name>
-    </fields>
-    <fields>
-        <label>会員開始日(支援)</label>
-        <name>Donation_Membership_Start_Date__c</name>
-    </fields>
-    <fields>
-        <label>名前(支援)</label>
-        <name>Donation_Name__c</name>
-    </fields>
-    <fields>
-        <help>商談にマッチングする潜在的な商談上位 10 件の ID のコンマ区切りリスト。</help>
-        <label>支援見込みマッチ</label>
-        <name>Donation_Possible_Matches__c</name>
-    </fields>
-    <fields>
-        <label>レコードタイプ名(支援)</label>
-        <name>Donation_Record_Type_Name__c</name>
-    </fields>
-    <fields>
-        <label>フェーズ(支援)</label>
-        <name>Donation_Stage__c</name>
-    </fields>
-    <fields>
-        <label>種類(支援)</label>
-        <name>Donation_Type__c</name>
-    </fields>
-    <fields>
-        <help>JSON として保存されている Elevate Giving Pages からのカスタムメタデータ。</help>
-        <label>Elevate カスタムメタデータ</label>
-        <name>Elevate_Custom_Metadata__c</name>
-    </fields>
-    <fields>
-        <help>データインポートレコードのインポートに失敗した理由の説明。</help>
-        <label>失敗情報</label>
-        <name>FailureInformation__c</name>
-    </fields>
-    <fields>
-        <help>商談の最初の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
-        <label>一般会計単位の割り当て 1: 金額</label>
-        <name>GAU_Allocation_1_Amount__c</name>
-    </fields>
-    <fields>
-        <help>最初の割り当てで使用される一般会計単位の Salesforce ID。</help>
-        <label>一般会計単位の割り当て 1: 一般会計単位</label>
-        <name>GAU_Allocation_1_GAU__c</name>
-        <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>最初の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
-        <label>一般会計単位の割り当て 1: インポート状況</label>
-        <name>GAU_Allocation_1_Import_Status__c</name>
-    </fields>
-    <fields>
-        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
-        <label>一般会計単位の割り当て 1: インポート済み</label>
-        <name>GAU_Allocation_1_Imported__c</name>
-        <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>商談の最初の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
-        <label>一般会計単位の割り当て 1: パーセント</label>
-        <name>GAU_Allocation_1_Percent__c</name>
-    </fields>
-    <fields>
-        <help>商談の 2 番目の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
-        <label>一般会計単位の割り当て 2: 金額</label>
-        <name>GAU_Allocation_2_Amount__c</name>
-    </fields>
-    <fields>
-        <help>2 番目の割り当てで使用される一般会計単位の Salesforce ID。</help>
-        <label>一般会計単位の割り当て 2: 一般会計単位</label>
-        <name>GAU_Allocation_2_GAU__c</name>
-        <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>2 番目の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
-        <label>一般会計単位の割り当て 2: インポート状況</label>
-        <name>GAU_Allocation_2_Import_Status__c</name>
-    </fields>
-    <fields>
-        <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
-        <label>一般会計単位の割り当て 2: インポート済み</label>
-        <name>GAU_Allocation_2_Imported__c</name>
-        <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>商談の 2 番目の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
-        <label>一般会計単位の割り当て 2: パーセント</label>
-        <name>GAU_Allocation_2_Percent__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(自宅住所)</label>
-        <name>HomeAddressImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(自宅住所)</label>
-        <name>HomeAddressImported__c</name>
-        <relationshipLabel>NPSP データインポート</relationshipLabel>
-    </fields>
-    <fields>
-        <label>市町村(自宅)</label>
-        <name>Home_City__c</name>
-    </fields>
-    <fields>
-        <label>国(自宅)</label>
-        <name>Home_Country__c</name>
-    </fields>
-    <fields>
-        <label>都道府県(ホーム)</label>
-        <name>Home_State_Province__c</name>
-    </fields>
-    <fields>
-        <label>番地(自宅)</label>
-        <name>Home_Street__c</name>
-    </fields>
-    <fields>
-        <label>郵便番号(自宅)</label>
-        <name>Home_Zip_Postal_Code__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(世帯取引先)</label>
-        <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP データインポート</relationshipLabel>
-    </fields>
-    <fields>
-        <label>世帯電話</label>
-        <name>Household_Phone__c</name>
-    </fields>
-    <fields>
-        <help>データインポートレコードが正常にインポートされた日付。</help>
-        <label>インポート日</label>
-        <name>ImportedDate__c</name>
-    </fields>
-    <fields>
-        <help>このレコードを含む NPSP データインポートバッチに対する参照。</help>
-        <label>NPSP データインポートバッチ</label>
-        <name>NPSP_Data_Import_Batch__c</name>
-        <relationshipLabel>NPSP データインポート</relationshipLabel>
-    </fields>
-    <fields>
-        <help>最初の商談取引先責任者の役割の挿入の試行に基づく状況。</help>
-        <label>商談取引先責任者の役割 1: ImportStatus</label>
-        <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
-    </fields>
-    <fields>
-        <help>インポートされた商談取引先責任者の役割の Salesforce ID</help>
-        <label>商談取引先責任者の役割 1: 挿入済み</label>
-        <name>Opportunity_Contact_Role_1_Imported__c</name>
-    </fields>
-    <fields>
-        <help>商談取引先責任者の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの商談取引先責任者の役割を作成します。</help>
-        <label>商談取引先責任者の役割 1: 役割</label>
-        <name>Opportunity_Contact_Role_1_Role__c</name>
-    </fields>
-    <fields>
-        <help>2 番目の商談取引先責任者の役割の挿入の試行に基づく状況。</help>
-        <label>商談取引先責任者の役割 2: ImportStatus</label>
-        <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
-    </fields>
-    <fields>
-        <help>インポートされた商談取引先責任者の役割の Salesforce ID</help>
-        <label>商談取引先責任者の役割 2: 挿入済み</label>
-        <name>Opportunity_Contact_Role_2_Imported__c</name>
-    </fields>
-    <fields>
-        <help>商談取引先責任者の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの商談取引先責任者の役割を作成します。</help>
-        <label>商談取引先責任者の役割 2: 役割</label>
-        <name>Opportunity_Contact_Role_2_Role__c</name>
-    </fields>
-    <fields>
-        <label>インポート状況(支払)</label>
-        <name>PaymentImportStatus__c</name>
-    </fields>
-    <fields>
-        <label>インポート済み(支払)</label>
-        <name>PaymentImported__c</name>
-        <relationshipLabel>NPSP データインポート</relationshipLabel>
-    </fields>
-    <fields>
-        <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
-        <label>支払 ACH コード</label>
-        <name>Payment_ACH_Code__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
-        <label>支払 ACH の最後の 4 桁</label>
-        <name>Payment_ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションの承認トークン。</help>
-        <label>支払承認トークン</label>
-        <name>Payment_Authorization_Token__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが承認された日時。</help>
-        <label>支払承認日</label>
-        <name>Payment_Authorized_Date__c</name>
-    </fields>
-    <fields>
-        <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
-        <label>支払承認 UTC タイムスタンプ</label>
-        <name>Payment_Authorized_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
-        <label>支払カードの有効期限 (月)</label>
-        <name>Payment_Card_Expiration_Month__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの有効期限 (年)。</help>
-        <label>支払カードの有効期限 (年)</label>
-        <name>Payment_Card_Expiration_Year__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードの最後の 4 桁。</help>
-        <label>支払カードの最後の 4 桁</label>
-        <name>Payment_Card_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションで使用されたカードのカードネットワーク。</help>
-        <label>支払カードネットワーク</label>
-        <name>Payment_Card_Network__c</name>
-    </fields>
-    <fields>
-        <label>支払確認/参照番号</label>
-        <name>Payment_Check_Reference_Number__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが却下された理由に関する詳細を提供します。</help>
-        <label>支払 Elevate API 却下理由</label>
-        <name>Payment_Declined_Reason__c</name>
-    </fields>
-    <fields>
-        <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
-        <label>支払支援者補償金額</label>
-        <name>Payment_Donor_Cover_Amount__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが作成された日時。</help>
-        <label>支払 Elevate 作成日</label>
-        <name>Payment_Elevate_Created_Date__c</name>
-    </fields>
-    <fields>
-        <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
-        <label>支払 Elevate 作成 UTC タイムスタンプ</label>
-        <name>Payment_Elevate_Created_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>Elevate から取得した、このトランザクションの一意の ID。</help>
-        <label>支払 Elevate ID</label>
-        <name>Payment_Elevate_ID__c</name>
-    </fields>
-    <fields>
-        <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
-        <label>支払 Elevate の元の支払 ID</label>
-        <name>Payment_Elevate_Original_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
-        <label>支払ゲートウェイ ID</label>
-        <name>Payment_Gateway_ID__c</name>
-    </fields>
-    <fields>
-        <help>支払ゲートウェイから取得した、このトランザクションの一意の ID。</help>
-        <label>支払ゲートウェイ支払 ID</label>
-        <name>Payment_Gateway_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <label>支払方法</label>
-        <name>Payment_Method__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが開始されたシステムの ID。</help>
-        <label>支払発生源 ID</label>
-        <name>Payment_Origin_ID__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションが開始されたシステムの名前。</help>
-        <label>支払発生源名</label>
-        <name>Payment_Origin_Name__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
-        <label>支払発生源種別</label>
-        <name>Payment_Origin_Type__c</name>
-    </fields>
-    <fields>
-        <help>支払が支払済かどうかを示します。</help>
-        <label>支払済</label>
-        <name>Payment_Paid__c</name>
-        <picklistValues>
-            <masterLabel>False</masterLabel>
-            <translation>False</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>True</masterLabel>
-            <translation>True</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>支援にマッチングする潜在的な支払上位 10 件の ID のコンマ区切りリスト。</help>
-        <label>支払見込みマッチ</label>
-        <name>Payment_Possible_Matches__c</name>
-    </fields>
-    <fields>
-        <help>Elevate から取得した、トランザクションの API 状況。</help>
-        <label>支払 Elevate API 状況</label>
-        <name>Payment_Status__c</name>
-    </fields>
-    <fields>
-        <help>トランザクションの種別を示します。</help>
-        <label>支払種別</label>
-        <name>Payment_Type__c</name>
-    </fields>
-    <fields>
-        <help>データインポートレコードのインポート状況。</help>
-        <label>状況</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Dry Run - Error</masterLabel>
-            <translation>Dry Run - エラー</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Dry Run - Validated</masterLabel>
-            <translation>Dry Run - 検証済み</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Failed</masterLabel>
-            <translation>失敗</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Imported</masterLabel>
-            <translation>インポート済み</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Ready to Process</masterLabel>
-            <translation>処理可能</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Data Import Layout</layout>
-        <sections>
-            <label>団体情報(取引先1)</label>
-            <section>Account1 Organization Information</section>
-        </sections>
-        <sections>
-            <label>団体情報(取引先2)</label>
-            <section>Account2 Organization Information</section>
-        </sections>
-        <sections>
-            <label>キャンペーン情報</label>
-            <section>Campaign Information</section>
-        </sections>
-        <sections>
-            <label>取引先責任者１情報</label>
-            <section>Contact1 Information</section>
-        </sections>
-        <sections>
-            <label>取引先責任者２情報</label>
-            <section>Contact2 Information</section>
-        </sections>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>一般会計単位の割り当て 1 の情報</label>
-            <section>GAU Allocation 1 Information</section>
-        </sections>
-        <sections>
-            <label>一般会計単位の割り当て 2 の情報</label>
-            <section>GAU Allocation 2 Information</section>
-        </sections>
-        <sections>
-            <label>自宅住所</label>
-            <section>Home Address</section>
-        </sections>
-        <sections>
-            <label>世帯取引先情報</label>
-            <section>Household Account Information</section>
-        </sections>
-        <sections>
-            <label>商談取引先責任者の役割 1 の情報</label>
-            <section>Opportunity Contact Role 1 Information</section>
-        </sections>
-        <sections>
-            <label>商談取引先責任者の役割 2 の情報</label>
-            <section>Opportunity Contact Role 2 Information</section>
-        </sections>
-        <sections>
-            <label>商談情報</label>
-            <section>Opportunity Information</section>
-        </sections>
-        <sections>
-            <label>お支払い情報</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>データインポート ID</nameFieldLabel>
-    <webLinks>
-        <label>すべてのデータインポートレコードを削除</label>
-        <name>Delete_All_Data_Import_Records</name>
-    </webLinks>
-    <webLinks>
-        <label>インポート済みのデータインポートレコードを削除</label>
-        <name>Delete_Imported_Data_Import_Records</name>
-    </webLinks>
-    <webLinks>
-        <label>データインポートの開始</label>
-        <name>Process_Data_Import</name>
-    </webLinks>
+  <fields>
+    <name>ACH_Consent__c</name>
+    <help>支援者が同意した Elevate Giving Page 同意メッセージ。</help>
+    <label>支払 ACH 同意メッセージ</label>
+  </fields>
+  <fields>
+    <name>Account1ImportStatus__c</name>
+    <label>インポート状況(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1Imported__c</name>
+    <relationshipLabel>NPSP データインポート (取引先1 インポート済み)</relationshipLabel>
+    <label>インポート済み(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_City__c</name>
+    <help>Account1.BillingCity</help>
+    <label>市区郡(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Country__c</name>
+    <help>Account1.BillingCountry</help>
+    <label>国(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Name__c</name>
+    <help>Account1.Name</help>
+    <label>名前(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Phone__c</name>
+    <help>Account1.Phone</help>
+    <label>電話(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_State_Province__c</name>
+    <help>Account1.BillingState</help>
+    <label>都道府県(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Street__c</name>
+    <help>Account1.BillingStreet</help>
+    <label>町名・番地(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Website__c</name>
+    <help>Account1.Website</help>
+    <label>Web サイト(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account1_Zip_Postal_Code__c</name>
+    <help>Account1.BillingPostalCode</help>
+    <label>郵便番号(取引先1)</label>
+  </fields>
+  <fields>
+    <name>Account2ImportStatus__c</name>
+    <label>インポート状況(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2Imported__c</name>
+    <relationshipLabel>NPSP データインポート (取引先2 インポート済み)</relationshipLabel>
+    <label>インポート済み(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_City__c</name>
+    <help>Account2.BillingCity</help>
+    <label>市区郡(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Country__c</name>
+    <help>Account2.BillingCountry</help>
+    <label>国(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Name__c</name>
+    <help>Account2.Name</help>
+    <label>名前(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Phone__c</name>
+    <help>Account2.Phone</help>
+    <label>電話(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_State_Province__c</name>
+    <help>Account2.BillingState</help>
+    <label>都道府県(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Street__c</name>
+    <help>Account2.BillingStreet</help>
+    <label>町名・番地(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Website__c</name>
+    <help>Account2.Website</help>
+    <label>Web サイト(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Account2_Zip_Postal_Code__c</name>
+    <help>Account2.BillingPostalCode</help>
+    <label>郵便番号(取引先2)</label>
+  </fields>
+  <fields>
+    <name>Additional_Object_JSON__c</name>
+    <help>この項目により、1 つのデータインポートレコードから動的な数のオブジェクトの動的な数のレコードを作成できます。追加オブジェクト情報は JSON 形式でここに保存されます。</help>
+    <label>追加オブジェクトの JSON</label>
+  </fields>
+  <fields>
+    <name>ApexJobId__c</name>
+    <help>レコードを処理した一括処理ジョブの ApexJobID。</help>
+    <label>ApexJobId</label>
+  </fields>
+  <fields>
+    <name>Campaign_Member_Status__c</name>
+    <label>キャンペーンメンバーの状況</label>
+  </fields>
+  <fields>
+    <name>Contact1ImportStatus__c</name>
+    <label>インポート状況(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1Imported__c</name>
+    <relationshipLabel>NPSP データインポート (Contact1 インポート済み)</relationshipLabel>
+    <label>インポート済み(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Alternate_Email__c</name>
+    <help>Contact1.npe01__AlternateEmail__c</help>
+    <label>その他のメール(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Birthdate__c</name>
+    <help>Contact1.Birthdate</help>
+    <label>誕生日(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Consent_Message__c</name>
+    <help>何に取引先責任者がオプトインしたかについての詳細を提供します。</help>
+    <label>同意メッセージ (取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Consent_Opt_In__c</name>
+    <help>取引先責任者がオプトインに同意したかどうかを決定します。</help>
+    <label>同意オプトイン (取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Firstname__c</name>
+    <help>Contact1.Firstname</help>
+    <label>名(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Home_Phone__c</name>
+    <help>Contact1.HomePhone</help>
+    <label>自宅電話(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Lastname__c</name>
+    <help>Contact1.Lastname</help>
+    <label>姓(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Mobile_Phone__c</name>
+    <help>Contact1.MobilePhone</help>
+    <label>携帯電話(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Other_Phone__c</name>
+    <help>Contact1.OtherPhone</help>
+    <label>その他の電話(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Personal_Email__c</name>
+    <help>Contact1.npe01__HomeEmail__c</help>
+    <label>個人メール(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Preferred_Email__c</name>
+    <help>Contact1.npe01__Preferred_Email__c</help>
+    <label>メール連絡先(取引先責任者1)</label>
+    <picklistValues>
+      <masterLabel>Personal</masterLabel>
+      <translation>取引先責任者</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Work</masterLabel>
+      <translation>勤務先</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Alternate</masterLabel>
+      <translation>その他</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Contact1_Preferred_Phone__c</name>
+    <help>Contact1.npe01__PreferredPhone__c</help>
+    <label>電話連絡先(取引先責任者1)</label>
+    <picklistValues>
+      <masterLabel>Home</masterLabel>
+      <translation>自宅</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Work</masterLabel>
+      <translation>勤務先</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Mobile</masterLabel>
+      <translation>携帯</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>その他</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Contact1_Salutation__c</name>
+    <help>Contact1.Salutation</help>
+    <label>敬称(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Title__c</name>
+    <help>Contact1.Title</help>
+    <label>役職(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Work_Email__c</name>
+    <help>Contact1.npe01__WorkEmail__c</help>
+    <label>勤務先メール(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact1_Work_Phone__c</name>
+    <help>Contact1.npe01__WorkPhone__c</help>
+    <label>勤務先電話(取引先責任者1)</label>
+  </fields>
+  <fields>
+    <name>Contact2ImportStatus__c</name>
+    <label>インポート状況(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2Imported__c</name>
+    <relationshipLabel>NPSP データインポート (Contact2 インポート済み)</relationshipLabel>
+    <label>インポート済み(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Alternate_Email__c</name>
+    <help>Contact2.npe01__AlternateEmail__c</help>
+    <label>その他のメール(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Birthdate__c</name>
+    <help>Contact2.Birthdate</help>
+    <label>誕生日(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Firstname__c</name>
+    <help>Contact2.Firstname</help>
+    <label>名(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Home_Phone__c</name>
+    <help>Contact2.HomePhone</help>
+    <label>自宅電話(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Lastname__c</name>
+    <help>Contact2.Lastname</help>
+    <label>姓(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Mobile_Phone__c</name>
+    <help>Contact2.MobilePhone</help>
+    <label>携帯電話(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Other_Phone__c</name>
+    <help>Contact2.OtherPhone</help>
+    <label>その他の電話(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Personal_Email__c</name>
+    <help>Contact2.npe01__HomeEmail__c</help>
+    <label>個人メール(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Preferred_Email__c</name>
+    <help>Contact2.npe01__Preferred_Email__c</help>
+    <label>メール連絡先(取引先責任者2)</label>
+    <picklistValues>
+      <masterLabel>Personal</masterLabel>
+      <translation>取引先責任者</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Work</masterLabel>
+      <translation>勤務先</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Alternate</masterLabel>
+      <translation>その他</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Contact2_Preferred_Phone__c</name>
+    <help>Contact2.npe01__PreferredPhone__c</help>
+    <label>電話連絡先(取引先責任者2)</label>
+    <picklistValues>
+      <masterLabel>Home</masterLabel>
+      <translation>自宅</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Work</masterLabel>
+      <translation>勤務先</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Mobile</masterLabel>
+      <translation>携帯</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>その他</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Contact2_Salutation__c</name>
+    <help>Contact2.Salutation</help>
+    <label>敬称(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Title__c</name>
+    <help>Contact2.Title</help>
+    <label>役職(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Work_Email__c</name>
+    <help>Contact2.npe01__WorkEmail__c</help>
+    <label>勤務先メール(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>Contact2_Work_Phone__c</name>
+    <help>Contact2.npe01__WorkPhone__c</help>
+    <label>勤務先電話(取引先責任者2)</label>
+  </fields>
+  <fields>
+    <name>DonationCampaignImportStatus__c</name>
+    <label>インポート状況(支援キャンペーン)</label>
+  </fields>
+  <fields>
+    <name>DonationCampaignImported__c</name>
+    <help>Opportunity.CampaignId</help>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>支援キャンペーンソース</label>
+  </fields>
+  <fields>
+    <name>DonationImportStatus__c</name>
+    <label>インポート状況(支援)</label>
+  </fields>
+  <fields>
+    <name>DonationImported__c</name>
+    <relationshipLabel>NPSP データインポート (Opportunity1 インポート済み)</relationshipLabel>
+    <label>インポート済み(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Amount__c</name>
+    <help>Opportunity.Amount</help>
+    <label>金額(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Campaign_Name__c</name>
+    <label>キャンペーン名</label>
+  </fields>
+  <fields>
+    <name>Donation_Date__c</name>
+    <help>Opportunity.CloseDate</help>
+    <label>日付(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Description__c</name>
+    <help>Opportunity.Description</help>
+    <label>説明(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Donor__c</name>
+    <help>支援が「取引先責任者1」からの個人支援であるか、「取引先1」からの団体支援であるかを指定します。</help>
+    <label>支援者(支援)</label>
+    <picklistValues>
+      <masterLabel>Contact1</masterLabel>
+      <translation>取引先責任者 1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Account1</masterLabel>
+      <translation>取引先 1</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Donation_Elevate_Recurring_ID__c</name>
+    <help>この支援商談のリンク先である、Elevate 内の継続支援の一意の外部 ID。</help>
+    <label>Elevate 継続 ID (支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Member_Level__c</name>
+    <help>Opportunity.npe01__Member_Level__c</help>
+    <label>会員レベル(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Membership_End_Date__c</name>
+    <help>Opportunity.npe01__Membership_End_Date__c</help>
+    <label>会員期限(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Membership_Origin__c</name>
+    <help>Opportunity.npe01__Membership_Origin__c</help>
+    <label>会員状況(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Membership_Start_Date__c</name>
+    <help>Opportunity.npe01__Membership_Start_Date__c</help>
+    <label>会員開始日(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Name__c</name>
+    <help>Opportunity.Name</help>
+    <label>名前(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Possible_Matches__c</name>
+    <help>商談にマッチングする潜在的な商談上位 10 件の ID のコンマ区切りリスト。</help>
+    <label>支援見込みマッチ</label>
+  </fields>
+  <fields>
+    <name>Donation_Record_Type_Name__c</name>
+    <help>商談に使用する商談レコードタイプの名前。空白のままにした場合、デフォルトのレコードタイプが使用されます。</help>
+    <label>レコードタイプ名(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Stage__c</name>
+    <help>Opportunity.StageName</help>
+    <label>フェーズ(支援)</label>
+  </fields>
+  <fields>
+    <name>Donation_Type__c</name>
+    <help>Opportunity.Type</help>
+    <label>種類(支援)</label>
+  </fields>
+  <fields>
+    <name>Elevate_Custom_Metadata__c</name>
+    <help>JSON として保存されている Elevate Giving Pages からのカスタムメタデータ。</help>
+    <label>Elevate カスタムメタデータ</label>
+  </fields>
+  <fields>
+    <name>FailureInformation__c</name>
+    <help>データインポートレコードのインポートに失敗した理由の説明。</help>
+    <label>失敗情報</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_1_Amount__c</name>
+    <help>商談の最初の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+    <label>一般会計単位の割り当て 1: 金額</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_1_GAU__c</name>
+    <help>最初の割り当てで使用される一般会計単位の Salesforce ID。</help>
+    <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
+    <label>一般会計単位の割り当て 1: 一般会計単位</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_1_Import_Status__c</name>
+    <help>最初の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+    <label>一般会計単位の割り当て 1: インポート状況</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_1_Imported__c</name>
+    <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+    <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
+    <label>一般会計単位の割り当て 1: インポート済み</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_1_Percent__c</name>
+    <help>商談の最初の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+    <label>一般会計単位の割り当て 1: パーセント</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_2_Amount__c</name>
+    <help>商談の 2 番目の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+    <label>一般会計単位の割り当て 2: 金額</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_2_GAU__c</name>
+    <help>2 番目の割り当てで使用される一般会計単位の Salesforce ID。</help>
+    <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
+    <label>一般会計単位の割り当て 2: 一般会計単位</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_2_Import_Status__c</name>
+    <help>2 番目の一般会計単位の割り当ての挿入の試行に基づく状況。</help>
+    <label>一般会計単位の割り当て 2: インポート状況</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_2_Imported__c</name>
+    <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+    <relationshipLabel>NPSP データインポート (一般会計単位 2)</relationshipLabel>
+    <label>一般会計単位の割り当て 2: インポート済み</label>
+  </fields>
+  <fields>
+    <name>GAU_Allocation_2_Percent__c</name>
+    <help>商談の 2 番目の一般会計単位の割り当てに起因するパーセント。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
+    <label>一般会計単位の割り当て 2: パーセント</label>
+  </fields>
+  <fields>
+    <name>HomeAddressImportStatus__c</name>
+    <label>インポート状況(自宅住所)</label>
+  </fields>
+  <fields>
+    <name>HomeAddressImported__c</name>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>インポート済み(自宅住所)</label>
+  </fields>
+  <fields>
+    <name>Home_City__c</name>
+    <help>Address.npsp__MailingCity__c</help>
+    <label>市町村(自宅)</label>
+  </fields>
+  <fields>
+    <name>Home_Country__c</name>
+    <help>Address.npsp__MailingCountry__c</help>
+    <label>国(自宅)</label>
+  </fields>
+  <fields>
+    <name>Home_State_Province__c</name>
+    <help>Address.npsp__MailingState__c</help>
+    <label>都道府県(ホーム)</label>
+  </fields>
+  <fields>
+    <name>Home_Street__c</name>
+    <help>Address.npsp__MailingStreet__c</help>
+    <label>番地(自宅)</label>
+  </fields>
+  <fields>
+    <name>Home_Zip_Postal_Code__c</name>
+    <help>Address.npsp__MailingPostalCode__c</help>
+    <label>郵便番号(自宅)</label>
+  </fields>
+  <fields>
+    <name>HouseholdAccountImported__c</name>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>インポート済み(世帯取引先)</label>
+  </fields>
+  <fields>
+    <name>Household_Phone__c</name>
+    <help>Household.Phone</help>
+    <label>世帯電話</label>
+  </fields>
+  <fields>
+    <name>ImportedDate__c</name>
+    <help>データインポートレコードが正常にインポートされた日付。</help>
+    <label>インポート日</label>
+  </fields>
+  <fields>
+    <name>NPSP_Data_Import_Batch__c</name>
+    <help>このレコードを含む NPSP データインポートバッチに対する参照。</help>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>NPSP データインポートバッチ</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+    <help>最初の商談取引先責任者の役割の挿入の試行に基づく状況。</help>
+    <label>商談取引先責任者の役割 1: ImportStatus</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_1_Imported__c</name>
+    <help>インポートされた商談取引先責任者の役割の Salesforce ID</help>
+    <label>商談取引先責任者の役割 1: 挿入済み</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_1_Role__c</name>
+    <help>商談取引先責任者の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの商談取引先責任者の役割を作成します。</help>
+    <label>商談取引先責任者の役割 1: 役割</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_2_ImportStatus__c</name>
+    <help>2 番目の商談取引先責任者の役割の挿入の試行に基づく状況。</help>
+    <label>商談取引先責任者の役割 2: ImportStatus</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_2_Imported__c</name>
+    <help>インポートされた商談取引先責任者の役割の Salesforce ID</help>
+    <label>商談取引先責任者の役割 2: 挿入済み</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Contact_Role_2_Role__c</name>
+    <help>商談取引先責任者の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの商談取引先責任者の役割を作成します。</help>
+    <label>商談取引先責任者の役割 2: 役割</label>
+  </fields>
+  <fields>
+    <name>PaymentImportStatus__c</name>
+    <label>インポート状況(支払)</label>
+  </fields>
+  <fields>
+    <name>PaymentImported__c</name>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>インポート済み(支払)</label>
+  </fields>
+  <fields>
+    <name>Payment_ACH_Code__c</name>
+    <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+    <label>支払 ACH コード</label>
+  </fields>
+  <fields>
+    <name>Payment_ACH_Last_4__c</name>
+    <help>このトランザクションで使用された銀行口座の最後の 4 桁。</help>
+    <label>支払 ACH の最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>Payment_Authorization_Token__c</name>
+    <help>トランザクションの承認トークン。</help>
+    <label>支払承認トークン</label>
+  </fields>
+  <fields>
+    <name>Payment_Authorized_Date__c</name>
+    <help>トランザクションが承認された日時。</help>
+    <label>支払承認日</label>
+  </fields>
+  <fields>
+    <name>Payment_Authorized_UTC_Timestamp__c</name>
+    <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
+    <label>支払承認 UTC タイムスタンプ</label>
+  </fields>
+  <fields>
+    <name>Payment_Card_Expiration_Month__c</name>
+    <help>このトランザクションで使用されたカードの有効期限 (月)。</help>
+    <label>支払カードの有効期限 (月)</label>
+  </fields>
+  <fields>
+    <name>Payment_Card_Expiration_Year__c</name>
+    <help>このトランザクションで使用されたカードの有効期限 (年)。</help>
+    <label>支払カードの有効期限 (年)</label>
+  </fields>
+  <fields>
+    <name>Payment_Card_Last_4__c</name>
+    <help>このトランザクションで使用されたカードの最後の 4 桁。</help>
+    <label>支払カードの最後の 4 桁</label>
+  </fields>
+  <fields>
+    <name>Payment_Card_Network__c</name>
+    <help>このトランザクションで使用されたカードのカードネットワーク。</help>
+    <label>支払カードネットワーク</label>
+  </fields>
+  <fields>
+    <name>Payment_Check_Reference_Number__c</name>
+    <help>Payment.npe01__Check_Reference_Number__c</help>
+    <label>支払確認/参照番号</label>
+  </fields>
+  <fields>
+    <name>Payment_Declined_Reason__c</name>
+    <help>トランザクションが却下された理由に関する詳細を提供します。</help>
+    <label>支払 Elevate API 却下理由</label>
+  </fields>
+  <fields>
+    <name>Payment_Donor_Cover_Amount__c</name>
+    <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+    <label>支払支援者補償金額</label>
+  </fields>
+  <fields>
+    <name>Payment_Elevate_Created_Date__c</name>
+    <help>トランザクションが作成された日時。</help>
+    <label>支払 Elevate 作成日</label>
+  </fields>
+  <fields>
+    <name>Payment_Elevate_Created_UTC_Timestamp__c</name>
+    <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
+    <label>支払 Elevate 作成 UTC タイムスタンプ</label>
+  </fields>
+  <fields>
+    <name>Payment_Elevate_ID__c</name>
+    <help>Elevate から取得した、このトランザクションの一意の ID。</help>
+    <label>支払 Elevate ID</label>
+  </fields>
+  <fields>
+    <name>Payment_Elevate_Original_Payment_ID__c</name>
+    <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
+    <label>支払 Elevate の元の支払 ID</label>
+  </fields>
+  <fields>
+    <name>Payment_Gateway_ID__c</name>
+    <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
+    <label>支払ゲートウェイ ID</label>
+  </fields>
+  <fields>
+    <name>Payment_Gateway_Payment_ID__c</name>
+    <help>支払ゲートウェイから取得した、このトランザクションの一意の ID。</help>
+    <label>支払ゲートウェイ支払 ID</label>
+  </fields>
+  <fields>
+    <name>Payment_Method__c</name>
+    <help>Payment.npe01__Payment_Method__c</help>
+    <label>支払方法</label>
+  </fields>
+  <fields>
+    <name>Payment_Origin_ID__c</name>
+    <help>トランザクションが開始されたシステムの ID。</help>
+    <label>支払発生源 ID</label>
+  </fields>
+  <fields>
+    <name>Payment_Origin_Name__c</name>
+    <help>トランザクションが開始されたシステムの名前。</help>
+    <label>支払発生源名</label>
+  </fields>
+  <fields>
+    <name>Payment_Origin_Type__c</name>
+    <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
+    <label>支払発生源種別</label>
+  </fields>
+  <fields>
+    <name>Payment_Paid__c</name>
+    <help>支払が支払済かどうかを示します。</help>
+    <label>支払済</label>
+    <picklistValues>
+      <masterLabel>True</masterLabel>
+      <translation>True</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>False</masterLabel>
+      <translation>False</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Payment_Possible_Matches__c</name>
+    <help>支援にマッチングする潜在的な支払上位 10 件の ID のコンマ区切りリスト。</help>
+    <label>支払見込みマッチ</label>
+  </fields>
+  <fields>
+    <name>Payment_Status__c</name>
+    <help>Elevate から取得した、トランザクションの API 状況。</help>
+    <label>支払 Elevate API 状況</label>
+  </fields>
+  <fields>
+    <name>Payment_Type__c</name>
+    <help>トランザクションの種別を示します。</help>
+    <label>支払種別</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>データインポートレコードのインポート状況。</help>
+    <label>状況</label>
+    <picklistValues>
+      <masterLabel>Ready to Process</masterLabel>
+      <translation>処理可能</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Imported</masterLabel>
+      <translation>インポート済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Dry Run - Validated</masterLabel>
+      <translation>Dry Run - 検証済み</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Dry Run - Error</masterLabel>
+      <translation>Dry Run - エラー</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Failed</masterLabel>
+      <translation>失敗</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Delete_All_Data_Import_Records</name>
+    <label>すべてのデータインポートレコードを削除</label>
+  </webLinks>
+  <webLinks>
+    <name>Delete_Imported_Data_Import_Records</name>
+    <label>インポート済みのデータインポートレコードを削除</label>
+  </webLinks>
+  <webLinks>
+    <name>Process_Data_Import</name>
+    <label>データインポートの開始</label>
+  </webLinks>
+  <layouts>
+    <layout>Data Import Layout</layout>
+    <sections>
+      <label>取引先責任者１情報</label>
+      <section>Contact1 Information</section>
+    </sections>
+    <sections>
+      <label>世帯取引先情報</label>
+      <section>Household Account Information</section>
+    </sections>
+    <sections>
+      <label>自宅住所</label>
+      <section>Home Address</section>
+    </sections>
+    <sections>
+      <label>団体情報(取引先1)</label>
+      <section>Account1 Organization Information</section>
+    </sections>
+    <sections>
+      <label>取引先責任者２情報</label>
+      <section>Contact2 Information</section>
+    </sections>
+    <sections>
+      <label>団体情報(取引先2)</label>
+      <section>Account2 Organization Information</section>
+    </sections>
+    <sections>
+      <label>キャンペーン情報</label>
+      <section>Campaign Information</section>
+    </sections>
+    <sections>
+      <label>商談情報</label>
+      <section>Opportunity Information</section>
+    </sections>
+    <sections>
+      <label>お支払い情報</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>一般会計単位の割り当て 1 の情報</label>
+      <section>GAU Allocation 1 Information</section>
+    </sections>
+    <sections>
+      <label>一般会計単位の割り当て 2 の情報</label>
+      <section>GAU Allocation 2 Information</section>
+    </sections>
+    <sections>
+      <label>商談取引先責任者の役割 1 の情報</label>
+      <section>Opportunity Contact Role 1 Information</section>
+    </sections>
+    <sections>
+      <label>商談取引先責任者の役割 2 の情報</label>
+      <section>Opportunity Contact Role 2 Information</section>
+    </sections>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>データインポート ID</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>データインポート ID</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP データインポート</value>
+  </caseValues>
 </CustomObjectTranslation>

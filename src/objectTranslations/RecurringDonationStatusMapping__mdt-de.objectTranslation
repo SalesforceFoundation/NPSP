@@ -1,66 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Statuszuordnung für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Statuszuordnungen für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Statuszuordnung für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Statuszuordnungen für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Statuszuordnung für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Statuszuordnungen für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Statuszuordnung für wiederkehrende Spende</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Statuszuordnungen für wiederkehrende Spende</value>
-    </caseValues>
-    <fields>
-        <help>Die gültigen Einträge sind Aktiv, Ausgesetzt und Geschlossen.</help>
-        <label>Status der wiederkehrenden Spende</label>
-        <name>State__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Aktiv</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Geschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Erloschen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>API-Name des Status der wiederkehrenden Spende, die einem Status zugeordnet ist.</help>
-        <label>Status der wiederkehrenden Spende</label>
-        <name>Status__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>State__c</name>
+    <help>[Valid entries are Active, Lapsed, and Closed.]o'介引户הаí先ร简аน]</help>
+    <label>[Recurring Donation State]o'介引户הа]</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>[Active]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>[Lapsed]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>[Closed]o']</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>[API name of the Recurring Donation Status that is mapped to a State.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Recurring Donation Status]o'介引户הа]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Recurring Donation Status Mapping]gr''介引户הаí先]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Recurring Donation Status Mappings]gr''介引户הаí先ร]</value>
+  </caseValues>
 </CustomObjectTranslation>

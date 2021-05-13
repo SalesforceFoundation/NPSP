@@ -1,96 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Lieferung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Lieferungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Lieferung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Lieferungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Lieferung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Lieferungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Lieferung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Lieferungen</value>
-    </caseValues>
-    <fields>
-        <help>Das Datum, an dem diese Lieferung fällig ist.</help>
-        <label>Fälligkeitstermin</label>
-        <name>Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum, an dem diese Lieferung tatsächlich übermittelt wurde.</help>
-        <label>Schlusstermin</label>
-        <name>Grant_Deliverable_Close_Date__c</name>
-    </fields>
-    <fields>
-        <help>Beschreibung dessen, was für diese Lieferung erforderlich ist.</help>
-        <label>Anforderungen</label>
-        <name>Grant_Deliverable_Requirements__c</name>
-    </fields>
-    <fields>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Lieferungen</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Typ</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Application</masterLabel>
-            <translation>Anwendung</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Final Report</masterLabel>
-            <translation>Abschlussbericht</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Interim Report</masterLabel>
-            <translation>Zwischenbericht</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>LOI</masterLabel>
-            <translation>Absichtserklärung</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Grant Deadline Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Lieferungsanforderungen gewähren</label>
-            <section>Grant Deliverable Requirements</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Lieferungsname</nameFieldLabel>
+  <fields>
+    <name>Grant_Deadline_Due_Date__c</name>
+    <help>[The date this Deliverable is due.]o'介引户הаí先]</help>
+    <label>[Due Date]o'介]</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Close_Date__c</name>
+    <help>[The date this Deliverable was actually submitted.]o'介引户הаí先ร简аน取]</help>
+    <label>[Close Date]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Grant_Deliverable_Requirements__c</name>
+    <help>[Description of what is required for this Deliverable.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Requirements]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>[Deliverables]o'介引]</relationshipLabel>
+    <label>[Opportunity]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <label>[Type]o'介引]</label>
+    <picklistValues>
+      <masterLabel>LOI</masterLabel>
+      <translation>[LOI]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Application</masterLabel>
+      <translation>[Application]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Interim Report</masterLabel>
+      <translation>[Interim Report]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Final Report</masterLabel>
+      <translation>[Final Report]o'介引]</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Grant Deadline Layout</layout>
+    <sections>
+      <label>[Grant Deliverable Requirements]o'介引户הаí先]</label>
+      <section>Grant Deliverable Requirements</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>[Deliverable Name]o'介引]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Deliverable Name]o'介引]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Deliverable]gr''介引]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Deliverables]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

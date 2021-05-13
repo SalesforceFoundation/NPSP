@@ -1,34 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de estado de Donación recurrente</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de estados de Donaciones recurrentes</value>
-    </caseValues>
-    <fields>
-        <help>Las entradas válidas son Activo, Transcurrido y Cerrado.</help>
-        <label>Situación de Donación recurrente</label>
-        <name>State__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Activo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Cerrado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Transcurrido</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>El nombre de API del Estado de Donación recurrente que está asignado a una Situación.</help>
-        <label>Estado de Donación recurrente</label>
-        <name>Status__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>State__c</name>
+    <help>Las entradas válidas son Activo, Transcurrido y Cerrado.</help>
+    <label>Situación de Donación recurrente</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>Activo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>Transcurrido</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>Cerrado</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>El nombre de API del Estado de Donación recurrente que está asignado a una Situación.</help>
+    <label>Estado de Donación recurrente</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Asignación de estado de Donación recurrente</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Asignaciones de estados de Donaciones recurrentes</value>
+  </caseValues>
 </CustomObjectTranslation>

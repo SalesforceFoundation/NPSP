@@ -1,54 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Spendeneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Spendeneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Spendeneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Spendeneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Spendeneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Spendeneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Spendeneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Spendeneintragseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Dies ist eine Ausgangsvorlage, die für den Spendeneintrag zur Eingabe einzelner Spenden oder Batches von Spenden verwendet wird. Dies ist die Standardvorlage für die Eingabe einzelner Spenden.</help>
-        <label>Standardvorlage für Spendeneintrag</label>
-        <name>Default_Gift_Entry_Template__c</name>
-    </fields>
-    <fields>
-        <help>Aktiviert das Spendeneintrags-Tool. Für dieses Feature ist erweiterte Zuordnung erforderlich.</help>
-        <label>Spendeneintrag aktivieren</label>
-        <name>Enable_Gift_Entry__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Gift_Entry_Template__c</name>
+    <help>[This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذ]</help>
+    <label>[Default Gift Entry Template]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Enable_Gift_Entry__c</name>
+    <help>[Enables the Gift Entry tool. This feature requires Advanced Mapping.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Enable Gift Entry]o'介引户]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Gift Entry Settings]gr''介引户]</value>
+  </caseValues>
 </CustomObjectTranslation>

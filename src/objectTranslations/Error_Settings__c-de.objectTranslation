@@ -1,94 +1,59 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Fehlereinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Fehlereinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Fehlereinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Fehlereinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Fehlereinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Fehlereinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Fehlereinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Fehlereinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Wird verwendet, um die letzte Ausführung der asynchronen Auftragsfehlerprotokollierung zu verfolgen.</help>
-        <label>Ltz. Ausführung der asynchr. Fehlerprüf.</label>
-        <name>Async_Error_Check_Last_Run__c</name>
-    </fields>
-    <fields>
-        <help>Aktiviert prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</help>
-        <label>Keine Statusprüfungen von Datensätzen</label>
-        <name>DisableRecordDataHealthChecks__c</name>
-    </fields>
-    <fields>
-        <help>Bei Aktivierung dieser Option wird das NPSP-Fehlerbehandlungs-Framework deaktiviert.</help>
-        <label>Fehlerbehandlung deaktivieren</label>
-        <name>Disable_Error_Handling__c</name>
-    </fields>
-    <fields>
-        <help>Wenn diese Option aktiviert wird, plant NPSP wiederkehrende Stand‘aufträge nicht autom. Mit diesen wiederkehrenden Auftr. werden Rollups berechnet, wiederkehrende Spenden und saisonale Adressen aktualisiert sowie die Fehlerbehandlung durchgeführt.</help>
-        <label>Keine autom. Plan. v. NPSP-Stand.-Auftr.</label>
-        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    </fields>
-    <fields>
-        <help>Aktivieren Sie diese Option, um Debug-Aussagen im Code für verwaltete Pakete zu aktivieren.</help>
-        <label>Debug aktivieren</label>
-        <name>Enable_Debug__c</name>
-    </fields>
-    <fields>
-        <help>Aktivieren Sie diese Option, wenn das System Benachrichtigungen für bestimmte Fehlertypen posten soll.</help>
-        <label>Fehlerbenachrichtigungen</label>
-        <name>Error_Notifications_On__c</name>
-    </fields>
-    <fields>
-        <help>Wählen Sie den Benutzertyp aus, an den Benachrichtigungen gesendet werden sollen.</help>
-        <label>Empfänger von Fehlerbenachrichtigungen</label>
-        <name>Error_Notifications_To__c</name>
-    </fields>
-    <fields>
-        <help>Nicht aktualisieren. Nur für Salesforce.org-Pilot-Tests. Ermöglicht das Überschreiben mit eingeschränktem Zugriff des PilotEnabled-Featureparameters in Scratch-Organisationen, in denen keine zugeordnete Produktlizenz im LMO vorhanden ist.</help>
-        <label>Scratch-Org. Override: Pilot aktiviert</label>
-        <name>OverrideFeature_PilotEnabled__c</name>
-    </fields>
-    <fields>
-        <help>Berücks. Sie die Einst‘en in einer Dupl‘regel zur Festleg., ob dopp. Datens. zulässig sind. Um die vorhand. Einstell‘n zu überpr., zu &quot;Setup&quot; &gt; &quot;Duplikatsregeln&quot; gehen. Wenn &quot;Aktion beim Erstellen&quot; o. &quot;Aktion b. Bearbeiten&quot; = &quot;Zulassen&quot;, Dupl. speichern.</help>
-        <label>Duplikatsregeleinst. berücksichtigen</label>
-        <name>Respect_Duplicate_Rule_Settings__c</name>
-    </fields>
-    <fields>
-        <help>Aktivieren Sie diese Option, wenn Fehler in der Datenbank gespeichert werden sollen.</help>
-        <label>Fehler speichern</label>
-        <name>Store_Errors_On__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>[Used to keep track of the most recent execution of the Async job error logger]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Async Error Check Last Run]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>[If checked, NPSP's error handling framework is disabled.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Disable Error Handling]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>[If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ]</help>
+    <label>[Disable Record Data Health Checks]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>[When checked, NPSP won't automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹]</help>
+    <label>[Don't Auto Schedule Default NPSP Jobs]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>[Turn this on to enable debug statements in managed package code.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Enable Debug]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>[Check this if you'd like the system to post notifications for certain type of errors.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Error Notifications]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>[Select the type of user to send notifications to.]o'介引户הаí先ร简аน取]</help>
+    <label>[Error Notification Recipients]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>[Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product License in the LMO.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрω]</help>
+    <label>[Scratch Org Override: Pilot Enabled]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>[Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to "Allow," duplicates will be saved.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčنご]</help>
+    <label>[Respect Duplicate Rule Settings]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>[Check this if you'd like errors to be stored in the database.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Store Errors]o'介引]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Error Settings]gr''介引]</value>
+  </caseValues>
 </CustomObjectTranslation>

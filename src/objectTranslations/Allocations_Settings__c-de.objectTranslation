@@ -1,79 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Zugehörigkeitseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Zugehörigkeitseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Zugehörigkeitseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Zugehörigkeitseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Zugehörigkeitseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Zugehörigkeitseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Zugehörigkeitseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Zugehörigkeitseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Durch die Aktivierung von Standardzuweisungen wird für jede Opportunity ein Zuweisungsobjekt erstellt. Dadurch wird die Berichterstellung zu Zuweisungen zu einem Standard-Verwendungszweck aktiviert, doch es wird auch mehr Datenspeicherplatz belegt.</help>
-        <label>Standardzuweisungen aktiviert</label>
-        <name>Default_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Enthält die Kennung des Standard-Verwendungszwecks für die Erstellung der Standardzuweisungen oder für die Zuweisung nicht zugewiesener Beträge.</help>
-        <label>Standard-Verwendungszweck</label>
-        <name>Default__c</name>
-    </fields>
-    <fields>
-        <help>Opportunity-Datensatztypen, die von den Berechnungen des Rollups von Zuweisungen ausgeschlossen werden sollen.</help>
-        <label>Ausgeschl. Opportunity-Datensatztypen</label>
-        <name>Excluded_Opp_RecTypes__c</name>
-    </fields>
-    <fields>
-        <help>Von Rollups von Zuweisungen ausgeschlossene Opportunity-Typen</help>
-        <label>Ausgeschl. Opportunity-Typen</label>
-        <name>Excluded_Opp_Types__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, ob Zuweisungen auf Zahlungsebene festgelegt werden können. Lesen Sie die Dokumentation zu Zuweisungen auf Zahlungsebene, bevor Sie diese Einstellung ändern.</help>
-        <label>Zahlungszuweisungen aktiviert</label>
-        <name>Payment_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Dieser Wert beeinflusst die Anzahl der Tage für die Rollup-Felder &quot;N-Tage-Zuweisungen&quot;.</help>
-        <label>N-Tage-Wert für Rollup</label>
-        <name>Rollup_N_Day_Value__c</name>
-    </fields>
-    <fields>
-        <help>Bei Akt. wird f. die Zuweis.-Rollup-Gesamtwerte das Geschäftsjahr statt der Einst. f. das Kalenderjahr verwendet. Festleg. der Gesch.jahrinf.: Setup -&gt; Unternehmensprofil -&gt; Geschäftsjahr. HINWEIS: Benutzerdef. Gesch.jahreinst. werden NICHT unterstützt.</help>
-        <label>Geschäftsjahr für Rollups verwenden</label>
-        <name>Use_Fiscal_Year_for_Rollups__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Allocations_Enabled__c</name>
+    <help>[Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт]</help>
+    <label>[Default Allocations Enabled]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Default__c</name>
+    <help>[Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Default General Accounting Unit]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_RecTypes__c</name>
+    <help>[Opportunity Record Types to exclude from calculations of Allocations rollups.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Excluded Opp RecTypes]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_Types__c</name>
+    <help>[Excluded Opportunity Types from Allocations rollups.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Excluded Opp Types]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Payment_Allocations_Enabled__c</name>
+    <help>[Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةб]</help>
+    <label>[Payment Allocations Enabled]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Rollup_N_Day_Value__c</name>
+    <help>[This value affects the number of days to count for N Days Allocations rollup fields.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Rollup N Day Value]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+    <help>[Checking this box will cause Allocation rollup totals to respect fiscal year, instead of calendar years settings. To set Fiscal Year information, go to Setup-&gt;Company Profile-&gt;Fiscal Year. NOTE: Custom Fiscal Year Settings are NOT supported.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبč]</help>
+    <label>[Use Fiscal Year for Rollups]o'介引户הаí]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Allocations Settings]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,49 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Paketeinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Paketeinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Paketeinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Paketeinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>NPSP-Paketeinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>NPSP-Paketeinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Paketeinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Paketeinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Das aktive Paket-Namespace-Präfix für NPSP. Nicht manuell bearbeiten.</help>
-        <label>Namespace-Präfix</label>
-        <name>Namespace_Prefix__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Namespace_Prefix__c</name>
+    <help>[The active package namespace prefix for NPSP. Do not edit manually.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Namespace Prefix]o'介引]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Package Settings]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

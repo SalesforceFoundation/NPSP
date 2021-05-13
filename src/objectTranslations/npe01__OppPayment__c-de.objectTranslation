@@ -1,143 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Payment Wizard FS --></label>
-        <name>Payment_WizardFS</name>
-    </fieldSets>
-    <fields>
-        <help>Der SEC-Code (Standard Entry Class), der für diese ACH-Transaktion verwendet wird.</help>
-        <label>ACH-Code</label>
-        <name>ACH_Code__c</name>
-    </fields>
-    <fields>
-        <help>Die letzten vier Ziffern des Bankkontos, das für diese Transaktion verwendet wird.</help>
-        <label>ACH Letzte 4</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Datum und Uhrzeit der Autorisierung der Transaktion.</help>
-        <label>Autorisierungsdatum</label>
-        <name>Authorized_Date__c</name>
-    </fields>
-    <fields>
-        <help>Datum und exakte Uhrzeit (auf die Millisekunde genau) der erfolgreichen Autorisierung dieser Transaktion vom Zahlungsgateway.</help>
-        <label>UTC-Zeitstempel der Autorisierung</label>
-        <name>Authorized_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>Der Batch, der diese Zahlung als bezahlt festlegt. Dieses Feld wird auf der Grundlage Ihrer Einstellungen für Batch-Nummern in den NPSP-Einstellungen automatisch aufgefüllt.</help>
-        <label>Batch-Nummer</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>Der Ablaufmonat der Karte, die für diese Transaktion verwendet wurde.</help>
-        <label>Ablaufmonat der Karte</label>
-        <name>Card_Expiration_Month__c</name>
-    </fields>
-    <fields>
-        <help>Das Ablaufjahr der Karte, die für diese Transaktion verwendet wurde.</help>
-        <label>Ablaufjahr der Karte</label>
-        <name>Card_Expiration_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die letzten vier Stellen der Karte, die für diese Transaktion verwendet wurde.</help>
-        <label>Letzte 4 Karte</label>
-        <name>Card_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Das Kartennetzwerk der Karte, die für diese Transaktion verwendet wurde.</help>
-        <label>Kartennetzwerk</label>
-        <name>Card_Network__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag, den der Spender über den Spendenbetrag hinaus gezahlt hat, oftmals um die Transaktionsgebühren abzudecken oder der Spende ein Trinkgeld hinzuzufügen.</help>
-        <label>Deckungsbetrag des Spenders</label>
-        <name>Donor_Cover_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Nur für Rückerstattungen. Zeigt die ID der ursprünglichen Zahlungstransaktion in Elevate.</help>
-        <label>Ursprüngliche Zahlungs-ID in Elevate</label>
-        <name>Elevate_Original_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Gibt Details zum Grund ab, warum eine Transaktion abgelehnt wurde.</help>
-        <label>Ablehnungsgrund Elevate-API für Zahlung</label>
-        <name>Elevate_Payment_API_Declined_Reason__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Statuswert für diesen mit Elevate verbundenen Zahlungsdatensatz.</help>
-        <label>Status der Elevate-API für Zahlung</label>
-        <name>Elevate_Payment_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>Datum und Uhrzeit der Transaktionserstellung</help>
-        <label>Erstellungsdatum der Zahlung in Elevate</label>
-        <name>Elevate_Payment_Created_Date__c</name>
-    </fields>
-    <fields>
-        <help>Datum und exakte Uhrzeit (auf die Millisekunde genau) der Zahlungserstellung aus Elevate</help>
-        <label>UTC-Zeit: Zahlungserstellung in Elevate</label>
-        <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
-    </fields>
-    <fields>
-        <help>Die eindeutige ID für diese Transaktion in Elevate.</help>
-        <label>Elevate-Zahlungs-ID</label>
-        <name>Elevate_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Die ID des Zahlungs-Gateways, das diese Transaktion verarbeitet hat.</help>
-        <label>Gateway-ID</label>
-        <name>Gateway_ID__c</name>
-    </fields>
-    <fields>
-        <help>Die eindeutige ID dieser Transaktion vom Zahlungs-Gateway.</help>
-        <label>Zahlungs-ID des Gateways</label>
-        <name>Gateway_Payment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Die ID des Systems, auf dem diese Transaktion eingeleitet wurde.</help>
-        <label>Ursprungs-ID</label>
-        <name>Origin_ID__c</name>
-    </fields>
-    <fields>
-        <help>Der Name des Systems, auf dem die Transaktion eingeleitet wurde.</help>
-        <label>Ursprungsname</label>
-        <name>Origin_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der Typ des Systems, das zum Einleiten der Zahlung verwendet wurde. Zu den verfügbaren Werten gehören Engagement Hub, Spendenseite, Zahlungs-API, Salesforce.</help>
-        <label>Ursprungstyp</label>
-        <name>Origin_Type__c</name>
-    </fields>
-    <fields>
-        <help>Bestätigungsdatum</help>
-        <label>Zahlungsbestätigungsdatum</label>
-        <name>Payment_Acknowledged_Date__c</name>
-    </fields>
-    <fields>
-        <help>Status der Bestätigung dieser Zahlung</help>
-        <label>Zahlungsbestätigungsstatus</label>
-        <name>Payment_Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>Bestätigt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Nicht bestätigen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Zu bestätigen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Gibt die Art der Transaktion an.</help>
-        <label>Typ</label>
-        <name>Type__c</name>
-    </fields>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Code__c</name>
+    <help>[The Standard Entry Class (SEC) code used for this ACH transaction.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[ACH Code]o'介]</label>
+  </fields>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>[The last four digits of the bank account used for this transaction.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[ACH Last 4]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Authorized_Date__c</name>
+    <help>[The date and time the transaction was authorized.]o'介引户הаí先ร简аน取]</help>
+    <label>[Authorized Date]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Authorized_UTC_Timestamp__c</name>
+    <help>[The exact date and time (down to the millisecond) from the payment gateway that this transaction was successfully authorized.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Authorized UTC Timestamp]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>[The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Batch Number]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Month__c</name>
+    <help>[The expiration month of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Expiration Month]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Card_Expiration_Year__c</name>
+    <help>[The expiration year of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Expiration Year]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Card_Last_4__c</name>
+    <help>[The last four digits of the card used for this transaction.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Card Last 4]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Card_Network__c</name>
+    <help>[The card network of the card used for this transaction.]o'介引户הаí先ร简аน取정ú]</help>
+    <label>[Card Network]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Donor_Cover_Amount__c</name>
+    <help>[The amount the donor paid in addition to their donation amount, often to help cover transaction fees or to add a tip to their donation.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Donor Cover Amount]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Original_Payment_ID__c</name>
+    <help>[For refunds only. Shows the ID of the original payment transaction from Elevate.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Elevate Original Payment ID]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Declined_Reason__c</name>
+    <help>[Provides detail about why a transaction was declined.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Elevate Payment API Declined Reason]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_API_Status__c</name>
+    <help>[The API status value for this Elevate connected Payment record.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Elevate Payment API Status]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_Date__c</name>
+    <help>[The date and time the transaction was created.]o'介引户הаí先ร简аน]</help>
+    <label>[Elevate Payment Created Date]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
+    <help>[The exact date and time (down to the millisecond) from Elevate that the transaction was created.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Elevate Payment Created  UTC Timestamp]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Elevate_Payment_ID__c</name>
+    <help>[The unique ID for this transaction from Elevate.]o'介引户הаí先ร简аน取]</help>
+    <label>[Elevate Payment ID]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Gateway_ID__c</name>
+    <help>[The ID of the payment gateway that processed this transaction.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Gateway ID]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Gateway_Payment_ID__c</name>
+    <help>[The unique ID for this transaction from the payment gateway.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Gateway Payment ID]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Origin_ID__c</name>
+    <help>[The ID for the system where the transaction was initiated.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Origin ID]o'介]</label>
+  </fields>
+  <fields>
+    <name>Origin_Name__c</name>
+    <help>[The name of the system where the transaction was initiated.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Origin Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Origin_Type__c</name>
+    <help>[The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Origin Type]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledged_Date__c</name>
+    <help>[Date of acknowledgment]o'介引户ה]</help>
+    <label>[Payment Acknowledged Date]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Payment_Acknowledgment_Status__c</name>
+    <help>[Status of Acknowledgment of this payment.]o'介引户הаí先ร简а]</help>
+    <label>[Payment Acknowledgment Status]o'介引户הаí]</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>[To Be Acknowledged]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>[Acknowledged]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>[Do Not Acknowledge]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>[Indicates the type of transaction.]o'介引户הаí先ร]</help>
+    <label>[Type]o'介引]</label>
+  </fields>
+</CustomObjectTranslation>

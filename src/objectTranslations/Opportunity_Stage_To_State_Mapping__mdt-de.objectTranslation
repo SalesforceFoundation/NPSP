@@ -1,62 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Opportunityphase-zu-Status-Zuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Opportunityphase-zu-Status-Zuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Opportunityphase-zu-Status-Zuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Opportunityphase-zu-Status-Zuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Opportunityphase-zu-Status-Zuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Opportunityphase-zu-Status-Zuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Opportunityphase-zu-Status-Zuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Opportunityphase-zu-Status-Zuordnungen</value>
-    </caseValues>
-    <fields>
-        <help>API-Name der Opportunity-Phase, die dem Status zugeordnet werden soll.</help>
-        <label>Opportunity-Phase</label>
-        <name>Opportunity_Stage__c</name>
-    </fields>
-    <fields>
-        <help>Die gültigen Werte sind “Nicht verpflichtet”, “Verpflichtet” oder “Abgeschlossen”.</help>
-        <label>Opportunity-Status</label>
-        <name>Opportunity_State__c</name>
-        <picklistValues>
-            <masterLabel>Committed</masterLabel>
-            <translation>Verpflichtet</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Finalized</masterLabel>
-            <translation>Abgeschlossen</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Opportunity_Stage__c</name>
+    <help>[API name of the Opportunity Stage that will be mapped to the state.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Opportunity Stage]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Opportunity_State__c</name>
+    <help>[Valid entries are “Uncommitted”, “Committed”, or “Finalized”.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Opportunity State]o'介引户]</label>
+    <picklistValues>
+      <masterLabel>Committed</masterLabel>
+      <translation>[Committed]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Finalized</masterLabel>
+      <translation>[Finalized]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Opportunity Stage To State Mapping]gr''介引户הаí先ร]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Opportunity Stage To State Mappings]gr''介引户הаí先ร]</value>
+  </caseValues>
 </CustomObjectTranslation>

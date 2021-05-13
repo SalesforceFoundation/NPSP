@@ -1,62 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de Verificación de dirección</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de Verificación de dirección</value>
-    </caseValues>
-    <fields>
-        <help>URL utilizada para la verificación de la dirección.</help>
-        <label>URL de verificación de dirección</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>El Id. de autenticación</help>
-        <label>Id. de autenticación</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>El token de autenticación.</help>
-        <label>Token de autenticación</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Clase de Salesforce responsable de contactar el servicio web y verificar las direcciones.</help>
-        <label>Servicio de verificación</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Habilita la verificación automática de direcciones para nuevas direcciones.</help>
-        <label>Habilitar verificación automática</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Evita que la API de Cicero sobreescriba direcciones durante la verificación.</help>
-        <label>Evitar sobreescritura de direcciones</label>
-        <name>Prevent_Address_Overwrite__c</name>
-    </fields>
-    <fields>
-        <help>Marca direcciones ambiguas como no válidas cuando la API devuelve más de una dirección. Si se deja sin seleccionar, Salesforce aceptará la primera dirección sugerida como dirección válida.</help>
-        <label>Rechazar direcciones ambiguas</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Tiempo de espera de llamada en segundos.</help>
-        <label>Tiempo de espera</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Especifica si se esta utilizando o no el servicio de verificación de direcciones de SmartyStreets.</help>
-        <label>DESUSADO - Uso de SmartyStreets</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>URL utilizada para la verificación del código postal.</help>
-        <label>Extremo de verificación de código postal</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>URL utilizada para la verificación de la dirección.</help>
+    <label>URL de verificación de dirección</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>El Id. de autenticación</help>
+    <label>Id. de autenticación</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>El token de autenticación.</help>
+    <label>Token de autenticación</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Clase de Salesforce responsable de contactar el servicio web y verificar las direcciones.</help>
+    <label>Servicio de verificación</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>Habilita la verificación automática de direcciones para nuevas direcciones.</help>
+    <label>Habilitar verificación automática</label>
+  </fields>
+  <fields>
+    <name>Prevent_Address_Overwrite__c</name>
+    <help>Evita que la API de Cicero sobreescriba direcciones durante la verificación.</help>
+    <label>Evitar sobreescritura de direcciones</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Marca direcciones ambiguas como no válidas cuando la API devuelve más de una dirección. Si se deja sin seleccionar, Salesforce aceptará la primera dirección sugerida como dirección válida.</help>
+    <label>Rechazar direcciones ambiguas</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>Tiempo de espera de llamada en segundos.</help>
+    <label>Tiempo de espera</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>Especifica si se esta utilizando o no el servicio de verificación de direcciones de SmartyStreets.</help>
+    <label>DESUSADO - Uso de SmartyStreets</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>URL utilizada para la verificación del código postal.</help>
+    <label>Extremo de verificación de código postal</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de Verificación de dirección</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de Verificación de dirección</value>
+  </caseValues>
 </CustomObjectTranslation>

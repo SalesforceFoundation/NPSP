@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP-pakketinstellingen</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>NPSP-pakketinstellingen</value>
-    </caseValues>
-    <fields>
-        <help>De actieve pakketnaamruimteprefix voor NPSP. Niet handmatig bewerken.</help>
-        <label>Naamruimteprefix</label>
-        <name>Namespace_Prefix__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Namespace_Prefix__c</name>
+    <help>De actieve pakketnaamruimteprefix voor NPSP. Niet handmatig bewerken.</help>
+    <label>Naamruimteprefix</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP-pakketinstellingen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>NPSP-pakketinstellingen</value>
+  </caseValues>
 </CustomObjectTranslation>

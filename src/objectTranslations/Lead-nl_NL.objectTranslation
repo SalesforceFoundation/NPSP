@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fields>
-        <help>De batch waar deze lead werd gemaakt.</help>
-        <label>Batch</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Leads</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Stad van Bedrijf</label>
-        <name>CompanyCity__c</name>
-    </fields>
-    <fields>
-        <label>Land van Bedrijf</label>
-        <name>CompanyCountry__c</name>
-    </fields>
-    <fields>
-        <label>Postcode van Bedrijf</label>
-        <name>CompanyPostalCode__c</name>
-    </fields>
-    <fields>
-        <label>Staat/Provincie van Bedrijf</label>
-        <name>CompanyState__c</name>
-    </fields>
-    <fields>
-        <label>Straat van Bedrijf</label>
-        <name>CompanyStreet__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Batch__c</name>
+    <help>De batch waar deze lead werd gemaakt.</help>
+    <relationshipLabel>Leads</relationshipLabel>
+    <label>Batch</label>
+  </fields>
+  <fields>
+    <name>CompanyCity__c</name>
+    <label>Stad van Bedrijf</label>
+  </fields>
+  <fields>
+    <name>CompanyCountry__c</name>
+    <label>Land van Bedrijf</label>
+  </fields>
+  <fields>
+    <name>CompanyPostalCode__c</name>
+    <label>Postcode van Bedrijf</label>
+  </fields>
+  <fields>
+    <name>CompanyState__c</name>
+    <label>Staat/Provincie van Bedrijf</label>
+  </fields>
+  <fields>
+    <name>CompanyStreet__c</name>
+    <label>Straat van Bedrijf</label>
+  </fields>
+</CustomObjectTranslation>

@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Conjunto de asignación de campo de importación de datos</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Conjuntos de asignaciones de campos de importaciones de datos</value>
-    </caseValues>
-    <fields>
-        <help>El grupo de objetos de importación de datos que contiene este conjunto de asignación de campos.</help>
-        <label>Conjunto asign objetos importación datos</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Conjuntos de asignaciones de campos de importación de datos</relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>El grupo de objetos de importación de datos que contiene este conjunto de asignación de campos.</help>
+    <relationshipLabel>Conjuntos de asignaciones de campos de importación de datos</relationshipLabel>
+    <label>Conjunto asign objetos importación datos</label>
+  </fields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Conjunto de asignación de campo de importación de datos</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Conjuntos de asignaciones de campos de importaciones de datos</value>
+  </caseValues>
 </CustomObjectTranslation>

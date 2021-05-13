@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Bei WAHR wird die Synchronisation des benutzerdefinierten Beziehungsfelds aktiviert.</help>
-        <label>Sync des benutzerdef. Felds aktivieren</label>
-        <name>Enable_Custom_Field_Sync__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Enable_Custom_Field_Sync__c</name>
+    <help>[If TRUE, then synchronization of custom Relationship fields is enabled.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Enable Custom Field Sync]o'介引户הа]</label>
+  </fields>
+</CustomObjectTranslation>

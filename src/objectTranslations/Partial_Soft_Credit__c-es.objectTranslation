@@ -1,56 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Crédito blando parcial</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Créditos blandos parciales</value>
-    </caseValues>
-    <fields>
-        <help>El importe que será asignado como crédito blando.</help>
-        <label>Importe</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>Nombre completo del contacto que recibe este crédito blando (solo lectura).</help>
-        <label>Nombre del contacto</label>
-        <name>Contact_Name__c</name>
-    </fields>
-    <fields>
-        <help>La función del contacto en la oportunidad a la que este crédito blando se aplica.</help>
-        <label>Id. de la función del contacto</label>
-        <name>Contact_Role_ID__c</name>
-    </fields>
-    <fields>
-        <help>El contacto que recibirá este crédito blando.</help>
-        <label>Contacto</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Créditos blandos parciales</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La oportunidad a la que este crédito blando se aplica.</help>
-        <label>Oportunidad</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Créditos blandos parciales</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La función de este crédito blando.</help>
-        <label>Nombre de la función</label>
-        <name>Role_Name__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Partial Soft Credit Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nombre de crédito blando parcial</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar créditos blandos</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>El importe que será asignado como crédito blando.</help>
+    <label>Importe</label>
+  </fields>
+  <fields>
+    <name>Contact_Name__c</name>
+    <help>Nombre completo del contacto que recibe este crédito blando (solo lectura).</help>
+    <label>Nombre del contacto</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_ID__c</name>
+    <help>La función del contacto en la oportunidad a la que este crédito blando se aplica.</help>
+    <label>Id. de la función del contacto</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <help>El contacto que recibirá este crédito blando.</help>
+    <relationshipLabel>Créditos blandos parciales</relationshipLabel>
+    <label>Contacto</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>La oportunidad a la que este crédito blando se aplica.</help>
+    <relationshipLabel>Créditos blandos parciales</relationshipLabel>
+    <label>Oportunidad</label>
+  </fields>
+  <fields>
+    <name>Role_Name__c</name>
+    <help>La función de este crédito blando.</help>
+    <label>Nombre de la función</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Gestionar créditos blandos</label>
+  </webLinks>
+  <layouts>
+    <layout>Partial Soft Credit Layout</layout>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nombre de crédito blando parcial</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de crédito blando parcial</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Crédito blando parcial</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Créditos blandos parciales</value>
+  </caseValues>
 </CustomObjectTranslation>

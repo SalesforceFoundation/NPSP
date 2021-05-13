@@ -1,54 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Status der Erste Schritte-Abschluss-Checkliste</value>
-    </caseValues>
-    <fields>
-        <label>Element-ID</label>
-        <name>Item_Id__c</name>
-    </fields>
-    <fields>
-        <label>Benutzer</label>
-        <name>User__c</name>
-        <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Statusname für die Abschluss-Checkliste der Seite &quot;Erste Schritte&quot;</nameFieldLabel>
+  <fields>
+    <name>Item_Id__c</name>
+    <label>[Item Id]o']</label>
+  </fields>
+  <fields>
+    <name>User__c</name>
+    <label>[User]o'介引]</label>
+  </fields>
+  <nameFieldLabel>[Get Started Completion Checklist State Name]o'介引户הаí先ร简а]</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>[Get Started Completion Checklist State Name]o'介引户הаí先ร简а]</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Get Started Completion Checklist State]gr''介引户הаí先ร简]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Get Started Completion Checklist States]gr''介引户הаí先ร简]</value>
+  </caseValues>
 </CustomObjectTranslation>

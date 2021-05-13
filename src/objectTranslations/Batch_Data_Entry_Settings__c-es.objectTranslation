@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de entrada de datos en lote</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de entrada de datos en lote</value>
-    </caseValues>
-    <fields>
-        <help>Si se establece, la entrada de datos de lote nunca asignará un nombre a las oportunidades, incluso si esta en blanco (no se incluye en la página BDE).</help>
-        <label>Permitir nombres oportunidades en blanco</label>
-        <name>Allow_Blank_Opportunity_Names__c</name>
-    </fields>
-    <fields>
-        <help>Este parámetro genera automáticamente el nombre del registro para los registros de oportunidades introducidos en lotes en base al valor de los campos introducidos.</help>
-        <label>Nomenclatura de oportunidades</label>
-        <name>Opportunity_Naming__c</name>
-    </fields>
-    <fields>
-        <label>Alerta de retirada vista</label>
-        <name>Viewed_Retirement_Alert__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+    <help>Si se establece, la entrada de datos de lote nunca asignará un nombre a las oportunidades, incluso si esta en blanco (no se incluye en la página BDE).</help>
+    <label>Permitir nombres oportunidades en blanco</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Naming__c</name>
+    <help>Este parámetro genera automáticamente el nombre del registro para los registros de oportunidades introducidos en lotes en base al valor de los campos introducidos.</help>
+    <label>Nomenclatura de oportunidades</label>
+  </fields>
+  <fields>
+    <name>Viewed_Retirement_Alert__c</name>
+    <label>Alerta de retirada vista</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de entrada de datos en lote</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de entrada de datos en lote</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,167 +1,137 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Element der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Elemente der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Element der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Elemente der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Elements der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Elemente der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Element der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Elementen der NPSP-Erste Schritte-Checkliste</value>
-    </caseValues>
-    <fields>
-        <help>Der API-Name für die Beschreibungsbezeichnung dieses Elements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-        <label>Name der Beschreibungsbezeichnung</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name der Bezeichnung mit Zusatzinformationen, die zusätzliche Informationen über ein Abschnittselement (z. B. Videolänge, PDF usw.) bereitstellt. Wird in der Ecke rechts oben angezeigt.</help>
-        <label>Name f. Bezeichnung m. Zus-Informationen</label>
-        <name>Extra_Info_Label__c</name>
-    </fields>
-    <fields>
-        <help>Der Abschnitt der Seite &quot;Erste Schritte&quot;, zu dem dieses Element gehört.</help>
-        <label>GS-Checklistenabschnitt</label>
-        <name>GS_Checklist_Section__c</name>
-        <relationshipLabel>GS-Checklistenelemente</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Gibt an, ob das Element über einen Anzeigelink verfügt.</help>
-        <label>Hat Link</label>
-        <name>Has_Link__c</name>
-    </fields>
-    <fields>
-        <help>Der Dateiname des wiederzugebenden Bilds in der statischen Ressource &quot;CumulusResources&quot; (im Ordner &quot;gsAssets/step&quot;).</help>
-        <label>Bild</label>
-        <name>Image__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name für die Linkbezeichnung eines Links auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-        <label>Name der Linkbezeichnung</label>
-        <name>Link_Label__c</name>
-    </fields>
-    <fields>
-        <help>Die Ziel-URL für einen Link auf der Seite &quot;Erste Schritte&quot;.</help>
-        <label>Link-URL</label>
-        <name>Link_URL__c</name>
-    </fields>
-    <fields>
-        <help>Die Position dieses Abschnittelements auf der Seite &quot;Erste Schritte&quot;.</help>
-        <label>Position</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name für die Bezeichnung der Hauptschaltfläche in einem Abschnittselement auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
-        <label>Bezeichnungsname der Hauptschaltfläche</label>
-        <name>Primary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>Die Art der Aktion, die sich auf die Hauptschaltfläche bezieht. Gibt an, ob die Schaltfläche deaktiviert ist, eine neue Salesforce-Registerkarte öffnet oder eine externe Seite öffnet.</help>
-        <label>Typ der Hauptschaltfläche</label>
-        <name>Primary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Deaktiviert</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Externe Seite</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Neue SFDC-Registerkarte</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Aktion der Hauptschaltfläche.
-Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
-        <label>Wert für Hauptschaltfläche</label>
-        <name>Primary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name für die Bezeichnung der sekundären Schaltfläche in einem Abschnittselement auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper LWC übereinstimmen.</help>
-        <label>Bezeichnungsname sekundäre Schaltfläche</label>
-        <name>Secondary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>Die Art der Aktion, die sich auf die sekundäre Schaltfläche bezieht. Gibt an, ob die Schaltfläche deaktiviert ist, eine neue Salesforce-Registerkarte öffnet oder eine externe Seite öffnet.</help>
-        <label>Typ der sekundären Schaltfläche</label>
-        <name>Secondary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Deaktiviert</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Externe Seite</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Neue SFDC-Registerkarte</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Aktion der sekundären Schaltfläche.
-Schaltfläche für externe Seite: externe URL.
-Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
-        <label>Wert der sekundären Schaltfläche</label>
-        <name>Secondary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-        <label>Name der Titelbezeichnung</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Neuter</gender>
-    <layouts>
-        <layout>GS Checklist Item Layout</layout>
-        <sections>
-            <label>Schaltflächen</label>
-            <section>Buttons</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Info</label>
-            <section>Info</section>
-        </sections>
-        <sections>
-            <label>Link</label>
-            <section>Link</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>[The API Name for the Description label of this item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Description Label Name]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Extra_Info_Label__c</name>
+    <help>[The API name of the Extra Info Label, which provides extra information about a section item (such as video length, PDF, etc). Shown in the upper right corner.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <label>[Extra Info Label Name]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>GS_Checklist_Section__c</name>
+    <help>[The section on the Get Started page that this item is part of.]o'介引户הаí先ร简аน取정úσι]</help>
+    <relationshipLabel>[GS Checklist Items]o'介引户]</relationshipLabel>
+    <label>[GS Checklist Section]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Has_Link__c</name>
+    <help>[Indicates if the item has a link to display.]o'介引户הаí先ร简аน]</help>
+    <label>[Has Link]o'介]</label>
+  </fields>
+  <fields>
+    <name>Image__c</name>
+    <help>[The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Image]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Link_Label__c</name>
+    <help>[The API name for the Link label of a link on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Link Label Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Link_URL__c</name>
+    <help>[The target URL for a link on the Get Started page.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Link URL]o'介]</label>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>[The position of this section item on the Get Started page.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Position]o'介]</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Label__c</name>
+    <help>[The API name for the Primary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Primary Button Label Name]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Type__c</name>
+    <help>[The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Primary Button Type]o'介引户]</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>[Disabled]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>[SFDC New Tab]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>[External Page]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Primary_Button_Value__c</name>
+    <help>[The action of the Primary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is "{pageReference}:{objectOrPageApiName}:{action}". See the Lightning NavigationMixin Documentation for examples and all specs.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčن]</help>
+    <label>[Primary Button Value]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Label__c</name>
+    <help>[The API name for the Secondary Button label in a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Secondary Button Label Name]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Type__c</name>
+    <help>[The type of action related to the Secondary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Secondary Button Type]o'介引户ה]</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>[Disabled]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>[SFDC New Tab]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>[External Page]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Value__c</name>
+    <help>[The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is "{pageReference}:{objectOrPageApiName}:{action}". See the Lightning NavigationMixin Documentation for examples and all specs.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčنご]</help>
+    <label>[Secondary Button Value]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>[The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Title Label Name]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Item Layout</layout>
+    <sections>
+      <label>[Info]o'介引]</label>
+      <section>Info</section>
+    </sections>
+    <sections>
+      <label>[Link]o'介引]</label>
+      <section>Link</section>
+    </sections>
+    <sections>
+      <label>[Buttons]o']</label>
+      <section>Buttons</section>
+    </sections>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Get Started Checklist Item]gr''介引户הаí先]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Get Started Checklist Items]gr''介引户הаí先]</value>
+  </caseValues>
 </CustomObjectTranslation>

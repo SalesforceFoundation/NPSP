@@ -1,62 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>住所検証設定-廃止</value>
-    </caseValues>
-    <fields>
-        <help>住所検証に使用する URL。</help>
-        <label>住所検証エンドポイント-廃止</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>認証 ID。</help>
-        <label>認証 ID-廃止</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>認証トークン。</help>
-        <label>認証トークン-廃止</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>オンの場合、変更された住所はサービスからの応答で自動的に更新されます (検証済み結果が 1 つの場合)。</help>
-        <label>住所の自動更新-廃止</label>
-        <name>Auto_Update_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。</help>
-        <label>クラス-廃止</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>オンの場合、サービスが配信不可とマークされた米国の取引先住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。</help>
-        <label>無効な住所のクリア-廃止</label>
-        <name>Clear_Invalid_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>新しい住所の自動住所検証を有効にします。</help>
-        <label>自動検証の有効化-廃止</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。</help>
-        <label>あいまいな住所の拒否-廃止</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>コールアウトのタイムアウト (秒)</help>
-        <label>タイムアウト-廃止</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>SmartyStreets 住所検証サービスを使用しているかどうかを指定します。</help>
-        <label>SmartyStreets の使用-廃止</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>郵便番号検証に使用される URL。</help>
-        <label>郵便番号検証エンドポイント-廃止</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>住所検証に使用する URL。</help>
+    <label>住所検証エンドポイント-廃止</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>認証 ID。</help>
+    <label>認証 ID-廃止</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>認証トークン。</help>
+    <label>認証トークン-廃止</label>
+  </fields>
+  <fields>
+    <name>Auto_Update_Addresses__c</name>
+    <help>オンの場合、変更された住所はサービスからの応答で自動的に更新されます (検証済み結果が 1 つの場合)。</help>
+    <label>住所の自動更新-廃止</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。</help>
+    <label>クラス-廃止</label>
+  </fields>
+  <fields>
+    <name>Clear_Invalid_Addresses__c</name>
+    <help>オンの場合、サービスが配信不可とマークされた米国の取引先住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。</help>
+    <label>無効な住所のクリア-廃止</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>新しい住所の自動住所検証を有効にします。</help>
+    <label>自動検証の有効化-廃止</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。</help>
+    <label>あいまいな住所の拒否-廃止</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>コールアウトのタイムアウト (秒)</help>
+    <label>タイムアウト-廃止</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>SmartyStreets 住所検証サービスを使用しているかどうかを指定します。</help>
+    <label>SmartyStreets の使用-廃止</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>郵便番号検証に使用される URL。</help>
+    <label>郵便番号検証エンドポイント-廃止</label>
+  </fields>
+  <caseValues>
+    <plural>false</plural>
+    <value>住所検証設定-廃止</value>
+  </caseValues>
 </CustomObjectTranslation>

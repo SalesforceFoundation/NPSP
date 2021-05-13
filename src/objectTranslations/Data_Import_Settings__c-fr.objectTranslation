@@ -1,89 +1,89 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre d&apos;importation de données</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres d&apos;importation de données</value>
-    </caseValues>
-    <fields>
-        <help>Un champ facultatif d&apos;ID unique à utiliser pour la correspondance de comptes d&apos;organisation</help>
-        <label>ID unique personnalisé de compte</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Indique quelle règle suivre pour mettre en correspondance les comptes des enregistrements d’importation de données avec les comptes existants.</help>
-        <label>Règle de correspondance de comptes</label>
-        <name>Account_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre d’enregistrements d’importation de données NPSP à traiter dans chaque lot.</help>
-        <label>Taille de lot</label>
-        <name>Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>JSON pour le résultat de déploiement CMT
-{ &quot;jobId&quot; : &quot;response&quot; }</help>
-        <label>Résultat de déploiement de l’API CMT</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>ID de déploiement des métadonnées personnalisées</help>
-        <label>ID de déploiement CMT</label>
-        <name>CMT_Deployment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Un identifiant unique optionnel utilisé pour identifier un contact</help>
-        <label>ID unique personnalisé de contact</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
-        <label>Règle de correspondance de contacts</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API des métadonnées personnalisées de l&apos;enregistrement Ensemble de mappages de champs d&apos;importation de données qui doit être utilisé par défaut.</help>
-        <label>Ensemble map. champs Imp. données défaut</label>
-        <name>Default_Data_Import_Field_Mapping_Set__c</name>
-    </fields>
-    <fields>
-        <help>Nbre de jour àpd la date de don à considérer lors de la recherche d’une opp. ou d&apos;un paiement corresp. L’importateur de données choisira l’opp. ou le paiement corresp. dont la date tombe dans le nbre de jours ET se rapproche le plus de la date du don.</help>
-        <label>Nbre de jours à partir de la date du don</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Définit la manière dont l’importateur de sonnées doit gérer les dons correspondants. Vous devez choisir une valeur.</help>
-        <label>Comportement de correspondance de dons</label>
-        <name>Donation_Matching_Behavior__c</name>
-    </fields>
-    <fields>
-        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
-        <label>Classe d’implém. de corresp. de dons</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Spécifie les champs à faire correspondre lors de la tentative de corresp. des dons dans les enregistrements d&apos;importation de données avec les opp. et les paiements existants. Pour sélectionner plus d&apos;un champ, cliquez sur Contrôle ou Commande.</help>
-        <label>Règle de correspondance de dons</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Définit la méthode de mappage des champs de l&apos;enregistrement Importation de données NPSP avec d&apos;autres objets dans Salesforce. Les options sont Texte d&apos;aide ou Mappage de champs d&apos;importation de données.</help>
-        <label>Méthode de mappage de champs</label>
-        <name>Field_Mapping_Method__c</name>
-    </fields>
-    <fields>
-        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements d’importation de données NPSP.</help>
-        <label>Classe d’implém. de traitement de publ.</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Si coché, NPSP calcule les stat. de donateurs lorsque les dons sont traités. Si non coché, les stat. de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
-        <label>Calculer les cumuls de dons par lots</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>Un champ facultatif d'ID unique à utiliser pour la correspondance de comptes d'organisation</help>
+    <label>ID unique personnalisé de compte</label>
+  </fields>
+  <fields>
+    <name>Account_Matching_Rule__c</name>
+    <help>Indique quelle règle suivre pour mettre en correspondance les comptes des enregistrements d’importation de données avec les comptes existants.</help>
+    <label>Règle de correspondance de comptes</label>
+  </fields>
+  <fields>
+    <name>Batch_Size__c</name>
+    <help>Le nombre d’enregistrements d’importation de données NPSP à traiter dans chaque lot.</help>
+    <label>Taille de lot</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>JSON pour le résultat de déploiement CMT
+{ "jobId" : "response" }</help>
+    <label>Résultat de déploiement de l’API CMT</label>
+  </fields>
+  <fields>
+    <name>CMT_Deployment_ID__c</name>
+    <help>ID de déploiement des métadonnées personnalisées</help>
+    <label>ID de déploiement CMT</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>Un identifiant unique optionnel utilisé pour identifier un contact</help>
+    <label>ID unique personnalisé de contact</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
+    <label>Règle de correspondance de contacts</label>
+  </fields>
+  <fields>
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
+    <help>Le nom d'API des métadonnées personnalisées de l'enregistrement Ensemble de mappages de champs d'importation de données qui doit être utilisé par défaut.</help>
+    <label>Ensemble map. champs Imp. données défaut</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>Nbre de jour àpd la date de don à considérer lors de la recherche d’une opp. ou d'un paiement corresp. L’importateur de données choisira l’opp. ou le paiement corresp. dont la date tombe dans le nbre de jours ET se rapproche le plus de la date du don.</help>
+    <label>Nbre de jours à partir de la date du don</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>Définit la manière dont l’importateur de sonnées doit gérer les dons correspondants. Vous devez choisir une valeur.</help>
+    <label>Comportement de correspondance de dons</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
+    <label>Classe d’implém. de corresp. de dons</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>Spécifie les champs à faire correspondre lors de la tentative de corresp. des dons dans les enregistrements d'importation de données avec les opp. et les paiements existants. Pour sélectionner plus d'un champ, cliquez sur Contrôle ou Commande.</help>
+    <label>Règle de correspondance de dons</label>
+  </fields>
+  <fields>
+    <name>Field_Mapping_Method__c</name>
+    <help>Définit la méthode de mappage des champs de l'enregistrement Importation de données NPSP avec d'autres objets dans Salesforce. Les options sont Texte d'aide ou Mappage de champs d'importation de données.</help>
+    <label>Méthode de mappage de champs</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IPostProcess pour les enregistrements d’importation de données NPSP.</help>
+    <label>Classe d’implém. de traitement de publ.</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>Si coché, NPSP calcule les stat. de donateurs lorsque les dons sont traités. Si non coché, les stat. de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
+    <label>Calculer les cumuls de dons par lots</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre d'importation de données</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres d'importation de données</value>
+  </caseValues>
 </CustomObjectTranslation>

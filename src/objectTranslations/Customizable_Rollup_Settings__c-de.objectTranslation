@@ -1,145 +1,110 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Einstellung für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Einstellungen für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Einstellung für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Einstellungen für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Einstellung für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Einstellungen für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Einstellung für anpassbares Rollup</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Einstellungen für anpassbares Rollup</value>
-    </caseValues>
-    <fields>
-        <help>Bei Akt. begrenzt der nächtl. Auftr. z. Acc.-Hard Credit (nicht verz.) die Anz. der Acc‘s, die zur Neuberechn. ausgew. werden, indem nach vor Kurzem aktual. Opp. in d. Acc. gesucht wird. So wird die Leist. d. nächtl. Auftr. zu anpassb. Rollups verbessert.</help>
-        <label>Inkrement. Acc.-Hard Credit, nicht verz.</label>
-        <name>AccountHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>JSON für das CMT-Bereitstellungsergebnis
-{ &quot;jobId&quot;: &quot;response&quot; }</help>
-        <label>CMT-Ergebnis API-Bereitstellung</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Accounts, wird d. max. Anz. an Acc. angeg., die in jedem Batch verarb. werden.</help>
-        <label>Gr. Datenvol.: Acc.-Hard Credit-Blockgr.</label>
-        <name>ChunkSize_Account_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Kontakten, wird d. max. Anz. an Kont. angeg., die in jedem Batch verarb. werden.</help>
-        <label>Gr. Datenvol.: Kont-Hard Credit-Blockgr.</label>
-        <name>ChunkSize_Contact_HardCredit__c</name>
-    </fields>
-    <fields>
-        <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. MIT SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batchauftr. in Organisat. mit vielen Mio. Kontakten, wird die max. Anz. an Kont. angeg., die in jedem Batch verarb. werden.</help>
-        <label>Gr. Datenvol.: Kont-Soft Credit-Blockgr.</label>
-        <name>ChunkSize_Contact_SoftCredit__c</name>
-    </fields>
-    <fields>
-        <help>Bei Akt. begr. der nächtl. Auftr. z. Kont.-Hard Credit (nicht verz.) die Anz. der Kont‘e, die zur Neuber. ausgew. werden, indem nach v. Kurz. aktual. Opp. in d. Kont. gesucht wird. So wird die Leist. des nächtl. Auftr. zu anpassb. Rollups verbessert.</help>
-        <label>Inkrem. Kontakt-Hard Credit, nicht verz.</label>
-        <name>ContactHardCreditNonSkew_Incremental__c</name>
-    </fields>
-    <fields>
-        <help>Aktivieren Sie dieses Kontrollkästchen, um die neue NPSP-Engine für anpassbare Rollups zu aktivieren.</help>
-        <label>Anpassbare Rollups aktivieren</label>
-        <name>Customizable_Rollups_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Aktivieren, um zu verhindern, dass Hard Credit- u. Soft Credit-Rollups zu Accounts und Kontakten nur Account- und Kontaktdatensätze verarbeiten, die bereits über verbundene Opp.- oder Opp.-Kontaktrollen-Datensätze verfügen.</help>
-        <label>Verbundene Datensatzfilter deaktivieren</label>
-        <name>Disable_Related_Records_Filter__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Account-Hard Credit-Batch-Größe</label>
-        <name>Rollups_Account_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Account-Objekt im verzerrten Modus verarbeitet werden.</help>
-        <label>Account verzerrter Modus – Batch-Größe</label>
-        <name>Rollups_Account_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Account-Soft Credit-Batch-Größe</label>
-        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Account-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Soft Credit zu Acct.-Batch-Größe</label>
-        <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Hard Credit Spender-Rollups zum Kontakt-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Hard Credit-Batch-Größe</label>
-        <name>Rollups_Contact_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Kontakt-Objekt im verzerrten Modus verarbeitet werden.</help>
-        <label>Kontakt verzerrter Modus – Batch-Größe</label>
-        <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Soft Credit Spender-Rollups zum Kontakt-Objekt verarbeitet werden.</help>
-        <label>Kontakt-Soft Credit-Batch-Größe</label>
-        <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Verwendungszweck-Objekt verarbeitet werden.</help>
-        <label>Batch-Größe Verwendungszweck</label>
-        <name>Rollups_GAU_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Nur zur Verw. beim Überschr. inkrem. Rollups. Überschr. d. Feld z. Filtern verbund. Opp., um festzul., welche Acc., Kontakte, Verwendungszwecke. oder RDs während eines nächtl. geplanten Auftrags neu berechnet werden. Standardeinstellung.: SystemModStamp.</help>
-        <label>Inkrem.: Überschr. d Felds Letzte N Tage</label>
-        <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
-    </fields>
-    <fields>
-        <help>Nur zur Verw. b. Überschr. Inkrem. Rollups. Der Wert überschr. die berechn. Anz. an Tagen, die z. Filtern verb. Opp. verw. werden, um festzulegen, welche Acc‘s, Kont‘e, Verwendungszwecke oder RDs während eines nächtl. gepl. Auftrags neu berechnet werden.</help>
-        <label>Inkrem.: Überschr. d. W‘s Letzte N Tage</label>
-        <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
-    </fields>
-    <fields>
-        <help>Die max. Zahl an verb. Opp. in einem Acc. o. Kont., die i. d. Rollup-Batch-Aufträgen im nicht verz. Modus zulässig sind. Ein Acc. o. Kont. mit einer höheren Zahl als diese Zahl an verb. Opp. wird immer im verz. Modus zusammengefasst.</help>
-        <label>Verzerrter Modus – Schwellenwert</label>
-        <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
-    </fields>
-    <fields>
-        <help>Anzahl an Account-, Kontakt- oder Verwendungszweck-Datensätzen pro Batch, die zur Verarbeitung im verzerrten Modus ausgewählt werden.</help>
-        <label>Verzerrter Modus, Disponent-Batch-Größe</label>
-        <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+    <help>[When checked, the Account Hard Credit (Non-Skew) nightly job limits the number of Accounts selected for recalculation by looking for recently updated Opportunities on those Accounts. This helps to improve Customizable Rollup nightly job performance.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčن]</help>
+    <label>[Incremental Account Hard Credit Non-Skew]o'介引户הаí先ร简а]</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>[JSON for the CMT deployment result
+{ "jobId": "repsonse" }]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[CMT API Deployment Result]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_FldOverride__c</name>
+    <help>[For Incremental Rollups Override Use Only. This value overrides the field used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job. Defaults to SystemModStamp.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Incremental: Last N Days Field Override]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+    <help>[When checked, the Contact Hard Credit (Non-Skew) nightly job limits the number of Contacts selected for recalculation by looking for those Contacts recently updated Opportunities. This helps to improve Customizable Rollup nightly job performance.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčن]</help>
+    <label>[Incremental Contact Hard Credit Non-Skew]o'介引户הаí先ร简а]</label>
+  </fields>
+  <fields>
+    <name>Customizable_Rollups_Enabled__c</name>
+    <help>[Check this box to enable the new NPSP Customizable Rollup Engine]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Enable Customizable Rollups]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Disable_Related_Records_Filter__c</name>
+    <help>[Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介น]</help>
+    <label>[Disable Related Records Filter]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating donor rollups to the Account object.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแة]</help>
+    <label>[Account Hard Credit Batch Size]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+    <help>[For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωt]</help>
+    <label>[Incremental: Last N Days Value Override]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating donor rollups to the Account object using Skew Mode.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Account Skew Mode Batch Size]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating soft credit donor rollups to the Account object.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Account Soft Credit Batch Size]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Rollups_AcctContactSoftCredit_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating soft credit donor rollups to the Account object.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Contact Soft Credit to Acct Batch Size]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating hard credit donor rollups to the Contact object.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Contact Hard Credit Batch Size]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating donor rollups to the Contact object using Skew Mode.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Contact Skew Mode Batch Size]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating soft credit donor rollups to the Contact object.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Contact Soft Credit Batch Size]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Rollups_GAU_Batch_Size__c</name>
+    <help>[Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[GAU Batch Size]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    <help>[The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрω]</help>
+    <label>[Skew Mode Threshold]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
+    <help>[Number of Account, Contact, or GAU records per batch to select for Skew Mode processing.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Skew Mode Dispatcher Batch Size]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_HardCredit__c</name>
+    <help>[FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소и]</help>
+    <label>[LDV: Contact Hard Credit Chunk Size]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Account_HardCredit__c</name>
+    <help>[FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소и]</help>
+    <label>[LDV: Account Hard Credit Chunk Size]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>ChunkSize_Contact_SoftCredit__c</name>
+    <help>[FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Contacts, this specifies the maximum number of Contacts processed in each batch.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소и]</help>
+    <label>[LDV: Contact Soft Credit Chunk Size]o'介引户הаí先ร]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Customizable Rollup Settings]gr''介引户הаí]</value>
+  </caseValues>
 </CustomObjectTranslation>

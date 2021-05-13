@@ -1,301 +1,286 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
-        <name>RD2_Entry_Form_Custom_Fields</name>
-    </fieldSets>
-    <fields>
-        <help>Die letzten vier Ziffern des Bankkontos, das für diese Transaktion verwendet wird.</help>
-        <label>ACH Letzte 4</label>
-        <name>ACH_Last_4__c</name>
-    </fields>
-    <fields>
-        <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum auf den letzten Tag des Monats. Die Ratenlaufzeit muss monatl. o. vierteljährl. o. eine benutzerdef. Ratenlaufzeit in Monaten sein.</help>
-        <label>Immer letzten Tag des Monats verwenden</label>
-        <name>Always_Use_Last_Day_Of_Month__c</name>
-    </fields>
-    <fields>
-        <help>Der Ablaufmonat der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
-        <label>Ablaufmonat der Karte</label>
-        <name>CardExpirationMonth__c</name>
-    </fields>
-    <fields>
-        <help>Das Ablaufjahr der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
-        <label>Ablaufjahr der Karte</label>
-        <name>CardExpirationYear__c</name>
-    </fields>
-    <fields>
-        <help>Die letzten vier Stellen der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
-        <label>Letzte 4 Karte</label>
-        <name>CardLast4__c</name>
-    </fields>
-    <fields>
-        <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
-        <label>Grund für Status</label>
-        <name>ClosedReason__c</name>
-        <picklistValues>
-            <masterLabel>Card Expired</masterLabel>
-            <translation>Karte abgelaufen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Commitment Completed</masterLabel>
-            <translation>Engagement abgeschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deceased Donor</masterLabel>
-            <translation>Spender verstorben</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Financial Difficulty</masterLabel>
-            <translation>Finanzielle Schwierigkeiten</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Longer Interested</masterLabel>
-            <translation>Kein Interesse mehr</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Unknown</masterLabel>
-            <translation>Unbekannt</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Externer Bezeichner für die Integration des Salesforce.org-Zahlungsservice.</help>
-        <label>Wiederholungs-ID in Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>Der Gesamtbetrag der wiederkehrenden Spende für das laufende Kalender- oder Geschäftsjahr (schreibgeschützt). Beinhaltet geschlossene gewonnene Opportunities und zukünftige Ratenzahlungen für den Rest des Jahres.</help>
-        <label>Wert für aktuelles Jahr</label>
-        <name>CurrentYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum a. d. ausgew. Tag des Monats. HINWEIS: Wenn &quot;Immer letzten Tag des Monats verwenden&quot; aktiviert ist, ersetzt dies den Wert &quot;Tag des Monats&quot;.</help>
-        <label>Tag des Monats</label>
-        <name>Day_of_Month__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>31</masterLabel>
-            <translation>31</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Verhindert die Erstellung der Opportunity für die erste Rate für eine neue wiederkehrende Spende, unabhängig von der Einstellung für die automatische Erstellung von Raten-Opportunitys in den NPSP-Einstellungen.</help>
-        <label>Erste Rate deaktivieren</label>
-        <name>DisableFirstInstallment__c</name>
-    </fields>
-    <fields>
-        <help>Nach diesem Datum erstellt NPSP keine Raten für diese wiederkehrende Spende mehr und aktualisiert den Status auf Abgeschlossen.</help>
-        <label>Enddatum</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
-        <label>Häufigkeit der Ratenzahlung</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Das letzte Elevate-Ereignis, das zu einer Aktualisierung dieser wiederkehrenden Spende geführt hat.</help>
-        <label>Letztes verarbeitetes Elevate-Ereignis</label>
-        <name>LastElevateEventPlayed__c</name>
-    </fields>
-    <fields>
-        <help>Der voraussichtliche Gesamtbetrag dieser wiederkehrenden Spende für das nächste Kalender- oder Geschäftsjahr (schreibgeschützt).</help>
-        <label>Wert für nächstes Jahr</label>
-        <name>NextYearValue__c</name>
-    </fields>
-    <fields>
-        <help>Die Zahlungsform für diese wiederkehrende Spende. NPSP kopiert den ausgewählten Wert automatisch in jeden ausgewählten Zahlungsdatensatz.</help>
-        <label>Zahlungsmethode</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Scheck</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Kreditkarte</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Offen&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Festgelegt&quot; aus. Bei &quot;Festgelegt&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
-        <label>Wiederholungstyp</label>
-        <name>RecurringType__c</name>
-        <picklistValues>
-            <masterLabel>Fixed</masterLabel>
-            <translation>Festgelegt</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Offen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
-        <label>Inkrafttreten</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
-        <label>Status</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Active</masterLabel>
-            <translation>Aktiv</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Closed</masterLabel>
-            <translation>Geschlossen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Lapsed</masterLabel>
-            <translation>Erloschen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Paused</masterLabel>
-            <translation>Aufschub</translation>
-        </picklistValues>
-    </fields>
-    <quickActions>
-        <label>Wiederkehrende Spende schließen</label>
-        <name>Close_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Neue Opportunity</label>
-        <name>New_Opportunity</name>
-    </quickActions>
-    <quickActions>
-        <label>Aufschub</label>
-        <name>Pause</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>ACH_Last_4__c</name>
+    <help>[The last four digits of the bank account used for this transaction.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[ACH Last 4]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+    <help>[Sets future monthly, custom monthly, or quarterly donation installments to the last day of the month, regardless of Next Donation Date. Installment period must be Monthly or Quarterly, or a custom installment period using months.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрω]</help>
+    <label>[Always use last day of month]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>CardExpirationMonth__c</name>
+    <help>[The expiration month of the card used for this Recurring Donation.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Card Expiration Month]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>CardExpirationYear__c</name>
+    <help>[The expiration year of the card used for this Recurring Donation.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Card Expiration Year]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>CardLast4__c</name>
+    <help>[The last four digits of the card used for this Recurring Donation.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Card Last 4]o'介引]</label>
+  </fields>
+  <fields>
+    <name>ClosedReason__c</name>
+    <help>[The reason this Recurring Donation has its current Status value.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <label>[Status Reason]o'介]</label>
+    <picklistValues>
+      <masterLabel>Card Expired</masterLabel>
+      <translation>[Card Expired]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Commitment Completed</masterLabel>
+      <translation>[Commitment Completed]o'介引户ה]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deceased Donor</masterLabel>
+      <translation>[Deceased Donor]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Financial Difficulty</masterLabel>
+      <translation>[Financial Difficulty]o'介引户ה]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Longer Interested</masterLabel>
+      <translation>[No Longer Interested]o'介引户ה]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Unknown</masterLabel>
+      <translation>[Unknown]o']</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>[External identifier for Salesforce.org payment service integration.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[Elevate Recurring Id]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>CurrentYearValue__c</name>
+    <help>[This Recurring Donation's total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяř]</help>
+    <label>[Current Year Value]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Day_of_Month__c</name>
+    <help>[Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبč]</help>
+    <label>[Day of Month]o'介引]</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>[1]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>[2]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>[3]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>[4]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>[5]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>[6]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>[7]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>[8]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>[9]o]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>[10]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>[11]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>[12]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>[13]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>[14]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>[15]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>[16]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>[17]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>[18]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>[19]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>[20]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>[21]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>[22]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>[23]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>[24]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>[25]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>[26]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>[27]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>[28]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>[29]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>[30]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>31</masterLabel>
+      <translation>[31]o']</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>DisableFirstInstallment__c</name>
+    <help>[Prevents creation of the first installment Opportunity for a new Recurring Donation, regardless of the Installment Opportunity Auto-Creation setting in NPSP Settings.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะ]</help>
+    <label>[Disable First Installment]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>[After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[End Date]o'介]</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>[The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtب]</help>
+    <label>[Installment Frequency]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>LastElevateEventPlayed__c</name>
+    <help>[The last Elevate event played resulting in an update to this Recurring Donation.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Last Elevate Event Played]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>LastElevateVersionPlayed__c</name>
+    <help>[An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبčنごдčש帳า]</help>
+    <label>[Last Elevate Version Played]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>NextYearValue__c</name>
+    <help>[This Recurring Donation's total expected amount for the next calendar or fiscal year (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةб]</help>
+    <label>[Next Year Value]o'介引]</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>[The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Payment Method]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>[Credit Card]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>[Check]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>[ACH]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringType__c</name>
+    <help>[Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ]</help>
+    <label>[Recurring Type]o'介引]</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>[Open]o'介引]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Fixed</masterLabel>
+      <translation>[Fixed]o'介引户]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>[The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <label>[Effective Date]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>[Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Status]o']</label>
+    <picklistValues>
+      <masterLabel>Active</masterLabel>
+      <translation>[Active]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Lapsed</masterLabel>
+      <translation>[Lapsed]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Closed</masterLabel>
+      <translation>[Closed]o']</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Paused</masterLabel>
+      <translation>[Paused]o']</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>[Recalculate Rollups]o'介引户]</label>
+  </webLinks>
+</CustomObjectTranslation>

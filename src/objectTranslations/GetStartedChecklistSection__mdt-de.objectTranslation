@@ -1,79 +1,49 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <fields>
-        <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-        <label>Name der Beschreibungsbezeichnung</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>Der Typ der Seite &quot;Erste Schritte&quot; (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
-        <label>Seitentyp</label>
-        <name>Page_Type__c</name>
-        <picklistValues>
-            <masterLabel>Admin</masterLabel>
-            <translation>Administrator</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>End User</masterLabel>
-            <translation>Endbenutzer</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Die Position dieses Abschnitts auf der Seite &quot;Erste Schritte&quot;.</help>
-        <label>Position</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-        <label>Name der Titelbezeichnung</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>GS Checklist Section Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>[The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Description Label Name]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Page_Type__c</name>
+    <help>[The type of Get Started page (Admin or End User) where this section will appear.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Page Type]o'介]</label>
+    <picklistValues>
+      <masterLabel>Admin</masterLabel>
+      <translation>[Admin]o'介引户]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>End User</masterLabel>
+      <translation>[End User]o'介]</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>[The position of this section on the Get Started page.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Position]o'介]</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>[The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.]o'介引户הаí先ร简аน取정úσιмÜП介мのαş]</help>
+    <label>[Title Label Name]o'介引]</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Section Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Get Started Checklist Section]gr''介引户הаí先ร]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[NPSP Get Started Checklist Sections]gr''介引户הаí先ร]</value>
+  </caseValues>
 </CustomObjectTranslation>

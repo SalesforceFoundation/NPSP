@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de Entrada de regalos</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de Entrada de regalos</value>
-    </caseValues>
-    <fields>
-        <help>Esta es una plantilla de inicio empleada para Entrada de regalos que puede utilizarse para introducir regalos por separado o lotes de regalos. Esta es la plantilla predeterminada para introducir regalos por separado.</help>
-        <label>Plantilla Entrada regalos predeterminada</label>
-        <name>Default_Gift_Entry_Template__c</name>
-    </fields>
-    <fields>
-        <help>Activa la herramienta Entrada de regalos. Esta función requiere Asignación avanzada.</help>
-        <label>Activar Entrada de regalos</label>
-        <name>Enable_Gift_Entry__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Gift_Entry_Template__c</name>
+    <help>Esta es una plantilla de inicio empleada para Entrada de regalos que puede utilizarse para introducir regalos por separado o lotes de regalos. Esta es la plantilla predeterminada para introducir regalos por separado.</help>
+    <label>Plantilla Entrada regalos predeterminada</label>
+  </fields>
+  <fields>
+    <name>Enable_Gift_Entry__c</name>
+    <help>Activa la herramienta Entrada de regalos. Esta función requiere Asignación avanzada.</help>
+    <label>Activar Entrada de regalos</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de Entrada de regalos</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de Entrada de regalos</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,91 +1,61 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Datenimport-Feldzuordnung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Datenimport-Feldzuordnungen</value>
-    </caseValues>
-    <fields>
-        <help>Der Datenimport-Feldzuordnungssatz, der diese Feldzuordnung enthält.</help>
-        <label>Datenimport-Feldzuordnungssatz</label>
-        <name>Data_Import_Field_Mapping_Set__c</name>
-        <relationshipLabel>Datenimport-Feldzuordnungen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Wenn diese Option aktiviert ist, wurde dieser Datensatz aus der Benutzeroberfläche der Erweiterten Zuordnung des Datenimports gelöscht und bei der Verarbeitung des NPSP-Datenimports ignoriert.</help>
-        <label>Ist gelöscht</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Zeigt an, ob das Feld des NPSP-Datenimportobjekts einen Wert enthalten muss. Wenn er erforderlich ist, schlägt die Testausführung fehl, wenn das Feld keinen Wert enthält.</help>
-        <label>Erforderlich?</label>
-        <name>Required__c</name>
-        <picklistValues>
-            <masterLabel>No</masterLabel>
-            <translation>Nein</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yes</masterLabel>
-            <translation>Ja</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Der API-Name des Felds auf dem NPSP-Datenimportobjekt.</help>
-        <label>API-Name des Quellfelds</label>
-        <name>Source_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der API-Name des Felds auf dem Zielobjekt.</help>
-        <label>API-Name des Zielfelds</label>
-        <name>Target_Field_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>Die Ziel-Datenimport-Objektgruppe für diese Feldzuordnung.</help>
-        <label>Zielobjektzuordnung</label>
-        <name>Target_Object_Mapping__c</name>
-        <relationshipLabel>Datenimport-Feldzuordnungen</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Field Mapping Layout</layout>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <help>[The Data Import Field Mapping Set containing this field mapping.]o'介引户הаí先ร简аน取정úσιм]</help>
+    <relationshipLabel>[Data Import Field Mappings]o'介引户הа]</relationshipLabel>
+    <label>[Data Import Field Mapping Set]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <help>[When checked, indicates this record was deleted from the Data Import Advanced Mapping user interface and will be ignored during NPSP Data Import processing.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <label>[Is Deleted]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Required__c</name>
+    <help>[Indicates if the field on the NPSP Data Import object must contain a value. When it's required, Dry Run will fail if that field doesn't contain a value.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй]</help>
+    <label>[Required?]o'介]</label>
+    <picklistValues>
+      <masterLabel>Yes</masterLabel>
+      <translation>[Yes]o'介]</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No</masterLabel>
+      <translation>[No]o']</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Source_Field_API_Name__c</name>
+    <help>[The API name of the field on the NPSP Data Import object.]o'介引户הаí先ร简аน取정úσ]</help>
+    <label>[Source Field API Name]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Target_Field_API_Name__c</name>
+    <help>[The API name of the field on the target object.]o'介引户הаí先ร简аน取]</help>
+    <label>[Target Field API Name]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Target_Object_Mapping__c</name>
+    <help>[The target Data Import Object Group for this field mapping.]o'介引户הаí先ร简аน取정úσ]</help>
+    <relationshipLabel>[Data Import Field Mappings]o'介引户הа]</relationshipLabel>
+    <label>[Target Object Mapping]o'介引户ה]</label>
+  </fields>
+  <layouts>
+    <layout>Data Import Field Mapping Layout</layout>
+    <sections>
+      <label>[Custom Links]o'介引]</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Field Mapping]gr''介引户הа]</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>[Data Import Field Mappings]gr''介引户הа]</value>
+  </caseValues>
 </CustomObjectTranslation>

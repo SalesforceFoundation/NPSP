@@ -1,201 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
-    <fields>
-        <help>Klicken Sie oben auf der Seite &quot;Adresse&quot; auf die Schaltfläche &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen zur Adressenüberprüfung finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
-        <label>Adressenüberprüfungsstatus</label>
-        <name>Address_Verification_Status__c</name>
-    </fields>
-    <fields>
-        <help>Nachschlageoption zum Batch, in dem dieser Kontakt erstellt wurde.</help>
-        <label>Batch</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Kontakte</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Nachschlageoption zum aktuellen Adressdatensatz für diesen Kontakt. NPSP gibt die Straße, die Stadt, das Bundesland und die Postleitzahl aus dem aktuellen Adressdatensatz in das Postadressenfeld des Kontakts ein. </help>
-        <label>Aktuelle Adresse</label>
-        <name>Current_Address__c</name>
-        <relationshipLabel>Kontakte (Aktuelle Adresse)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Gibt an, dass der Kontakt verstorben ist. Bei Auswahl dieser Option wird der Kontakt als verstorben gekennz. und von der Haushalt-Benennung und von den Standard-E-Mails und Telefonanrufen ausgeschl. (Wenn er nicht der einzige Kontakt i. d. Haush. ist).</help>
-        <label>Verstorben</label>
-        <name>Deceased__c</name>
-    </fields>
-    <fields>
-        <help>Gibt an, dass der Kontakt keine Anrufe und E-Mails von Ihrer Organisation erhalten möchte. Mit diesem Feld filtern Sie Kontakte aus den E-Mail- und Telefonlisten heraus. Mit dieser Option wird dieser Kontakt aus den Opp.-Bestätigungen ausgeschl.</help>
-        <label>Nicht kontaktieren</label>
-        <name>Do_Not_Contact__c</name>
-    </fields>
-    <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der formellen Anrede des Haushalts ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
-        <label>Von formeller Anrede d. Haush. ausschl.</label>
-        <name>Exclude_from_Household_Formal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt von der informellen Anrede des Haushalts ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
-        <label>Von inform. Anrede des Haush. ausschl.</label>
-        <name>Exclude_from_Household_Informal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Durch Aktivierung dieses Kontrollkästchens wird dieser Kontakt aus dem Haushalt-Namen ausgeschlossen (Einstellung unter NPSP-Einstellungen | Personen | Haushalte).</help>
-        <label>Aus Haushalt-Namen ausschließen</label>
-        <name>Exclude_from_Household_Name__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag des ersten Soft Credit</help>
-        <label>Betrag des ersten Soft Credit</label>
-        <name>First_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum des ersten Soft Credit</help>
-        <label>Datum des ersten Soft Credit</label>
-        <name>First_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Enthält die Kennung des Haushalt-Datensatzes (entweder Haushalt-Account oder Haushalt-Objekt), mit dem dieser Kontakt aktuell verbunden ist (schreibgeschützt).</help>
-        <label>HH-Kennung</label>
-        <name>HHId__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag des höchsten Soft Credit dieses Kontakts</help>
-        <label>Betrag des höchsten Soft Credit</label>
-        <name>Largest_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum des höchsten Soft Credit dieses Kontakts</help>
-        <label>Datum des höchsten Soft Credit</label>
-        <name>Largest_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Der Betrag des letzten Soft Credit dieses Kontakts</help>
-        <label>Betrag des letzten Soft Credit</label>
-        <name>Last_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Das Datum des letzten Soft Credit</help>
-        <label>Datum des letzten Soft Credit</label>
-        <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der Soft Credits, die in den letzten Tagen abgeschlossen wurden, wie in den NPSP-Einstellungen definiert</help>
-        <label>Anz. Soft Credits i. d. letzt. N Tagen</label>
-        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der diesem Kontakt im letzten Kalenderjahr zugewiesenen Soft Credits</help>
-        <label>Anzahl Soft Credits letztes Jahr</label>
-        <name>Number_of_Soft_Credits_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der diesem Kontakt in diesem Kalenderjahr zugewiesenen Soft Credits</help>
-        <label>Anzahl Soft Credits dieses Jahr</label>
-        <name>Number_of_Soft_Credits_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Die Anzahl der diesem Kontakt vor zwei Kalenderjahren zugewiesenen Soft Credits</help>
-        <label>Anzahl Soft Credits vor zwei Jahren</label>
-        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Die Gesamtzahl der diesem Kontakt zugewiesenen Soft Credits</help>
-        <label>Anzahl Soft Credits</label>
-        <name>Number_of_Soft_Credits__c</name>
-    </fields>
-    <fields>
-        <help>Der in der Liste der Organisationszugehörigkeiten dieses Kontakts als &quot;Primär&quot; gekennzeichnete Account.</help>
-        <label>Primäre Zugehörigkeit</label>
-        <name>Primary_Affiliation__c</name>
-        <relationshipLabel>Nicht verwenden. Verwenden Sie &quot;Organisationszugehörigkeiten&quot;.</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Gibt an, ob dieser Kontakt in seinem Account als Hauptansprechpartner festgelegt ist (schreibgeschützt).</help>
-        <label>Hauptansprechpartner</label>
-        <name>Primary_Contact__c</name>
-    </fields>
-    <fields>
-        <help>Der Gesamtbetrag des diesem Kontakt in den letzten N Tagen zugewiesenen Soft Credit. Der Wert N wird in den NPSP-Einstellungen unter &quot;Spenden&quot; &gt; &quot;Spenderstatistik&quot; definiert.</help>
-        <label>Soft Credits in den letzten N Tagen</label>
-        <name>Soft_Credit_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Wenn diese Option aktiviert ist, wird die Adresse dieses Kontakts nicht mit dem Standardhaushalt oder der saisonalen Adresse synchronisiert. Auf diese Weise erhalten Sie eine separate Postanschrift für diesen speziellen Kontakt.</help>
-        <label>Überschreiben der Adresse</label>
-        <name>is_Address_Override__c</name>
-    </fields>
-    <layouts>
-        <layout>Contact Layout</layout>
-        <sections>
-            <label>Kontaktdetails</label>
-            <section>Contact Details</section>
-        </sections>
-        <sections>
-            <label>Spendeninformationen</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Spendenbeträge gesamt</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Adresse des Haushalts</label>
-            <section>Household Address</section>
-        </sections>
-        <sections>
-            <label>Informationen zur Spende des Haushalts</label>
-            <section>Household Donation Info</section>
-        </sections>
-        <sections>
-            <label>Mitgliedschaftsinformationen</label>
-            <section>Membership Information</section>
-        </sections>
-        <sections>
-            <label>Sonstiges</label>
-            <section>Misc</section>
-        </sections>
-        <sections>
-            <label>Soft Credit gesamt</label>
-            <section>Soft Credit Totals</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Neue Zugehörigkeit</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Neue wiederkehrende Spende</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Neue Beziehung</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Kontakte zusammenführen</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>Neue Spende</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Address_Verification_Status__c</name>
+    <help>[The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介นşрωtبč]</help>
+    <label>[Address Verification Status]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <help>[Lookup to the Batch that this Contact was created in.]o'介引户הаí先ร简аน取정]</help>
+    <relationshipLabel>[Contacts]o'介]</relationshipLabel>
+    <label>[Batch]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Current_Address__c</name>
+    <help>[Lookup to the current Address record for this Contact. NPSP populates the Contact's Mailing Address field with the street, city, state, and postal code from the current Address record.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт]</help>
+    <relationshipLabel>[Contacts (Current Address)]o'介引户הа]</relationshipLabel>
+    <label>[Current Address]o'介引]</label>
+  </fields>
+  <fields>
+    <name>CustomizableRollups_UseSkewMode__c</name>
+    <help>[When checked, Customizable Rollups will always use 'Skew Mode' to rollup Hard Credit and Soft Credits for this record.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Customizable Rollups: Force Skew Mode]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Deceased__c</name>
+    <help>[Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소]</help>
+    <label>[Deceased]o'介]</label>
+  </fields>
+  <fields>
+    <name>Do_Not_Contact__c</name>
+    <help>[Indicates the Contact does not want your organization to call or email. Use this field to filter out Contacts in email and phone lists. When selected, NPSP excludes this Contact from Opportunity Acknowledgements.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт紹소иЗ介น]</help>
+    <label>[Do Not Contact]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
+    <help>[When selected, NPSP excludes this Contact from the Household Formal Greeting (set in NPSP Settings | People | Households).]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Exclude from Household Formal Greeting]o'介引户הаí先ร简]</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Informal_Greeting__c</name>
+    <help>[When selected, NPSP excludes this Contact from the Household Informal Greeting (set in NPSP Settings | People | Households).]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <label>[Exclude from Household Informal Greeting]o'介引户הаí先ร简а]</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Name__c</name>
+    <help>[When selected, NPSP excludes this Contact from the Household Name (set in NPSP Settings | People | Households).]o'介引户הаí先ร简аน取정úσιмÜП介]</help>
+    <label>[Exclude from Household Name]o'介引户הаí]</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Amount__c</name>
+    <help>[The amount of this Contact's earliest soft credit.]o'介引户הаí先ร简аน取정]</help>
+    <label>[First Soft Credit Amount]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Date__c</name>
+    <help>[The date of this Contact's earliest soft credit.]o'介引户הаí先ร简аน取]</help>
+    <label>[First Soft Credit Date]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>HHId__c</name>
+    <help>[Holds the Id of the Household record (either Household Account, or Household object) this Contact is currently associated with (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[HHId]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Amount__c</name>
+    <help>[The amount of this Contact's largest soft credit.]o'介引户הаí先ร简аน取]</help>
+    <label>[Largest Soft Credit Amount]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Date__c</name>
+    <help>[The date of this Contact's largest soft credit.]o'介引户הаí先ร简аน取]</help>
+    <label>[Largest Soft Credit Date]o'介引户הа]</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Amount__c</name>
+    <help>[The amount of this Contact's most recent soft credit.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Last Soft Credit Amount]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Date__c</name>
+    <help>[The date of this Contact's most recent soft credit.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Last Soft Credit Date]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    <help>[The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계]</help>
+    <label>[Number of Soft Credits Last N Days]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
+    <help>[The number of soft credits attributed to this Contact in the previous calendar year.]o'介引户הаí先ร简аน取정úσιмÜП介мのα]</help>
+    <label>[Number of Soft Credits Last Year]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_This_Year__c</name>
+    <help>[The number of soft credits attributed to this Contact this calendar year.]o'介引户הаí先ร简аน取정úσιмÜП]</help>
+    <label>[Number of Soft Credits This Year]o'介引户הаí先]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    <help>[The number of soft credits attributed to this Contact two calendar years ago.]o'介引户הаí先ร简аน取정úσιмÜП介м]</help>
+    <label>[Number of Soft Credits Two Years Ago]o'介引户הаí先ร]</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits__c</name>
+    <help>[The total number of soft credits attributed to this Contact.]o'介引户הаí先ร简аน取정úσι]</help>
+    <label>[Number of Soft Credits]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>Primary_Affiliation__c</name>
+    <help>[The Account marked as Primary in this Contact's list of Organization Affiliations.]o'介引户הаí先ร简аน取정úσιмÜП介мの]</help>
+    <relationshipLabel>[Do Not Use.  Use Organization Affiliations.]o'介引户הаí先ร简а]</relationshipLabel>
+    <label>[Primary Affiliation]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>[Indicates if this Contact is designated as the Primary Contact on their Account (read only).]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแ]</help>
+    <label>[Primary Contact]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Soft_Credit_Last_N_Days__c</name>
+    <help>[The total amount of soft credit attributed to this Contact in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةб]</help>
+    <label>[Soft Credit Last N Days]o'介引户ה]</label>
+  </fields>
+  <fields>
+    <name>is_Address_Override__c</name>
+    <help>[When selected, NPSP will not sync this Contact's address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.]o'介引户הаí先ร简аน取정úσιмÜП介мのαşแةбй계ذะяřт]</help>
+    <label>[Address Override]o'介引]</label>
+  </fields>
+  <webLinks>
+    <name>Merge_Contacts</name>
+    <label>[Merge Contacts]o'介引]</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>[New Gift]o'介]</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>[Recalculate Rollups]o'介引户]</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Layout</layout>
+    <sections>
+      <label>[Contact Details]o'介引]</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>[Household Address]o'介引户]</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>[Donation Information]o'介引户ה]</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>[Donation Totals]o'介引]</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>[Soft Credit Totals]o'介引户]</label>
+      <section>Soft Credit Totals</section>
+    </sections>
+    <sections>
+      <label>[Household Donation Info]o'介引户ה]</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>[Membership Information]o'介引户ה]</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>[Misc]o'介引]</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

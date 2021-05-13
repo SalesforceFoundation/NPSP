@@ -1,59 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Benutzerdefinierte Spaltenüberschrift</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Benutzerdefinierten Spaltenüberschriften</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Benutzerdefinierte Spaltenüberschrift</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Benutzerdefinierten Spaltenüberschriften</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Benutzerdefinierten Spaltenüberschrift</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Benutzerdefinierten Spaltenüberschriften</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Benutzerdefinierten Spaltenüberschrift</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Benutzerdefinierten Spaltenüberschriften</value>
-    </caseValues>
-    <fields>
-        <help>Der API-Name des Felds, das in der Listenansicht angezeigt wird.</help>
-        <label>Feld-API-Name</label>
-        <name>Field_Api_Name__c</name>
-    </fields>
-    <fields>
-        <help>Die Position des Felds in der Listenansicht.</help>
-        <label>Index</label>
-        <name>Index__c</name>
-    </fields>
-    <fields>
-        <help>Die Listenansicht (z. B. Batches oder Vorlagen, die dieses Feld anzeigt.</help>
-        <label>Listenname</label>
-        <name>List_Name__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Field_Api_Name__c</name>
+    <help>[The API name of the field displayed in the list view.]o'介引户הаí先ร简аน取정]</help>
+    <label>[Field API Name]o'介引]</label>
+  </fields>
+  <fields>
+    <name>Index__c</name>
+    <help>[The position of the field in the list view.]o'介引户הаí先ร简а]</help>
+    <label>[Index]o'介引户]</label>
+  </fields>
+  <fields>
+    <name>List_Name__c</name>
+    <help>[The list view (e.g. Batches or Templates) that displays this field.]o'介引户הаí先ร简аน取정úσιмÜ]</help>
+    <label>[List Name]o'介]</label>
+  </fields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>[Custom Column Header]gr''介引户ה]</value>
+  </caseValues>
 </CustomObjectTranslation>

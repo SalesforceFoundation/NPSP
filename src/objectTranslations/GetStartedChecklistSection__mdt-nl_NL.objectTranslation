@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Checklistsectie Aan de slag voor NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Checklistsecties Aan de slag voor NPSP</value>
-    </caseValues>
-    <fields>
-        <help>De API-naam van het beschrijvingslabel voor een sectie-item op de pagina Aan de slag. Moet overeenkomen met een geïmporteerd label in de LWC van gsLabelMapper.</help>
-        <label>Naam beschrijvingslabel</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>Het type Aan de slag-pagina (Beheerder of Eindgebruiker) waarop deze sectie wordt weergegeven.</help>
-        <label>Paginatype</label>
-        <name>Page_Type__c</name>
-        <picklistValues>
-            <masterLabel>Admin</masterLabel>
-            <translation>Beheerder</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>End User</masterLabel>
-            <translation>Eindgebruiker</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De positie van deze sectie op de pagina Aan de slag.</help>
-        <label>Positie</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>De API-naam van het titellabel voor een sectie-item op de pagina Aan de slag. Moet overeenkomen met een geïmporteerd label in de LWC van gsLabelMapper.</help>
-        <label>Naam titellabel</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>GS Checklist Section Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>De API-naam van het beschrijvingslabel voor een sectie-item op de pagina Aan de slag. Moet overeenkomen met een geïmporteerd label in de LWC van gsLabelMapper.</help>
+    <label>Naam beschrijvingslabel</label>
+  </fields>
+  <fields>
+    <name>Page_Type__c</name>
+    <help>Het type Aan de slag-pagina (Beheerder of Eindgebruiker) waarop deze sectie wordt weergegeven.</help>
+    <label>Paginatype</label>
+    <picklistValues>
+      <masterLabel>Admin</masterLabel>
+      <translation>Beheerder</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>End User</masterLabel>
+      <translation>Eindgebruiker</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>De positie van deze sectie op de pagina Aan de slag.</help>
+    <label>Positie</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>De API-naam van het titellabel voor een sectie-item op de pagina Aan de slag. Moet overeenkomen met een geïmporteerd label in de LWC van gsLabelMapper.</help>
+    <label>Naam titellabel</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Section Layout</layout>
+    <sections>
+      <label>Aangepaste koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Checklistsectie Aan de slag voor NPSP</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Checklistsecties Aan de slag voor NPSP</value>
+  </caseValues>
 </CustomObjectTranslation>

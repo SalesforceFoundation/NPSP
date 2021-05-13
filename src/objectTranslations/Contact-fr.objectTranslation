@@ -1,201 +1,173 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
-    <fields>
-        <help>Le statut de vérification de l’adresse actuelle. Si cette adresse doit être vérifiée, accédez à l’enregistrement de l’adresse actuelle et cliquez sur « Vérifier l’adresse ». Pour plus d’informations, consultez la documentation dans le hub Power of Us.</help>
-        <label>Statut de vérification d’adresse</label>
-        <name>Address_Verification_Status__c</name>
-    </fields>
-    <fields>
-        <help>Recherche du lot dans lequel ce contact a été créé.</help>
-        <label>Lot</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Contacts</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Recherche de l’enregistrement de l’adresse actuelle pour ce contact. NPSP renseigne le champ Adresse postale du contact avec la rue, la ville, l&apos;état ou la province, et le code postal de l&apos;enregistrement de l’adresse actuelle.</help>
-        <label>Adresse actuelle</label>
-        <name>Current_Address__c</name>
-        <relationshipLabel>Contacts (adresse actuelle)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Cette option marque le contact comme décédé, et l’exclut de la dénomination du foyer (à moins que ce contact soit le seul dans le foyer), des e-mails et des appels téléphoniques.</help>
-        <label>Décédé</label>
-        <name>Deceased__c</name>
-    </fields>
-    <fields>
-        <help>Le contact ne souhaite pas que votre org. l’appelle ou lui envoie des e-mails. Utilisez ce champ pour filtrer les contacts dans les listes téléphoniques et d’e-mail. Si cette option est sélectionnée, NPSP exclut ce contact des Confirmations d’opportunité.</help>
-        <label>Ne pas contacter</label>
-        <name>Do_Not_Contact__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact de la salutation formelle du foyer (définie dans les Paramètres NPSP | Personnes | Foyers).</help>
-        <label>Exclure de salutation formelle du foyer</label>
-        <name>Exclude_from_Household_Formal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact de la salutation informelle du foyer (définie dans les Paramètres NPSP | Personnes | Foyers).</help>
-        <label>Exclure de salutation inform. du foyer</label>
-        <name>Exclude_from_Household_Informal_Greeting__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact du nom du foyer (défini dans les Paramètres NPSP | Personnes | Foyers).</help>
-        <label>Exclure du nom du foyer</label>
-        <name>Exclude_from_Household_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le montant du crédit indirect le plus ancien de ce contact.</help>
-        <label>Montant du premier crédit indirect</label>
-        <name>First_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La date du crédit indirect le plus ancien de ce contact.</help>
-        <label>Date du premier crédit indirect</label>
-        <name>First_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Contient l’ID de l’enregistrement du foyer (qu’il s’agisse d’un compte de foyer ou d’un objet de foyer) auquel ce contact est actuellement associé (lecture seule).</help>
-        <label>Identifiant du foyer</label>
-        <name>HHId__c</name>
-    </fields>
-    <fields>
-        <help>Le montant du crédit indirect le plus élevé de ce contact.</help>
-        <label>Montant le plus élevé du crédit indirect</label>
-        <name>Largest_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La date du crédit indirect le plus élevé de ce contact.</help>
-        <label>Date du crédit indirect le plus élevé</label>
-        <name>Largest_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Le montant du crédit indirect le plus récent de ce contact.</help>
-        <label>Montant du dernier crédit indirect</label>
-        <name>Last_Soft_Credit_Amount__c</name>
-    </fields>
-    <fields>
-        <help>La date du crédit indirect le plus récent de ce contact.</help>
-        <label>Date du dernier crédit indirect</label>
-        <name>Last_Soft_Credit_Date__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de crédits indirects fermés aux cours des derniers jours tels que définis dans la configuration de NPSP.</help>
-        <label>Nbre crédits indirects N derniers jours</label>
-        <name>Number_of_Soft_Credits_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de crédits indirects de l’année dernière.</help>
-        <label>Nbre crédits indirects année dernière</label>
-        <name>Number_of_Soft_Credits_Last_Year__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de crédits indirects cette année.</help>
-        <label>Nombre de crédits indirects cette année</label>
-        <name>Number_of_Soft_Credits_This_Year__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de crédits indirects il y a deux ans.</help>
-        <label>Nbre crédits indirects il y a deux ans</label>
-        <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de crédits indirects.</help>
-        <label>Nombre de crédits indirects</label>
-        <name>Number_of_Soft_Credits__c</name>
-    </fields>
-    <fields>
-        <help>Le compte marqué comme principal dans la liste des affiliations d’organisation de ce contact.</help>
-        <label>Affiliation principale</label>
-        <name>Primary_Affiliation__c</name>
-        <relationshipLabel>Ne pas utiliser. Utiliser des affiliations d’organisations.</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indique si ce contact est le contact principal sur son compte (lecture seule).</help>
-        <label>Contact principal</label>
-        <name>Primary_Contact__c</name>
-    </fields>
-    <fields>
-        <help>Le montant total des crédits indirects attribués à ce contact au cours des N derniers jours. La valeur de N est définie dans les Paramètres NPSP | Dons | Statistiques des donateurs.</help>
-        <label>Crédits indirects des N derniers jours</label>
-        <name>Soft_Credit_Last_N_Days__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, NPSN ne synchronise pas l’adresse de ce contact avec l’adresse par défaut ou l’adresse saisonnière du foyer. Utilisez cette option pour conserver une adresse postale distincte pour ce contact particulier.</help>
-        <label>Remplacement d’adresse</label>
-        <name>is_Address_Override__c</name>
-    </fields>
-    <layouts>
-        <layout>Contact Layout</layout>
-        <sections>
-            <label>Détails du contact</label>
-            <section>Contact Details</section>
-        </sections>
-        <sections>
-            <label>Informations sur les dons</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Totaux des dons</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Adresse du foyer</label>
-            <section>Household Address</section>
-        </sections>
-        <sections>
-            <label>Informations sur les dons de foyers</label>
-            <section>Household Donation Info</section>
-        </sections>
-        <sections>
-            <label>Informations sur l’adhésion</label>
-            <section>Membership Information</section>
-        </sections>
-        <sections>
-            <label>Divers</label>
-            <section>Misc</section>
-        </sections>
-        <sections>
-            <label>Totaux des crédits indirects</label>
-            <section>Soft Credit Totals</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Nouvelle affiliation</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nouveau don régulier</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nouvelle relation</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>Mise à jour rapide</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Fusionner des contacts</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>Nouveau don</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Recalculer des cumuls</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Address_Verification_Status__c</name>
+    <help>Le statut de vérification de l’adresse actuelle. Si cette adresse doit être vérifiée, accédez à l’enregistrement de l’adresse actuelle et cliquez sur « Vérifier l’adresse ». Pour plus d’informations, consultez la documentation dans le hub Power of Us.</help>
+    <label>Statut de vérification d’adresse</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <help>Recherche du lot dans lequel ce contact a été créé.</help>
+    <relationshipLabel>Contacts</relationshipLabel>
+    <label>Lot</label>
+  </fields>
+  <fields>
+    <name>Current_Address__c</name>
+    <help>Recherche de l’enregistrement de l’adresse actuelle pour ce contact. NPSP renseigne le champ Adresse postale du contact avec la rue, la ville, l'état ou la province, et le code postal de l'enregistrement de l’adresse actuelle.</help>
+    <relationshipLabel>Contacts (adresse actuelle)</relationshipLabel>
+    <label>Adresse actuelle</label>
+  </fields>
+  <fields>
+    <name>Deceased__c</name>
+    <help>Cette option marque le contact comme décédé, et l’exclut de la dénomination du foyer (à moins que ce contact soit le seul dans le foyer), des e-mails et des appels téléphoniques.</help>
+    <label>Décédé</label>
+  </fields>
+  <fields>
+    <name>Do_Not_Contact__c</name>
+    <help>Le contact ne souhaite pas que votre org. l’appelle ou lui envoie des e-mails. Utilisez ce champ pour filtrer les contacts dans les listes téléphoniques et d’e-mail. Si cette option est sélectionnée, NPSP exclut ce contact des Confirmations d’opportunité.</help>
+    <label>Ne pas contacter</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
+    <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact de la salutation formelle du foyer (définie dans les Paramètres NPSP | Personnes | Foyers).</help>
+    <label>Exclure de salutation formelle du foyer</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Informal_Greeting__c</name>
+    <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact de la salutation informelle du foyer (définie dans les Paramètres NPSP | Personnes | Foyers).</help>
+    <label>Exclure de salutation inform. du foyer</label>
+  </fields>
+  <fields>
+    <name>Exclude_from_Household_Name__c</name>
+    <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact du nom du foyer (défini dans les Paramètres NPSP | Personnes | Foyers).</help>
+    <label>Exclure du nom du foyer</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Amount__c</name>
+    <help>Le montant du crédit indirect le plus ancien de ce contact.</help>
+    <label>Montant du premier crédit indirect</label>
+  </fields>
+  <fields>
+    <name>First_Soft_Credit_Date__c</name>
+    <help>La date du crédit indirect le plus ancien de ce contact.</help>
+    <label>Date du premier crédit indirect</label>
+  </fields>
+  <fields>
+    <name>HHId__c</name>
+    <help>Contient l’ID de l’enregistrement du foyer (qu’il s’agisse d’un compte de foyer ou d’un objet de foyer) auquel ce contact est actuellement associé (lecture seule).</help>
+    <label>Identifiant du foyer</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Amount__c</name>
+    <help>Le montant du crédit indirect le plus élevé de ce contact.</help>
+    <label>Montant le plus élevé du crédit indirect</label>
+  </fields>
+  <fields>
+    <name>Largest_Soft_Credit_Date__c</name>
+    <help>La date du crédit indirect le plus élevé de ce contact.</help>
+    <label>Date du crédit indirect le plus élevé</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Amount__c</name>
+    <help>Le montant du crédit indirect le plus récent de ce contact.</help>
+    <label>Montant du dernier crédit indirect</label>
+  </fields>
+  <fields>
+    <name>Last_Soft_Credit_Date__c</name>
+    <help>La date du crédit indirect le plus récent de ce contact.</help>
+    <label>Date du dernier crédit indirect</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+    <help>Le nombre de crédits indirects fermés aux cours des derniers jours tels que définis dans la configuration de NPSP.</help>
+    <label>Nbre crédits indirects N derniers jours</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
+    <help>Le nombre de crédits indirects de l’année dernière.</help>
+    <label>Nbre crédits indirects année dernière</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_This_Year__c</name>
+    <help>Le nombre de crédits indirects cette année.</help>
+    <label>Nombre de crédits indirects cette année</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+    <help>Le nombre de crédits indirects il y a deux ans.</help>
+    <label>Nbre crédits indirects il y a deux ans</label>
+  </fields>
+  <fields>
+    <name>Number_of_Soft_Credits__c</name>
+    <help>Le nombre de crédits indirects.</help>
+    <label>Nombre de crédits indirects</label>
+  </fields>
+  <fields>
+    <name>Primary_Affiliation__c</name>
+    <help>Le compte marqué comme principal dans la liste des affiliations d’organisation de ce contact.</help>
+    <relationshipLabel>Ne pas utiliser. Utiliser des affiliations d’organisations.</relationshipLabel>
+    <label>Affiliation principale</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>Indique si ce contact est le contact principal sur son compte (lecture seule).</help>
+    <label>Contact principal</label>
+  </fields>
+  <fields>
+    <name>Soft_Credit_Last_N_Days__c</name>
+    <help>Le montant total des crédits indirects attribués à ce contact au cours des N derniers jours. La valeur de N est définie dans les Paramètres NPSP | Dons | Statistiques des donateurs.</help>
+    <label>Crédits indirects des N derniers jours</label>
+  </fields>
+  <fields>
+    <name>is_Address_Override__c</name>
+    <help>Lorsque cette option est sélectionnée, NPSN ne synchronise pas l’adresse de ce contact avec l’adresse par défaut ou l’adresse saisonnière du foyer. Utilisez cette option pour conserver une adresse postale distincte pour ce contact particulier.</help>
+    <label>Remplacement d’adresse</label>
+  </fields>
+  <webLinks>
+    <name>Merge_Contacts</name>
+    <label>Fusionner des contacts</label>
+  </webLinks>
+  <webLinks>
+    <name>New_Gift</name>
+    <label>Nouveau don</label>
+  </webLinks>
+  <webLinks>
+    <name>Recalculate_Rollups</name>
+    <label>Recalculer des cumuls</label>
+  </webLinks>
+  <layouts>
+    <layout>Contact Layout</layout>
+    <sections>
+      <label>Détails du contact</label>
+      <section>Contact Details</section>
+    </sections>
+    <sections>
+      <label>Adresse du foyer</label>
+      <section>Household Address</section>
+    </sections>
+    <sections>
+      <label>Informations sur les dons</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Totaux des dons</label>
+      <section>Donation Totals</section>
+    </sections>
+    <sections>
+      <label>Totaux des crédits indirects</label>
+      <section>Soft Credit Totals</section>
+    </sections>
+    <sections>
+      <label>Informations sur les dons de foyers</label>
+      <section>Household Donation Info</section>
+    </sections>
+    <sections>
+      <label>Informations sur l’adhésion</label>
+      <section>Membership Information</section>
+    </sections>
+    <sections>
+      <label>Divers</label>
+      <section>Misc</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>
