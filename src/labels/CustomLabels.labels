@@ -1551,7 +1551,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Cannot change payment method to a non-Elevate payment method</shortDescription>
-        <value>The only valid payment methods for an active Elevate Recurring Donation are Credit Card or ACH.</value>
+        <value>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</value>
     </labels>
     <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
