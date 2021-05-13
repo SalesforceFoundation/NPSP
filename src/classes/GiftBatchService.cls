@@ -39,4 +39,11 @@ public with sharing class GiftBatchService {
         GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
         return groupedTotals.totalsFor(batchId);
     }
+
+    public void processPaymentsFor(Id batchId) {
+        System.debug('GiftBatchService.processPaymentsFor');
+        ElevateCaptureGroupService service = new ElevateCaptureGroupService();
+        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        service.capturePaymentsFor(giftBatch);
+    }
 }
