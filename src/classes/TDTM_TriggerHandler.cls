@@ -296,7 +296,6 @@ public class TDTM_TriggerHandler {
     * will be thrown.  If false, then inspect the error collection to see what failed
     * @return Errors Object with list of Error objects
     */
-    //Todo: add null safety for dmlWrapper objects
     public static ERR_Handler.Errors processDMLAllOrNothing(TDTM_Runnable.DmlWrapper dmlWrapper, Boolean allOrNothing) {
         if (dmlWrapper == null) {
             return null;

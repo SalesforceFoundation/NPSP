@@ -84,7 +84,6 @@ public inherited sharing class OrgConfig {
     * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
     */
     private static Boolean initValidStateCountryCodes() {
-System.debug(LoggingLevel.ERROR, '*** ##### OrgConfig.initValidStateCountryCodes ######');
         // If State & Country Picklists are enabled in the org, build maps of the
         // valid Labels and Codes for each field to use for validation
         Map<String, Schema.SObjectField> acctFields = Account.getSObjectType().getDescribe().fields.getMap();
