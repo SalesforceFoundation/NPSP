@@ -2061,6 +2061,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c recurringDonation
                 = getRecurringDonationBuilder(getContact())
             .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod('Credit Card')
             .build();
         insert recurringDonation;
 
@@ -2121,6 +2122,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -2176,6 +2178,7 @@ private class RD2_OpportunityEvaluationService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -2296,6 +2299,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
             .withCommitmentId(commitmentId)
+            .withPaymentMethod('Credit Card')
             .build();
 
         Test.startTest();
