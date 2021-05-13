@@ -36,7 +36,8 @@ public inherited sharing class GiftBatchSelector {
 
     public List<DataImportBatch__c> selectGiftBatchesById(Set<Id> ids) {
         return [
-            SELECT Id
+            SELECT Id,
+                Queueable_Job_Id__c
             FROM DataImportBatch__c
             WHERE Id IN :ids
             WITH SECURITY_ENFORCED
