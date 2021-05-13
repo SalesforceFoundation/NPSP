@@ -38,38 +38,112 @@
 public without sharing class ElevateCaptureGroupCapturer implements Finalizer, Queueable {
 
     private NPSP_Batch giftBatch;
-    private Set<Id> captureGroupIds;
-    private final Integer maxCaptureCountPerQueueable;
+    private QueueableCaptureGroup queueableCaptureGroup;
     private List<ElevateCaptureGroupResponse> captureGroupResponses;
 
-    public ElevateCaptureGroupCapturer(Id giftBatchId) {
-        // giftBatch = new NPSP_Batch(giftBatchId);
+    public ElevateCaptureGroupCapturer(NPSP_Batch giftBatch) {
+        System.debug('in qeueable constructor');
+        this.giftBatch = giftBatch;
+        queueableCaptureGroup = new QueueableCaptureGroup(giftBatch.capturableGroupIds());
+    }
 
-        // TODO: retrieve capture group ids from batch entity
+    public ElevateCaptureGroupCapturer(QueueableCaptureGroup queueableCaptureGroup, NPSP_Batch giftBatch) {
+        this.giftBatch = giftBatch;
+        this.queueableCaptureGroup = queueableCaptureGroup;
     }
 
     public void execute(QueueableContext context) {
-        // captureGroupResponses = new List<ElevateCaptureGroupResponse>();
+        System.debug('in queueable execute method... current paritition index: ' + queueableCaptureGroup.currentPartitionIndex());
+        System.attachFinalizer(this);
+        giftBatch.queueableJobId(context.getJobId());
+        System.debug('Gift Job Id: ' + giftBatch.queueableJobId());
 
-        // for (String captureGroupId : captureGroupIds) {
-        //     HttpRequest captureRequest = captureRequest(captureGroupId);
-        //     UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest();
-        //     ElevateCaptureGroupResponse captureGroupResponse =
-        //         (ElevateCaptureGroupResponse) JSON.deserialize(response.body, ElevateCaptureGroupResponse.class);
+        for (String captureGroupId : queueableCaptureGroup.idsToCapture()) {
+            // TODO: make the callout
+            System.debug(captureGroupId);
+            // TODO: if callout succeeds
+            // Apply success values to gift in memory
 
-        //     captureGroupResponses.add(captureGroupResponse);
-        // }
+            // TODO: if callout fails
+            // Apply fail and fail reason values to gift in memory
+
+            giftBatch.giftIsNowProcessing(captureGroupId);
+        }
+
+        if (queueableCaptureGroup.shouldChainNextJob()) {
+            System.debug('enqueuing child job');
+            System.enqueueJob(new ElevateCaptureGroupCapturer(queueableCaptureGroup, giftBatch));
+        }
+
+        // TODO: Perform dml to persist success / fail info to gifts
+        giftBatch.updateMembers();
     }
 
-    public execute(FinalizerContext context) {
-        // TODO: Update the relevant gift records with success/fail info from captureGroupResponse 
+    public void execute(FinalizerContext context) {
+        System.debug('in finalizer execute method...');
     }
 
-    private HttpRequest captureRequest(String groupId) {
-        return new PS_Request.Builder()
-            .withMethod(UTIL_Http.Method.POST)
-            .withCaptureGroupId(groupId)
-            .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
-            .build();
+    // private HttpRequest captureRequest(String groupId) {
+    //     return new PS_Request.Builder()
+    //         .withMethod(UTIL_Http.Method.POST)
+    //         .withCaptureGroupId(groupId)
+    //         .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
+    //         .build();
+    // }
+
+    private class QueueableCaptureGroup {
+        private List<String> captureGroupIds;
+        private List<List<String>> partitionedGroupIds;
+        private final Integer MAX_COUNT = 50;
+        private Integer currentPartitionIndex = 0;
+
+        public QueueableCaptureGroup(List<String> captureGroupIds) {
+            this.captureGroupIds = captureGroupIds;
+            partitionedGroupIds = subdivide(captureGroupIds);
+        }
+
+        public List<String> idsToCapture() {
+            List<String> groupIds = partitionedGroupIds[currentPartitionIndex];
+            currentPartitionIndex++;
+            return groupIds;
+        }
+
+        public Integer partitionSize() {
+            return partitionedGroupIds.size();
+        }
+
+        public Integer currentPartitionIndex() {
+            return currentPartitionIndex;
+        }
+
+        public Boolean shouldChainNextJob() {
+            return partitionSize() > currentPartitionIndex();
+        }
+
+        private List<List<String>> subdivide(List<String> captureGroupIds) {
+            Integer containingListSize = captureGroupIds.size() / MAX_COUNT;
+            if (Math.mod(captureGroupIds.size(), MAX_COUNT) > 0) {
+                containingListSize++;
+            }
+            System.debug(containingListSize);
+            List<List<String>> subdividedList = new List<List<String>>();
+            List<String> currentList = new List<String>();
+            Integer currentCount = 0;
+
+            for (Integer i = 0; i < captureGroupIds.size(); i++) {
+                System.debug('Loop iteration: ' + i);
+                currentList.add(captureGroupIds[i]);
+
+                currentCount++;
+                if (currentCount == MAX_COUNT || (i == captureGroupIds.size() - 1 && currentList.size() > 0)) {
+                    subdividedList.add(currentList);
+                    System.debug(currentList);
+                    currentCount = 0;
+                    currentList = new List<String>();
+                }
+            }
+
+            return subdividedList;
+        }
     }
 }
