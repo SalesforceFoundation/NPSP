@@ -36,7 +36,18 @@
 public inherited sharing class NPSP_Batch {
 
     private Id batchId;
+    private DataImportBatch__c giftBatch;
     private Gifts authorizedGifts;
+    private GiftBatchSelector giftBatchSelector {
+        get {
+            if (giftBatchSelector == null) {
+                giftBatchSelector = new GiftBatchSelector();
+            }
+            return giftBatchSelector;
+        }
+        set;
+    }
+
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
@@ -64,7 +75,45 @@ public inherited sharing class NPSP_Batch {
 
     public NPSP_Batch(Id batchId) {
         this.batchId = batchId;
+        List<DataImportBatch__c> giftBatches =
+            giftBatchSelector.selectGiftBatchesById(new Set<Id>{ batchId });
+        if (giftBatches.size() > 0) {
+            this.giftBatch = giftBatches[0];
+        } 
         this.authorizedGifts = authorizedGifts();
+    }
+
+    public void queueableJobId(String queueableJobId) {
+        giftBatch.Queueable_Job_Id__c = queueableJobId;
+    }
+
+    public String queueableJobId() {
+        String queueableJobId = giftBatch.Queueable_Job_Id__c;
+        return queueableJobId;
+    }
+
+    public void updateMembers() {
+        List<SObject> memberSObjects = new List<SObject>();
+        memberSObjects.add(giftBatch);
+        memberSObjects.addAll(authorizedGifts.dataImports());
+        update memberSObjects;
+    }
+
+    public List<String> capturableGroupIds() {
+        Gifts authorizedGifts = authorizedGifts();
+        Set<String> setOfIds = authorizedGifts.capturableGroupIds();
+        System.debug('Set of ids: ' + setOfIds.size());
+        List<String> newList = new List<String>();
+        newList.addAll(setOfIds);
+        return newList;
+    }
+
+    public void giftIsNowProcessing(String captureGroupId) {
+        DataImport__c gift = authorizedGifts.findByCaptureGroupId(captureGroupId);
+        if (gift != null) {
+            System.debug('Found gift: ' + gift.Name);
+            gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
+        }
     }
 
     private Gifts authorizedGifts() {
@@ -72,12 +121,6 @@ public inherited sharing class NPSP_Batch {
             return authorizedGifts;
         }
         return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
-    }
-
-    public void processPayments() {
-        List<ElevateCaptureGroupResponse> captureGroupResponses =
-                captureGroupService.capture(authorizedGifts.captureGroupIds());
-        handleCaptureGroupResponses(captureGroupResponses);
     }
 
     private void handleCaptureGroupResponses(List<ElevateCaptureGroupResponse> captureGroupResponses) {
