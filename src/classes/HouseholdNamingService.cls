@@ -177,7 +177,8 @@ public without sharing class HouseholdNamingService {
 
     private List<SObject> getHouseholdsFor(List<Id> hhids) {
         return [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
                 FROM Npo02__Household__c
                 WHERE Id IN :hhids
         ];
