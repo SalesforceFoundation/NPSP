@@ -214,6 +214,9 @@ public inherited sharing class PS_Request {
             request.setHeader('Content-Type', 'application/json;charset=UTF-8');
             request.setHeader(PS_IntegrationServiceConfig.JWT_TOKEN, getJwt(endpoint));
             request.setHeader(PS_IntegrationServiceConfig.SFDO_USERNAME, UserInfo.getUserName());
+            // TODO: Send the key along with the setHeader method
+            String idempotencyKey = 'TESTING123';
+            request.setHeader(PS_IntegrationServiceConfig.IDEMPOTENCY_KEY, idempotencyKey);
 
             if (String.isNotBlank(configService.getMerchantIds())) {
                 request.setHeader(

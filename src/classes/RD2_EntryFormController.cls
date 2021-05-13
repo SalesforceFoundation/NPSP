@@ -469,6 +469,10 @@ public with sharing class RD2_EntryFormController {
         * @return void
         */
         private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
+            
+            System.debug(response.body); // "errors":[{"message":"Request parameters and/or body do not match cached value for idempotency-key"
+            System.debug(response.status); // 'Conflict'
+            
             if (isCommitmentSuccess(response)) {
                 return;
             }

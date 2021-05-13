@@ -51,6 +51,7 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String SFDO_USERNAME = 'sfdo.username';
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String PRODUCTID = 'productId';
+    public static final String IDEMPOTENCY_KEY = 'idempotency-key';
 
     // Elevate record view types
     public enum VIEW_TYPE {
