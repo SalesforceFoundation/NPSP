@@ -107,7 +107,6 @@ public without sharing class HouseholdNamingService {
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
         setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-        unitOfWorkInst.registerDirty(householdsOrAccounts);
         unitOfWorkInst.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
@@ -121,10 +120,21 @@ public without sharing class HouseholdNamingService {
 
     private void setNumberOfHouseholdMembers(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
-            List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
-            household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
-                    householdMembers != null ? householdMembers.size() : 0);
+            List<Contact> members = membersByHouseholdId.get(idFor(household));
+            if (numberOfHouseholdMembersIsIncorrect(household, members)) {
+                refreshNumberOfHouseholdMembers(household, members);
+                unitOfWorkInst.registerDirty(new List<SObject>{household});
+            }
         }
+    }
+
+    private void refreshNumberOfHouseholdMembers(SObject household, List<Contact> members) {
+        household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
+                members != null ? members.size() : 0);
+    }
+
+    private Boolean numberOfHouseholdMembersIsIncorrect(SObject household, List<Contact> householdMembers) {
+        return household.get('Number_of_Household_Members__c') != householdMembers.size();
     }
 
     private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts,
@@ -158,7 +168,8 @@ public without sharing class HouseholdNamingService {
 
     private List<SObject> getAccountsFor(List<Id> hhids) {
         return [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
                 FROM Account
                 WHERE Id IN :hhids
         ];
@@ -360,13 +371,22 @@ public without sharing class HouseholdNamingService {
         HouseholdNamingUserControlledFields namingOverrides =
                 new HouseholdNamingUserControlledFields(namingOverridesFor(household));
         if (!namingOverrides.isNameControlledByUser()) {
-            setName(household, householdName);
+            if (household.get('Name') != householdName.asName()) {
+                setName(household, householdName);
+                unitOfWorkInst.registerDirty(new List<SObject>{household});
+            }
         }
         if (!namingOverrides.isFormalGreetingControlledByUser()) {
-            setFormalGreeting(household, householdName);
+            if (household.get('npo02__Formal_Greeting__c') != householdName.asFormalGreeting()) {
+                setFormalGreeting(household, householdName);
+                unitOfWorkInst.registerDirty(new List<SObject>{household});
+            }
         }
         if (!namingOverrides.isInformalGreetingControlledByUser()) {
-            setInformalGreeting(household, householdName);
+            if (household.get('npo02__Informal_Greeting__c') != householdName.asInformalGreeting()) {
+                setInformalGreeting(household, householdName);
+                unitOfWorkInst.registerDirty(new List<SObject>{household});
+            }
         }
     }
 
