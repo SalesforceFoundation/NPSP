@@ -84,11 +84,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
             setContactAddressFromCurrentAddress(consThatHaveARelatedAddress);
         }
 
-        if (contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
+        Contacts contactsNeedingHouseholdAddressApplied = contactsNeedingHouseholdAddressApplied();
+        if (contactsNeedingHouseholdAddressApplied.getRecords().size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            contactsNeedingHouseholdAddressApplied().resetAddressUsingHouseholdAddress();
+            contactsNeedingHouseholdAddressApplied.resetAddressUsingHouseholdAddress();
         }
 
         // create any new Default Address objects
@@ -99,7 +100,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
 
         if (consThatHaveARelatedAddress.size() > 0 ||
-                contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
+                contactsNeedingHouseholdAddressApplied.getRecords().size() > 0) {
             deactivateAddrRecursionFlag();
         }
     }
