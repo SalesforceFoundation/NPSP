@@ -212,9 +212,9 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static void processPaymentsFor(Id batchId) {
+        System.debug('GE_GiftEntryController.processPaymentsFor');
        try {
-           NPSP_Batch batch = new NPSP_Batch(batchId);
-           batch.processPayments();
+           giftBatchService.processPaymentsFor(batchId);
        } catch (Exception ex) {
           throw new AuraHandledException(ex.getMessage());
        }
