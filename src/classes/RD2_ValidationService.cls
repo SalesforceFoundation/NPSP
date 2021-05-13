@@ -435,8 +435,8 @@ public with sharing class RD2_ValidationService {
     private void validateElevateRDCampaignCannotUpdateToEmpty(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled()
             && String.isNotBlank(rd.CommitmentId__c)) {
-            if (oldRd.npe03__Recurring_Donation_Campaign__c != null 
-                && rd.npe03__Recurring_Donation_Campaign__c == null) {
+            if (String.isNotBlank(oldRd.npe03__Recurring_Donation_Campaign__c) 
+                && String.isBlank(rd.npe03__Recurring_Donation_Campaign__c)) {
                 errorCollection.addError(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull);
             }
         }
