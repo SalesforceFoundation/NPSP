@@ -79,7 +79,7 @@ public inherited sharing class NPSP_Batch {
             giftBatchSelector.selectGiftBatchesById(new Set<Id>{ batchId });
         if (giftBatches.size() > 0) {
             this.giftBatch = giftBatches[0];
-        } 
+        }
         this.authorizedGifts = authorizedGifts();
     }
 
@@ -111,7 +111,7 @@ public inherited sharing class NPSP_Batch {
     public void giftIsNowProcessing(String captureGroupId) {
         DataImport__c gift = authorizedGifts.findByCaptureGroupId(captureGroupId);
         if (gift != null) {
-            System.debug('Found gift: ' + gift.Name);
+            System.debug('Found gift: ' + gift);
             gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
         }
     }

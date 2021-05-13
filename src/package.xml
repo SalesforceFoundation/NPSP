@@ -310,6 +310,7 @@
         <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateAuthorizedGift_TEST</members>
         <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupCapturer</members>
         <members>ElevateCaptureGroupResponse</members>
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
@@ -1114,6 +1115,7 @@
         <members>DataImportBatch__c.Last_Processed_On__c</members>
         <members>DataImportBatch__c.Post_Process_Implementing_Class__c</members>
         <members>DataImportBatch__c.Process_Using_Scheduled_Job__c</members>
+        <members>DataImportBatch__c.Queueable_Job_Id__c</members>
         <members>DataImportBatch__c.Records_Failed__c</members>
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.RequireTotalMatch__c</members>
@@ -1905,8 +1907,8 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
-        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NextACHPaymentDonationDateInfo</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
