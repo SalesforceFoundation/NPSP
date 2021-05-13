@@ -61,6 +61,17 @@ public without sharing class HouseholdNamingService {
         set;
     }
 
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -376,23 +387,47 @@ public without sharing class HouseholdNamingService {
         HouseholdNamingUserControlledFields namingOverrides =
                 new HouseholdNamingUserControlledFields(namingOverridesFor(household));
         if (!namingOverrides.isNameControlledByUser()) {
-            if (household.get('Name') != householdName.asName()) {
+            if (nameNeedsUpdate(household, householdName)) {
                 setName(household, householdName);
-                unitOfWorkInst.registerDirty(new List<SObject>{household});
+                unitOfWorkInst.registerDirty(new List<SObject>{
+                        household
+                });
+            }
+            if (!namingOverrides.isFormalGreetingControlledByUser()) {
+                if (formalGreetingNeedsUpdate(household, householdName)) {
+                    setFormalGreeting(household, householdName);
+                    unitOfWorkInst.registerDirty(new List<SObject>{
+                            household
+                    });
+                }
+            }
+            if (!namingOverrides.isInformalGreetingControlledByUser()) {
+                if (informalGreetingNeedsUpdate(household, householdName)) {
+                    setInformalGreeting(household, householdName);
+                    unitOfWorkInst.registerDirty(new List<SObject>{
+                            household
+                    });
+                }
             }
         }
-        if (!namingOverrides.isFormalGreetingControlledByUser()) {
-            if (household.get('npo02__Formal_Greeting__c') != householdName.asFormalGreeting()) {
-                setFormalGreeting(household, householdName);
-                unitOfWorkInst.registerDirty(new List<SObject>{household});
-            }
-        }
-        if (!namingOverrides.isInformalGreetingControlledByUser()) {
-            if (household.get('npo02__Informal_Greeting__c') != householdName.asInformalGreeting()) {
-                setInformalGreeting(household, householdName);
-                unitOfWorkInst.registerDirty(new List<SObject>{household});
-            }
-        }
+    }
+
+    private Boolean informalGreetingNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('npo02__Informal_Greeting__c'),
+                householdName.asInformalGreeting());
+    }
+
+    private Boolean formalGreetingNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('npo02__Formal_Greeting__c'),
+                householdName.asFormalGreeting());
+    }
+
+    private Boolean nameNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('Name'),
+                householdName.asName());
     }
 
     private void setInformalGreeting(SObject household, HouseholdName householdName) {
