@@ -76,11 +76,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public void onBeforeInsert_FromAddrContactTDTM() {
         normalizeLineBreaks();
 
-        if (consThatHaveARelatedAddress().size() > 0) {
+        List<Contact> consThatHaveARelatedAddress = consThatHaveARelatedAddress();
+        if (consThatHaveARelatedAddress.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // set the mailing address for contacts who specify an address lookup or override
-            setContactAddressFromCurrentAddress(consThatHaveARelatedAddress());
+            setContactAddressFromCurrentAddress(consThatHaveARelatedAddress);
         }
 
         if (contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
@@ -97,7 +98,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
 
-        if (consThatHaveARelatedAddress().size() > 0 ||
+        if (consThatHaveARelatedAddress.size() > 0 ||
                 contactsNeedingHouseholdAddressApplied().getRecords().size() > 0) {
             deactivateAddrRecursionFlag();
         }
