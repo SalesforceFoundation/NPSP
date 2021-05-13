@@ -36,11 +36,22 @@
 public with sharing class Gifts {
 
     private Set<String> captureGroupIds;
+    private Set<String> capturableGroupIds;
     private List<DataImport__c> dataImports;
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setCaptureGroupIds(dataImports);
+        setCapturableGroupIds(dataImports);
+    }
+
+    public DataImport__c findByCaptureGroupId(String captureGroupId) {
+        for (DataImport__c gift : dataImports) {
+            if (gift.Payment_Elevate_Batch_ID__c == captureGroupId) {
+                return gift;
+            }
+        }
+        return null;
     }
 
     private void setCaptureGroupIds(List<DataImport__c> dataImports) {
@@ -52,6 +63,19 @@ public with sharing class Gifts {
 
     public Set<String> captureGroupIds() {
         return captureGroupIds;
+    }
+
+    private void setCapturableGroupIds(List<DataImport__c> dataImports) {
+        capturableGroupIds = new Set<String>();
+        for (DataImport__c dataImport : dataImports) {
+            if (dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+                capturableGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
+            }
+        }
+    }
+
+    public Set<String> capturableGroupIds() {
+        return capturableGroupIds;
     }
 
     public List<DataImport__c> dataImports() {
