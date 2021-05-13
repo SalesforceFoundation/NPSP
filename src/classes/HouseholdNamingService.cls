@@ -386,29 +386,27 @@ public without sharing class HouseholdNamingService {
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
         HouseholdNamingUserControlledFields namingOverrides =
                 new HouseholdNamingUserControlledFields(namingOverridesFor(household));
-        if (!namingOverrides.isNameControlledByUser()) {
-            if (nameNeedsUpdate(household, householdName)) {
-                setName(household, householdName);
-                unitOfWorkInst.registerDirty(new List<SObject>{
-                        household
-                });
-            }
-            if (!namingOverrides.isFormalGreetingControlledByUser()) {
-                if (formalGreetingNeedsUpdate(household, householdName)) {
-                    setFormalGreeting(household, householdName);
-                    unitOfWorkInst.registerDirty(new List<SObject>{
-                            household
-                    });
-                }
-            }
-            if (!namingOverrides.isInformalGreetingControlledByUser()) {
-                if (informalGreetingNeedsUpdate(household, householdName)) {
-                    setInformalGreeting(household, householdName);
-                    unitOfWorkInst.registerDirty(new List<SObject>{
-                            household
-                    });
-                }
-            }
+        if (!namingOverrides.isNameControlledByUser() &&
+                nameNeedsUpdate(household, householdName)) {
+            setName(household, householdName);
+            unitOfWorkInst.registerDirty(new List<SObject>{
+                    household
+            });
+        }
+
+        if (!namingOverrides.isFormalGreetingControlledByUser() &&
+                formalGreetingNeedsUpdate(household, householdName)) {
+            setFormalGreeting(household, householdName);
+            unitOfWorkInst.registerDirty(new List<SObject>{
+                    household
+            });
+        }
+        if (!namingOverrides.isInformalGreetingControlledByUser() &&
+                informalGreetingNeedsUpdate(household, householdName)) {
+            setInformalGreeting(household, householdName);
+            unitOfWorkInst.registerDirty(new List<SObject>{
+                    household
+            });
         }
     }
 
