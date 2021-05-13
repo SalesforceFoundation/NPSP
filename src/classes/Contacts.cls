@@ -503,19 +503,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
-    private List<Contact> thatHaveAccounts;
-    public Contacts thatHaveAccounts() {
-        if (thatHaveAccounts==null) {
-            thatHaveAccounts = new List<Contact>();
+    private List<NPSP_Contact> thatHaveAccountsAsNpspContacts;
+    public List<NPSP_Contact> thatHaveAccountsAsNpspContacts() {
+        if (thatHaveAccountsAsNpspContacts == null) {
+            thatHaveAccountsAsNpspContacts = new List<NPSP_Contact>();
             for (Contact con : (List<Contact>) getRecords()) {
-                NPSP_Contact npspContact = new NPSP_Contact(con);
+                NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
                 if (!npspContact.hasAccount()) {
                     continue;
                 }
-                thatHaveAccounts.add(con);
+                thatHaveAccountsAsNpspContacts.add(npspContact);
             }
         }
-        return new Contacts(thatHaveAccounts);
+        return thatHaveAccountsAsNpspContacts;
     }
 
     public Set<Id> accountIds() {
@@ -787,11 +787,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getConsMovingToANewHousehold() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
-        for (SObject so : thatHaveAccounts().getRecords()) {
-            Contact con = (Contact) so;
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
 
-            Account a = accountsByIds().get(con.AccountId);
+            Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                 continue;
             }
@@ -806,7 +804,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
             // if the contacts address changed or if the contact with an address moves to a new household remember the contact
             if (npspContact.isMovingToANewHousehold()) {
-                consMovingToANewHousehold.add(con);
+                consMovingToANewHousehold.add(npspContact.getRecord());
             }
         }
         return consMovingToANewHousehold;
@@ -815,11 +813,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (SObject so : thatHaveAccounts().getRecords()) {
-            Contact con = (Contact) so;
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
 
-            Account a = accountsByIds().get(con.AccountId);
+            Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                 continue;
             }
@@ -834,7 +830,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
             // if the contacts address changed or if the contact with an address moves to a new household remember the contact
             if (npspContact.isAddressChanged()) {
-                consWithAddressChanges.add(con);
+                consWithAddressChanges.add(npspContact.getRecord());
             }
         }
         return consWithAddressChanges;
@@ -842,16 +838,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        for (SObject so : thatHaveAccounts().getRecords()) {
-            Contact con = (Contact) so;
-            NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
+        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
 
             if (npspContact.householdAndAccountDiffer()) {
                 continue;
             }
 
             if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
-                addressCreationQueue.add(con);
+                addressCreationQueue.add(npspContact.getRecord());
             }
         }
         return addressCreationQueue;
