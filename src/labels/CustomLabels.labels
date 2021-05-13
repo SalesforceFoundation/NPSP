@@ -1719,7 +1719,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Checks if Elevate Recurring Donation&apos;s Day of Month Changed</shortDescription>
-        <value>The Day of Month for an Elevate Recurring Donation cannot be changed.</value>
+        <value>You can't change Day of Month for an Elevate-connected Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDEffectiveDateMustBeValid</fullName>
