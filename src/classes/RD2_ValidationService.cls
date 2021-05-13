@@ -57,6 +57,7 @@ public with sharing class RD2_ValidationService {
     /**
     * @description New or updated Recurring Donation records
     */
+    @TestVisible
     private List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
 
     /**
@@ -241,13 +242,6 @@ public with sharing class RD2_ValidationService {
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevatePermissionRequired);
             }
-            RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
-            if (recurringDonation.isElevateRecord() &&
-                !isValidElevateRecurringDonationPaymentMethod(recurringDonation)) {
-
-                errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
-            }
-
             validateActiveRecurringDonation(rd, errorCollection);
             validateInstallmentFrequency(rd, errorCollection);
             validateCurrencyChange(rd, oldRd, errorCollection);
@@ -268,6 +262,15 @@ public with sharing class RD2_ValidationService {
         }
 
         return errorRecords;
+    }
+
+    private void validatePaymentMethod(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+        RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
+        if (recurringDonation.isElevateRecord() &&
+                !isValidElevateRecurringDonationPaymentMethod(recurringDonation)) {
+
+            errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
+        }
     }
 
     /**
@@ -302,11 +305,11 @@ public with sharing class RD2_ValidationService {
         if (new RD2_RecurringDonation(rd).isClosed()) {
             return;
         }
-
         validateAmount(rd, errorCollection);
         validateInstallmentPeriod(rd, errorCollection);
         validateDayOfMonth(rd, errorCollection);
         validateFixedLength(rd, errorCollection);
+        validatePaymentMethod(rd, errorCollection);
     }
 
     /**
