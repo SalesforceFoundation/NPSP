@@ -134,7 +134,11 @@ public without sharing class HouseholdNamingService {
     }
 
     private Boolean numberOfHouseholdMembersIsIncorrect(SObject household, List<Contact> householdMembers) {
-        return household.get('Number_of_Household_Members__c') != householdMembers.size();
+        if (householdMembers != null) {
+            return household.get('Number_of_Household_Members__c') != householdMembers.size();
+        } else {
+            return false;
+        }
     }
 
     private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts,
