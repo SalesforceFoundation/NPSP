@@ -222,7 +222,7 @@ public with sharing class GE_PaymentServices {
         /*********************************
         * Required properties
         */
-        public Double amount;
+        public Integer amount;
         // Currency code for the amount property. Currently an ENUM = [USD] from Elevate
         public String currencyCode;
         public String paymentMethodToken;
