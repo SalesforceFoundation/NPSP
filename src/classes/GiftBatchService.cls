@@ -42,8 +42,17 @@ public with sharing class GiftBatchService {
 
     public void processPaymentsFor(Id batchId) {
         System.debug('GiftBatchService.processPaymentsFor');
-        ElevateCaptureGroupService service = new ElevateCaptureGroupService();
+        ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
         NPSP_Batch giftBatch = new NPSP_Batch(batchId);
-        service.capturePaymentsFor(giftBatch);
+        Set<String> capturableGroupIds = giftBatch.capturableGroupIds();
+        captureGroupService.enqueuePaymentCaptureJobFor(batchId, capturableGroupIds);
+    }
+
+    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
+        // TODO: Update all gifts that failed to be captured
+    }
+
+    public void allAuthorizedGiftsAreNowPendingFor(Id batchId) {
+        // TODO: update all authorized gifts to pending gifts
     }
 }
