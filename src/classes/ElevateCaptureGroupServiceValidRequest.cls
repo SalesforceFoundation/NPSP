@@ -49,42 +49,40 @@ public with sharing class ElevateCaptureGroupServiceValidRequest extends Elevate
     }
 
     public ElevateAuthorizedGiftResponse addCaptureGroupSuccessMessage() {
-        return (ElevateAuthorizedGiftResponse)JSON.deserialize('{\n' +
-                '  "body": {\n' +
-                '    "id": "test-valid-id",\n' +
-                '    "timestamp": "2021-03-03T17:43:28.589Z",\n' +
-                '    "createdAt": "2021-03-03T17:43:28.589Z",\n' +
-                '    "submittedAt": "2021-03-03T17:43:29.313Z",\n' +
-                '    "authorizedAt": "2021-03-03T17:43:29.313Z",\n' +
-                '    "authExpiresAt": "2021-03-06T17:43:29.313Z",\n' +
-                '    "status": "AUTHORIZED",\n' +
-                '    "merchantId": "f4338833-20f1-44b5-9270-6087659e0b9f",\n' +
-                '    "merchantName": "TestPortal",\n' +
-                '    "gatewayId": "106beaae-6d28-48b2-8c67-3cac2b636ee4",\n' +
-                '    "gatewayTransactionId": "ch_1IQyjMLjHqxVjuiLnrG8C6Zx",\n' +
-                '    "currencyCode": "USD",\n' +
-                '    "amount": 500,\n' +
-                '    "lastName": "Bond",\n' +
-                '    "firstName": "James",\n' +
-                '    "type": "PAYMENT",\n' +
-                '    "paymentType": "CARD",\n' +
-                '    "cardData": {\n' +
-                '      "last4": "1111",\n' +
-                '      "brand": "visa",\n' +
-                '      "expirationYear": "2025",\n' +
-                '      "expirationMonth": "05",\n' +
-                '      "firstName": "James",\n' +
-                '      "lastName": "Bond",\n' +
-                '      "fingerprint": "wU5VS1C0QNoMND4z"\n' +
-                '    },\n' +
-                '    "originalTransactionId": "c260c3eb-a8ae-47de-8f19-15e66c22098b",\n' +
-                '    "batchId": "b0eec3f4-ab08-4207-857b-f2c6afc36d24",\n' +
-                '    "receiptTimezone": "America/Los_Angeles",\n' +
-                '    "amountRefunded": 0,\n' +
-                '    "achData": {},\n' +
-                '    "version": 2\n' +
-                '  },\n' +
-                '  "statusCode": 201\n' +
+        return (ElevateAuthorizedGiftResponse)JSON.deserialize(
+                '{\n' +
+                    '"id": "test-valid-id",\n' +
+                    '"timestamp": "2021-03-03T17:43:28.589Z",\n' +
+                    '"createdAt": "2021-03-03T17:43:28.589Z",\n' +
+                    '"submittedAt": "2021-03-03T17:43:29.313Z",\n' +
+                    '"authorizedAt": "2021-03-03T17:43:29.313Z",\n' +
+                    '"authExpiresAt": "2021-03-06T17:43:29.313Z",\n' +
+                    '"status": "AUTHORIZED",\n' +
+                    '"merchantId": "f4338833-20f1-44b5-9270-6087659e0b9f",\n' +
+                    '"merchantName": "TestPortal",\n' +
+                    '"gatewayId": "106beaae-6d28-48b2-8c67-3cac2b636ee4",\n' +
+                    '"gatewayTransactionId": "ch_1IQyjMLjHqxVjuiLnrG8C6Zx",\n' +
+                    '"currencyCode": "USD",\n' +
+                    '"amount": 500,\n' +
+                    '"lastName": "Bond",\n' +
+                    '"firstName": "James",\n' +
+                    '"type": "PAYMENT",\n' +
+                    '"paymentType": "CARD",\n' +
+                    '"cardData": {\n' +
+                    '    "last4": "1111",\n' +
+                    '    "brand": "visa",\n' +
+                    '    "expirationYear": "2025",\n' +
+                    '    "expirationMonth": "05",\n' +
+                    '    "firstName": "James",\n' +
+                    '    "lastName": "Bond",\n' +
+                    '    "fingerprint": "wU5VS1C0QNoMND4z"\n' +
+                    '},\n' +
+                    '"originalTransactionId": "c260c3eb-a8ae-47de-8f19-15e66c22098b",\n' +
+                    '"batchId": "b0eec3f4-ab08-4207-857b-f2c6afc36d24",\n' +
+                    '"receiptTimezone": "America/Los_Angeles",\n' +
+                    '"amountRefunded": 0,\n' +
+                    '"achData": {},\n' +
+                    '"version": 2\n' +
                 '}', ElevateAuthorizedGiftResponse.class);
     }
 
