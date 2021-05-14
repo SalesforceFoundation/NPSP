@@ -78,6 +78,18 @@ public with sharing class Gifts {
         return capturableGroupIds;
     }
 
+    public void toPending() {
+        for (DataImport__c gift : dataImports) {
+            gift.Payment_Status__c = ElevateTransactionStatus.PENDING.name();
+        }
+    }
+
+    public void toRetryableError() {
+        for (DataImport__c gift : dataImports) {
+            gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
+        }
+    }
+
     public List<DataImport__c> dataImports() {
         return dataImports;
     }
