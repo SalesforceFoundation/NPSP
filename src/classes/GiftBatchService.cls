@@ -49,10 +49,12 @@ public with sharing class GiftBatchService {
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
-        // TODO: Update all gifts that failed to be captured
+        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
     }
 
     public void allAuthorizedGiftsAreNowPendingFor(Id batchId) {
-        // TODO: update all authorized gifts to pending gifts
+        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        giftBatch.transitionAuthorizedGiftsToPendingGifts();
     }
 }
