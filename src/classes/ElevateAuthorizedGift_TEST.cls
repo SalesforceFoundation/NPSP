@@ -87,7 +87,6 @@ public with sharing class ElevateAuthorizedGift_TEST {
 
     private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
         ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
-        authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
         authorizedGiftResponse.cardData = new ElevateAuthorizedGiftResponse.CardData();
         authorizedGiftResponse.id = DUMMY_ID;
         authorizedGiftResponse.authExpiresAt = System.today().addDays(1);

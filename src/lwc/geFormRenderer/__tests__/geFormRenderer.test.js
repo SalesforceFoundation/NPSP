@@ -105,7 +105,6 @@ describe('c-ge-form-renderer', () => {
                 Contact1Imported__c: '003J000001zoYLGIA2',
                 Donation_Date__c: '2021-02-23',
                 Donation_Amount__c: '0.01',
-                Payment_Authorization_Token__c: "a_dummy_token",
                 Payment_Method__c: "Credit Card",
                 Payment_Status__c: "PENDING"
             };
