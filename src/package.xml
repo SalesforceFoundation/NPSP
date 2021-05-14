@@ -269,9 +269,12 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
+        <members>ContactBuilder</members>
+        <members>ContactSelector</members>
         <members>ContactService</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
+        <members>ContactsInLegacyHouseholds_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -371,10 +374,13 @@
         <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
         <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdNaming_TEST</members>
         <members>HouseholdSelector</members>
         <members>HouseholdService</members>
+        <members>HouseholdService_TEST</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
+        <members>IAddress</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
@@ -390,9 +396,12 @@
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
+        <members>NPSP_Address_TEST</members>
         <members>NPSP_Batch</members>
         <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
+        <members>NPSP_Contact_TEST</members>
+        <members>NPSP_Household</members>
         <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
@@ -731,7 +740,10 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>UnitOfWork</members>
         <members>fflib_Domain</members>
+        <members>fflib_IDGenerator</members>
+        <members>fflib_IDGeneratorTest</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>
         <name>ApexClass</name>
@@ -1905,8 +1917,8 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
-        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NextACHPaymentDonationDateInfo</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>
