@@ -50,6 +50,16 @@
                             </c-util-page-level-message>
                         </template>
                     </div>
+                    <div>
+                        <lightning-radio-group
+                                label="Payment Method"
+                                options={paymentMethodOptions}
+                                onchange={handlePaymentMethodChange}
+                                value={paymentMethod}
+                                data-id="paymentMethod"
+                        >
+                        </lightning-radio-group>
+                    </div>
                     <div class={paymentEditForm}>
                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
                             data-qa-locator='widget Elevate'

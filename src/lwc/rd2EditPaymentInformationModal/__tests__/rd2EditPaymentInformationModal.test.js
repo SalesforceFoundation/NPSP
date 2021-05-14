@@ -112,14 +112,9 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on successfully save with new payment information', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-
-            const mockPaymentResultString = mockPaymentResult;
-            mockPaymentResultString.body = JSON.stringify(mockPaymentResultString.body);
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResultString));
-
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
-            
         });
 
         it('should close the modal when successfully save', async () => {
@@ -178,6 +173,49 @@ describe('c-rd2-edit-payment-information-modal', () => {
             });
         });
     });
+
+    describe('changing payment methods on existing credit card commitment', () => {
+        beforeEach(() => {
+            component.rdRecord = recurringDonation;
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            updateRecord.mockResolvedValue(recurringDonation);
+            document.body.appendChild(component);
+        });
+
+        it('has a radio group with ACH and Credit Card as options', () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            expect(radioGroup).toBeTruthy();
+            expect(radioGroup.options).toContainOptions(['ACH', 'Credit Card']);
+        })
+
+        it('updates widget when payment method changed to ach', () => {
+
+
+        });
+
+        it('payment method can be swapped back', () => {
+
+        });
+
+        it('clears credit card information on save', () => {
+
+        });
+
+    });
+
+    describe('changing payment methods on existing ach commitment', () => {
+        it('updates widget when payment method changed to credit card', () => {
+
+        });
+
+        it('can be swapped back', () => {
+
+        });
+
+        it('clears ach information on save', () => {
+
+        });
+    })
 });
 
 // Helpers

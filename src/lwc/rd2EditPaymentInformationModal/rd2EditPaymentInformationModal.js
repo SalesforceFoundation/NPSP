@@ -45,6 +45,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     loadingText = this.labels.loadingMessage;
     @track error = {};
     isSaveButtonDisabled = false;
+    _paymentMethod;
     rd2Service = new Rd2Service();
 
     /**
@@ -58,7 +59,10 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     get paymentMethod() {
-        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+        if(!this._paymentMethod) {
+            this._paymentMethod = this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+        }
+        return this._paymentMethod;
     }
 
     get nextDonationDate() {
@@ -71,6 +75,13 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
 
     get rdName() {
         return this.getValue(FIELD_NAME.fieldApiName);
+    }
+
+    get paymentMethodOptions() {
+        return [
+            { label: 'ACH', value: 'ACH' },
+            { label: 'Credit Card', value: 'Credit Card' }
+        ];
     }
 
     /**
@@ -98,6 +109,10 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     */
     handleClose() {
         this.dispatchEvent(new CustomEvent('close'));
+    }
+
+    handlePaymentMethodChange(event) {
+        console.log(event);
     }
 
     /**
