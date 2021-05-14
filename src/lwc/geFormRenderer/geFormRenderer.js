@@ -3,6 +3,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
+import processEditGift from '@salesforce/apex/GE_GiftEntryController.processEditGift';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -283,6 +284,7 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
         registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
+        registerListener('widgetStateChange', this.handleWidgetStateChange, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -322,6 +324,16 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         });
+    }
+
+    handleWidgetStateChange(changeEvent) {
+        const newState = changeEvent.state;
+        
+        this._isElevateWidgetInDisabledState = false;
+        if (newState == 'readOnly') {
+            console.log('widget being set to readonly');
+            this._isElevateWidgetInDisabledState = true;
+        }
     }
 
     handleNullPaymentFieldsInFormState() {
@@ -666,6 +678,7 @@ export default class GeFormRenderer extends LightningElement{
             formControls.toggleSpinner();
 
             let tokenizedGift = null;
+            console.log(`should tokenize = ${this.shouldTokenizeCard()}`);
             try {
                 if (this.shouldTokenizeCard()) {
                     tokenizedGift = new ElevateTokenizeableGift(
@@ -730,9 +743,22 @@ export default class GeFormRenderer extends LightningElement{
                 this.handleElevateAPIErrors(errors);
                 return;
             }
+        }  else if (this.isGiftAuthorized()) {
+            try {
+                await processEditGift({'dataImport': dataImportFromFormState});
+            } catch (ex) {
+                console.log(ex);
+                const error = {error: true, message: ex.body.message};
+                this.handleAsyncWidgetError(error);
+                return;
+            }
         }
         
         this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
+    }
+
+    isGiftAuthorized() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === 'AUTHORIZED';
     }
 
     shouldTokenizeCard() {
@@ -2097,6 +2123,7 @@ export default class GeFormRenderer extends LightningElement{
             case undefined:
             case null:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
             case PAYMENT_UNKNOWN_ERROR_STATUS:

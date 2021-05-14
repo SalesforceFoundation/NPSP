@@ -1,3 +1,5 @@
+import { fireEvent } from 'c/pubsubNoPageRef';
+
 class ElevateWidgetDisplay {
     _state = DISPLAY_DEFINITIONS.initialState;
     _componentContext;
@@ -13,6 +15,10 @@ class ElevateWidgetDisplay {
             return;
         }
 
+        this.dispatchApplicationEvent('widgetStateChange', {
+            isReadOnly: nextState === 'readOnly'
+        });
+
         const destinationState = destinationTransition.target;
         const destinationStateDefinition = DISPLAY_DEFINITIONS[destinationState];
 
@@ -25,6 +31,10 @@ class ElevateWidgetDisplay {
 
     currentState() {
         return this._state;
+    }
+
+    dispatchApplicationEvent(eventName, payload) {
+        fireEvent(null, eventName, payload);
     }
 }
 

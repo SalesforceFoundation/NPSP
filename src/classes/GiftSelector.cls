@@ -43,4 +43,12 @@ public with sharing class GiftSelector {
                 AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
         ];
     }
+
+    public DataImport__c getGiftById(Id giftId) {
+        return [
+                SELECT Id, Donation_Amount__c
+                FROM DataImport__c
+                WHERE Id =: giftId
+        ];
+    }
 }

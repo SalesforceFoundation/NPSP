@@ -6872,6 +6872,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Total amount doesn't match the {0}</value>
     </labels>
     <labels>
+        <fullName>geErrorBatchGiftEntryReauthRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when payment attributes changed on authorized gift</shortDescription>
+        <value>To update donor, date or amount, reenter card details to reauthorized the payment.</value>
+    </labels>
+    <labels>
         <fullName>geErrorBatchGiftEntryCurrencyMismatch</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

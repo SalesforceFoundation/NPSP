@@ -211,6 +211,17 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void processEditGift(DataImport__c dataImport){
+        throw new AuraHandledException('ERROR ERROR');
+        
+        /*try {
+            
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }*/
+    }
+
+    @AuraEnabled
     public static void processPaymentsFor(Id batchId) {
        try {
            NPSP_Batch batch = new NPSP_Batch(batchId);

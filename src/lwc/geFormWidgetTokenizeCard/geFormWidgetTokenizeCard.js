@@ -140,6 +140,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._displayState === 'criticalError';
     }
 
+    get shouldDisplayEditPaymentInformation() {
+        return this.isReadOnly  
+            && (this.paymentStatus() === 'EXPIRED' || this.paymentStatus() === 'AUTHORIZED');
+    }
+
     get isEdit() {
         return this._displayState === 'edit';
     }
