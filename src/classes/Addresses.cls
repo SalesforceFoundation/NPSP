@@ -65,7 +65,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
+        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0 &&
+                !isBeingInsertedByHHAccountInsertContext()) {
             refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
         }
 
@@ -81,6 +82,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
         deleteEmptyAddresses();
+    }
+
+    private Boolean isBeingInsertedByHHAccountInsertContext() {
+       return ADDR_Account_TDTM.isRunningInsert;
     }
 
     public void onBeforeUpdate() {

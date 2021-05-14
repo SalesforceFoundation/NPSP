@@ -36,6 +36,8 @@
 */
 public class ADDR_Account_TDTM extends TDTM_Runnable {
 
+    public static Boolean isRunningInsert = false;
+
     @TestVisible
     private OrgConfig orgConfig {
         get {
@@ -91,6 +93,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 // AFTER INSERT
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                     if (isAccountAddressSpecified(newRecord)) {
+                        isRunningInsert = true;
                         listAccCreateAddr.add(newRecord);
                     }
                 }
