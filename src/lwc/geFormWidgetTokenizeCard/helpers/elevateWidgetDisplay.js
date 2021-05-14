@@ -16,7 +16,7 @@ class ElevateWidgetDisplay {
         }
 
         this.dispatchApplicationEvent('widgetStateChange', {
-            isReadOnly: nextState === 'readOnly'
+            state: nextState
         });
 
         const destinationState = destinationTransition.target;

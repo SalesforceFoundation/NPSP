@@ -331,8 +331,7 @@ export default class GeFormRenderer extends LightningElement{
         const newState = changeEvent.state;
         
         this._isElevateWidgetInDisabledState = false;
-        if (newState == 'readOnly') {
-            console.log('widget being set to readonly');
+        if (newState === 'readOnly') {
             this._isElevateWidgetInDisabledState = true;
         }
     }
@@ -680,7 +679,6 @@ export default class GeFormRenderer extends LightningElement{
             formControls.toggleSpinner();
 
             let tokenizedGift = null;
-            console.log(`should tokenize = ${this.shouldTokenizeCard()}`);
             try {
                 if (this.shouldTokenizeCard()) {
                     tokenizedGift = new ElevateTokenizeableGift(
@@ -749,7 +747,6 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 await validateAuthorizedGiftEdit({'dataImport': dataImportFromFormState});
             } catch (ex) {
-                console.log(ex);
                 const error = {error: true, message: ex.body.message};
                 this.handleAsyncWidgetError(error);
                 return;
