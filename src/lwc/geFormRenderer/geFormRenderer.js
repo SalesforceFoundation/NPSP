@@ -719,6 +719,7 @@ export default class GeFormRenderer extends LightningElement{
                         [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
                     });
 
+                    this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
                     dataImportFromFormState = this.saveableFormState();
                 } else {
                     const errors = [{ message: authorizedGift.declineReason }];
@@ -2144,6 +2145,7 @@ export default class GeFormRenderer extends LightningElement{
             : this.CUSTOM_LABELS.geTextSaving;
 
         try {
+            delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
             const upsertResponse = await upsertDataImport({
                 dataImport: dataImportFromFormState
             });
@@ -2378,9 +2380,11 @@ export default class GeFormRenderer extends LightningElement{
 
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+        this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
+        const dataImportRecord = this.saveableFormState();
 
         submitDataImportToBDI({
-            dataImport: this.saveableFormState(),
+            dataImport: dataImportRecord,
             updateGift: this.hasSelectedDonationOrPayment()
         })
             .then(opportunityId => {
