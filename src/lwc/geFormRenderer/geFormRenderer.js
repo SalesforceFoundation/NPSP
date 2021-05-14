@@ -747,8 +747,9 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 await validateAuthorizedGiftEdit({'dataImport': dataImportFromFormState});
             } catch (ex) {
-                const error = {error: true, message: ex.body.message};
-                this.handleAsyncWidgetError(error);
+                this.handleCatchOnSave(ex.body.message);
+                formControls.enableSaveButton();
+                formControls.toggleSpinner();
                 return;
             }
         }
