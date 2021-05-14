@@ -54,4 +54,15 @@ public with sharing class ElevateCaptureGroupResponse {
                 && errors == null
                 && status == System.Label.BatchProgressStatusProcessing;
     }
+
+    public Boolean isValidCaptureResponse() {
+        return errors == null && status == System.Label.BatchProgressStatusProcessing;
+    }
+
+    public String firstError() {
+        if (isValidCaptureResponse() == false) {
+            return errors()[0].message;
+        }
+        return null;
+    }
 }
