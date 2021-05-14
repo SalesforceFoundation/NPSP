@@ -35,77 +35,81 @@
 * @description Makes the callout to the Elevate endpoint for capturing
 * payments in Elevate Batches.
 */
-public without sharing class ElevateCaptureGroupCapturer implements Finalizer, Queueable {
+public without sharing class ElevateCaptureGroupCapturer implements Queueable, Database.AllowsCallouts {
 
-    private NPSP_Batch giftBatch;
-    private QueueableCaptureGroup queueableCaptureGroup;
-    private List<ElevateCaptureGroupResponse> captureGroupResponses;
+    private Id batchId;
+    private QueueableCaptureGroups queueableCaptureGroups;
+    private Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+    private ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
 
-    public ElevateCaptureGroupCapturer(NPSP_Batch giftBatch) {
-        System.debug('in qeueable constructor');
-        this.giftBatch = giftBatch;
-        queueableCaptureGroup = new QueueableCaptureGroup(giftBatch.capturableGroupIds());
+    public ElevateCaptureGroupCapturer(Id batchId, Set<String> capturableGroupIds) {
+        System.debug('queueable constructor...');
+        this.batchId = batchId;
+        queueableCaptureGroups = new QueueableCaptureGroups(capturableGroupIds);
     }
 
-    public ElevateCaptureGroupCapturer(QueueableCaptureGroup queueableCaptureGroup, NPSP_Batch giftBatch) {
-        this.giftBatch = giftBatch;
-        this.queueableCaptureGroup = queueableCaptureGroup;
+    public ElevateCaptureGroupCapturer(Id batchId, QueueableCaptureGroups queueableCaptureGroups) {
+        System.debug('queueable child execute...');
+        this.batchId = batchId;
+        this.queueableCaptureGroups = queueableCaptureGroups;
     }
 
     public void execute(QueueableContext context) {
-        System.debug('in queueable execute method... current paritition index: ' + queueableCaptureGroup.currentPartitionIndex());
-        System.attachFinalizer(this);
-        giftBatch.queueableJobId(context.getJobId());
-        System.debug('Gift Job Id: ' + giftBatch.queueableJobId());
-
-        for (String captureGroupId : queueableCaptureGroup.idsToCapture()) {
-            // TODO: make the callout
-            System.debug(captureGroupId);
-            // TODO: if callout succeeds
-            // Apply success values to gift in memory
-
-            // TODO: if callout fails
-            // Apply fail and fail reason values to gift in memory
-
-            giftBatch.giftIsNowProcessing(captureGroupId);
+        System.debug('queueable execute...');
+        captureGroups();
+        if (giftFailedToBeCaptured()) {
+            updatePendingGiftsWithFailure();
         }
-
-        if (queueableCaptureGroup.shouldChainNextJob()) {
-            System.debug('enqueuing child job');
-            System.enqueueJob(new ElevateCaptureGroupCapturer(queueableCaptureGroup, giftBatch));
-        }
-
-        // TODO: Perform dml to persist success / fail info to gifts
-        giftBatch.updateMembers();
+        chainNextJob();
     }
 
-    public void execute(FinalizerContext context) {
-        System.debug('in finalizer execute method...');
+    private void captureGroups() {
+        for (String captureGroupId : queueableCaptureGroups.idsToCapture()) {
+            ElevateCaptureGroupResponse response = captureGroupService.capture(captureGroupId);
+            handleCaptureResponseFrom(captureGroupId, response);
+        }
     }
 
-    // private HttpRequest captureRequest(String groupId) {
-    //     return new PS_Request.Builder()
-    //         .withMethod(UTIL_Http.Method.POST)
-    //         .withCaptureGroupId(groupId)
-    //         .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
-    //         .build();
-    // }
+    private void handleCaptureResponseFrom(String captureGroupId, ElevateCaptureGroupResponse captureResponse) {
+        if (captureResponse.isValidCaptureResponse() == false) {
+            failReasonByCaptureGroupId.put(captureGroupId, captureResponse.firstError());
+        }
+    }
 
-    private class QueueableCaptureGroup {
+    private Boolean giftFailedToBeCaptured() {
+        return failReasonByCaptureGroupId.keySet().size() > 0;
+    }
+
+    private void updatePendingGiftsWithFailure() {
+        GiftBatchService giftBatchService = new GiftBatchService();
+        giftBatchService.giftsFailedCaptureFor(batchId, failReasonByCaptureGroupId);
+    }
+
+    private void chainNextJob() {
+        if (queueableCaptureGroups.hasGroupsToCapture()) {
+            ElevateCaptureGroupCapturer capturer =
+                new ElevateCaptureGroupCapturer(batchId, queueableCaptureGroups);
+            System.enqueueJob(capturer);
+        }
+    }
+
+    private class QueueableCaptureGroups {
         private List<String> captureGroupIds;
         private List<List<String>> partitionedGroupIds;
         private final Integer MAX_COUNT = 50;
         private Integer currentPartitionIndex = 0;
 
-        public QueueableCaptureGroup(List<String> captureGroupIds) {
-            this.captureGroupIds = captureGroupIds;
-            partitionedGroupIds = subdivide(captureGroupIds);
+        public QueueableCaptureGroups(Set<String> captureGroupIds) {
+            System.debug('QueueableCaptureGroups constructor with set...');
+            this.captureGroupIds = new List<String>();
+            this.captureGroupIds.addAll(captureGroupIds);
+            partitionedGroupIds = subdivide(this.captureGroupIds);
         }
 
         public List<String> idsToCapture() {
-            List<String> groupIds = partitionedGroupIds[currentPartitionIndex];
+            List<String> currentIdsToCapture = partitionedGroupIds[currentPartitionIndex];
             currentPartitionIndex++;
-            return groupIds;
+            return currentIdsToCapture;
         }
 
         public Integer partitionSize() {
@@ -116,7 +120,7 @@ public without sharing class ElevateCaptureGroupCapturer implements Finalizer, Q
             return currentPartitionIndex;
         }
 
-        public Boolean shouldChainNextJob() {
+        public Boolean hasGroupsToCapture() {
             return partitionSize() > currentPartitionIndex();
         }
 
