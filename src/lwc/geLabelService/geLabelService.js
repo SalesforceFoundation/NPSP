@@ -125,7 +125,6 @@ import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geErrorBatchGiftEntryCurrencyMismatch';
-import geErrorBatchGiftEntryReauthRequired from '@salesforce/label/c.geErrorBatchGiftEntryReauthRequired';
 import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
 import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisField';
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
@@ -370,7 +369,6 @@ class GeLabelService {
         geDonorColumnLabel,
         geErrorAmountDoesNotMatch,
         geErrorBatchGiftEntryCurrencyMismatch,
-        geErrorBatchGiftEntryReauthRequired,
         geErrorCardChargedBDIFailed,
         geErrorCompleteThisField,
         geErrorDonorTypeInvalid,

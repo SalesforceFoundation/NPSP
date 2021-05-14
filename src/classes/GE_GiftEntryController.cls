@@ -211,14 +211,11 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static void processEditGift(DataImport__c dataImport){
-        throw new AuraHandledException('ERROR ERROR');
-        
-        /*try {
-            
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }*/
+    public static void validateAuthorizedGiftEdit(DataImport__c dataImport){
+        Gift editedGift = new Gift(dataImport);
+        if (editedGift.isGiftReauthorizedRequired()) { 
+            throw new AuraHandledException(Label.geErrorBatchGiftEntryReauthRequired);
+        }
     }
 
     @AuraEnabled

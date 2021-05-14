@@ -3,7 +3,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
-import processEditGift from '@salesforce/apex/GE_GiftEntryController.processEditGift';
+import validateAuthorizedGiftEdit from '@salesforce/apex/GE_GiftEntryController.validateAuthorizedGiftEdit';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -472,6 +472,7 @@ export default class GeFormRenderer extends LightningElement{
     handleCancel() {
         this.reset();
         this.initializeFormState();
+        this.clearErrors();
 
         if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
@@ -745,7 +746,7 @@ export default class GeFormRenderer extends LightningElement{
             }
         }  else if (this.isGiftAuthorized()) {
             try {
-                await processEditGift({'dataImport': dataImportFromFormState});
+                await validateAuthorizedGiftEdit({'dataImport': dataImportFromFormState});
             } catch (ex) {
                 console.log(ex);
                 const error = {error: true, message: ex.body.message};

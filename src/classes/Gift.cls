@@ -30,38 +30,27 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description Gift entity class in NPSP.
 */
-public with sharing class GiftBatchService {
 
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
-    }
-
-    public Boolean comparePaymentFieldsForChange(DataImport__c updatedDataImport, GiftSelector selector) {
-        List<String> paymentFields = new List<String>{
-          'Donation_Amount__c', 
-          'Donation_Date__c', 
-          'Contact1_Firstname__c', 
-          'Contact1_Lastname__c', 
-          'Contact1Imported__c'
-        };
-
-        DataImport__c databaseDataImport = selector.getGiftById(updatedDataImport.Id);
-        Map<String, Object> updatedDataImportFields = updatedDataImport.getPopulatedFieldsAsMap();
-
-        for (String field : paymentFields) {
-          Object newValue = updatedDataImport.get(field);
-          Object oldValue = databaseDataImport.get(field);
-
-          if (oldValue != newValue && updatedDataImportFields.containsKey(field)) {
-            return true;
-          }
-        }
-
-        return false;
-    }
+public with sharing class Gift {
     
+    private DataImport__c dataImport;
+    
+    public Gift(DataImport__c dataImport) {
+        this.dataImport = dataImport;
+    }
+
+    public Boolean isGiftReauthorizedRequired() {
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { return false; }
+        return 
+            new GiftBatchService().comparePaymentFieldsForChange(
+                this.dataImport, 
+                new GiftSelector()
+            );
+    }
+
+    public DataImport__c dataImport() {
+        return this.dataImport;
+    }
 }
