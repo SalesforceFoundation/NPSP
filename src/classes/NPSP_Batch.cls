@@ -37,7 +37,9 @@ public inherited sharing class NPSP_Batch {
 
     private Id batchId;
     private DataImportBatch__c giftBatch;
+    private Gifts allGifts;
     private Gifts authorizedGifts;
+    private Gifts pendingGifts;
     private GiftBatchSelector giftBatchSelector {
         get {
             if (giftBatchSelector == null) {
@@ -96,24 +98,39 @@ public inherited sharing class NPSP_Batch {
         List<SObject> memberSObjects = new List<SObject>();
         memberSObjects.add(giftBatch);
         memberSObjects.addAll(authorizedGifts.dataImports());
+        memberSObjects.addAll(pendingGifts.dataImports());
         update memberSObjects;
     }
 
-    public List<String> capturableGroupIds() {
-        Gifts authorizedGifts = authorizedGifts();
-        Set<String> setOfIds = authorizedGifts.capturableGroupIds();
-        System.debug('Set of ids: ' + setOfIds.size());
-        List<String> newList = new List<String>();
-        newList.addAll(setOfIds);
-        return newList;
+    public Set<String> capturableGroupIds() {
+        return authorizedGifts()?.capturableGroupIds();
     }
 
-    public void giftIsNowProcessing(String captureGroupId) {
-        DataImport__c gift = authorizedGifts.findByCaptureGroupId(captureGroupId);
-        if (gift != null) {
-            System.debug('Found gift: ' + gift);
-            gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
+    public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
+        System.debug('failGiftsWithReason');
+
+        List<DataImport__c> giftsFailedCapture = new List<DataImport__c>();
+        for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
+            DataImport__c gift = allGifts().findByCaptureGroupId(captureGroupId);
+            gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
+            gift.FailureInformation__c = failReasonByCaptureGroupId.get(captureGroupId);
+            giftsFailedCapture.add(gift);
         }
+
+        update giftsFailedCapture;
+    }
+
+    public void transitionAuthorizedGiftsToPendingGifts() {
+        authorizedGifts.toPending();
+        updateAuthorizedGifts();
+    }
+
+    private void updateAuthorizedGifts() {
+        update authorizedGifts().dataImports();
+    }
+
+    private void updatePendingGifts() {
+        update pendingGifts().dataImports();
     }
 
     private Gifts authorizedGifts() {
@@ -123,14 +140,17 @@ public inherited sharing class NPSP_Batch {
         return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
     }
 
-    private void handleCaptureGroupResponses(List<ElevateCaptureGroupResponse> captureGroupResponses) {
-        for (DataImport__c dataImport : authorizedGifts.dataImports()) {
-            for (ElevateCaptureGroupResponse response : captureGroupResponses) {
-                if(response.isValidCaptureResponse(dataImport)) {
-                    dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-                }
-            }
+    private Gifts pendingGifts() {
+        if (pendingGifts != null) {
+            return pendingGifts;
         }
-        update authorizedGifts.dataImports();
+        return new Gifts(giftSelector.getPendingGiftsFor(this.batchId));
+    }
+
+    private Gifts allGifts() {
+        if (allGifts != null) {
+            return allGifts;
+        }
+        return new Gifts(giftSelector.getGiftsFor(this.batchId));
     }
 }
