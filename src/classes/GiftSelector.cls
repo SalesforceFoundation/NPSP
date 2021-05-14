@@ -35,12 +35,29 @@
 
 public with sharing class GiftSelector {
 
+    public List<DataImport__c> getGiftsFor(Id batchId) {
+        return [
+                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c =: batchId
+        ];
+    }
+
     public List<DataImport__c> getAuthorizedGiftsFor(Id batchId) {
         return [
                 SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c
                 FROM DataImport__c
                 WHERE NPSP_Data_Import_Batch__c =: batchId
                 AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
+        ];
+    }
+
+    public List<DataImport__c> getPendingGiftsFor(Id batchId) {
+        return [
+                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c
+                FROM DataImport__c
+                WHERE NPSP_Data_Import_Batch__c =: batchId
+                AND Payment_Status__c=: ElevateTransactionStatus.PENDING.name()
         ];
     }
 }
