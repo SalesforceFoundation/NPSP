@@ -66,22 +66,14 @@ public virtual with sharing class ElevateCaptureGroupService {
                 .build();
     }
 
-    // public List<ElevateCaptureGroupResponse> capture(Set<String> captureGroupIds) {
-    //     List<ElevateCaptureGroupResponse> elevateCaptureGroupResponses = new List<ElevateCaptureGroupResponse>();
-    //     for (String elevateBatchId : captureGroupIds) {
-    //         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-    //                 captureRequest(elevateBatchId)
-    //         );
-    //         ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
-    //                 response.body, ElevateCaptureGroupResponse.class);
-    //         elevateCaptureGroupResponses.add(captureGroupResponse);
-    //     }
-    //     return elevateCaptureGroupResponses;
-    // }
+    public void enqueuePaymentCaptureJobFor(Id batchId, Set<String> capturableGroupIds) {
+        ElevateCaptureGroupCapturer capturer =
+            new ElevateCaptureGroupCapturer(batchId, capturableGroupIds);
+        Id queuedJobId = System.enqueueJob(capturer);
 
-    public void capturePaymentsFor(NPSP_Batch giftBatch) {
-        System.debug('enqueueing job');
-        Id queuedJobId = System.enqueueJob(new ElevateCaptureGroupCapturer(giftBatch));
+        if (queuedJobId != null) {
+            new GiftBatchService().allAuthorizedGiftsAreNowPendingFor(batchId);
+        }
     }
 
     @TestVisible
