@@ -35,6 +35,8 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
+    private Boolean isBeforeInsert = false;
+
     @TestVisible
     private OrgConfig orgConfig {
         get {
@@ -205,6 +207,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
+        isBeforeInsert = true;
         createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
     }
@@ -551,6 +554,19 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
                 // construct the Account name
                 accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
+                if (isBeforeInsert) {
+                    HouseholdName householdName =
+                            new HouseholdName(new Contacts(new List<Contact>{
+                                    contactRecord
+                            }));
+                    if (accountRecord.npo02__Formal_Greeting__c == null) {
+                        accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
+                    }
+                    if (accountRecord.npo02__Informal_Greeting__c == null) {
+                        accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
+                    }
+                    accountRecord.Number_of_Household_Members__c = 1;
+                }
 
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
