@@ -30,7 +30,7 @@
 @isTest
 public with sharing class ElevateAuthorizedGift_TEST {
 
-    private static final Decimal DUMMY_AMOUNT = 100.00;
+    private static final Integer DUMMY_AMOUNT = 100;
     private static final String DUMMY_TOKEN = 'token-1234';
     private static final String DUMMY_LAST_NAME = 'Bond';
     private static final String DUMMY_FIRST_NAME = 'James';
@@ -87,7 +87,6 @@ public with sharing class ElevateAuthorizedGift_TEST {
 
     private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
         ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
-        authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
         authorizedGiftResponse.cardData = new ElevateAuthorizedGiftResponse.CardData();
         authorizedGiftResponse.id = DUMMY_ID;
         authorizedGiftResponse.authExpiresAt = System.today().addDays(1);
