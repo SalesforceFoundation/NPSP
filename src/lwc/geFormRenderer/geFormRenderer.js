@@ -170,6 +170,7 @@ export default class GeFormRenderer extends LightningElement{
     _hasPaymentWidget = false;
     latestCaptureGroupId = null;
     cardholderNamesNotInTemplate = {};
+    _openedGiftId;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -1010,6 +1011,11 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     loadDataImportRecord(dataImport) {
+        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
+        if (isAlreadyOpen) {
+            return;
+        }
+
         this.expandForm();
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
@@ -1018,10 +1024,12 @@ export default class GeFormRenderer extends LightningElement{
             convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
         this.reset();
         this.updateFormState(dataImportWithNullValuesAppended);
+        this._openedGiftId = dataImport.Id;
     }
 
     reset() {
         this.resetFormState();
+        this._openedGiftId = null;
     }
 
     resetFormState() {
