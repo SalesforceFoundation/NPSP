@@ -70,6 +70,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         set;
     }
 
+    @TestVisible
+    private HouseholdSettings householdSettings {
+        get {
+            if (householdSettings == null) {
+                householdSettings = new HouseholdSettings();
+            }
+            return householdSettings;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -555,17 +566,19 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 // construct the Account name
                 accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
                 if (isBeforeInsert) {
-                    HouseholdName householdName =
-                            new HouseholdName(new Contacts(new List<Contact>{
-                                    contactRecord
-                            }));
-                    if (accountRecord.npo02__Formal_Greeting__c == null) {
-                        accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
-                    }
-                    if (accountRecord.npo02__Informal_Greeting__c == null) {
-                        accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
-                    }
                     accountRecord.Number_of_Household_Members__c = 1;
+                    if (householdSettings.isAdvancedHouseholdNaming()) {
+                        HouseholdName householdName =
+                                new HouseholdName(new Contacts(new List<Contact>{
+                                        contactRecord
+                                }));
+                        if (accountRecord.npo02__Formal_Greeting__c == null) {
+                            accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
+                        }
+                        if (accountRecord.npo02__Informal_Greeting__c == null) {
+                            accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
+                        }
+                    }
                 }
 
                 // connect the Account to the Contact for 1:1 and HHAccount
