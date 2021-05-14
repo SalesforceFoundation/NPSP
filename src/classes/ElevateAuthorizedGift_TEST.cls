@@ -87,22 +87,21 @@ public with sharing class ElevateAuthorizedGift_TEST {
 
     private static ElevateAuthorizedGiftResponse createAuthorizedGiftResponse() {
         ElevateAuthorizedGiftResponse authorizedGiftResponse = new ElevateAuthorizedGiftResponse();
-        authorizedGiftResponse.body = new ElevateAuthorizedGiftResponse.Body();
-        authorizedGiftResponse.body.cardData = new ElevateAuthorizedGiftResponse.CardData();
-        authorizedGiftResponse.body.id = DUMMY_ID;
-        authorizedGiftResponse.body.authExpiresAt = System.today().addDays(1);
-        authorizedGiftResponse.body.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.body.paymentType = DUMMY_PAYMENT_TYPE;
-        authorizedGiftResponse.body.originalTransactionId = DUMMY_ID;
-        authorizedGiftResponse.body.batchId = DUMMY_ID;
-        authorizedGiftResponse.body.status = ElevateTransactionStatus.AUTHORIZED;
-        authorizedGiftResponse.body.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
-        authorizedGiftResponse.body.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
-        authorizedGiftResponse.body.cardData.last4 = DUMMY_CARD_LAST_4;
-        authorizedGiftResponse.body.cardData.brand = DUMMY_CARD_NETWORK;
-        authorizedGiftResponse.body.gatewayId = DUMMY_ID;
-        authorizedGiftResponse.body.gatewayTransactionId = DUMMY_ID;
-        authorizedGiftResponse.body.authorizedAt = DUMMY_DATE;
+        authorizedGiftResponse.cardData = new ElevateAuthorizedGiftResponse.CardData();
+        authorizedGiftResponse.id = DUMMY_ID;
+        authorizedGiftResponse.authExpiresAt = System.today().addDays(1);
+        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
+        authorizedGiftResponse.paymentType = DUMMY_PAYMENT_TYPE;
+        authorizedGiftResponse.originalTransactionId = DUMMY_ID;
+        authorizedGiftResponse.batchId = DUMMY_ID;
+        authorizedGiftResponse.status = ElevateTransactionStatus.AUTHORIZED;
+        authorizedGiftResponse.cardData.expirationYear = String.valueOf(DUMMY_DATE.addYears(1).year());
+        authorizedGiftResponse.cardData.expirationMonth = String.valueOf(DUMMY_DATE.addYears(1).month());
+        authorizedGiftResponse.cardData.last4 = DUMMY_CARD_LAST_4;
+        authorizedGiftResponse.cardData.brand = DUMMY_CARD_NETWORK;
+        authorizedGiftResponse.gatewayId = DUMMY_ID;
+        authorizedGiftResponse.gatewayTransactionId = DUMMY_ID;
+        authorizedGiftResponse.authorizedAt = DUMMY_DATE;
         return authorizedGiftResponse;
     }
 }
