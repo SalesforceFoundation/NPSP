@@ -290,14 +290,15 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
-        if (new RD2_RecurringDonation(rd).isClosed()) {
+        RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
+        if (recurringDonation.isClosed()) {
             return;
         }
         validateAmount(rd, errorCollection);
         validateInstallmentPeriod(rd, errorCollection);
         validateDayOfMonth(rd, errorCollection);
         validateFixedLength(rd, errorCollection);
-        validatePaymentMethod(new RD2_RecurringDonation(rd), errorCollection);
+        validatePaymentMethod(recurringDonation, errorCollection);
     }
 
     /**

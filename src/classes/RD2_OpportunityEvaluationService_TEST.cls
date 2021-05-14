@@ -2058,10 +2058,9 @@ private class RD2_OpportunityEvaluationService_TEST {
         setUpElevateIntegration(configStub);
         
 
-        npe03__Recurring_Donation__c recurringDonation
-                = getRecurringDonationBuilder(getContact())
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder(getContact())
             .withDayOfMonth(String.valueOf(START_DATE.day()))
-            .withPaymentMethod('Credit Card')
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
         insert recurringDonation;
 
