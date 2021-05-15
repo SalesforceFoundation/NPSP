@@ -28,24 +28,19 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateAuthorizedGiftResponse {
-    @TestVisible private Body body;
-    private Integer statusCode;
     private List<Errors> errors;
 
-    @TestVisible
-    private class Body {
-        @TestVisible private CardData cardData;
-        @TestVisible private String id;
-        @TestVisible private DateTime authExpiresAt;
-        @TestVisible private Datetime authorizedAt;
-        @TestVisible private ElevateTransactionStatus status;
-        @TestVisible private String paymentType;
-        @TestVisible private String originalTransactionId;
-        @TestVisible private String batchId;
-        @TestVisible private String declineReason;
-        @TestVisible private String gatewayId;
-        @TestVisible private String gatewayTransactionId;
-    }
+    @TestVisible private CardData cardData;
+    @TestVisible private String id;
+    @TestVisible private DateTime authExpiresAt;
+    @TestVisible private Datetime authorizedAt;
+    @TestVisible private ElevateTransactionStatus status;
+    @TestVisible private String paymentType;
+    @TestVisible private String originalTransactionId;
+    @TestVisible private String batchId;
+    @TestVisible private String declineReason;
+    @TestVisible private String gatewayId;
+    @TestVisible private String gatewayTransactionId;
 
     @TestVisible
     private class CardData {
@@ -61,47 +56,47 @@ public with sharing class ElevateAuthorizedGiftResponse {
     }
 
     public String gatewayId() {
-        return body?.gatewayId;
+        return gatewayId;
     }
 
     public String gatewayTransactionId() {
-        return body?.gatewayTransactionId;
+        return gatewayTransactionId;
     }
 
     public String id() {
-        return body?.id;
+        return id;
     }
 
     public DateTime authorizedAt() {
-        return body?.authorizedAt;
+        return authorizedAt;
     }
 
     public String last4() {
-        return body?.cardData?.last4;
+        return cardData?.last4;
     }
 
     public String brand() {
-        return body?.cardData?.brand;
+        return cardData?.brand;
     }
 
     public String expirationYear() {
-        return body?.cardData?.expirationYear;
+        return cardData?.expirationYear;
     }
 
     public String expirationMonth() {
-        return body?.cardData?.expirationMonth;
+        return cardData?.expirationMonth;
     }
 
     public DateTime authExpiration() {
-        return this.body?.authExpiresAt;
+        return this.authExpiresAt;
     }
 
     public ElevateTransactionStatus status() {
-        return body?.status;
+        return status;
     }
 
     public String declineReason() {
-        return body?.declineReason;
+        return declineReason;
     }
 
     public List<Errors> errors() {
@@ -109,14 +104,14 @@ public with sharing class ElevateAuthorizedGiftResponse {
     }
 
     public String paymentMethod() {
-        return this.body?.paymentType;
+        return this.paymentType;
     }
 
     public String originalTransactionId() {
-        return this.body?.originalTransactionId;
+        return this.originalTransactionId;
     }
 
     public String groupId() {
-        return this.body?.batchId;
+        return this.batchId;
     }
 }
