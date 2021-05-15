@@ -323,9 +323,9 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertEquals(null, listCon[0].AccountId);
         insert listCon;
 
-        list<Account> listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
+        list<Account> householdAccounts = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c from Account];
-        system.assertEquals(5, listAcc.size());
+        system.assertEquals(5, householdAccounts.size());
 
         // refresh our contacts to get their accounts
         listCon = [select Name, FirstName, LastName, AccountId from Contact];
@@ -333,11 +333,11 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertNotEquals(null, listCon[0].AccountId);
 
         // now merge some HH Accounts
-        listCon[0].AccountId = listAcc[0].Id;
-        listCon[1].AccountId = listAcc[0].Id;
-        listCon[2].AccountId = listAcc[1].Id;
-        listCon[3].AccountId = listAcc[1].Id;
-        listCon[4].AccountId = listAcc[4].Id;
+        listCon[0].AccountId = householdAccounts[0].Id;
+        listCon[1].AccountId = householdAccounts[0].Id;
+        listCon[2].AccountId = householdAccounts[1].Id;
+        listCon[3].AccountId = householdAccounts[1].Id;
+        listCon[4].AccountId = householdAccounts[4].Id;
 
         // lastname permutations
         system.assertEqualS(listCon[0].LastName, listCon[1].LastName);
@@ -345,20 +345,21 @@ private with sharing class ACCT_HHAccounts_TEST {
         system.assertNotEquals(listCon[2].LastName, listCon[3].LastName);
 
         // Force the primary contact on each to ensure proper naming order
-        listAcc[0].npe01__One2OneContact__c = listCon[0].Id;
-        listAcc[1].npe01__One2OneContact__c = listCon[2].Id;
-        listAcc[2].npe01__One2OneContact__c = listCon[4].Id;
-        update listAcc;
+        householdAccounts[0].npe01__One2OneContact__c = listCon[0].Id;
+        householdAccounts[1].npe01__One2OneContact__c = listCon[2].Id;
+        householdAccounts[2].npe01__One2OneContact__c = listCon[4].Id;
+        update householdAccounts;
 
         Test.startTest();
         update listCon;
         test.stopTest();    // to flush any future calls.
 
-        listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
+        householdAccounts = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
-        system.assertEquals(3, listAcc.size());
+        system.assertEquals(3, householdAccounts.size(),
+                'listAcc should be size 3 because...');
 
-        for (Account acc : listAcc) {
+        for (Account acc : householdAccounts) {
             system.assertNotEquals(null, acc.npe01__One2OneContact__c);
             system.assertNotEquals(null, acc.npo02__Formal_Greeting__c);
             system.assertNotEquals(null, acc.npo02__Informal_Greeting__c);
