@@ -68,7 +68,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId =
                 defaultAndSeasonalAddressesByHouseholdAccountId();
         List<Address__c> addresses = [
-                SELECT Default_Address__c
+                SELECT Default_Address__c, Household_Account__c
                 FROM Address__c
                 WHERE Household_Account__c
                         IN :defaultAndSeasonalAddressesByHouseholdAccountId.keySet()

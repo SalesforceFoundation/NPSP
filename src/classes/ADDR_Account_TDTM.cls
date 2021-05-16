@@ -72,7 +72,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
 
         List<Account> listAccCreateAddr = new List<Account>();
-       
+
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
@@ -93,7 +93,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 // AFTER INSERT
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                     if (isAccountAddressSpecified(newRecord)) {
-                        isRunningInsert = true;
                         listAccCreateAddr.add(newRecord);
                     }
                 }
