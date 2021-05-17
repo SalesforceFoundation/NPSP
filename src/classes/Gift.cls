@@ -50,7 +50,4 @@ public with sharing class Gift {
             );
     }
 
-    public DataImport__c dataImport() {
-        return this.dataImport;
-    }
 }

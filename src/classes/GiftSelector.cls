@@ -45,16 +45,11 @@ public with sharing class GiftSelector {
     }
 
     public DataImport__c getGiftById(Id giftId) {
-        return [
-                SELECT 
-                    Id, 
-                    Donation_Amount__c, 
-                    Donation_Date__c, 
-                    Contact1_Firstname__c, 
-                    Contact1_Lastname__c,
-                    Contact1Imported__c 
-                FROM DataImport__c
-                WHERE Id =: giftId
-        ];
+        String giftQuery = 
+          'SELECT ' + String.join(GiftBatchService.PAYMENT_FIELDS, ', ') + ' ' +
+          'FROM DataImport__c ' +
+          'WHERE Id = \'' + String.escapeSingleQuotes(giftId) + '\'';
+
+        return Database.query(giftQuery);
     }
 }

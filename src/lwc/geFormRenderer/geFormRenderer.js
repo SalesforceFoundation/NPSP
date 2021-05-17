@@ -332,8 +332,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleNullPaymentFieldsInFormState() {
-        if (this.isGiftAuthorized()) { return; }
-
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
             apiNameFor(PAYMENT_DECLINED_REASON),
@@ -740,17 +738,34 @@ export default class GeFormRenderer extends LightningElement{
                 return;
             }
         }  else if (this.isGiftAuthorized()) {
-            try {
-                await validateAuthorizedGiftEdit({'dataImport': dataImportFromFormState});
-            } catch (ex) {
-                this.handleCatchOnSave(ex.body.message);
-                formControls.enableSaveButton();
-                formControls.toggleSpinner();
-                return;
-            }
+            const canUpdate = this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
+            if (!canUpdate) { return; }
         }
         
         this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
+    }
+
+    /*******************************************************************************
+    * @description On an authorized data import record where re-tokenization is not
+    * required, validate that certain payment-related fields have not been modified
+    *
+    * @param {object} dataImportFromFormState: Representing data import record
+    * @param {object} formControls: Used to drive UI elements like spinner and button
+    * visibility
+    *
+    * @return {boolean}: True if the gift can be saved in its current state
+    */
+    async canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls) {
+        try {
+            await validateAuthorizedGiftEdit({dataImport: dataImportFromFormState});
+        } catch (ex) {
+            this.handleCatchOnSave(ex.body.message);
+            formControls.enableSaveButton();
+            formControls.toggleSpinner();
+            return false;
+        }
+
+        return true;
     }
 
     isGiftAuthorized() {
