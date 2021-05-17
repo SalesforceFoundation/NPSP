@@ -95,7 +95,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(PS_IntegrationServiceConfig_TEST.testMerchantId, requestBody.merchantId, 'Merchant Id should match');
         System.assertEquals(PS_IntegrationServiceConfig_TEST.testGatewayId, requestBody.gatewayId, 'Gateway Id should match');
         System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Payment method should be CARD');
+        System.assertEquals(ElevatePaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Payment method should be CARD');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
@@ -151,7 +151,7 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
+        System.assertEquals(ElevatePaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(true, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should set to true');
         System.assertEquals(1, requestBody.schedules.size(),
@@ -187,7 +187,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         Test.stopTest();
 
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
+        System.assertEquals(ElevatePaymentMethod.CARD.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(null, requestBody.deactivateAllExistingSchedules, 'Deactivate Existing Schedules Boolean should not be set');
         System.assertEquals(null, requestBody.schedules,
@@ -310,7 +310,7 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         commitmentBody.withPaymentMethodType(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD);
 
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.CARD.name(),
+        System.assertEquals(ElevatePaymentMethod.CARD.name(),
                 commitmentBody.paymentMethodType,
                 'Expected payment method to be CARD');
     }
@@ -321,7 +321,7 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         commitmentBody.withPaymentMethodType(RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH);
 
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(),
+        System.assertEquals(ElevatePaymentMethod.ACH.name(),
                 commitmentBody.paymentMethodType,
                 'Expected payment method to be ACH');
     }
@@ -349,7 +349,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(contact.FirstName, requestBody.firstName, 'First Name should match');
         System.assertEquals(contact.LastName, requestBody.lastName, 'Last Name should match');
         System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
+        System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
         PS_CommitmentRequest.AchData achData = requestBody.achData;
 
         System.assertEquals('WEB', achData.achCode, 'ACH Code should be WEB');
@@ -399,7 +399,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(account.Name, requestBody.lastName, 'Last Name should be company name');
         System.assertEquals(account.Name, requestBody.accountName, 'Commitment request account name should be company name');
         System.assertEquals(PS_CommitmentRequest.CommitmentType.SUSTAINER.name(), requestBody.type, 'Commitment Type should match');
-        System.assertEquals(PS_CommitmentRequest.PaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
+        System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Payment method should be ACH');
         PS_CommitmentRequest.AchData achData = requestBody.achData;
 
         System.assertEquals('WEB', achData.achCode, 'AchData Code should be WEB');
