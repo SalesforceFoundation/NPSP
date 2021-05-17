@@ -1,0 +1,502 @@
+<apex:page controller="pkBanding_CTRL" showHeader="true" sidebar="false"
+           docType="html-5.0" title="PK Banding" >
+    <head>
+        <apex:slds />
+
+        <style type="text/css">
+            .logs-panel {
+                word-wrap: break-word;
+                font-size: x-small;
+                font-family: monospace;
+                background-color:gainsboro;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+
+        </style>
+
+        <script type="text/js-worker">
+            onmessage = (oEvent) => {
+
+                // env vars                
+                let startTime = Date.now();
+
+                // web service
+                async function web_worker(requestData) {
+
+                    postMessage(requestData);
+                    postMessage(`>> Starting web_worker(${requestData.band}) for:`);
+
+                    // create async request
+                    fetch(requestData.url, {
+                        method: 'POST',
+                        body: JSON.stringify(requestData),
+                        mode: 'cors',
+                        headers: {
+                            'Authorization': `Bearer ${requestData.session}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(
+                        response => {
+                            // response exists && status == 200
+                            if (typeof response !== 'undefined' && response.ok) {
+                                // handle somewhere else
+                                return response.json();
+                            }
+
+                            // re-Try logic when we hit governor limits on salesforce and service returns != 200 status
+                            const t = getRandomInt(1000, 3000);
+                            const b = (requestData.batchSize*0.75) | 0 ;
+
+                            requestData.batchSize = b;
+                            postMessage(requestData);
+                            postMessage(`<** Error on request for web_worker(${requestData.band}): Re-Try logic using batchSize=${b} (fetching in ${t/1000}s), request-data:`);
+                            // set random timeout | usually Apex CPU Time Exceeded
+                            setTimeout(()=>{web_worker(requestData)}, t);
+
+                        }
+                    ).then(
+                        jsonResponse => {
+
+                            if (typeof jsonResponse !== 'undefined') {
+                                // clone cursor
+                                let reqData = clone(jsonResponse.cursor);
+                                // log data to JS
+                                postMessage(jsonResponse);
+                                postMessage(`<< web_worker(${reqData.band+':'+reqData.offset}) response:`);
+
+                                // evaluate response
+                                if (jsonResponse.result && !jsonResponse.completed) {
+
+                                    // clone response obj and perform new call
+                                    postMessage(reqData);
+                                    postMessage(`&nbsp; >> Creating next web_worker(${reqData.band+':'+reqData.offset}) for:`);
+
+                                    // if processed data, send info to JS
+                                    if (jsonResponse.numberProcessed > 0) {
+                                        // send partial results to JS
+                                        let jsResponse = {
+                                            totalEvents: jsonResponse.numberProcessed,                                         
+                                            band: jsonResponse.cursor.band,                                           
+                                            completed: false,
+                                            timeInSeconds: (Date.now() - startTime)/1000
+                                        };
+                                        postMessage(jsResponse);
+                                    }
+
+                                    // recursive call to get remaining data
+                                    web_worker(reqData);
+
+                                } else if (!jsonResponse.result) {
+
+                                    const t = getRandomInt(1000, 3000); // number
+                                    const b = (jsonResponse.cursor.batchSize*0.75) | 0 ;
+                                    reqData.batchSize = b;
+
+                                    // if processed data, send partial results to JS
+                                    if (jsonResponse.numberProcessed > 0) {
+                                        let jsResponse = {
+                                            totalEvents: jsonResponse.numberProcessed,                                                                                      
+                                            band: jsonResponse.cursor.band,                                            
+                                            completed: false,
+                                            timeInSeconds: (Date.now() - startTime)/1000
+                                        };
+                                        postMessage(jsResponse);
+                                    }
+
+                                    postMessage(reqData);
+                                    postMessage(`><* Error in web_worker(${reqData.band+':'+reqData.offset}) response: Re-Try logic with batchSize=${b} (fetching in ${t/1000}s), request-data:`);
+                                    // set random timeout | usually DataLakeServiceApi - InteralServerError message
+                                    setTimeout(()=>{web_worker(reqData)}, t);
+
+                                } else if (jsonResponse.completed) {
+
+                                    // return results to JS
+                                    let jsResponse = {
+                                        totalEvents: jsonResponse.numberProcessed,                                        
+                                        band: jsonResponse.cursor.band,                                        
+                                        completed: true,
+                                        timeInSeconds: (Date.now() - startTime)/1000
+                                    };
+
+                                    // return results
+                                    postMessage(jsResponse);
+                                }
+                            }else{
+                                postMessage('jsonResponse is undefined');
+                            }
+
+                        } // end jsonResponse => {
+                    );
+
+                }
+
+                // clone objs
+                function clone(obj) {
+                    // aux var
+                    let copy;
+                    // handle nulls
+                    if (null == obj || "object" != typeof obj) return obj;
+                    // handle Object
+                    if (obj instanceof Object) {
+                        copy = {};
+                        for (let attr in obj) {
+                            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+                        }
+                        return copy;
+                    }
+                }
+
+                // random integer between min and max
+                function getRandomInt(min, max) {
+                    return Math.floor(Math.random() * (max - min) + min);
+                }
+
+                // init web worker
+                web_worker(oEvent.data);
+
+            };
+        </script>
+
+        <script>
+            // worker
+            var workerBlob = new Blob(Array.prototype.map.call(document.querySelectorAll('script[type=\'text\/js-worker\']'), function (oScript) { return oScript.textContent; }),{type: 'text/javascript'});
+            // Creating a new document.worker property containing all our "text/js-worker" scripts.
+            var documentworker = new Worker(window.URL.createObjectURL(workerBlob));
+
+            // sfdc consts
+            const __sfdcSessionId = '{!getSessionId()}';            
+            const __serviceUrl = '{!baseUrl}' + '/services/apexrest/pkbanding';
+
+            // app vars
+            let totalEvents;            
+            let startTime;
+            let totalBands;
+            let bandsCompleted;
+            let timer;
+            let totalSeconds = 0;
+            const partitionBits = 3;
+
+            // handle web-worker responses
+            documentworker.onmessage = function(oEvent) {
+
+                let eData = oEvent.data;
+
+                if (eData === undefined) {
+                    return 'Undefined value!';
+                }
+
+                if (typeof eData === 'string') {
+                    log(eData);
+                } else if (eData.totalEvents!=null && eData.timeInSeconds!=null ) {
+
+                    // app vars
+                    totalEvents += eData.totalEvents;
+                    // aux metric vars                    
+                    let totTransactionsPerSecond = Math.round(totalEvents/eData.timeInSeconds);
+                    let totTransactionsPerDay = Math.round(totTransactionsPerSecond*86400);
+
+                    // update results card
+                    document.getElementById('results-total').innerHTML = format_num(totalEvents);                    
+                    document.getElementById('results-perday').innerHTML = format_num(totTransactionsPerDay);
+                    document.getElementById('results-transactions-seconds').innerHTML = format_num(totTransactionsPerSecond);
+
+                    // when completed
+                    if (eData.completed) {
+                        bandsCompleted++;
+                        log(' -----------------------------------------------');
+                        log(` &emsp; #failed events: ${format_num(totalEvents)}`);
+                        log(` &emsp; #success events: ${format_num(totalEvents)}`);
+                        log(` &emsp; #total-events: <b>${format_num(totalEvents)}</b>`);
+                        log(`<b>&nbsp; ${eData.band}:${eData.offset} = completed</b>`);
+                        log(' -----------------------------------------------');
+                    }
+
+                    // update results progress bar
+                    if (bandsCompleted>0) {
+                        const perc = ((bandsCompleted/totalBands) * 100).toFixed(3);
+                        if (Math.round(perc)===100) {
+                            show_element(false,'spinner');
+                            clearInterval(timer);
+                        }
+                        document.getElementById('results-progress').style.width = `${perc}%`;
+                    }
+
+                } else {
+                    log(eData);
+                }
+
+            };            
+
+            function log(content) {
+                // console.info(content);
+                const str = typeof content === 'string' ? content : JSON.stringify(content);
+                let previousHtml = document.getElementById('results').innerHTML;
+                // if we already have a lot of content, delete it to avoid page crash
+                if (previousHtml.length>39000) {
+                    previousHtml =  previousHtml.substring(0, previousHtml.substring(0, 6000).lastIndexOf("<br>"));
+                }
+                // log content
+                document.getElementById('results').innerHTML = '<br/><p>' + str + '</p>' + previousHtml;
+            }
+
+            // counter
+            function setTime() {
+                ++totalSeconds;
+                document.getElementById('results-seconds').innerHTML = pad(totalSeconds % 60);
+                document.getElementById('results-minutes').innerHTML = pad(parseInt(totalSeconds / 60));
+            }
+
+            function pad(val) {
+                let valString = val + '';
+                if (valString.length < 2) {
+                    return '0' + valString;
+                } else {
+                    return valString;
+                }
+            }
+
+            // clean log panel and re-init app variables
+            function clean_log() {
+                // html results
+                document.getElementById('results').innerHTML = '';
+                document.getElementById('results').classList.add('logs-panel');
+                document.getElementById('results-total').innerHTML = '-';                
+                document.getElementById('results-transactions-seconds').innerHTML = '-';
+                document.getElementById('results-perday').innerHTML = '-';
+                document.getElementById('results-progress').style.width = '0%';
+                document.getElementById('results-minutes').innerHTML = 00;
+                document.getElementById('results-seconds').innerHTML = 00;
+                // app vars
+                totalEvents = 0;                
+                totalBands = 0;
+                bandsCompleted = 0;
+                startTime = Date.now();
+                totalSeconds = 0;
+            }
+
+            // clone function for objects
+            function clone(obj) {
+                // aux var
+                let copy;
+                // handle object
+                if (null == obj || "object" != typeof obj) return obj;
+                // Handle Object
+                if (obj instanceof Object) {
+                    copy = {};
+                    for (let attr in obj) {
+                        if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+                        if (attr instanceof Date) copy[attr].setTime(attr.getTime());
+                    }
+                    return copy;
+                }
+                // if instance is not object
+                throw new Error("Unable to copy obj! Its type isn't supported.");
+            }
+
+            function format_num (num) {
+                // Nine Zeroes for Billions
+                return Math.abs(Number(num)) >= 1.0e+9
+
+                    ? Math.abs(Number(num)) / 1.0e+9 + 'B'
+                    // Six Zeroes for Millions
+                    : Math.abs(Number(num)) >= 1.0e+6
+
+                        ? Math.abs(Number(num)) / 1.0e+6 + 'M'
+                        // Three Zeroes for Thousands
+                        : Math.abs(Number(num)) >= 1.0e+3
+
+                            ? Math.abs(Number(num)) / 1.0e+3 + 'K'
+
+                            : Math.abs(Number(num));
+            }
+
+            function show_element(show,elementId) {
+                var x = document.getElementById(elementId);
+                x.style.display = show ? 'block' : 'none';
+            }
+
+            // parallel execution
+            async function execute_parallel(useWorkers) {
+
+                // clear and start logs
+                clean_log();
+                // start timer
+                timer = setInterval(setTime, 1000);
+                // show spinner
+                show_element(true,'spinner');
+                let offset = document.getElementById("offset").value === '' ? null : document.getElementById("offset").value;
+
+                
+                // execute a web worker per band
+                for (let i = 0; i < 2**partitionBits; i++){
+                    totalBands++;
+                    let requestData = {                                                
+                        band: i,
+                        chunkBits: 15,
+                        batchSize: parseInt(document.getElementById("batch").value),
+                        partitionBits: partitionBits,
+                        offset: null,
+                        session: __sfdcSessionId,
+                        url: __serviceUrl
+                    };
+                    // post
+                    documentworker.postMessage(requestData);
+                }
+            }      
+
+        </script>
+    </head>
+
+    <body class="slds-scope" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <apex:form id="dispatcherform">
+
+        <!-- header -->
+        <div class="slds-page-header" >
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-omni_supervisor">
+                            <svg class="slds-icon slds-icon_large slds-icon-text-default" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS,
+                                    '/assets/icons/standard-sprite/svg/symbols.svg#omni_supervisor')}"></use>
+                            </svg>
+                        </span>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle">Parallelization Engine Prototype</h1>
+                    <p><b>Welcome to the Parallelization Engine Prototype. We don't recommend using this page unless explicitly directed to by Salesforce.</b></p>
+                    <div class="slds-float_right">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- body content -->
+        <div class="body">
+            <!-- CONTENT HERE -->
+            <div class="slds-grid">
+                <div class="slds-col slds-size_2-of-6 slds-m-around_small">
+                    <div class="slds-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Configure:</h2>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-gutters slds-p-bottom_medium">
+                            <div class="slds-col" id="inputsContainerCol">
+                                <div class="slds-form-element slds-m-left_medium" id="inputsContainer">
+                                    
+                                    <label class="slds-form-element__label" for="bits">Choose number of parallel shards:</label>
+                                    <select name="bits" id="bits" tabindex="1" class="slds-select" disabled="true">
+                                        <option value="1">1 bit (2 shards)</option>
+                                        <option value="2">2 bits (4 shards)</option>
+                                        <option value="3" selected="true">3 bits (8 shards)</option>
+                                        <option value="4">4 bits (16 shards)</option>
+                                        <option value="5">5 bits (34 shards)</option>
+                                        <option value="6">6 bits (64 shards)</option>
+                                        <option value="7">7 bits (128 shards)</option>
+                                        <option value="8">8 bits (256 shards)</option>
+                                    </select> <br/>
+
+                                    <label class="slds-form-element__label" for="batch">Choose a batch size:</label>
+                                    <select name="batch" id="batch" tabindex="2" class="slds-select">
+                                        <option value="1">1</option>
+                                        <option value="2" selected="true">2</option>
+                                        <option value="3">3</option>
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>                                        
+                                        <option value="500">500</option>                                       
+                                        <option value="1000">1000</option>                                        
+                                    </select> <br/>
+
+                                    <label class="slds-form-element__label" for="offset">Type a offset:</label>
+                                    <input type="input" class="slds-input" id="offset" value="" placeholder="a093F000009QUOq" tabindex="3" />
+                                    <br/>
+
+                                </div>
+                            </div>
+                            <div id="actionContainer" class="slds-col">
+                                <!-- Action Buttons -->                                
+                                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                                    <input type="button" value="Call Workers" onclick="execute_parallel(true)" tabindex="4" class="slds-button slds-button_outline-brand" />
+                                </div>
+                                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                                    <apex:commandButton id="cleanOrgBtn" value="Clean Org"
+                                                        action="{!cleanOrg}" immediate="true"
+                                                        styleClass="slds-button slds-button_destructive" tabindex="5" />
+                                </div>
+                                <div class="slds-spinner_container" id="spinner" style="display: none;">
+                                    <div role="status" class="slds-spinner slds-spinner_medium">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END slds-card -->
+                    <!-- Results CARD -->
+                    <div class="slds-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Results:</h2>
+                            <div class="slds-col slds-m-around_small">
+                                <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" role="progressbar">
+                                        <span class="slds-progress-bar__value" style="width:0%" id="results-progress">
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-m-around_small slds-text-heading_medium">
+                            <div class="slds-col" id="results-card">
+                                <div class="slds-card slds-text-heading_small slds-text-align_right">
+                                    Clock: &nbsp;<label id="results-minutes">00</label>:<label id="results-seconds">00</label>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions Processed:&nbsp;<b><div id="results-total">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per second:&nbsp;<b><div id="results-transactions-seconds">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per day:&nbsp;<b><div id="results-perday">-</div></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END of Results slds-card -->
+                </div>
+                <div class="slds-col slds-size_3-of-6 slds-m-around_small">
+                    <div class="slds-card" id="logs-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Logs:</h2>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                            <input type="button" value="Clean Logs" onclick="clean_log()" tabindex="6" class="slds-button slds-button_text-destructive"/>
+                        </div>
+                        <div id="results" class="slds-text-align_left" tabindex="7">
+                            <div class="slds-illustration slds-illustration_large" aria-hidden="true" id="logs-img">
+                                <img src="/projRes/ui-home-private/emptyStates/noAssistant.svg" class="slds-illustration__svg" alt=""/>
+                                <div class="slds-text-color_weak">
+                                    <h3 class="slds-text-heading_large">Logs<br/></h3>
+                                    <p class="slds-text-heading_medium">
+                                        they will show up here to guide us through the dark
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END slds-card -->
+                </div>
+                <div class="slds-col slds-size_1-of-6">
+                </div>
+            </div>
+        </div>
+    </apex:form>
+    </body>
+
+</apex:page>

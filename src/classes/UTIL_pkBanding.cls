@@ -1,18 +1,20 @@
 public with sharing class UTIL_pkBanding {
 
-    public String querySelect = getRDBatchQuery(); //RD_RecurringDonations.strQueryRDNoWhere();
-    public String queryWhere; // = ' where npe03__Open_Ended_Status__c = \'' + RD_Constants.OPEN_ENDED_STATUS_OPEN + '\'';
+    public String querySelect = getQuery();
+    public String queryWhere;
     public pkBandingService.dispatcherResponse resp = new pkBandingService.dispatcherResponse();
 
-    public String getRDBatchQuery() {
+    // should be interface
+    public String getQuery() {
         return new UTIL_Query()
                 .withFrom(npe03__Recurring_Donation__c.SObjectType)
                 .withSelectFields(
-                        new Set<String>{ 'Id' }
+                    new Set<String>{ 'Id' }
                 )
                 .build();
     }
 
+    // should be interface
     public sObject[] getNextBatch(){
         SObject[] records = new List<SObject>();
         resp.completed = false;

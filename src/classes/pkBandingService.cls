@@ -2,13 +2,9 @@
 global with sharing class pkBandingService {
 
     // consts
-    public static final String ERR_CLASS_NAME = 'PKBanding_REST:';
+    public static final String ERR_CLASS_NAME = 'pkBandingService:';
     public static final Integer HTTP_SUCCESS = 200;
     public static final Integer HTTP_FORBIDDEN = 403;
-    // attrs
-    Integer recordCount = 0;
-    Integer failCount = 0;
-    List<String> failedList = new List<String>();
 
     @HttpPost
     global static void pkbanding() {
@@ -23,22 +19,27 @@ global with sharing class pkBandingService {
         SObject[] events;
 
         // class vars
-        Integer band;
-        SObject auxEvent;
+        Integer recordCount = 0;
+        Integer successCount = 0;
+        Integer failedCount = 0;
+        Set<String> failedIds = new Set<String>();
+        
+        // aux vars
+        Integer band;        
         Integer numberOfEvents;
         Integer eventLimit;
-        String lastOffset;
-        Boolean completed = false;
+        String lastOffset;        
 
-        try {
+        try { system.debug('init service');
 
             // deserialize payload
             request = (Cursor) JSON.deserialize(
-                    RestContext.request.requestBody.toString(),
-                    Cursor.class
-            );
+                RestContext.request.requestBody.toString(),
+                Cursor.class
+            ); 
+            system.debug('request data:' + request);
 
-            // init class attributes
+            // init aux vars
             numberOfEvents = 0;
             band = request.band;
             eventLimit = request.batchSize;
@@ -47,17 +48,23 @@ global with sharing class pkBandingService {
             // init response
             dResponse.init(request);
 
-            // init events
+            // init pk banding service
             UTIL_pkBanding pkb = new UTIL_pkBanding();
+            // set resp obj
             pkb.resp = dResponse;
-            events = pkb.getNextBatch();
+            // get next batch
+            events = pkb.getNextBatch(); system.debug('events results: ' + events); system.debug('events size: ' + events.size());
+            // get resp obj from service
             dResponse = pkb.resp;
+            dResponse.numberProcessed = events.size(); system.debug('dResponse: ' + dResponse);
 
-            // fire if we have events to process
-            if (numberOfEvents>0) {
+            // process RDs if result == true
+            if (dResponse.numberProcessed>0 && dResponse.result) { system.debug('calling RD method...');
 
-                // fire event handler
-                Integer recordsProcessed = events.size();
+                // counter of RDs to process
+                recordCount = events.size();
+                System.debug('recordCount: ' + recordCount);
+
                 // disable rollups
                 TDTM_Config_API.disableAllRollupTriggers();
                 // execute RD service
@@ -66,16 +73,20 @@ global with sharing class pkBandingService {
                                                                     .withRds(UTIL_SObject.extractIds(events))
                                                                     .withCurrentDate(Date.Today())
                                                                     .evaluateOpportunities();
-                // todo: maybe get ids to replay
-                Integer recordsFailed = evalService.getRecordsFailed();
 
-            }
+                // todo: maybe get ids to replay
+
+                // counter after execution                
+                failedCount += evalService.getRecordsFailed();   System.debug('rdIds size: ' + evalService.rdIds.size());  System.debug('failedCount: ' + failedCount);            
+                successCount += evalService.rdIds.size() - evalService.getRecordsFailed(); System.debug('successCount: ' + successCount);            
+
+            } 
 
         } catch (Exception e) {
-
+            System.debug('EXCEPTION: ' + e.getMessage());
             // update response object
             dResponse.cursor.offset = lastOffset;
-            dResponse.numberProcessed = numberOfEvents;
+            dResponse.numberProcessed = numberOfEvents; // TODO: accomodate this number
             dResponse.result = false;
             dResponse.error =  ERR_CLASS_NAME + e.getMessage();
             response.responseBody = Blob.valueOf(JSON.serialize(dResponse));
