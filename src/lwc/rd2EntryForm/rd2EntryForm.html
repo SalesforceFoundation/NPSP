@@ -83,7 +83,10 @@
 
                                     <lightning-layout horizontal-align="spread" multiple-rows="true">
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
-                                            <lightning-input-field field-name={fields.status.apiName} required>
+                                            <lightning-input-field
+                                                    data-id="status"
+                                                    field-name={fields.status.apiName}
+                                                    required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
 
@@ -148,13 +151,12 @@
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
                                             data-qa-locator='widget Elevate'    
-                                            is-edit-mode={isEdit}
+                                            is-edit-mode={isCommitmentEdit}
                                             card-exp-date={cardExpDate}
                                             card-last-four-label={cardLastFourLabel}
                                             ach-last-four-label={achLastFourLabel}
                                             card-last-four={cardLastFour}
                                             ach-last-four={achLastFour}
-                                            is-edit-payment={isEdit}
                                             next-donation-date={nextDonationDate}
                                             payer-organization-name={organizationAccountName}
                                             payer-first-name={contactFirstName}
