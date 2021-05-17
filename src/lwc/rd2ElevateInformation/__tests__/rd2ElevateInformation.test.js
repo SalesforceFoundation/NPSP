@@ -37,10 +37,12 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
 
 const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetRecord = require('./data/getRecord.json');
+const mockGetAchRecord = require('./data/getAchRecord.json');
 const mockGetData = require('./data/getData.json');
 
 const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
 const CC_LAST_4_FIELD_NAME = 'CardLast4__c';
+const ACH_LAST_4_FIELD_NAME = 'ACH_Last_4__c';
 const EXPIRATION_YEAR_FIELD_NAME = 'CardExpirationYear__c';
 const STATUS_REASON_FIELD_NAME = 'ClosedReason__c';
 const ICON_NAME_ERROR = 'utility:error';
@@ -84,7 +86,7 @@ describe('c-rd2-elevate-information', () => {
     * @description Verifies the widget when the Recurring Donation has no error
     * or there is no error after the latest successful payment
     */
-    describe('on data load when no errors', () => {
+    describe('on credit card payment data load when no errors', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
@@ -151,6 +153,38 @@ describe('c-rd2-elevate-information', () => {
         it("should be accessible", async () => {
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
+            });
+        });
+    });
+
+    describe('on ach payment data load when no errors', () => {
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(null);
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Open"
+            });
+
+            getRecord.emit(mockGetAchRecord);
+
+            document.body.appendChild(component);
+        });
+
+        it('should display ACH Last 4', async () => {
+            return global.flushPromises().then(async () => {
+                assertLastFourACHIsPopulated(component, mockGetAchRecord);
+            });
+        });
+
+        it('should not display Expiration Date', async () => {
+            return global.flushPromises().then(async () => {
+                const expDate = getExpirationDate(component);
+                expect(expDate).toBeFalsy();
             });
         });
     });
@@ -519,6 +553,12 @@ const assertLastFourDigitsIsPopulated = (component, mockRecord) => {
     const last4Digits = getLastFourDigits(component);
     expect(last4Digits).not.toBeNull();
     expect(last4Digits.value).toBe(mockRecord.fields[CC_LAST_4_FIELD_NAME].value);
+}
+
+const assertLastFourACHIsPopulated = (component, mockRecord) => {
+    const last4Digits = getLastFourDigits(component);
+    expect(last4Digits).not.toBeNull();
+    expect(last4Digits.value).toBe(mockRecord.fields[ACH_LAST_4_FIELD_NAME].value);
 }
 
 /***

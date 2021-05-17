@@ -16,6 +16,10 @@ import FIELD_CC_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.Car
 import FIELD_ACH_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
+import RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
+import RD_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.npe01__One2OneContact__r.LastName';
+import RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
+import RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
@@ -49,7 +53,11 @@ const FIELDS = [
     FIELD_COMMITMENT_ID,
     FIELD_STATUS,
     FIELD_STATUS_REASON,
-    FIELD_NEXT_DONATION_DATE  
+    FIELD_NEXT_DONATION_DATE,
+    RD_ACCOUNT_NAME,
+    RD_PRIMARY_CONTACT_LAST_NAME,
+    RD_CONTACT_LAST_NAME,
+    RD_CONTACT_FIRST_NAME
 ];
 
 const OPTIONAL_FIELDS = [
