@@ -6884,7 +6884,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when payment attributes changed on authorized gift</shortDescription>
+        <shortDescription>Instructions to reenter payment details when updating authorized attributes</shortDescription>
         <value>To update donor, date or amount, reenter card details to reauthorized the payment.</value>
     </labels>
     <labels>
