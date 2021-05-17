@@ -161,6 +161,7 @@ public with sharing class RD2_PauseForm_TEST {
 
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         rd.CommitmentId__c = 'TEST COMMITMENT';
+        rd.PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD;
         update rd;
 
         RD2_ScheduleService.currentDate = START_DATE.addDays(1);
@@ -532,6 +533,7 @@ public with sharing class RD2_PauseForm_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withCommitmentId('TEST')
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
         insert rd;
 

@@ -13,8 +13,8 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={isEditMode}>
-                                        <template if:true={isEditCard}>
+                                    <template if:true={isEditCard}>
+                                        <template if:true={isDisabled}>
                                             <lightning-button variant="base" 
                                                 label={labels.updatePaymentButtonLabel}
                                                 onclick={handleUserEnabledWidget}
@@ -33,7 +33,7 @@
                                             </lightning-button>
                                         </template>
                                     </template>
-                                    <template if:false={isEditPayment}>
+                                    <template if:false={isEditMode}>
                                         <template if:false={isDisabled}>
                                             <lightning-button variant="base" 
                                                 label={labels.elevateDisableButtonLabel}

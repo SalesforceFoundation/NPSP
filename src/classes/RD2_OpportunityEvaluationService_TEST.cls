@@ -2039,6 +2039,189 @@ private class RD2_OpportunityEvaluationService_TEST {
             'No installment should be created with close date during the pause');
     }
 
+    /**
+    * @description Verifies that when the Open Opportunity Behavior is set to Closed Lost,
+    * All mathcing installments should be set to Closed Lost when RD is converted to Elevate
+    */
+    @isTest
+    private static void shouldCloseAllOpportunitiesForConvertedElevateRDWhenAutoSettingIsClosed() {
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.Mark_Opportunities_Closed_Lost.name()
+        });
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+
+        setUpElevateIntegration(configStub);
+        
+
+        npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+        insert recurringDonation;
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(recurringDonation);
+        List<Opportunity> opportunities = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1)) //match nex month installment
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(15)) //unmatch
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(10)) //unmatch
+                .withOpenStage()
+                .build()
+        };
+        insert opportunities;
+
+        recurringDonation.CommitmentId__c = MOCK_COMMITMENT_ID;
+
+        Test.startTest();
+        update recurringDonation;
+        Test.stopTest();
+
+        List<Opportunity> queriedOpportunities = oppGateway.getRecords(recurringDonation);
+
+        System.assertEquals(4, queriedOpportunities.size(), 'There should be total of 3 future opps on the RD');
+
+        for (Opportunity queriedOpportunity : queriedOpportunities) {
+            System.assertEquals('Closed Lost', queriedOpportunity.StageName,
+                'The matching installment opportunity should be mark as close lost');
+        }
+    }
+
+    /**
+    * @description Verifies that when the Open Opportunity Behavior is set to Delete,
+    * All matching installments should be Delete when RD is converted to Elevate
+    */
+    @isTest
+    private static void shouldDeleteAllOpportunitiesForConvertedElevateRDWhenAutoSettingIsDelete() {
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.Delete_Open_Opportunities.name()
+        });
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+
+        setUpElevateIntegration(configStub);
+        
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod('Credit Card')
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1)) //match nex month installment
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(15)) //unmatch
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(10)) //unmatch
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        rd.CommitmentId__c = MOCK_COMMITMENT_ID;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
+
+        System.assertEquals(0, queriedOpps.size(), 'There should be no opportunities left on the RD');
+    }
+
+    /**
+    * @description Verifies that when the Open Opportunity Behavior is set to No Action,
+    * All matching installments should stay the same when RD is converted to Elevate
+    */
+    @isTest
+    private static void shouldLeaveInstallmentMatchingOppsUntouchForConvertedElevateRDWhenAutoSettingIsNoAction() {
+        RD2_ScheduleService.currentDate = START_DATE;
+
+        RD2_Settings_TEST.setUpConfiguration(new Map<String, Object> {
+            'npe03__Open_Opportunity_Behavior__c' => RD2_Constants.CloseActions.No_Action.name()
+        });
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true);
+
+        setUpElevateIntegration(configStub);
+        
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth(String.valueOf(START_DATE.day()))
+            .withPaymentMethod('Credit Card')
+            .build();
+        insert rd;
+
+        TEST_OpportunityBuilder oppBuilder = TEST_OpportunityBuilder.getOpportunityBuilder(rd);
+        List<Opportunity> opps = new List<Opportunity>{
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1)) //match nex month installment
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(15)) //unmatch
+                .withOpenStage()
+                .build(),
+            oppBuilder
+                .withName()
+                .withCloseDate(START_DATE.addMonths(1).addDays(10)) //unmatch
+                .withOpenStage()
+                .build()
+        };
+        insert opps;
+
+        rd.CommitmentId__c = MOCK_COMMITMENT_ID;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        List<Opportunity> queriedOpps = oppGateway.getRecords(rd);
+
+        System.assertEquals(4, queriedOpps.size(), 'There should be total of 4 future opps on the RD');
+        
+        
+        System.assertEquals(false, queriedOpps[0].IsClosed,
+            'The matching installment opportunity should stay open');
+        System.assertEquals(false, queriedOpps[1].IsClosed,
+            'The matching installment opportunity should stay open');
+        System.assertEquals(false, queriedOpps[2].IsClosed,
+            'The non matching installment opportunity should stay open');
+        System.assertEquals(false, queriedOpps[3].IsClosed,
+            'The non matching installment opportunity should stay open');
+    }
+
     // Helpers
     ///////////////////
 
@@ -2110,11 +2293,12 @@ private class RD2_OpportunityEvaluationService_TEST {
     private static npe03__Recurring_Donation__c setUpElevateTestData(PS_IntegrationServiceConfig_TEST.Stub configStub, String commitmentId) {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
+        setUpElevateIntegration(configStub);
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
             .withCommitmentId(commitmentId)
+            .withPaymentMethod('Credit Card')
             .build();
 
         Test.startTest();
@@ -2122,5 +2306,13 @@ private class RD2_OpportunityEvaluationService_TEST {
         Test.stopTest();
 
         return rd;
+    }
+
+    /****
+    * @description Sets up Elevate environment
+    * @param configStub Elevate Integration Service configuration stub
+    */
+    private static void setUpElevateIntegration(PS_IntegrationServiceConfig_TEST.Stub configStub) {
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(PS_IntegrationServiceConfig.class, configStub);
     }
 }
