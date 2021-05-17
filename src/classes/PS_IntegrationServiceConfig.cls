@@ -50,7 +50,7 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String SFDO_GATEWAYIDS = 'sfdo.gatewayIds';
     public static final String SFDO_USERNAME = 'sfdo.username';
     public static final String ELEVATE_SDK = 'elevateSDK';
-    public static final String PRODUCTID = 'productId';
+    public static final String CLIENTID = 'clientId';
 
     // Elevate record view types
     public enum VIEW_TYPE {
@@ -65,7 +65,7 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
-        PRODUCTID,
+        CLIENTID,
         BASE_URL,
         API_KEY,
         SFDO_MERCHANTIDS,
@@ -237,8 +237,8 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(ELEVATE_SDK);
         }
 
-        public String getProductId() {
-            return config.get(PRODUCTID);
+        public String getClientId() {
+            return config.get(CLIENTID);
         }
 
         public String getGatewayIds() {
