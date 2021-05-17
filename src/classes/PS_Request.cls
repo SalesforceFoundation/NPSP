@@ -280,7 +280,7 @@ public inherited sharing class PS_Request {
         * @return String JSON Web Token
         */
         public String getJwt(ElevateEndpoint endpoint) {
-            JWTPayload payload = new JWTPayload(configService.getProductId(), endpoint);
+            JWTPayload payload = new JWTPayload(configService.getClientId(), endpoint);
 
             String jwt = UTIL_Jwt.getSignedJWTFromString(
                 payload.getAsString(),
