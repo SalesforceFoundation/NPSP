@@ -142,8 +142,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get shouldDisplayEditPaymentInformation() {
         return this.isReadOnly  
-            && (this.paymentTransactionStatusValues.EXPIRED 
-                || this.paymentTransactionStatusValues.AUTHORIZED);
+            && (this.isExpiredTransaction || this.isPaymentStatusAuthorized());
     }
 
     get isEdit() {
@@ -152,11 +151,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get showCancelButton() {
         return this.isEdit 
-            && this.paymentStatus() !== this.paymentTransactionStatusValues.AUTHORIZED 
-            && this.paymentStatus() !== this.paymentTransactionStatusValues.CAPTURED;
+            && !this.isExpiredTransaction
+            && !this.isPaymentStatusAuthorized();
     }
 
     get isExpiredTransaction() {
+        return this.paymentStatus() === this.paymentTransactionStatusValues.EXPIRED;
+    }
+
+    get isAuthorizedTransaction() {
         return this.paymentStatus() === this.paymentTransactionStatusValues.AUTHORIZED;
     }
 

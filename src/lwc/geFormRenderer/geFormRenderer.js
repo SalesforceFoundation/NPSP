@@ -332,7 +332,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleNullPaymentFieldsInFormState() {
-        if (this.isGiftAuthorized()) { return; }
+        if (this.shouldNotNullPaymentFields()) { return; }
 
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
@@ -773,6 +773,14 @@ export default class GeFormRenderer extends LightningElement{
 
     isGiftAuthorized() {
         return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED;
+    }
+
+    isGiftExpired() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
+    }
+    
+    shouldNotNullPaymentFields() {
+        return (this.isGiftAuthorized() || this.isGiftExpired());
     }
 
     shouldTokenizeCard() {
