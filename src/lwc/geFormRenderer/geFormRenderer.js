@@ -328,15 +328,12 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleWidgetStateChange(changeEvent) {
-        const newState = changeEvent.state;
-        
-        this._isElevateWidgetInDisabledState = false;
-        if (newState === 'readOnly') {
-            this._isElevateWidgetInDisabledState = true;
-        }
+        this._isElevateWidgetInDisabledState = (changeEvent.state === 'readOnly');
     }
 
     handleNullPaymentFieldsInFormState() {
+        if (this.isGiftAuthorized()) { return; }
+
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
             apiNameFor(PAYMENT_DECLINED_REASON),
@@ -472,7 +469,6 @@ export default class GeFormRenderer extends LightningElement{
     handleCancel() {
         this.reset();
         this.initializeFormState();
-        this.clearErrors();
 
         if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
@@ -758,7 +754,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     isGiftAuthorized() {
-        return this.formState[apiNameFor(PAYMENT_STATUS)] === 'AUTHORIZED';
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED;
     }
 
     shouldTokenizeCard() {
@@ -1028,6 +1024,7 @@ export default class GeFormRenderer extends LightningElement{
     reset() {
         this.resetFormState();
         this._openedGiftId = null;
+        this.clearErrors();
     }
 
     resetFormState() {
