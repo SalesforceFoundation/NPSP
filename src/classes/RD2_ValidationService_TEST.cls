@@ -751,6 +751,7 @@ private with sharing class RD2_ValidationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -788,6 +789,7 @@ private with sharing class RD2_ValidationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -863,6 +865,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
             .withAmount(10)
+            .withPaymentMethod('Credit Card')
             .withStartDate(today.addDays(1))
             .build();
 
@@ -1102,6 +1105,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withRecurringTypeOpen()
             .withCommitmentId('commitmentId')
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -1120,6 +1124,62 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage.contains(System.Label.RD2_EndDateElevateCannotBeInFuture),
             'Elevate RD update should fail when Rd End Date is in the future: ' + errMessage
         );
+    }
+
+    @isTest
+    private static void shouldFailElevateUpdateWhenPaymentMethodInsertIsInvalid() {
+        TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{
+                builder.withPaymentMethod('Check')
+                        .withCommitmentId('commitmentId')
+                        .build()
+        };
+        RD2_ValidationService validationService = new RD2_ValidationService(recurringDonations);
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
+                'record.');
+        System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
+                ' null');
+        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+            System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
+                    'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
+        }
+    }
+
+    @isTest
+    private static void shouldFailElevateUpdateWhenPaymentMethodUpdateIsInvalid() {
+        TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
+        List<npe03__Recurring_Donation__c> oldRecurringDonations = new List<npe03__Recurring_Donation__c>{
+                builder.withPaymentMethod('Credit Card')
+                        .withCommitmentId('commitmentId')
+                        .build()
+        };
+        List<npe03__Recurring_Donation__c> updatedRecurringDonations = new List<npe03__Recurring_Donation__c>{
+            builder.withPaymentMethod('Check')
+                   .withCommitmentId('commitmentId')
+                   .build()
+        };
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            updatedRecurringDonations,
+            oldRecurringDonations
+        );
+
+        Test.startTest();
+            List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
+                'record.');
+        System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
+                ' null');
+        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+            System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
+                    'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
+        }
     }
 
     // Helper Methods
