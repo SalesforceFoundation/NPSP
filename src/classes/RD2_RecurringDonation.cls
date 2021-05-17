@@ -393,6 +393,10 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Total_Paid_Installments__c.intValue();
     }
 
+    public String paymentMethod() {
+        return rd.PaymentMethod__c;
+    }
+
     /**
     * @description Return the state of the Recurring Donation.
     * @return String 
@@ -493,4 +497,15 @@ public inherited sharing class RD2_RecurringDonation {
        return String.isNotBlank(rd.CommitmentId__c);
     }
 
+    public Boolean hasValidRecurringDonationPaymentMethod() {
+        if (isElevateRecord()) {
+            return isValidElevatePaymentMethod();
+        }
+        return true;
+    }
+
+    private Boolean isValidElevatePaymentMethod() {
+        return paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
+               paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
+    }
 }

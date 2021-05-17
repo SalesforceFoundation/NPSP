@@ -478,6 +478,7 @@ private with sharing class RD2_EntryFormController_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withDayOfMonth('1')
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
     }
 
