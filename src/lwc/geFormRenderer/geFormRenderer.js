@@ -741,7 +741,7 @@ export default class GeFormRenderer extends LightningElement{
                 return;
             }
         }  else if (this.isGiftAuthorized()) {
-            const canUpdate = this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
+            const canUpdate = await this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
             if (!canUpdate) { return; }
         }
         
