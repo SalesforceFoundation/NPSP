@@ -147,6 +147,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAmount(100)
             .withDefaultValues()
             .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
         System.assertNotEquals(null, rd.Name, 'Elevate RD Name should be specified');
 
@@ -177,6 +178,7 @@ private with sharing class RD2_RecurringDonations_TEST {
                 .withAmount(100)
                 .withDefaultValues()
                 .withCommitmentId(COMMITMENT_ID)
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
                 .withName(null)
                 .build(),
             new TEST_RecurringDonationBuilder()
@@ -216,6 +218,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAmount(100)
             .withDefaultValues()
             .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
 
         String rdName = rd.Name;
@@ -241,6 +244,7 @@ private with sharing class RD2_RecurringDonations_TEST {
             .withAmount(100)
             .withDefaultValues()
             .withCommitmentId(COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
 
         String rdName = rd.Name;

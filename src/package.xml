@@ -314,6 +314,7 @@
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
         <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevatePaymentMethod</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
@@ -1824,6 +1825,7 @@
         <members>RD2_ElevateInformationHeader</members>
         <members>RD2_ElevateInformationStatusSuccess</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePaymentMethodChangeError</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_ElevateRDAmountMustBeValid</members>
@@ -1905,8 +1907,8 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
-        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NextACHPaymentDonationDateInfo</members>
+        <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
         <members>RD2_NumberInstallmentsRequiredWhenFixed</members>

@@ -42,14 +42,6 @@ public inherited sharing class PS_CommitmentRequest {
         SUSTAINER
     }
 
-    /***
-     * @description Commitment payment method.
-     */
-    public enum PaymentMethod {
-        CARD,
-        ACH
-    }
-
     public enum DonorType {
         INDIVIDUAL,
         BUSINESS
@@ -478,9 +470,9 @@ public inherited sharing class PS_CommitmentRequest {
 
         public RequestBody withPaymentMethodType(String paymentMethodPicklistValue) {
             if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH) {
-                this.paymentMethodType = PaymentMethod.ACH.name();
+                this.paymentMethodType = ElevatePaymentMethod.ACH.name();
             } else if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
-                this.paymentMethodType = PaymentMethod.CARD.name();
+                this.paymentMethodType = ElevatePaymentMethod.CARD.name();
             }
             return this;
         }
@@ -585,7 +577,7 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         public Boolean isACH() {
-            return this.paymentMethodType == PaymentMethod.ACH.name();
+            return this.paymentMethodType == ElevatePaymentMethod.ACH.name();
         }
     }
 
