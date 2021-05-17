@@ -4,7 +4,6 @@ import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
 jest.mock(
@@ -17,16 +16,10 @@ jest.mock(
     { virtual: true }
 );
 
-jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
-    () => {
-        return { default: jest.fn() }
-    },
-    { virtual: true }
-);
-
 const mockPaymentResult = require('./data/updatePaymentResult.json');
 const mockPaymentError = require('./data/updatePaymentError.json');
 const recurringDonation = require('./data/recurringDonation.json');
+const recurringACHDonation = require('./data/reccuringACHDonation.json');
 const creditCardPayload = require('./data/creditCardPayload.json');
 
 describe('c-rd2-edit-payment-information-modal', () => {
@@ -184,9 +177,10 @@ describe('c-rd2-edit-payment-information-modal', () => {
         });
     });
 
-    describe('changing payment methods on existing credit card commitment', () => {
+    describe('updating an existing credit card commitment', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
+            component.donorType = 'Contact';
             handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
             setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
@@ -208,23 +202,62 @@ describe('c-rd2-edit-payment-information-modal', () => {
             const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
             changeValue(radioGroup, 'ACH');
             await flushPromises();
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(1);
             expect(mockGetIframeReply).toHaveBeenCalledWith(
                 expect.any(HTMLIFrameElement),
-                expect.objectContaining({action: 'setPaymentMethod'}),
+                expect.objectContaining({
+                    action: 'setPaymentMethod',
+                    paymentMethod: 'ACH'
+                }),
                 undefined
             );
+        });
+
+        it('updates widget when swapped to ACH and back to Credit Card', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+
+            changeValue(radioGroup, 'Credit Card');
+            await flushPromises();
+
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
+            expect(mockGetIframeReply).toHaveBeenLastCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({
+                    action: 'setPaymentMethod',
+                    paymentMethod: 'Credit Card'
+                }),
+                undefined
+            );
+        });
+
+        it('sets donor type on rd2 credit card form after load', async () => {
+            const widget = getElevateWidget(component);
+            expect(widget.achAccountType).toBe('Contact');
         });
 
         it('saves successfully after swapping to ACH', async () => {
             const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
             changeValue(radioGroup, 'ACH');
             await flushPromises();
-            getSaveButton(element).click();
+
+            getSaveButton(component).click();
+            await flushPromises();
+
+            expect(mockGetIframeReply).toHaveBeenLastCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({
+                    action: 'createAchToken',
+                    params: 'some json string of ach parameters'
+                }),
+                undefined
+            );
+
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
         });
 
-        it('payment method can be swapped back', () => {
 
-        });
 
         it('clears credit card information on save', () => {
 
@@ -232,7 +265,22 @@ describe('c-rd2-edit-payment-information-modal', () => {
 
     });
 
-    describe('changing payment methods on existing ach commitment', () => {
+    describe('updating an existing ach commitment', () => {
+        beforeEach(() => {
+            component.rdRecord = recurringACHDonation;
+            component.donorType = 'Account';
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            setupIframeReply();
+            document.body.appendChild(component);
+        });
+
+        it('sets payer information on widget after load', async () => {
+            const widget = getElevateWidget(component);
+            expect(widget.payerFirstName).toBe('TestingFirstName');
+            expect(widget.payerLastName).toBe('TestingLastName');
+            expect(widget.payerOrganizationName).toBe('TestingLastName Household');
+        });
+
         it('updates widget when payment method changed to credit card', () => {
 
         });

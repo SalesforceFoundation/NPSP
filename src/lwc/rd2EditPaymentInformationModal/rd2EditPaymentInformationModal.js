@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
-import { isNull, showToast, constructErrorMessage, format, isUndefined } from 'c/utilCommon';
+import { isNull, showToast, constructErrorMessage, isUndefined } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
-import { updateRecord } from 'lightning/uiRecordApi';
+import { updateRecord, getFieldValue } from 'lightning/uiRecordApi';
 import paymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
 import closeButtonLabel from '@salesforce/label/c.commonClose';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -19,12 +19,18 @@ import FIELD_LAST_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donati
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 
+import RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
+import RD_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.npe01__One2OneContact__r.LastName';
+import RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
+import RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
+
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
 import { Rd2Service } from 'c/rd2Service';
 
 export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
+    @api donorType;
 
     labels = Object.freeze({
         paymentInformationTitle,
@@ -46,6 +52,19 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     @track error = {};
     isSaveButtonDisabled = false;
     _paymentMethod;
+
+    get contactFirstName() {
+        return this.getRdValue(RD_CONTACT_FIRST_NAME);
+    }
+
+    get contactLastName() {
+        return this.getRdValue(RD_CONTACT_LAST_NAME);
+    }
+
+    get organizationAccountName() {
+        return this.getRdValue(RD_ACCOUNT_NAME);
+    }
+
     rd2Service = new Rd2Service();
 
     /**
@@ -91,6 +110,10 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         return this.hasValue(fieldName)
             ? this.rdRecord.fields[fieldName].value
             : null;
+    }
+
+    getRdValue(field) {
+        return getFieldValue(this.rdRecord, field);
     }
 
     /**
