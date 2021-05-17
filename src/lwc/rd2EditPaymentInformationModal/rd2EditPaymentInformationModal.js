@@ -112,7 +112,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     handlePaymentMethodChange(event) {
-        console.log(event);
+        this._paymentMethod = event.detail.value;
     }
 
     /**

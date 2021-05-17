@@ -4,6 +4,8 @@ import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
+import { mockGetIframeReply } from 'c/psElevateTokenHandler';
+
 jest.mock(
     '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment',
     () => {
@@ -178,6 +180,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
             handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
         });
@@ -188,9 +191,27 @@ describe('c-rd2-edit-payment-information-modal', () => {
             expect(radioGroup.options).toContainOptions(['ACH', 'Credit Card']);
         })
 
-        it('updates widget when payment method changed to ach', () => {
+        it('radio group displays payment method from existing record', () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            expect(radioGroup.value).toBe('Credit Card');
+        });
 
+        it('updates widget when payment method changed to ACH', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+            expect(mockGetIframeReply).toHaveBeenCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({action: 'setPaymentMethod'}),
+                undefined
+            );
+        });
 
+        it('saves successfully after swapping to ACH', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+            getSaveButton(element).click();
         });
 
         it('payment method can be swapped back', () => {
@@ -276,6 +297,28 @@ const dispatchClickEvent = (element) => {
     element.dispatchEvent(
         new CustomEvent('click')
     );
+}
+
+const changeValue = (element, value) => {
+    element.value = value;
+    element.dispatchEvent(new CustomEvent('change', { detail: { value }} ));
+}
+
+const setupIframeReply = () => {
+    mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+        const type = "post__npsp";
+        const token = "a_dummy_token";
+        // if message action is "createToken", reply with dummy token immediately
+        // instead of trying to hook into postMessage
+        // see sendIframeMessage in mocked psElevateTokenHandler
+        if (message.action === 'createToken' || message.action === 'createAchToken') {
+            return { type, token };
+        }
+
+        if (message.action === 'setPaymentMethod') {
+            return { type };
+        }
+    });
 }
 
 
