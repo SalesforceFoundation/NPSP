@@ -1,18 +1,21 @@
 import {createElement} from 'lwc';
 import Rd2EntryForm from 'c/rd2EntryForm';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { getRecord } from 'lightning/uiRecordApi';
+import { mockGetIframeReply } from "c/psElevateTokenHandler";
+
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
+import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
+
 import RD2_EntryFormMissingPermissions from '@salesforce/label/c.RD2_EntryFormMissingPermissions';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
-
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
 import CONTACT_OBJECT from '@salesforce/schema/Contact';
-import {getObjectInfo, getPicklistValues} from 'lightning/uiObjectInfoApi';
-import {getRecord} from 'lightning/uiRecordApi';
-import {mockGetIframeReply} from "c/psElevateTokenHandler";
+
 
 const recurringSettingsResponse = require('./data/getRecurringSettings.json');
 const recurringDonationObjectInfo = require('./data/recurringDonationObjectInfo.json');
@@ -24,12 +27,35 @@ const contactGetRecord = require('./data/contactGetRecord.json');
 const accountGetRecord = require('./data/accountGetRecord.json');
 const rd2WithCardCommitment = require('./data/rd2WithCardCommitment.json');
 const rd2WithACHCommitment = require('./data/rd2WithACHCommitment.json');
-const recurringDataAccountResponse = require('./data/recurringDataAccountResponse.json');
+const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json');
+const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 
 const mockScrollIntoView = jest.fn();
 
 const FAKE_ACH_RD2_ID = 'a0963000008pebAAAQ';
 const FAKE_CARD_RD2_ID = 'a0963000008oxZnAAI';
+
+const EXPECTED_BUSINESS_ACH_PARAMS = {
+    nameOnAccount: "Donor Organization",
+    accountHolder: {
+        type: "BUSINESS",
+        businessName: "Anthropy",
+        accountName: "Donor Organization",
+        bankType: "CHECKING"
+    },
+    achCode: 'WEB'
+};
+
+const EXPECTED_INDIVIDUAL_ACH_PARAMS = {
+    nameOnAccount: "John Smith",
+    accountHolder: {
+        type: "INDIVIDUAL",
+        firstName: "John",
+        lastName: "Smith",
+        bankType: "CHECKING"
+    },
+    achCode: 'WEB'
+};
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings',
     () => {
@@ -52,6 +78,13 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
     { virtual: true }
 );
 
+jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
+    () => {
+        return { default: jest.fn() }
+    },
+    { virtual: true }
+);
+
 
 describe('c-rd2-entry-form', () => {
 
@@ -64,251 +97,312 @@ describe('c-rd2-entry-form', () => {
     afterEach(() => {
         clearDOM();
         jest.clearAllMocks();
+    });
+
+    describe('creating new records', () => {
+        it('displays an error when user does not have required permissions', async () => {
+            hasRequiredFieldPermissions.mockResolvedValue(false);
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
+
+            const saveButton = controller.saveButton();
+            expect(saveButton.disabled).toBe(true);
+
+            const formattedText = element.shadowRoot.querySelector('lightning-formatted-text');
+            expect(formattedText.value).toBe(RD2_EntryFormMissingPermissions);
+        });
+
+        it('elevate customer selects Credit Card payment method then widget displayed', async () => {
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValues();
+
+            controller.paymentMethod().changeValue('Credit Card');
+
+            await flushPromises();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+
+        });
+
+        it('elevate customer selects ACH payment method then widget displayed', async () => {
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValues();
+
+            controller.paymentMethod().changeValue('ACH');
+
+            await flushPromises();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+        });
+    });
+
+    describe('tokenization', () => {
+
+        beforeEach(() => {
+            setupIframeReply();
+        });
+
+        it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            controller.setDefaultInputFieldValues();
+            controller.contactLookup().changeValue('001fakeContactId');
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            controller.amount().changeValue(1.00);
+            controller.paymentMethod().changeValue('ACH');
+
+            await flushPromises();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+            expect(elevateWidget.payerFirstName).toBe('John');
+            expect(elevateWidget.payerLastName).toBe('Smith');
+
+            controller.saveButton().click();
+
+            await flushPromises();
+            validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "6",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "npe03__Amount__c": 1,
+                "InstallmentFrequency__c": 1
+            };
+            validateCommitmentMessage(EXPECTED_RECORD);
+        });
+
+        it('organization donor, account name is used when tokenizing an ACH payment', async () => {
+
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            controller.setDefaultInputFieldValues();
+            controller.dayOfMonth().setValue('6');
+            controller.donorType().changeValue('Account');
+            controller.paymentMethod().changeValue('ACH');
+            await flushPromises();
+
+
+            controller.accountLookup().changeValue('001fakeAccountId');
+            await flushPromises();
+
+            getRecord.emit(accountGetRecord, config => {
+                return config.recordId === '001fakeAccountId';
+            });
+            await flushPromises();
+            controller.amount().changeValue(1.00);
+
+            await flushPromises();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+            expect(elevateWidget.payerOrganizationName).toBe("Donor Organization");
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(mockGetIframeReply).toHaveBeenCalled();
+
+            validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_BUSINESS_ACH_PARAMS);
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "6",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Organization__c": "001fakeAccountId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "npe03__Amount__c": 1,
+                "InstallmentFrequency__c": 1
+            };
+            validateCommitmentMessage(EXPECTED_RECORD);
+        });
+    });
+
+    describe('edit mode', () => {
+
+        beforeEach(() => {
+            getRecurringData.mockResolvedValue(recurringDataContactResponse);
+        })
+
+        it('rd2 record with card payment, when editing, displays card information', async () => {
+
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            getRecord.emit(rd2WithCardCommitment, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+
+            await setupWireMocksForElevate();
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+
+            expect(controller.last4().value).toBe('1212');
+            expect(controller.cardExpriation().value).toBe('02/2023');
+
+        });
+
+
+        it('rd2 record with ACH payment, when editing, displays ACH last 4', async () => {
+
+            const element = createRd2EditForm(FAKE_ACH_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            getRecord.emit(rd2WithACHCommitment, config => {
+                return config.recordId === FAKE_ACH_RD2_ID;
+            });
+
+            await setupWireMocksForElevate();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeTruthy();
+            expect(controller.last4().value).toBe('1111');
+
+        });
+
+
+        it('rd2 record with credit card payment type but no commitment, when editing, displays widget', async () => {
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            getRecord.emit(rd2WithoutCommitmentCard, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+
+        });
+
+        it('rd2 record with check payment type, when editing and payment type changed to credit card, displays widget', async () => {
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            const rd2WithoutCommitmentCheck = generateMockFrom(rd2WithoutCommitmentCard)
+                .withFieldValue('PaymentMethod__c', 'Check');
+
+            getRecord.emit(rd2WithoutCommitmentCheck, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValues();
+
+            expect(controller.elevateWidget()).toBeNull();
+
+            controller.paymentMethod().changeValue('Credit Card');
+
+            await flushPromises();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+        });
+
+        it('rd2 record, when editing, uses existing contact information in tokenization', async () => {
+            setupIframeReply();
+
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            getRecord.emit(rd2WithoutCommitmentCard, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+
+            controller.paymentMethod().changeValue('ACH');
+
+            await flushPromises();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
+
+            controller.saveButton().click();
+
+            await flushPromises();
+
+            expect(mockGetIframeReply).toHaveBeenCalled();
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
+            validateIframeMessage(mockGetIframeReply.mock.calls[1], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+
+            const EXPECTED_RECORD = {
+                "RecurringType__c": "Open",
+                "Day_of_Month__c": "6",
+                "StartDate__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly",
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "PaymentMethod__c": "ACH",
+                "Status__c": "Active",
+                "npe03__Amount__c": 0.5,
+                "Id": "a0963000008oxZnAAI",
+                "InstallmentFrequency__c": 1
+            };
+
+            validateCommitmentMessage(EXPECTED_RECORD);
+        })
+
     })
-
-    it('displays an error when user does not have required permissions', async () => {
-        hasRequiredFieldPermissions.mockResolvedValue(false);
-        const element = createRd2EntryForm();
-
-        await flushPromises();
-
-        expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
-
-        const saveButton = selectSaveButton(element);
-        expect(saveButton.disabled).toBe(true);
-
-        const formattedText = element.shadowRoot.querySelector('lightning-formatted-text');
-        expect(formattedText.value).toBe(RD2_EntryFormMissingPermissions);
-    });
-
-    it('elevate customer selects Credit Card payment method then widget displayed', async () => {
-        const element = createRd2EntryForm();
-        const controller = new RD2FormController(element)
-
-        await flushPromises();
-
-        await setupWireMocksForElevate();
-        controller.setDefaultInputFieldValues();
-
-        controller.paymentMethod().changeValue('Credit Card');
-
-        await flushPromises();
-
-        const elevateWidget = controller.elevateWidget();
-        expect(elevateWidget).toBeTruthy();
-
-    });
-
-    it('elevate customer selects ACH payment method then widget displayed', async () => {
-        const element = createRd2EntryForm();
-        const controller = new RD2FormController(element);
-        await flushPromises();
-
-        await setupWireMocksForElevate();
-        controller.setDefaultInputFieldValues();
-
-        controller.paymentMethod().changeValue('ACH');
-
-        await flushPromises();
-
-        const elevateWidget = controller.elevateWidget();
-        expect(elevateWidget).toBeTruthy();
-    });
-
-    it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
-        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
-            // if message action is "createToken", reply with dummy token immediately
-            // instead of trying to hook into postMessage
-            // see sendIframeMessage in mocked psElevateTokenHandler
-            if (message.action === 'createToken' || message.action === 'createAchToken') {
-                return {"type": "post__npsp", "token": "a_dummy_token"};
-            }
-        });
-
-        const element = createRd2EntryForm();
-        const controller = new RD2FormController(element);
-
-        await flushPromises();
-
-        await setupWireMocksForElevate();
-
-        controller.setDefaultInputFieldValues();
-        controller.contactLookup().changeValue('001fakeContactId');
-        await flushPromises();
-
-        getRecord.emit(contactGetRecord, config => {
-            return config.recordId === '001fakeContactId';
-        });
-
-        controller.amount().changeValue(1.00);
-        controller.paymentMethod().changeValue('ACH');
-
-        await flushPromises();
-
-        const elevateWidget = controller.elevateWidget();
-        expect(elevateWidget).toBeTruthy();
-        expect(elevateWidget.payerFirstName).toBe('John');
-        expect(elevateWidget.payerLastName).toBe('Smith');
-
-        controller.saveButton().click();
-
-        await flushPromises();
-
-        const EXPECTED_PARAMS = {
-            nameOnAccount: "John Smith",
-            accountHolder: {
-                type: "INDIVIDUAL",
-                firstName: "John",
-                lastName: "Smith",
-                bankType: "CHECKING"
-            },
-            achCode: 'WEB'
-        };
-
-        expect(mockGetIframeReply).toHaveBeenCalled();
-        const actualMessage = mockGetIframeReply.mock.calls[0][1];
-        const serializedParams = actualMessage.params;
-        const deserializedParams = JSON.parse(serializedParams);
-        expect(deserializedParams).toMatchObject(EXPECTED_PARAMS);
-
-        expect(mockGetIframeReply).toHaveBeenCalledWith(
-            expect.any(HTMLIFrameElement), // iframe
-            expect.objectContaining({
-                action: "createAchToken",
-                params: expect.any(String)
-            }),
-            undefined
-        );
-    });
-
-    it('organization donor, account name is used when tokenizing an ACH payment', async () => {
-        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
-            // if message action is "createToken", reply with dummy token immediately
-            // instead of trying to hook into postMessage
-            // see sendIframeMessage in mocked psElevateTokenHandler
-            if (message.action === 'createToken' || message.action === 'createAchToken') {
-                return {"type": "post__npsp", "token": "a_dummy_token"};
-            }
-        });
-
-        const element = createRd2EntryForm();
-        const controller = new RD2FormController(element);
-
-        await flushPromises();
-
-        await setupWireMocksForElevate();
-
-        controller.setDefaultInputFieldValues();
-        controller.donorType().changeValue('Account');
-        controller.paymentMethod().changeValue('ACH');
-        await flushPromises();
-
-
-        controller.accountLookup().changeValue('001fakeAccountId');
-        await flushPromises();
-
-        getRecord.emit(accountGetRecord, config => {
-            return config.recordId === '001fakeAccountId';
-        });
-        await flushPromises();
-        controller.amount().changeValue(1.00);
-
-        await flushPromises();
-
-
-        const elevateWidget = controller.elevateWidget();
-        expect(elevateWidget).toBeTruthy();
-        expect(elevateWidget.payerOrganizationName).toBe("Donor Organization");
-
-        controller.saveButton().click();
-
-        await flushPromises();
-
-        const EXPECTED_PARAMS = {
-            nameOnAccount: "Donor Organization",
-            accountHolder: {
-                type: "BUSINESS",
-                businessName: "Anthropy",
-                accountName: "Donor Organization",
-                bankType: "CHECKING"
-            },
-            achCode: 'WEB'
-        };
-
-        expect(mockGetIframeReply).toHaveBeenCalled();
-        const actualMessage = mockGetIframeReply.mock.calls[0][1];
-        const serializedParams = actualMessage.params;
-        const deserializedParams = JSON.parse(serializedParams);
-        expect(deserializedParams).toMatchObject(EXPECTED_PARAMS);
-
-        expect(mockGetIframeReply).toHaveBeenCalledWith(
-            expect.any(HTMLIFrameElement), // iframe
-            expect.objectContaining({ // message
-                action: "createAchToken",
-                params: expect.any(String)
-            }),
-            undefined
-        );
-
-    });
-
-
-    it('rd2 record with card payment, when editing, displays card information', async () => {
-        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
-            // if message action is "createToken", reply with dummy token immediately
-            // instead of trying to hook into postMessage
-            // see sendIframeMessage in mocked psElevateTokenHandler
-            if (message.action === 'createToken' || message.action === 'createAchToken') {
-                return {"type": "post__npsp", "token": "a_dummy_token"};
-            }
-        });
-
-        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
-
-        const element = createRd2EditForm(FAKE_CARD_RD2_ID);
-        const controller = new RD2FormController(element);
-        await flushPromises();
-
-        getRecord.emit(rd2WithCardCommitment, config => {
-            return config.recordId === FAKE_CARD_RD2_ID;
-        });
-
-        await setupWireMocksForElevate();
-        const elevateWidget = controller.elevateWidget();
-
-        expect(controller.last4().value).toBe('1212');
-        expect(controller.cardExpriation().value).toBe('02/2023');
-
-    });
-
-
-    it('rd2 record with ACH payment, when editing, displays ACH last 4', async () => {
-        mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
-            // if message action is "createToken", reply with dummy token immediately
-            // instead of trying to hook into postMessage
-            // see sendIframeMessage in mocked psElevateTokenHandler
-            if (message.action === 'createToken' || message.action === 'createAchToken') {
-                return {"type": "post__npsp", "token": "a_dummy_token"};
-            }
-        });
-
-        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
-
-        const element = createRd2EditForm(FAKE_ACH_RD2_ID);
-        const controller = new RD2FormController(element);
-        await flushPromises();
-
-        getRecord.emit(rd2WithACHCommitment, config => {
-            return config.recordId === FAKE_ACH_RD2_ID;
-        });
-
-        await setupWireMocksForElevate();
-
-        expect(controller.last4().value).toBe('1111');
-
-    });
-
-
 });
 
 const createRd2EntryForm = () => {
@@ -324,8 +418,62 @@ const createRd2EditForm = (recordId) => {
     return element;
 }
 
-const selectSaveButton = (element) => {
-    return element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
+const generateMockFrom = (recordMock) => {
+    return {
+        withFieldValue: (field, value) => {
+            return {
+                ...recordMock,
+                fields: {
+                    ...recordMock.fields,
+                    [field]: { value }
+                }
+            }
+        }
+    }
+}
+
+const setupIframeReply = () => {
+    mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+        const type = "post__npsp";
+        const token = "a_dummy_token";
+        // if message action is "createToken", reply with dummy token immediately
+        // instead of trying to hook into postMessage
+        // see sendIframeMessage in mocked psElevateTokenHandler
+        if (message.action === 'createToken' || message.action === 'createAchToken') {
+            return { type, token };
+        }
+
+        if (message.action === 'setPaymentMethod') {
+            return { type };
+        }
+    });
+}
+
+const validateCommitmentMessage = (expectedParams) => {
+    expect(handleCommitment).toHaveBeenCalled();
+    const { jsonRecord, paymentMethodToken } = handleCommitment.mock.calls[0][0];
+    debugger;
+    const deserialized = JSON.parse(jsonRecord);
+    expect(deserialized).toMatchObject(expectedParams);
+    expect(paymentMethodToken).toBe('a_dummy_token');
+}
+
+const validateIframeMessage = (tokenizeMockCall, expectedParams) => {
+
+    expect(mockGetIframeReply).toHaveBeenCalled();
+    const tokenizeMessage = tokenizeMockCall[1];
+    const serializedParams = tokenizeMessage.params;
+    const deserializedParams = JSON.parse(serializedParams);
+    expect(deserializedParams).toMatchObject(expectedParams);
+
+    expect(mockGetIframeReply).toHaveBeenCalledWith(
+        expect.any(HTMLIFrameElement), // iframe
+        expect.objectContaining({
+            action: "createAchToken",
+            params: expect.any(String)
+        }),
+        undefined
+    );
 }
 
 const setupWireMocksForElevate = async () => {
@@ -364,6 +512,14 @@ class RD2FormController {
         this.recurringType().changeValue('Open');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
+        this.dayOfMonth().setValue('6');
+    }
+
+    setDefaultInputFieldValuesEdit() {
+        this.setDefaultInputFieldValues();
+        this.status().setValue('Active');
+        this.amount().setValue(0.50);
+        this.contactLookup().setValue('001fakeContactId');
     }
 
     donorSection() {
@@ -422,6 +578,12 @@ class RD2FormController {
         return widget.shadowRoot.querySelector('lightning-formatted-text[data-qa-locator="text Expiration Date"]');
     }
 
+    dayOfMonth() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="dayOfMonth"]');
+        return new RD2FormField(field);
+    }
+
     recurringType() {
         const scheduleSection = this.scheduleSection();
         const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="RecurringType__c"]');
@@ -434,8 +596,22 @@ class RD2FormController {
         return new RD2FormField(field);
     }
 
+    status() {
+        const field = this.element.shadowRoot.querySelector('lightning-input-field[data-id="status"]');
+        return new RD2FormField(field);
+    }
+
+    cardholderName() {
+        const field = this.elevateWidget().shadowRoot.querySelector('[data-id="cardholderName"]');
+        return new RD2FormField(field);
+    }
+
     saveButton() {
         return this.element.shadowRoot.querySelector('lightning-button[data-id="submitButton"]');
+    }
+
+    disableElevateButton() {
+        return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Do Not Use Elevate"]');
     }
 
 }

@@ -111,10 +111,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @return Boolean
      */
     public Boolean hasUpdatePermissions(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        // Do not check changed fields if
-        // 1. the Recurring Donation is not referencing an Elevate record or
-        // 2. the Elevate integration is not configured/enabled or
-        // 3. the user *has* the Elevate integration permission to change the Recurring Donation
         if (String.isBlank(rd.CommitmentId__c)
             || !config.isIntegrationEnabled()
             || config.hasIntegrationPermissions()
