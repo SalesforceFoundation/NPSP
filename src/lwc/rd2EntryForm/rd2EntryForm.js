@@ -24,6 +24,8 @@ import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_LAST_ELEVATE_VERSION from '@salesforce/schema/npe03__Recurring_Donation__c.LastElevateVersionPlayed__c';
+import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
+import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -108,6 +110,7 @@ export default class rd2EntryForm extends LightningElement {
     @api recordId;
 
     @track isEdit = false;
+    @track isCommitmentEdit = false;
     @track record;
     recordName;
     @track isMultiCurrencyEnabled = false;
@@ -208,7 +211,7 @@ export default class rd2EntryForm extends LightningElement {
             })
             .finally(() => {
                 this.isLoading = false;
-                this.evaluateElevateEditWidget(getFieldValue(this.record, FIELD_PAYMENT_METHOD));
+                this.evaluateElevateEditWidget();
             });
 
         /*
@@ -283,6 +286,14 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
+            this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
+            this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
+            this.isCommitmentEdit = !isNull(this.commitmentId);
+            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
+            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
+            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
+
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
 
@@ -359,8 +370,9 @@ export default class rd2EntryForm extends LightningElement {
     */
     handlePaymentChange(event) {
         //reset the widget and the form related to the payment method
-        this.hasUserDisabledElevateWidget = false;
+        this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
         this._paymentMethod = event.detail.value;
+        this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
     }
 
@@ -395,25 +407,18 @@ export default class rd2EntryForm extends LightningElement {
     */
     evaluateElevateEditWidget() {
         let statusField = getFieldValue(this.record, FIELD_STATUS);
-        this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
 
-        if (this.isElevateCustomer && this.commitmentId !== null && this.isEdit && statusField !== STATUS_CLOSED) {
+        if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
             // On load, we can't rely on the schedule component, but we should when detecting changes
             let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()){
+            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
                 recurringType = this.scheduleComponent.getRecurringType();
             }
 
             // Since the widget requires interaction to Edit, this should start as true
-            this.isDisabled = true;
-            this.hasUserDisabledElevateWidget = true;
+            this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
 
-            this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
-            this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
-            this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
-            this.isElevateEditWidgetEnabled = this.isElevateCustomer === true
-                && this.isEdit 
-                && this.isElevatePaymentMethod()
+            this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
@@ -434,7 +439,6 @@ export default class rd2EntryForm extends LightningElement {
         const countrySupported = this.isCountrySupported();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
-            && !this.isEdit
             && isValidPaymentMethod
             && isOpenSchedule
             && currencySupported
