@@ -133,8 +133,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get canEditPaymentInformation() {
         return this.isElevateCustomer
-            && this.permissions.hasKeyFieldsUpdateAccess
-            && this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+            && this.permissions.hasKeyFieldsUpdateAccess;
     }
 
     /***
