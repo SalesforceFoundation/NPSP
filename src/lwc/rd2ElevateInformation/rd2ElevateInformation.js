@@ -39,8 +39,9 @@ import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 import updatePaymentInformation from '@salesforce/label/c.commonEditPaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getPermissionData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 const FIELDS = [
     FIELD_NAME,
@@ -141,45 +142,60 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     connectedCallback() {
         if (this.recordId) {
-            getData({ recordId: this.recordId })
-                .then(response => {
-                    this.isElevateCustomer = response.isElevateCustomer;
-                    this.permissions.alert = response.alert;
-                    this.commitmentURLPrefix = response.commitmentURLPrefix;
-
-                    this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
-                        && response.hasFieldPermissions === true
-                        && isNull(this.permissions.alert);
-
-                    this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
-                         && response.hasFieldUpdatePermission;
-                    this.permissions.showExpirationDate = response.showExpirationDate;
-                    this.permissions.showLastFourDigits = response.showLastFourDigits;
-
-                    if (this.isElevateCustomer === true) {
-                        if (!isNull(this.permissions.alert)) {
-                            this.handleError({
-                                detail: this.permissions.alert
-                            });
-
-                        } else if (response.hasFieldPermissions === false) {
-                            this.handleError({
-                                header: this.labels.flsErrorHeader,
-                                detail: this.labels.flsErrorDetail
-                            });
-
-                        } else {
-                            this.getLatestErrorMessage();
-                        }
-                    }
-                })
-                .catch((error) => {
-                    this.handleError(error);
-                })
-                .finally(() => {
-                    this.checkLoading();
-                });
+            this.populatePermissionData();
+            this.populateRecurringData();
         }
+    }
+
+    populatePermissionData() {
+        getPermissionData({recordId: this.recordId})
+            .then(response => {
+                this.isElevateCustomer = response.isElevateCustomer;
+                this.permissions.alert = response.alert;
+                this.commitmentURLPrefix = response.commitmentURLPrefix;
+
+                this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
+                    && response.hasFieldPermissions === true
+                    && isNull(this.permissions.alert);
+
+                this.permissions.hasKeyFieldsUpdateAccess = response.hasRDSObjectUpdatePermission
+                    && response.hasFieldUpdatePermission;
+                this.permissions.showExpirationDate = response.showExpirationDate;
+                this.permissions.showLastFourDigits = response.showLastFourDigits;
+
+                if (this.isElevateCustomer === true) {
+                    if (!isNull(this.permissions.alert)) {
+                        this.handleError({
+                            detail: this.permissions.alert
+                        });
+
+                    } else if (response.hasFieldPermissions === false) {
+                        this.handleError({
+                            header: this.labels.flsErrorHeader,
+                            detail: this.labels.flsErrorDetail
+                        });
+
+                    } else {
+                        this.getLatestErrorMessage();
+                    }
+                }
+            })
+            .catch((error) => {
+                this.handleError(error);
+            })
+            .finally(() => {
+                this.checkLoading();
+            });
+    }
+
+    populateRecurringData() {
+        getRecurringData({ recordId: this.recordId })
+            .then(response => {
+                this.donorType = response.DonorType;
+            })
+            .catch((error) => {
+                this.handleError(error);
+            });
     }
 
     /***
@@ -549,10 +565,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get qaLocatorUpdatePaymentInformation() {
         return `link Update Payment Information`;
-    }
-
-    get qaLocatorUpdatePaymentInformation() {
-        return `link ${this.labels.UpdatePaymentInformation}`;
     }
 
 }

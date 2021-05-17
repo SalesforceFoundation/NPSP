@@ -452,7 +452,6 @@ const setupIframeReply = () => {
 const validateCommitmentMessage = (expectedParams) => {
     expect(handleCommitment).toHaveBeenCalled();
     const { jsonRecord, paymentMethodToken } = handleCommitment.mock.calls[0][0];
-    debugger;
     const deserialized = JSON.parse(jsonRecord);
     expect(deserialized).toMatchObject(expectedParams);
     expect(paymentMethodToken).toBe('a_dummy_token');

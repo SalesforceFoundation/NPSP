@@ -4,8 +4,10 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
-
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData',
     () => {
@@ -16,13 +18,19 @@ jest.mock(
     { virtual: true }
 );
 
-import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage',
     () => {
         return {
             default: jest.fn(),
         };
+    },
+    { virtual: true }
+);
+
+jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
+    () => {
+        return { default: jest.fn() }
     },
     { virtual: true }
 );
@@ -82,6 +90,12 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Open"
+            });
 
             getRecord.emit(mockGetRecord);
 
@@ -124,6 +138,14 @@ describe('c-rd2-elevate-information', () => {
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
             });
+        });
+
+        it('should populate donor type for edit payment information modal', async () => {
+            await flushPromises();
+            const updatePaymentButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link Update Payment Information"]');
+            expect(getData).toHaveBeenCalled();
+
+            expect(updatePaymentButton).toBeTruthy();
         });
 
         it("should be accessible", async () => {
@@ -590,7 +612,7 @@ const assertViewErrorLogIsDisplayed = (component) => {
 * @description Finds and returns View Error Log button if it is displayed on the widget
 */
 const getViewErrorLogButton = (component) => {
-    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+    const errorLogButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link View Error Log"]');
 
     return errorLogButton;
 }

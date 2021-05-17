@@ -4,6 +4,7 @@ import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
 jest.mock(
@@ -12,6 +13,13 @@ jest.mock(
         return {
             default: jest.fn(),
         };
+    },
+    { virtual: true }
+);
+
+jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
+    () => {
+        return { default: jest.fn() }
     },
     { virtual: true }
 );
