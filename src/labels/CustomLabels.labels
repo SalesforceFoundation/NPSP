@@ -1546,6 +1546,14 @@
         <value>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevatePaymentMethodChangeError</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change payment method to a non-Elevate payment method</shortDescription>
+        <value>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</value>
+    </labels>
+    <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
