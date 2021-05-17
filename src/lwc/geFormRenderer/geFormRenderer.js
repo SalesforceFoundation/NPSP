@@ -332,6 +332,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleNullPaymentFieldsInFormState() {
+        if (this.isGiftAuthorized()) { return; }
+
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
             apiNameFor(PAYMENT_DECLINED_REASON),
