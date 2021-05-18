@@ -507,87 +507,135 @@ private class CRLP_RollupProcessor_TEST {
     }
 
     /**
-     * @description Verify that skew mode flag is set true when running in skew mode. Test only validates
-     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     * @description Verify that skew mode flag is not updated when running in skew mode.
      */
     @IsTest
-    static void shouldSetSkewModeFlagTrueWhenSkewModeFlagIsFalse() {
+    static void shouldNotSetSkewModeFlagWhenInSkewMode() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
-
-        Account account = buildMockAccount();
-        account.CustomizableRollups_UseSkewMode__c = false;
-
-        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
-
-        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
-
-        System.assertEquals(true, updatedAcct.CustomizableRollups_UseSkewMode__c,
-            'CustomizableRollups_UseSkewMode__c should be set true if currently false and running in skew mode.');
-    }
-
-    /**
-     * @description Verify that skew mode flag is not updated if already set true.  Test only validates
-     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
-     */
-    @IsTest
-    static void shouldNotUpdateUpdateRecordWhenSkewModeFlagIsAlreadyTrue() {
-        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
-
-        Account account = buildMockAccount();
-        account.CustomizableRollups_UseSkewMode__c = true;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
             .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
             .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
 
+        Account account = buildMockAccount();
         Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
 
         System.assertEquals(null, updatedAcct,
-            'Account should not be updated if CustomizableRollups_UseSkewMode__c is already true.');
+            'Account should not be updated when in skew mode.');
     }
 
-    /**
-     * @description Verify that skew mode flag is not updated if running in non skew mode.  Test only validates
-     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
-     */
     @IsTest
-    static void shouldNotSetSkewModeFlagTrueWhenInNonSkewMode() {
+    static void shouldNotSetSkewModeFlagWhenInNonSkewModeWithNoUpdate() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c(Rollups_Limit_on_Attached_Opps_for_Skew__c = 1)
+        );
 
         Account account = buildMockAccount();
-        account.CustomizableRollups_UseSkewMode__c = false;
+        Contact contact = buildMockContact(account.Id);
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
             .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
+        Contact updatedContact = (Contact) processor.completeRollupForSingleSummaryRecord(contact);
 
-        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
-
-        System.assertEquals(null, updatedAcct,
-            'Account should not be updated if running in non skew mode.');
+        System.assertEquals(null, updatedContact,
+            'CustomizableRollups_UseSkewMode__c should not be set if no update and under threshold.');
     }
 
-    /**
-     * @description Verify that skew mode flag is not updated if running in non skew mode.  Test only validates
-     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
-     */
     @IsTest
-    static void shouldNotSetSkewModeFlagFalseWhenInNonSkewMode() {
+    static void shouldNotSetSkewModeFlagWhenInNonSkewModeAndBelowOpportunityThreshold() {
         CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c(Rollups_Limit_on_Attached_Opps_for_Skew__c = 2)
+        );
 
         Account account = buildMockAccount();
-        account.CustomizableRollups_UseSkewMode__c = true;
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
             .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
-
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withDetailRecords(new List<SObject>{opp});
         Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
 
-        System.assertEquals(null, updatedAcct,
-            'Account should not be updated if running in non skew mode.');
+        System.assertEquals(false, updatedAcct.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should not be set if at threshold and running in nonskew mode.');
+    }
+
+    @IsTest
+    static void shouldNotSetSkewModeFlagWhenInNonSkewModeAndBelowSoftCreditThreshold() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c(Rollups_Limit_on_Attached_Opps_for_Skew__c = 2)
+        );
+
+        Account account = buildMockAccount();
+        Contact contact = buildMockContact(account.Id);
+
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        OpportunityContactRole ocr = buildMockContactRoles(opp, new List<Contact>{ contact })[0];
+
+        List<Partial_Soft_Credit__c> pscRecords = new List<Partial_Soft_Credit__c>{
+            buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount)
+        };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withDetailRecords(pscRecords);
+        Contact updatedContact = (Contact) processor.completeRollupForSingleSummaryRecord(contact);
+        System.debug(updatedContact);
+
+        System.assertEquals(false, updatedContact.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should be false if below threshold and running in nonskew mode.');
+    }
+
+    @IsTest
+    static void shoulSetSkewModeFlagWhenInNonSkewModeAndAtOpportunityThreshold() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c(Rollups_Limit_on_Attached_Opps_for_Skew__c = 1)
+        );
+
+        Account account = buildMockAccount();
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit)
+            .withDetailRecords(new List<SObject>{opp});
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(true, updatedAcct.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should be set if at threshold and running in nonskew mode.');
+    }
+
+    @IsTest
+    static void shouldSetSkewModeFlagWhenInNonSkewModeAndAtSoftCreditThreshold() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+            new Customizable_Rollup_Settings__c(Rollups_Limit_on_Attached_Opps_for_Skew__c = 1)
+        );
+
+        Account account = buildMockAccount();
+        Contact contact = buildMockContact(account.Id);
+
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        OpportunityContactRole ocr = buildMockContactRoles(opp, new List<Contact>{ contact })[0];
+
+        List<Partial_Soft_Credit__c> pscRecords = new List<Partial_Soft_Credit__c>{
+            buildMockPartialSoftCredit(opp, ocr, contact, opp.Amount)
+        };
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)
+            .withDetailRecords(pscRecords);
+        Contact updatedContact = (Contact) processor.completeRollupForSingleSummaryRecord(contact);
+
+        System.assertEquals(true, updatedContact.CustomizableRollups_UseSkewMode__c,
+            'CustomizableRollups_UseSkewMode__c should be true if at threshold and running in nonskew mode.');
     }
 
     // **************************** HELPER METHODS ****************************
@@ -620,7 +668,9 @@ private class CRLP_RollupProcessor_TEST {
             Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType),
             Name = 'TestAccount',
             npo02__TotalOppAmount__c = null,
-            npo02__NumberOfClosedOpps__c = null
+            npo02__NumberOfClosedOpps__c = null,
+            npo02__NumberOfMembershipOpps__c = null,
+            CustomizableRollups_UseSkewMode__c = null
         );
     }
 
@@ -630,17 +680,25 @@ private class CRLP_RollupProcessor_TEST {
             AccountId = acctId,
             LastName = 'TestContact',
             Number_of_Soft_Credits__c = null,
-            npo02__Soft_Credit_Total__c = null
+            npo02__Soft_Credit_Total__c = null,
+            npo02__NumberOfClosedOpps__c = null,
+            npo02__NumberOfMembershipOpps__c = null,
+            CustomizableRollups_UseSkewMode__c = null
         );
+    }
+
+    private static Opportunity buildMockOpportunity(Id accountId, Double amt) {
+        return (buildMockOpportunity(accountId, null, amt));
     }
 
     /**
      * @description Instantiate a single mock Opportunity that will not be inserted
      */
-    private static Opportunity buildMockOpportunity(Id accountId, Double amt) {
+    private static Opportunity buildMockOpportunity(Id accountId, Id primaryContactId, Double amt) {
         return new Opportunity(
             Id = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
             AccountId = accountId,
+            Primary_Contact__c = primaryContactId,
             Amount = amt,
             CloseDate = Date.today(),
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage()

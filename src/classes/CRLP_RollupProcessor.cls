@@ -498,13 +498,6 @@ public inherited sharing class CRLP_RollupProcessor {
         // has changed or not.
         Id parentId = parent.Id;
 
-        // Determine status of force skew mode field
-        initForceSkewModeValues(parent.getSObjectType());
-        Boolean isForceSkewModeTrue = false;
-        if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField)) {
-            isForceSkewModeTrue = (Boolean) parent.get(this.qualifiedSkewField);
-        }
-
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
         List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
@@ -518,10 +511,10 @@ public inherited sharing class CRLP_RollupProcessor {
         // Determine if the updated SObject record is different than the parent.
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
 
-        // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
-            updatedRecord.put(this.qualifiedSkewField, true);
-            needsUpdate = true;
+        // Check whether skew mode threshold has been exceeded
+        initForceSkewModeValues(parent.getSObjectType());
+        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode && this.useForceSkewModeField) {
+            needsUpdate = isSkewModeNeeded(updatedRecord) || needsUpdate;
         }
 
         if (!needsUpdate) {
@@ -540,6 +533,30 @@ public inherited sharing class CRLP_RollupProcessor {
             this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
             this.useForceSkewModeField = (parentObjType == Account.SObjectType || parentObjType == Contact.SObjectType);
         }
+    }
+
+    private Boolean isSkewModeNeeded(SObject updatedRecord) {
+        if (isRollupFieldAtThreshold(updatedRecord)) {
+            updatedRecord.put(this.qualifiedSkewField, true);
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean isRollupFieldAtThreshold(SObject summaryObject) {
+        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+
+        if ((Decimal) summaryObject.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonLDVMode ||
+            (Decimal) summaryObject.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonLDVMode) {
+            return true;
+
+        } else if (summaryObject.getSObjectType() == Contact.getSObjectType() &&
+            (Decimal) summaryObject.get(UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c'))
+                >= maxRelatedOppsForNonLDVMode) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
