@@ -627,7 +627,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private static Boolean isMatch(NPSP_Address npspAddress, NPSP_Address npspAddressHH) {
-        return !npspAddress.isAddressChanged(npspAddressHH.getRecord(), false);
+        return npspAddress.isEqualTo(npspAddressHH, false);
     }
 
     /*******************************************************************************************************
