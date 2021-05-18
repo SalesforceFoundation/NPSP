@@ -329,7 +329,17 @@ export default class GeFormRenderer extends LightningElement{
         this.nullPaymentFieldsInFormState([
             apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
             apiNameFor(PAYMENT_DECLINED_REASON),
-            apiNameFor(PAYMENT_STATUS)
+            apiNameFor(PAYMENT_STATUS),
+            apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID),
+            apiNameFor(PAYMENT_ELEVATE_ID),
+            apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID),
+            apiNameFor(PAYMENT_LAST_4),
+            apiNameFor(PAYMENT_CARD_NETWORK),
+            apiNameFor(PAYMENT_EXPIRATION_MONTH),
+            apiNameFor(PAYMENT_EXPIRATION_YEAR),
+            apiNameFor(PAYMENT_AUTHORIZED_AT),
+            apiNameFor(PAYMENT_GATEWAY_ID),
+            apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID),
         ]);
     }
 
@@ -684,15 +694,36 @@ export default class GeFormRenderer extends LightningElement{
                 return;
             }
 
-            let dataImportFromFormState = this.saveableFormState();
-
-            // handle save depending mode
             if (this.batchId) {
-                await this.prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift);
+                await this.submitBatch(formControls, tokenizedGift);
             } else {
-                await this.submitSingleGift(dataImportFromFormState);
+                await this.submitSingleGift();
             }
         }
+    }
+
+    async submitBatch(formControls, tokenizedGift) {
+        if (this.shouldNullPaymentRelatedFields()) {
+            this.handleNullPaymentFieldsInFormState();
+        }
+
+        const hasSaved = await this.saveDataImport(this.saveableFormState());
+        if (!hasSaved) {
+            this.disabled = false;
+            this.toggleSpinner();
+            return;
+        }
+
+        await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
+    }
+
+    shouldNullPaymentRelatedFields() {
+        return this.isAuthorizedGift()
+            && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+    }
+
+    isAuthorizedGift() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED;
     }
 
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
@@ -1001,6 +1032,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     reset() {
+        this.clearErrors();
         this.resetFormState();
         this._openedGiftId = null;
     }
@@ -2128,9 +2160,10 @@ export default class GeFormRenderer extends LightningElement{
      *
      * @param dataImportFromFormState
      */
-    submitSingleGift = async (dataImportFromFormState) => {
+    submitSingleGift = async () => {
+        const gift = this.saveableFormState();
         try {
-            await this.saveDataImport(dataImportFromFormState);
+            await this.saveDataImport(gift);
 
             if (this.shouldMakePurchaseRequest()) {
                 await this.makePurchaseRequest();
@@ -2157,8 +2190,10 @@ export default class GeFormRenderer extends LightningElement{
                 dataImport: dataImportFromFormState
             });
             this.updateFormState(upsertResponse);
+            return true;
         } catch (err) {
-            handleError(err);
+            this.handleCatchOnSave(err);
+            return false;
         }
     };
 
