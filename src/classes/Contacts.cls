@@ -423,7 +423,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 NPSP_Address npspAddress = new NPSP_Address(addrNew);
                 NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
 
-                if (!npspAddress.isEqualTo(npspAddressDup, true)) {
+                if (!npspAddress.isEqualToIncludingAddressType(npspAddressDup, true)) {
                     npspAddressDup.copyFrom(npspAddress);
                     if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
                         addrDup.Default_Address__c = true;

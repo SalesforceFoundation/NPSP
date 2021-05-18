@@ -51,7 +51,7 @@ public interface IAddress {
     Decimal latitude();
     Decimal longitude();
 
-    Boolean isEqualTo(IAddress other, Boolean includeAddressType);
+    Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType);
     Boolean isDifferentIncludingLatLong(IAddress other);
 
 }

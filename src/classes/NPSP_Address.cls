@@ -243,7 +243,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         return addr.Seasonal_Start_Month__c;
     }
 
-    public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
+    public Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType) {
         if (addr == null || other == null) {
             return false;
         }
@@ -267,7 +267,7 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public Boolean isDifferentIncludingLatLong(IAddress other) {
         Boolean isDifferent = (
-                        !isEqualTo(other, false) ||
+                        !isEqualToIncludingAddressType(other, false) ||
                         latitude() != other.latitude() ||
                         longitude() != other.longitude()
         );
