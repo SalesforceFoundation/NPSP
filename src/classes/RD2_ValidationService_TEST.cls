@@ -913,6 +913,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withAmount(10)
             .withStartDate(today)
             .withCampaign(campaign.Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
 
         insert rd;
