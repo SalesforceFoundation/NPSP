@@ -35,6 +35,7 @@
 public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Contact> oldMap;
+    private Boolean isUpdate = false;
 
     @TestVisible
     private ContactService contactService {
@@ -160,7 +161,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         createAddressesForContacts();
     }
 
-    private Boolean isUpdate = false;
     public void onAfterInsert() {
         createAddressesForContacts();
     }
