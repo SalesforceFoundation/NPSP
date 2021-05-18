@@ -43,19 +43,16 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
     private ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
 
     public ElevateCaptureGroupCapturer(Id batchId, Set<String> capturableGroupIds) {
-        System.debug('queueable constructor...');
         this.batchId = batchId;
         queueableCaptureGroups = new QueueableCaptureGroups(capturableGroupIds);
     }
 
     public ElevateCaptureGroupCapturer(Id batchId, QueueableCaptureGroups queueableCaptureGroups) {
-        System.debug('queueable child execute...');
         this.batchId = batchId;
         this.queueableCaptureGroups = queueableCaptureGroups;
     }
 
     public void execute(QueueableContext context) {
-        System.debug('queueable execute...');
         captureGroups();
         if (hasGiftsThatFailedCapture()) {
             updatePendingGiftsWithFailure();

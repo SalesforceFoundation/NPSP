@@ -212,7 +212,6 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static void processPaymentsFor(Id batchId) {
-        System.debug('GE_GiftEntryController.processPaymentsFor');
        try {
            giftBatchService.processPaymentsFor(batchId);
        } catch (Exception ex) {

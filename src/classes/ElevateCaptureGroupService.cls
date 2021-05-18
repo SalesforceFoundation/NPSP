@@ -67,6 +67,9 @@ public virtual with sharing class ElevateCaptureGroupService {
     }
 
     public void enqueuePaymentCaptureJobFor(Id batchId, Set<String> capturableGroupIds) {
+        if (capturableGroupIds.isEmpty()) {
+            return;
+        }
         ElevateCaptureGroupCapturer capturer =
             new ElevateCaptureGroupCapturer(batchId, capturableGroupIds);
         System.enqueueJob(capturer);

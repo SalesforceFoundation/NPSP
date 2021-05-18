@@ -89,13 +89,9 @@ public inherited sharing class GiftBatch {
     }
 
     public void captureAuthorizedGifts() {
-        Set<String> capturableGroupIds = capturableGroupIds();
+        new ElevateCaptureGroupService()
+            .enqueuePaymentCaptureJobFor(batchId, gifts?.capturableGroupIds());
         gifts.authorizedToPaymentProcessingStatus();
-        new ElevateCaptureGroupService().enqueuePaymentCaptureJobFor(batchId, capturableGroupIds);
-    }
-
-    private Set<String> capturableGroupIds() {
-        return gifts?.capturableGroupIds();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
