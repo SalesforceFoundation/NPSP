@@ -94,15 +94,13 @@ public inherited sharing class NPSP_Batch {
         return queueableJobId;
     }
 
-    public void updateMembers() {
-        List<SObject> memberSObjects = new List<SObject>();
-        memberSObjects.add(giftBatch);
-        memberSObjects.addAll(authorizedGifts.dataImports());
-        memberSObjects.addAll(pendingGifts.dataImports());
-        update memberSObjects;
+    public void captureAuthorizedGifts() {
+        new ElevateCaptureGroupService()
+            .enqueuePaymentCaptureJobFor(batchId, capturableGroupIds());
+        transitionAuthorizedGiftsToPendingGifts();
     }
 
-    public Set<String> capturableGroupIds() {
+    private Set<String> capturableGroupIds() {
         return authorizedGifts()?.capturableGroupIds();
     }
 
@@ -110,6 +108,7 @@ public inherited sharing class NPSP_Batch {
         System.debug('failGiftsWithReason');
 
         List<DataImport__c> giftsFailedCapture = new List<DataImport__c>();
+
         for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
             DataImport__c gift = allGifts().findByCaptureGroupId(captureGroupId);
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();

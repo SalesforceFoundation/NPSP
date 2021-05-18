@@ -42,10 +42,8 @@ public with sharing class GiftBatchService {
 
     public void processPaymentsFor(Id batchId) {
         System.debug('GiftBatchService.processPaymentsFor');
-        ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
         NPSP_Batch giftBatch = new NPSP_Batch(batchId);
-        Set<String> capturableGroupIds = giftBatch.capturableGroupIds();
-        captureGroupService.enqueuePaymentCaptureJobFor(batchId, capturableGroupIds);
+        giftBatch.captureAuthorizedGifts();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
