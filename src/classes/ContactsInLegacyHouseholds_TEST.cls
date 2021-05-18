@@ -33,7 +33,7 @@
 * @description ContactsInLegacyHouseholds tests in NPSP.
 */
 @IsTest
-private class ContactsInLegacyHouseholds_TEST {
+private with sharing class ContactsInLegacyHouseholds_TEST {
 
     @IsTest
     static void whenOnAfterInsert_thenCreateHouseholdsCalled() {
