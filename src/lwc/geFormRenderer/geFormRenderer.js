@@ -705,7 +705,7 @@ export default class GeFormRenderer extends LightningElement{
                 if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
 
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: currentCaptureGroup.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
