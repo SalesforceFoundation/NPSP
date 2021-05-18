@@ -124,12 +124,4 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
         }
     }
 
-    @IsTest
-    static void testCreateHouseholdsFor() {
-        ContactsInLegacyHouseholds c = new ContactsInLegacyHouseholds(
-                TEST_ContactBuilder.dummyContactList()
-        );
-        HouseholdService h = new HouseholdService();
-        h.createHouseholdsFor(c);
-    }
 }
