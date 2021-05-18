@@ -252,6 +252,10 @@ public inherited sharing class NPSP_Address implements IAddress {
                 return false;
             }
         }
+        return isEqualTo(other);
+    }
+
+    private Boolean isEqualTo(IAddress other) {
         return (addressService.equalsCaseSensitive(street(), other.street()) &&
                 addressService.equalsCaseSensitive(street2(), other.street2()) &&
                 addressService.equalsCaseSensitive(city(), other.city()) &&
