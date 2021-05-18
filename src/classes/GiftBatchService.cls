@@ -41,7 +41,6 @@ public with sharing class GiftBatchService {
     }
 
     public void processPaymentsFor(Id batchId) {
-        System.debug('GiftBatchService.processPaymentsFor');
         GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.captureAuthorizedGifts();
     }

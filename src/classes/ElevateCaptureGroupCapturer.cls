@@ -97,7 +97,6 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
         private Integer currentPartitionIndex = 0;
 
         public QueueableCaptureGroups(Set<String> captureGroupIds) {
-            System.debug('QueueableCaptureGroups constructor with set...');
             this.captureGroupIds = new List<String>();
             this.captureGroupIds.addAll(captureGroupIds);
             partitionedGroupIds = subdivide(this.captureGroupIds);
@@ -126,19 +125,16 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
             if (Math.mod(captureGroupIds.size(), MAX_COUNT) > 0) {
                 containingListSize++;
             }
-            System.debug(containingListSize);
             List<List<String>> subdividedList = new List<List<String>>();
             List<String> currentList = new List<String>();
             Integer currentCount = 0;
 
             for (Integer i = 0; i < captureGroupIds.size(); i++) {
-                System.debug('Loop iteration: ' + i);
                 currentList.add(captureGroupIds[i]);
 
                 currentCount++;
                 if (currentCount == MAX_COUNT || (i == captureGroupIds.size() - 1 && currentList.size() > 0)) {
                     subdividedList.add(currentList);
-                    System.debug(currentList);
                     currentCount = 0;
                     currentList = new List<String>();
                 }

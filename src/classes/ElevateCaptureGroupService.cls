@@ -79,7 +79,7 @@ public virtual with sharing class ElevateCaptureGroupService {
         HttpRequest captureRequest = captureRequest(captureGroupId);
         UTIL_Http.Response response =
             new UTIL_Http.RequestService().sendRequest(captureRequest);
-        System.debug(response);
+
         ElevateCaptureGroupResponse captureResponse = (ElevateCaptureGroupResponse)
             JSON.deserialize(response.body, ElevateCaptureGroupResponse.class);
         return captureResponse;
