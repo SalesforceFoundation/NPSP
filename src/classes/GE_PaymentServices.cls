@@ -100,8 +100,8 @@ public with sharing class GE_PaymentServices {
      * @description Returns Elevate Product Id to payments services tokenize card iframe
      * @return String
      */
-    public String getProductId() {
-        return configService.getProductId();
+    public String getClientId() {
+        return configService.getClientId();
     }
 
     /**
@@ -222,7 +222,7 @@ public with sharing class GE_PaymentServices {
         /*********************************
         * Required properties
         */
-        public Double amount;
+        public Integer amount;
         // Currency code for the amount property. Currently an ENUM = [USD] from Elevate
         public String currencyCode;
         public String paymentMethodToken;
