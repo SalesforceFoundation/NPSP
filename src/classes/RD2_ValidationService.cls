@@ -214,15 +214,6 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
-    private Boolean isValidElevateRecurringDonationPaymentMethod(RD2_RecurringDonation recurringDonation) {
-        return isElevatePaymentMethod(recurringDonation);
-    }
-
-    private Boolean isElevatePaymentMethod(RD2_RecurringDonation recurringDonation) {
-        return recurringDonation.paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
-               recurringDonation.paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
-    }
-
     /**
     * @description Validates Recurring Donation on update DML
     * @return void
@@ -264,11 +255,8 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
-    private void validatePaymentMethod(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
-        RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
-        if (recurringDonation.isElevateRecord() &&
-                !isValidElevateRecurringDonationPaymentMethod(recurringDonation)) {
-
+    private void validatePaymentMethod(RD2_RecurringDonation recurringDonation, ErrorRecord errorCollection) {
+        if (!recurringDonation.hasValidRecurringDonationPaymentMethod()) {
             errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
         }
     }
@@ -302,14 +290,15 @@ public with sharing class RD2_ValidationService {
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
-        if (new RD2_RecurringDonation(rd).isClosed()) {
+        RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
+        if (recurringDonation.isClosed()) {
             return;
         }
         validateAmount(rd, errorCollection);
         validateInstallmentPeriod(rd, errorCollection);
         validateDayOfMonth(rd, errorCollection);
         validateFixedLength(rd, errorCollection);
-        validatePaymentMethod(rd, errorCollection);
+        validatePaymentMethod(recurringDonation, errorCollection);
     }
 
     /**
