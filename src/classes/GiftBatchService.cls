@@ -43,10 +43,12 @@ public with sharing class GiftBatchService {
     public void processPaymentsFor(Id batchId) {
         GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.captureAuthorizedGifts();
+        giftBatch.updateRecords();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
         GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
+        giftBatch.updateRecords();
     }
 }

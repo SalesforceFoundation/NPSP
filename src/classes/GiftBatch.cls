@@ -68,6 +68,7 @@ public inherited sharing class GiftBatch {
         set;
     }
 
+    @TestVisible
     private ElevateCaptureGroupService captureGroupService {
         get {
             if (captureGroupService == null) {
@@ -89,14 +90,16 @@ public inherited sharing class GiftBatch {
     }
 
     public void captureAuthorizedGifts() {
-        new ElevateCaptureGroupService()
-            .enqueuePaymentCaptureJobFor(batchId, gifts?.capturableGroupIds());
+        captureGroupService.enqueuePaymentCaptureJobFor(
+            batchId, gifts?.capturableGroupIds());
         gifts.authorizedToPaymentProcessingStatus();
-        gifts.updateRecords();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
         gifts.failGiftsByCaptureIdWithReason(failReasonByCaptureGroupId);
+    }
+
+    public void updateRecords() {
         gifts.updateRecords();
     }
 }

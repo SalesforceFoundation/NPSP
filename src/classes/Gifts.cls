@@ -37,6 +37,7 @@ public with sharing class Gifts {
 
     private Set<String> capturableGroupIds;
     private List<DataImport__c> dataImports;
+    @TestVisible
     private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
     public Gifts(List<DataImport__c> dataImports) {

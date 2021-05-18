@@ -30,28 +30,92 @@
 
 @IsTest
 private class GiftBatch_TEST {
-    @isTest static void chargeCreditCardCaptureGroupShouldReturnSuccessResponse() {
-        // PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-        // AuraHandledException auraException;
-        // List<DataImport__c> dataImports = new List<DataImport__c>{
-        //         new DataImport__c(
-        //                 Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
-        //                 Payment_Elevate_Batch_ID__c = 'test-valid-group-id')
-        // };
-        // insert dataImports;
-        // Test.startTest();
-        // try {
-        //     GiftBatch batch = new GiftBatch(new Gifts(dataImports));
-        //     String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
-        //     UTIL_Http_TEST.mockChargeCaptureGroup(validResponse);
-        //     batch.processPayments();
-        // } catch (AuraHandledException ex) {
-        //     auraException = ex;
-        // }
-        // Test.stopTest();
-        // List<DataImport__c> updatedDataImports = [
-        //         SELECT Payment_Status__c FROM DataImport__c WHERE Id =: dataImports[0].Id
-        // ];
-        // System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(),updatedDataImports[0].Payment_Status__c);
+    @isTest static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
+        final Integer numberOfGifts = 10;
+        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        ElevateCaptureGroupServiceMock captureGroupServiceMock = new ElevateCaptureGroupServiceMock();
+
+        System.assert(authorizedGifts.giftsToUpdate.size() == 0);
+
+        giftBatch.captureGroupService = stubFor(captureGroupServiceMock);
+        giftBatch.captureAuthorizedGifts();
+
+        System.assert(captureGroupServiceMock.enqueuePaymentCaptureJobForCalled);
+        System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+            System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
+        }
+    }
+
+    @isTest static void shouldUpdateGiftRecordsWithFailReason() {
+        final Integer numberOfGifts = 5;
+        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        ElevateCaptureGroupServiceMock captureGroupServiceMock = new ElevateCaptureGroupServiceMock();
+
+        System.assert(authorizedGifts.giftsToUpdate.size() == 0);
+
+        giftBatch.captureGroupService = stubFor(captureGroupServiceMock);
+        giftBatch.failGiftsWithReason(buildFailReasonByCaptureGroupId(numberOfGifts));
+
+        System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+            System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
+            System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
+        }
+    }
+
+    public class ElevateCaptureGroupServiceMock implements StubProvider {
+        public Boolean enqueuePaymentCaptureJobForCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'enqueuePaymentCaptureJobFor' {
+                    enqueuePaymentCaptureJobForCalled = true;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static ElevateCaptureGroupService stubFor(ElevateCaptureGroupServiceMock captureGroupServiceMock) {
+        return (ElevateCaptureGroupService) Test.createStub(
+            ElevateCaptureGroupService.class,
+            captureGroupServiceMock
+        );
+    }
+
+    private static List<DataImport__c> buildAuthorizedGifts(Integer numberOfGifts) {
+        List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
+        for (Integer i = 0; i < numberOfGifts; i++) {
+            DataImport__c dummyGift = new DataImport__c(
+                Status__c = null,
+                NPSP_Data_Import_Batch__c = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
+                Account1_Name__c = 'DUMMY ACCOUNT ' +  i,
+                Donation_Amount__c = 1,
+                Donation_Date__c = Date.today(),
+                Donation_Donor__c = 'Account1',
+                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                Payment_Elevate_Batch_ID__c = 'DUMMY_ELEVATE_BATCH_ID_' + i
+            );
+            dummyAuthorizedGifts.add(dummyGift);
+        }
+        return dummyAuthorizedGifts;
+    }
+
+    private static Map<String, String> buildFailReasonByCaptureGroupId(Integer numberOfGifts) {
+        Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+        for (Integer i = 0; i < numberOfGifts; i++) {
+            failReasonByCaptureGroupId.put('DUMMY_ELEVATE_BATCH_ID_' + i, 'DUMMY FAIL REASON');
+        }
+        return failReasonByCaptureGroupId;
     }
 }
