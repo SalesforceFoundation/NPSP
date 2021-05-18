@@ -286,8 +286,9 @@ public inherited sharing class NPSP_Address implements IAddress {
         addr.MailingCountry__c = other.country();
         addr.Geolocation__Latitude__s = other.latitude();
         addr.Geolocation__Longitude__s = other.longitude();
-        if (other.getType() != null)
+        if (other.getType() != null) {
             addr.Address_Type__c = other.getType();
+        }
     }
 
     public Boolean isDefault() {
