@@ -30,7 +30,7 @@ import { Rd2Service } from 'c/rd2Service';
 
 export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
-    @api donorType;
+    @api accountHolderType;
 
     labels = Object.freeze({
         paymentInformationTitle,

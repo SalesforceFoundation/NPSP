@@ -3,7 +3,7 @@ import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
 import { Rd2Service } from 'c/rd2Service';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
-import { HTTP_CODES, ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
+import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -139,7 +139,7 @@ export default class rd2EntryForm extends LightningElement {
     contactId;
     organizationAccountId;
     organizationAccountName;
-    donorType;
+    accountHolderType;
 
     contact = {
         MailingCountry: null
@@ -320,13 +320,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleDonorTypeChange(event) {
-        if(event.detail === 'Contact') {
-            this.donorType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if(event.detail === 'Account') {
-            this.donorType = ACCOUNT_HOLDER_TYPES.BUSINESS;
-        } else {
-            this.donorType = null;
-        }
+        this.accountHolderType = this.rd2Service.accountHolderTypeFor(event.detail);
     }
 
     /**

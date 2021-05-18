@@ -5,6 +5,7 @@ import { updateRecord } from 'lightning/uiRecordApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
+import { ACCOUNT_HOLDER_TYPES } from "c/geConstants";
 
 jest.mock(
     '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment',
@@ -180,7 +181,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('updating an existing credit card commitment', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-            component.donorType = 'Contact';
+            component.accountHolderType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
             handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
             setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
@@ -232,9 +233,9 @@ describe('c-rd2-edit-payment-information-modal', () => {
             );
         });
 
-        it('sets donor type on rd2 credit card form after load', async () => {
+        it('sets donor information on rd2 credit card form after load', async () => {
             const widget = getElevateWidget(component);
-            expect(widget.achAccountType).toBe('Contact');
+            expect(widget.achAccountType).toBe(ACCOUNT_HOLDER_TYPES.INDIVIDUAL);
         });
 
         it('saves successfully after swapping to ACH', async () => {
@@ -245,21 +246,34 @@ describe('c-rd2-edit-payment-information-modal', () => {
             getSaveButton(component).click();
             await flushPromises();
 
+            const ACH_PARAMS = {
+                "accountHolder": {
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "type": "INDIVIDUAL",
+                    "bankType": "CHECKING"
+                },
+                "achCode": "WEB",
+                "nameOnAccount": "John Smith"
+            };
+
             expect(mockGetIframeReply).toHaveBeenLastCalledWith(
                 expect.any(HTMLIFrameElement),
                 expect.objectContaining({
                     action: 'createAchToken',
-                    params: 'some json string of ach parameters'
+                    params: expect.any(String)
                 }),
                 undefined
             );
-
             expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
+            const { params } = mockGetIframeReply.mock.calls[1][1];
+            const paramObject = JSON.parse(params);
+            expect(paramObject).toMatchObject(ACH_PARAMS);
         });
 
 
 
-        it('clears credit card information on save', () => {
+        it('clears credit card information after swapping to ACH and saving', () => {
 
         });
 
@@ -281,15 +295,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
             expect(widget.payerOrganizationName).toBe('TestingLastName Household');
         });
 
-        it('updates widget when payment method changed to credit card', () => {
-
-        });
-
-        it('can be swapped back', () => {
-
-        });
-
-        it('clears ach information on save', () => {
+        it('clears ach information after swapping to card and saving', () => {
 
         });
     })

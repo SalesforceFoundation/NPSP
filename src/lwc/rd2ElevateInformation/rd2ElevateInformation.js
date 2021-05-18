@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { constructErrorMessage, extractFieldInfo, isNull, isUndefined, getNamespace } from 'c/utilCommon';
+import { Rd2Service } from 'c/rd2Service';
 import { PAYMENT_METHOD_CREDIT_CARD, PAYMENT_METHOD_ACH } from 'c/geConstants';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
@@ -123,6 +124,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @track error = {};
     @track displayEditModal = false;
     commitmentURLPrefix;
+    rd2Service = new Rd2Service();
 
     get paymentMethod() {
         return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
@@ -199,7 +201,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     populateRecurringData() {
         getRecurringData({ recordId: this.recordId })
             .then(response => {
-                this.donorType = response.DonorType;
+                this.accountHolderType = this.rd2Service.accountHolderTypeFor(response.DonorType);
             })
             .catch((error) => {
                 this.handleError(error);
