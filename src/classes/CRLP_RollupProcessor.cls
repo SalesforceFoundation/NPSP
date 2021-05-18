@@ -500,7 +500,7 @@ public inherited sharing class CRLP_RollupProcessor {
 
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
-        List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
+        List<CRLP_Rollup> rollupsToCalculate = doFinalRollup(handler, parentId);
         if (options.doSummaryObjectComparison == false) {
             return null;
         }
@@ -509,7 +509,7 @@ public inherited sharing class CRLP_RollupProcessor {
         SObject updatedRecord = handler.getPopulatedSObject();
 
         // Determine if the updated SObject record is different than the parent.
-        Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
+        Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupsToCalculate);
 
         // Check whether skew mode threshold has been exceeded
         initForceSkewModeValues(parent.getSObjectType());
