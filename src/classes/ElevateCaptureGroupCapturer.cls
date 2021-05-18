@@ -38,8 +38,8 @@
 public without sharing class ElevateCaptureGroupCapturer implements Queueable, Database.AllowsCallouts {
 
     private Id batchId;
-    private QueueableCaptureGroups queueableCaptureGroups;
-    private Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+    @TestVisible private QueueableCaptureGroups queueableCaptureGroups;
+    @TestVisible private Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
     private ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
 
     public ElevateCaptureGroupCapturer(Id batchId, Set<String> capturableGroupIds) {
@@ -86,7 +86,7 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
         if (queueableCaptureGroups.hasGroupsToCapture()) {
             ElevateCaptureGroupCapturer capturer =
                 new ElevateCaptureGroupCapturer(batchId, queueableCaptureGroups);
-            System.enqueueJob(capturer);
+            if (!Test.isRunningTest()) { System.enqueueJob(capturer); }
         }
     }
 

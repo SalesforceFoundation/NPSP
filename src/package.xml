@@ -311,6 +311,7 @@
         <members>ElevateAuthorizedGift_TEST</members>
         <members>ElevateCaptureGroup</members>
         <members>ElevateCaptureGroupCapturer</members>
+        <members>ElevateCaptureGroupCapturer_TEST</members>
         <members>ElevateCaptureGroupResponse</members>
         <members>ElevateCaptureGroupService</members>
         <members>ElevateCaptureGroupServiceInvalidRequest</members>
