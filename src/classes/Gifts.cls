@@ -35,34 +35,57 @@
 
 public with sharing class Gifts {
 
-    private Set<String> captureGroupIds;
     private Set<String> capturableGroupIds;
     private List<DataImport__c> dataImports;
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
-        setCaptureGroupIds(dataImports);
         setCapturableGroupIds(dataImports);
     }
 
-    public DataImport__c findByCaptureGroupId(String captureGroupId) {
+    public List<DataImport__c> authorizedGifts() {
+        List<DataImport__c> giftsToReturn = new List<DataImport__c>();
+        for (DataImport__c gift : dataImports) {
+            if (gift.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+                giftsToReturn.add(gift);
+            }
+        }
+        return giftsToReturn;
+    }
+
+    public Set<String> capturableGroupIds() {
+        return capturableGroupIds;
+    }
+
+    public void authorizedToPaymentProcessingStatus() {
+        List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+        for (DataImport__c gift : authorizedGifts()) {
+            gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
+            giftsToUpdate.add(gift);
+        }
+
+        update giftsToUpdate;
+    }
+
+    public void failGiftsByCaptureIdWithReason(Map<String, String> failReasonByCaptureGroupId) {
+        List<DataImport__c> giftsFailedCapture = new List<DataImport__c>();
+        for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
+            DataImport__c gift = findByCaptureGroupId(captureGroupId);
+            gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
+            gift.FailureInformation__c = failReasonByCaptureGroupId.get(captureGroupId);
+            giftsFailedCapture.add(gift);
+        }
+
+        update giftsFailedCapture;
+    }
+
+    private DataImport__c findByCaptureGroupId(String captureGroupId) {
         for (DataImport__c gift : dataImports) {
             if (gift.Payment_Elevate_Batch_ID__c == captureGroupId) {
                 return gift;
             }
         }
         return null;
-    }
-
-    private void setCaptureGroupIds(List<DataImport__c> dataImports) {
-        captureGroupIds = new Set<String>();
-        for (DataImport__c dataImport : dataImports) {
-            captureGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
-        }
-    }
-
-    public Set<String> captureGroupIds() {
-        return captureGroupIds;
     }
 
     private void setCapturableGroupIds(List<DataImport__c> dataImports) {
@@ -72,25 +95,5 @@ public with sharing class Gifts {
                 capturableGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }
-    }
-
-    public Set<String> capturableGroupIds() {
-        return capturableGroupIds;
-    }
-
-    public void toPending() {
-        for (DataImport__c gift : dataImports) {
-            gift.Payment_Status__c = ElevateTransactionStatus.PENDING.name();
-        }
-    }
-
-    public void toRetryableError() {
-        for (DataImport__c gift : dataImports) {
-            gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
-        }
-    }
-
-    public List<DataImport__c> dataImports() {
-        return dataImports;
     }
 }

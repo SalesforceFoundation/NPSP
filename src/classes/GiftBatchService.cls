@@ -50,9 +50,4 @@ public with sharing class GiftBatchService {
         GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
     }
-
-    public void allAuthorizedGiftsAreNowPendingFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.transitionAuthorizedGiftsToPendingGifts();
-    }
 }

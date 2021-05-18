@@ -37,9 +37,17 @@ public inherited sharing class GiftBatch {
 
     private Id batchId;
     private DataImportBatch__c giftBatch;
-    private Gifts allGifts;
-    private Gifts authorizedGifts;
-    private Gifts pendingGifts;
+
+    private Gifts gifts {
+        get {
+            if (gifts != null) {
+                return gifts;
+            }
+            return new Gifts(giftSelector.getGiftsFor(this.batchId));
+        }
+        set;
+    }
+
     private GiftBatchSelector giftBatchSelector {
         get {
             if (giftBatchSelector == null) {
@@ -71,84 +79,26 @@ public inherited sharing class GiftBatch {
     }
 
     @TestVisible
-    private GiftBatch(Gifts authorizedGifts) {
-        this.authorizedGifts = authorizedGifts;
+    private GiftBatch(Gifts gifts) {
+        this.gifts = gifts;
     }
 
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
-        List<DataImportBatch__c> giftBatches =
-            giftBatchSelector.selectGiftBatchesById(new Set<Id>{ batchId });
-        if (giftBatches.size() > 0) {
-            this.giftBatch = giftBatches[0];
-        }
-        this.authorizedGifts = authorizedGifts();
-    }
-
-    public void queueableJobId(String queueableJobId) {
-        giftBatch.Queueable_Job_Id__c = queueableJobId;
-    }
-
-    public String queueableJobId() {
-        String queueableJobId = giftBatch.Queueable_Job_Id__c;
-        return queueableJobId;
+        this.giftBatch = giftBatchSelector.selectGiftBatchById(batchId);
     }
 
     public void captureAuthorizedGifts() {
-        new ElevateCaptureGroupService().enqueuePaymentCaptureJobFor(batchId, capturableGroupIds());
-        transitionAuthorizedGiftsToPendingGifts();
+        Set<String> capturableGroupIds = capturableGroupIds();
+        gifts.authorizedToPaymentProcessingStatus();
+        new ElevateCaptureGroupService().enqueuePaymentCaptureJobFor(batchId, capturableGroupIds);
     }
 
     private Set<String> capturableGroupIds() {
-        return authorizedGifts()?.capturableGroupIds();
+        return gifts?.capturableGroupIds();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
-        System.debug('failGiftsWithReason');
-
-        List<DataImport__c> giftsFailedCapture = new List<DataImport__c>();
-
-        for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
-            DataImport__c gift = allGifts().findByCaptureGroupId(captureGroupId);
-            gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
-            gift.FailureInformation__c = failReasonByCaptureGroupId.get(captureGroupId);
-            giftsFailedCapture.add(gift);
-        }
-
-        update giftsFailedCapture;
-    }
-
-    public void transitionAuthorizedGiftsToPendingGifts() {
-        authorizedGifts.toPending();
-        updateAuthorizedGifts();
-    }
-
-    private void updateAuthorizedGifts() {
-        update authorizedGifts().dataImports();
-    }
-
-    private void updatePendingGifts() {
-        update pendingGifts().dataImports();
-    }
-
-    private Gifts authorizedGifts() {
-        if (authorizedGifts != null) {
-            return authorizedGifts;
-        }
-        return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
-    }
-
-    private Gifts pendingGifts() {
-        if (pendingGifts != null) {
-            return pendingGifts;
-        }
-        return new Gifts(giftSelector.getPendingGiftsFor(this.batchId));
-    }
-
-    private Gifts allGifts() {
-        if (allGifts != null) {
-            return allGifts;
-        }
-        return new Gifts(giftSelector.getGiftsFor(this.batchId));
+        gifts.failGiftsByCaptureIdWithReason(failReasonByCaptureGroupId);
     }
 }
