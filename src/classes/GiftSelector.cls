@@ -44,12 +44,14 @@ public with sharing class GiftSelector {
         ];
     }
 
-    public DataImport__c getGiftById(Id giftId) {
-        String giftQuery = 
-          'SELECT ' + String.join(GiftBatchService.PAYMENT_FIELDS, ', ') + ' ' +
-          'FROM DataImport__c ' +
-          'WHERE Id = \'' + String.escapeSingleQuotes(giftId) + '\'';
+    public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
+        String queryString = new UTIL_Query()
+                .withFrom(DataImport__c.SObjectType)
+                .withSelectFields(fieldsToQuery)
+                .withWhere('Id = \'' + String.escapeSingleQuotes(giftId) + '\'')
+                .withSecurityEnforced()
+                .build();
 
-        return Database.query(giftQuery);
+        return Database.query(queryString);
     }
 }

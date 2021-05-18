@@ -37,18 +37,48 @@ public with sharing class Gift {
     
     @TestVisible
     private DataImport__c dataImport;
+    private List<String> availableFields;
     
     public Gift(DataImport__c dataImport) {
-        this.dataImport = dataImport;
+      this.dataImport = dataImport;
+      this.populateAvailableFields();
     }
 
     public Boolean isGiftReauthorizedRequired() {
-        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { return false; }
-        return 
-            new GiftBatchService().comparePaymentFieldsForChange(
-                this.dataImport, 
-                new GiftSelector()
-            );
+      if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
+        return false; 
+      }
+
+      return this.hasPaymentFieldsChanged();
+    }
+
+    public DataImport__c dataImport() {
+      return this.dataImport;
+    }
+
+    public void populateAvailableFields() {
+      Map<String, Object> dataImportFields = this.dataImport().getPopulatedFieldsAsMap();
+      List<String> fields = new List<String>();
+
+      for (String field : dataImportFields.keySet()) {
+        if (GiftBatchService.PAYMENT_FIELDS.contains(field)) {
+          fields.add(field);
+        }
+      }
+
+      this.availableFields = fields;
+    }
+
+    public Boolean hasPaymentFieldsChanged() {
+      DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport().Id, this.availableFields);
+
+      for (String field : this.availableFields) {
+        if (this.dataImport().get(field) != databaseDataImport.get(field)) {
+          return true;
+        }
+      }
+
+      return false;
     }
 
 }

@@ -49,21 +49,5 @@ public with sharing class GiftBatchService {
         GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
         return groupedTotals.totalsFor(batchId);
     }
-
-    public Boolean comparePaymentFieldsForChange(DataImport__c updatedDataImport, GiftSelector selector) {
-        DataImport__c databaseDataImport = selector.getGiftById(updatedDataImport.Id);
-        Map<String, Object> updatedDataImportFields = updatedDataImport.getPopulatedFieldsAsMap();
-
-        for (String field : PAYMENT_FIELDS) {
-          Object newValue = updatedDataImport.get(field);
-          Object oldValue = databaseDataImport.get(field);
-
-          if (updatedDataImportFields.containsKey(field) && oldValue != newValue) {
-            return true;
-          }
-        }
-
-        return false;
-    }
     
 }
