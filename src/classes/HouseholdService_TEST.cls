@@ -72,7 +72,7 @@ private class HouseholdService_TEST {
         System.assert(mock.saveCalled);
     }
 
-    public class UnitOfWorkMock implements StubProvider {
+    private class UnitOfWorkMock implements StubProvider {
         public Boolean registerNewCalled = false;
         List<npo02__Household__c> householdsToBeInserted;
         public Boolean saveCalled = false;
