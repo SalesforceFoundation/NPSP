@@ -269,7 +269,7 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
-        <members>ContactBuilder</members>
+        <members>TEST_ContactBuilder</members>
         <members>ContactSelector</members>
         <members>ContactService</members>
         <members>Contacts</members>

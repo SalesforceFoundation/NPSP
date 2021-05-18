@@ -135,7 +135,7 @@ public with sharing class HH_Households_TEST {
         setOrgContactSettingsToOneToOne();
         setupHouseholdNamingSettings();
 
-        Contact con = ContactBuilder.dummyContact();
+        Contact con = TEST_ContactBuilder.dummyContact();
         Test.startTest();
         insert con;
         Test.stopTest();
@@ -181,7 +181,7 @@ public with sharing class HH_Households_TEST {
 
         //When
         householdsTDTM.run(
-                ContactBuilder.dummyContactList(),
+                TEST_ContactBuilder.dummyContactList(),
                 null,
                 TDTM_Runnable.Action.AfterInsert,
                 null);

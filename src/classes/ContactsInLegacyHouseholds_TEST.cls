@@ -39,7 +39,7 @@ private class ContactsInLegacyHouseholds_TEST {
     static void whenOnAfterInsert_thenCreateHouseholdsCalled() {
         //Given
         ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                new ContactsInLegacyHouseholds(ContactBuilder.dummyContactList());
+                new ContactsInLegacyHouseholds(TEST_ContactBuilder.dummyContactList());
 
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
         contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
@@ -58,7 +58,7 @@ private class ContactsInLegacyHouseholds_TEST {
     @IsTest
     static void whenOnAfterUpdate_thenUpdateHouseholdNameCalled() {
         //Given
-        Contact dummyContactWithTitleChanged = ContactBuilder.dummyContactWithId();
+        Contact dummyContactWithTitleChanged = TEST_ContactBuilder.dummyContactWithId();
         String newTitle = 'Handy Man';
         dummyContactWithTitleChanged.Title = newTitle;
         ContactsInLegacyHouseholds contactsInLegacyHouseholds =
@@ -66,7 +66,7 @@ private class ContactsInLegacyHouseholds_TEST {
                         new List<Contact>{
                                 dummyContactWithTitleChanged
                         },
-                        new Map<Id, Contact>(ContactBuilder.dummyContactListWithIds())
+                        new Map<Id, Contact>(TEST_ContactBuilder.dummyContactListWithIds())
                 );
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
         contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
@@ -90,9 +90,9 @@ private class ContactsInLegacyHouseholds_TEST {
     }
 
     private static Boolean isDummyContact(Contact con) {
-        return con.FirstName == ContactBuilder.dummyContact().FirstName &&
-                con.LastName == ContactBuilder.dummyContact().LastName &&
-                con.npe01__WorkEmail__c == ContactBuilder.dummyContact().npe01__WorkEmail__c;
+        return con.FirstName == TEST_ContactBuilder.dummyContact().FirstName &&
+                con.LastName == TEST_ContactBuilder.dummyContact().LastName &&
+                con.npe01__WorkEmail__c == TEST_ContactBuilder.dummyContact().npe01__WorkEmail__c;
     }
 
     public class HouseholdServiceMock implements StubProvider {
@@ -127,7 +127,7 @@ private class ContactsInLegacyHouseholds_TEST {
     @IsTest
     static void testCreateHouseholdsFor() {
         ContactsInLegacyHouseholds c = new ContactsInLegacyHouseholds(
-                ContactBuilder.dummyContactList()
+                TEST_ContactBuilder.dummyContactList()
         );
         HouseholdService h = new HouseholdService();
         h.createHouseholdsFor(c);

@@ -65,7 +65,7 @@ private class HouseholdService_TEST {
         //When
         service.createHouseholdsFor(
                 new ContactsInLegacyHouseholds(
-                        ContactBuilder.dummyContactList()));
+                        TEST_ContactBuilder.dummyContactList()));
 
         //Then
         System.assert(mock.householdsToBeInserted.size() == 1);
