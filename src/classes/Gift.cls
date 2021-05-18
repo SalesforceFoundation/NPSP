@@ -52,12 +52,8 @@ public with sharing class Gift {
       return this.hasPaymentFieldsChanged();
     }
 
-    public DataImport__c dataImport() {
-      return this.dataImport;
-    }
-
     public void populateAvailableFields() {
-      Map<String, Object> dataImportFields = this.dataImport().getPopulatedFieldsAsMap();
+      Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
       List<String> fields = new List<String>();
 
       for (String field : dataImportFields.keySet()) {
@@ -70,10 +66,10 @@ public with sharing class Gift {
     }
 
     public Boolean hasPaymentFieldsChanged() {
-      DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport().Id, this.availableFields);
+      DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport.Id, this.availableFields);
 
       for (String field : this.availableFields) {
-        if (this.dataImport().get(field) != databaseDataImport.get(field)) {
+        if (this.dataImport.get(field) != databaseDataImport.get(field)) {
           return true;
         }
       }
