@@ -393,8 +393,6 @@
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
-        <members>NPSP_Batch</members>
-        <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
         <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>

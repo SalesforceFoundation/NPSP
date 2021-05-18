@@ -42,17 +42,17 @@ public with sharing class GiftBatchService {
 
     public void processPaymentsFor(Id batchId) {
         System.debug('GiftBatchService.processPaymentsFor');
-        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.captureAuthorizedGifts();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
-        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
     }
 
     public void allAuthorizedGiftsAreNowPendingFor(Id batchId) {
-        NPSP_Batch giftBatch = new NPSP_Batch(batchId);
+        GiftBatch giftBatch = new GiftBatch(batchId);
         giftBatch.transitionAuthorizedGiftsToPendingGifts();
     }
 }
