@@ -27,28 +27,29 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Gift entity class in NPSP.
-*/
 
-public with sharing class Gift {
+@isTest
+private class Gift_Test {
     
-    @TestVisible
-    private DataImport__c dataImport;
-    
-    public Gift(DataImport__c dataImport) {
-        this.dataImport = dataImport;
-    }
+    @isTest
+    static void validateThatGiftNeedsToBeReauthorized() {
+        DataImport__c dataImport = new DataImport__c(
+            Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+            Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
+            Donation_Amount__c = 3.00
+        );
 
-    public Boolean isGiftReauthorizedRequired() {
-        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { return false; }
-        return 
-            new GiftBatchService().comparePaymentFieldsForChange(
-                this.dataImport, 
-                new GiftSelector()
-            );
-    }
+        insert dataImport;
 
+        Test.startTest();
+
+        dataImport.Donation_Amount__c = 5.00;
+        Gift authorizedGift = new Gift(dataImport);
+        Boolean needsReauthorization = authorizedGift.isGiftReauthorizedRequired();
+
+        Test.stopTest();
+
+        System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
+        System.assert(needsReauthorization);
+    }
 }
