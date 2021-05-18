@@ -27,19 +27,31 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Gift Selector Class in NPSP.
-*/
 
-public with sharing class GiftSelector {
-
-    public List<DataImport__c> getGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-        ];
+@IsTest
+private class GiftBatch_TEST {
+    @isTest static void chargeCreditCardCaptureGroupShouldReturnSuccessResponse() {
+        // PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        // AuraHandledException auraException;
+        // List<DataImport__c> dataImports = new List<DataImport__c>{
+        //         new DataImport__c(
+        //                 Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+        //                 Payment_Elevate_Batch_ID__c = 'test-valid-group-id')
+        // };
+        // insert dataImports;
+        // Test.startTest();
+        // try {
+        //     GiftBatch batch = new GiftBatch(new Gifts(dataImports));
+        //     String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
+        //     UTIL_Http_TEST.mockChargeCaptureGroup(validResponse);
+        //     batch.processPayments();
+        // } catch (AuraHandledException ex) {
+        //     auraException = ex;
+        // }
+        // Test.stopTest();
+        // List<DataImport__c> updatedDataImports = [
+        //         SELECT Payment_Status__c FROM DataImport__c WHERE Id =: dataImports[0].Id
+        // ];
+        // System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(),updatedDataImports[0].Payment_Status__c);
     }
 }
