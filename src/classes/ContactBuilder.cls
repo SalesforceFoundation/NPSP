@@ -33,7 +33,7 @@
 * @description Used to create test Contacts in NPSP.
 */
 @IsTest
-public class ContactBuilder {
+public inherited sharing class ContactBuilder {
 
     @TestVisible
     private static Contact dummyContact() {
