@@ -882,6 +882,56 @@ private with sharing class RD2_ValidationService_TEST {
             'Elvate RD cannot update to future Effective Date.');
     }
 
+    /**
+    * @description Verifies that Elevate RD update will fail when Campaign is update to null
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateCampaignToNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        Campaign campaign = new Campaign(
+            name = 'campaign',
+            isActive = true
+        );
+
+        insert campaign;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(10)
+            .withStartDate(today)
+            .withCampaign(campaign.Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+
+        insert rd;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        rd.npe03__Recurring_Donation_Campaign__c = null;
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull, errorRecords[0].getFirstError(),
+            'Elvate RD cannot update campaign to null.');
+    }
+
     /***
     * @description Verifies that RD is inserted successfully when Status is mapped
     */
