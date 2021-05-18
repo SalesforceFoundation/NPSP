@@ -57,7 +57,7 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
     public void execute(QueueableContext context) {
         System.debug('queueable execute...');
         captureGroups();
-        if (giftFailedToBeCaptured()) {
+        if (hasGiftsThatFailedCapture()) {
             updatePendingGiftsWithFailure();
         }
         chainNextJob();
@@ -76,7 +76,7 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
         }
     }
 
-    private Boolean giftFailedToBeCaptured() {
+    private Boolean hasGiftsThatFailedCapture() {
         return failReasonByCaptureGroupId.keySet().size() > 0;
     }
 
