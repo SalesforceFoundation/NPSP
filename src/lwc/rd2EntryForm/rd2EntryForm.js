@@ -465,7 +465,10 @@ export default class rd2EntryForm extends LightningElement {
     */
     hasElevateFieldsChange(allFields) {
         let amount = getFieldValue(this.record, FIELD_AMOUNT);
-        return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
+        let campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
+
+        return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
+            || campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
     }
 
     /***

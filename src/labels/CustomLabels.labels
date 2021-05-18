@@ -1730,6 +1730,14 @@
         <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donations cannot be in the future.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCampaignCannotUpdateToNull</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Campaign update is valid or not</shortDescription>
+        <value>You can&apos;t remove the Campaign on an active Elevate-connected Recurring Donation. To remove the Campaign, close the Recurring Donation and create a new one.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRecordCreateFailed</fullName>
         <categories>Recurring Donation</categories>
         <language>en_US</language>

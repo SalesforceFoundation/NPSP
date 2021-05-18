@@ -426,6 +426,57 @@ private with sharing class RD2_EntryFormController_TEST {
         System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorMessage,
             'RD should be pre-validate before the Elevate Commitment API is called');
     }
+
+    /**
+    * @description Verifies commitment success response is returned upon successful campaign update
+    */
+    @isTest
+    private static void shouldReturnSuccessResponseWhenUpdateElevateCamapaign() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
+        insert rdCampaign;
+
+        Campaign anotherRdCampaign = new Campaign(name = 'Annual Campaign');
+        insert anotherRdCampaign;
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        rd.npe03__Recurring_Donation_Campaign__c = rdCampaign.Id;
+        insert rd;
+
+        rd.npe03__Recurring_Donation_Campaign__c = anotherRdCampaign.Id;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+
+        String response = 
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            } 
+        }
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+            'The response status code should match: ' + response);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+            'The response status should match: ' + response);
+    }
  
 
     // Helpers
