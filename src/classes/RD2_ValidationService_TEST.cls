@@ -825,6 +825,7 @@ private with sharing class RD2_ValidationService_TEST {
 
         npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
             .build();
         npe03__Recurring_Donation__c rd = oldRd.clone();
