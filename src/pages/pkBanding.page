@@ -194,11 +194,13 @@
                     totalEvents += eData.totalEvents;
                     // aux metric vars                    
                     let totTransactionsPerSecond = Math.round(totalEvents/eData.timeInSeconds);
-                    let totTransactionsPerDay = Math.round(totTransactionsPerSecond*86400);
+                    let totTransactionsPerDay = Math.round((totalEvents/eData.timeInSeconds)*86400);
+                    let totTransactionsPerHour = Math.round((totalEvents/eData.timeInSeconds)*3600);
 
                     // update results card
                     document.getElementById('results-total').innerHTML = format_num(totalEvents);                    
                     document.getElementById('results-perday').innerHTML = format_num(totTransactionsPerDay);
+                    document.getElementById('results-perhour').innerHTML = format_num(totTransactionsPerHour);
                     document.getElementById('results-transactions-seconds').innerHTML = format_num(totTransactionsPerSecond);
 
                     // when completed
@@ -407,7 +409,9 @@
                                         <option value="10">10</option>
                                         <option value="50">50</option>
                                         <option value="100">100</option>
-                                        <option value="200">200</option>                                        
+                                        <option value="200">200</option>
+                                        <option value="300">300</option>
+                                        <option value="400">400</option>
                                         <option value="500">500</option>                                       
                                         <option value="1000">1000</option>                                        
                                     </select> <br/>
@@ -464,6 +468,9 @@
                                 </div>
                                 <div class="slds-card slds-p-top_x-small">
                                     Transactions per day:&nbsp;<b><div id="results-perday">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per hour:&nbsp;<b><div id="results-perhour">-</div></b>
                                 </div>
                             </div>
                         </div>
