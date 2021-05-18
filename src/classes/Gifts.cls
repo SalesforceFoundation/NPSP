@@ -37,6 +37,7 @@ public with sharing class Gifts {
 
     private Set<String> capturableGroupIds;
     private List<DataImport__c> dataImports;
+    private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
@@ -58,25 +59,23 @@ public with sharing class Gifts {
     }
 
     public void authorizedToPaymentProcessingStatus() {
-        List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
         for (DataImport__c gift : authorizedGifts()) {
             gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
             giftsToUpdate.add(gift);
         }
-
-        update giftsToUpdate;
     }
 
     public void failGiftsByCaptureIdWithReason(Map<String, String> failReasonByCaptureGroupId) {
-        List<DataImport__c> giftsFailedCapture = new List<DataImport__c>();
         for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
             DataImport__c gift = findByCaptureGroupId(captureGroupId);
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
             gift.FailureInformation__c = failReasonByCaptureGroupId.get(captureGroupId);
-            giftsFailedCapture.add(gift);
+            giftsToUpdate.add(gift);
         }
+    }
 
-        update giftsFailedCapture;
+    public void updateRecords() {
+        update giftsToUpdate;
     }
 
     private DataImport__c findByCaptureGroupId(String captureGroupId) {

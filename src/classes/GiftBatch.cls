@@ -40,10 +40,10 @@ public inherited sharing class GiftBatch {
 
     private Gifts gifts {
         get {
-            if (gifts != null) {
-                return gifts;
+            if (gifts == null) {
+                gifts = new Gifts(giftSelector.getGiftsFor(this.batchId));
             }
-            return new Gifts(giftSelector.getGiftsFor(this.batchId));
+            return gifts;
         }
         set;
     }
@@ -92,9 +92,11 @@ public inherited sharing class GiftBatch {
         new ElevateCaptureGroupService()
             .enqueuePaymentCaptureJobFor(batchId, gifts?.capturableGroupIds());
         gifts.authorizedToPaymentProcessingStatus();
+        gifts.updateRecords();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
         gifts.failGiftsByCaptureIdWithReason(failReasonByCaptureGroupId);
+        gifts.updateRecords();
     }
 }
