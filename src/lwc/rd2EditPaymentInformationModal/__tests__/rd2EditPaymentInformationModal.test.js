@@ -18,6 +18,7 @@ jest.mock(
 );
 
 const mockPaymentResult = require('./data/updatePaymentResult.json');
+const mockPaymentACHResult = require('./data/updatePaymentACHResult.json');
 const mockPaymentError = require('./data/updatePaymentError.json');
 const recurringDonation = require('./data/recurringDonation.json');
 const recurringACHDonation = require('./data/reccuringACHDonation.json');
@@ -64,7 +65,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
             document.body.appendChild(component);
         });
 
-        it('should display credt card edit form', async () => {
+        it('should display credit card edit form', async () => {
             return global.flushPromises()
             .then(async () => {
                 const widget = getElevateWidget(component);
@@ -271,10 +272,27 @@ describe('c-rd2-edit-payment-information-modal', () => {
             expect(paramObject).toMatchObject(ACH_PARAMS);
         });
 
+        it('clears credit card information after swapping to ACH and saving', async () => {
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentACHResult));
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
 
-
-        it('clears credit card information after swapping to ACH and saving', () => {
-
+            getSaveButton(component).click();
+            await flushPromises();
+            const UPDATE_RECORD_ARGS = {
+                "fields": {
+                    "ACH_Last_4__c": "1234",
+                    "CardExpirationMonth__c": null,
+                    "CardExpirationYear__c": null,
+                    "CardLast4__c": null,
+                    "CommitmentId__c": "fake-commitment-uuid",
+                    "Id": "a0900000008MR9bQAG",
+                    "InstallmentFrequency__c": 1
+                }
+            };
+            expect(updateRecord).toHaveBeenCalledTimes(1);
+            expect(updateRecord).toHaveBeenCalledWith(UPDATE_RECORD_ARGS);
         });
 
     });
@@ -283,7 +301,6 @@ describe('c-rd2-edit-payment-information-modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringACHDonation;
             component.donorType = 'Account';
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
             setupIframeReply();
             document.body.appendChild(component);
         });
@@ -295,8 +312,27 @@ describe('c-rd2-edit-payment-information-modal', () => {
             expect(widget.payerOrganizationName).toBe('TestingLastName Household');
         });
 
-        it('clears ach information after swapping to card and saving', () => {
+        it('clears ach information after swapping to card and saving', async () => {
+            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'Credit Card');
+            await flushPromises();
 
+            getSaveButton(component).click();
+            await flushPromises();
+            const UPDATE_RECORD_ARGS = {
+                "fields": {
+                    "ACH_Last_4__c": null,
+                    "CardExpirationMonth__c": "12",
+                    "CardExpirationYear__c": "25",
+                    "CardLast4__c": 1111,
+                    "CommitmentId__c": "fake-commitment-uuid",
+                    "Id": "a09S000000HNWL3IAP",
+                    "InstallmentFrequency__c": 1
+                }
+            };
+            expect(updateRecord).toHaveBeenCalledTimes(1);
+            expect(updateRecord).toHaveBeenCalledWith(UPDATE_RECORD_ARGS);
         });
     })
 });
