@@ -334,6 +334,7 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
