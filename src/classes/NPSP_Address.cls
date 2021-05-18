@@ -67,8 +67,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         try {
             addr.Household_Account__c = con.AccountId;
         } catch (NullPointerException npe) {
-
-            System.debug(LoggingLevel.ERROR, '*** ##### npe on npsp addr doing nothing ######');
+            UTIL_Debug.debug('*** ##### npe on NPSP_Address doing nothing. ######');
         }
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.is_Address_Override__c)
@@ -82,9 +81,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         )) {
             copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
         } else {
-            //Todo: add test for when PrimAddr not populated
             copyFromSObject(con, 'Mailing', 'Mailing');
-
         }
     }
 
