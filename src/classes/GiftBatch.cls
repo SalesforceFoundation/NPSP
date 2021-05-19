@@ -36,7 +36,6 @@
 public inherited sharing class GiftBatch {
 
     private Id batchId;
-    private DataImportBatch__c giftBatch;
 
     private Gifts gifts {
         get {
@@ -86,7 +85,6 @@ public inherited sharing class GiftBatch {
 
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
-        this.giftBatch = giftBatchSelector.selectGiftBatchById(batchId);
     }
 
     public void captureAuthorizedGifts() {
