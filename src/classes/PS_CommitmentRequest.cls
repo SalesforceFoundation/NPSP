@@ -110,6 +110,11 @@ public inherited sharing class PS_CommitmentRequest {
     private static final String ACH_CODE_WEB = 'WEB';
     private static final String ACH_CONSENT_MESSAGE = 'true';
 
+    private static final Map<SObjectType, DonorType> DONOR_TYPE_MAP = new Map<SObjectType, DonorType>{
+        Contact.SObjectType => DonorType.INDIVIDUAL,
+        Account.SObjectType => DonorType.BUSINESS
+    };
+
     /***
      * @description Payment Services configuration
      */
@@ -223,6 +228,13 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodType(rd.PaymentMethod__c)
             .withPaymentMethodToken(token);
 
+        SObject donor = getDonorRecord(rd);
+        DonorType accountHolderType = getAccountHolderType(donor);
+
+        if(reqBody.isACH()) {
+            reqBody.withAchData(accountHolderType);
+        }
+
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
@@ -256,19 +268,31 @@ public inherited sharing class PS_CommitmentRequest {
     */
     @TestVisible
     private DonorType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+        SObject donor = getDonorRecord(rd);
+        return setDonorFromSObject(reqBody, donor);
+    }
+
+    private DonorType setDonorFromSObject(RequestBody reqBody, SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        if (donorSObjectType == Contact.SObjectType) {
+            reqBody.withDonor((Contact)donor);
+        } else {
+            reqBody.withDonor((Account)donor);
+        }
+        return getAccountHolderType(donor);
+    }
+
+    private SObject getDonorRecord(npe03__Recurring_Donation__c rd) {
         Contact contactDonor = rd.npe03__Contact__c != null
-            ? getContact(rd.npe03__Contact__c)
-            : null;
+                ? getContact(rd.npe03__Contact__c)
+                : null;
 
         Boolean isHouseholdDonor = donorIsInHousehold(contactDonor, rd.npe03__Organization__c);
 
         if (isHouseholdDonor) {
-            reqBody.withDonor(contactDonor);
-            return DonorType.INDIVIDUAL;
+            return contactDonor;
         } else {
-            Account organization = getAccount(rd.npe03__Organization__c);
-            reqBody.withDonor(organization);
-            return DonorType.BUSINESS;
+            return getAccount(rd.npe03__Organization__c);
         }
     }
 
@@ -276,6 +300,11 @@ public inherited sharing class PS_CommitmentRequest {
         Boolean isHouseholdDonor = contactDonor != null
                 && ( rdAccountId == null || rdAccountId == contactDonor.AccountId);
         return isHouseholdDonor;
+    }
+
+    private DonorType getAccountHolderType(SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        return DONOR_TYPE_MAP.get(donorSObjectType);
     }
 
     /**
@@ -478,12 +507,17 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         public RequestBody withACHAccountHolder(DonorType accountHolderType) {
+            withAchData(accountHolderType);
+            this.accountName = getAccountName(accountHolderType);
+            return this;
+        }
+
+        public RequestBody withAchData(DonorType accountHolderType) {
             this.achData = new AchData();
             this.achData.achCode = ACH_CODE_WEB;
             this.achData.bankType = ACH_BANK_TYPE_CHECKING;
             this.achData.consent = ACH_CONSENT_MESSAGE;
             this.achData.type = accountHolderType.name();
-            this.accountName = getAccountName(accountHolderType);
             return this;
         }
 
