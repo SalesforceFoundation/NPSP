@@ -62,7 +62,7 @@ public inherited sharing class TEST_ContactBuilder {
     @TestVisible
     private static Contact dummyContactWithId() {
         Contact con = dummyContact();
-        con.Id = fflib_IDGenerator.generate(Contact.SObjectType);
+        con.Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         return con;
     }
 

@@ -269,7 +269,6 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
-        <members>TEST_ContactBuilder</members>
         <members>ContactSelector</members>
         <members>ContactService</members>
         <members>Contacts</members>
@@ -397,7 +396,6 @@
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
-        <members>NPSP_Address_TEST</members>
         <members>NPSP_Batch</members>
         <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
@@ -643,6 +641,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_ContactBuilder</members>
         <members>TEST_OpportunityBuilder</members>
         <members>TEST_RecurringDonationBuilder</members>
         <members>TEST_SObjectGateway</members>
@@ -743,8 +742,6 @@
         <members>UTIL_iSoqlListViewConsumer</members>
         <members>UnitOfWork</members>
         <members>fflib_Domain</members>
-        <members>fflib_IDGenerator</members>
-        <members>fflib_IDGeneratorTest</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>
         <name>ApexClass</name>
