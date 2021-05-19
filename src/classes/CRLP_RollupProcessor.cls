@@ -522,11 +522,6 @@ public inherited sharing class CRLP_RollupProcessor {
         if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
             updatedRecord.put(this.qualifiedSkewField, true);
             needsUpdate = true;
-
-        // Reset any flags erroneously set for NonSkewMode records
-        } else if (mode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode && this.useForceSkewModeField && isForceSkewModeTrue) {
-            updatedRecord.put(this.qualifiedSkewField, false);
-            needsUpdate = true;
         }
 
         if (!needsUpdate) {
