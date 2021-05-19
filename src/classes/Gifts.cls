@@ -36,9 +36,8 @@
 public with sharing class Gifts {
 
     private Set<String> capturableGroupIds;
-    private List<DataImport__c> dataImports;
-    @TestVisible
-    private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private List<DataImport__c> dataImports;
+    @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
@@ -55,6 +54,10 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
+    public void updateRecords() {
+        update giftsToUpdate;
+    }
+
     public Set<String> capturableGroupIds() {
         return capturableGroupIds;
     }
@@ -68,24 +71,28 @@ public with sharing class Gifts {
 
     public void failGiftsByCaptureIdWithReason(Map<String, String> failReasonByCaptureGroupId) {
         for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
-            DataImport__c gift = findByCaptureGroupId(captureGroupId);
+            List<DataImport__c> giftsInCaptureGroup = findGiftsByCaptureGroupId(captureGroupId);
+            String failReason = failReasonByCaptureGroupId.get(captureGroupId);
+            applyFailReasonToGiftsIn(giftsInCaptureGroup, failReason);
+        }
+    }
+
+    private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInCaptureGroup, String failReason) {
+        for (DataImport__c gift : giftsInCaptureGroup) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
-            gift.FailureInformation__c = failReasonByCaptureGroupId.get(captureGroupId);
+            gift.FailureInformation__c = failReason;
             giftsToUpdate.add(gift);
         }
     }
 
-    public void updateRecords() {
-        update giftsToUpdate;
-    }
-
-    private DataImport__c findByCaptureGroupId(String captureGroupId) {
+    private List<DataImport__c> findGiftsByCaptureGroupId(String captureGroupId) {
+        List<DataImport__c> giftsInCaptureGroup = new List<DataImport__c>();
         for (DataImport__c gift : dataImports) {
             if (gift.Payment_Elevate_Batch_ID__c == captureGroupId) {
-                return gift;
+                giftsInCaptureGroup.add(gift);
             }
         }
-        return null;
+        return giftsInCaptureGroup;
     }
 
     private void setCapturableGroupIds(List<DataImport__c> dataImports) {

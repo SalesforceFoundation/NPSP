@@ -348,6 +348,7 @@
         <members>GiftBatches</members>
         <members>GiftSelector</members>
         <members>Gifts</members>
+        <members>Gifts_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
