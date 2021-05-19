@@ -37,18 +37,19 @@
 */
 public without sharing class ElevateCaptureGroupCapturer implements Queueable, Database.AllowsCallouts {
 
-    private Id batchId;
+    private Id giftBatchId;
     @TestVisible private QueueableCaptureGroups queueableCaptureGroups;
     @TestVisible private Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+    @TestVisible GiftBatchService giftBatchService = new GiftBatchService();
     private ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
 
     public ElevateCaptureGroupCapturer(Id batchId, Set<String> capturableGroupIds) {
-        this.batchId = batchId;
+        this.giftBatchId = batchId;
         queueableCaptureGroups = new QueueableCaptureGroups(capturableGroupIds);
     }
 
     public ElevateCaptureGroupCapturer(Id batchId, QueueableCaptureGroups queueableCaptureGroups) {
-        this.batchId = batchId;
+        this.giftBatchId = batchId;
         this.queueableCaptureGroups = queueableCaptureGroups;
     }
 
@@ -78,14 +79,13 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
     }
 
     private void updatePendingGiftsWithFailure() {
-        GiftBatchService giftBatchService = new GiftBatchService();
-        giftBatchService.giftsFailedCaptureFor(batchId, failReasonByCaptureGroupId);
+        giftBatchService.giftsFailedCaptureFor(giftBatchId, failReasonByCaptureGroupId);
     }
 
     private void chainNextJob() {
         if (queueableCaptureGroups.hasGroupsToCapture()) {
             ElevateCaptureGroupCapturer capturer =
-                new ElevateCaptureGroupCapturer(batchId, queueableCaptureGroups);
+                new ElevateCaptureGroupCapturer(giftBatchId, queueableCaptureGroups);
             if (!Test.isRunningTest()) { System.enqueueJob(capturer); }
         }
     }
@@ -99,7 +99,7 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
         public QueueableCaptureGroups(Set<String> captureGroupIds) {
             this.captureGroupIds = new List<String>();
             this.captureGroupIds.addAll(captureGroupIds);
-            partitionedGroupIds = subdivide(this.captureGroupIds);
+            partitionedGroupIds = partitionCaptureGroupIds(this.captureGroupIds);
         }
 
         public List<String> idsToCapture() {
@@ -120,27 +120,26 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
             return partitionSize() > currentPartitionIndex();
         }
 
-        private List<List<String>> subdivide(List<String> captureGroupIds) {
-            Integer containingListSize = captureGroupIds.size() / MAX_COUNT;
-            if (Math.mod(captureGroupIds.size(), MAX_COUNT) > 0) {
-                containingListSize++;
-            }
-            List<List<String>> subdividedList = new List<List<String>>();
+        private List<List<String>> partitionCaptureGroupIds(List<String> captureGroupIds) {
+            List<List<String>> partitionedCaptureGroupIds = new List<List<String>>();
             List<String> currentList = new List<String>();
             Integer currentCount = 0;
 
             for (Integer i = 0; i < captureGroupIds.size(); i++) {
                 currentList.add(captureGroupIds[i]);
-
                 currentCount++;
-                if (currentCount == MAX_COUNT || (i == captureGroupIds.size() - 1 && currentList.size() > 0)) {
-                    subdividedList.add(currentList);
+
+                Boolean isAtPartitionLimit = currentCount == MAX_COUNT;
+                Boolean isLastIdToAdd = (i == captureGroupIds.size() - 1 && currentList.size() > 0);
+
+                if (isAtPartitionLimit || isLastIdToAdd) {
+                    partitionedCaptureGroupIds.add(currentList);
                     currentCount = 0;
                     currentList = new List<String>();
                 }
             }
 
-            return subdividedList;
+            return partitionedCaptureGroupIds;
         }
     }
 }
