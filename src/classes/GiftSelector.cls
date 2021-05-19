@@ -54,4 +54,5 @@ public with sharing class GiftSelector {
 
         return Database.query(queryString);
     }
+    
 }

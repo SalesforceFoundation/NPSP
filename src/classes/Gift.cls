@@ -40,41 +40,41 @@ public with sharing class Gift {
     private List<String> availableFields;
     
     public Gift(DataImport__c dataImport) {
-      this.dataImport = dataImport;
-      this.populateAvailableFields();
+        this.dataImport = dataImport;
+        this.populateAvailableFields();
     }
 
     public Boolean isGiftReauthorizedRequired() {
-      if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
-        return false; 
-      }
-
-      return this.hasPaymentFieldsChanged();
-    }
-
-    public void populateAvailableFields() {
-      Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
-      List<String> fields = new List<String>();
-
-      for (String field : dataImportFields.keySet()) {
-        if (GiftBatchService.PAYMENT_FIELDS.contains(field)) {
-          fields.add(field);
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
+            return false; 
         }
-      }
 
-      this.availableFields = fields;
+        return this.hasPaymentFieldsChanged();
     }
 
-    public Boolean hasPaymentFieldsChanged() {
-      DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport.Id, this.availableFields);
+    private void populateAvailableFields() {
+        Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
+        List<String> fields = new List<String>();
 
-      for (String field : this.availableFields) {
-        if (this.dataImport.get(field) != databaseDataImport.get(field)) {
-          return true;
+        for (String field : dataImportFields.keySet()) {
+            if (GiftBatchService.PAYMENT_FIELDS.contains(field)) {
+                fields.add(field);
+            }
         }
-      }
 
-      return false;
+        this.availableFields = fields;
     }
 
+    private Boolean hasPaymentFieldsChanged() {
+        DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport.Id, this.availableFields);
+
+        for (String field : this.availableFields) {
+            if (this.dataImport.get(field) != databaseDataImport.get(field)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
 }
