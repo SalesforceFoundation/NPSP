@@ -539,8 +539,8 @@ private class CRLP_RollupProcessor_TEST {
         account.CustomizableRollups_UseSkewMode__c = true;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
 
         Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
 
@@ -560,8 +560,29 @@ private class CRLP_RollupProcessor_TEST {
         account.CustomizableRollups_UseSkewMode__c = false;
 
         CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
-                .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
-                .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
+
+        Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
+
+        System.assertEquals(null, updatedAcct,
+            'Account should not be updated if running in non skew mode.');
+    }
+
+    /**
+     * @description Verify that skew mode flag is not updated if running in non skew mode.  Test only validates
+     * whether CustomizableRollups_UseSkewMode__c is updated appropriately.
+     */
+    @IsTest
+    static void shouldNotSetSkewModeFlagFalseWhenInNonSkewMode() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+        account.CustomizableRollups_UseSkewMode__c = true;
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
 
         Account updatedAcct = (Account) processor.completeRollupForSingleSummaryRecord(account);
 
