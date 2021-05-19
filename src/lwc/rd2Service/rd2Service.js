@@ -62,20 +62,11 @@ class Rd2Service {
     /***
      * @description Convert LWC RD record into recognizable form and consume the api response if exist
      */
-    constructRecurringDonation(recordId, commitmentId, response) {
+    constructRecurringDonation(recordId, commitmentId) {
         const recurringDonation = new RecurringDonation()
             .withId(recordId)
-            .withCommitmentId(commitmentId);
-
-        if (!isNull(response) && !isUndefined(response)
-            && !isNull(response.body) && !isUndefined(response.body)
-        ) {
-            recurringDonation.withCommitmentResponseBody(response.body);
-        }
-
-        if(!recurringDonation.hasInstallmentFrequency()) {
-            recurringDonation.withInstallmentFrequency(1);
-        }
+            .withCommitmentId(commitmentId)
+            .withInstallmentFrequency(1);
 
         return recurringDonation;
     }
