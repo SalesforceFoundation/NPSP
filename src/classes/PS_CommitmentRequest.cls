@@ -42,7 +42,7 @@ public inherited sharing class PS_CommitmentRequest {
         SUSTAINER
     }
 
-    public enum DonorType {
+    public enum ElevateBankAccountType {
         INDIVIDUAL,
         BUSINESS
     }
@@ -110,9 +110,9 @@ public inherited sharing class PS_CommitmentRequest {
     private static final String ACH_CODE_WEB = 'WEB';
     private static final String ACH_CONSENT_MESSAGE = 'true';
 
-    private static final Map<SObjectType, DonorType> DONOR_TYPE_MAP = new Map<SObjectType, DonorType>{
-        Contact.SObjectType => DonorType.INDIVIDUAL,
-        Account.SObjectType => DonorType.BUSINESS
+    private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
+        Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
+        Account.SObjectType => ElevateBankAccountType.BUSINESS
     };
 
     /***
@@ -202,7 +202,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withProductMetadata(productMetadata);
 
 
-        DonorType accountHolderType = setDonorInfo(reqBody, rd);
+        ElevateBankAccountType accountHolderType = setDonorInfo(reqBody, rd);
         if(reqBody.isACH()) {
             reqBody.withACHAccountHolder(accountHolderType);
         }
@@ -224,7 +224,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodToken(token);
 
         SObject donor = getDonorRecord(oldRd);
-        DonorType accountHolderType = getAccountHolderType(donor);
+        ElevateBankAccountType accountHolderType = getAccountHolderType(donor);
 
         if(reqBody.isACH()) {
             reqBody.withAchData(accountHolderType);
@@ -279,12 +279,12 @@ public inherited sharing class PS_CommitmentRequest {
     * @return void
     */
     @TestVisible
-    private DonorType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+    private ElevateBankAccountType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
         SObject donor = getDonorRecord(rd);
         return setDonorFromSObject(reqBody, donor);
     }
 
-    private DonorType setDonorFromSObject(RequestBody reqBody, SObject donor) {
+    private ElevateBankAccountType setDonorFromSObject(RequestBody reqBody, SObject donor) {
         Schema.SObjectType donorSObjectType = donor.getSObjectType();
         if (donorSObjectType == Contact.SObjectType) {
             reqBody.withDonor((Contact)donor);
@@ -314,9 +314,9 @@ public inherited sharing class PS_CommitmentRequest {
         return isHouseholdDonor;
     }
 
-    private DonorType getAccountHolderType(SObject donor) {
+    private ElevateBankAccountType getAccountHolderType(SObject donor) {
         Schema.SObjectType donorSObjectType = donor.getSObjectType();
-        return DONOR_TYPE_MAP.get(donorSObjectType);
+        return BANK_ACCOUNT_TYPE_MAP.get(donorSObjectType);
     }
 
     /**
@@ -526,13 +526,13 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        public RequestBody withACHAccountHolder(DonorType accountHolderType) {
+        public RequestBody withACHAccountHolder(ElevateBankAccountType accountHolderType) {
             withAchData(accountHolderType);
             this.accountName = getAccountName(accountHolderType);
             return this;
         }
 
-        public RequestBody withAchData(DonorType accountHolderType) {
+        public RequestBody withAchData(ElevateBankAccountType accountHolderType) {
             this.achData = new AchData();
             this.achData.achCode = ACH_CODE_WEB;
             this.achData.bankType = ACH_BANK_TYPE_CHECKING;
@@ -541,8 +541,8 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        private String getAccountName(DonorType accountHolderType) {
-            if (accountHolderType == DonorType.INDIVIDUAL) {
+        private String getAccountName(ElevateBankAccountType accountHolderType) {
+            if (accountHolderType == ElevateBankAccountType.INDIVIDUAL) {
                 return String.format('{0} {1}', new List<String>{
                         this.firstName, this.lastName
                 });
