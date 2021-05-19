@@ -287,6 +287,7 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
             this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
@@ -571,18 +572,17 @@ export default class rd2EntryForm extends LightningElement {
                 paymentMethodToken: this.paymentMethodToken
             })
                 .then(jsonResponse => {
-                    let response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    let isSuccess = isNull(response)
+                    const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+                    const isSuccess = isNull(response)
                         || response.statusCode === HTTP_CODES.Created
                         || response.statusCode === HTTP_CODES.OK;
+                    const responseBody = JSON.parse(response.body);
 
                     if (isSuccess) {
-                        rd.withCommitmentResponseBody(response.body);
-
+                        rd.withCommitmentResponseBody(responseBody);
                         this.processSubmit(rd.record);
-
                     } else {
-                        let message = this.rd2Service.getCommitmentError(response);
+                        const message = this.rd2Service.getCommitmentError(response);
                         this.handleSaveError(message);
                     }
                 })

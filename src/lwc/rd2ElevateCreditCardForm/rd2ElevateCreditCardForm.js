@@ -62,6 +62,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _isEditPayment = false;
     
     @api isEditMode;
+    @api existingPaymentMethod;
     @api cardLastFour;
     @api cardLastFourLabel;
     @api cardExpDate;
@@ -85,18 +86,18 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     notifyIframePaymentMethodChanged(newValue) {
         const iframe = this.selectIframe();
-        if (isNull(iframe)) {
-            return;
-        }
         if(this.shouldNotifyIframe(newValue)) {
-            tokenHandler.setPaymentMethod(
-                iframe,
-                newValue,
-                this.handleError,
-                this.resolveMount
-            ).catch(err => {
-                this.handleError(err);
-            });
+            this.handleUserEnabledWidget();
+            if (!isNull(iframe)) {
+                tokenHandler.setPaymentMethod(
+                    iframe,
+                    newValue,
+                    this.handleError,
+                    this.resolveMount
+                ).catch(err => {
+                    this.handleError(err);
+                });
+            }
         }
     }
 
@@ -109,20 +110,16 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this._isEditPayment = value;
     }
 
-    get isAchPayment() {
-        return this.paymentMethod === PAYMENT_METHOD_ACH;
-    }
-
-    get isCardPayment() {
+    get showCardholderName() {
         return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
-    get isEditAch() {
-        return this.isEditMode && this.isAchPayment;
+    get existingPaymentIsAch() {
+        return this.isEditMode && this.existingPaymentMethod === PAYMENT_METHOD_ACH;
     }
 
-    get isEditCard() {
-        return this.isEditMode && this.isCardPayment;
+    get existingPaymentIsCard() {
+        return this.isEditMode && this.existingPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     get nextPaymentDateMessage() {
