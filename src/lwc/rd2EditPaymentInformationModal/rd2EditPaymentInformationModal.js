@@ -79,9 +79,13 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
 
     get paymentMethod() {
         if(!this._paymentMethod) {
-            this._paymentMethod = this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+            this._paymentMethod = this.existingPaymentMethod;
         }
         return this._paymentMethod;
+    }
+
+    get existingPaymentMethod() {
+        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
     }
 
     get nextDonationDate() {

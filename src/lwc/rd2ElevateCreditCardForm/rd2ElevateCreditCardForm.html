@@ -120,7 +120,7 @@
                                     <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
-                            <template if:true={showCardholderName}>
+                            <template if:true={currentPaymentIsCard}>
                                 <div class="slds-col slds-size_1-of-2">
                                     <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
                                                      data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">

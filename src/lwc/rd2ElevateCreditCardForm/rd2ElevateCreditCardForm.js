@@ -110,22 +110,26 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this._isEditPayment = value;
     }
 
-    get showCardholderName() {
+    get currentPaymentIsCard() {
         return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
+    currentPaymentIsAch() {
+        return this.paymentMethod === PAYMENT_METHOD_ACH;
+    }
+
     get existingPaymentIsAch() {
-        return this.isEditMode && this.existingPaymentMethod === PAYMENT_METHOD_ACH;
+        return this.existingPaymentMethod === PAYMENT_METHOD_ACH;
     }
 
     get existingPaymentIsCard() {
-        return this.isEditMode && this.existingPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+        return this.existingPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
     get nextPaymentDateMessage() {
-        if(this.existingPaymentIsAch) {
+        if(this.currentPaymentIsCard) {
             return this.labels.nextACHPaymentDonationDateMessage;
-        } else if(this.existingPaymentIsCard) {
+        } else if(this.currentPaymentIsAch()) {
             return this.labels.nextPaymentDonationDateMessage;
         }
     }
