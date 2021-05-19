@@ -11,7 +11,6 @@ import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import waitMessage from '@salesforce/label/c.commonWaitMessage';
 import unknownError from '@salesforce/label/c.commonUnknownError';
 import updateSuccessMessage from '@salesforce/label/c.RD2_EntryFormUpdateSuccessMessage';
-import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
 import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
 import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
@@ -41,7 +40,6 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         loadingMessage,
         waitMessage,
         unknownError,
-        validatingCardMessage,
         savingCommitmentMessage,
         savingRDMessage,
         updateSuccessMessage
@@ -150,7 +148,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         this.isSaving = true;
         this.isSaveButtonDisabled = true;
 
-        this.loadingText = this.labels.validatingCardMessage;
+        this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
 
         try {
             const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');

@@ -9,7 +9,9 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
-import { ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
+import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
+import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
+import {ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD} from 'c/geConstants';
 
 class Rd2Service {
 
@@ -77,6 +79,14 @@ class Rd2Service {
             return ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
         } else if(donorType === 'Account') {
             return ACCOUNT_HOLDER_TYPES.BUSINESS;
+        }
+    }
+
+    getPaymentProcessingMessage(paymentMethod) {
+        if(paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
+            return validatingCardMessage;
+        } else if(paymentMethod === PAYMENT_METHOD_ACH) {
+            return validatingACHMessage;
         }
     }
 }
