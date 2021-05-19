@@ -199,18 +199,18 @@ describe('c-ge-form-widget-tokenize-card', () => {
         expect(editPaymentInformationButton(element)).toBeFalsy();
     });
 
-    it('should go into soft read-only mode when credit card payment has been authorized', async () => {
+    it('should go into soft read-only mode when credit card payment has expired', async () => {
         const element = createWidgetElement();
         element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
-            AUTHORIZED: 'AUTHORIZED',
+            EXPIRED: 'EXPIRED',
             CAPTURED: 'CAPTURED'
         }
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
             [PAYMENT_METHOD_FIELD]: CREDIT_CARD,
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
-            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
+            [DATA_IMPORT_PAYMENT_STATUS]: 'EXPIRED'
         }
 
         getObjectInfo.emit(mockObjectInfo);
@@ -227,14 +227,14 @@ describe('c-ge-form-widget-tokenize-card', () => {
         const element = createWidgetElement();
         element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
-            AUTHORIZED: 'AUTHORIZED',
+            EXPIRED: 'EXPIRED',
             CAPTURED: 'CAPTURED'
         }
         element.widgetDataFromState = {
             ...element.widgetDataFromState,
             [PAYMENT_METHOD_FIELD]: CREDIT_CARD,
             [DATA_IMPORT_PARENT_BATCH_LOOKUP]: 'DUMMY_ID',
-            [DATA_IMPORT_PAYMENT_STATUS]: 'AUTHORIZED'
+            [DATA_IMPORT_PAYMENT_STATUS]: 'EXPIRED'
         }
 
         getObjectInfo.emit(mockObjectInfo);
