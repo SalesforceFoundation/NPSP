@@ -180,13 +180,14 @@ private with sharing class PS_CommitmentRequest_TEST {
         npe03__Recurring_Donation__c updateRequestRd = new npe03__Recurring_Donation__c(
                 Id = oldRd.Id,
                 CommitmentId__c = oldRd.CommitmentId__c,
-                PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH
+                PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH,
+                npe03__Contact__c = contact.Id
         );
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
 
         Test.startTest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(updateRequestRd, oldRd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(updateRequestRd, null, PAYMENT_TOKEN);
         Test.stopTest();
 
         System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Expect payment method to be card');

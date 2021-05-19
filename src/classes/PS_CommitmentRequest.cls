@@ -223,7 +223,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodType(rd.PaymentMethod__c)
             .withPaymentMethodToken(token);
 
-        SObject donor = getDonorRecord(oldRd);
+        SObject donor = getDonorRecord(rd);
         ElevateBankAccountType accountHolderType = getAccountHolderType(donor);
 
         if(reqBody.isACH()) {
@@ -259,7 +259,7 @@ public inherited sharing class PS_CommitmentRequest {
     * @param oldRd old Recurring Donation
     */
     public Boolean isElevateScheduleFieldsChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        if (oldRd == null || !isFieldPresent(rd, 'npe03__Amount__c')) {
+        if (oldRd == null) {
             return false;
         }
 
@@ -267,7 +267,7 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        if (oldRd == null || !isFieldPresent(rd, 'npe03__Recurring_Donation_Campaign__c')) {
+        if (oldRd == null) {
             return false;
         }
         return rd.npe03__Recurring_Donation_Campaign__c != oldRd?.npe03__Recurring_Donation_Campaign__c;
@@ -317,14 +317,6 @@ public inherited sharing class PS_CommitmentRequest {
     private ElevateBankAccountType getAccountHolderType(SObject donor) {
         Schema.SObjectType donorSObjectType = donor.getSObjectType();
         return BANK_ACCOUNT_TYPE_MAP.get(donorSObjectType);
-    }
-
-    /**
-     * @param rd The recurring donation to be updated
-     * @return TRUE when the Amount field is present on the recurring donation with any value, including null.
-     */
-    private Boolean isFieldPresent(npe03__Recurring_Donation__c rd, String fieldName) {
-        return rd.getPopulatedFieldsAsMap().containsKey(fieldName);
     }
 
     /**
