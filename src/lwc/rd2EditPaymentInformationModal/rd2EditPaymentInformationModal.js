@@ -179,7 +179,8 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
 
                     if (isSuccess) {
                         this.loadingText = this.labels.savingRDMessage;
-                        rd.withCommitmentResponseBody(response.body);
+                        const responseBody = JSON.parse(response.body);
+                        rd.withCommitmentResponseBody(responseBody);
                         this.updateRecurringDonation(rd.record);
 
                     } else {

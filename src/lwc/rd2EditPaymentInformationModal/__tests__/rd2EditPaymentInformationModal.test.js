@@ -17,8 +17,8 @@ jest.mock(
     { virtual: true }
 );
 
-const mockPaymentResult = require('./data/updatePaymentResult.json');
-const mockPaymentACHResult = require('./data/updatePaymentACHResult.json');
+const mockPaymentResultBody = require('./data/updatePaymentResultBody.json');
+const mockPaymentACHResultBody = require('./data/updatePaymentACHResultBody.json');
 const mockPaymentError = require('./data/updatePaymentError.json');
 const recurringDonation = require('./data/recurringDonation.json');
 const recurringACHDonation = require('./data/reccuringACHDonation.json');
@@ -61,7 +61,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on open of the Edit Payment Information Modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-            handleUpdatePaymentCommitment.mockResolvedValue(mockPaymentResult);
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             document.body.appendChild(component);
         });
 
@@ -117,7 +117,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on successfully save with new payment information', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
         });
@@ -183,7 +183,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
             component.accountHolderType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
@@ -273,7 +273,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
         });
 
         it('clears credit card information after swapping to ACH and saving', async () => {
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentACHResult));
+            setupUpdateCommitmentResponse(mockPaymentACHResultBody);
             const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
             changeValue(radioGroup, 'ACH');
             await flushPromises();
@@ -314,7 +314,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
         });
 
         it('clears ach information after swapping to card and saving', async () => {
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResult));
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
             changeValue(radioGroup, 'Credit Card');
             await flushPromises();
@@ -402,6 +402,15 @@ const dispatchClickEvent = (element) => {
 const changeValue = (element, value) => {
     element.value = value;
     element.dispatchEvent(new CustomEvent('change', { detail: { value }} ));
+}
+
+const setupUpdateCommitmentResponse = (responseBody) => {
+    const response = {
+        "statusCode": 200,
+        "status": "OK",
+        "body": JSON.stringify(responseBody)
+    };
+    handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(response));
 }
 
 const setupIframeReply = () => {
