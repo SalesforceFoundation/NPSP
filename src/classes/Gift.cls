@@ -38,6 +38,15 @@ public with sharing class Gift {
     @TestVisible
     private DataImport__c dataImport;
     private List<String> availableFields;
+    private GiftSelector giftSelector {
+        get {
+            if (giftSelector == null) {
+                giftSelector = new GiftSelector();
+            }
+            return giftSelector;
+        }
+        set;
+    }
     
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
@@ -57,7 +66,7 @@ public with sharing class Gift {
         List<String> fields = new List<String>();
 
         for (String field : dataImportFields.keySet()) {
-            if (GiftBatchService.PAYMENT_FIELDS.contains(field)) {
+            if (GiftBatchService.PAYMENT_INTEGRATION_FIELDS.contains(field)) {
                 fields.add(field);
             }
         }
@@ -66,7 +75,7 @@ public with sharing class Gift {
     }
 
     private Boolean hasPaymentFieldsChanged() {
-        DataImport__c databaseDataImport = new GiftSelector().getGiftById(this.dataImport.Id, this.availableFields);
+        DataImport__c databaseDataImport = giftSelector.getGiftById(this.dataImport.Id, this.availableFields);
 
         for (String field : this.availableFields) {
             if (this.dataImport.get(field) != databaseDataImport.get(field)) {
@@ -76,5 +85,5 @@ public with sharing class Gift {
 
         return false;
     }
-    
+
 }
