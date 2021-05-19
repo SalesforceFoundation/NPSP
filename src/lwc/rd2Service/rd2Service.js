@@ -8,6 +8,7 @@ import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c
 import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
+import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import { ACCOUNT_HOLDER_TYPES } from 'c/geConstants';
 
 class Rd2Service {
@@ -122,6 +123,11 @@ class RecurringDonation {
 
     withInputFieldValues(inputFieldValues) {
         this.record = { ...this.record, ...inputFieldValues };
+        return this;
+    }
+
+    withPaymentMethod(paymentMethod) {
+        this.record[FIELD_PAYMENT_METHOD.fieldApiName] = paymentMethod;
         return this;
     }
 

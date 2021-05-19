@@ -288,7 +288,8 @@ describe('c-rd2-edit-payment-information-modal', () => {
                     "CardLast4__c": null,
                     "CommitmentId__c": "fake-commitment-uuid",
                     "Id": "a0900000008MR9bQAG",
-                    "InstallmentFrequency__c": 1
+                    "InstallmentFrequency__c": 1,
+                    "PaymentMethod__c": "ACH"
                 }
             };
             expect(updateRecord).toHaveBeenCalledTimes(1);
@@ -328,7 +329,8 @@ describe('c-rd2-edit-payment-information-modal', () => {
                     "CardLast4__c": 1111,
                     "CommitmentId__c": "fake-commitment-uuid",
                     "Id": "a09S000000HNWL3IAP",
-                    "InstallmentFrequency__c": 1
+                    "InstallmentFrequency__c": 1,
+                    "PaymentMethod__c": "Credit Card"
                 }
             };
             expect(updateRecord).toHaveBeenCalledTimes(1);

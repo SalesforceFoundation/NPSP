@@ -165,7 +165,8 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         this.loadingText = this.labels.savingCommitmentMessage;
 
         try {
-            const rd = this.rd2Service.constructRecurringDonation(this.rdRecord.id, this.commitmentId);
+            const rd = this.rd2Service.constructRecurringDonation(this.rdRecord.id, this.commitmentId)
+                .withPaymentMethod(this.paymentMethod);
             handleUpdatePaymentCommitment({
                 jsonRecord: rd.asJSON(),
                 paymentMethodToken: this.paymentMethodToken
