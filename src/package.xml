@@ -4323,6 +4323,7 @@
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2PauseForm</members>
+        <members>rd2Service</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
