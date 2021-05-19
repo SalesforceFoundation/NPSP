@@ -461,7 +461,7 @@ export default class rd2EntryForm extends LightningElement {
     */
     hasElevateFieldsChange(allFields) {
         const amount = getFieldValue(this.record, FIELD_AMOUNT);
-        let campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
+        const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
 
         return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
             || campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
@@ -710,7 +710,7 @@ export default class rd2EntryForm extends LightningElement {
      * @param event (error construct)
      */
     handleChildComponentError(event) {
-        let error = event.detail && event.detail.value ? event.detail.value : event.detail;
+        const error = event.detail && event.detail.value ? event.detail.value : event.detail;
         this.handleError(error);
     }
 

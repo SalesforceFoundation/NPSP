@@ -161,6 +161,7 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
+            setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EntryForm();
             const controller = new RD2FormController(element);
 
@@ -169,6 +170,7 @@ describe('c-rd2-entry-form', () => {
             await setupWireMocksForElevate();
 
             controller.setDefaultInputFieldValues();
+            controller.setupSubmitMock();
             controller.contactLookup().changeValue('001fakeContactId');
             await flushPromises();
 
@@ -202,6 +204,23 @@ describe('c-rd2-entry-form', () => {
                 "InstallmentFrequency__c": 1
             };
             validateCommitmentMessage(EXPECTED_RECORD);
+            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
+            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
+                "ACH_Last_4__c": "5432",
+                "CardExpirationMonth__c": null,
+                "CardExpirationYear__c": null,
+                "CardLast4__c": null,
+                "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                "Day_of_Month__c": "6",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "ACH",
+                "RecurringType__c": "Open",
+                "StartDate__c": "2021-02-03",
+                "npe03__Amount__c": 1,
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly"
+            });
         });
 
         it('organization donor, account name is used when tokenizing an ACH payment', async () => {
