@@ -113,8 +113,6 @@ public inherited sharing class CRLP_RollupProcessor {
 
     private SObjectType summaryObjectType;
 
-    private Boolean useForceSkewModeField;
-
     /** *************************************************************************************************************
     * @description Constructor
     */
@@ -511,10 +509,11 @@ public inherited sharing class CRLP_RollupProcessor {
         Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupsToCalculate);
 
         initForceSkewModeValues(parent);
-        needsUpdate = isSkewModeNeeded(updatedRecord) || needsUpdate;
+        if (isSkewModeNeeded(updatedRecord)) {
+            updatedRecord.put(this.qualifiedSkewField, true);
 
-        if (!needsUpdate) {
-            updatedRecord = null;
+        } else if (!needsUpdate) {
+            return null;
         }
 
         return updatedRecord;
@@ -528,7 +527,6 @@ public inherited sharing class CRLP_RollupProcessor {
         if (this.qualifiedSkewField == null) {
             this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
             this.summaryObjectType = parent.getSObjectType();
-            this.useForceSkewModeField = (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType);
         }
     }
 
@@ -545,7 +543,6 @@ public inherited sharing class CRLP_RollupProcessor {
         }
 
         if (isRollupFieldAtThreshold(updatedRecord)) {
-            updatedRecord.put(this.qualifiedSkewField, true);
             return true;
         }
         return false;
