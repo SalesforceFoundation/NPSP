@@ -87,19 +87,6 @@
         <label>Batch Gift Entry Tab Columns</label>
     </fieldSets>
     <fields>
-        <fullName>Queueable_Job_Id__c</fullName>
-        <description>Used to track the last known related queueable job</description>
-        <externalId>false</externalId>
-        <inlineHelpText>Used to track the last known related queueable job</inlineHelpText>
-        <label>Queuable Job Id</label>
-        <length>255</length>
-        <required>false</required>
-        <trackHistory>false</trackHistory>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
         <fullName>Account_Custom_Unique_ID__c</fullName>
         <description>An optional Unique Id field to use for Organization Account matching</description>
         <externalId>false</externalId>
