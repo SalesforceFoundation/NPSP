@@ -240,6 +240,7 @@ public with sharing class RD2_ValidationService {
             validateRecurringDonationEndDate(rd, errorCollection);
             validateStatus(rd, errorCollection);
             validateDayOfMonthChange(rd, oldRd, errorCollection);
+            validateElevateRDCampaignCannotUpdateToEmpty(rd, oldRd, errorCollection);
 
             Boolean isValid = validateDonorChange(rd, oldRd, errorCollection);
             if (isValid) {
@@ -429,6 +430,22 @@ public with sharing class RD2_ValidationService {
             && String.isNotBlank(rd.CommitmentId__c)) {
             if (rd.StartDate__c > currentDate) {
                 errorCollection.addError(System.Label.RD2_ElevateRDEffectiveDateMustBeValid);
+            }
+        }
+    }
+
+    /**
+    * @description Validate the Elevate RD with Campaign cannot update to null
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    * @return void
+    */
+    private void validateElevateRDCampaignCannotUpdateToEmpty(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)) {
+            if (String.isNotBlank(oldRd.npe03__Recurring_Donation_Campaign__c) 
+                && String.isBlank(rd.npe03__Recurring_Donation_Campaign__c)) {
+                errorCollection.addError(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull);
             }
         }
     }

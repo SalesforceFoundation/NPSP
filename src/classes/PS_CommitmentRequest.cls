@@ -184,11 +184,7 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
-
-        Metadata metadata = new Metadata()
-            .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
-
-        ProductMetaData productMetaData = new ProductMetaData()
+        ProductMetadata productMetadata = new ProductMetadata()
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withOrigin(PS_Request.OriginType.CRM.name());
     
@@ -198,8 +194,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodToken(token)
             .withPaymentMethodType(rd.PaymentMethod__c)
             .withCurrency(currencyCode)
-            .withMetadata(metadata)
-            .withProductMetaData(productMetaData);
+            .withProductMetadata(productMetadata);
 
 
         DonorType accountHolderType = setDonorInfo(reqBody, rd);
@@ -232,6 +227,17 @@ public inherited sharing class PS_CommitmentRequest {
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
         }
         
+        
+
+
+        if (isElevateCampaignChanged(rd, oldRd)) {
+            ProductMetadata productMetadata = new ProductMetadata()
+                .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
+            
+            reqBody
+                .withProductMetadata(productMetadata);
+        }
+
         return reqBody;
     }
 
@@ -250,6 +256,9 @@ public inherited sharing class PS_CommitmentRequest {
             || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c;
     }
 
+    public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return rd.npe03__Recurring_Donation_Campaign__c != oldRd?.npe03__Recurring_Donation_Campaign__c;
+    }
     /**
     * @description Sets donor info on the commitment request body
     * @param reqBody RequestBody
@@ -394,11 +403,11 @@ public inherited sharing class PS_CommitmentRequest {
         public Boolean deactivateAllExistingSchedules;
         public List<Schedule> schedules;
         public AchData achData;
+        public String productMetadataSchemaUri;
         /***
          * Optional properties
          */
-        public Metadata metadata;
-        public ProductMetaData productMetaData;
+        public ProductMetadata productMetadata;
 
         /***
          * @description Constructor
@@ -551,22 +560,13 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         /**
-         * @description Sets metadata
-         * @param metadata Payments API metadata
-         * @return RequestBody This request body instance
-         */
-        public RequestBody withMetadata(Metadata metadata) {
-            this.metadata = metadata;
-            return this;
-        }
-
-        /**
          * @description Sets product metadata
-         * @param productMetaData Payments API product metadata
+         * @param productMetadata Payments API product metadata
          * @return RequestBody This request body instance
          */
-        public RequestBody withProductMetaData(productMetaData productMetaData) {
-            this.productMetaData = productMetaData;
+        public RequestBody withProductMetadata(productMetadata productMetadata) {
+            this.productMetadata = productMetadata;
+            this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
             return this;
         }
 
@@ -706,44 +706,18 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-     * @description Metadata property on the commitment request
-     */
-    public class Metadata {
-        public String originType;
-        public String campaignCode;
-
-        /**
-         * @description Metadata constructor
-         */
-        public Metadata() {
-            //set defaults
-            this.originType = PS_Request.OriginType.CRM.name();
-        }
-
-        /**
-         * @description Sets campaign info
-         * @param campaignId campaign Id
-         * @return productMetaData This product metadata instance
-         */
-        public Metadata withCampaignCode(Id campaignId) {
-            this.campaignCode = campaignId;
-            return this;
-        }
-    }
-
-    /***
     * @description Product metadata property on the commitment request
     */
-    public class ProductMetaData {
+    public class ProductMetadata {
         public Origin origin;
         public Campaign campaign;
 
         /**
         * @description Sets origin info
         * @param type origin type
-        * @return productMetaData This product metadata instance
+        * @return productMetadata This product metadata instance
         */
-        public ProductMetaData withOrigin(String type) {
+        public ProductMetadata withOrigin(String type) {
             this.origin = new Origin(type);
             return this;
         }
@@ -751,10 +725,13 @@ public inherited sharing class PS_CommitmentRequest {
         /**
         * @description Sets campaign info
         * @param campaignId campaign Id
-        * @return productMetaData This product metadata instance
+        * @return productMetadata This product metadata instance
         */
-        public ProductMetaData withCampaign(Id campaignId) {
-            this.campaign = new Campaign(campaignId);
+        public ProductMetadata withCampaign(Id campaignId) {
+            if (campaignId != null) {
+                this.campaign = new Campaign(campaignId);
+            }
+
             return this;
         }
     }
