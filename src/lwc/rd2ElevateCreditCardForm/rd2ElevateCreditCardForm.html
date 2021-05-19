@@ -13,23 +13,25 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={isDisabled}>
-                                        <lightning-button variant="base"
-                                            label={labels.updatePaymentButtonLabel}
-                                            onclick={handleUserEnabledWidget}
-                                            class='slds-button slds-button_base slds-float_right hide-card-button'
-                                            data-qa-locator='button Update Payment Information'>
-                                        </lightning-button>
-                                    </template>
-                                    <template if:false={isDisabled}>
-                                        <lightning-button variant="base"
-                                            label={labels.cancelButtonLabel}
-                                            icon-name='utility:close'
-                                            icon-position="right"
-                                            onclick={handleUserDisabledWidget}
-                                            class='slds-button slds-button_base slds-float_right hide-card-button'
-                                            data-qa-locator='button Cancel Update Payment Information'>
-                                        </lightning-button>
+                                    <template if:true={isEditMode}>
+                                        <template if:true={isDisabled}>
+                                            <lightning-button variant="base"
+                                                label={labels.updatePaymentButtonLabel}
+                                                onclick={handleUserEnabledWidget}
+                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                data-qa-locator='button Update Payment Information'>
+                                            </lightning-button>
+                                        </template>
+                                        <template if:false={isDisabled}>
+                                            <lightning-button variant="base"
+                                                label={labels.cancelButtonLabel}
+                                                icon-name='utility:close'
+                                                icon-position="right"
+                                                onclick={handleUserDisabledWidget}
+                                                class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                data-qa-locator='button Cancel Update Payment Information'>
+                                            </lightning-button>
+                                        </template>
                                     </template>
                                     <template if:false={isEditMode}>
                                         <template if:false={isDisabled}>
