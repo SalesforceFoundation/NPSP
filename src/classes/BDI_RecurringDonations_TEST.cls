@@ -2,9 +2,6 @@
 private class BDI_RecurringDonations_TEST {
     static final String RD_STATUS_CLOSED = 'Closed';
 
-    private static final String OPTION_NAME_DISABLE_FIRST =
-            RD2_Constants.InstallmentCreateOptions.Disable_First_Installment.name();
-  
     @TestSetup
     static void setupTestData(){
 

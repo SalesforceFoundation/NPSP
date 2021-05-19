@@ -113,6 +113,8 @@
         <members>BDI_DynamicSourceGroup</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingSet</members>
+        <members>BDI_GAUAllocationsUtil</members>
+        <members>BDI_GAUAllocationsUtil_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
@@ -2077,6 +2079,9 @@
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorDonationRequireNoMatch</members>
+        <members>bdiErrorExistingDonationAllocations</members>
+        <members>bdiErrorExistingPaymentAllocations</members>
+        <members>bdiErrorGAUAllocationOver100</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidIMatchDonations</members>
@@ -3463,11 +3468,13 @@
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.Home_City</members>
         <members>Data_Import_Field_Mapping.Home_Country</members>
         <members>Data_Import_Field_Mapping.Home_State_Province</members>
