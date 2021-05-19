@@ -46,11 +46,11 @@ public with sharing class GiftSelector {
 
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
         String queryString = new UTIL_Query()
-                .withFrom(DataImport__c.SObjectType)
-                .withSelectFields(fieldsToQuery)
-                .withWhere('Id = \'' + String.escapeSingleQuotes(giftId) + '\'')
-                .withSecurityEnforced()
-                .build();
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fieldsToQuery)
+            .withWhere('Id =: giftId')
+            .withSecurityEnforced()
+            .build();
 
         return Database.query(queryString);
     }
