@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import rd2EditPaymentInformationModal from 'c/rd2EditPaymentInformationModal';
 import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
@@ -23,6 +24,7 @@ const mockPaymentError = require('./data/updatePaymentError.json');
 const recurringDonation = require('./data/recurringDonation.json');
 const recurringACHDonation = require('./data/reccuringACHDonation.json');
 const creditCardPayload = require('./data/creditCardPayload.json');
+const paymentMethodPicklistValues = require('./data/paymentMethodPicklistValues.json');
 
 describe('c-rd2-edit-payment-information-modal', () => {
     let component;
@@ -186,6 +188,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
             setupUpdateCommitmentResponse(mockPaymentResultBody);
             setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
+            getPicklistValues.emit(paymentMethodPicklistValues);
             document.body.appendChild(component);
         });
 

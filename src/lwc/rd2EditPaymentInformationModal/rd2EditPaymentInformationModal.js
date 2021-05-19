@@ -50,6 +50,14 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     @track error = {};
     isSaveButtonDisabled = false;
     _paymentMethod;
+    @track paymentMethodOptions;
+
+    @wire(getPicklistValues, { recordTypeId: '012000000000000AAA', fieldApiName: FIELD_PAYMENT_METHOD } )
+    wiredPicklistValues({data, error}) {
+        if(data) {
+            this.paymentMethodOptions = data.values.filter(({value}) => value === 'ACH' || value === 'Credit Card');
+        }
+    }
 
     get contactFirstName() {
         return this.getRdValue(RD_CONTACT_FIRST_NAME);
@@ -96,13 +104,6 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
 
     get rdName() {
         return this.getValue(FIELD_NAME.fieldApiName);
-    }
-
-    get paymentMethodOptions() {
-        return [
-            { label: 'ACH', value: 'ACH' },
-            { label: 'Credit Card', value: 'Credit Card' }
-        ];
     }
 
     /**

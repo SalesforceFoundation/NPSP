@@ -214,8 +214,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     @wire(getObjectInfo, { objectApiName: RECURRING_DONATION_OBJECT.objectApiName })
     wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
-            let rdObjectInfo = response.data;
-
+            const rdObjectInfo = response.data;
+            console.log(rdObjectInfo);
             this.setFields(rdObjectInfo.fields);
 
             this.checkLoading();
