@@ -53,6 +53,25 @@ private class ElevateCaptureGroupCapturer_TEST {
         System.assert(capturer.failReasonByCaptureGroupId.isEmpty());
     }
 
+    @IsTest static void shouldPopulateFailReasonMapForFailedCaptures() {
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        ElevateCaptureGroupCapturer capturer = new ElevateCaptureGroupCapturer(
+                UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
+                buildCapturableGroupIds(50));
+        GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
+        capturer.giftBatchService = stubFor(giftBatchServiceMock);
+
+        Test.startTest();
+        String invalidResponse = '{"errors":[{"message":"id: Must be a valid UUID","localizedPaymentsMessage":"Bad Request","detailedMessage":"id: Must be a valid UUID"}]}';
+        UTIL_Http_TEST.mockChargeCaptureGroup(invalidResponse);
+        capturer.execute(null);
+        Test.stopTest();
+
+        System.assert(giftBatchServiceMock.giftsFailedCaptureForCalled);
+        System.assertEquals(50, capturer.failReasonByCaptureGroupId.size());
+        System.assertEquals(capturer.failReasonByCaptureGroupId.values()[0], 'id: Must be a valid UUID');
+    }
+
     static Set<String> buildCapturableGroupIds(Integer numOfCaptureGroupIds) {
         Set<String> captureGroupIds = new Set<String>();
         for (Integer i=0; i < numOfCaptureGroupIds; i++) {
@@ -61,5 +80,30 @@ private class ElevateCaptureGroupCapturer_TEST {
         return captureGroupIds;
     }
 
+    public class GiftBatchServiceMock implements StubProvider {
+        public Boolean giftsFailedCaptureForCalled = false;
 
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'giftsFailedCaptureFor' {
+                    giftsFailedCaptureForCalled = true;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftBatchService stubFor(GiftBatchServiceMock giftBatchServiceMock) {
+        return (GiftBatchService) Test.createStub(
+            GiftBatchService.class,
+            giftBatchServiceMock
+        );
+    }
 }
