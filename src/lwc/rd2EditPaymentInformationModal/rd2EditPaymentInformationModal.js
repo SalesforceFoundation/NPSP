@@ -32,6 +32,8 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
     @api accountHolderType;
 
+    rd2Service = new Rd2Service();
+
     labels = Object.freeze({
         paymentInformationTitle,
         cancelButtonLabel,
@@ -61,18 +63,17 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     get contactFirstName() {
-        return this.getRdValue(FIELD_RD_CONTACT_FIRST_NAME);
+        return this.getValue(FIELD_RD_CONTACT_FIRST_NAME);
     }
 
     get contactLastName() {
-        return this.getRdValue(FIELD_RD_CONTACT_LAST_NAME);
+        return this.getValue(FIELD_RD_CONTACT_LAST_NAME);
     }
 
     get organizationAccountName() {
-        return this.getRdValue(FIELD_RD_ACCOUNT_NAME);
+        return this.getValue(FIELD_RD_ACCOUNT_NAME);
     }
 
-    rd2Service = new Rd2Service();
 
     /**
     * @description Dynamically render the payment edit form via CSS to show/hide based on the status of
@@ -92,43 +93,23 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     get existingPaymentMethod() {
-        return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
+        return this.getValue(FIELD_PAYMENT_METHOD);
     }
 
     get nextDonationDate() {
-        return this.getValue(FIELD_LAST_DONATION_DATE.fieldApiName);
+        return this.getValue(FIELD_LAST_DONATION_DATE);
     }
 
     get commitmentId() {
-        return this.getValue(FIELD_COMMITMENT_ID.fieldApiName);
+        return this.getValue(FIELD_COMMITMENT_ID);
     }
 
     get rdName() {
-        return this.getValue(FIELD_NAME.fieldApiName);
+        return this.getValue(FIELD_NAME);
     }
 
-    /**
-    * @description Returns the Recurring Donation field value if the field is set and populated
-    */
-    getValue(fieldName) {
-        return this.hasValue(fieldName)
-            ? this.rdRecord.fields[fieldName].value
-            : null;
-    }
-
-    getRdValue(field) {
+    getValue(field) {
         return getFieldValue(this.rdRecord, field);
-    }
-
-    /**
-    * @description Determines if the Recurring Donation record is retrieved and
-    * its fields defined and populated
-    */
-    hasValue(fieldName) {
-        return this.rdRecord
-            && this.rdRecord.fields
-            && !isUndefined(this.rdRecord.fields[fieldName])
-            && !isNull(this.rdRecord.fields[fieldName].value);
     }
 
     /**
@@ -167,8 +148,8 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
         try {
             const rd = this.rd2Service.constructRecurringDonation(this.rdRecord.id, this.commitmentId)
                 .withPaymentMethod(this.paymentMethod)
-                .withContactId(this.getRdValue(FIELD_CONTACT_ID))
-                .withOrganizationId(this.getRdValue(FIELD_ORGANIZATION_ID));
+                .withContactId(this.getValue(FIELD_CONTACT_ID))
+                .withOrganizationId(this.getValue(FIELD_ORGANIZATION_ID));
 
             handleUpdatePaymentCommitment({
                 jsonRecord: rd.asJSON(),
