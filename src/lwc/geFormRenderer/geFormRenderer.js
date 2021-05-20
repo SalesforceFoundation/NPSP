@@ -169,6 +169,7 @@ export default class GeFormRenderer extends LightningElement{
     _hasPaymentWidget = false;
     latestCaptureGroupId = null;
     cardholderNamesNotInTemplate = {};
+    _openedGiftId;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -282,6 +283,7 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
+        registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -321,6 +323,14 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         });
+    }
+
+    handleNullPaymentFieldsInFormState() {
+        this.nullPaymentFieldsInFormState([
+            apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
+            apiNameFor(PAYMENT_DECLINED_REASON),
+            apiNameFor(PAYMENT_STATUS)
+        ]);
     }
 
     initializeDonationDonorTypeInFormState(donorApiName) {
@@ -975,6 +985,11 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     loadDataImportRecord(dataImport) {
+        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
+        if (isAlreadyOpen) {
+            return;
+        }
+
         this.expandForm();
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
@@ -983,15 +998,19 @@ export default class GeFormRenderer extends LightningElement{
             convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
         this.reset();
         this.updateFormState(dataImportWithNullValuesAppended);
+        this._openedGiftId = dataImport.Id;
     }
 
     reset() {
         this.resetFormState();
+        this._openedGiftId = null;
     }
 
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.initializeFormState();
+        fireEvent(this, 'resetElevateWidget', {});
+        this._isElevateWidgetInDisabledState = false;
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
@@ -1110,7 +1129,7 @@ export default class GeFormRenderer extends LightningElement{
     handleDisableElevateWidgetState (event) {
         this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
         if (this._isElevateWidgetInDisabledState) {
-            this.removePaymentFieldsFromFormState([
+            this.nullPaymentFieldsInFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
                 apiNameFor(PAYMENT_STATUS)
@@ -2068,9 +2087,14 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
-            this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+        const nonChargeableForSingleGift = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
+            && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+        if (this.isSingleGiftEntry && nonChargeableForSingleGift) {
+            return false;
+        }
 
+        const nonChargeableForBatchGift = this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+        if (!this.isSingleGiftEntry && nonChargeableForBatchGift) {
             return false;
         }
 
@@ -2467,9 +2491,9 @@ export default class GeFormRenderer extends LightningElement{
         return sourceField === apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
     }
 
-    removePaymentFieldsFromFormState(paymentFields) {
+    nullPaymentFieldsInFormState(paymentFields) {
         paymentFields.forEach(field => {
-            this.deleteFieldFromFormState(field);
+            this.updateFormState({ [field]: null });
         });
     }
 
