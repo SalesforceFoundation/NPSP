@@ -76,6 +76,8 @@ const STATUS_SUCCESS = 'success';
 
 export default class rd2ElevateInformation extends NavigationMixin(LightningElement) {
 
+    @api recordId;
+
     labels = Object.freeze({
         header,
         loadingMessage,
@@ -99,7 +101,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         commonExpirationDate
     });
 
-    @api recordId;
     @track rdRecord;
     @track fields = {};
     @track status = {
@@ -109,14 +110,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         icon: 'utility:success',
         assistiveText: this.labels.textSuccess
     };
-
-    @track isLoading = true;
-    @track isElevateCustomer = false;
-    @track isElevateRecord = false;
-    @track isElevateConnected = false;
-    @track showLastFourACH = false;
-    @track showLastFourCreditCard = false;
-    @track showExpirationDate = false;
+    @track error = {};
     @track permissions = {
         hasAccess: null,
         hasKeyFieldsUpdateAccess : null,
@@ -125,10 +119,19 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         showExpirationDate: null,
         alert: ''
     };
-    @track error = {};
-    @track displayEditModal = false;
-    commitmentURLPrefix;
+
     rd2Service = new Rd2Service();
+
+    isLoading = true;
+    isElevateCustomer = false;
+    isElevateRecord = false;
+    isElevateConnected = false;
+    showLastFourACH = false;
+    showLastFourCreditCard = false;
+    showExpirationDate = false;
+    displayEditModal = false;
+    commitmentURLPrefix;
+    defaultRecordTypeId;
 
     get paymentMethod() {
         return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
@@ -220,7 +223,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         if (response.data) {
             const rdObjectInfo = response.data;
             this.setFields(rdObjectInfo.fields);
-
+            this.defaultRecordTypeId = rdObjectInfo.defaultRecordTypeId;
             this.checkLoading();
         }
 
