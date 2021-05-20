@@ -98,7 +98,7 @@ npsp_lex_locators={
     'name':'//tbody/tr/th/span/a',
     'select_name':'//tbody//a[text()= "{}"]',
     'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
-    'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
+    'locate_dropdown':'//tbody/tr[{}]/td/span//div/a',
     'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
     'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
     'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
