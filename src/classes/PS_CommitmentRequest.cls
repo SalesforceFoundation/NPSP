@@ -238,8 +238,8 @@ public inherited sharing class PS_CommitmentRequest {
             reqBody.deactivateOldSchedules();
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
         }
-        
-        
+
+
 
 
         if (isElevateCampaignChanged(rd, oldRd)) {
@@ -267,9 +267,6 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        if (oldRd == null) {
-            return false;
-        }
         return rd.npe03__Recurring_Donation_Campaign__c != oldRd?.npe03__Recurring_Donation_Campaign__c;
     }
     /**

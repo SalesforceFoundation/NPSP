@@ -190,7 +190,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(updateRequestRd, null, PAYMENT_TOKEN);
         Test.stopTest();
 
-        System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Expect payment method to be card');
+        System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Expected payment method to be ACH');
         PS_CommitmentRequest.AchData achData = requestBody.achData;
 
         System.assertEquals('WEB', achData.achCode, 'ACH Code should be WEB');
@@ -215,7 +215,6 @@ private with sharing class PS_CommitmentRequest_TEST {
         );
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
-
 
 
         Test.startTest();
