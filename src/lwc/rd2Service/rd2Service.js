@@ -15,6 +15,8 @@ import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCa
 import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
 import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
+const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
+
 class Rd2Service {
 
     /***
@@ -85,11 +87,23 @@ class Rd2Service {
     }
 
     getPaymentProcessingMessage(paymentMethod) {
-        if(paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
+        if(this.isCard(paymentMethod)) {
             return validatingCardMessage;
-        } else if(paymentMethod === PAYMENT_METHOD_ACH) {
+        } else if(this.isACH(paymentMethod)) {
             return validatingACHMessage;
         }
+    }
+
+    isElevatePaymentMethod(paymentMethod) {
+        return ELEVATE_PAYMENT_METHODS.includes(paymentMethod);
+    }
+
+    isCard(paymentMethod) {
+        return paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+    }
+
+    isACH(paymentMethod) {
+        return paymentMethod === PAYMENT_METHOD_ACH;
     }
 }
 
@@ -172,4 +186,4 @@ class RecurringDonation {
     }
 }
 
-export { Rd2Service }
+export { Rd2Service, ELEVATE_PAYMENT_METHODS }

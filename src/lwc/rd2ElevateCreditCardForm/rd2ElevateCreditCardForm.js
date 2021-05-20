@@ -19,11 +19,11 @@ import { isNull } from 'c/util';
 import {
     ACCOUNT_HOLDER_BANK_TYPES,
     ACCOUNT_HOLDER_TYPES,
-    PAYMENT_METHOD_ACH,
-    PAYMENT_METHOD_CREDIT_CARD,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION,
     TOKENIZE_ACH_EVENT_ACTION
 } from 'c/geConstants';
+
+import { Rd2Service } from 'c/rd2Service';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -31,7 +31,6 @@ import {
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
-const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
 const DEFAULT_ACH_CODE = 'WEB';
 
 /***
@@ -52,6 +51,8 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         nextACHPaymentDonationDateMessage,
         commonExpirationDate
     };
+    
+    rd2Service = new Rd2Service();
 
     @track isLoading = true;
     @track isDisabled = false;
@@ -111,19 +112,19 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get currentPaymentIsCard() {
-        return this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+        return this.rd2Service.isCard(this.paymentMethod);
     }
 
     currentPaymentIsAch() {
-        return this.paymentMethod === PAYMENT_METHOD_ACH;
+        return this.rd2Service.isACH(this.paymentMethod);
     }
 
     get existingPaymentIsAch() {
-        return this.existingPaymentMethod === PAYMENT_METHOD_ACH;
+        return this.rd2Service.isACH(this.existingPaymentMethod);
     }
 
     get existingPaymentIsCard() {
-        return this.existingPaymentMethod === PAYMENT_METHOD_CREDIT_CARD;
+        return this.rd2Service.isCard(this.existingPaymentMethod);
     }
 
     get nextPaymentDateMessage() {
@@ -134,14 +135,10 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         }
     }
 
-    isElevatePaymentMethod(paymentMethod) {
-        return ELEVATE_PAYMENT_METHODS.includes(paymentMethod);
-    }
-
     shouldNotifyIframe(newPaymentMethod) {
         const oldPaymentMethod = this._paymentMethod;
         const changed = oldPaymentMethod !== newPaymentMethod;
-        const newMethodValidForElevate = this.isElevatePaymentMethod(newPaymentMethod);
+        const newMethodValidForElevate = this.rd2Service.isElevatePaymentMethod(newPaymentMethod);
         return changed && newMethodValidForElevate;
     }
 
@@ -223,9 +220,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this.clearError();
 
         const iframe = this.selectIframe();
-        if(this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
+        if(this.rd2Service.isCard(this.paymentMethod)) {
             return this.requestCardToken(iframe);
-        } else if(this.paymentMethod === PAYMENT_METHOD_ACH) {
+        } else if(this.rd2Service.isACH(this.paymentMethod)) {
             return this.requestAchToken(iframe);
         }
     }
