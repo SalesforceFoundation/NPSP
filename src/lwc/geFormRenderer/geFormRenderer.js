@@ -1048,9 +1048,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     reset() {
+        this.clearErrors();
         this.resetFormState();
         this._openedGiftId = null;
-        this.clearErrors();
     }
 
     resetFormState() {
