@@ -15,7 +15,7 @@ import {
     TOKENIZE_ACH_EVENT_ACTION,
     TOKENIZE_CREDIT_CARD_EVENT_ACTION
 } from 'c/geConstants';
-
+import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
@@ -35,139 +35,66 @@ import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 
 const CONTACT_DONOR_TYPE = 'Contact1';
 
-const MODES = Object.freeze({
-    CHARGE: 'Charge',
-    READ_ONLY: 'ReadOnly',
-    CRITICAL_ERROR: 'CriticalError',
-    DO_NOT_CHARGE: 'DoNotCharge',
-    DEACTIVATE: 'Deactivate'
-});
-
 export default class geFormWidgetTokenizeCard extends LightningElement {
-    @api paymentTransactionStatusValues = {};
-    @api hasPaymentMethodFieldInForm;
-    _isLoading = true;
-    alert = {};
-    _disabledMessage;
-    _isDisabled = false;
-    _hasUserDisabledWidget = false;
-    _hasEventDisabledWidget = false;
-    _isEditMode = false;
-
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
+    @api paymentTransactionStatusValues = {};
+    @api hasPaymentMethodFieldInForm;
+    display = {};
+    alert = {};
     dataImportId;
+    isMounted = false;
+
+    _displayState;
+    _showSpinner = true;
     _currentPaymentMethod = undefined;
-    _isReadOnlyMode = false;
-    _showCancelButton = false;
     _cardLast4;
     _cardExpirationDate;
     _widgetDataFromState;
 
-    setMode (mode) {
-        switch (mode) {
-            case MODES.CHARGE:
-                this.enableChargeMode();
-                break;
-            case MODES.READ_ONLY:
-                this.enableReadOnlyMode();
-                break;
-            case MODES.CRITICAL_ERROR:
-                this.enableCriticalErrorMode();
-                break;
-            case MODES.DO_NOT_CHARGE:
-                this.enableDoNotChargeMode();
-                break;
-            case MODES.DEACTIVATE:
-                this.disableWidget();
-                break;
-            default:
-                this.enableChargeMode();
+    constructor() {
+        super();
+        this.display = new ElevateWidgetDisplay();
+        this.display.init(this);
+        this._displayState = this.display.currentState();
+        registerListener('resetElevateWidget', this.handleElevateWidgetReset, this);
+    }
+
+     async connectedCallback() {
+        const domainInfo = await GeFormService.getOrgDomain();
+        tokenHandler.setVisualforceOriginURLs(domainInfo);
+    }
+
+    renderedCallback() {
+        //Listens for a message from the Visualforce iframe.
+        let component = this;
+        tokenHandler.registerPostMessageListener(component);
+
+        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleCriticalError, this);
+    }
+
+    disconnectedCallback() {
+        unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
+    }
+
+    @wire(getObjectInfo, { objectApiName: apiNameFor(DATA_IMPORT) })
+    dataImportObjectDescribe;
+
+    @wire(getRecord, {recordId: '$dataImportId', optionalFields: [
+            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
+    wiredDataImportRecord({data, error}) {
+        if (data) {
+            this.setReadOnlyData(data);
+        } else if (error) {
+            this.handleError(error);
         }
     }
 
-    enableChargeMode() {
-        if (this.canEnterChargeMode()) {
-            this.handleUserEnabledWidget();
-            this._hasEventDisabledWidget = false;
-            return;
+    @api
+    get paymentToken() {
+        return {
+            payload: this.requestToken()
         }
-        if (this.isMounted) {
-            this.requestSetPaymentMethod(this._currentPaymentMethod);
-        }
-    }
-
-    canEnterChargeMode() {
-        return !(this.isMounted
-            || this._isReadOnlyMode || this._isEditMode
-            || this._hasUserDisabledWidget
-        );
-    }
-
-    enableReadOnlyMode() {
-        if (!this.canEnterReadOnlyMode()) return;
-        if (this.hasReadOnlyStatus()) {
-            this.dataImportId = this.widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
-            this.toggleWidget(true);
-            this._isReadOnlyMode = true;
-            this._hasUserDisabledWidget = false;
-        }
-    }
-
-    canEnterReadOnlyMode() {
-        return !(this._isEditMode || this._hasUserDisabledWidget);
-    }
-
-    enableCriticalErrorMode() {
-        this.toggleWidget(true, this._disabledMessage);
-        this._hasEventDisabledWidget = true;
-    }
-
-    enableDoNotChargeMode() {
-        this.toggleWidget(true);
-        this._hasUserDisabledWidget = true;
-        this.isMounted = false;
-        this.dispatchApplicationEvent('doNotChargeState', {
-            isElevateWidgetDisabled: this._hasUserDisabledWidget
-        });
-    }
-
-    disableWidget() {
-        this._isReadOnlyMode = false;
-        this._showCancelButton = false;
-        this.toggleWidget(true, this.disabledWidgetMessage);
-        this._hasEventDisabledWidget = true;
-    }
-
-    disableReadOnlyMode() {
-        if (!this.hasValidPaymentMethod()) {
-            this.setMode(MODES.DEACTIVATE);
-            return;
-        }
-        this._isEditMode = true;
-        this._isReadOnlyMode = false;
-        this._showCancelButton = true;
-        this.handleUserEnabledWidget();
-    }
-
-    cancelEditPaymentInformation() {
-        this._showCancelButton = false;
-        this._isEditMode = false;
-        this.enableReadOnlyMode();
-    }
-
-    isInBatchGiftEntry() {
-        return this.widgetDataFromState &&
-               this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
-    }
-
-    iframe() {
-        return this.template.querySelector(
-            `[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
-    }
-
-    get isReadOnlyMode() {
-        return this._isReadOnlyMode;
     }
 
     @api
@@ -175,33 +102,62 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._widgetDataFromState;
     }
 
-    get shouldDisplayCancelButton() {
-        return this._showCancelButton;
-    }
-
-    get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnlyMode && !this.isPaymentCaptured();
-    }
-
-    get shouldDisplayCardProcessingGuidanceMessage() {
-        return !this.isReadOnlyMode && this.isInBatchGiftEntry() && this.hasValidPaymentMethod() && this.isMounted;
-    }
-
-    isPaymentCaptured() {
-        return this.currentPaymentStatus() === this.paymentTransactionStatusValues.CAPTURED;
-    }
-
-    @wire(getObjectInfo, {objectApiName: apiNameFor(DATA_IMPORT)})
-    dataImportObjectDescribe;
-
-    @wire(getRecord, {recordId: '$dataImportId', optionalFields: [
-            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
-    wiredDataImportRecord({data, error}) {
-        if (data) {
-            this.setReadOnlyData(data)
-        } else if (error) {
-            this.handleError(error);
+    set widgetDataFromState(widgetState) {
+        if (this.isNewRow(widgetState)) {
+            this._widgetDataFromState = undefined;
         }
+
+        this._widgetDataFromState = widgetState;
+        this.setCurrentPaymentMethod();
+        if (this.shouldHandleWidgetDataChange()) {
+            this.dataImportId = this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
+        }
+
+        this.updateDisplayState();
+    }
+
+    get showSpinner() {
+        return this._showSpinner === true;
+    }
+
+    get isCharge() {
+        return this._displayState === 'charge';
+    }
+
+    get isDeactivated() {
+        return this._displayState === 'deactivated';
+    }
+
+    get isReadOnly() {
+        return this._displayState === 'readOnly';
+    }
+
+    get isDoNotCharge() {
+        return this._displayState === 'doNotCharge';
+    }
+
+    get isCriticalError() {
+        return this._displayState === 'criticalError';
+    }
+
+    get isEdit() {
+        return this._displayState === 'edit';
+    }
+
+    get isExpiredTransaction() {
+        return this.paymentStatus() === 'EXPIRED';
+    }
+
+    get criticalErrorMessage() {
+        return this._criticalErrorMessage;
+    }
+
+    get doNotChargeMessage() {
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
+    }
+
+    get tokenizeCardPageUrl() {
+        return tokenHandler.getTokenizeCardPageURL();
     }
 
     get canViewReadOnlyFields() {
@@ -209,16 +165,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return fields?.[apiNameFor(PAYMENT_LAST_4)] !== undefined
             && fields?.[apiNameFor(PAYMENT_EXPIRATION_MONTH)] !== undefined
             && fields?.[apiNameFor(PAYMENT_EXPIRATION_YEAR)] !== undefined;
-    }
-    
-    get hasUserDisabledWidget() {
-        return this._hasUserDisabledWidget;
-    }
-
-    setReadOnlyData(data) {
-        this._cardLast4  = getFieldValue(data, PAYMENT_LAST_4);
-        this._cardExpirationDate =  getFieldValue(data, PAYMENT_EXPIRATION_MONTH) + '/' +
-            getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
     }
 
     get cardLast4() {
@@ -229,27 +175,25 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._cardExpirationDate;
     }
 
-    get isLoading() {
-        return this._isLoading;
+    get deactivatedMessage() {
+        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
+            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
     }
 
-    get disabledMessage() {
-        return this._disabledMessage;
+    get shouldDisplayCardProcessingGuidanceMessage() {
+        return !this.isReadOnly && this.isInBatchGiftEntry() && this.hasValidPaymentMethod() && this.isMounted;
     }
 
-    get isDisabled() {
-        return this._isDisabled;
-    }
+    async handleMessage(message) {
+        tokenHandler.handleMessage(message);
 
-    set widgetDataFromState(widgetState) {
-        if (this.isNewRow(widgetState)) {
-           this.resetWidget();
+        if (message.isReadyToMount && !this.isMounted) {
+            this.requestMount();
         }
-        this._widgetDataFromState = widgetState;
-        this.setCurrentPaymentMethod();
-        if (this.shouldHandleWidgetDataChange()) {
-            this.handleWidgetDataChange();
-        }
+    }
+
+    requestParentNullPaymentFieldsInFormState() {
+        this.dispatchApplicationEvent('nullPaymentFieldsInFormState', {});
     }
 
     isNewRow(widgetState) {
@@ -257,19 +201,156 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)] !== widgetState[apiNameFor(DATA_IMPORT_ID)];
     }
 
-    resetWidget() {
-        this._isReadOnlyMode = false;
-        this._showCancelButton= false;
-        this._widgetDataFromState = undefined;
+    updateDisplayState() {
+        if (this.isInBatchGiftEntry()) {
+            this.updateDisplayStateWhenInBatchGiftEntry();
+        } else {
+            this.updateDisplayStateWhenInSingleGiftEntry();
+        }
     }
 
-    handleWidgetDataChange() {
-        if (this.hasValidPaymentMethod()) {
-            this.setMode(MODES.READ_ONLY);
-            this.setMode(MODES.CHARGE);
-            return;
+    updateDisplayStateWhenInBatchGiftEntry() {
+        if (this.isPaymentStatusAuthorized() && this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('readOnly');
+        } else if (this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('charge');
+        } else {
+            this.display.transitionTo('deactivated');
         }
-        this.setMode(MODES.DEACTIVATE);
+    }
+
+    updateDisplayStateWhenInSingleGiftEntry() {
+        if (!this.hasPaymentMethodFieldInForm) {
+            this.display.transitionTo('charge');
+            if (this.isMounted) {
+                this.requestSetPaymentMethod(PAYMENT_METHOD_CREDIT_CARD);
+            }
+        } else if ((this.isPaymentMethodCreditCard() || this.isPaymentMethodAch()))  {
+            this.display.transitionTo('charge');
+            if (this.isMounted) {
+                this.requestSetPaymentMethod(this._currentPaymentMethod);
+            }
+        } else {
+            this.display.transitionTo('deactivated');
+        }
+    }
+
+    handleUserDoNotCharge() {
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isElevateWidgetDisabled: true
+        });
+
+        this.display.transitionTo('userOriginatedDoNotCharge');
+    }
+
+    handleUserEnterPaymentInformation() {
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isElevateWidgetDisabled: false
+        });
+
+        if (this.isInBatchGiftEntry() && !this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('userOriginatedDeactivated');
+        } else {
+            this.display.transitionTo('userOriginatedCharge');
+        }
+    }
+
+    handleUserEditExpired() {
+        this.display.transitionTo('editExpiredTransaction');
+    }
+
+    handleUserCancelEdit() {
+        this.display.transitionTo('readOnly');
+    }
+
+    isPaymentStatusAuthorized() {
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)]
+            === this.paymentTransactionStatusValues.AUTHORIZED;
+    }
+
+    isPaymentMethodCreditCard() {
+        return this.paymentMethod() === PAYMENT_METHOD_CREDIT_CARD;
+    }
+
+    isPaymentMethodAch() {
+        return this.paymentMethod() === PAYMENT_METHODS.ACH;
+    }
+
+    paymentMethod() {
+        return this._widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_METHOD)];
+    }
+
+    refreshDisplayState() {
+        this._displayState = this.display.currentState();
+    }
+
+    handleElevateWidgetReset() {
+        this.clearError();
+        this.clearPaymentInformation();
+
+        if (this.isInBatchGiftEntry) {
+            if (this.isReadOnly) {
+                this.resetForBatchFromReadOnly();
+            } else if (this.isDoNotCharge) {
+                this.resetForBatchFromDoNotCharge();
+            }
+        } else {
+            this.updateDisplayState();
+        }
+    }
+
+    resetForBatchFromReadOnly() {
+        if (this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('resetToCharge');
+        } else {
+            this.display.transitionTo('resetToDeactivated');
+        }
+    }
+
+    resetForBatchFromDoNotCharge() {
+        if (this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('userOriginatedCharge');
+        }
+    }
+
+    clearPaymentInformation() {
+        this._cardLast4 = undefined;
+        this._cardExpirationDate = undefined;
+    }
+
+    loadingOn() {
+        this._showSpinner = true;
+    }
+
+    loadingOff() {
+        this._showSpinner = false;
+    }
+
+    dismount() {
+        this.clearError();
+        this.isMounted = false;
+    }
+
+    isInBatchGiftEntry() {
+        return this.widgetDataFromState &&
+            this.widgetDataFromState[apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP)] !== undefined;
+    }
+
+    iframe() {
+        return this.template.querySelector(`[data-id='${this.CUSTOM_LABELS.commonPaymentServices}']`);
+    }
+
+    isPaymentCaptured() {
+        return this.paymentStatus() === this.paymentTransactionStatusValues.CAPTURED;
+    }
+
+    setReadOnlyData(data) {
+        this._cardLast4 = getFieldValue(data, PAYMENT_LAST_4);
+        this._cardExpirationDate = getFieldValue(data, PAYMENT_EXPIRATION_MONTH) + '/' +
+            getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        if (this._cardLast4 && this._cardExpirationDate) {
+            this.display.transitionTo('readOnly');
+        }
     }
 
     setCurrentPaymentMethod() {
@@ -279,11 +360,11 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     shouldHandleWidgetDataChange() {
-        return (this.isInBatchGiftEntry() && isNotEmpty(this.currentPaymentStatus())
-            || isEmpty(this.currentPaymentStatus()));
+        return (this.isInBatchGiftEntry() && isNotEmpty(this.paymentStatus())
+            || isEmpty(this.paymentStatus()));
     }
 
-    readOnlyStatuses () {
+    readOnlyStatuses() {
         return [
             this.paymentTransactionStatusValues.CAPTURED,
             this.paymentTransactionStatusValues.SUBMITTED,
@@ -292,15 +373,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         ]
     }
 
-    currentPaymentStatus () {
-        return this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)];
+    paymentStatus() {
+        return this.widgetDataFromState && this.widgetDataFromState[apiNameFor(DATA_IMPORT_PAYMENT_STATUS_FIELD)];
     }
 
     hasReadOnlyStatus() {
         if (!this.isInBatchGiftEntry()) {
             return false;
         }
-        return this.readOnlyStatuses().includes(this.currentPaymentStatus());
+        return this.readOnlyStatuses().includes(this.paymentStatus());
     }
 
     hasValidPaymentMethod() {
@@ -318,7 +399,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     requestSetPaymentMethod() {
-        this._isLoading = true;
+        this._showSpinner = true;
         tokenHandler.setPaymentMethod(
             this.iframe(), this._currentPaymentMethod, this.handleError,
             this.resolveSetPaymentMethod,
@@ -328,81 +409,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveSetPaymentMethod = () => {
-        this._isLoading = false;
-    }
-
-    get shouldDisplayEnableButton() {
-        if (!this.hasPaymentMethodFieldInForm) return true;
-        return !!(this.hasPaymentMethodFieldInForm && this.hasValidPaymentMethod());
-
-    }
-
-    get disabledWidgetMessage() {
-        if (this.shouldDisplayEnableButton) {
-            return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction;
-        }
-        return this.CUSTOM_LABELS.geBodyPaymentNotProcessingTransaction
-            + ' ' + this.CUSTOM_LABELS.psSelectValidPaymentMethod;
-    }
-
-    /***
-    * @description Initializes the component and determines the Visualforce origin URLs
-    */
-    async connectedCallback() {
-        const domainInfo = await GeFormService.getOrgDomain();
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
-    }
-
-    /***
-    * @description Registers event listeners
-    */
-    renderedCallback() {
-        //Listens for a message from the Visualforce iframe.
-        let component = this;
-        tokenHandler.registerPostMessageListener(component);
-
-        registerListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME, this.handleCriticalError, this);
-    }
-
-    /***
-    * @description Unregisters the event listener
-    */
-    disconnectedCallback() {
-        unregisterListener(DISABLE_TOKENIZE_WIDGET_EVENT_NAME);
-    }
-
-    /***
-    * @description Returns the Elevate credit card tokenization Visualforce page URL
-    */
-    get tokenizeCardPageUrl() {
-        return tokenHandler.getTokenizeCardPageURL();
-    }
-
-    /***
-    * @description Returns true if the Elevate credit card widget is enabled
-    * and the user did not click an action to hide it
-    */
-    get displayDisableWidgetButton() {
-        return !(this._hasEventDisabledWidget || this._hasUserDisabledWidget) && !this._showCancelButton;
-    }
-
-    /***
-    * @description Handles a user's onclick event for disabling the widget.
-    */
-    handleUserDisabledWidget() {
-        this.setMode(MODES.DO_NOT_CHARGE)
-    }
-
-    /***
-    * @description Handles a user's onclick event for re-enabling the widget.
-    */
-    handleUserEnabledWidget() {
-        this._isLoading = true;
-        this.toggleWidget(false);
-        this._hasUserDisabledWidget = false;
-        this.dispatchApplicationEvent('doNotChargeState', {
-            isElevateWidgetDisabled: this._hasUserDisabledWidget
-        });
+        this._showSpinner = false;
     }
 
     /***
@@ -410,33 +417,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     * used when we've submitted a payment, but BDI processing failed.
     */
     handleCriticalError(event) {
-        this._disabledMessage = event.detail.message;
-        this.setMode(MODES.CRITICAL_ERROR);
-    }
-
-    /***
-    * @description Function enables or disables the widget based on provided args.
-    *
-    * @param {boolean} isDisabled: Determines whether or not the widget is disabled.
-    * @param {string} message: Text to be disabled in the widgets body when disabled.
-    */
-    toggleWidget(isDisabled, message) {
-        this._isDisabled = isDisabled;
-        this.isMounted = false;
-        this._disabledMessage = message || null;
-    }
-
-    /***
-    * @description Method handles messages received from iframed visualforce page.
-    *
-    * @param {object} message: Message received from iframe
-    */
-    async handleMessage(message) {
-        tokenHandler.handleMessage(message);
-
-        if (message.isReadyToMount && !this.isMounted) {
-            this.requestMount();
-        }
+        this._criticalErrorMessage = event.detail.message;
+        this.display.transitionTo('criticalError');
     }
 
     requestMount() {
@@ -444,7 +426,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     resolveMount = () => {
-        this._isLoading = false;
+        this._showSpinner = false;
         this.isMounted = true;
     }
 
@@ -482,7 +464,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         achTokenizeParameters.accountHolder.type = this.accountHolderType();
         achTokenizeParameters.accountHolder.bankType = ACCOUNT_HOLDER_BANK_TYPES.CHECKING;
         achTokenizeParameters = this.accountHolderType() ===
-        ACCOUNT_HOLDER_TYPES.BUSINESS
+            ACCOUNT_HOLDER_TYPES.BUSINESS
             ? this.populateAchParametersForBusiness(achTokenizeParameters)
             : this.populateAchParametersForIndividual(achTokenizeParameters);
         return JSON.stringify(achTokenizeParameters);
@@ -498,7 +480,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return achTokenizeParameters;
     }
 
-    populateAchParametersForIndividual (achTokenizeParameters) {
+    populateAchParametersForIndividual(achTokenizeParameters) {
         achTokenizeParameters.accountHolder.firstName =
             this.widgetDataFromState[apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME)];
         achTokenizeParameters.accountHolder.lastName =
@@ -513,13 +495,6 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             apiNameFor(DATA_IMPORT_DONATION_DONOR)] === CONTACT_DONOR_TYPE
             ? ACCOUNT_HOLDER_TYPES.INDIVIDUAL
             : ACCOUNT_HOLDER_TYPES.BUSINESS;
-    }
-
-    @api
-    get paymentToken() {
-        return {
-            payload: this.requestToken()
-        }
     }
 
     /**
@@ -543,6 +518,8 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
      * Displays the error
      */
     handleError = (message) => {
+        this.display.transitionTo('loading');
+        this.display.transitionTo('charge');
         this.alert = {
             theme: 'error',
             show: true,

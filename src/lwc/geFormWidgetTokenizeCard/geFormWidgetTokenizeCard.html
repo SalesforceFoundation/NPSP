@@ -12,37 +12,41 @@
                         <div class='credit-card-header slds-p-vertical_small slds-p-horizontal_x-small'>
                             <lightning-layout vertical-align='center'>
                                 <lightning-layout-item size='6'>
-                                    <h1 class='slds-text-body_regular'>{CUSTOM_LABELS.commonPaymentServices}</h1>
+                                    <h2 class='slds-text-body_regular'>
+                                        {CUSTOM_LABELS.commonPaymentServices}
+                                    </h2>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={displayDisableWidgetButton}>
-                                        <template if:false={isReadOnlyMode}>
+                                    <template if:true={isCharge}>
+                                        <template if:false={isEdit}>
                                             <lightning-button variant="base"
-                                                              label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                                              icon-name='utility:close'
-                                                              icon-position="right"
-                                                              onclick={handleUserDisabledWidget}
-                                                              class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                              data-qa-locator={qaLocatorDoNotChargeButton}>
+                                                            label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
+                                                            icon-name='utility:close'
+                                                            icon-position="right"
+                                                            onclick={handleUserDoNotCharge}
+                                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                            data-qa-locator={qaLocatorDoNotChargeButton}>
                                             </lightning-button>
                                         </template>
                                     </template>
-                                    <template if:true={shouldDisplayEditPaymentInformation}>
-                                        <lightning-button variant="base"
-                                                          label={CUSTOM_LABELS.commonEditPaymentInformation}
-                                                          icon-name='utility:close'
-                                                          icon-position="right"
-                                                          onclick={disableReadOnlyMode}
-                                                          class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                          data-qa-locator={qaLocatorEditPaymentInformation}>
-                                        </lightning-button>
+                                    <template if:true={isExpiredTransaction}>
+                                        <template if:false={isEdit}>
+                                            <lightning-button variant="base"
+                                                            label={CUSTOM_LABELS.commonEditPaymentInformation}
+                                                            icon-name='utility:close'
+                                                            icon-position="right"
+                                                            onclick={handleUserEditExpired}
+                                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                            data-qa-locator={qaLocatorEditPaymentInformation}>
+                                            </lightning-button>
+                                        </template>
                                     </template>
-                                    <template if:true={shouldDisplayCancelButton}>
+                                    <template if:true={isEdit}>
                                         <lightning-button variant="base"
                                                           label={CUSTOM_LABELS.commonCancel}
                                                           icon-name='utility:close'
                                                           icon-position="right"
-                                                          onclick={cancelEditPaymentInformation}
+                                                          onclick={handleUserCancelEdit}
                                                           class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
                                                           data-qa-locator={qaLocatorCancelEditPaymentInformation}>
                                         </lightning-button>
@@ -59,56 +63,10 @@
                             <b>{CUSTOM_LABELS.geBodyPaymentProcessedDuringBatchProcessing}</b>
                         </div>
                     </lightning-layout-item>
+
                     <lightning-layout-item size='12'
                                            padding='around-small'>
-                        <template if:true={isDisabled}>
-                            <template if:true={hasUserDisabledWidget}>
-                                <p class='fade-in'>
-                                    <span class='slds-content-message'>
-                                        {disabledWidgetMessage}
-                                    </span>
-                                    <template if:true={shouldDisplayEnableButton}>
-                                        <lightning-button variant='base'
-                                                          label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                          title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                          onclick={handleUserEnabledWidget}
-                                                          class='slds-m-left_xx-small'>
-                                        </lightning-button>
-                                    </template>
-                                </p>
-                            </template>
-                            <template if:false={hasUserDisabledWidget}>
-                                <template if:false={isReadOnlyMode}>
-                                    <p class='slds-content-message slds-p-vertical_medium'>{disabledMessage}</p>
-                                </template>
-                                <template if:true={isReadOnlyMode}>
-                                    <template if:true={canViewReadOnlyFields}>
-                                        <lightning-layout class="read-only-mode">
-                                            <lightning-layout-item padding="around-small"
-                                                                   class='fade-in'
-                                                                   data-qa-locator={qaLocatorLastFourDigits}>
-                                                <p class="slds-form-element__label" title="last4">
-                                                    {CUSTOM_LABELS.commonCardLast4}
-                                                </p>
-                                                <p class='slds-text-body_regular'>{cardLast4}</p>
-                                            </lightning-layout-item>
-                                            <lightning-layout-item padding="around-small"
-                                                                   class='fade-in'
-                                                                   data-qa-locator={qaLocatorExpirationDate}>
-                                                <p class="slds-form-element__label" title="expirationDate">
-                                                    {CUSTOM_LABELS.commonMMYY}
-                                                </p>
-                                                <p class='slds-text-body_regular'>{cardExpirationDate}</p>
-                                            </lightning-layout-item>
-                                        </lightning-layout>
-                                    </template>
-                                    <template if:false={canViewReadOnlyFields}>
-                                        <p class='fade-in'>{CUSTOM_LABELS.commonPermissionErrorMessage}</p>
-                                    </template>
-                                </template>
-                            </template>
-                        </template>
-                        <template if:false={isDisabled}>
+                        <template if:true={isCharge}>
                             <c-util-alert-banner if:true={alert.show}
                                                  theme={alert.theme}
                                                  variant={alert.variant}
@@ -116,9 +74,8 @@
                                                  message={alert.message}>
                             </c-util-alert-banner>
                             <div class='iframe-container'>
-                                <template if:true={isLoading}>
-                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}>
-                                    </lightning-spinner>
+                                <template if:true={showSpinner}>
+                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
                                 <iframe class='payment-services-iframe'
                                         title={CUSTOM_LABELS.commonPaymentServices}
@@ -127,11 +84,91 @@
                                 </iframe>
                             </div>
                         </template>
+
+                        <template if:true={isEdit}>
+                            <c-util-alert-banner if:true={alert.show}
+                                                 theme={alert.theme}
+                                                 variant={alert.variant}
+                                                 icon={alert.icon}
+                                                 message={alert.message}>
+                            </c-util-alert-banner>
+                            <div class='iframe-container'>
+                                <template if:true={showSpinner}>
+                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                                </template>
+                                <iframe class='payment-services-iframe'
+                                        title={CUSTOM_LABELS.commonPaymentServices}
+                                        src={tokenizeCardPageUrl}
+                                        data-id={CUSTOM_LABELS.commonPaymentServices}>
+                                </iframe>
+                            </div>
+                        </template>
+
+                        <template if:true={isDeactivated}>
+                            <p class='fade-in slds-p-vertical_medium'>
+                                <span class='slds-content-message'>
+                                    {deactivatedMessage}
+                                </span>
+                            </p>
+                        </template>
+
+                        <template if:true={isReadOnly}>
+                            <template if:true={canViewReadOnlyFields}>
+                                <lightning-layout class="read-only-mode">
+                                    <lightning-layout-item padding="around-small"
+                                                           class='fade-in'
+                                                           data-qa-locator={qaLocatorLastFourDigits}>
+                                        <p class="slds-form-element__label"
+                                           title="last4">
+                                            {CUSTOM_LABELS.commonCardLast4}
+                                        </p>
+                                        <p class='slds-text-body_regular'>
+                                            {cardLast4}</p>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item padding="around-small"
+                                                           class='fade-in'
+                                                           data-qa-locator={qaLocatorExpirationDate}>
+                                        <p class="slds-form-element__label"
+                                           title="expirationDate">
+                                            {CUSTOM_LABELS.commonMMYY}
+                                        </p>
+                                        <p class='slds-text-body_regular'>
+                                            {cardExpirationDate}</p>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </template>
+                            <template if:false={canViewReadOnlyFields}>
+                                <p class='fade-in'>
+                                    {CUSTOM_LABELS.commonPermissionErrorMessage}
+                                </p>
+                            </template>
+                        </template>
+
+                        <template if:true={isDoNotCharge}>
+                            <p class='fade-in slds-p-vertical_medium'>
+                                <span class='slds-content-message'>
+                                    {doNotChargeMessage}
+                                </span>
+                                <lightning-button variant='base'
+                                                    label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                    title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                    onclick={handleUserEnterPaymentInformation}
+                                                    class='slds-m-left_xx-small'>
+                                </lightning-button>
+                            </p>
+                        </template>
+
+                        <template if:true={isCriticalError}>
+                            <p class='fade-in slds-p-vertical_medium'>
+                                <span class='slds-content-message'>
+                                    {criticalErrorMessage}
+                                </span>
+                            </p>
+                        </template>
                     </lightning-layout-item>
 
                 </lightning-layout>
             </article>
         </lightning-layout-item>
-
     </lightning-layout>
 </template>
