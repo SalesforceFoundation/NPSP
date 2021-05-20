@@ -10,7 +10,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import { handleError } from 'c/utilTemplateBuilder';
 import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
@@ -99,6 +99,24 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     connectedCallback() {
         this.loadBatch();
+        registerListener('refreshtable', this.refreshTable, this);
+    }
+
+    refreshTable() {
+        let refreshedRows = [];
+        getDataImportRows({ batchId: this.batchId, offset: 0 })
+            .then(rows => {
+                rows.forEach(row => {
+                    refreshedRows.push(
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this._dataImportObjectInfo)));
+                });
+                this.data = [ ...refreshedRows ];
+            })
+            .catch(error => {
+                handleError(error);
+            });
     }
 
     get hasData() {

@@ -100,7 +100,8 @@ import {
     ACCOUNT_HOLDER_TYPES,
     PAYMENT_METHODS, ACH_CODE,
     PAYMENT_METHOD_CREDIT_CARD,
-    PAYMENT_UNKNOWN_ERROR_STATUS
+    PAYMENT_UNKNOWN_ERROR_STATUS,
+    FAILED
 } from 'c/geConstants';
 
 
@@ -531,7 +532,7 @@ export default class GeFormRenderer extends LightningElement{
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    handleSaveBatchGiftEntry(dataImportRecord, formControls, isCreditCardAuth) {
+    continueBatchGiftEntrySave(dataImportRecord, formControls, isCreditCardAuth) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
@@ -733,8 +734,10 @@ export default class GeFormRenderer extends LightningElement{
 
                 const currentCaptureGroup = new ElevateCaptureGroup();
                 const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
-                if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
+                const isSuccess = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
+                    || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
+                if (isSuccess) {
                     this.updateFormState({
                         [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: currentCaptureGroup.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
@@ -747,24 +750,38 @@ export default class GeFormRenderer extends LightningElement{
                         [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
                         [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
                         [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
-                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
+                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId,
+                        [apiNameFor(PAYMENT_DECLINED_REASON)]: null,
+                        [apiNameFor(STATUS_FIELD)]: null
                     });
 
                     this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
                     dataImportFromFormState = this.saveableFormState();
                 } else {
-                    const errors = [{ message: authorizedGift.declineReason }];
-                    this.handleElevateAPIErrors(errors);
-                    return;                
+                    await this.handleAuthorizationFailure(authorizedGift.declineReason);
+                    return;
                 }
             } catch (ex) {
-                const errors = [{ message: buildErrorMessage(ex) }];
-                this.handleElevateAPIErrors(errors);
+                await this.handleAuthorizationFailure(buildErrorMessage(ex));
                 return;
             }
         }
-        
-        this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
+
+        this.continueBatchGiftEntrySave(dataImportFromFormState, formControls, !!tokenizedGift);
+    }
+
+    async handleAuthorizationFailure(declineReason) {
+        this.updateFormState({
+            [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
+            [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
+            [apiNameFor(STATUS_FIELD)]: FAILED
+        });
+        await this.saveDataImport(this.saveableFormState());
+
+        const errors = [{ message: declineReason }];
+        this.handleElevateAPIErrors(errors);
+
+        fireEvent(this, 'refreshtable', {});
     }
 
     shouldTokenizeCard() {
