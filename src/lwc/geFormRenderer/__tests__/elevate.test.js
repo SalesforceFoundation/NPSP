@@ -65,31 +65,6 @@ describe('elevate-capture-group', () => {
         });
     });
 
-    it('capture group when add fails then new group id should be used in subsequent call', async () => {
-        apexCreateCaptureGroup.mockResolvedValue({
-            "groupId" : "good-fake-capture-group-id"
-        });
-        apexAddToCaptureGroup.mockRejectedValueOnce({});
-
-        const DUMMY_RESPONSE = { groupId: 'DUMMY_GROUP_ID', tokenizedGift: {} };
-        apexAddToCaptureGroup.mockResolvedValueOnce(DUMMY_RESPONSE);
-
-        const captureGroup = new ElevateCaptureGroup('badFakeCaptureGroupId');
-
-        const tokenizableGift = getDummyGift();
-
-        const captureGroupResponse = await captureGroup.add(tokenizableGift);
-
-        expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(2); // first add fails due to group being closed
-        expect(apexAddToCaptureGroup).toHaveBeenNthCalledWith(1, {"groupId": "badFakeCaptureGroupId", "tokenizedGift": tokenizableGift });
-        expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(1); // a new group should have been created
-
-        // second call uses known good group id
-        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({"groupId": "good-fake-capture-group-id", "tokenizedGift": tokenizableGift });
-
-        expect(captureGroupResponse).toBe(DUMMY_RESPONSE);
-    });
-
 });
 
 
