@@ -137,7 +137,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     shouldNotifyIframe(newPaymentMethod) {
         const oldPaymentMethod = this._paymentMethod;
-        const changed = oldPaymentMethod !== newPaymentMethod;
+        const changed = (oldPaymentMethod !== undefined) && (oldPaymentMethod !== newPaymentMethod);
         const newMethodValidForElevate = this.rd2Service.isElevatePaymentMethod(newPaymentMethod);
         return changed && newMethodValidForElevate;
     }
