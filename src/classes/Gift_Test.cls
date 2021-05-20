@@ -45,7 +45,7 @@ private class Gift_Test {
 
         dataImport.Donation_Amount__c = 5.00;
         Gift authorizedGift = new Gift(dataImport);
-        Boolean needsReauthorization = authorizedGift.isGiftReauthorizedRequired();
+        Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
 
         Test.stopTest();
 

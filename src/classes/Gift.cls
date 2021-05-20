@@ -53,7 +53,7 @@ public with sharing class Gift {
         this.populateAvailableFields();
     }
 
-    public Boolean isGiftReauthorizedRequired() {
+    public Boolean requiresReauthorizationBeforeChange() {
         if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
             return false; 
         }
