@@ -303,19 +303,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleElevateWidgetReset() {
         this.clearError();
         this.clearPaymentInformation();
+        this.dismount();
 
         if (this.isInBatchGiftEntry) {
-            if (this.isReadOnly) {
-                this.resetForBatchFromReadOnly();
-            } else if (this.isDoNotCharge) {
+            if (this.isDoNotCharge) {
                 this.resetForBatchFromDoNotCharge();
+            } else {
+                this.resetForBatch();
             }
         } else {
             this.updateDisplayState();
         }
     }
 
-    resetForBatchFromReadOnly() {
+    resetForBatch() {
         if (this.isPaymentMethodCreditCard()) {
             this.display.transitionTo('resetToCharge');
         } else {

@@ -142,6 +142,9 @@ const DISPLAY_DEFINITIONS = Object.freeze({
             loading: {
                 target: 'loading'
             },
+            edit: {
+                target: 'edit'
+            },
             editExpiredTransaction: {
                 target: 'edit'
             },
@@ -175,6 +178,12 @@ const DISPLAY_DEFINITIONS = Object.freeze({
         transitions: {
             readOnly: {
                 target: 'readOnly'
+            },
+            resetToCharge: {
+                target: 'charge'
+            },
+            resetToDeactivated: {
+                target: 'deactivated'
             }
         }
     }
