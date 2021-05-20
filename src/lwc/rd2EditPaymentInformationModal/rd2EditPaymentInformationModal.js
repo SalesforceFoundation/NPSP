@@ -20,10 +20,9 @@ import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
-
-import RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
-import RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
-import RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
+import FIELD_RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
+import FIELD_RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
+import FIELD_RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
@@ -62,15 +61,15 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     }
 
     get contactFirstName() {
-        return this.getRdValue(RD_CONTACT_FIRST_NAME);
+        return this.getRdValue(FIELD_RD_CONTACT_FIRST_NAME);
     }
 
     get contactLastName() {
-        return this.getRdValue(RD_CONTACT_LAST_NAME);
+        return this.getRdValue(FIELD_RD_CONTACT_LAST_NAME);
     }
 
     get organizationAccountName() {
-        return this.getRdValue(RD_ACCOUNT_NAME);
+        return this.getRdValue(FIELD_RD_ACCOUNT_NAME);
     }
 
     rd2Service = new Rd2Service();
