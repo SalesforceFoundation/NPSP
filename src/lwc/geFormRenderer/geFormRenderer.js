@@ -328,7 +328,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleWidgetStateChange(changeEvent) {
-        this._isElevateWidgetInDisabledState = (changeEvent.state === 'readOnly');
+        if (changeEvent.state === 'readOnly') {
+            this._isElevateWidgetInDisabledState = true;
+        }
     }
 
     handleNullPaymentFieldsInFormState() {

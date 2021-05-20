@@ -272,6 +272,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     handleUserEditExpired() {
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isElevateWidgetDisabled: false
+        });
+
         this.display.transitionTo('editExpiredTransaction');
     }
 
