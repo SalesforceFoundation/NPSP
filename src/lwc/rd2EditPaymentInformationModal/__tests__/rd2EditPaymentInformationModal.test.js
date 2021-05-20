@@ -292,9 +292,23 @@ describe('c-rd2-edit-payment-information-modal', () => {
                     "CommitmentId__c": "fake-commitment-uuid",
                     "Id": "a0900000008MR9bQAG",
                     "InstallmentFrequency__c": 1,
-                    "PaymentMethod__c": "ACH"
+                    "PaymentMethod__c": "ACH",
+                    "npe03__Contact__c": "003S000001WqpKSIAZ",
+                    "npe03__Organization__c": "001S000001NAsRFIA1"
                 }
             };
+
+            const updatePaymentArgs = handleUpdatePaymentCommitment.mock.calls[0][0];
+
+            const parsedJson = JSON.parse(updatePaymentArgs.jsonRecord);
+            expect(parsedJson).toMatchObject({
+                "Id": "a0900000008MR9bQAG",
+                "CommitmentId__c": "11a1c101-bcde-001-111f-g1dh00i0jk111",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "ACH",
+                "npe03__Contact__c": "003S000001WqpKSIAZ",
+                "npe03__Organization__c": "001S000001NAsRFIA1"
+            });
             expect(updateRecord).toHaveBeenCalledTimes(1);
             expect(updateRecord).toHaveBeenCalledWith(UPDATE_RECORD_ARGS);
         });
@@ -333,7 +347,9 @@ describe('c-rd2-edit-payment-information-modal', () => {
                     "CommitmentId__c": "fake-commitment-uuid",
                     "Id": "a09S000000HNWL3IAP",
                     "InstallmentFrequency__c": 1,
-                    "PaymentMethod__c": "Credit Card"
+                    "PaymentMethod__c": "Credit Card",
+                    "npe03__Contact__c": "003S000001WqpKSIAZ",
+                    "npe03__Organization__c": "001S000001NAsRFIA1"
                 }
             };
             expect(updateRecord).toHaveBeenCalledTimes(1);

@@ -12,6 +12,10 @@
             "displayValue": "Active",
             "value": "Active"
         },
+        "npe03__Contact__c": {
+            "displayValue": "Testing Contact",
+            "value": "003S000001WqpKSIAZ"
+        },
         "npe03__Contact__r": {
             "displayValue": "Testing Contact",
             "value": {
@@ -43,6 +47,10 @@
         "npe03__Next_Payment_Date__c": {
             "displayValue": null,
             "value": "2021-04-01"
+        },
+        "npe03__Organization__c": {
+            "displayValue": "Smith Household",
+            "value": "001S000001NAsRFIA1"
         },
         "npe03__Organization__r": {
             "displayValue": "Smith Household",

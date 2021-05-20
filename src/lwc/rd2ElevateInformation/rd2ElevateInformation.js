@@ -17,10 +17,12 @@ import FIELD_CC_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.Car
 import FIELD_ACH_LAST_4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
 import FIELD_STATUS_REASON from '@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
-import RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
-import RD_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.npe01__One2OneContact__r.LastName';
-import RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
-import RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
+import FIELD_RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
+import FIELD_RD_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.npe01__One2OneContact__r.LastName';
+import FIELD_RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
+import FIELD_RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
+import FIELD_RD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
+import FIELD_RD_ACCOUNT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 import ERROR_OBJECT from '@salesforce/schema/Error__c';
 
 import header from '@salesforce/label/c.RD2_ElevateInformationHeader';
@@ -55,10 +57,12 @@ const FIELDS = [
     FIELD_STATUS,
     FIELD_STATUS_REASON,
     FIELD_NEXT_DONATION_DATE,
-    RD_ACCOUNT_NAME,
-    RD_PRIMARY_CONTACT_LAST_NAME,
-    RD_CONTACT_LAST_NAME,
-    RD_CONTACT_FIRST_NAME
+    FIELD_RD_ACCOUNT_NAME,
+    FIELD_RD_PRIMARY_CONTACT_LAST_NAME,
+    FIELD_RD_CONTACT_LAST_NAME,
+    FIELD_RD_CONTACT_FIRST_NAME,
+    FIELD_RD_CONTACT_ID,
+    FIELD_RD_ACCOUNT_ID
 ];
 
 const OPTIONAL_FIELDS = [
@@ -215,7 +219,6 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     wiredRecurringDonationObjectInfo(response) {
         if (response.data) {
             const rdObjectInfo = response.data;
-            console.log(rdObjectInfo);
             this.setFields(rdObjectInfo.fields);
 
             this.checkLoading();

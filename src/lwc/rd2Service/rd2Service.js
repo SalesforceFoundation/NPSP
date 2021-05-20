@@ -9,9 +9,11 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
+import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
+import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
 import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
-import {ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD} from 'c/geConstants';
+import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 class Rd2Service {
 
@@ -113,6 +115,16 @@ class RecurringDonation {
             this.withAchData(achData);
         }
 
+        return this;
+    }
+
+    withContactId(contactId) {
+        this.record[FIELD_CONTACT_ID.fieldApiName] = contactId;
+        return this;
+    }
+
+    withOrganizationId(organizationId) {
+        this.record[FIELD_ORGANIZATION_ID.fieldApiName] = organizationId;
         return this;
     }
 

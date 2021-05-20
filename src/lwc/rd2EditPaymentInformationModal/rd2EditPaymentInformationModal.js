@@ -1,7 +1,8 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
 import { isNull, showToast, constructErrorMessage, isUndefined } from 'c/utilCommon';
 import { HTTP_CODES } from 'c/geConstants';
 import { updateRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import paymentInformationTitle from '@salesforce/label/c.RD2_PaymentInformation';
 import closeButtonLabel from '@salesforce/label/c.commonClose';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -17,9 +18,10 @@ import FIELD_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.Name';
 import FIELD_LAST_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
 import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
+import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
+import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 
 import RD_ACCOUNT_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.Name';
-import RD_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__r.npe01__One2OneContact__r.LastName';
 import RD_CONTACT_FIRST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.FirstName';
 import RD_CONTACT_LAST_NAME from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__r.LastName';
 
@@ -53,7 +55,7 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
     @track paymentMethodOptions;
 
     @wire(getPicklistValues, { recordTypeId: '012000000000000AAA', fieldApiName: FIELD_PAYMENT_METHOD } )
-    wiredPicklistValues({data, error}) {
+    wiredPicklistValues({data}) {
         if(data) {
             this.paymentMethodOptions = data.values.filter(({value}) => value === 'ACH' || value === 'Credit Card');
         }
@@ -165,7 +167,10 @@ export default class rd2EditPaymentInformationModal extends LightningElement {
 
         try {
             const rd = this.rd2Service.constructRecurringDonation(this.rdRecord.id, this.commitmentId)
-                .withPaymentMethod(this.paymentMethod);
+                .withPaymentMethod(this.paymentMethod)
+                .withContactId(this.getRdValue(FIELD_CONTACT_ID))
+                .withOrganizationId(this.getRdValue(FIELD_ORGANIZATION_ID));
+
             handleUpdatePaymentCommitment({
                 jsonRecord: rd.asJSON(),
                 paymentMethodToken: this.paymentMethodToken
