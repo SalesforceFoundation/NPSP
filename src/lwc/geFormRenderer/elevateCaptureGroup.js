@@ -5,27 +5,21 @@ class ElevateCaptureGroup {
 
     constructor(elevateBatchId) {
         this.elevateBatchId = elevateBatchId;
-        this._hasAddRun = false;
     }
 
     async add(tokenizedGift) {
-        if (!this.elevateBatchId) {
-            this.elevateBatchId = await this.create();
-        }
-
         try {
-            const authorizedGift = await apexAddToCaptureGroup(
-                {tokenizedGift: tokenizedGift, groupId: this.elevateBatchId}
-            );
-            return authorizedGift;
-        } catch (ex) {
-            if (!this._hasAddRun) {
-                this._hasAddRun = true;
+            if (!this.elevateBatchId) {
                 this.elevateBatchId = await this.create();
-                return this.add(tokenizedGift);
-            } else {
-                throw(ex); // Propagate error to calling function for error handling
             }
+
+            const authorizedGift = await apexAddToCaptureGroup(
+                { tokenizedGift: tokenizedGift, groupId: this.elevateBatchId }
+            );
+
+            return authorizedGift;
+        } catch (exception) {
+            throw (exception);
         }
     }
 
@@ -33,7 +27,6 @@ class ElevateCaptureGroup {
         const captureGroup = await apexCreateCaptureGroup();
         return captureGroup.groupId;
     }
-
 }
 
 export default ElevateCaptureGroup;
