@@ -1056,7 +1056,7 @@ export default class GeFormRenderer extends LightningElement{
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.initializeFormState();
-        fireEvent(this, 'resetElevateWidget', {});
+        this.resetElevateWidget();
         this._isElevateWidgetInDisabledState = false;
     }
 
@@ -1250,6 +1250,12 @@ export default class GeFormRenderer extends LightningElement{
         if (!this.isSingleGiftEntry) {
             this.expandForm();
         }
+
+        this.resetElevateWidget();
+    }
+
+    resetElevateWidget() {
+        fireEvent(this, 'resetElevateWidget', {});
     }
 
     hasSelectedDonationOrPayment() {
