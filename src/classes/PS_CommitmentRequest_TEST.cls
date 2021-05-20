@@ -210,17 +210,16 @@ private with sharing class PS_CommitmentRequest_TEST {
         Contact contact = getContact();
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
             CommitmentId__c = COMMITMENT_ID,
-            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD
+            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD,
+            npe03__Contact__c = contact.Id
         );
-
-        npe03__Recurring_Donation__c oldRd = rd.clone();
-        oldRd.npe03__Contact__c = contact.Id;
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();
 
 
+
         Test.startTest();
-        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, oldRd, PAYMENT_TOKEN);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(rd, rd.clone(), PAYMENT_TOKEN);
         Test.stopTest();
 
         System.assertEquals(rd.CommitmentId__c, requestBody.id, 'Commitment Id should match');
