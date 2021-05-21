@@ -36,6 +36,16 @@
 @isTest
 public class HouseholdNamingService_TEST {
 
+    private static ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
     /*********************************************************************************************************
     * @description Test method for batch
     */
@@ -490,7 +500,7 @@ public class HouseholdNamingService_TEST {
             '{!{!FirstName}}'
         );
 
-        String soql = new HouseholdNamingService().getQueryForContactNamingFields();
+        String soql = contactSelector.getQueryForContactNamingFields();
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', // mandatory fields
@@ -526,7 +536,7 @@ public class HouseholdNamingService_TEST {
             '{!{!FirstName}}}'
         );
 
-        String soql = new HouseholdNamingService().getQueryForContactNamingFields();
+        String soql = contactSelector.getQueryForContactNamingFields();
 
         for (String fieldName : new String[] {
             'Id', 'HHId__c', 'npo02__Naming_Exclusions__c' // mandatory fields
@@ -629,22 +639,20 @@ public class HouseholdNamingService_TEST {
         // The private Contact should not be returned by the query
         insert new Contact(LastName = 'foo', npe01__Private__c = true);
 
-        HouseholdNamingService householdNamingService = new HouseholdNamingService();
-
         List<Id> hhIds = null;
-        List<Contact> contacts = householdNamingService.householdMembersFor(hhIds);
+        List<Contact> contacts = contactSelector.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for null Id list argument: ' + contacts);
 
         hhIds = new List<Id>();
-        contacts = householdNamingService.householdMembersFor(hhIds);
+        contacts = contactSelector.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for empty Id list arg: ' + contacts);
 
         hhIds.add(null);
-        contacts = householdNamingService.householdMembersFor(hhIds);
+        contacts = contactSelector.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record when Id list arg contains null: ' + contacts);
 
         hhIds.add(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
-        contacts = householdNamingService.householdMembersFor(hhIds);
+        contacts = contactSelector.householdMembersFor(hhIds);
         System.assertEquals(0, contacts.size(), 'The Contact list should contain no record for Account without Contacts: ' + contacts);
     }
 
@@ -698,7 +706,7 @@ public class HouseholdNamingService_TEST {
         // their Household/Account is provided in the input Id list
         List<Id> hhIds = new List<Id>{ accounts[0].Id, hhs[0].Id, null };
 
-        List<Contact> hhContacts = householdNamingService.householdMembersFor(hhIds);
+        List<Contact> hhContacts = contactSelector.householdMembersFor(hhIds);
 
         Set<Id> hhContactIds = new Map<Id, Contact>(hhContacts).keySet();
         Set<Id> expectedContactIds = new Set<Id>{ contacts[0].Id, contacts[1].Id };

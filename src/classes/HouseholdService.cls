@@ -44,6 +44,7 @@ public inherited sharing class HouseholdService {
         }
         set;
     }
+
     @TestVisible
     private HouseholdNamingService householdNamingServiceInst {
         get {
@@ -54,7 +55,19 @@ public inherited sharing class HouseholdService {
         }
         set;
     }
+
     private static final String RECORD_TYPE_ID = 'RecordTypeId';
+
+    @TestVisible
+    private UnitOfWork unitOfWorkInst {
+        get {
+            if (unitOfWorkInst == null) {
+                unitOfWorkInst = new UnitOfWork();
+            }
+            return unitOfWorkInst;
+        }
+        set;
+    }
 
     public Set<String> fieldsUsedForHouseholdNaming() {
         return householdNamingServiceInst.getHouseholdNamingContactFields();
@@ -142,17 +155,13 @@ public inherited sharing class HouseholdService {
     private void insertHouseholdsForContacts(List<Contact> contacts) {
         List<npo02__Household__c> households = getHouseholdsForInsert(contacts);
         if (households.size() > 0) {
-            Database.SaveResult[] householdSaveResults = insertHouseholds(households);
-            putHouseholdIdOntoContacts(contacts, householdSaveResults);
-            updateNamesAfterHouseholdInsert(householdSaveResults);
+            unitOfWorkInst.registerNew((List<SObject>) households);
+            Database.SaveResult[] householdSaveResults = unitOfWorkInst.save();
+            if (householdSaveResults != null && !householdSaveResults.isEmpty()) {
+                putHouseholdIdOntoContacts(contacts, householdSaveResults);
+                updateNamesAfterHouseholdInsert(householdSaveResults);
+            }
         }
-    }
-
-    private Database.SaveResult[] insertHouseholds(
-            List<npo02__Household__c> householdInserts) {
-        Database.SaveResult[] householdSaveResults =
-                UTIL_DMLService.insertRecords(householdInserts, false);
-        return householdSaveResults;
     }
 
     private void putHouseholdIdOntoContacts(List<Contact> contacts,

@@ -269,9 +269,11 @@
         <members>Callable_API_TEST</members>
         <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
+        <members>ContactSelector</members>
         <members>ContactService</members>
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
+        <members>ContactsInLegacyHouseholds_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -372,10 +374,13 @@
         <members>HouseholdNamingService</members>
         <members>HouseholdNamingService_TEST</members>
         <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdNaming_TEST</members>
         <members>HouseholdSelector</members>
         <members>HouseholdService</members>
+        <members>HouseholdService_TEST</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
+        <members>IAddress</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
@@ -394,6 +399,8 @@
         <members>NPSP_Batch</members>
         <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
+        <members>NPSP_Contact_TEST</members>
+        <members>NPSP_Household</members>
         <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
@@ -634,6 +641,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_ContactBuilder</members>
         <members>TEST_OpportunityBuilder</members>
         <members>TEST_RecurringDonationBuilder</members>
         <members>TEST_SObjectGateway</members>
@@ -732,6 +740,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>UnitOfWork</members>
         <members>fflib_Domain</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>

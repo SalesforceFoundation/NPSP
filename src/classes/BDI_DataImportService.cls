@@ -1785,7 +1785,7 @@ global with sharing class BDI_DataImportService {
                     NPSP_Contact npspContact = new NPSP_Contact(con1);
                     npspContact.mailingAddress(npspAddress);
                     if (setIdUpdate.add(con1.Id)) {
-                        listCon1Update.add(con1);
+                        listCon1Update.add(npspContact.getRecord());
                         listCon1Di.add(dataImport);
                     }
                 }
@@ -1794,7 +1794,7 @@ global with sharing class BDI_DataImportService {
                     NPSP_Contact npspContact = new NPSP_Contact(con2);
                     npspContact.mailingAddress(npspAddress);
                     if (setIdUpdate.add(con2.Id)) {
-                        listCon2Update.add(con2);
+                        listCon2Update.add(npspContact.getRecord());
                         listCon2Di.add(dataImport);
                     }
                 }
@@ -1803,7 +1803,7 @@ global with sharing class BDI_DataImportService {
                     NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(accHH);
                     npspHousehold.billingAddress(npspAddress);
                     if (setIdUpdate.add(accHH.Id)) {
-                        listAccUpdate.add(accHH);
+                        listAccUpdate.add(npspHousehold.getRecord());
                         listAccDi.add(dataImport);
                     }
                 }
