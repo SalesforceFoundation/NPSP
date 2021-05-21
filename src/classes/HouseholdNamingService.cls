@@ -39,6 +39,39 @@ public without sharing class HouseholdNamingService {
 
     private HouseholdSettings settings = new HouseholdSettings();
 
+    @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
+    }
+
+    @TestVisible
+    private AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -85,7 +118,7 @@ public without sharing class HouseholdNamingService {
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
         setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-        save(householdsOrAccounts);
+        unitOfWork.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
@@ -98,9 +131,24 @@ public without sharing class HouseholdNamingService {
 
     private void setNumberOfHouseholdMembers(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
-            List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
-            household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
-                    householdMembers != null ? householdMembers.size() : 0);
+            List<Contact> members = membersByHouseholdId.get(idFor(household));
+            if (numberOfHouseholdMembersIsIncorrect(household, members)) {
+                refreshNumberOfHouseholdMembers(household, members);
+                unitOfWork.registerDirty(new List<SObject>{household});
+            }
+        }
+    }
+
+    private void refreshNumberOfHouseholdMembers(SObject household, List<Contact> members) {
+        household.put(UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c'),
+                members != null ? members.size() : 0);
+    }
+
+    private Boolean numberOfHouseholdMembersIsIncorrect(SObject household, List<Contact> householdMembers) {
+        if (householdMembers != null) {
+            return household.get('Number_of_Household_Members__c') != householdMembers.size();
+        } else {
+            return false;
         }
     }
 
@@ -122,7 +170,8 @@ public without sharing class HouseholdNamingService {
     }
 
     private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
-        return householdMembersByHouseholdId(householdMembersFor(householdOrAccountIds));
+        return householdMembersByHouseholdId(
+                contactSelector.householdMembersFor(householdOrAccountIds));
     }
 
     private List<SObject> householdsOrAccountsFor(List<Id> householdOrAccountIds) {
@@ -134,7 +183,8 @@ public without sharing class HouseholdNamingService {
 
     private List<SObject> getAccountsFor(List<Id> hhids) {
         return [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
                 FROM Account
                 WHERE Id IN :hhids
         ];
@@ -142,7 +192,8 @@ public without sharing class HouseholdNamingService {
 
     private List<SObject> getHouseholdsFor(List<Id> hhids) {
         return [
-                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c
+                SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
                 FROM Npo02__Household__c
                 WHERE Id IN :hhids
         ];
@@ -167,40 +218,13 @@ public without sharing class HouseholdNamingService {
         return hhIDContactMap;
     }
 
-    /*******************************************************************************************************
-    * @description Returns Contacts for specified Accounts or Households.
-    * Private Contacts or records not belonging to the specified Accounts/Households are not selected.
-    * @param householdOrAccountIds The list of Household Id's (either Household__c or Account Id's)
-    * @return List<Contact>
-    */
-    @TestVisible
-    private List<Contact> householdMembersFor(List<Id> householdOrAccountIds) {
-        Set<Id> queryHHIds = householdOrAccountIds == null ? new Set<Id>() : new Set<Id>(householdOrAccountIds);
-        queryHHIds.remove(null);
-
-        if (queryHHIds.isEmpty()) {
-            return new List<Contact>();
-        }
-
-        return Database.Query(householdMembersQueryFor(queryHHIds));
-    }
-
-    private String householdMembersQueryFor(Set<Id> queryHHIds) {
-        //get all of the contacts and their associated households
-        //return them in the order of household and then household naming order
-        //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-        String strSoql = getQueryForContactNamingFields();
-        String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
-        strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
-                ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';
-        return strSoql;
-    }
 
     /*******************************************************************************************************
     * @description Returns Contact fields specified in the Household Naming Settings format fields.
     * @return Set<String> If the Automatic Household Naming is enabled, return set of Contact field API names;
     * otherwise, an empty set
     */
+    //Todo: move to Household Settings?
     public Set<String> getHouseholdNamingContactFields() {
         if (!settings.isAdvancedHouseholdNaming()
                 || householdNamingImpl.setHouseholdNameFieldsOnContact() == null) {
@@ -246,29 +270,6 @@ public without sharing class HouseholdNamingService {
 
     private static Integer getBatchSize() {
         return 200;
-    }
-
-    /*******************************************************************************************************
-    * @description the soql select String to use which includes any fields we use or are referred to in
-    * any of the naming specifications.
-    */
-    private String queryForContactNamingFields;
-    @TestVisible
-    private String getQueryForContactNamingFields() {
-        if (queryForContactNamingFields == null) {
-            //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
-            String[] selectFields = new String[]{
-                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
-            };
-            selectFields.addAll(getHouseholdNamingContactFields());
-
-            queryForContactNamingFields = new UTIL_Query()
-                    .withSelectFields(selectFields)
-                    .withToLabelSalutation()
-                    .withFrom('Contact')
-                    .build();
-        }
-        return queryForContactNamingFields;
     }
 
     private Boolean needsNamingFieldsUpdated(SObject household, SObject oldRecord) {
@@ -385,15 +386,46 @@ public without sharing class HouseholdNamingService {
     public void setNameFieldValuesOnHousehold(SObject household, HouseholdName householdName) {
         HouseholdNamingUserControlledFields namingOverrides =
                 new HouseholdNamingUserControlledFields(namingOverridesFor(household));
-        if (!namingOverrides.isNameControlledByUser()) {
+        if (!namingOverrides.isNameControlledByUser() &&
+                nameNeedsUpdate(household, householdName)) {
             setName(household, householdName);
+            unitOfWork.registerDirty(new List<SObject>{
+                    household
+            });
         }
-        if (!namingOverrides.isFormalGreetingControlledByUser()) {
+
+        if (!namingOverrides.isFormalGreetingControlledByUser() &&
+                formalGreetingNeedsUpdate(household, householdName)) {
             setFormalGreeting(household, householdName);
+            unitOfWork.registerDirty(new List<SObject>{
+                    household
+            });
         }
-        if (!namingOverrides.isInformalGreetingControlledByUser()) {
+        if (!namingOverrides.isInformalGreetingControlledByUser() &&
+                informalGreetingNeedsUpdate(household, householdName)) {
             setInformalGreeting(household, householdName);
+            unitOfWork.registerDirty(new List<SObject>{
+                    household
+            });
         }
+    }
+
+    private Boolean informalGreetingNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('npo02__Informal_Greeting__c'),
+                householdName.asInformalGreeting());
+    }
+
+    private Boolean formalGreetingNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('npo02__Formal_Greeting__c'),
+                householdName.asFormalGreeting());
+    }
+
+    private Boolean nameNeedsUpdate(SObject household, HouseholdName householdName) {
+        return !addressService.equalsCaseSensitive(
+                (String) household.get('Name'),
+                householdName.asName());
     }
 
     private void setInformalGreeting(SObject household, HouseholdName householdName) {

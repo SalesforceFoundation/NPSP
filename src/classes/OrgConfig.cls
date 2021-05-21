@@ -37,7 +37,7 @@ public inherited sharing class OrgConfig {
     /*******************************************************************************************************
     * @description map from Country name (UPPER CASE) to Country Code
     */
-    private Map<String, String> validCountriesByLabel = new Map<String, String>();
+    private static Map<String, String> validCountriesByLabel = new Map<String, String>();
 
     public Map<String, String> validCountriesByLabel() {
         return validCountriesByLabel;
@@ -46,7 +46,7 @@ public inherited sharing class OrgConfig {
     /*******************************************************************************************************
     * @description map from State name (UPPER CASE) to State Code
     */
-    private Map<String, String> validStatesByLabel = new Map<String, String>();
+    private static Map<String, String> validStatesByLabel = new Map<String, String>();
 
     public Map<String, String> validStatesByLabel() {
         return validStatesByLabel;
@@ -55,7 +55,7 @@ public inherited sharing class OrgConfig {
     /*******************************************************************************************************
     * @description map from Country Code to Country Name
     */
-    private Map<String, String> validCountriesByCode = new Map<String, String>();
+    private static Map<String, String> validCountriesByCode = new Map<String, String>();
 
     public Map<String, String> validCountriesByCode() {
         return validCountriesByCode;
@@ -65,7 +65,7 @@ public inherited sharing class OrgConfig {
     * @description specifies whether state and country picklists are enabled in this org.
     * @return true if enabled
     */
-    private Boolean isStateCountryPicklistsEnabled {
+    private static Boolean isStateCountryPicklistsEnabled {
         get {
             if (isStateCountryPicklistsEnabled == null) {
                 isStateCountryPicklistsEnabled = initValidStateCountryCodes();
@@ -83,8 +83,7 @@ public inherited sharing class OrgConfig {
     * @description utility to determine if the "State and Country Picklist" field feature is enabled in Salesforce
     * @return true if enabled; Fills 4 sets<> with a list of value codes and labels for each field
     */
-    private Boolean initValidStateCountryCodes() {
-
+    private static Boolean initValidStateCountryCodes() {
         // If State & Country Picklists are enabled in the org, build maps of the
         // valid Labels and Codes for each field to use for validation
         Map<String, Schema.SObjectField> acctFields = Account.getSObjectType().getDescribe().fields.getMap();

@@ -32,7 +32,7 @@
 * @date 2021
 * @description Address entity class in NPSP.
 */
-public inherited sharing class NPSP_Address {
+public inherited sharing class NPSP_Address implements IAddress {
 
     private Address__c addr;
 
@@ -64,11 +64,25 @@ public inherited sharing class NPSP_Address {
 
     public NPSP_Address(Contact con) {
         this.addr = new Address__c();
-        addr.Household_Account__c = con.AccountId;
-        addr.Default_Address__c = !con.is_Address_Override__c;
+        try {
+            addr.Household_Account__c = con.AccountId;
+        } catch (NullPointerException npe) {
+            UTIL_Debug.debug('*** ##### npe on NPSP_Address doing nothing. ######');
+        }
+        if (con.getPopulatedFieldsAsMap().keySet().contains(
+                String.valueOf(Contact.is_Address_Override__c)
+        )) {
+            addr.Default_Address__c = !con.is_Address_Override__c;
+        }
         addr.Latest_Start_Date__c = System.today();
         addr.Latest_End_Date__c = null;
-        copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+        if (con.getPopulatedFieldsAsMap().keySet().contains(
+                String.valueOf(Contact.npe01__Primary_Address_Type__c)
+        )) {
+            copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
+        } else {
+            copyFromSObject(con, 'Mailing', 'Mailing');
+        }
     }
 
     public NPSP_Address(Account acc) {
@@ -78,6 +92,15 @@ public inherited sharing class NPSP_Address {
         addr.Latest_Start_Date__c = System.today();
         addr.Latest_End_Date__c = null;
         copyFromSObject(acc, 'Billing', null);
+    }
+
+    public NPSP_Address(npo02__Household__c household) {
+        this.addr = new Address__c();
+        addr.MailingStreet__c = household.npo02__MailingStreet__c;
+        addr.MailingCity__c = household.npo02__MailingCity__c;
+        addr.MailingState__c = household.npo02__MailingState__c;
+        addr.MailingPostalCode__c = household.npo02__MailingPostalCode__c;
+        addr.MailingCountry__c = household.npo02__MailingCountry__c;
     }
 
     public Boolean isSeasonal() {
@@ -217,94 +240,35 @@ public inherited sharing class NPSP_Address {
         return addr.Seasonal_Start_Month__c;
     }
 
-    /*******************************************************************************************************
-    * @description Utility to copy Address fields from an Address object to a Contact or Account.
-    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
-    * @param addr the Address object to copy from
-    * @param sobjDst the destination Contact or Account
-    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
-    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
-    * @return void
-    */
-    public void copyOntoSObject(SObject sobjDst, String strFieldPrefix, String strFieldAddrType) {
-        sobjDst.put(strFieldPrefix + 'Street', addressService.getMultilineStreet(addr));
-        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
-        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
-        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
-        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
-
-        if (!orgConfig.isStateCountryPicklistsEnabled()) {
-            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-        } else {
-            if (addr.MailingCountry__c != null) {
-                if (orgConfig.validCountriesByLabel().containsKey(addr.MailingCountry__c
-                        .toUpperCase()
-                )) {
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                    sobjDst.put(strFieldPrefix + 'CountryCode',
-                            orgConfig.validCountriesByLabel().get(
-                                    addr.MailingCountry__c.toUpperCase()));
-                } else if (orgConfig.validCountriesByCode().containsKey(addr.MailingCountry__c
-                        .toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
-                    sobjDst.put(strFieldPrefix + 'Country',
-                            orgConfig.validCountriesByCode().get(
-                                    addr.MailingCountry__c.toUpperCase()));
-                } else {
-                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
-                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
-                }
-            } else { // MailingCountry = null
-                sobjDst.put(strFieldPrefix + 'CountryCode', null);
-                sobjDst.put(strFieldPrefix + 'Country', null);
-            }
-            if (addr.MailingState__c != null) {
-                if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
-                        .toUpperCase())) {
-                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
-                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
-                            .get(addr
-                            .MailingState__c.toUpperCase()));
-                } else {
-                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
-                    // so we will just try to save any state that isn't a label as a code.
-                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
-                }
-            } else { // MailingState = null
-                sobjDst.put(strFieldPrefix + 'StateCode', null);
-                sobjDst.put(strFieldPrefix + 'State', null);
-            }
-        }
-
-        if (strFieldAddrType != null)
-            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
-
-    }
-
-    public Boolean isEqualTo(NPSP_Address other, Boolean includeAddressType) {
-        Address__c addrOld = other.getRecord();
-        if (addr == null || addrOld == null) {
+    public Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType) {
+        if (addr == null || other == null) {
             return false;
         }
         if (includeAddressType) {
-            if (!addressService.equalsCaseSensitive(
-                    addr.Address_Type__c, addrOld.Address_Type__c)) {
+            if (!addressService.equalsCaseSensitive(getType(), other.getType())) {
                 return false;
             }
         }
-        return (addressService.equalsCaseSensitive(
-                addr.MailingStreet__c, addrOld.MailingStreet__c) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingStreet2__c, addrOld.MailingStreet2__c) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingCity__c, addrOld.MailingCity__c) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingState__c, addrOld.MailingState__c) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingPostalCode__c, addrOld.MailingPostalCode__c) &&
-                addressService.equalsCaseSensitive(
-                        addr.MailingCountry__c, addrOld.MailingCountry__c));
+        return isEqualTo(other);
+    }
+
+    private Boolean isEqualTo(IAddress other) {
+        return (addressService.equalsCaseSensitive(street(), other.street()) &&
+                addressService.equalsCaseSensitive(street2(), other.street2()) &&
+                addressService.equalsCaseSensitive(city(), other.city()) &&
+                addressService.equalsCaseSensitive(state(), other.state()) &&
+                addressService.equalsCaseSensitive(postalCode(), other.postalCode()) &&
+                addressService.equalsCaseSensitive(country(), other.country())
+        );
+    }
+
+    public Boolean isDifferentIncludingLatLong(IAddress other) {
+        Boolean isDifferent = (
+                        !isEqualToIncludingAddressType(other, false) ||
+                        latitude() != other.latitude() ||
+                        longitude() != other.longitude()
+        );
+        return isDifferent;
     }
 
     /*******************************************************************************************************
@@ -313,17 +277,18 @@ public inherited sharing class NPSP_Address {
     * @param addrDst the destination Address
     * @return void
     */
-    public void copyFrom(NPSP_Address other) {
-        addr.MailingStreet__c = other.getRecord().MailingStreet__c;
-        addr.MailingStreet2__c = other.getRecord().MailingStreet2__c;
-        addr.MailingCity__c = other.getRecord().MailingCity__c;
-        addr.MailingState__c = other.getRecord().MailingState__c;
-        addr.MailingPostalCode__c = other.getRecord().MailingPostalCode__c;
-        addr.MailingCountry__c = other.getRecord().MailingCountry__c;
-        addr.Geolocation__Latitude__s = other.getRecord().Geolocation__Latitude__s;
-        addr.Geolocation__Longitude__s = other.getRecord().Geolocation__Longitude__s;
-        if (other.getRecord().Address_Type__c != null)
-            addr.Address_Type__c = other.getRecord().Address_Type__c;
+    public void copyFrom(IAddress other) {
+        addr.MailingStreet__c = other.street();
+        addr.MailingStreet2__c = other.street2();
+        addr.MailingCity__c = other.city();
+        addr.MailingState__c = other.state();
+        addr.MailingPostalCode__c = other.postalCode();
+        addr.MailingCountry__c = other.country();
+        addr.Geolocation__Latitude__s = other.latitude();
+        addr.Geolocation__Longitude__s = other.longitude();
+        if (other.getType() != null) {
+            addr.Address_Type__c = other.getType();
+        }
     }
 
     public Boolean isDefault() {
@@ -348,14 +313,14 @@ public inherited sharing class NPSP_Address {
     * @return void
     */
     public void copyFromSObject(SObject sobjSrc, String fieldPrefixSrc, String addrType) {
-        addr.MailingStreet__c = (String) sobjSrc.get(fieldPrefixSrc + 'Street');
+        addr.MailingStreet__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Street');
         Addresses.handleMultilineStreet(addr);
-        addr.MailingCity__c = (String) sobjSrc.get(fieldPrefixSrc + 'City');
-        addr.MailingPostalCode__c = (String) sobjSrc.get(fieldPrefixSrc + 'PostalCode');
-        addr.MailingState__c = (String) sobjSrc.get(fieldPrefixSrc + 'State');
-        addr.MailingCountry__c = (String) sobjSrc.get(fieldPrefixSrc + 'Country');
-        addr.Geolocation__Latitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Latitude');
-        addr.Geolocation__Longitude__s = (Decimal) sobjSrc.get(fieldPrefixSrc + 'Longitude');
+        addr.MailingCity__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'City');
+        addr.MailingPostalCode__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'PostalCode');
+        addr.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'State');
+        addr.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Country');
+        addr.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
+        addr.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
@@ -373,7 +338,17 @@ public inherited sharing class NPSP_Address {
         }
     }
 
-    public void checkForPartialSeasonalErrors(){
+    private Object getSObjectField(SObject sobjSrc, String fieldPrefixSrc, String field) {
+        Object val;
+        try {
+            val = sobjSrc.get(fieldPrefixSrc + field);
+        } catch (Exception e) {
+            val = null;
+        }
+        return val;
+    }
+
+    public void checkForPartialSeasonalErrors() {
         if (isPartialSeasonalAddr()) {
             this.addr.addError(Label.addrSeasonalPartial);
         }
@@ -476,16 +451,53 @@ public inherited sharing class NPSP_Address {
                 addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
     }
 
-    public void mailingState(String state) {
+    public void state(String state) {
         addr.MailingState__c = state;
     }
 
-    public String mailingState() {
+    public String street() {
+        return addr.MailingStreet__c;
+    }
+
+    public String street2() {
+        return addr.MailingStreet2__c;
+    }
+
+    public String city() {
+        return addr.MailingCity__c;
+    }
+
+    public String state() {
         return addr.MailingState__c;
     }
 
-    public String mailingCountry() {
+    public String postalCode() {
+        return addr.MailingPostalCode__c;
+    }
+
+    public String country() {
         return addr.MailingCountry__c;
+    }
+
+    public Decimal longitude() {
+        return addr.Geolocation__Longitude__s;
+    }
+
+    public Decimal latitude() {
+        return addr.Geolocation__Latitude__s;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to combine mailing street fields into a single string with embedded CR LF
+    * @param addr the Address to look at
+    * @return boolean
+    */
+    public String multilineStreet() {
+        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        if (isOneLineStreetAddress) {
+            return addr.MailingStreet__c;
+        }
+        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
     }
 
 }

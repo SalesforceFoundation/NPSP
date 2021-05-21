@@ -76,8 +76,10 @@ public inherited sharing class NPSP_HouseholdAccount {
         return householdAccount;
     }
 
-    public void billingAddress(NPSP_Address npspAddress) {
-        npspAddress.copyOntoSObject(householdAccount, 'Billing', null);
+    public void billingAddress(IAddress anAddress) {
+        addressService.copyOntoSObject(
+                anAddress, householdAccount, 'Billing',
+                null);
     }
 
     /*******************************************************************************************************
@@ -89,6 +91,7 @@ public inherited sharing class NPSP_HouseholdAccount {
             return false;
         }
 
+        //Todo: convert to use isEqualTo
         Boolean isChanged =
                 !addressService.equalsCaseSensitive(householdAccount.BillingStreet, oldVersion
                         .BillingStreet) ||
@@ -119,8 +122,9 @@ public inherited sharing class NPSP_HouseholdAccount {
 
     }
 
-    public Boolean billingAddressIsDifferentFrom(NPSP_Address npspAddress) {
-        return addressService.isSObjectAddressDifferent(householdAccount, npspAddress.getRecord());
+    //Todo: replace usages with isEqualTo
+    public Boolean billingAddressIsDifferentFrom(IAddress anAddress) {
+        return addressService.isSObjectAddressDifferent(householdAccount, anAddress);
     }
 
 }

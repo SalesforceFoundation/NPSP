@@ -36,6 +36,7 @@ public inherited sharing class NPSP_Contact {
 
     private Contact contact;
     private Contact oldContact;
+    private IAddress mailingAddress;
 
     @TestVisible
     private ContactService contactService {
@@ -72,8 +73,8 @@ public inherited sharing class NPSP_Contact {
         return this.contact;
     }
 
-    public void currentAddress(NPSP_Address npspAddress) {
-        contact.Current_Address__c = npspAddress.getRecord().Id;
+    public void currentAddress(IAddress npspAddress) {
+        contact.Current_Address__c = npspAddress.getRecord()?.Id;
         mailingAddress(npspAddress);
     }
 
@@ -117,16 +118,74 @@ public inherited sharing class NPSP_Contact {
         return contact.AccountId;
     }
 
+    public Id householdId() {
+        return contact.npo02__household__c;
+    }
+
     public Boolean isMovingToANewHousehold() {
         return accountChanged() && !isAddressEmpty();
     }
 
-    public void mailingAddress(NPSP_Address npspAddress) {
-        npspAddress.copyOntoSObject(contact, 'Mailing','npe01__Primary_Address_Type__c');
+    public void mailingAddress(IAddress anAddress) {
+        addressService.copyOntoSObject(
+                anAddress, contact, 'Mailing',
+                'npe01__Primary_Address_Type__c');
+        this.mailingAddress = anAddress;
     }
 
-    public Boolean mailingAddressIsDifferentFrom(NPSP_Address npspAddress) {
-       return addressService.isSObjectAddressDifferent(contact, npspAddress.getRecord());
+    public IAddress mailingAddress() {
+        return mailingAddress != null ? mailingAddress : new NPSP_Address(contact);
+    }
+
+    public Boolean mailingAddressIsDifferentFrom(IAddress other) {
+       return mailingAddress().isDifferentIncludingLatLong(other) ||
+               isCurrentAddressDifferent(other) ||
+               isAddressTypeDifferent(other);
+    }
+
+    private Boolean isCurrentAddressDifferent(IAddress other) {
+        return !addressService.equalsCaseSensitive(
+                (String) currentAddress(contact),
+                other.getRecord().Id);
+    }
+
+    private Boolean isAddressTypeDifferent(IAddress other) {
+        return !addressService.equalsCaseSensitive(
+                primaryAddressType(contact),
+                other.getType());
+    }
+
+    private Object currentAddress(SObject sObj) {
+        return sObj.get('Current_Address__c');
+    }
+
+    private String primaryAddressType(SObject sObj) {
+        return (String) sObj.get
+                ('npe01__Primary_Address_Type__c');
+    }
+
+    public NPSP_Contact oldVersion() {
+        return new NPSP_Contact(oldContact);
+    }
+
+    public Boolean isClearingAddressOverride() {
+        return (addressOverrideChanged() && !hasAddressOverride());
+    }
+
+    public Boolean hadAnAddress() {
+        return oldVersion().currentAddress() != null;
+    }
+
+    public Boolean noAddressFieldsChanged() {
+        return !isAddressChanged() && hadAnAddress();
+    }
+
+    public Boolean isChangingToANewCurrentAddress() {
+        return isCurrentAddressChanged() && hasAddressOverride();
+    }
+
+    public Boolean isCurrentAddressChanged() {
+        return currentAddressChanged() && currentAddress() != null;
     }
 
 }

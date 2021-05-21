@@ -1680,7 +1680,7 @@ public with sharing class BDI_DataImport_TEST {
         BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
         ID ApexJobId = Database.executeBatch(bdi, 10);
         Test.stopTest();
-    
+
         // verify expected results
         List<Contact> listCon = getContacts();
         System.assertEquals(2, listCon.size());
