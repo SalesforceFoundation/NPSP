@@ -27,7 +27,7 @@ Verify Mapped Field Is Available For Batch Template
     [Documentation]                         Create a custom field on opportunity and npsp data import objects. Create advanced mapping to these fields.
     ...                                     Verify that the mapped field is available for selection while creating a new template and once selected, its avialble on newly created batch gift form
     ...                                     Remove field from template, delete mapping and verify that the new field is not avaialable for selection while creating template.
-    [tags]                                  feature:GE                    W-039562
+    [tags]                                  unstable     feature:GE                    W-039562
     #Create field mapping
     Click Configure Advanced Mapping
     View Field Mappings Of The Object       Opportunity
