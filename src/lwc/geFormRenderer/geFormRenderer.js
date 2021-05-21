@@ -719,14 +719,20 @@ export default class GeFormRenderer extends LightningElement{
             this.handleNullPaymentFieldsInFormState();
         }
 
-        const hasSaved = await this.saveDataImport(this.saveableFormState());
-        if (!hasSaved) {
-            this.disabled = false;
-            this.toggleSpinner();
-            return;
+        if (this.shouldAttemptSaveToCatchValidationRuleFailures()) {
+            const hasSaved = await this.saveDataImport(this.saveableFormState());
+            if (!hasSaved) {
+                this.disabled = false;
+                this.toggleSpinner();
+                return;
+            }
         }
 
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
+    }
+
+    shouldAttemptSaveToCatchValidationRuleFailures() {
+        return !this._openedGiftId;
     }
 
     shouldNullPaymentRelatedFields() {
