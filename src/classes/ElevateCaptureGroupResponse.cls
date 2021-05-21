@@ -60,7 +60,7 @@ public with sharing class ElevateCaptureGroupResponse {
     }
 
     public String firstError() {
-        if (isValidCaptureResponse() == false) {
+        if (!isValidCaptureResponse()) {
             return errors()[0].message;
         }
         return null;

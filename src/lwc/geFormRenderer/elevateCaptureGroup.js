@@ -2,16 +2,9 @@ import apexAddToCaptureGroup from '@salesforce/apex/GE_GiftEntryController.addTo
 import apexCreateCaptureGroup from '@salesforce/apex/GE_GiftEntryController.createCaptureGroup';
 
 class ElevateCaptureGroup {
-
-    constructor(elevateBatchId) {
-        this.elevateBatchId = elevateBatchId;
-    }
-
     async add(tokenizedGift) {
         try {
-            if (!this.elevateBatchId) {
-                this.elevateBatchId = await this.create();
-            }
+            this.elevateBatchId = await this.create();
 
             const authorizedGift = await apexAddToCaptureGroup(
                 { tokenizedGift: tokenizedGift, groupId: this.elevateBatchId }
