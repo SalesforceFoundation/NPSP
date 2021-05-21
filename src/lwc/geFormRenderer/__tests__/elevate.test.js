@@ -47,24 +47,6 @@ describe('elevate-capture-group', () => {
 
     });
 
-    it('capture group with existing id when adding gift then id is unchanged', async () => {
-        apexAddToCaptureGroup.mockResolvedValue({});
-
-        const captureGroup = new ElevateCaptureGroup('fakeCaptureGroupId');
-
-        const tokenizableGift = getDummyGift();
-
-        await captureGroup.add(tokenizableGift);
-
-        expect(apexAddToCaptureGroup).toHaveBeenCalledTimes(1);
-        expect(apexCreateCaptureGroup).toHaveBeenCalledTimes(0);
-
-        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({
-            groupId: 'fakeCaptureGroupId',
-            tokenizedGift: tokenizableGift
-        });
-    });
-
 });
 
 
