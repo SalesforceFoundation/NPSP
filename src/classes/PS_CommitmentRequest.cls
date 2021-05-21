@@ -251,7 +251,9 @@ public inherited sharing class PS_CommitmentRequest {
             return false;
         }
 
-        return rd.npe03__Amount__c != oldRd.npe03__Amount__c;
+        return rd.npe03__Amount__c != oldRd.npe03__Amount__c
+            || rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c
+            || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c;
     }
 
     public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {

@@ -239,6 +239,7 @@ public with sharing class RD2_ValidationService {
             validateElevateRDScheduleCannotBeInTheFuture(rd, errorCollection);
             validateRecurringDonationEndDate(rd, errorCollection);
             validateStatus(rd, errorCollection);
+            validateDayOfMonthChange(rd, oldRd, errorCollection);
             validateElevateRDCampaignCannotUpdateToEmpty(rd, oldRd, errorCollection);
 
             Boolean isValid = validateDonorChange(rd, oldRd, errorCollection);
@@ -573,6 +574,22 @@ public with sharing class RD2_ValidationService {
                     System.Label.RD2_DayOfMonthMustBeValid,
                     new String[]{ rd.Day_of_Month__c })
             );
+        }
+    }
+
+    /***
+    * @description Validates Day of Month Change on Recurring Donation
+    * @param rd The Recurring Donation to validate
+    * @param oldRd The previous version of the Recurring Donation
+    * @return void
+    */
+    private void validateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)
+            && (rd.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_MONTHLY
+                && rd.npe03__Installment_Period__c == oldRd.npe03__Installment_Period__c
+                && rd.Day_of_Month__c != oldRd.Day_of_Month__c)) {
+                errorCollection.addError(System.Label.RD2_ElevateRDDayOfMonthCannotChange);
         }
     }
 
