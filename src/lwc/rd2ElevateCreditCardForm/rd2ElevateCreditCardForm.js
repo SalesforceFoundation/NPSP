@@ -128,9 +128,9 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get nextPaymentDateMessage() {
-        if(this.currentPaymentIsCard) {
+        if(this.currentPaymentIsAch()) {
             return this.labels.nextACHPaymentDonationDateMessage;
-        } else if(this.currentPaymentIsAch()) {
+        } else if(this.currentPaymentIsCard) {
             return this.labels.nextPaymentDonationDateMessage;
         }
     }
