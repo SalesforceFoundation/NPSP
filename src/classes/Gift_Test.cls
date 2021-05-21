@@ -27,38 +27,29 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Service class for Gift Batches in NPSP.
-*/
-public with sharing class GiftBatchService {
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
+@isTest
+private class Gift_Test {
+    
+    @isTest
+    static void validateThatGiftNeedsToBeReauthorized() {
+        DataImport__c dataImport = new DataImport__c(
+            Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+            Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
+            Donation_Amount__c = 3.00
+        );
 
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
-    }
+        insert dataImport;
 
-    public void processPaymentsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.captureAuthorizedGifts();
-        giftBatch.updateRecords();
-    }
+        Test.startTest();
 
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
-        giftBatch.updateRecords();
+        dataImport.Donation_Amount__c = 5.00;
+        Gift authorizedGift = new Gift(dataImport);
+        Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
+
+        Test.stopTest();
+
+        System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
+        System.assert(needsReauthorization);
     }
 }

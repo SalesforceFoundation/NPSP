@@ -1,8 +1,9 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isUndefined, isEmpty } from 'c/utilCommon';
-import { HTTP_CODES, ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
+import { Rd2Service } from 'c/rd2Service';
+import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
+import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
@@ -24,7 +25,6 @@ import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
-import FIELD_LAST_ELEVATE_VERSION from '@salesforce/schema/npe03__Recurring_Donation__c.LastElevateVersionPlayed__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 
@@ -48,8 +48,6 @@ import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import loadingMessage from '@salesforce/label/c.labelMessageLoading';
 import waitMessage from '@salesforce/label/c.commonWaitMessage';
 import savingRDMessage from '@salesforce/label/c.RD2_EntryFormSaveRecurringDonationMessage';
-import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
-import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
 import savingCommitmentMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentMessage';
 import commitmentFailedMessage from '@salesforce/label/c.RD2_EntryFormSaveCommitmentFailedMessage';
 import contactAdminMessage from '@salesforce/label/c.commonContactSystemAdminMessage';
@@ -99,8 +97,6 @@ export default class rd2EntryForm extends LightningElement {
         loadingMessage,
         waitMessage,
         savingRDMessage,
-        validatingCardMessage,
-        validatingACHMessage,
         savingCommitmentMessage,
         commitmentFailedMessage,
         contactAdminMessage,
@@ -141,11 +137,13 @@ export default class rd2EntryForm extends LightningElement {
     contactId;
     organizationAccountId;
     organizationAccountName;
-    donorType;
+    accountHolderType;
 
     contact = {
         MailingCountry: null
     };
+
+    rd2Service = new Rd2Service();
 
     @track error = {};
 
@@ -163,8 +161,8 @@ export default class rd2EntryForm extends LightningElement {
     */
     @api 
     get cardExpDate(){
-        let cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
-        let cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
+        const cardExpMonth = getFieldValue(this.record, FIELD_CARD_EXPIRY_MONTH);
+        const cardExpYear = getFieldValue(this.record, FIELD_CARD_EXPIRY_YEAR);
         return (cardExpMonth && cardExpYear) ? cardExpMonth + '/' + cardExpYear : '';
     }
 
@@ -287,6 +285,7 @@ export default class rd2EntryForm extends LightningElement {
             this.isRecordReady = true;
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
+            this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
             this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
@@ -320,13 +319,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleDonorTypeChange(event) {
-        if(event.detail === 'Contact') {
-            this.donorType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if(event.detail === 'Account') {
-            this.donorType = ACCOUNT_HOLDER_TYPES.BUSINESS;
-        } else {
-            this.donorType = null;
-        }
+        this.accountHolderType = this.rd2Service.accountHolderTypeFor(event.detail);
     }
 
     /**
@@ -407,7 +400,7 @@ export default class rd2EntryForm extends LightningElement {
     * @description Checks if the Elevate Widget should be displayed on Edit
     */
     evaluateElevateEditWidget() {
-        let statusField = getFieldValue(this.record, FIELD_STATUS);
+        const statusField = getFieldValue(this.record, FIELD_STATUS);
 
         if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
             // On load, we can't rely on the schedule component, but we should when detecting changes
@@ -465,10 +458,11 @@ export default class rd2EntryForm extends LightningElement {
     * @description Returns true if Schedule fields has updated
     */
     hasElevateFieldsChange(allFields) {
-        let amount = getFieldValue(this.record, FIELD_AMOUNT);
-        let frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
-        let period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
-        let campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
+        const amount = getFieldValue(this.record, FIELD_AMOUNT);
+        const frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
+        const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
+        const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
+
         return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
             || frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName])
             || period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName]
@@ -561,7 +555,8 @@ export default class rd2EntryForm extends LightningElement {
     async processCommitmentSubmit(allFields) {
         try {
             if (this.isElevateWidgetDisplayed()) {
-                this.loadingText = this.getPaymentProcessingMessage();
+                this.loadingText = this.rd2Service.getPaymentProcessingMessage(this.paymentMethod);
+
                 const elevateWidget = this.template.querySelector('[data-id="elevateWidget"]');
 
                 this.paymentMethodToken = await elevateWidget.returnToken().payload;
@@ -574,26 +569,26 @@ export default class rd2EntryForm extends LightningElement {
 
         this.loadingText = this.customLabels.savingCommitmentMessage;
 
-        try {//ensure all errors are handled and displayed to the user
-            const rd = this.constructRecurringDonation(allFields);
+        try {
+            const rd = this.rd2Service.constructRecurringDonation(this.recordId, this.commitmentId)
+                .withInputFieldValues(allFields);
 
             handleCommitment({
-                jsonRecord: JSON.stringify(rd),
+                jsonRecord: rd.asJSON(),
                 paymentMethodToken: this.paymentMethodToken
             })
                 .then(jsonResponse => {
-                    let response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
-                    let isSuccess = isNull(response)
+                    const response = isNull(jsonResponse) ? null : JSON.parse(jsonResponse);
+                    const isSuccess = isNull(response)
                         || response.statusCode === HTTP_CODES.Created
                         || response.statusCode === HTTP_CODES.OK;
+                    const responseBody = JSON.parse(response.body);
 
                     if (isSuccess) {
-                        this.populateCommitmentFields(response, allFields);
-
-                        this.processSubmit(allFields);
-
+                        rd.withCommitmentResponseBody(responseBody);
+                        this.processSubmit(rd.record);
                     } else {
-                        let message = this.getCommitmentError(response);
+                        const message = this.rd2Service.getCommitmentError(response);
                         this.handleSaveError(message);
                     }
                 })
@@ -603,14 +598,6 @@ export default class rd2EntryForm extends LightningElement {
 
         } catch (error) {
             this.handleSaveError(error);
-        }
-    }
-
-    getPaymentProcessingMessage() {
-        if(this._paymentMethod === PAYMENT_METHOD_CREDIT_CARD) {
-            return this.customLabels.validatingCardMessage;
-        } else if(this._paymentMethod === PAYMENT_METHOD_ACH) {
-            return this.customLabels.validatingACHMessage;
         }
     }
 
@@ -637,79 +624,14 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Constructs a Recurring Donation record to pass into commitment Apex method(s)
-    */
-    constructRecurringDonation(allFields) {
-        // Populate commitment Id if provided
-        if (!isEmpty(this.getCommitmentId())) {
-            allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.getCommitmentId();
-        }
-
-        // Specify the Id since it is relevant for commitment create/update logic!
-        if (!isNull(this.recordId)) {
-            allFields['Id'] = this.recordId;
-        }
-
-        // Construct the Recurring Donation object
-        let rd = { ...allFields };
-
-        // Set defaults
-        const installmentFrequency = rd[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
-        if (isEmpty(installmentFrequency)) {
-            rd[FIELD_INSTALLMENT_FREQUENCY.fieldApiName] = 1;
-        }
-
-        return rd;
-    }
-
-    /***
-    * @description Populates Recurring Donation fields upon receiving successful
-    * Payments API commitment create/edit response
-    */
-    populateCommitmentFields(response, allFields) {
-        if (isNull(response) || isUndefined(response)
-            || isNull(response.body) || isUndefined(response.body)
-        ) {
-            return;
-        }
-
-        const responseBody = JSON.parse(response.body);
-        const cardData = responseBody.cardData;
-        const achData = responseBody.achData;
-
-        if (response.statusCode === HTTP_CODES.Created) {
-            // Track the commitment Id to log an error if the RD insert fails as well as
-            // to use it if user submits the form again so no new commitment is created but
-            // the current one is updated.
-            this.commitmentId = responseBody.id;
-
-            allFields[FIELD_COMMITMENT_ID.fieldApiName] = this.commitmentId;
-
-            // Set the version so we can compare later and know when an update occurs
-            allFields[FIELD_LAST_ELEVATE_VERSION.fieldApiName] = responseBody.version;
-        }
-
-        if (cardData) {
-            allFields[FIELD_CARD_LAST4.fieldApiName] = cardData.last4;
-            allFields[FIELD_CARD_EXPIRY_MONTH.fieldApiName] = cardData.expirationMonth;
-            allFields[FIELD_CARD_EXPIRY_YEAR.fieldApiName] = cardData.expirationYear;
-        }
-
-        if(achData) {
-            allFields[FIELD_ACH_LAST4.fieldApiName] = achData.last4;
-        }
-    }
-
-
-    /***
     * @description Overrides the standard submit.
     * Collects and validates fields displayed on the form and any integrated LWC
     * and submits them for the record insert or update.
     */
-    processSubmit(allFields) {
+    processSubmit(rdRecord) {
         try {
             this.loadingText = this.customLabels.savingRDMessage;
-            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(allFields);
+            this.template.querySelector('[data-id="outerRecordEditForm"]').submit(rdRecord);
 
         } catch (error) {
             this.handleSaveError(error);
@@ -730,7 +652,6 @@ export default class rd2EntryForm extends LightningElement {
     handleSaveError(error) {
         try {
             this.error = constructErrorMessage(error);
-
             // Transform the error to a user-friendly error and log it when
             // the RD insert failed but the Elevate commitment has been created
             if (isNull(this.recordId) && !isEmpty(this.getCommitmentId())) {
@@ -784,7 +705,7 @@ export default class rd2EntryForm extends LightningElement {
      * @param event (error construct)
      */
     handleChildComponentError(event) {
-        let error = event.detail && event.detail.value ? event.detail.value : event.detail;
+        const error = event.detail && event.detail.value ? event.detail.value : event.detail;
         this.handleError(error);
     }
 
@@ -809,52 +730,6 @@ export default class rd2EntryForm extends LightningElement {
         showToast(message, '', 'success');
 
         this.closeModal(recordId);
-    }
-
-    /**
-     * @description Displayes errors extracted from the error response
-     * returned from the Elevate API when the Commitment cannot be created
-     */
-    getCommitmentError(response) {
-        if (response.body) {
-            // Errors returned in the response body can contain a single quote, for example:
-            // "body": "{'errors':[{'message':'\"Unauthorized\"'}]}".
-            // However, the JSON parser does not work with a single quote,
-            // so need to replace it with the double quote but after
-            // replacing \" with an empty string, otherwise the message content
-            // will be misformatted.
-            if (JSON.stringify(response.body).includes("'errors'")) {
-                response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
-            }
-
-            //parse the error response
-            try {
-                response.body = JSON.parse(response.body);
-            } catch (error) { }
-        }
-
-        let errors = this.getErrors(response);
-
-        return format('{0}', [errors]);
-    }
-
-    /***
-    * @description Get the message or errors from a failed API call.
-    * @param {object} response: Http response object
-    * @return {string}: Message from a failed API call response
-    */
-    getErrors(response) {
-        if (response.body && response.body.errors) {
-            return response.body.errors.map(error => error.message).join('\n ');
-        }
-
-        // For some reason the key in the body object for 'Message'
-        // in the response we receive from Elevate is capitalized.
-        // Also checking for lowercase M in message in case they fix it.
-        return response.body.Message
-            || response.body.message
-            || response.errorMessage
-            || JSON.stringify(response.body);
     }
 
     /**

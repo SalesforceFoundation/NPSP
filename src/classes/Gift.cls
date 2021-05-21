@@ -30,35 +30,60 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description Gift entity class in NPSP.
 */
-public with sharing class GiftBatchService {
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
-
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
+public with sharing class Gift {
+    
+    @TestVisible
+    private DataImport__c dataImport;
+    private List<String> availableFields;
+    private GiftSelector giftSelector {
+        get {
+            if (giftSelector == null) {
+                giftSelector = new GiftSelector();
+            }
+            return giftSelector;
+        }
+        set;
+    }
+    
+    public Gift(DataImport__c dataImport) {
+        this.dataImport = dataImport;
+        this.populateAvailableFields();
     }
 
-    public void processPaymentsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.captureAuthorizedGifts();
-        giftBatch.updateRecords();
+    public Boolean requiresReauthorizationBeforeChange() {
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
+            return false; 
+        }
+
+        return this.hasPaymentFieldsChanged();
     }
 
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
-        giftBatch.updateRecords();
+    private void populateAvailableFields() {
+        Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
+        List<String> fields = new List<String>();
+
+        for (String field : dataImportFields.keySet()) {
+            if (GiftBatchService.PAYMENT_INTEGRATION_FIELDS.contains(field)) {
+                fields.add(field);
+            }
+        }
+
+        this.availableFields = fields;
     }
+
+    private Boolean hasPaymentFieldsChanged() {
+        DataImport__c databaseDataImport = giftSelector.getGiftById(this.dataImport.Id, this.availableFields);
+
+        for (String field : this.availableFields) {
+            if (this.dataImport.get(field) != databaseDataImport.get(field)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

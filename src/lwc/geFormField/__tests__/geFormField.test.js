@@ -204,28 +204,6 @@ describe('c-ge-form-field', () => {
 
 });
 
-expect.extend({
-    toContainOptions(actual, expected) {
-        const valueExists = valueToCheck =>
-            [...actual].some(actualValue => {
-                return actualValue.value === valueToCheck;
-            });
-        const lengthCheck = actual.length === expected.length;
-        const pass =
-            lengthCheck &&
-            [...expected].every(expectedValue => {
-                return valueExists(expectedValue);
-            });
-
-        return {
-            message: () =>
-                `expected the picklist to contain options: ${JSON.stringify(expected)}
-                actual options: ${JSON.stringify(actual)}`,
-            pass,
-        };
-    }
-});
-
 /**
  * Returns the shadowRoot property of a given Lightning web component.
  * Originally sourced from lightning-global repo.

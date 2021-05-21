@@ -42,4 +42,16 @@ public with sharing class GiftSelector {
                 WHERE NPSP_Data_Import_Batch__c =: batchId
         ];
     }
+
+    public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fieldsToQuery)
+            .withWhere('Id =: giftId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
+    }
+    
 }

@@ -147,12 +147,28 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         return this._displayState === 'criticalError';
     }
 
+    get shouldDisplayEditPaymentInformation() {
+        return this.isReadOnly  
+            && (this.isExpiredTransaction || this.isPaymentStatusAuthorized());
+    }
+
     get isEdit() {
         return this._displayState === 'edit';
     }
 
+    get showCancelButton() {
+        return this.isEdit 
+            && !this.isExpiredTransaction
+            && !this.isPaymentStatusAuthorized()
+            && this.paymentStatus();
+    }
+
     get isExpiredTransaction() {
-        return this.paymentStatus() === 'EXPIRED';
+        return this.paymentStatus() === this.paymentTransactionStatusValues.EXPIRED;
+    }
+
+    get isAuthorizedTransaction() {
+        return this.paymentStatus() === this.paymentTransactionStatusValues.AUTHORIZED;
     }
 
     get criticalErrorMessage() {
@@ -267,6 +283,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     handleUserEditExpired() {
+        this.dispatchApplicationEvent('doNotChargeState', {
+            isElevateWidgetDisabled: false
+        });
+
         this.display.transitionTo('editExpiredTransaction');
     }
 
@@ -298,19 +318,20 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     handleElevateWidgetReset() {
         this.clearError();
         this.clearPaymentInformation();
+        this.dismount();
 
         if (this.isInBatchGiftEntry) {
-            if (this.isReadOnly) {
-                this.resetForBatchFromReadOnly();
-            } else if (this.isDoNotCharge) {
+            if (this.isDoNotCharge) {
                 this.resetForBatchFromDoNotCharge();
+            } else {
+                this.resetForBatch();
             }
         } else {
             this.updateDisplayState();
         }
     }
 
-    resetForBatchFromReadOnly() {
+    resetForBatch() {
         if (this.isPaymentMethodCreditCard()) {
             this.display.transitionTo('resetToCharge');
         } else {

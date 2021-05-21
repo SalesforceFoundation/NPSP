@@ -223,7 +223,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
         expect(editPaymentInformationButton(element)).toBeTruthy();
     });
 
-    it('should allow for payment information to be updated in update payment information is clicked', async () => {
+    it('should not be able to click cancel on widget when gift is expired', async () => {
         const element = createWidgetElement();
         element.hasPaymentMethodFieldInForm = true;
         element.paymentTransactionStatusValues = {
@@ -245,7 +245,7 @@ describe('c-ge-form-widget-tokenize-card', () => {
 
         await flushPromises();
         expect(editPaymentInformationButton(element)).toBeFalsy();
-        expect(cancelEditPaymentInformationButton(element)).toBeTruthy();
+        expect(cancelEditPaymentInformationButton(element)).toBeFalsy();
         expect(iframe(element).src).toContain(PATH_GE_TOKENIZE_CARD);
     });
 });

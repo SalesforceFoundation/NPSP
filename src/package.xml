@@ -338,6 +338,7 @@
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>GiftBatch</members>
+        <members>Gift</members>
         <members>GiftBatchAggregateGroupName</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
@@ -349,6 +350,7 @@
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftSelector</members>
+        <members>Gift_Test</members>
         <members>Gifts</members>
         <members>Gifts_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
@@ -2492,6 +2494,7 @@
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorBatchGiftEntryCurrencyMismatch</members>
+        <members>geErrorBatchGiftEntryReauthRequired</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -4337,6 +4340,7 @@
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2PauseForm</members>
+        <members>rd2Service</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>

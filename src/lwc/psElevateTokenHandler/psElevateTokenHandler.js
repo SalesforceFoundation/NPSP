@@ -1,7 +1,6 @@
 
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilCommon';
-import {ACCOUNT_HOLDER_BANK_TYPES, ACCOUNT_HOLDER_TYPES} from 'c/geConstants';
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
