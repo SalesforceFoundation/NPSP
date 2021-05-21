@@ -60,51 +60,19 @@ public class CRLP_RollupBatch_SVC {
      * @return A portion of a WHERE clause without WHERE or AND; or an empty string
      */
     public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode,
-            String parentRelationshipField) {
+        String parentRelationshipField) {
         String queryFilter = '';
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
 
-        // If the Summary Object is the Account, then filter on Accounts that have at least a single
-        // Opportunity attached. This is helpful to reduce the overall query size.
-        // To handle a scenario where an attached Opportunity was deleted, but the record not recalculated
-        // also include any records where the TotalGifts or TotalMemberships fields are not zero.
-        // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
+            ) {
 
             if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c = null OR ' + parentRelationshipField +
-                    'npo02__NumberOfClosedOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
-                    'AND (' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c = null OR ' + parentRelationshipField +
-                    'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
             } else {
-                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c >= ' + maxRelatedOppsForNonLDVMode +
-                        ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode + ')';
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
             }
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-
-            String softCreditField = parentRelationshipField + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c');
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
-            } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
-            }
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-            jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-
-            // TODO -- How to get Accounts that require using this method for Soft Credits??
-            // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
-            String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
-            } else {
-                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
-            }
-
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            // no extra filter on this type since we're always processing all GAU's using the skew method
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
 
@@ -131,18 +99,13 @@ public class CRLP_RollupBatch_SVC {
             jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations)
         {
             String objName = recordId.getSobjectType().getDescribe().getName();
-            String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID AND ('
-                + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c')
-                + ' = true';
+            String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID ';
             String filter = getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             if (!String.isEmpty(filter)) {
-                soql += ' OR ' + filter + ')';
+                soql += ' AND ' + filter;
             }
-            else {
-                soql += ')';
-            }
-            List<SObject> cntObj = database.query(soql);
-            return cntObj.size() == 1;
+            List<SObject> rollupSummaryObjects = database.query(soql);
+            return rollupSummaryObjects.size() == 1;
         }
         return true;
     }
