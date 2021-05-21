@@ -719,20 +719,14 @@ export default class GeFormRenderer extends LightningElement{
             this.handleNullPaymentFieldsInFormState();
         }
 
-        if (this.shouldAttemptSaveToCatchValidationRuleFailures()) {
-            const hasSaved = await this.saveDataImport(this.saveableFormState());
-            if (!hasSaved) {
-                this.disabled = false;
-                this.toggleSpinner();
-                return;
-            }
+        const hasSaved = await this.saveDataImport(this.saveableFormState());
+        if (!hasSaved) {
+            this.disabled = false;
+            this.toggleSpinner();
+            return;
         }
 
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
-    }
-
-    shouldAttemptSaveToCatchValidationRuleFailures() {
-        return !this._openedGiftId;
     }
 
     shouldNullPaymentRelatedFields() {
@@ -745,6 +739,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
+        if (this.isGiftAuthorized() && !tokenizedGift) {
+            const canUpdate = await this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
+            if (!canUpdate) { return; }
+        }
+
         if (tokenizedGift) {
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
@@ -782,9 +781,6 @@ export default class GeFormRenderer extends LightningElement{
                 await this.handleAuthorizationFailure(buildErrorMessage(ex));
                 return;
             }
-        }  else if (this.isGiftAuthorized()) {
-            const canUpdate = await this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
-            if (!canUpdate) { return; }
         }
 
         this.continueBatchGiftEntrySave(dataImportFromFormState, formControls, !!tokenizedGift);
