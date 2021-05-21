@@ -184,6 +184,9 @@ const DISPLAY_DEFINITIONS = Object.freeze({
             },
             resetToDeactivated: {
                 target: 'deactivated'
+            },
+            deactivated: {
+                target: 'deactivated'
             }
         }
     }
