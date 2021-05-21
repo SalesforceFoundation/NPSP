@@ -344,7 +344,7 @@ private with sharing class RD2_EntryFormController_TEST {
             'The response status should match: ' + response);
     }
 
-     /**
+    /**
     * @description Verifies commitment success response is returned upon successful schedule update 
     */
     @isTest
@@ -359,6 +359,100 @@ private with sharing class RD2_EntryFormController_TEST {
             Id = rd.Id,
             CommitmentId__c = COMMITMENT_ID,
             npe03__Amount__c = rd.npe03__Amount__c + 10);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+
+        String response = 
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            } 
+        }
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+            'The response status code should match: ' + response);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+            'The response status should match: ' + response);
+    }
+
+    /**
+    * @description Verifies commitment success response is returned upon successful schedule update 
+    */
+    @isTest
+    private static void shouldReturnSuccessResponseWhenUpdateElevateSchedulePeriod() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        insert rd;
+
+        rd = new npe03__Recurring_Donation__c(
+            Id = rd.Id,
+            CommitmentId__c = COMMITMENT_ID,
+            npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_YEARLY);
+
+        Test.startTest();
+        UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+
+        String response = 
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+        Test.stopTest();
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            } 
+        }
+
+        System.assertNotEquals(null, response, 'The Commitment response should be returned');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+            'The response status code should match: ' + response);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+            'The response status should match: ' + response);
+    }
+
+    /**
+    * @description Verifies commitment success response is returned upon successful schedule update 
+    */
+    @isTest
+    private static void shouldReturnSuccessResponseWhenUpdateElevateScheduleFrequency() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        insert rd;
+
+        rd = new npe03__Recurring_Donation__c(
+            Id = rd.Id,
+            CommitmentId__c = COMMITMENT_ID,
+            InstallmentFrequency__c = rd.InstallmentFrequency__c + 1);
 
         Test.startTest();
         UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
