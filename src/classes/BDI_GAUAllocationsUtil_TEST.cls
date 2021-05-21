@@ -1,6 +1,3 @@
-/**
- * Created by c.allen on 4/23/21.
- */
 /*
     Copyright (c) 2021 Salesforce.org
     All rights reserved.
@@ -163,7 +160,32 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                         GAU_Allocation_2_Percent__c = 50,
                         GAU_Allocation_2_GAU__c = gau2.Id);
 
-        DataImport__c[] testDIs = new DataImport__c[]{testDataImportA,testDataImportB,testDataImportC};
+        // This will test mixing Default GAUs with partially allocated DI GAUs
+        DataImport__c testDataImportD =
+                new DataImport__c(
+                        Contact1_Firstname__c = 'Jake',
+                        Contact1_Home_Phone__c = '555-321-0034',
+                        Contact1_Lastname__c = 'TestGroupD01',
+                        Contact1_Other_Phone__c = '555-456-0034',
+                        Contact1_Personal_Email__c = 'testgroupDcontact01Personal@fakedata.com',
+                        Contact1_Preferred_Phone__c = '555-567-0034',
+                        Donation_Donor__c = 'Contact1',
+                        Donation_Amount__c = 100,
+                        Home_City__c = 'Fakeville',
+                        Home_Country__c = 'United States',
+                        Home_State_Province__c = 'California',
+                        Home_Street__c = '600 Faked Blvd',
+                        Home_Zip_Postal_Code__c = '94105',
+                        Household_Phone__c = '555-789-0034',
+                        Payment_Check_Reference_Number__c = '452',
+                        Payment_Method__c = 'Check',
+                        GAU_Allocation_1_Percent__c = 50,
+                        GAU_Allocation_1_GAU__c = gau1.Id);
+
+        DataImport__c[] testDIs = new DataImport__c[]{testDataImportA,
+                                                        testDataImportB,
+                                                        testDataImportC,
+                                                        testDataImportD};
         insert testDIs;
 
         Test.StartTest();
@@ -174,6 +196,7 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         DataImport__c testDIResultA;
         DataImport__c testDIResultB;
         DataImport__c testDIResultC;
+        DataImport__c testDIResultD;
 
         for (DataImport__c di : [SELECT Id,
                 Status__c,
@@ -210,12 +233,14 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                 NPSP_Data_Import_Batch__c,
                 Additional_Object_JSON__c
         FROM DataImport__c]) {
-            if (di.Contact1_Lastname__c == 'TestGroupA01') {
+            if (di.Id == testDataImportA.Id) {
                 testDIResultA = di;
-            } else if (di.Contact1_Lastname__c == 'TestGroupB01') {
+            } else if (di.Id == testDataImportB.Id) {
                 testDIResultB = di;
-            } else if (di.Account1_Name__c == 'TestGroupC Org 1') {
+            } else if (di.Id == testDataImportC.Id) {
                 testDIResultC = di;
+            } else if (di.Id == testDataImportD.Id) {
+                testDIResultD = di;
             }
         }
 
@@ -263,8 +288,24 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         System.assertNotEquals(null,testDIResultC.GAU_Allocation_1_Imported__c);
         System.assertNotEquals(null,testDIResultC.GAU_Allocation_2_Imported__c);
 
+        // Test that this record was created successfully, and the partial GAU allocation was created
+        System.assertEquals(null,testDIResultD.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultD.Status__c);
+        System.assertNotEquals(null,testDIResultD.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultD.Contact1ImportStatus__c);
+        System.assertEquals('Contact1',testDIResultD.Donation_Donor__c);
+        System.assertNotEquals(null,testDIResultD.DonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultD.DonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultD.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultD.HomeAddressImported__c);
+        System.assertNotEquals(null,testDIResultD.GAU_Allocation_1_Imported__c);
+
         Allocation__c opptB1Alloc;
         Allocation__c pymtB1Alloc;
+        Allocation__c opptDgau1Alloc;
+        Allocation__c opptDgau3Alloc;
+        Allocation__c pymtDgau1Alloc;
+        Allocation__c pymtDgau3Alloc;
 
         for(Allocation__c alloc : [SELECT Id,
                 Opportunity__c,
@@ -279,11 +320,27 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                 opptB1Alloc = alloc;
             } else if (alloc.Payment__c == testDIResultB.PaymentImported__c) {
                 pymtB1Alloc = alloc;
+            } else if (alloc.Opportunity__c == testDIResultD.DonationImported__c &&
+                    alloc.General_Accounting_Unit__c == gau1.Id) {
+                opptDgau1Alloc = alloc;
+            } else if (alloc.Opportunity__c == testDIResultD.DonationImported__c &&
+                    alloc.General_Accounting_Unit__c == gau3.Id) {
+                opptDgau3Alloc = alloc;
+            } else if (alloc.Payment__c == testDIResultD.PaymentImported__c &&
+                    alloc.General_Accounting_Unit__c == gau1.Id) {
+                pymtDgau1Alloc = alloc;
+            } else if (alloc.Payment__c == testDIResultD.PaymentImported__c &&
+                    alloc.General_Accounting_Unit__c == gau3.Id) {
+                pymtDgau3Alloc = alloc;
             }
         }
 
         System.assertNotEquals(null,opptB1Alloc);
         System.assertNotEquals(null,pymtB1Alloc);
+        System.assertNotEquals(null,opptDgau1Alloc);
+        System.assertNotEquals(null,opptDgau3Alloc);
+        System.assertNotEquals(null,pymtDgau1Alloc);
+        System.assertNotEquals(null,pymtDgau3Alloc);
         System.assertEquals(opptB1Alloc.General_Accounting_Unit__c,gau3.id);
         System.assertEquals(pymtB1Alloc.General_Accounting_Unit__c,gau3.id);
 
