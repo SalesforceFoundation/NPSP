@@ -715,6 +715,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async submitBatch(formControls, tokenizedGift) {
+        if (this.isGiftAuthorized() && !tokenizedGift && this._openedGiftId) {
+            const canUpdate = await this.canAuthorizedGiftBeUpdated(this.saveableFormState(), formControls);
+            if (!canUpdate) { return; }
+        }
+
         if (this.shouldNullPaymentRelatedFields()) {
             this.handleNullPaymentFieldsInFormState();
         }
@@ -739,11 +744,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
-        if (this.isGiftAuthorized() && !tokenizedGift) {
-            const canUpdate = await this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
-            if (!canUpdate) { return; }
-        }
-
         if (tokenizedGift) {
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
