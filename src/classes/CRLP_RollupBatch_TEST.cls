@@ -42,8 +42,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
-            'npo02__NumberOfMembershipOpps__c', 2, '>=');
+        assertSkewModeBoolean(whereClause, true);
     }
 
     @IsTest
@@ -52,8 +51,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
-            'npo02__NumberOfMembershipOpps__c', 2, '<');
+        assertSkewModeBoolean(whereClause, false);
     }
 
     @IsTest
@@ -62,8 +60,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
-            'npo02__NumberOfMembershipOpps__c', 2, '>=');
+        assertSkewModeBoolean(whereClause, true);
     }
 
     @IsTest
@@ -72,8 +69,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c',
-            'npo02__NumberOfMembershipOpps__c', 2, '<');
+        assertSkewModeBoolean(whereClause, false);
     }
 
     @IsTest
@@ -82,7 +78,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'Number_of_Soft_Credits__c', 1, '>=');
+        assertSkewModeBoolean(whereClause, true);
     }
 
     @IsTest
@@ -91,7 +87,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'Number_of_Soft_Credits__c', 1, '<');
+        assertSkewModeBoolean(whereClause, false);
     }
 
     @IsTest
@@ -100,7 +96,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '>=');
+        assertSkewModeBoolean(whereClause, true);
     }
 
     @IsTest
@@ -109,7 +105,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '<');
+        assertSkewModeBoolean(whereClause, false);
     }
 
     @IsTest
@@ -118,7 +114,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.SkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '>=');
+        assertSkewModeBoolean(whereClause, true);
     }
 
     @IsTest
@@ -127,7 +123,7 @@ private class CRLP_RollupBatch_TEST {
             CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
             CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode
         );
-        assertFieldsAndComparisonOperators(whereClause, 'npo02__NumberOfClosedOpps__c', 1, '<');
+        assertSkewModeBoolean(whereClause, false);
     }
 
     @IsTest
@@ -173,5 +169,14 @@ private class CRLP_RollupBatch_TEST {
         if (count > 1) {
             System.assert(whereClause.contains(apiName2), 'Expected field ' + apiName2 + ' missing from skew mode where clause');
         }
+    }
+
+    private static void assertSkewModeBoolean(String whereClause, Boolean isSkewMode)
+    {
+        final String apiName = 'CustomizableRollups_UseSkewMode__c';
+
+        System.assert(whereClause.contains(apiName), 'Expected field ' + apiName + ' missing from skew mode where clause');
+        System.assert(whereClause.contains(String.valueOf(isSkewMode)), 'Expected Boolean value ' + isSkewMode +
+            ' missing from skew mode where clause');
     }
 }
