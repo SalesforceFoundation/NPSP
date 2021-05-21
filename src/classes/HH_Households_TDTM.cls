@@ -80,7 +80,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 //we'll check the trigger action again there to make sure it doesn't run twice
                 if (orgUsesLegacyHouseholds()) {
                     ContactsInLegacyHouseholds legacyHouseholdContacts =
-                            new ContactsInLegacyHouseholds(newlist);
+                            ContactsInLegacyHouseholds.newInstance(newlist);
                     legacyHouseholdContacts.onAfterInsert();
                 }
             }

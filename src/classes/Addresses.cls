@@ -489,7 +489,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     // any seasonal address also need to be considered
                     || isSeasonalChanged(addr, addrOld)) {
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
-            } else if (!npspAddress.isEqualTo(npspAddressOld, TRUE)) {
+            } else if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
                     defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
                 }
@@ -506,7 +506,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addr);
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
-            if (!npspAddress.isEqualTo(npspAddressOld, TRUE)) {
+            if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
                 if (!isDefault(addr)) {
                     nonDefaultsWithChanges.put(idOf(addr), addr);
                 }
@@ -557,7 +557,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
             if (addrDup != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (!npspAddressNew.isEqualTo(npspAddressDup, includeAddressType)) {
+                if (!npspAddressNew.isEqualToIncludingAddressType(npspAddressDup, includeAddressType)) {
                     npspAddressDup.copyFrom(npspAddressNew);
                     if (npspAddressNew.isDefault()) {
                         npspAddressDup.setAsDefault();
@@ -602,7 +602,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 for (Address__c addrHH : listAddrHH) {
                     NPSP_Address npspAddressHH = new NPSP_Address(addrHH);
                     // only include address type in the test if the new one isn't empty.
-                    if (npspAddress.isEqualTo(npspAddressHH, npspAddress.getType() != null)) {
+                    if (isMatch(npspAddress, npspAddressHH)) {
                         // found exact match, record it and bail out
                         addrMatch = addrHH;
                         break;
@@ -624,6 +624,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         return mapAddrDupAddr;
+    }
+
+    private static Boolean isMatch(NPSP_Address npspAddress, NPSP_Address npspAddressHH) {
+        return npspAddress.isEqualToIncludingAddressType(npspAddressHH, false);
     }
 
     /*******************************************************************************************************
@@ -729,7 +733,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     NPSP_Address npspAddressCurrent = new NPSP_Address(new Address__c());
                     npspAddressCurrent.copyFromSObject(acc, 'Billing', null);
                     // now see if the address has changed, and if not, we don't need to process it anymore
-                    if (npspAddr.isEqualTo(npspAddressCurrent, false)) {
+                    if (npspAddr.isEqualToIncludingAddressType(npspAddressCurrent, false)) {
                         mapAccIdAddr.remove(acc.Id);
                     }
 

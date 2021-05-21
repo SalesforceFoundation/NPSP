@@ -74,27 +74,27 @@ public inherited sharing class AddressService {
     * @param addr Address
     * @return boolean. true if any of the Address fields on the Contact are different from this Address record
     */
-    public Boolean isSObjectAddressDifferent(SObject sObj, Address__c addr) {
+    public Boolean isSObjectAddressDifferent(SObject sObj, IAddress other) {
+        Address__c addr = (Address__c) other.getRecord();
         if (sObj == null || addr == null) {
             return false;
         }
-        Boolean isContact = (sObj.getSObjectType() == Contact.SObjectType);
-        String prefix = (isContact ? 'Mailing' : 'Billing');
+        String prefix = ((sObj.getSObjectType() == Contact.SObjectType) ? 'Mailing' : 'Billing');
 
-        Boolean isDifferent = (
-                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), getMultilineStreet(addr)) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), addr.MailingCity__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), addr.MailingState__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), addr.MailingPostalCode__c) ||
-                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), addr.MailingCountry__c) ||
-                        (Decimal) sObj.get(prefix + 'Latitude') != addr.Geolocation__Latitude__s ||
-                        (Decimal) sObj.get(prefix + 'Longitude') != addr.Geolocation__Longitude__s ||
-                        (isContact &&
-                                (!equalsCaseSensitive((String) sObj.get('npe01__Primary_Address_Type__c'), addr.Address_Type__c) ||
-                                        !equalsCaseSensitive((String) sObj.get('Current_Address__c'), addr.Id))
-                        )
-        );
+        Boolean isDifferent = isDifferentIncludingLatLong(sObj, prefix, other);
         return isDifferent;
+    }
+
+    private Boolean isDifferentIncludingLatLong(SObject sObj, String prefix, IAddress other) {
+        return (
+                !equalsCaseSensitive((String) sObj.get(prefix + 'Street'), other.multilineStreet()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'City'), other.city()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'State'), other.state()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'PostalCode'), other.postalCode()) ||
+                        !equalsCaseSensitive((String) sObj.get(prefix + 'Country'), other.country()) ||
+                        (Decimal) sObj.get(prefix + 'Latitude') != other.latitude() ||
+                        (Decimal) sObj.get(prefix + 'Longitude') != other.longitude()
+        );
     }
 
     /*******************************************************************************************************
@@ -114,16 +114,70 @@ public inherited sharing class AddressService {
     }
 
     /*******************************************************************************************************
-    * @description utility to combine mailing street fields into a single string with embedded CR LF
-    * @param addr the Address to look at
-    * @return boolean
+    * @description Utility to copy Address fields from an Address object to a Contact or Account.
+    * Handles instances where State and Country picklists are enabled, and multiline street addresses.
+    * @param addr the Address object to copy from
+    * @param sobjDst the destination Contact or Account
+    * @param strFieldPrefix the address fields to copy to, ie., Mailing, Other, Shipping, Billing
+    * @param strFieldAddrType an optional Address Type field on sobjDst to copy to
+    * @return void
     */
-    public String getMultilineStreet(Address__c addr) {
-        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
-        if (isOneLineStreetAddress) {
-            return addr.MailingStreet__c;
-        }
-        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
-    }
+    public void copyOntoSObject(IAddress anAddress, SObject sobjDst,
+            String strFieldPrefix, String strFieldAddrType) {
+        Address__c addr = (Address__c) anAddress.getRecord();
 
+        sobjDst.put(strFieldPrefix + 'Street', anAddress.multilineStreet());
+        sobjDst.put(strFieldPrefix + 'City', addr.MailingCity__c);
+        sobjDst.put(strFieldPrefix + 'PostalCode', addr.MailingPostalCode__c);
+        sobjDst.put(strFieldPrefix + 'Latitude', addr.Geolocation__Latitude__s);
+        sobjDst.put(strFieldPrefix + 'Longitude', addr.Geolocation__Longitude__s);
+
+        if (!orgConfig.isStateCountryPicklistsEnabled()) {
+            sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+            sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+        } else {
+            if (addr.MailingCountry__c != null) {
+                if (orgConfig.validCountriesByLabel().containsKey(addr.MailingCountry__c
+                        .toUpperCase()
+                )) {
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                    sobjDst.put(strFieldPrefix + 'CountryCode',
+                            orgConfig.validCountriesByLabel().get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else if (orgConfig.validCountriesByCode().containsKey(addr.MailingCountry__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'CountryCode', addr.MailingCountry__c.toUpperCase());
+                    sobjDst.put(strFieldPrefix + 'Country',
+                            orgConfig.validCountriesByCode().get(
+                                    addr.MailingCountry__c.toUpperCase()));
+                } else {
+                    // allow the invalid country to be placed in the country field, so Salesforce will generate the error.
+                    sobjDst.put(strFieldPrefix + 'Country', addr.MailingCountry__c);
+                }
+            } else { // MailingCountry = null
+                sobjDst.put(strFieldPrefix + 'CountryCode', null);
+                sobjDst.put(strFieldPrefix + 'Country', null);
+            }
+            if (addr.MailingState__c != null) {
+                if (orgConfig.validStatesByLabel().containsKey(addr.MailingState__c
+                        .toUpperCase())) {
+                    sobjDst.put(strFieldPrefix + 'State', addr.MailingState__c);
+                    sobjDst.put(strFieldPrefix + 'StateCode', orgConfig.validStatesByLabel()
+                            .get(addr
+                                    .MailingState__c.toUpperCase()));
+                } else {
+                    // too expensive for us to create the map of CountryCode|StateCode to StateLabel
+                    // so we will just try to save any state that isn't a label as a code.
+                    sobjDst.put(strFieldPrefix + 'StateCode', addr.MailingState__c.toUpperCase());
+                }
+            } else { // MailingState = null
+                sobjDst.put(strFieldPrefix + 'StateCode', null);
+                sobjDst.put(strFieldPrefix + 'State', null);
+            }
+        }
+
+        if (strFieldAddrType != null)
+            sobjDst.put(strFieldAddrType, addr.Address_Type__c);
+
+    }
 }
