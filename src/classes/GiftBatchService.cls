@@ -34,9 +34,20 @@
 */
 public with sharing class GiftBatchService {
 
+    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
+        String.valueOf(DataImport__c.Donation_Amount__c), 
+        String.valueOf(DataImport__c.Donation_Date__c), 
+        String.valueOf(DataImport__c.Contact1Imported__c),
+        String.valueOf(DataImport__c.Contact1_Firstname__c), 
+        String.valueOf(DataImport__c.Contact1_Lastname__c), 
+        String.valueOf(DataImport__c.Account1Imported__c),
+        String.valueOf(DataImport__c.Account1_Name__c)
+    };
+
     public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
         GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
         GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
         return groupedTotals.totalsFor(batchId);
     }
+    
 }

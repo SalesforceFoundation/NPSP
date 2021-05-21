@@ -335,6 +335,7 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>Gift</members>
         <members>GiftBatchAggregateGroupName</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
@@ -345,6 +346,7 @@
         <members>GiftBatchTotals</members>
         <members>GiftBatches</members>
         <members>GiftSelector</members>
+        <members>Gift_Test</members>
         <members>Gifts</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
@@ -2489,6 +2491,7 @@
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorBatchGiftEntryCurrencyMismatch</members>
+        <members>geErrorBatchGiftEntryReauthRequired</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>

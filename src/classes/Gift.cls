@@ -30,29 +30,60 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Gift Selector Class in NPSP.
+* @description Gift entity class in NPSP.
 */
 
-public with sharing class GiftSelector {
-
-    public List<DataImport__c> getAuthorizedGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-                AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
-        ];
-    }
-
-    public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
-        String queryString = new UTIL_Query()
-            .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
-            .withWhere('Id =: giftId')
-            .withSecurityEnforced()
-            .build();
-
-        return Database.query(queryString);
+public with sharing class Gift {
+    
+    @TestVisible
+    private DataImport__c dataImport;
+    private List<String> availableFields;
+    private GiftSelector giftSelector {
+        get {
+            if (giftSelector == null) {
+                giftSelector = new GiftSelector();
+            }
+            return giftSelector;
+        }
+        set;
     }
     
+    public Gift(DataImport__c dataImport) {
+        this.dataImport = dataImport;
+        this.populateAvailableFields();
+    }
+
+    public Boolean requiresReauthorizationBeforeChange() {
+        if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
+            return false; 
+        }
+
+        return this.hasPaymentFieldsChanged();
+    }
+
+    private void populateAvailableFields() {
+        Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
+        List<String> fields = new List<String>();
+
+        for (String field : dataImportFields.keySet()) {
+            if (GiftBatchService.PAYMENT_INTEGRATION_FIELDS.contains(field)) {
+                fields.add(field);
+            }
+        }
+
+        this.availableFields = fields;
+    }
+
+    private Boolean hasPaymentFieldsChanged() {
+        DataImport__c databaseDataImport = giftSelector.getGiftById(this.dataImport.Id, this.availableFields);
+
+        for (String field : this.availableFields) {
+            if (this.dataImport.get(field) != databaseDataImport.get(field)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

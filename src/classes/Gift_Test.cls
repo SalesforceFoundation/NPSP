@@ -27,32 +27,29 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Gift Selector Class in NPSP.
-*/
 
-public with sharing class GiftSelector {
-
-    public List<DataImport__c> getAuthorizedGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-                AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
-        ];
-    }
-
-    public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
-        String queryString = new UTIL_Query()
-            .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
-            .withWhere('Id =: giftId')
-            .withSecurityEnforced()
-            .build();
-
-        return Database.query(queryString);
-    }
+@isTest
+private class Gift_Test {
     
+    @isTest
+    static void validateThatGiftNeedsToBeReauthorized() {
+        DataImport__c dataImport = new DataImport__c(
+            Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+            Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
+            Donation_Amount__c = 3.00
+        );
+
+        insert dataImport;
+
+        Test.startTest();
+
+        dataImport.Donation_Amount__c = 5.00;
+        Gift authorizedGift = new Gift(dataImport);
+        Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
+
+        Test.stopTest();
+
+        System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
+        System.assert(needsReauthorization);
+    }
 }
