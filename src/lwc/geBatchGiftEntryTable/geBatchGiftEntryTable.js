@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
@@ -19,6 +19,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
+import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
@@ -301,6 +302,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             }
         }));
         this.notifyGiftBatchHeaderOfTableChange();
+        this.requestFormRendererReset();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            bgeGridGiftDeleted,
+            'success',
+            'dismissible',
+            null
+        );
     }
 
     loadMoreData(event) {
@@ -488,6 +497,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     notifyGiftBatchHeaderOfTableChange = () => {
         fireEvent(this, 'geBatchGiftEntryTableChangeEvent', {});
+    }
+
+    requestFormRendererReset() {
+        fireEvent(this, 'formRendererReset', {});
     }
 
     _dataImportObjectInfo;

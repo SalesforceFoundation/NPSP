@@ -285,6 +285,7 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
         registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
         registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
+        registerListener('formRendererReset', this.reset, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
