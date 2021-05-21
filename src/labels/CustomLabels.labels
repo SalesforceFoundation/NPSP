@@ -1722,12 +1722,20 @@
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDDayOfMonthCannotChange</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Day of Month Changed</shortDescription>
+        <value>You can't change Day of Month for an Elevate-connected Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDEffectiveDateMustBeValid</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Checks if Elevate Recurring Donation&apos;s Effective Date is valid or not</shortDescription>
-        <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donations cannot be in the future.</value>
+        <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donation cannot be in the future.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDCampaignCannotUpdateToNull</fullName>

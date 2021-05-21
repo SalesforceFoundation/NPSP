@@ -758,7 +758,7 @@ private with sharing class RD2_ValidationService_TEST {
         String errMessage = '';
         try {
             Test.startTest();
-            rd.InstallmentFrequency__c = 2;
+            rd.StartDate__c = rd.StartDate__c.addDays(-1);
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -809,6 +809,42 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     /**
+    * @description Verifies that Elevate RD cannot have Day of Month changed
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenDayOfMonthChanges() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Day_of_Month__c = '1';
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDDayOfMonthCannotChange, errorRecords[0].getFirstError(),
+            'Elevate RD should not be updated when Day of Month changes.');
+    }
+
+    /**
     * @description Verifies that Elevate RD cannot have amount less than 1 dollar
     */
     @isTest
@@ -840,7 +876,7 @@ private with sharing class RD2_ValidationService_TEST {
         Test.stopTest();
 
         System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorRecords[0].getFirstError(),
-            'Elvate RD should not be updated when Amount is less than 1.');
+            'Elevate RD should not be updated when Amount is less than 1.');
     }
 
     /**

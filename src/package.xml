@@ -1831,6 +1831,7 @@
         <members>RD2_ElevateRDAmountMustBeValid</members>
         <members>RD2_ElevateRDCampaignCannotUpdateToNull</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDDayOfMonthCannotChange</members>
         <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
