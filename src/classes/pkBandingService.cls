@@ -18,11 +18,10 @@ global with sharing class pkBandingService {
         dispatcherResponse dResponse = new dispatcherResponse();
         SObject[] events;
 
-        // class vars
-        Integer recordCount = 0;
-        Integer successCount = 0;
+        // class vars        
         Integer failedCount = 0;
-        Set<String> failedIds = new Set<String>();
+        Map<Id,String> failedIdsMap = new Map<Id,String>();
+        Set<Id> failedIds = new Set<Id>();
         
         // aux vars
         Integer band;        
@@ -30,14 +29,13 @@ global with sharing class pkBandingService {
         Integer eventLimit;
         String lastOffset;        
 
-        try { system.debug('init service');
+        try {
 
             // deserialize payload
             request = (Cursor) JSON.deserialize(
                 RestContext.request.requestBody.toString(),
                 Cursor.class
-            ); 
-            system.debug('request data:' + request);
+            );            
 
             // init aux vars
             numberOfEvents = 0;
@@ -53,18 +51,14 @@ global with sharing class pkBandingService {
             // set resp obj
             pkb.resp = dResponse;
             // get next batch
-            events = pkb.getNextBatch(); system.debug('events results: ' + events); system.debug('events size: ' + events.size());
+            events = pkb.getNextBatch();
             // get resp obj from service
             dResponse = pkb.resp;
-            dResponse.numberProcessed = events.size(); system.debug('dResponse: ' + dResponse);
+            dResponse.numberProcessed = events.size();
 
             // process RDs if result == true
-            if (dResponse.numberProcessed>0 && dResponse.result) { system.debug('calling RD method...');
-
-                // counter of RDs to process
-                recordCount = events.size();
-                System.debug('recordCount: ' + recordCount);
-
+            if (dResponse.numberProcessed>0 && dResponse.result) {
+              
                 // disable rollups
                 TDTM_Config_API.disableAllRollupTriggers();
                 // execute RD service
@@ -74,11 +68,10 @@ global with sharing class pkBandingService {
                                                                     .withCurrentDate(Date.Today())
                                                                     .evaluateOpportunities();
 
-                // todo: maybe get ids to replay
-
-                // counter after execution                
-                failedCount += evalService.getRecordsFailed();   System.debug('rdIds size: ' + evalService.rdIds.size());  System.debug('failedCount: ' + failedCount);            
-                successCount += evalService.rdIds.size() - evalService.getRecordsFailed(); System.debug('successCount: ' + successCount);            
+                // capture after execution results
+                failedCount = evalService.getRecordsFailed();
+                failedIds = evalService.getRecordsFailedId();
+                failedIdsMap = evalService.getRecordsFailedMap();
 
             } 
 
@@ -87,6 +80,7 @@ global with sharing class pkBandingService {
             // update response object
             dResponse.cursor.offset = lastOffset;
             dResponse.numberProcessed = numberOfEvents; // TODO: accomodate this number
+            dResponse.numberErrors = failedCount;
             dResponse.result = false;
             dResponse.error =  ERR_CLASS_NAME + e.getMessage();
             response.responseBody = Blob.valueOf(JSON.serialize(dResponse));
@@ -94,6 +88,9 @@ global with sharing class pkBandingService {
         }
 
         // service response
+        dResponse.numberErrors = failedCount;
+        dResponse.failedRecords = failedIdsMap;
+        dResponse.failedRecordsIds = failedIds;
         response.responseBody = Blob.valueOf(JSON.serialize(dResponse));
     }
 
@@ -101,6 +98,9 @@ global with sharing class pkBandingService {
         public Boolean result;
         public String error;
         public Integer numberProcessed;
+        public Integer numberErrors;
+        public Map<Id,String> failedRecords = new Map<Id,String>();
+        public Set<Id> failedRecordsIds = new Set<Id>();
         public Boolean completed; // consumed all records in band
         public Cursor cursor = new Cursor();
 
