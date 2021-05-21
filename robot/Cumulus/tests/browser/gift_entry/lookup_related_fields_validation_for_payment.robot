@@ -19,6 +19,7 @@ Suite Teardown  Run Keywords
 Setup Test Data
     [Documentation]       Create contact, opportunity, get current date and npsp
     ...                   generate random names for template and batch.
+    [Tags]                unstable       feature:GE
 
     &{CONTACT} =          API Create Contact       FirstName=${faker.first_name()}    LastName=${faker.last_name()}
     Set suite variable    &{CONTACT}
