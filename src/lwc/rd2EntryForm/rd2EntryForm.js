@@ -22,6 +22,7 @@ import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.Ca
 import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
 import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
 import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
+import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_LAST_ELEVATE_VERSION from '@salesforce/schema/npe03__Recurring_Donation__c.LastElevateVersionPlayed__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
@@ -465,9 +466,12 @@ export default class rd2EntryForm extends LightningElement {
     */
     hasElevateFieldsChange(allFields) {
         let amount = getFieldValue(this.record, FIELD_AMOUNT);
+        let frequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
+        let period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
         let campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
-
         return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
+            || frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName])
+            || period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName]
             || campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
     }
 
