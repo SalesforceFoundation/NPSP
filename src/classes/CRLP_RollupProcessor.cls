@@ -111,10 +111,7 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     private String qualifiedSkewField;
 
-    /**
-     * @description Boolean set true if parent record should use the force skew mode field on Account & Contact
-     */
-    private Boolean useForceSkewModeField;
+    private SObjectType summaryObjectType;
 
     /** *************************************************************************************************************
     * @description Constructor
@@ -498,16 +495,9 @@ public inherited sharing class CRLP_RollupProcessor {
         // has changed or not.
         Id parentId = parent.Id;
 
-        // Determine status of force skew mode field
-        initForceSkewModeValues(parent.getSObjectType());
-        Boolean isForceSkewModeTrue = false;
-        if (this.useForceSkewModeField && parent.isSet(this.qualifiedSkewField)) {
-            isForceSkewModeTrue = (Boolean) parent.get(this.qualifiedSkewField);
-        }
-
         CRLP_VRollupHandler handler = initHandlerClass(parent);
 
-        List<CRLP_Rollup> rollupDefs = doFinalRollup(handler, parentId);
+        List<CRLP_Rollup> rollupsToCalculate = doFinalRollup(handler, parentId);
         if (options.doSummaryObjectComparison == false) {
             return null;
         }
@@ -516,16 +506,14 @@ public inherited sharing class CRLP_RollupProcessor {
         SObject updatedRecord = handler.getPopulatedSObject();
 
         // Determine if the updated SObject record is different than the parent.
-        Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupDefs);
+        Boolean needsUpdate = CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, rollupsToCalculate);
 
-        // Unconditionally set force skew flag if parent is Account/Contact and running in skew mode
-        if (mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && this.useForceSkewModeField && !isForceSkewModeTrue) {
+        initForceSkewModeValues(parent);
+        if (isSkewModeNeeded(updatedRecord)) {
             updatedRecord.put(this.qualifiedSkewField, true);
-            needsUpdate = true;
-        }
 
-        if (!needsUpdate) {
-            updatedRecord = null;
+        } else if (!needsUpdate) {
+            return null;
         }
 
         return updatedRecord;
@@ -533,13 +521,52 @@ public inherited sharing class CRLP_RollupProcessor {
 
     /**
      * @description Set variables associated with handling force skew mode checkbox on Account and Contact
-     * @param parentObjType Base SObject type for the dynamically generated query
+     * @param parent Base SObject for the dynamically generated query
      */
-    private void initForceSkewModeValues(SObjectType parentObjType) {
+    private void initForceSkewModeValues(SObject parent) {
         if (this.qualifiedSkewField == null) {
             this.qualifiedSkewField = UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c');
-            this.useForceSkewModeField = (parentObjType == Account.SObjectType || parentObjType == Contact.SObjectType);
+            this.summaryObjectType = parent.getSObjectType();
         }
+    }
+
+    /**
+     * @description Determine whether skew mode is needed in the future for this job
+     * @param updatedRecord Base SObject for the dynamically generated query
+     * @return Boolean
+     */
+    private Boolean isSkewModeNeeded(SObject updatedRecord) {
+        if ((this.summaryObjectType != Account.SObjectType && this.summaryObjectType != Contact.SObjectType)
+            || mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+        {
+            return false;
+        }
+
+        if (isRollupFieldAtThreshold(updatedRecord)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @description Determine whether calculated rollups have arrived at threshold value.
+     * @param summaryObject Updated SObject reflecting rollup calculations
+     * @return Boolean
+     */
+    private Boolean isRollupFieldAtThreshold(SObject summaryObject) {
+        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+
+        if ((Decimal) summaryObject.get('npo02__NumberOfClosedOpps__c') >= maxRelatedOppsForNonLDVMode ||
+            (Decimal) summaryObject.get('npo02__NumberOfMembershipOpps__c') >= maxRelatedOppsForNonLDVMode) {
+            return true;
+
+        } else if (this.summaryObjectType == Contact.SObjectType &&
+            (Decimal) summaryObject.get(UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c'))
+                >= maxRelatedOppsForNonLDVMode) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
