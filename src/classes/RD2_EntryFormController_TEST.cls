@@ -408,16 +408,18 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
         insert rd;
 
-        rd = new npe03__Recurring_Donation__c(
+        npe03__Recurring_Donation__c updateRequestRd = new npe03__Recurring_Donation__c(
             Id = rd.Id,
             CommitmentId__c = COMMITMENT_ID,
-            npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_YEARLY);
+            npe03__Installment_Period__c = RD_Constants.INSTALLMENT_PERIOD_YEARLY,
+            npe03__Contact__c = rd.npe03__Contact__c
+        );
 
         Test.startTest();
         UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
 
         String response = 
-            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(updateRequestRd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         Integer statusCode;
@@ -455,16 +457,18 @@ private with sharing class RD2_EntryFormController_TEST {
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
         insert rd;
 
-        rd = new npe03__Recurring_Donation__c(
+        npe03__Recurring_Donation__c updateRequestRd = new npe03__Recurring_Donation__c(
             Id = rd.Id,
             CommitmentId__c = COMMITMENT_ID,
-            InstallmentFrequency__c = rd.InstallmentFrequency__c + 1);
+            InstallmentFrequency__c = rd.InstallmentFrequency__c + 1,
+            npe03__Contact__c = rd.npe03__Contact__c
+        );
 
         Test.startTest();
         UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
 
         String response = 
-            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+            RD2_EntryFormController.handleUpdatePaymentCommitment(JSON.serialize(updateRequestRd), PAYMENT_METHOD_TOKEN);
         Test.stopTest();
 
         Integer statusCode;
