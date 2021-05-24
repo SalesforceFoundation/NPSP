@@ -27,31 +27,38 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateCaptureGroupResponse {
-    public String id;
-    public List<Errors> errors;
-    public String status;
+public with sharing class ElevateBatch {
+    @AuraEnabled public String groupId;
 
-    public class Errors {
-        public String message;
-        public String failure_reason;
+    @TestVisible
+    private ElevateBatchService elevateBatchService {
+        get {
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
+            }
+            return elevateBatchService;
+        }
+        set;
+    }
+    public ElevateBatch() {}
+
+    public ElevateBatch(String groupId) {
+        this.groupId = groupId;
     }
 
-    public String id() {
-        return id;
+    public ElevateBatch(ElevateBatchResponse elevateBatchResponse) {
+        this.groupId = elevateBatchResponse.id();
     }
 
-    public String status() {
-        return status;
+    public ElevateBatch create() {
+        return elevateBatchService.getelevateBatch();
     }
 
-    public List<Errors> errors() {
-        return errors;
+    public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
+        return elevateBatchService.sendAddRequest(tokenizedGift, groupId());
     }
 
-    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
-        return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
-                && errors == null
-                && status == System.Label.BatchProgressStatusProcessing;
+    public String groupId() {
+        return groupId;
     }
 }

@@ -1,7 +1,7 @@
-import apexAddToCaptureGroup from '@salesforce/apex/GE_GiftEntryController.addToCaptureGroup';
-import apexCreateCaptureGroup from '@salesforce/apex/GE_GiftEntryController.createCaptureGroup';
+import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addToElevateBatch';
+import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 
-class ElevateCaptureGroup {
+class ElevateBatch {
 
     constructor(elevateBatchId) {
         this.elevateBatchId = elevateBatchId;
@@ -14,7 +14,7 @@ class ElevateCaptureGroup {
         }
 
         try {
-            const authorizedGift = await apexAddToCaptureGroup(
+            const authorizedGift = await apexAddToElevateBatch(
                 {tokenizedGift: tokenizedGift, groupId: this.elevateBatchId}
             );
             return authorizedGift;
@@ -30,10 +30,10 @@ class ElevateCaptureGroup {
     }
 
     async create() {
-        const captureGroup = await apexCreateCaptureGroup();
-        return captureGroup.groupId;
+        const elevateBatch = await apexCreateElevateBatch();
+        return elevateBatch.groupId;
     }
 
 }
 
-export default ElevateCaptureGroup;
+export default ElevateBatch;

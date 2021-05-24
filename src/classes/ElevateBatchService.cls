@@ -27,14 +27,14 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public virtual with sharing class ElevateCaptureGroupService {
+public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new ElevateCaptureGroup(groupId).add(tokenizedGift);
+    public virtual ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String groupId) {
+        return new ElevateBatch(groupId).add(tokenizedGift);
     }
 
-    public virtual ElevateCaptureGroup createCaptureGroup() {
-        return new ElevateCaptureGroup().create();
+    public virtual ElevateBatch createElevateBatch() {
+        return new ElevateBatch().create();
     }
 
     public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
@@ -48,35 +48,35 @@ public virtual with sharing class ElevateCaptureGroupService {
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
     }
 
-    public ElevateCaptureGroup getCaptureGroup() {
+    public ElevateBatch getElevateBatch() {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 createRequest()
         );
-        ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
-                response.body, ElevateCaptureGroupResponse.class);
-        return new ElevateCaptureGroup(captureGroupResponse);
+        ElevateBatchResponse ElevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
+                response.body, ElevateBatchResponse.class);
+        return new ElevateBatch(ElevateBatchResponse);
     }
 
     private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withCaptureGroupId(groupId)
+                .withElevateBatchId(groupId)
                 .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
                 .withBody(JSON.serialize(tokenizedGift))
                 .build();
     }
 
-    public List<ElevateCaptureGroupResponse> capture(Set<String> captureGroupIds) {
-        List<ElevateCaptureGroupResponse> elevateCaptureGroupResponses = new List<ElevateCaptureGroupResponse>();
-        for (String elevateBatchId : captureGroupIds) {
+    public List<ElevateBatchResponse> capture(Set<String> ElevateBatchIds) {
+        List<ElevateBatchResponse> ElevateBatchResponses = new List<ElevateBatchResponse>();
+        for (String elevateBatchId : ElevateBatchIds) {
             UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                     captureRequest(elevateBatchId)
             );
-            ElevateCaptureGroupResponse captureGroupResponse = (ElevateCaptureGroupResponse)JSON.deserialize(
-                    response.body, ElevateCaptureGroupResponse.class);
-            elevateCaptureGroupResponses.add(captureGroupResponse);
+            ElevateBatchResponse ElevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
+                    response.body, ElevateBatchResponse.class);
+            ElevateBatchResponses.add(ElevateBatchResponse);
         }
-        return elevateCaptureGroupResponses;
+        return ElevateBatchResponses;
     }
 
     @TestVisible
@@ -92,21 +92,21 @@ public virtual with sharing class ElevateCaptureGroupService {
     }
 
     @TestVisible
-    private void checkForCaptureGroupErrorsIn(ElevateCaptureGroupResponse captureGroupResponse) {
-        if (hasCaptureGroupErrors(captureGroupResponse)) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(captureGroupResponse.errors()[0].message);
+    private void checkForElevateBatchErrorsIn(ElevateBatchResponse ElevateBatchResponse) {
+        if (hasElevateBatchErrors(ElevateBatchResponse)) {
+            UTIL_AuraEnabledCommon.throwAuraHandledException(ElevateBatchResponse.errors()[0].message);
         }
     }
 
-    private Boolean hasCaptureGroupErrors(ElevateCaptureGroupResponse captureGroupResponse) {
-        return captureGroupResponse.errors() != null &&
-               !captureGroupResponse.errors().isEmpty();
+    private Boolean hasElevateBatchErrors(ElevateBatchResponse ElevateBatchResponse) {
+        return ElevateBatchResponse.errors() != null &&
+               !ElevateBatchResponse.errors().isEmpty();
     }
 
     private HttpRequest createRequest() {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withEndpoint(PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP)
+                .withEndpoint(PS_Request.ElevateEndpoint.CREATE_ELEVATE_BATCH)
                 .withBody(createRequestBody())
                 .build();
     }
@@ -114,8 +114,8 @@ public virtual with sharing class ElevateCaptureGroupService {
     private HttpRequest captureRequest(String groupId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withCaptureGroupId(groupId)
-                .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP)
+                .withElevateBatchId(groupId)
+                .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_ELEVATE_BATCH)
                 .build();
     }
 

@@ -110,7 +110,7 @@ public inherited sharing class PS_Request {
         private ElevateEndpoint endpoint;
         private String jsonBody;
         private String commitmentId;
-        private String captureGroupId;
+        private String elevateBatchId;
         private Integer timeout;
 
         /***
@@ -148,8 +148,8 @@ public inherited sharing class PS_Request {
         * @param commitmentId Elevate Capture Group Id
         * @return Builder This request builder instance
         */
-        public Builder withCaptureGroupId(String captureGroupId) {
-            this.captureGroupId = captureGroupId;
+        public Builder withElevateBatchId(String elevateBatchId) {
+            this.elevateBatchId = elevateBatchId;
             return this;
         }
 
@@ -258,14 +258,14 @@ public inherited sharing class PS_Request {
                 value = String.format(
                     ENDPOINT_ADD_TO_CAPTURE_GROUP,
                     new String[] {
-                        captureGroupId
+                        elevateBatchId
                     }
                 );
             } else if (endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
                 value = String.format(
                         ENDPOINT_CHARGE_CAPTURE_GROUP,
                         new String[] {
-                                captureGroupId
+                                elevateBatchId
                         }
                 );
             }
@@ -373,7 +373,7 @@ public inherited sharing class PS_Request {
                 value = ROLE_PAYMENT_PURCHASE;
             } else if (isCommitmentEndpoint()) {
                 value = ROLE_PAYMENT_COMMITMENTS;
-            } else if (isCaptureGroupEndpoint()) {
+            } else if (isElevateBatchEndpoint()) {
                 value = ROLE_PAYMENT_BATCH;
             }
             return value;
@@ -387,7 +387,7 @@ public inherited sharing class PS_Request {
             return endpoint == ElevateEndpoint.PURCHASE;
         }
 
-        private Boolean isCaptureGroupEndpoint() {
+        private Boolean isElevateBatchEndpoint() {
             return endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
                     || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP
                     || endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP;

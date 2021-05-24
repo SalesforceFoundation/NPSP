@@ -37,15 +37,15 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
-    @isTest static void createCreditCardCaptureGroupShouldReturnFailureResponse() {
-        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
-        String errorMessage = new ElevateCaptureGroupServiceInvalidRequest().createCaptureGroupErrorMessage()
+    @isTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+        String errorMessage = new ElevateBatchServiceInvalidRequest().createElevateBatchErrorMessage()
                 .errors()[0].message;
         AuraHandledException auraException;
 
         Test.startTest();
             try {
-                GE_GiftEntryController.createCaptureGroup();
+                GE_GiftEntryController.createElevateBatch();
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -57,14 +57,14 @@ private with sharing class GE_GiftEntryController_TEST {
                     'message specified in the invalid request data type.');
     }
 
-    @isTest static void createCreditCardCaptureGroupShouldReturnSuccessResponse() {
-        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+    @isTest static void createCreditCardElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
-        ElevateCaptureGroup captureGroup;
+        ElevateBatch elevateBatch;
 
         Test.startTest();
             try {
-                captureGroup = GE_GiftEntryController.createCaptureGroup();
+                elevateBatch = GE_GiftEntryController.createElevateBatch();
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }
@@ -74,18 +74,18 @@ private with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-id', captureGroup.groupId(), 'The capture group id should be ' +
+        System.assertEquals('test-id', elevateBatch.groupId(), 'The capture group id should be ' +
                 'populated on a successful response.');
     }
 
-    @isTest static void addCreditCardCaptureGroupShouldReturnSuccessResponse() {
-        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceValidRequest();
+    @isTest static void addCreditCardElevateBatchShouldReturnSuccessResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceValidRequest();
         AuraHandledException auraException;
         ElevateAuthorizedGift authorizedGift;
 
         Test.startTest();
             try {
-                authorizedGift = GE_GiftEntryController.addToCaptureGroup(new ElevateTokenizedGift(),
+                authorizedGift = GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(),
                         'test-valid-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
@@ -100,15 +100,15 @@ private with sharing class GE_GiftEntryController_TEST {
                 'The capture group id should be populated on a successful response.');
     }
 
-    @isTest static void addCreditCardCaptureGroupShouldReturnFailureResponse() {
-        GE_GiftEntryController.captureGroupService = new ElevateCaptureGroupServiceInvalidRequest();
-        String errorMessage = new ElevateCaptureGroupServiceInvalidRequest().addCaptureGroupErrorMessage()
+    @isTest static void addCreditCardElevateBatchShouldReturnFailureResponse() {
+        GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
+        String errorMessage = new ElevateBatchServiceInvalidRequest().addElevateBatchErrorMessage()
                 .errors()[0].message;
         AuraHandledException auraException;
 
         Test.startTest();
             try {
-                GE_GiftEntryController.addToCaptureGroup(new ElevateTokenizedGift(), 'test-valid-group-id');
+                GE_GiftEntryController.addToElevateBatch(new ElevateTokenizedGift(), 'test-valid-group-id');
             } catch (AuraHandledException ex) {
                 auraException = ex;
             }

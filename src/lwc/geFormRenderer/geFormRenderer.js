@@ -68,7 +68,7 @@ import {
     showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateCaptureGroup from './elevateCaptureGroup';
+import ElevateBatch from './elevateElevateBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -168,7 +168,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
-    latestCaptureGroupId = null;
+    latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
 
@@ -710,13 +710,13 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
-                const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+                const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
+                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
                 if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
-                    this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
+                    this.latestElevateBatchId = currentElevateBatch.elevateBatchId;
 
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestElevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
