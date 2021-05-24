@@ -1651,6 +1651,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Payment_Status_Display_Value__c</fullName>
+        <externalId>false</externalId>
+        <formula>IF(Payment_Status__c = &apos;EXPIRED&apos;, &apos;Expired Authorization&apos;, &apos;&apos;)</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Payment Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Status__c</fullName>
         <description>The status of the import for this record, for example, Imported or Failed.</description>
         <externalId>false</externalId>
