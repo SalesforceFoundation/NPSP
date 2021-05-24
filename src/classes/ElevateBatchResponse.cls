@@ -49,7 +49,7 @@ public with sharing class ElevateBatchResponse {
         return errors;
     }
 
-    public Boolean isValidBatchResponse (DataImport__c dataImport) {
+    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
         return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
                 && errors == null
                 && status == System.Label.BatchProgressStatusProcessing;

@@ -68,7 +68,7 @@ import {
     showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateBatch from './elevateElevateBatch';
+import ElevateBatch from './elevateBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
