@@ -1,5 +1,6 @@
 {
     "apiName": "npe03__Recurring_Donation__c",
+    "defaultRecordTypeId": "012000000000000AAA",
     "label": "Recurring Donations",
     "labelPlural": "Recurring Donations",
     "themeInfo": {

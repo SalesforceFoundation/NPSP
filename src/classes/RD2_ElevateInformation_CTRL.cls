@@ -59,6 +59,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
     public static Map<String, Object> getPermissionData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
 
+
         try {
             data = new Map<String, Object> {
                 'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
