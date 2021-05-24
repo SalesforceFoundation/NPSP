@@ -315,6 +315,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         List<String> fieldsWithoutPermission = new List<String>();
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
+            Boolean canReadCustomFormulaField =
+                dfr.isCalculated() && UTIL_Permissions.canRead(dfr, false);
+            if (canReadCustomFormulaField) {
+                continue;
+            }
             if (!UTIL_Permissions.canUpdate(dfr, false)) {
                 hasPermission = false;
                 fieldsWithoutPermission.add(dfr.getLabel());
