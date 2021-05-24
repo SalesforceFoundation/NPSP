@@ -40,9 +40,9 @@ public inherited sharing class PS_Request {
         PURCHASE,
         COMMITMENT,
         COMMITMENT_CANCEL,
-        CREATE_CAPTURE_GROUP,
-        ADD_TO_CAPTURE_GROUP,
-        CHARGE_CAPTURE_GROUP
+        CREATE_ELEVATE_BATCH,
+        ADD_TO_ELEVATE_BATCH,
+        CHARGE_ELEVATE_BATCH
     }
 
     public enum ProductType {
@@ -73,9 +73,9 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_PURCHASE = '/v1/payments/verified/purchase';
     public static String ENDPOINT_COMMITMENT = '/v1/payments/verified/commitments';
     public static String ENDPOINT_COMMITMENT_CANCEL = '/v1/payments/verified/commitments/{0}/cancel';
-    public static String ENDPOINT_CREATE_CAPTURE_GROUP = '/v1/payments/verified/batch';
-    public static String ENDPOINT_ADD_TO_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/add';
-    public static String ENDPOINT_CHARGE_CAPTURE_GROUP = '/v1/payments/verified/batch/{0}/capture';
+    public static String ENDPOINT_CREATE_ELEVATE_BATCH = '/v1/payments/verified/batch';
+    public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
+    public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
@@ -144,8 +144,8 @@ public inherited sharing class PS_Request {
         }
 
         /***
-        * @description Incorporates the Elevate Capture Group Id into the endpoint where applicable
-        * @param commitmentId Elevate Capture Group Id
+        * @description Incorporates the Elevate Elevate Batch Id into the endpoint where applicable
+        * @param commitmentId Elevate Elevate Batch Id
         * @return Builder This request builder instance
         */
         public Builder withElevateBatchId(String elevateBatchId) {
@@ -252,18 +252,18 @@ public inherited sharing class PS_Request {
                         commitmentId
                     }
                 );
-            } else if (endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP) {
-                value = ENDPOINT_CREATE_CAPTURE_GROUP;
-            } else if (endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP) {
+            } else if (endpoint == ElevateEndpoint.CREATE_ELEVATE_BATCH) {
+                value = ENDPOINT_CREATE_ELEVATE_BATCH;
+            } else if (endpoint == ElevateEndpoint.ADD_TO_ELEVATE_BATCH) {
                 value = String.format(
-                    ENDPOINT_ADD_TO_CAPTURE_GROUP,
+                    ENDPOINT_ADD_TO_ELEVATE_BATCH,
                     new String[] {
                         elevateBatchId
                     }
                 );
-            } else if (endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
+            } else if (endpoint == ElevateEndpoint.CHARGE_ELEVATE_BATCH) {
                 value = String.format(
-                        ENDPOINT_CHARGE_CAPTURE_GROUP,
+                        ENDPOINT_CHARGE_ELEVATE_BATCH,
                         new String[] {
                                 elevateBatchId
                         }
@@ -388,9 +388,9 @@ public inherited sharing class PS_Request {
         }
 
         private Boolean isElevateBatchEndpoint() {
-            return endpoint == ElevateEndpoint.CREATE_CAPTURE_GROUP
-                    || endpoint == ElevateEndpoint.ADD_TO_CAPTURE_GROUP
-                    || endpoint == ElevateEndpoint.CHARGE_CAPTURE_GROUP;
+            return endpoint == ElevateEndpoint.CREATE_ELEVATE_BATCH
+                    || endpoint == ElevateEndpoint.ADD_TO_ELEVATE_BATCH
+                    || endpoint == ElevateEndpoint.CHARGE_ELEVATE_BATCH;
         }
 
         private Boolean isCommitmentEndpoint () {

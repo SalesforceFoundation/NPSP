@@ -61,7 +61,7 @@ public virtual with sharing class ElevateBatchService {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(groupId)
-                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP)
+                .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH)
                 .withBody(JSON.serialize(tokenizedGift))
                 .build();
     }
