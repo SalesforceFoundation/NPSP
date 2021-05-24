@@ -170,7 +170,6 @@ const DISPLAY_DEFINITIONS = Object.freeze({
                 if (!this._componentContext.isMounted) {
                     this._componentContext.loadingOn();
                 }
-                this._componentContext.requestParentNullPaymentFieldsInFormState();
             },
             onExit() {},
         },
