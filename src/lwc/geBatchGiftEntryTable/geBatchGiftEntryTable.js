@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor, showToast} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
@@ -259,7 +259,19 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
+        this.includePaymentStatusDisplayField();
         this._columnsLoaded = true;
+    }
+
+    includePaymentStatusDisplayField() {
+        if (hasNestedProperty(this._dataImportObjectInfo, 'fields', 'Payment_Status_Display_Value__c')) {
+            const paymentStatusDisplayValue = this._dataImportObjectInfo.fields.Payment_Status_Display_Value__c;
+            this._columnsBySourceFieldApiName[paymentStatusDisplayValue.apiName] = {
+                label: paymentStatusDisplayValue.label,
+                fieldName: paymentStatusDisplayValue.apiName,
+                type: paymentStatusDisplayValue.dataType
+            }
+        }
     }
 
     @api

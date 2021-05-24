@@ -26,7 +26,8 @@ import {
     getNamespace,
     removeByProperty,
     removeFromArray,
-    isEmpty
+    isEmpty,
+    hasNestedProperty
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
@@ -421,6 +422,20 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 }
             ];
         });
+
+        this.includePaymentStatusDisplayField();
+    }
+
+    includePaymentStatusDisplayField() {
+        if (hasNestedProperty(this._dataImportObject, 'fields', 'Payment_Status_Display_Value__c')) {
+            this.availableBatchTableColumnOptions = [
+                ...this.availableBatchTableColumnOptions,
+                {
+                    label: this._dataImportObject.fields.Payment_Status_Display_Value__c.label,
+                    value: this._dataImportObject.fields.Payment_Status_Display_Value__c.apiName
+                }
+            ];
+        }
     }
 
     /*******************************************************************************
