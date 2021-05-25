@@ -35,6 +35,7 @@
 public inherited sharing class Contacts extends fflib_SObjects {
 
     private Map<Id, Contact> oldMap;
+    private Boolean isUpdate = false;
 
     @TestVisible
     private ContactService contactService {
@@ -160,7 +161,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         createAddressesForContacts();
     }
 
-    private Boolean isUpdate = false;
     public void onAfterInsert() {
         createAddressesForContacts();
     }
@@ -423,7 +423,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 NPSP_Address npspAddress = new NPSP_Address(addrNew);
                 NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
 
-                if (!npspAddress.isEqualTo(npspAddressDup, true)) {
+                if (!npspAddress.isEqualToIncludingAddressType(npspAddressDup, true)) {
                     npspAddressDup.copyFrom(npspAddress);
                     if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
                         addrDup.Default_Address__c = true;
@@ -503,19 +503,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
-    private List<NPSP_Contact> thatHaveAccountsAsNpspContacts;
-    public List<NPSP_Contact> thatHaveAccountsAsNpspContacts() {
-        if (thatHaveAccountsAsNpspContacts == null) {
-            thatHaveAccountsAsNpspContacts = new List<NPSP_Contact>();
+    private List<NPSP_Contact> householdAccountContacts;
+    public List<NPSP_Contact> householdAccountContacts() {
+        if (householdAccountContacts == null) {
+            householdAccountContacts = new List<NPSP_Contact>();
             for (Contact con : (List<Contact>) getRecords()) {
                 NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
                 if (!npspContact.hasAccount()) {
                     continue;
                 }
-                thatHaveAccountsAsNpspContacts.add(npspContact);
+                householdAccountContacts.add(npspContact);
             }
         }
-        return thatHaveAccountsAsNpspContacts;
+        return householdAccountContacts;
     }
 
     public Set<Id> accountIds() {
@@ -787,7 +787,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getConsMovingToANewHousehold() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
-        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
+        for (NPSP_Contact npspContact : householdAccountContacts()) {
 
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -813,7 +813,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
+        for (NPSP_Contact npspContact : householdAccountContacts()) {
 
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -838,7 +838,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        for (NPSP_Contact npspContact : thatHaveAccountsAsNpspContacts()) {
+        for (NPSP_Contact npspContact : householdAccountContacts()) {
 
             if (npspContact.householdAndAccountDiffer()) {
                 continue;

@@ -65,14 +65,14 @@ private class HouseholdService_TEST {
         //When
         service.createHouseholdsFor(
                 new ContactsInLegacyHouseholds(
-                        ContactBuilder.dummyContactList()));
+                        TEST_ContactBuilder.dummyContactList()));
 
         //Then
         System.assert(mock.householdsToBeInserted.size() == 1);
         System.assert(mock.saveCalled);
     }
 
-    public class UnitOfWorkMock implements StubProvider {
+    private class UnitOfWorkMock implements StubProvider {
         public Boolean registerNewCalled = false;
         List<npo02__Household__c> householdsToBeInserted;
         public Boolean saveCalled = false;

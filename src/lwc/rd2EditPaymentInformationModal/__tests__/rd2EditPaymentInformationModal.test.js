@@ -2,8 +2,12 @@ import { createElement } from 'lwc';
 import rd2EditPaymentInformationModal from 'c/rd2EditPaymentInformationModal';
 import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
+import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
+import { mockGetIframeReply } from 'c/psElevateTokenHandler';
+import { ACCOUNT_HOLDER_TYPES } from "c/geConstants";
+
 jest.mock(
     '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment',
     () => {
@@ -14,10 +18,13 @@ jest.mock(
     { virtual: true }
 );
 
-const mockPaymentResult = require('./data/updatePaymentResult.json');
+const mockPaymentResultBody = require('./data/updatePaymentResultBody.json');
+const mockPaymentACHResultBody = require('./data/updatePaymentACHResultBody.json');
 const mockPaymentError = require('./data/updatePaymentError.json');
 const recurringDonation = require('./data/recurringDonation.json');
+const recurringACHDonation = require('./data/reccuringACHDonation.json');
 const creditCardPayload = require('./data/creditCardPayload.json');
+const paymentMethodPicklistValues = require('./data/paymentMethodPicklistValues.json');
 
 describe('c-rd2-edit-payment-information-modal', () => {
     let component;
@@ -56,11 +63,11 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on open of the Edit Payment Information Modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-            handleUpdatePaymentCommitment.mockResolvedValue(mockPaymentResult);
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             document.body.appendChild(component);
         });
 
-        it('should display credt card edit form', async () => {
+        it('should display credit card edit form', async () => {
             return global.flushPromises()
             .then(async () => {
                 const widget = getElevateWidget(component);
@@ -112,14 +119,9 @@ describe('c-rd2-edit-payment-information-modal', () => {
     describe('on successfully save with new payment information', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
-
-            const mockPaymentResultString = mockPaymentResult;
-            mockPaymentResultString.body = JSON.stringify(mockPaymentResultString.body);
-            handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(mockPaymentResultString));
-
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
             updateRecord.mockResolvedValue(recurringDonation);
             document.body.appendChild(component);
-            
         });
 
         it('should close the modal when successfully save', async () => {
@@ -178,6 +180,182 @@ describe('c-rd2-edit-payment-information-modal', () => {
             });
         });
     });
+
+    describe('updating an existing credit card commitment', () => {
+        beforeEach(() => {
+            component.rdRecord = recurringDonation;
+            component.accountHolderType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
+            setupIframeReply();
+            updateRecord.mockResolvedValue(recurringDonation);
+            getPicklistValues.emit(paymentMethodPicklistValues);
+            document.body.appendChild(component);
+        });
+
+        it('has a radio group with ACH and Credit Card as options', () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            expect(radioGroup).toBeTruthy();
+            expect(radioGroup.options).toContainOptions(['ACH', 'Credit Card']);
+        })
+
+        it('radio group displays payment method from existing record', () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            expect(radioGroup.value).toBe('Credit Card');
+        });
+
+        it('updates widget when payment method changed to ACH', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(1);
+            expect(mockGetIframeReply).toHaveBeenCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({
+                    action: 'setPaymentMethod',
+                    paymentMethod: 'ACH'
+                }),
+                undefined
+            );
+        });
+
+        it('updates widget when swapped to ACH and back to Credit Card', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+
+            changeValue(radioGroup, 'Credit Card');
+            await flushPromises();
+
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
+            expect(mockGetIframeReply).toHaveBeenLastCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({
+                    action: 'setPaymentMethod',
+                    paymentMethod: 'Credit Card'
+                }),
+                undefined
+            );
+        });
+
+        it('sets donor information on rd2 credit card form after load', async () => {
+            const widget = getElevateWidget(component);
+            expect(widget.achAccountType).toBe(ACCOUNT_HOLDER_TYPES.INDIVIDUAL);
+        });
+
+        it('saves successfully after swapping to ACH', async () => {
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+
+            getSaveButton(component).click();
+            await flushPromises();
+
+            const ACH_PARAMS = {
+                "accountHolder": {
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "type": "INDIVIDUAL",
+                    "bankType": "CHECKING"
+                },
+                "achCode": "WEB",
+                "nameOnAccount": "John Smith"
+            };
+
+            expect(mockGetIframeReply).toHaveBeenLastCalledWith(
+                expect.any(HTMLIFrameElement),
+                expect.objectContaining({
+                    action: 'createAchToken',
+                    params: expect.any(String)
+                }),
+                undefined
+            );
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
+            const { params } = mockGetIframeReply.mock.calls[1][1];
+            const paramObject = JSON.parse(params);
+            expect(paramObject).toMatchObject(ACH_PARAMS);
+        });
+
+        it('clears credit card information after swapping to ACH and saving', async () => {
+            setupUpdateCommitmentResponse(mockPaymentACHResultBody);
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'ACH');
+            await flushPromises();
+
+            getSaveButton(component).click();
+            await flushPromises();
+            const UPDATE_RECORD_ARGS = {
+                "fields": {
+                    "ACH_Last_4__c": "1234",
+                    "CardExpirationMonth__c": null,
+                    "CardExpirationYear__c": null,
+                    "CardLast4__c": null,
+                    "CommitmentId__c": "fake-commitment-uuid",
+                    "Id": "a0900000008MR9bQAG",
+                    "InstallmentFrequency__c": 1,
+                    "PaymentMethod__c": "ACH",
+                    "npe03__Contact__c": "003S000001WqpKSIAZ",
+                    "npe03__Organization__c": "001S000001NAsRFIA1"
+                }
+            };
+
+            const updatePaymentArgs = handleUpdatePaymentCommitment.mock.calls[0][0];
+
+            const parsedJson = JSON.parse(updatePaymentArgs.jsonRecord);
+            expect(parsedJson).toMatchObject({
+                "Id": "a0900000008MR9bQAG",
+                "CommitmentId__c": "11a1c101-bcde-001-111f-g1dh00i0jk111",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "ACH",
+                "npe03__Contact__c": "003S000001WqpKSIAZ",
+                "npe03__Organization__c": "001S000001NAsRFIA1"
+            });
+            expect(updateRecord).toHaveBeenCalledTimes(1);
+            expect(updateRecord).toHaveBeenCalledWith(UPDATE_RECORD_ARGS);
+        });
+
+    });
+
+    describe('updating an existing ach commitment', () => {
+        beforeEach(() => {
+            component.rdRecord = recurringACHDonation;
+            component.donorType = 'Account';
+            setupIframeReply();
+            document.body.appendChild(component);
+        });
+
+        it('sets payer information on widget after load', async () => {
+            const widget = getElevateWidget(component);
+            expect(widget.payerFirstName).toBe('TestingFirstName');
+            expect(widget.payerLastName).toBe('TestingLastName');
+            expect(widget.payerOrganizationName).toBe('TestingLastName Household');
+        });
+
+        it('clears ach information after swapping to card and saving', async () => {
+            setupUpdateCommitmentResponse(mockPaymentResultBody);
+            const radioGroup = component.shadowRoot.querySelector('lightning-radio-group');
+            changeValue(radioGroup, 'Credit Card');
+            await flushPromises();
+
+            getSaveButton(component).click();
+            await flushPromises();
+            const UPDATE_RECORD_ARGS = {
+                "fields": {
+                    "ACH_Last_4__c": null,
+                    "CardExpirationMonth__c": "12",
+                    "CardExpirationYear__c": "25",
+                    "CardLast4__c": 1111,
+                    "CommitmentId__c": "fake-commitment-uuid",
+                    "Id": "a09S000000HNWL3IAP",
+                    "InstallmentFrequency__c": 1,
+                    "PaymentMethod__c": "Credit Card",
+                    "npe03__Contact__c": "003S000001WqpKSIAZ",
+                    "npe03__Organization__c": "001S000001NAsRFIA1"
+                }
+            };
+            expect(updateRecord).toHaveBeenCalledTimes(1);
+            expect(updateRecord).toHaveBeenCalledWith(UPDATE_RECORD_ARGS);
+        });
+    })
 });
 
 // Helpers
@@ -238,6 +416,37 @@ const dispatchClickEvent = (element) => {
     element.dispatchEvent(
         new CustomEvent('click')
     );
+}
+
+const changeValue = (element, value) => {
+    element.value = value;
+    element.dispatchEvent(new CustomEvent('change', { detail: { value }} ));
+}
+
+const setupUpdateCommitmentResponse = (responseBody) => {
+    const response = {
+        "statusCode": 200,
+        "status": "OK",
+        "body": JSON.stringify(responseBody)
+    };
+    handleUpdatePaymentCommitment.mockResolvedValue(JSON.stringify(response));
+}
+
+const setupIframeReply = () => {
+    mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+        const type = "post__npsp";
+        const token = "a_dummy_token";
+        // if message action is "createToken", reply with dummy token immediately
+        // instead of trying to hook into postMessage
+        // see sendIframeMessage in mocked psElevateTokenHandler
+        if (message.action === 'createToken' || message.action === 'createAchToken') {
+            return { type, token };
+        }
+
+        if (message.action === 'setPaymentMethod') {
+            return { type };
+        }
+    });
 }
 
 

@@ -67,8 +67,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         try {
             addr.Household_Account__c = con.AccountId;
         } catch (NullPointerException npe) {
-
-            System.debug(LoggingLevel.ERROR, '*** ##### npe on npsp addr doing nothing ######');
+            UTIL_Debug.debug('*** ##### npe on NPSP_Address doing nothing. ######');
         }
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.is_Address_Override__c)
@@ -82,9 +81,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         )) {
             copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
         } else {
-            //Todo: add test for when PrimAddr not populated
             copyFromSObject(con, 'Mailing', 'Mailing');
-
         }
     }
 
@@ -243,7 +240,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         return addr.Seasonal_Start_Month__c;
     }
 
-    public Boolean isEqualTo(IAddress other, Boolean includeAddressType) {
+    public Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType) {
         if (addr == null || other == null) {
             return false;
         }
@@ -252,6 +249,10 @@ public inherited sharing class NPSP_Address implements IAddress {
                 return false;
             }
         }
+        return isEqualTo(other);
+    }
+
+    private Boolean isEqualTo(IAddress other) {
         return (addressService.equalsCaseSensitive(street(), other.street()) &&
                 addressService.equalsCaseSensitive(street2(), other.street2()) &&
                 addressService.equalsCaseSensitive(city(), other.city()) &&
@@ -263,7 +264,7 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public Boolean isDifferentIncludingLatLong(IAddress other) {
         Boolean isDifferent = (
-                        !isEqualTo(other, false) ||
+                        !isEqualToIncludingAddressType(other, false) ||
                         latitude() != other.latitude() ||
                         longitude() != other.longitude()
         );
@@ -285,8 +286,9 @@ public inherited sharing class NPSP_Address implements IAddress {
         addr.MailingCountry__c = other.country();
         addr.Geolocation__Latitude__s = other.latitude();
         addr.Geolocation__Longitude__s = other.longitude();
-        if (other.getType() != null)
+        if (other.getType() != null) {
             addr.Address_Type__c = other.getType();
+        }
     }
 
     public Boolean isDefault() {
@@ -496,28 +498,6 @@ public inherited sharing class NPSP_Address implements IAddress {
             return addr.MailingStreet__c;
         }
         return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two address objects address fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @param includeAddressType whether to include comparing the AddressType field
-    * @return boolean. true if any of the fields fields have changed on the Address
-    */
-    public Boolean isAddressChanged(Address__c addrOld, Boolean includeAddressType) {
-        if (addr == null || addrOld == null) {
-            return false;
-        }
-        return (!AddressService.equalsCaseSensitive(addr.MailingStreet__c, addrOld.MailingStreet__c) ||
-                !AddressService.equalsCaseSensitive(addr.MailingStreet2__c, addrOld.MailingStreet2__c) ||
-                !AddressService.equalsCaseSensitive(addr.MailingCity__c, addrOld.MailingCity__c) ||
-                !AddressService.equalsCaseSensitive(addr.MailingState__c, addrOld.MailingState__c) ||
-                !AddressService.equalsCaseSensitive(addr.MailingPostalCode__c, addrOld
-                        .MailingPostalCode__c) ||
-                !AddressService.equalsCaseSensitive(addr.MailingCountry__c, addrOld.MailingCountry__c) ||
-                (includeAddressType && (!AddressService.equalsCaseSensitive(addr.Address_Type__c, addrOld
-                        .Address_Type__c))));
     }
 
 }

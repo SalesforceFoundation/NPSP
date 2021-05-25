@@ -17,7 +17,6 @@ module.exports = {
         '<rootDir>/node_modules/',
         '<rootDir>/test/specs/'
     ],
-    setupFiles: ['./jest.setup.js'],
     reporters: ["default"],
     setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };

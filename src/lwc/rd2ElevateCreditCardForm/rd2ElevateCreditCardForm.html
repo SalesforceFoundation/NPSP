@@ -13,9 +13,9 @@
                                     <h1 class='slds-text-body_regular' data-qa-locator='heading'>{labels.elevateWidgetLabel}</h1>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={isEditCard}>
+                                    <template if:true={isEditMode}>
                                         <template if:true={isDisabled}>
-                                            <lightning-button variant="base" 
+                                            <lightning-button variant="base"
                                                 label={labels.updatePaymentButtonLabel}
                                                 onclick={handleUserEnabledWidget}
                                                 class='slds-button slds-button_base slds-float_right hide-card-button'
@@ -23,9 +23,9 @@
                                             </lightning-button>
                                         </template>
                                         <template if:false={isDisabled}>
-                                            <lightning-button variant="base" 
+                                            <lightning-button variant="base"
                                                 label={labels.cancelButtonLabel}
-                                                icon-name='utility:close' 
+                                                icon-name='utility:close'
                                                 icon-position="right"
                                                 onclick={handleUserDisabledWidget}
                                                 class='slds-button slds-button_base slds-float_right hide-card-button'
@@ -33,7 +33,7 @@
                                             </lightning-button>
                                         </template>
                                     </template>
-                                    <template if:false={isEditMode}>
+                                    <template if:false={isEditPayment}>
                                         <template if:false={isDisabled}>
                                             <lightning-button variant="base" 
                                                 label={labels.elevateDisableButtonLabel}
@@ -52,7 +52,7 @@
 
                     <lightning-layout-item size="12" class='slds-p-horizontal_small slds-p-top_small'>
                         <template if:true={isDisabled}>
-                            <template if:true={isEditCard}>
+                            <template if:true={existingPaymentIsCard}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
                                         <label for="last4CreditCard" id="creditCardLast4Label"
@@ -79,7 +79,7 @@
                                     </lightning-layout-item>
                                 </lightning-layout>
                             </template>
-                            <template if:true={isEditAch}>
+                            <template if:true={existingPaymentIsAch}>
                                 <lightning-layout vertical-align='center' multiple-rows='true'>
                                     <lightning-layout-item size="4" class=" slds-text-color_weak slds-p-bottom_small">
                                         <label for="last4ACH"
@@ -120,7 +120,7 @@
                                     <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
                             </template>
-                            <template if:true={isCardPayment}>
+                            <template if:true={currentPaymentIsCard}>
                                 <div class="slds-col slds-size_1-of-2">
                                     <lightning-input name="cardholderName" label={labels.cardholderNameLabel}
                                                      data-qa-locator="input Elevate Cardholder Name" data-id="cardholderName">

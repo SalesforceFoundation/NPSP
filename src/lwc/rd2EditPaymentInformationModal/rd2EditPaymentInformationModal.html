@@ -51,11 +51,26 @@
                         </template>
                     </div>
                     <div class={paymentEditForm}>
-                        <c-rd2-elevate-credit-card-form data-id='elevateWidget'
+                        <lightning-radio-group
+                                label="Payment Method"
+                                options={paymentMethodOptions}
+                                onchange={handlePaymentMethodChange}
+                                value={paymentMethod}
+                                data-id="paymentMethod"
+                        >
+                        </lightning-radio-group>
+                        <c-rd2-elevate-credit-card-form
+                            data-id='elevateWidget'
                             data-qa-locator='widget Elevate'
                             payment-method={paymentMethod}
+                            existing-payment-method={existingPaymentMethod}
                             is-edit-payment="true"
-                            next-donation-date={nextDonationDate}>
+                            next-donation-date={nextDonationDate}
+                            ach-account-type={accountHolderType}
+                            payer-first-name={contactFirstName}
+                            payer-last-name={contactLastName}
+                            payer-organization-name={organizationAccountName}
+                        >
                         </c-rd2-elevate-credit-card-form>
                     </div>
                 </div>

@@ -42,7 +42,7 @@ public inherited sharing class PS_CommitmentRequest {
         SUSTAINER
     }
 
-    public enum DonorType {
+    public enum ElevateBankAccountType {
         INDIVIDUAL,
         BUSINESS
     }
@@ -109,6 +109,11 @@ public inherited sharing class PS_CommitmentRequest {
     private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
     private static final String ACH_CODE_WEB = 'WEB';
     private static final String ACH_CONSENT_MESSAGE = 'true';
+
+    private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
+        Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
+        Account.SObjectType => ElevateBankAccountType.BUSINESS
+    };
 
     /***
      * @description Payment Services configuration
@@ -197,7 +202,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withProductMetadata(productMetadata);
 
 
-        DonorType accountHolderType = setDonorInfo(reqBody, rd);
+        ElevateBankAccountType accountHolderType = setDonorInfo(reqBody, rd);
         if(reqBody.isACH()) {
             reqBody.withACHAccountHolder(accountHolderType);
         }
@@ -218,6 +223,13 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodType(rd.PaymentMethod__c)
             .withPaymentMethodToken(token);
 
+        SObject donor = getDonorRecord(rd);
+        ElevateBankAccountType accountHolderType = getAccountHolderType(donor);
+
+        if(reqBody.isACH()) {
+            reqBody.withAchData(accountHolderType);
+        }
+
         String currencyCode = UserInfo.isMultiCurrencyOrganization()
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
@@ -226,8 +238,8 @@ public inherited sharing class PS_CommitmentRequest {
             reqBody.deactivateOldSchedules();
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
         }
-        
-        
+
+
 
 
         if (isElevateCampaignChanged(rd, oldRd)) {
@@ -266,20 +278,32 @@ public inherited sharing class PS_CommitmentRequest {
     * @return void
     */
     @TestVisible
-    private DonorType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+    private ElevateBankAccountType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+        SObject donor = getDonorRecord(rd);
+        return setDonorFromSObject(reqBody, donor);
+    }
+
+    private ElevateBankAccountType setDonorFromSObject(RequestBody reqBody, SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        if (donorSObjectType == Contact.SObjectType) {
+            reqBody.withDonor((Contact)donor);
+        } else {
+            reqBody.withDonor((Account)donor);
+        }
+        return getAccountHolderType(donor);
+    }
+
+    private SObject getDonorRecord(npe03__Recurring_Donation__c rd) {
         Contact contactDonor = rd.npe03__Contact__c != null
-            ? getContact(rd.npe03__Contact__c)
-            : null;
+                ? getContact(rd.npe03__Contact__c)
+                : null;
 
         Boolean isHouseholdDonor = donorIsInHousehold(contactDonor, rd.npe03__Organization__c);
 
         if (isHouseholdDonor) {
-            reqBody.withDonor(contactDonor);
-            return DonorType.INDIVIDUAL;
+            return contactDonor;
         } else {
-            Account organization = getAccount(rd.npe03__Organization__c);
-            reqBody.withDonor(organization);
-            return DonorType.BUSINESS;
+            return getAccount(rd.npe03__Organization__c);
         }
     }
 
@@ -287,6 +311,11 @@ public inherited sharing class PS_CommitmentRequest {
         Boolean isHouseholdDonor = contactDonor != null
                 && ( rdAccountId == null || rdAccountId == contactDonor.AccountId);
         return isHouseholdDonor;
+    }
+
+    private ElevateBankAccountType getAccountHolderType(SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        return BANK_ACCOUNT_TYPE_MAP.get(donorSObjectType);
     }
 
     /**
@@ -488,18 +517,23 @@ public inherited sharing class PS_CommitmentRequest {
             return this;
         }
 
-        public RequestBody withACHAccountHolder(DonorType accountHolderType) {
+        public RequestBody withACHAccountHolder(ElevateBankAccountType accountHolderType) {
+            withAchData(accountHolderType);
+            this.accountName = getAccountName(accountHolderType);
+            return this;
+        }
+
+        public RequestBody withAchData(ElevateBankAccountType accountHolderType) {
             this.achData = new AchData();
             this.achData.achCode = ACH_CODE_WEB;
             this.achData.bankType = ACH_BANK_TYPE_CHECKING;
             this.achData.consent = ACH_CONSENT_MESSAGE;
             this.achData.type = accountHolderType.name();
-            this.accountName = getAccountName(accountHolderType);
             return this;
         }
 
-        private String getAccountName(DonorType accountHolderType) {
-            if (accountHolderType == DonorType.INDIVIDUAL) {
+        private String getAccountName(ElevateBankAccountType accountHolderType) {
+            if (accountHolderType == ElevateBankAccountType.INDIVIDUAL) {
                 return String.format('{0} {1}', new List<String>{
                         this.firstName, this.lastName
                 });

@@ -65,7 +65,7 @@ public with sharing class HH_Households_TEST {
                 new NPSP_Household(createdContacts[0].npo02__Household__r);
 
         System.assert(firstNpspHousehold.mailingAddress()
-                .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
+                .isEqualToIncludingAddressType(npspContactHavingAnAddress.mailingAddress(), false),
                 'The Household should have inherited its Address from the Contact.');
 
         System.assertEquals(
@@ -89,7 +89,7 @@ public with sharing class HH_Households_TEST {
                 'The Contact should no longer be in the first Household.');
 
         System.assert(secondNpspHousehold.mailingAddress()
-                .isEqualTo(npspContactHavingAnAddress.mailingAddress(), false),
+                .isEqualToIncludingAddressType(npspContactHavingAnAddress.mailingAddress(), false),
                 'The Contacts new Household should have inherited its Address from the ' +
                         'Contact.');
 
@@ -135,7 +135,7 @@ public with sharing class HH_Households_TEST {
         setOrgContactSettingsToOneToOne();
         setupHouseholdNamingSettings();
 
-        Contact con = ContactBuilder.dummyContact();
+        Contact con = TEST_ContactBuilder.dummyContact();
         Test.startTest();
         insert con;
         Test.stopTest();
@@ -181,7 +181,7 @@ public with sharing class HH_Households_TEST {
 
         //When
         householdsTDTM.run(
-                ContactBuilder.dummyContactList(),
+                TEST_ContactBuilder.dummyContactList(),
                 null,
                 TDTM_Runnable.Action.AfterInsert,
                 null);
@@ -333,7 +333,7 @@ public with sharing class HH_Households_TEST {
 
         //Assert that the Contact's Household's Address is same as what was on Contact
         System.assert(firstNpspHousehold.mailingAddress()
-                .isEqualTo(firstNpspContact.mailingAddress(), false));
+                .isEqualToIncludingAddressType(firstNpspContact.mailingAddress(), false));
 
         //Assert HouseholdName value
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + CAO_Constants.HH_NAME_SUFFIX, createdContacts[0].npo02__household__r.Name);
@@ -355,7 +355,7 @@ public with sharing class HH_Households_TEST {
 
         //Assert Contact (has a new Household?) with same initial Address from Contact
         System.assert(secondNpspHousehold.mailingAddress()
-                .isEqualTo(createdNpspContact.mailingAddress(), false));
+                .isEqualToIncludingAddressType(createdNpspContact.mailingAddress(), false));
 
         //Assert Household Name for new (second) Household?
         system.assertEquals(CAO_Constants.CONTACT_LASTNAME_FOR_TESTS +
@@ -722,7 +722,7 @@ public with sharing class HH_Households_TEST {
         String lastname = 'SmithForTest99';
 
         List<Contact> cons = new List<contact>();
-        Integer conCount = 1;
+        Integer conCount = 200;
         for(Integer i=0;i<conCount;i++){
             Contact con = new Contact(
                 FirstName='test',

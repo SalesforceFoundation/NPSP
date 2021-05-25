@@ -29,8 +29,11 @@ const rd2WithCardCommitment = require('./data/rd2WithCardCommitment.json');
 const rd2WithACHCommitment = require('./data/rd2WithACHCommitment.json');
 const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json');
 const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
+const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
+const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
 
 const mockScrollIntoView = jest.fn();
+const mockRecordEditFormSubmit = jest.fn();
 
 const FAKE_ACH_RD2_ID = 'a0963000008pebAAAQ';
 const FAKE_CARD_RD2_ID = 'a0963000008oxZnAAI';
@@ -158,6 +161,7 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('individual donor, contact name is used for account holder name when tokenizing an ACH payment', async () => {
+            setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EntryForm();
             const controller = new RD2FormController(element);
 
@@ -166,6 +170,7 @@ describe('c-rd2-entry-form', () => {
             await setupWireMocksForElevate();
 
             controller.setDefaultInputFieldValues();
+            controller.setupSubmitMock();
             controller.contactLookup().changeValue('001fakeContactId');
             await flushPromises();
 
@@ -199,6 +204,23 @@ describe('c-rd2-entry-form', () => {
                 "InstallmentFrequency__c": 1
             };
             validateCommitmentMessage(EXPECTED_RECORD);
+            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
+            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
+                "ACH_Last_4__c": "5432",
+                "CardExpirationMonth__c": null,
+                "CardExpirationYear__c": null,
+                "CardLast4__c": null,
+                "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                "Day_of_Month__c": "6",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "ACH",
+                "RecurringType__c": "Open",
+                "StartDate__c": "2021-02-03",
+                "npe03__Amount__c": 1,
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly"
+            });
         });
 
         it('organization donor, account name is used when tokenizing an ACH payment', async () => {
@@ -258,6 +280,7 @@ describe('c-rd2-entry-form', () => {
 
         beforeEach(() => {
             getRecurringData.mockResolvedValue(recurringDataContactResponse);
+            setupIframeReply();
         })
 
         it('rd2 record with card payment, when editing, displays card information', async () => {
@@ -351,7 +374,6 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('rd2 record, when editing, uses existing contact information in tokenization', async () => {
-            setupIframeReply();
 
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -400,9 +422,117 @@ describe('c-rd2-entry-form', () => {
             };
 
             validateCommitmentMessage(EXPECTED_RECORD);
-        })
+        });
 
-    })
+        it('clears credit card fields when payment method changed to ACH', async () => {
+            setupCommitmentResponse(handleCommitmentResponseBodyACH);
+            const element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+            const rd2WithCommitmentCard = generateMockFrom(rd2WithoutCommitmentCard)
+                .withFieldValue('CommitmentId__c', 'fake-commitment-uuid');
+
+            getRecord.emit(rd2WithCommitmentCard, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+            controller.setupSubmitMock();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+            expect(controller.updatePaymentButton()).toBeTruthy();
+
+            controller.paymentMethod().changeValue('ACH');
+            await flushPromises();
+
+            expect(controller.updatePaymentButton()).toBeFalsy();
+            expect(controller.cancelUpdatePaymentButton()).toBeTruthy();
+
+            controller.saveButton().click();
+            await flushPromises();
+
+            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
+            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
+                "ACH_Last_4__c": "5432",
+                "CardExpirationMonth__c": null,
+                "CardExpirationYear__c": null,
+                "CardLast4__c": null,
+                "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                "Day_of_Month__c": "6",
+                "Id": "a0963000008oxZnAAI",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "ACH",
+                "RecurringType__c": "Open",
+                "StartDate__c": "2021-02-03",
+                "Status__c": "Active",
+                "npe03__Amount__c": 0.5,
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly"
+            });
+        });
+
+
+        it('clears ACH fields when payment method changed to Card', async () => {
+            setupCommitmentResponse(handleCommitmentResponseBody);
+            const element = createRd2EditForm(FAKE_ACH_RD2_ID);
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            getRecord.emit(rd2WithACHCommitment, config => {
+                return config.recordId === FAKE_ACH_RD2_ID;
+            });
+
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+            controller.setupSubmitMock();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+            expect(controller.updatePaymentButton()).toBeTruthy();
+
+            controller.paymentMethod().changeValue('Credit Card');
+            await flushPromises();
+
+            expect(controller.updatePaymentButton()).toBeFalsy();
+            expect(controller.cancelUpdatePaymentButton()).toBeTruthy();
+
+            controller.saveButton().click();
+            await flushPromises();
+
+            expect(mockRecordEditFormSubmit).toHaveBeenCalled();
+            expect(mockRecordEditFormSubmit).toHaveBeenCalledWith({
+                "ACH_Last_4__c": null,
+                "CardExpirationMonth__c": "05",
+                "CardExpirationYear__c": "2023",
+                "CardLast4__c": "1111",
+                "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+                "Day_of_Month__c": "6",
+                "Id": "a0963000008pebAAAQ",
+                "InstallmentFrequency__c": 1,
+                "PaymentMethod__c": "Credit Card",
+                "RecurringType__c": "Open",
+                "StartDate__c": "2021-02-03",
+                "Status__c": "Active",
+                "npe03__Amount__c": 0.5,
+                "npe03__Contact__c": "001fakeContactId",
+                "npe03__Date_Established__c": "2021-02-03",
+                "npe03__Installment_Period__c": "Monthly"
+            });
+        });
+    });
 });
 
 const createRd2EntryForm = () => {
@@ -449,10 +579,18 @@ const setupIframeReply = () => {
     });
 }
 
+const setupCommitmentResponse = (responseBody) => {
+    const response = {
+        "statusCode": 200,
+        "status": "OK",
+        "body": JSON.stringify(responseBody)
+    };
+    handleCommitment.mockResolvedValue(JSON.stringify(response));
+}
+
 const validateCommitmentMessage = (expectedParams) => {
     expect(handleCommitment).toHaveBeenCalled();
     const { jsonRecord, paymentMethodToken } = handleCommitment.mock.calls[0][0];
-    debugger;
     const deserialized = JSON.parse(jsonRecord);
     expect(deserialized).toMatchObject(expectedParams);
     expect(paymentMethodToken).toBe('a_dummy_token');
@@ -506,6 +644,11 @@ class RD2FormController {
 
     constructor(element) {
         this.element = element;
+    }
+
+    setupSubmitMock() {
+        const element = this.element.shadowRoot.querySelector('[data-id="outerRecordEditForm"]');
+        element.submit = mockRecordEditFormSubmit;
     }
 
     setDefaultInputFieldValues() {
@@ -612,6 +755,14 @@ class RD2FormController {
 
     disableElevateButton() {
         return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Do Not Use Elevate"]');
+    }
+
+    updatePaymentButton() {
+        return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Update Payment Information"]');
+    }
+
+    cancelUpdatePaymentButton() {
+        return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Cancel Update Payment Information"]');
     }
 
 }

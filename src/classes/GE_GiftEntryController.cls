@@ -211,6 +211,14 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void validateAuthorizedGiftEdit(DataImport__c dataImport){
+        Gift editedGift = new Gift(dataImport);
+        if (editedGift.requiresReauthorizationBeforeChange()) { 
+            throw new AuraHandledException(Label.geErrorBatchGiftEntryReauthRequired);
+        }
+    }
+
+    @AuraEnabled
     public static void processPaymentsFor(Id batchId) {
        try {
            NPSP_Batch batch = new NPSP_Batch(batchId);

@@ -159,6 +159,46 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
     /**
+    * @description Verify update request when changing payment method to ACH
+    */
+    @isTest
+    private static void shouldBuildUpdateCommitmentRequestBodyACH() {
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+                .withContact(contact.Id)
+                .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+                .withCommitmentId(COMMITMENT_ID)
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+                .build();
+
+        insert oldRd;
+
+        npe03__Recurring_Donation__c updateRequestRd = new npe03__Recurring_Donation__c(
+                Id = oldRd.Id,
+                CommitmentId__c = oldRd.CommitmentId__c,
+                PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH,
+                npe03__Contact__c = contact.Id
+        );
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+        Test.startTest();
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(updateRequestRd, null, PAYMENT_TOKEN);
+        Test.stopTest();
+
+        System.assertEquals(ElevatePaymentMethod.ACH.name(), requestBody.paymentMethodType, 'Expected payment method to be ACH');
+        PS_CommitmentRequest.AchData achData = requestBody.achData;
+
+        System.assertEquals('WEB', achData.achCode, 'ACH Code should be WEB');
+        System.assertEquals('INDIVIDUAL', achData.type, 'AchData type should be INDIVIDUAL');
+        System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
+    }
+
+    /**
     * @description Verifies that the update request body should not set new schedules if there is no data
     */
     @isTest
@@ -170,7 +210,8 @@ private with sharing class PS_CommitmentRequest_TEST {
         Contact contact = getContact();
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
             CommitmentId__c = COMMITMENT_ID,
-            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD
+            PaymentMethod__c = RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD,
+            npe03__Contact__c = contact.Id
         );
 
         PS_CommitmentRequest request = new PS_CommitmentRequest();

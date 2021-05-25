@@ -30,29 +30,45 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Gift Selector Class in NPSP.
+* @description Used to create test Contacts in NPSP.
 */
+@IsTest
+public inherited sharing class TEST_ContactBuilder {
 
-public with sharing class GiftSelector {
-
-    public List<DataImport__c> getAuthorizedGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-                AND Payment_Status__c=: ElevateTransactionStatus.AUTHORIZED.name()
-        ];
+    @TestVisible
+    private static Contact dummyContact() {
+        Contact con = new Contact(
+                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+                Title = 'Doctor',
+                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        );
+        return con;
     }
 
-    public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
-        String queryString = new UTIL_Query()
-            .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
-            .withWhere('Id =: giftId')
-            .withSecurityEnforced()
-            .build();
-
-        return Database.query(queryString);
+    @TestVisible
+    private static Contacts dummyContacts() {
+        return new Contacts(dummyContactList());
     }
-    
+
+    @TestVisible
+    private static List<Contact> dummyContactList() {
+        return new List<Contact>{dummyContact()};
+    }
+
+    @TestVisible
+    private static Contact dummyContactWithId() {
+        Contact con = dummyContact();
+        con.Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        return con;
+    }
+
+    @TestVisible
+    private static List<Contact> dummyContactListWithIds() {
+        return new List<Contact>{dummyContactWithId()};
+    }
+
 }

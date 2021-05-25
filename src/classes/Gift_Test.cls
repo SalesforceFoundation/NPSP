@@ -27,48 +27,29 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Used to create test Contacts in NPSP.
-*/
-@IsTest
-public class ContactBuilder {
 
-    @TestVisible
-    private static Contact dummyContact() {
-        Contact con = new Contact(
-                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                Title = 'Doctor',
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+@isTest
+private class Gift_Test {
+    
+    @isTest
+    static void validateThatGiftNeedsToBeReauthorized() {
+        DataImport__c dataImport = new DataImport__c(
+            Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+            Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
+            Donation_Amount__c = 3.00
         );
-        return con;
-    }
 
-    @TestVisible
-    private static Contacts dummyContacts() {
-        return new Contacts(dummyContactList());
-    }
+        insert dataImport;
 
-    @TestVisible
-    private static List<Contact> dummyContactList() {
-        return new List<Contact>{dummyContact()};
-    }
+        Test.startTest();
 
-    @TestVisible
-    private static Contact dummyContactWithId() {
-        Contact con = dummyContact();
-        con.Id = fflib_IDGenerator.generate(Contact.SObjectType);
-        return con;
-    }
+        dataImport.Donation_Amount__c = 5.00;
+        Gift authorizedGift = new Gift(dataImport);
+        Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
 
-    @TestVisible
-    private static List<Contact> dummyContactListWithIds() {
-        return new List<Contact>{dummyContactWithId()};
-    }
+        Test.stopTest();
 
+        System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
+        System.assert(needsReauthorization);
+    }
 }

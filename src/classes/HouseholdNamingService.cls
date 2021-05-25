@@ -40,23 +40,23 @@ public without sharing class HouseholdNamingService {
     private HouseholdSettings settings = new HouseholdSettings();
 
     @TestVisible
-    private ContactSelector selector {
+    private ContactSelector contactSelector {
         get {
-            if (selector == null) {
-                selector = new ContactSelector();
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
             }
-            return selector;
+            return contactSelector;
         }
         set;
     }
 
     @TestVisible
-    private UnitOfWork unitOfWorkInst {
+    private UnitOfWork unitOfWork {
         get {
-            if (unitOfWorkInst == null) {
-                unitOfWorkInst = new UnitOfWork();
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
             }
-            return unitOfWorkInst;
+            return unitOfWork;
         }
         set;
     }
@@ -118,7 +118,7 @@ public without sharing class HouseholdNamingService {
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
         setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
-        unitOfWorkInst.save();
+        unitOfWork.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
@@ -134,7 +134,7 @@ public without sharing class HouseholdNamingService {
             List<Contact> members = membersByHouseholdId.get(idFor(household));
             if (numberOfHouseholdMembersIsIncorrect(household, members)) {
                 refreshNumberOfHouseholdMembers(household, members);
-                unitOfWorkInst.registerDirty(new List<SObject>{household});
+                unitOfWork.registerDirty(new List<SObject>{household});
             }
         }
     }
@@ -176,7 +176,7 @@ public without sharing class HouseholdNamingService {
 
     private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
         return householdMembersByHouseholdId(
-                selector.householdMembersFor(householdOrAccountIds));
+                contactSelector.householdMembersFor(householdOrAccountIds));
     }
 
     private List<SObject> householdsOrAccountsFor(List<Id> householdOrAccountIds) {
@@ -394,7 +394,7 @@ public without sharing class HouseholdNamingService {
         if (!namingOverrides.isNameControlledByUser() &&
                 nameNeedsUpdate(household, householdName)) {
             setName(household, householdName);
-            unitOfWorkInst.registerDirty(new List<SObject>{
+            unitOfWork.registerDirty(new List<SObject>{
                     household
             });
         }
@@ -402,14 +402,14 @@ public without sharing class HouseholdNamingService {
         if (!namingOverrides.isFormalGreetingControlledByUser() &&
                 formalGreetingNeedsUpdate(household, householdName)) {
             setFormalGreeting(household, householdName);
-            unitOfWorkInst.registerDirty(new List<SObject>{
+            unitOfWork.registerDirty(new List<SObject>{
                     household
             });
         }
         if (!namingOverrides.isInformalGreetingControlledByUser() &&
                 informalGreetingNeedsUpdate(household, householdName)) {
             setInformalGreeting(household, householdName);
-            unitOfWorkInst.registerDirty(new List<SObject>{
+            unitOfWork.registerDirty(new List<SObject>{
                     household
             });
         }
