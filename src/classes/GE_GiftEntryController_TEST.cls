@@ -52,8 +52,8 @@ private with sharing class GE_GiftEntryController_TEST {
         Test.stopTest();
 
         System.assertEquals(errorMessage,
-                auraException.getMessage(), 'The error message in the capture group response ' +
-                    'should throw an exception and the message should be the create capture group error ' +
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                    'should throw an exception and the message should be the create elevate batch error ' +
                     'message specified in the invalid request data type.');
     }
 
@@ -74,7 +74,7 @@ private with sharing class GE_GiftEntryController_TEST {
                 ' occurred with a valid request.');
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
-        System.assertEquals('test-id', elevateBatch.groupId(), 'The capture group id should be ' +
+        System.assertEquals('test-id', elevateBatch.elevateBatchId(), 'The elevate batch id should be ' +
                 'populated on a successful response.');
     }
 
@@ -97,7 +97,7 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(null, auraException, 'The aura exception object should be null since no error should have' +
                 ' occurred with a valid request.');
         System.assertEquals('test-valid-id', authorizedGift.paymentId(),
-                'The capture group id should be populated on a successful response.');
+                'The elevate batch id should be populated on a successful response.');
     }
 
     @isTest static void addCreditCardElevateBatchShouldReturnFailureResponse() {
@@ -117,8 +117,8 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assert(auraException != null, 'The aura handled exception should not be null since an invalid request ' +
                 'has been sent.');
         System.assertEquals(errorMessage,
-                auraException.getMessage(), 'The error message in the capture group response ' +
-                        'should throw an exception and the message should be the create capture group error ' +
+                auraException.getMessage(), 'The error message in the elevate batch response ' +
+                        'should throw an exception and the message should be the create elevate batch error ' +
                         'message specified in the invalid request data type.');
     }
 
