@@ -357,7 +357,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         householdAccounts = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
             npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
         system.assertEquals(3, householdAccounts.size(),
-                'listAcc should be size 3 because...');
+                'There should be 3 Households with members after merging the Households.');
 
         for (Account acc : householdAccounts) {
             system.assertNotEquals(null, acc.npe01__One2OneContact__c);
