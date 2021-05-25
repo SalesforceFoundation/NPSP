@@ -15,7 +15,7 @@ class ElevateBatch {
 
         try {
             const authorizedGift = await apexAddToElevateBatch(
-                {tokenizedGift: tokenizedGift, groupId: this.elevateBatchId}
+                {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
             return authorizedGift;
         } catch (ex) {
@@ -31,7 +31,7 @@ class ElevateBatch {
 
     async create() {
         const elevateBatch = await apexCreateElevateBatch();
-        return elevateBatch.groupId;
+        return elevateBatch.elevateBatchId;
     }
 
 }

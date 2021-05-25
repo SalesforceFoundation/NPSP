@@ -29,17 +29,17 @@
  */
 public virtual with sharing class ElevateBatchService {
 
-    public virtual ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String groupId) {
-        return new ElevateBatch(groupId).add(tokenizedGift);
+    public virtual ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+        return new ElevateBatch(elevateBatchId).add(tokenizedGift);
     }
 
     public virtual ElevateBatch createElevateBatch() {
         return new ElevateBatch().create();
     }
 
-    public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+    public ElevateAuthorizedGift sendAddRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                addRequest(tokenizedGift, groupId)
+                addRequest(tokenizedGift, elevateBatchId)
         );
         ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
                 (response.body, ElevateAuthorizedGiftResponse.class);
@@ -57,10 +57,10 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch(ElevateBatchResponse);
     }
 
-    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String groupId) {
+    private HttpRequest addRequest(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withElevateBatchId(groupId)
+                .withElevateBatchId(elevateBatchId)
                 .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH)
                 .withBody(JSON.serialize(tokenizedGift))
                 .build();
@@ -111,10 +111,10 @@ public virtual with sharing class ElevateBatchService {
                 .build();
     }
 
-    private HttpRequest captureRequest(String groupId) {
+    private HttpRequest captureRequest(String elevateBatchId) {
         return new PS_Request.Builder()
                 .withMethod(UTIL_Http.Method.POST)
-                .withElevateBatchId(groupId)
+                .withElevateBatchId(elevateBatchId)
                 .withEndpoint(PS_Request.ElevateEndpoint.CHARGE_ELEVATE_BATCH)
                 .build();
     }

@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateBatch {
-    @AuraEnabled public String groupId;
+    @AuraEnabled public String elevateBatchId;
 
     @TestVisible
     private ElevateBatchService elevateBatchService {
@@ -42,12 +42,12 @@ public with sharing class ElevateBatch {
     }
     public ElevateBatch() {}
 
-    public ElevateBatch(String groupId) {
-        this.groupId = groupId;
+    public ElevateBatch(String elevateBatchId) {
+        this.elevateBatchId = elevateBatchId;
     }
 
     public ElevateBatch(ElevateBatchResponse elevateBatchResponse) {
-        this.groupId = elevateBatchResponse.id();
+        this.elevateBatchId = elevateBatchResponse.id();
     }
 
     public ElevateBatch create() {
@@ -55,10 +55,10 @@ public with sharing class ElevateBatch {
     }
 
     public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
-        return elevateBatchService.sendAddRequest(tokenizedGift, groupId());
+        return elevateBatchService.sendAddRequest(tokenizedGift, elevateBatchId());
     }
 
-    public String groupId() {
-        return groupId;
+    public String elevateBatchId() {
+        return elevateBatchId;
     }
 }
