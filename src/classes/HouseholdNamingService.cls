@@ -363,7 +363,13 @@ public without sharing class HouseholdNamingService {
     * @return void
     */
     public void renameHouseholdAccounts(List<Id> accountIds) {
-        renameHHAccounts(accountIds);
+        if (!ACCT_IndividualAccounts_TDTM.isInsertingNewHouseholdAccount) {
+            renameHHAccounts(accountIds);
+        } else {
+            UTIL_Debug.debug(LoggingLevel.ERROR, '*** ##### Inserting a new Household Account ' +
+                    'as part of Contact Insert.  No need to analyze for a rename since the ' +
+                    'Household Name has already been set using the Contact. Exiting. ######');
+        }
     }
 
     /*******************************************************************************************************

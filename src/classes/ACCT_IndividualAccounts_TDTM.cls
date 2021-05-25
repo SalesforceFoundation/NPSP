@@ -36,6 +36,7 @@
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     private Boolean isBeforeInsert = false;
+    public static Boolean isInsertingNewHouseholdAccount = false;
 
     @TestVisible
     private OrgConfig orgConfig {
@@ -564,16 +565,22 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // because we need to get the new AccountID's into the Contacts.
 
         // identify the specific records that had the problem, and don't fail the whole batch
-        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-        for (Integer index = 0; index < insertResults.size(); index++) {
-            Database.SaveResult insertResult = insertResults[index];
-            if (!insertResult.isSuccess()) {
-                for (Database.Error err : insertResult.getErrors()) {
-                    accountInserts[index].addError(err.getMessage());
-                    Contact contactRecord = contacts[index];
-                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.FirstName, contactRecord.LastName, err.getMessage()}));
+        if (!accountInserts.isEmpty()) {
+            isInsertingNewHouseholdAccount = true;
+            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+            for (Integer index = 0; index < insertResults.size(); index++) {
+                Database.SaveResult insertResult = insertResults[index];
+                if (!insertResult.isSuccess()) {
+                    for (Database.Error err : insertResult.getErrors()) {
+                        accountInserts[index].addError(err.getMessage());
+                        Contact contactRecord = contacts[index];
+                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
+                                contactRecord.FirstName, contactRecord.LastName, err.getMessage()
+                        }));
+                    }
                 }
             }
+            isInsertingNewHouseholdAccount = false;
         }
 
         // now update each contact's accountId
