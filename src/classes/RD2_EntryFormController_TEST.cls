@@ -531,6 +531,61 @@ private with sharing class RD2_EntryFormController_TEST {
             'RD should be pre-validate before the Elevate Commitment API is called');
     }
 
+    /***
+    * @description Verifies Recurring Donation should be validate and handle any error before calling Elevate API
+    */
+    @isTest
+    private static void shouldReturnSuccessWhenUpdatingRdFromController() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+
+        npe03__Recurring_Donation__c rd = buildRecurringDonation();
+
+        rd.CommitmentId__c = COMMITMENT_ID;
+        rd.npe03__Amount__c = 1;
+
+        insert rd;
+
+        rd.npe03__Amount__c = 2;
+
+        String response;
+
+        Test.startTest();
+
+        try {
+            UTIL_Http_TEST.mockRecordUpdateCalloutResponse(mockSuccessResponseBody());
+            response = RD2_EntryFormController.handleCommitment(JSON.serialize(rd), PAYMENT_METHOD_TOKEN);
+
+        } catch(Exception ex) {
+
+        }
+
+        Integer statusCode;
+        String status;
+        JSONParser parser = JSON.createParser(response);
+
+        while (parser.nextToken() != null) {
+            if(parser.getCurrentToken() == JSONToken.FIELD_NAME) {
+                if (parser.getText() == 'statusCode') {
+                    parser.nextToken();
+                    statusCode = parser.getIntegerValue();
+
+                } else if (parser.getText() == 'status') {
+                    parser.nextToken();
+                    status = parser.getText();
+                }
+            }
+        }
+
+        Test.stopTest();
+
+        System.assertNotEquals(null, response, 'Expected to receive a response from handleCommitment');
+        System.assertEquals(UTIL_Http.STATUS_CODE_OK, statusCode,
+                'The response status code should match: ' + response);
+        System.assertEquals(UTIL_Http.STATUS_OK, status,
+                'The response status should match: ' + response);
+    }
+
     /**
     * @description Verifies commitment success response is returned upon successful campaign update
     */
