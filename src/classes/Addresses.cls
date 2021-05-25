@@ -108,10 +108,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         deleteEmptyAddresses();
     }
 
-    private Boolean isBeingInsertedByHHAccountInsertContext() {
-       return ADDR_Account_TDTM.isRunningInsert;
-    }
-
     public void onBeforeUpdate() {
         updateLatestDatesForDefaultChanges();
         verifyAddrHHAccOnly();
