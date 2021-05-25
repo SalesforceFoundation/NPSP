@@ -70,17 +70,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         set;
     }
 
-    @TestVisible
-    private HouseholdSettings householdSettings {
-        get {
-            if (householdSettings == null) {
-                householdSettings = new HouseholdSettings();
-            }
-            return householdSettings;
-        }
-        set;
-    }
-
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -548,7 +537,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = Accounts.rtIdForNewAccount();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
@@ -561,44 +549,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 contactRecord.AccountId = accountRecord.Id;
             } else {
                 // construct the individual account for the Contact
-                accountRecord = new Account();
-
-                // construct the Account name
-                accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
-                if (isBeforeInsert) {
-                    accountRecord.Number_of_Household_Members__c = 1;
-                    if (isAdvancedNamingEnabled()) {
-                        setHouseholdGreetings(contactRecord, accountRecord);
-                    }
-                }
-
-                // connect the Account to the Contact for 1:1 and HHAccount
-                if (contactRecord.Id != null) {
-                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
-                }
-
-                accountRecord.Phone = contactRecord.Phone;
-                accountRecord.Fax = contactRecord.Fax;
-                accountRecord.OwnerId = contactRecord.OwnerId;
-
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
-                }
-
-                // Always copy the Contact's Mailing & Others address to the new Account's
-                // Billing & Shipping address.
-                if (contactRecord.is_Address_Override__c != true) {
-                    addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
-                }
-
-                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (individualRecordTypeId != null) {
-                    accountRecord.put('RecordTypeID', individualRecordTypeId);
-                }
-                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
-                accountRecord.npe01__SYSTEMIsIndividual__c = true;
-                accountInserts.add(accountRecord);
+                NPSP_HouseholdAccount npspHouseholdAccount =
+                        new NPSP_HouseholdAccount(contactRecord);
+                accountInserts.add(npspHouseholdAccount.getRecord());
                 contacts.add(contactRecord);
             }
         }
@@ -629,23 +582,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
-    }
-
-    private void setHouseholdGreetings(Contact contactRecord, Account accountRecord) {
-        HouseholdName householdName =
-                new HouseholdName(new Contacts(new List<Contact>{
-                        contactRecord
-                }));
-        if (accountRecord.npo02__Formal_Greeting__c == null) {
-            accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
-        }
-        if (accountRecord.npo02__Informal_Greeting__c == null) {
-            accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
-        }
-    }
-
-    private Boolean isAdvancedNamingEnabled() {
-        return householdSettings.isAdvancedHouseholdNaming();
     }
 
     /*******************************************************************************************************

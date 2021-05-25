@@ -47,6 +47,7 @@ public inherited sharing class NPSP_HouseholdAccount {
 
     private Account householdAccount;
     private Account oldVersion;
+    private Id individualRecordTypeId = Accounts.rtIdForNewAccount();
 
     @TestVisible
     private AddressService addressService {
@@ -59,6 +60,17 @@ public inherited sharing class NPSP_HouseholdAccount {
         set;
     }
 
+    @TestVisible
+    private HouseholdSettings householdSettings {
+        get {
+            if (householdSettings == null) {
+                householdSettings = new HouseholdSettings();
+            }
+            return householdSettings;
+        }
+        set;
+    }
+
     public NPSP_HouseholdAccount(Account account) {
         this.householdAccount = account;
     }
@@ -66,6 +78,47 @@ public inherited sharing class NPSP_HouseholdAccount {
     public NPSP_HouseholdAccount(Account account, Account oldVersion) {
         this.householdAccount = account;
         this.oldVersion = oldVersion;
+    }
+
+    public NPSP_HouseholdAccount(Contact con) {
+        householdAccount = new Account();
+        householdAccount.Name = CAO_Constants.isHHAccountModel() ?
+                ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con) :
+                ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
+        householdAccount.Number_of_Household_Members__c = 1;
+        if (isAdvancedNamingEnabled()) {
+            setHouseholdGreetings(con, householdAccount);
+        }
+        // connect the Account to the Contact for 1:1 and HHAccount
+        if (con.Id != null) {
+            householdAccount.npe01__One2OneContact__c = con.Id;
+        }
+        householdAccount.Phone = con.Phone;
+        householdAccount.Fax = con.Fax;
+        householdAccount.OwnerId = con.OwnerId;
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            householdAccount.put('CurrencyIsoCode',
+                    (String) con.get('CurrencyIsoCode'));
+        }
+        // Always copy the Contact's Mailing & Others address to the new Account's
+        // Billing & Shipping address.
+        if (con.is_Address_Override__c != true) {
+            addressService.copyAddressStdSObj(
+                    con, 'Mailing',
+                    householdAccount, 'Billing');
+            addressService.copyAddressStdSObj(
+                    con, 'Other',
+                    householdAccount, 'Shipping');
+        }
+        householdAccount.npe01__SYSTEM_AccountType__c =
+                CAO_Constants.isHHAccountModel() ?
+                        CAO_Constants.HH_ACCOUNT_TYPE :
+                        CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        if (individualRecordTypeId != null) {
+            householdAccount.put('RecordTypeID', individualRecordTypeId);
+        }
+        householdAccount.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+        householdAccount.npe01__SYSTEMIsIndividual__c = true;
     }
 
     public Id getId() {
@@ -127,4 +180,20 @@ public inherited sharing class NPSP_HouseholdAccount {
         return addressService.isSObjectAddressDifferent(householdAccount, anAddress);
     }
 
+    private void setHouseholdGreetings(Contact contactRecord, Account accountRecord) {
+        HouseholdName householdName =
+                new HouseholdName(new Contacts(new List<Contact>{
+                        contactRecord
+                }));
+        if (accountRecord.npo02__Formal_Greeting__c == null) {
+            accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
+        }
+        if (accountRecord.npo02__Informal_Greeting__c == null) {
+            accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
+        }
+    }
+
+    private Boolean isAdvancedNamingEnabled() {
+        return householdSettings.isAdvancedHouseholdNaming();
+    }
 }
