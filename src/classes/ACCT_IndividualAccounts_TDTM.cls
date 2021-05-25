@@ -560,7 +560,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
             } else {
-                // construct the individul account for the Contact
+                // construct the individual account for the Contact
                 accountRecord = new Account();
 
                 // construct the Account name
