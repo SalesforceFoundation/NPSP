@@ -567,17 +567,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
                 if (isBeforeInsert) {
                     accountRecord.Number_of_Household_Members__c = 1;
-                    if (householdSettings.isAdvancedHouseholdNaming()) {
-                        HouseholdName householdName =
-                                new HouseholdName(new Contacts(new List<Contact>{
-                                        contactRecord
-                                }));
-                        if (accountRecord.npo02__Formal_Greeting__c == null) {
-                            accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
-                        }
-                        if (accountRecord.npo02__Informal_Greeting__c == null) {
-                            accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
-                        }
+                    if (isAdvancedNamingEnabled()) {
+                        setHouseholdGreetings(contactRecord, accountRecord);
                     }
                 }
 
@@ -638,6 +629,23 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+    }
+
+    private void setHouseholdGreetings(Contact contactRecord, Account accountRecord) {
+        HouseholdName householdName =
+                new HouseholdName(new Contacts(new List<Contact>{
+                        contactRecord
+                }));
+        if (accountRecord.npo02__Formal_Greeting__c == null) {
+            accountRecord.npo02__Formal_Greeting__c = householdName.asFormalGreeting();
+        }
+        if (accountRecord.npo02__Informal_Greeting__c == null) {
+            accountRecord.npo02__Informal_Greeting__c = householdName.asInformalGreeting();
+        }
+    }
+
+    private Boolean isAdvancedNamingEnabled() {
+        return householdSettings.isAdvancedHouseholdNaming();
     }
 
     /*******************************************************************************************************
