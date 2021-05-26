@@ -269,13 +269,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
             }
 
-            if (isHouseholdMember(contactRecord)) {
+            if (!isNewContactInsertOperation() && isHouseholdMember(contactRecord)) {
                 householdIdsToRename.add(contactRecord.AccountId);
             }
         }
 
         updatePrimaryContactOnAccount(primaryContactByAccountId);
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
+    }
+
+    private Boolean isNewContactInsertOperation() {
+        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert);
     }
 
     /**
