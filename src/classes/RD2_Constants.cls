@@ -97,6 +97,10 @@ public inherited sharing class RD2_Constants {
     */
     public static final String FIXED_TYPE_CLOSED_REASON = 'Commitment Completed';
 
+
+    public static final String PAYMENT_PICKLIST_VALUE_CARD = 'Credit Card';
+    public static final String PAYMENT_PICKLIST_VALUE_ACH = 'ACH';
+
     /**
     * @description Returns all valid Installment Periods
     */

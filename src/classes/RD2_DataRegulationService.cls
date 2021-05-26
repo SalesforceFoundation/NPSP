@@ -46,6 +46,7 @@ public inherited sharing class RD2_DataRegulationService {
         } set;
     }
 
+    private final String TEMP_COMMITMENT_ID = 'TEMP';
     public RD2_DataRegulationService() {
     }
 
@@ -70,6 +71,32 @@ public inherited sharing class RD2_DataRegulationService {
         for (npe03__Recurring_Donation__c rd : rds) {
             adjustScheduleFields(rd);   
             adjustEndDateAndStatus(rd, oldRdsById.get(rd.Id));          
+        }
+    }
+
+    /**
+    * @description Add tempary commitment Id to recurring donation
+    * @param rds Recurring Donation list
+    * @return void 
+    */
+    public void markRDsAsElevate(List<npe03__Recurring_Donation__c> rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.CommitmentId__c == null) {
+                rd.CommitmentId__c = TEMP_COMMITMENT_ID;
+            }
+        }
+    }
+
+    /**
+    * @description Remove tempary commitment Id to new recurring donation
+    * @param rds Recurring Donation list
+    * @return void 
+    */
+    public void removeElevateMarker(List<npe03__Recurring_Donation__c> rds) {
+        for (npe03__Recurring_Donation__c rd : rds) {
+            if (rd.CommitmentId__c == TEMP_COMMITMENT_ID) {
+                rd.CommitmentId__c = null;
+            }
         }
     }
 

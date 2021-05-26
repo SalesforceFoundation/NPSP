@@ -309,7 +309,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                                 Address_Type__c = 'Home',
                                 Household_Account__c = myHHAccount.Id
                                 );
-                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                            Addresses.handleMultilineStreet(a);
                             addressesForInsert.put(myHHAccount.Id, a);                                            
                         }
 
@@ -342,7 +342,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                                     Default_Address__c = true,
                                     Address_Type__c = cadd.AddressType,
                                     Household_Account__c = accountId);
-                                ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                                Addresses.handleMultilineStreet(a);
                                 addressesForInsert.put(conList[0].Id, a);
                             }
                         }
@@ -359,7 +359,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                                 Default_Address__c = true,
                                 Address_Type__c = cadd.AddressType,
                                 Household_Account__c = accountId);
-                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                            Addresses.handleMultilineStreet(a);
                             addressesForInsert.put(AccountId, a);
 
                             myHHAccount.BillingStreet = cadd.MailingStreet;
@@ -466,7 +466,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                                                 Address_Type__c = cadd.AddressType,
                                                 Household_Account__c = cadd.contact.AccountId
                                                 );
-                            ADDR_Addresses_TDTM.handleMultilineStreet(a);
+                            Addresses.handleMultilineStreet(a);
 
                             if (masteraddresshash == MD5Hash){
                                 addressesForInsert.put(cadd.AccountId, a);

@@ -9,11 +9,7 @@
     <aura:attribute name="modal"
                     type="Object" />
 
-    <c:utilDedicatedListener eventName="geDonationMatchingEvent"
-                             onreceiveevent="{!c.closeModal}" />
-    <c:utilDedicatedListener eventName="geBatchWizardFormEvent"
-                             onreceiveevent="{!c.closeModal}" />
-    <c:utilDedicatedListener eventName="gePurchaseCallModalErrorEvent"
+    <c:utilDedicatedListener eventName="geModalCloseEvent"
                              onreceiveevent="{!c.closeModal}" />
 
     <c:geGiftEntryFormApp aura:id="giftEntryFormApp"

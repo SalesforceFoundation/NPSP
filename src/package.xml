@@ -73,6 +73,11 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>Accounts</members>
+        <members>AddressService</members>
+        <members>Addresses</members>
+        <members>AggregateResultProxy</members>
+        <members>AggregateResultProxy_TEST</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -113,6 +118,8 @@
         <members>BDI_DynamicSourceGroup</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingSet</members>
+        <members>BDI_GAUAllocationsUtil</members>
+        <members>BDI_GAUAllocationsUtil_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
@@ -264,6 +271,13 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>CaptureGroup</members>
+        <members>ContactAndOrgSettings</members>
+        <members>ContactSelector</members>
+        <members>ContactService</members>
+        <members>Contacts</members>
+        <members>ContactsInLegacyHouseholds</members>
+        <members>ContactsInLegacyHouseholds_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -298,6 +312,17 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>ElevateAuthorizedGift</members>
+        <members>ElevateAuthorizedGiftResponse</members>
+        <members>ElevateAuthorizedGift_TEST</members>
+        <members>ElevateCaptureGroup</members>
+        <members>ElevateCaptureGroupResponse</members>
+        <members>ElevateCaptureGroupService</members>
+        <members>ElevateCaptureGroupServiceInvalidRequest</members>
+        <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevatePaymentMethod</members>
+        <members>ElevateTokenizedGift</members>
+        <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_GiftEntryController</members>
@@ -305,6 +330,7 @@
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
+        <members>GE_PaymentServicesMock</members>
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
@@ -313,6 +339,19 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>Gift</members>
+        <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchGroupedTotals</members>
+        <members>GiftBatchGroupedTotals_TEST</members>
+        <members>GiftBatchSelector</members>
+        <members>GiftBatchService</members>
+        <members>GiftBatchStatusGroup</members>
+        <members>GiftBatchStatusGroup_TEST</members>
+        <members>GiftBatchTotals</members>
+        <members>GiftBatches</members>
+        <members>GiftSelector</members>
+        <members>Gift_Test</members>
+        <members>Gifts</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -320,22 +359,36 @@
         <members>HH_Container_LCTRL</members>
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
-        <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNamingSettingValidator</members>
         <members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_HouseholdNaming_BATCH</members>
-        <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
+        <members>HH_INamingImpl</members>
+        <members>HH_INamingImpl_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
-        <members>HH_NameSpec</members>
-        <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
+        <members>HouseholdAccounts</members>
+        <members>HouseholdName</members>
+        <members>HouseholdNamingExclusionsCheckboxes</members>
+        <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingService</members>
+        <members>HouseholdNamingService_TEST</members>
+        <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdNaming_TEST</members>
+        <members>HouseholdSelector</members>
+        <members>HouseholdService</members>
+        <members>HouseholdService_TEST</members>
+        <members>HouseholdSettings</members>
+        <members>Households</members>
+        <members>IAddress</members>
+        <members>INamingExclusions</members>
+        <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -348,6 +401,13 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>NPSP_Address</members>
+        <members>NPSP_Batch</members>
+        <members>NPSP_Batch_TEST</members>
+        <members>NPSP_Contact</members>
+        <members>NPSP_Contact_TEST</members>
+        <members>NPSP_Household</members>
+        <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
@@ -377,6 +437,7 @@
         <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
+        <members>OrgConfig</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -586,6 +647,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_ContactBuilder</members>
         <members>TEST_OpportunityBuilder</members>
         <members>TEST_RecurringDonationBuilder</members>
         <members>TEST_SObjectGateway</members>
@@ -684,6 +746,10 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>UnitOfWork</members>
+        <members>fflib_Domain</members>
+        <members>fflib_Objects</members>
+        <members>fflib_SObjects</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1188,6 +1254,7 @@
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
         <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
+        <members>DataImport__c.Payment_Elevate_Batch_ID__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
@@ -1789,9 +1856,14 @@
         <members>RD2_ElevateInformationHeader</members>
         <members>RD2_ElevateInformationStatusSuccess</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePaymentMethodChangeError</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDAmountMustBeValid</members>
+        <members>RD2_ElevateRDCampaignCannotUpdateToNull</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDDayOfMonthCannotChange</members>
+        <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
@@ -1854,6 +1926,7 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveACHMessage</members>
         <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
         <members>RD2_EntryFormSaveCommitmentMessage</members>
         <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
@@ -1867,6 +1940,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_NextACHPaymentDonationDateInfo</members>
         <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
@@ -1907,7 +1981,6 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
-        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2077,6 +2150,9 @@
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorDonationRequireNoMatch</members>
+        <members>bdiErrorExistingDonationAllocations</members>
+        <members>bdiErrorExistingPaymentAllocations</members>
+        <members>bdiErrorGAUAllocationOver100</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidIMatchDonations</members>
@@ -2232,7 +2308,10 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeNotSupportedBody</members>
+        <members>bgeNotSupportedHeader</members>
         <members>bgeProcessBatch</members>
+        <members>bgeProcessBatchAndPayments</members>
         <members>bgeRetirementWarningBody</members>
         <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
@@ -2259,6 +2338,7 @@
         <members>commonBatches</members>
         <members>commonCVV</members>
         <members>commonCancel</members>
+        <members>commonCardLast4</members>
         <members>commonCardType</members>
         <members>commonCardholderName</members>
         <members>commonClone</members>
@@ -2271,6 +2351,7 @@
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
+        <members>commonEditPaymentInformation</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonErrorPrefix</members>
@@ -2290,10 +2371,13 @@
         <members>commonNoItems</members>
         <members>commonOkay</members>
         <members>commonOpen</members>
+        <members>commonPaymentProcessingErrors</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
         <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
+        <members>commonRecordsFailed</members>
+        <members>commonRecordsProcessed</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
         <members>commonSave</members>
@@ -2366,6 +2450,8 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geAuthorizedCreditCardSuccess</members>
+        <members>geAuthorizingCreditCard</members>
         <members>geBatchGiftsCount</members>
         <members>geBatchGiftsExpectedCountOrTotalMessage</members>
         <members>geBatchGiftsExpectedTotalsMessage</members>
@@ -2394,6 +2480,7 @@
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
         <members>geBodyPaymentNotProcessingTransaction</members>
+        <members>geBodyPaymentProcessedDuringBatchProcessing</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2427,6 +2514,7 @@
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorBatchGiftEntryCurrencyMismatch</members>
+        <members>geErrorBatchGiftEntryReauthRequired</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2503,9 +2591,14 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
+        <members>gePaymentAuthExpiredHeader</members>
+        <members>gePaymentAuthExpiredWarningText</members>
         <members>gePaymentProcessError</members>
+        <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
+        <members>geProcessAnyway</members>
+        <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
@@ -3463,11 +3556,13 @@
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.Home_City</members>
         <members>Data_Import_Field_Mapping.Home_Country</members>
         <members>Data_Import_Field_Mapping.Home_State_Province</members>
@@ -4224,6 +4319,7 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
+        <members>formattedTextWithDate</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -4243,8 +4339,8 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>geModalPrompt</members>
         <members>gePaymentGatewayManagement</members>
-        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
@@ -4282,6 +4378,7 @@
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2PauseForm</members>
+        <members>rd2Service</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
@@ -4296,6 +4393,8 @@
         <members>utilInput</members>
         <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
+        <members>utilPageHeaderDetailBlock</members>
+        <members>utilPageHeaderDetailRow</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>

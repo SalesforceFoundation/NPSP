@@ -39,7 +39,23 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    private static GiftBatchService giftBatchService = new GiftBatchService();
 
+    @TestVisible
+    private static ElevateCaptureGroupService captureGroupService {
+        get {
+            if (captureGroupService == null) {
+                captureGroupService = new ElevateCaptureGroupService();
+            }
+            return captureGroupService;
+        }
+        set;
+    }
+
+    @AuraEnabled
+    public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
+        return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
 
     /*******************************************************************************************************
     * @description Indicates if the org is connected to Elevate
@@ -48,7 +64,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled(cacheable=true)
     public static Boolean isElevateCustomer() {
         try {
-            return GE_PaymentServices.isElevateCustomer;
+            return new GE_PaymentServices().isElevateCustomer();
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -175,6 +191,41 @@ public with sharing class GE_GiftEntryController {
 
             throw buildDmlException(JSONExceptionData);
         }
+    }
+
+    @AuraEnabled
+    public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+        ElevateAuthorizedGift authorizedGift;
+        try {
+            authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return authorizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateCaptureGroup createCaptureGroup() {
+        ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
+        return captureGroup;
+    }
+
+    @AuraEnabled
+    public static void validateAuthorizedGiftEdit(DataImport__c dataImport){
+        Gift editedGift = new Gift(dataImport);
+        if (editedGift.requiresReauthorizationBeforeChange()) { 
+            throw new AuraHandledException(Label.geErrorBatchGiftEntryReauthRequired);
+        }
+    }
+
+    @AuraEnabled
+    public static void processPaymentsFor(Id batchId) {
+       try {
+           NPSP_Batch batch = new NPSP_Batch(batchId);
+           batch.processPayments();
+       } catch (Exception ex) {
+          throw new AuraHandledException(ex.getMessage());
+       }
     }
 
     /**
@@ -322,7 +373,8 @@ public with sharing class GE_GiftEntryController {
                 'npe01__Scheduled_Date__c, ' +
                 'npe01__Opportunity__r.Name, ' +
                 'npe01__Opportunity__c, ' +
-                'npe01__Payment_Amount__c ' +
+                'npe01__Payment_Amount__c, ' +
+                'Elevate_Payment_API_Status__c ' +
                 'FROM npe01__OppPayment__c ' +
                 'WHERE npe01__Opportunity__r.' + relationshipField + ' = :donorId ' +
                 'AND npe01__Written_Off__c = false ' +
@@ -350,8 +402,10 @@ public with sharing class GE_GiftEntryController {
                     'npe01__Opportunity__r.Name, ' +
                     'npe01__Opportunity__c, ' +
                     'npe01__Payment_Amount__c,' +
+                    'npe01__Payment_Date__c,' +
                     'npe01__Paid__c, ' +
-                    'npe01__Written_Off__c ' +
+                    'npe01__Written_Off__c, ' +
+                    'Elevate_Payment_API_Status__c ' +
                     'FROM npe01__OppPayment__r ' +
                     'WHERE npe01__Written_Off__c = false ' +
                     'AND npe01__Paid__c = false)' +

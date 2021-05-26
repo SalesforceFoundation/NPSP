@@ -1546,6 +1546,14 @@
         <value>You can&apos;t change the Opportunity currency to a different currency than the related Recurring Donation.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevatePaymentMethodChangeError</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Cannot change payment method to a non-Elevate payment method</shortDescription>
+        <value>Valid Payment Methods for an active Elevate-connected Recurring Donation are Credit Card or ACH.</value>
+    </labels>
+    <labels>
         <fullName>RD2_CurrencyChangeIsRestrictedOnRD</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -1713,6 +1721,14 @@
         <shortDescription>Error when user does not have a permission to change an RD originated in Elevate</shortDescription>
         <value>Recurring Donations from Elevate Payment Services can&apos;t be modified in NPSP except by the Elevate Payment Services Integration user.</value>
     </labels>
+        <labels>
+        <fullName>RD2_ElevateRDAmountMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if an Elevate Recurring Donation&apos;s amount is valid or not</shortDescription>
+        <value>Please enter a valid Amount. The Amount cannot be less than 1.</value>
+    </labels>
     <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1720,6 +1736,30 @@
         <protected>true</protected>
         <shortDescription>Error when an attempt is made to change the Status of a Closed Elevate RD</shortDescription>
         <value>You can&apos;t edit the Status for an Elevate connected Recurring Donation when Status is Closed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDDayOfMonthCannotChange</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Day of Month Changed</shortDescription>
+        <value>You can't change Day of Month for an Elevate-connected Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDEffectiveDateMustBeValid</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Effective Date is valid or not</shortDescription>
+        <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donation cannot be in the future.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_ElevateRDCampaignCannotUpdateToNull</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Elevate Recurring Donation&apos;s Campaign update is valid or not</shortDescription>
+        <value>You can&apos;t remove the Campaign on an active Elevate-connected Recurring Donation. To remove the Campaign, close the Recurring Donation and create a new one.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRecordCreateFailed</fullName>
@@ -2253,6 +2293,14 @@
         You can keep this form open, fix the error, and save the Recurring Donation again. Alternatively, cancel and contact your System Administrator for help.</value>
     </labels>
     <labels>
+        <fullName>RD2_EntryFormSaveACHMessage</fullName>
+        <categories>Recurring-Donations, Entry-Form</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Spinner text when credit card is validated on Recurring Donation save</shortDescription>
+        <value>Sending ACH information to Elevate...</value>
+    </labels>
+    <labels>
         <fullName>RD2_EntryFormSaveCreditCardValidationMessage</fullName>
         <categories>Recurring-Donations, Entry-Form</categories>
         <language>en_US</language>
@@ -2347,6 +2395,14 @@
         <protected>true</protected>
         <shortDescription>Detail for the next payment charging date</shortDescription>
         <value>The donor&apos;s credit card will be charged on the next donation date: {{DATE}}</value>
+    </labels>
+    <labels>
+        <fullName>RD2_NextACHPaymentDonationDateInfo</fullName>
+        <categories>Recurring-Donations, Elevate</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Detail for the next payment charging date</shortDescription>
+        <value>The donor&apos;s ACH payment information will be sent to their bank on {{DATE}}. Payments begin after the bank verifies and processes the information.</value>
     </labels>
     <labels>
         <fullName>RD2_NumberInstallmentsRequiredWhenFixed</fullName>
@@ -2654,14 +2710,6 @@
         <protected>true</protected>
         <shortDescription>Validation and health check error message when status is not mapped to a state.</shortDescription>
         <value>The Status &quot;{0}&quot; hasn&apos;&apos;t been mapped to a State.</value>
-    </labels>
-    <labels>
-        <fullName>RD2_UpdatePaymentInformation</fullName>
-        <categories>Recurring-Donations, Elevate</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text to update evelate payment information</shortDescription>
-        <value>Update Payment Information</value>
     </labels>
     <labels>
         <fullName>RD2_StatusMustBeMappedSolution</fullName>
@@ -5134,6 +5182,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Process Batch</value>
     </labels>
     <labels>
+        <fullName>bgeProcessBatchAndPayments</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to process a batch and payments through {0}</shortDescription>
+        <value>Process Batch &amp; Payments</value>
+    </labels>
+    <labels>
         <fullName>bgeRetirementWarningBody</fullName>
         <categories>Batch Data Entry</categories>
         <language>en_US</language>
@@ -5148,6 +5203,28 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for warning about Batch Gift Entry retiring</shortDescription>
         <value>Retiring Batch Gift Entry</value>
+    </labels>
+    <labels>
+        <fullName>bgeNotSupportedHeader</fullName>
+        <categories>Batch Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry</shortDescription>
+        <value>Batch Gift Entry Not Supported</value>
+    </labels>
+    <labels>
+        <fullName>bgeNotSupportedBody</fullName>
+        <categories>Batch Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch Gift Entry</shortDescription>
+        <value>
+            As of July 13, 2021, Batch Gift Entry is no longer supported and has been replaced by Gift Entry.
+            If you have any in-progress batches, you can still access those records, but you can't process them using Batch Gift Entry.
+            Contact support if you need to access in-progress batches.
+            You may want to explore Gift Entry as an alternative to Batch Gift Entry.
+            Learn more about Gift Entry in the &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP Documentation&lt;/a&gt; on the Power of Us Hub.
+        </value>
     </labels>
     <labels>
         <fullName>bgeTabHeader</fullName>
@@ -5464,6 +5541,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Cardholder Name</value>
     </labels>
     <labels>
+        <fullName>commonCardLast4</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for card last 4</shortDescription>
+        <value>Card Last 4</value>
+    </labels>
+    <labels>
         <fullName>commonCVV</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5558,6 +5643,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Edit</shortDescription>
         <value>Edit</value>
+    </labels>
+    <labels>
+        <fullName>commonEditPaymentInformation</fullName>
+        <categories>Recurring-Donations, Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text to edit elevate payment information</shortDescription>
+        <value>Edit payment information.</value>
     </labels>
     <labels>
         <fullName>commonElevateFailedOnboarding</fullName>
@@ -5688,6 +5781,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Open</value>
     </labels>
     <labels>
+        <fullName>commonPaymentProcessingErrors</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Payment Processing Errors</shortDescription>
+        <value>Payment Processing Errors</value>
+    </labels>
+    <labels>
         <fullName>commonPaymentServices</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -5718,6 +5819,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Read More</shortDescription>
         <value>Read More</value>
+    </labels>
+    <labels>
+        <fullName>commonRecordsFailed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Records Failed</shortDescription>
+        <value>Records Failed</value>
+    </labels>
+    <labels>
+        <fullName>commonRecordsProcessed</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Records Processed</shortDescription>
+        <value>Records Processed</value>
     </labels>
     <labels>
         <fullName>commonRequired</fullName>
@@ -6314,6 +6431,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Content is loading.</value>
     </labels>
     <labels>
+        <fullName>geAuthorizedCreditCardSuccess</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message about card being authorized</shortDescription>
+        <value>Card authorized.</value>
+    </labels>
+    <labels>
+        <fullName>geAuthorizingCreditCard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text indicating the payment is being Authorized</shortDescription>
+        <value>Authorizing...</value>
+    </labels>
+    <labels>
         <fullName>geBatchGiftsCount</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6565,6 +6696,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>You aren&apos;t entering payment information to be processed by Elevate.</value>
     </labels>
     <labels>
+        <fullName>geBodyPaymentProcessedDuringBatchProcessing</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit card(s) will not be processed until batch is processed</shortDescription>
+        <value>The donor&apos;s credit card will be processed when you process the batch.</value>
+    </labels>
+    <labels>
         <fullName>geBodyTemplateInfoLeftCol</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6795,6 +6934,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Common error when a total doesn't match Donation Amount.</shortDescription>
         <value>Total amount doesn't match the {0}</value>
+    </labels>
+    <labels>
+        <fullName>geErrorBatchGiftEntryReauthRequired</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Instructions to reenter payment details when updating authorized attributes</shortDescription>
+        <value>To update donor, date or amount, reenter card details to reauthorized the payment.</value>
     </labels>
     <labels>
         <fullName>geErrorBatchGiftEntryCurrencyMismatch</fullName>
@@ -8635,12 +8782,52 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>The base64 format is invalid. The number of characters must be a multiple of 4 and can only contain these characters: [a-z A-Z 0-9 + / =]</value>
     </labels>
     <labels>
+        <fullName>geProcessAnyway</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to Process Anyway</shortDescription>
+        <value>Process Anyway</value>
+    </labels>
+    <labels>
+        <fullName>geProcessingErrors</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Processing Errors</shortDescription>
+        <value>Processing Errors</value>
+    </labels>
+    <labels>
         <fullName>geJWTUtilInvalidBase64UrlMessage</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Failure message if an invalid base64 url was provided</shortDescription>
         <value>The base64url format is invalid. It can only contain these characters: [a-z A-Z 0-9 _ -]</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentAuthExpiredHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header text for payment authorization warning</shortDescription>
+        <value>Payment Authorization Expired</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentAuthExpiredWarningText</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about processing batch when authorizations have expired</shortDescription>
+        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with Expired Authorization Payment Status.</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentProcessedWarning</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about editing fields when transaction already processed</shortDescription>
+        <value>{0} successfully processed the payment. Changing the donor, date, amount, or payment method will result in inconsistent records for the same transaction in {0} and NPSP.</value>
     </labels>
     <labels>
         <fullName>gePaymentProcessError</fullName>

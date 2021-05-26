@@ -758,9 +758,13 @@ global with sharing class BDI_DataImportService {
 
         return String.isBlank(paymentStatus) ||
             (dataImport.Payment_Status__c.equalsIgnoreCase(
-                GE_PaymentServices.ElevateTransactionStatus.CAPTURED.name()
-            ) || (dataImport.Payment_Method__c == ACH_PAYMENT_METHOD
-                && dataImport.Payment_Elevate_ID__c != null));
+                ElevateTransactionStatus.CAPTURED.name()
+            ) ||
+            (isDryRun && dataImport.Payment_Status__c.equalsIgnoreCase(
+                ElevateTransactionStatus.AUTHORIZED.name()
+            ) ||
+            (dataImport.Payment_Method__c == ACH_PAYMENT_METHOD
+                && dataImport.Payment_Elevate_ID__c != null)));
     }
 
     /**
@@ -1851,23 +1855,29 @@ global with sharing class BDI_DataImportService {
                 addr.Address_Type__c = 'Home';
 
                 if (con1 != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con1, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_Contact npspContact = new NPSP_Contact(con1);
+                    npspContact.mailingAddress(npspAddress);
                     if (setIdUpdate.add(con1.Id)) {
-                        listCon1Update.add(con1);
+                        listCon1Update.add(npspContact.getRecord());
                         listCon1Di.add(dataImport);
                     }
                 }
                 if (con2 != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, con2, 'Mailing', 'npe01__Primary_Address_Type__c');
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_Contact npspContact = new NPSP_Contact(con2);
+                    npspContact.mailingAddress(npspAddress);
                     if (setIdUpdate.add(con2.Id)) {
-                        listCon2Update.add(con2);
+                        listCon2Update.add(npspContact.getRecord());
                         listCon2Di.add(dataImport);
                     }
                 }
                 if (accHH != null) {
-                    ADDR_Addresses_TDTM.copyAddressAddrSObj(addr, accHH, 'Billing', null);
+                    NPSP_Address npspAddress = new NPSP_Address(addr);
+                    NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(accHH);
+                    npspHousehold.billingAddress(npspAddress);
                     if (setIdUpdate.add(accHH.Id)) {
-                        listAccUpdate.add(accHH);
+                        listAccUpdate.add(npspHousehold.getRecord());
                         listAccDi.add(dataImport);
                     }
                 }

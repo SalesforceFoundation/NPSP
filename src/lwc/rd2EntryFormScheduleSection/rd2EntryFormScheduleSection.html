@@ -78,16 +78,24 @@
                     </lightning-layout-item>
 
                     <template if:true={showDayOfMonth}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                        <lightning-layout-item padding="horizontal-small" size="12"
+                                               large-device-size={scheduleRowColumnSize}
                                                if:true={fields.dayOfMonth}>
-                            <lightning-input-field field-name={fields.dayOfMonth.apiName} value={defaultDayOfMonth} required>
+                            <lightning-input-field
+                                    field-name={fields.dayOfMonth.apiName}
+                                    value={defaultDayOfMonth}
+                                    data-id="dayOfMonth"
+                                    required>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
 
                     <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
                                            if:true={fields.startDate}>
-                        <lightning-input-field field-name={fields.startDate.apiName} required>
+                        <lightning-input-field
+                                field-name={fields.startDate.apiName}
+                                data-id="startDate"
+                                required>
                         </lightning-input-field>
                     </lightning-layout-item>
 

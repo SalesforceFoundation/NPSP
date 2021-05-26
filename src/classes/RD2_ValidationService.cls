@@ -57,6 +57,7 @@ public with sharing class RD2_ValidationService {
     /**
     * @description New or updated Recurring Donation records
     */
+    @TestVisible
     private List<npe03__Recurring_Donation__c> rds = new List<npe03__Recurring_Donation__c>();
 
     /**
@@ -232,12 +233,14 @@ public with sharing class RD2_ValidationService {
             if (!elevateService.hasUpdatePermissions(rd, oldRd)) {
                 errorCollection.addError(System.Label.RD2_ElevatePermissionRequired);
             }
-
             validateActiveRecurringDonation(rd, errorCollection);
             validateInstallmentFrequency(rd, errorCollection);
             validateCurrencyChange(rd, oldRd, errorCollection);
+            validateElevateRDScheduleCannotBeInTheFuture(rd, errorCollection);
             validateRecurringDonationEndDate(rd, errorCollection);
             validateStatus(rd, errorCollection);
+            validateDayOfMonthChange(rd, oldRd, errorCollection);
+            validateElevateRDCampaignCannotUpdateToEmpty(rd, oldRd, errorCollection);
 
             Boolean isValid = validateDonorChange(rd, oldRd, errorCollection);
             if (isValid) {
@@ -254,6 +257,12 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
+    private void validatePaymentMethod(RD2_RecurringDonation recurringDonation, ErrorRecord errorCollection) {
+        if (!recurringDonation.hasValidRecurringDonationPaymentMethod()) {
+            errorCollection.addError(System.Label.RD2_ElevatePaymentMethodChangeError);
+        }
+    }
+
     /**
     * @description Validates if Enhanced Recurring Donation Paused Status is Active
     * @return Boolean 
@@ -267,6 +276,7 @@ public with sharing class RD2_ValidationService {
     /***
     * @description Validates Enhanced Recurring Donations metadata has been deployed
     * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     private void validateRD2MetadataDeployed(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
@@ -278,17 +288,44 @@ public with sharing class RD2_ValidationService {
     /***
     * @description Validates data on Recurring Donation is valid
     * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     private void validateActiveRecurringDonation(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
-        if (new RD2_RecurringDonation(rd).isClosed()) {
+        RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
+        if (recurringDonation.isClosed()) {
             return;
         }
+        validateAmount(rd, errorCollection);
+        validateInstallmentPeriod(rd, errorCollection);
+        validateDayOfMonth(rd, errorCollection);
+        validateFixedLength(rd, errorCollection);
+        validatePaymentMethod(recurringDonation, errorCollection);
+    }
 
-        if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
+    /**
+    * @description Validate Recurring Donation amount for Elevate and non-elevate Recurring Donation
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    */
+    private void validateAmount(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)
+            && (rd.npe03__Amount__c == null || rd.npe03__Amount__c < 1)) {
+
+             errorCollection.addError(System.Label.RD2_ElevateRDAmountMustBeValid);
+
+        } else if (rd.npe03__Amount__c == null || rd.npe03__Amount__c == 0 || rd.npe03__Amount__c < 0) {
             errorCollection.addError(System.Label.RD2_AmountMustBeValid);
         }
+    }
 
+    /***
+    * @description Validate Installment Period is set correctly
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    */
+    private void validateInstallmentPeriod(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
         if (!RD2_Constants.allInstallmentPeriods.contains(rd.npe03__Installment_Period__c)) {
             errorCollection.addError(
                 String.format(
@@ -296,16 +333,13 @@ public with sharing class RD2_ValidationService {
                     new String[]{ rd.npe03__Installment_Period__c })
             );
         }
-
-        validateDayOfMonth(rd, errorCollection);
-
-        validateFixedLength(rd, errorCollection);
     }
 
     /***
-     * @description Validate Installment Frequency to be in the range
-     * @param rd Recurring Donation record to validate
-     */
+    * @description Validate Installment Frequency to be in the range
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    */
     private void validateInstallmentFrequency(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
         if (!(new RD2_RecurringDonation(rd)).isValidInstallmentFrequency()) {
             errorCollection.addError(System.Label.RD2_InstallmentFrequencyMustBeValid);
@@ -316,6 +350,7 @@ public with sharing class RD2_ValidationService {
     * @description Validates missing account or contact data on Recurring Donation
     * @param rd The Recurring Donation to validate
     * @param acct The associated account for the Recurring Donation
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     private void validateDonor(npe03__Recurring_Donation__c rd, Account acct, ErrorRecord errorCollection) {
@@ -341,6 +376,7 @@ public with sharing class RD2_ValidationService {
     * @description Validate when contact or account change is permitted on update of the Recurring Donation
     * @param rd The Recurring Donation to validate
     * @param oldRd The previous version of the Recurring Donation
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return Boolean True when the validation pass, otherwise, false
     */
     private Boolean validateDonorChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
@@ -367,6 +403,7 @@ public with sharing class RD2_ValidationService {
     * the RD has at least one Closed Won/Lost Opportunity.
     * @param rd The Recurring Donation to validate
     * @param oldRd The previous version of the Recurring Donation
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     private void validateCurrencyChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
@@ -383,8 +420,40 @@ public with sharing class RD2_ValidationService {
     }
 
     /**
+    * @description Validate the Elevate RD Effective date cannot be in the future during update
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    * @return void
+    */
+    private void validateElevateRDScheduleCannotBeInTheFuture(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)) {
+            if (rd.StartDate__c > currentDate) {
+                errorCollection.addError(System.Label.RD2_ElevateRDEffectiveDateMustBeValid);
+            }
+        }
+    }
+
+    /**
+    * @description Validate the Elevate RD with Campaign cannot update to null
+    * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
+    * @return void
+    */
+    private void validateElevateRDCampaignCannotUpdateToEmpty(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)) {
+            if (String.isNotBlank(oldRd.npe03__Recurring_Donation_Campaign__c) 
+                && String.isBlank(rd.npe03__Recurring_Donation_Campaign__c)) {
+                errorCollection.addError(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull);
+            }
+        }
+    }
+
+    /**
     * @description Validate the End Date on the Recurring Donation
     * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     private void validateRecurringDonationEndDate(npe03__Recurring_Donation__c rd, ErrorRecord errorCollection) {
@@ -422,6 +491,7 @@ public with sharing class RD2_ValidationService {
     /**
     * @description Validates RD status is mapped to a valid state
     * @param rd The Recurring Donation to validate
+    * @param errorCollection Error wrapper which contains all error related to the RD
     * @return void
     */
     @TestVisible
@@ -504,6 +574,22 @@ public with sharing class RD2_ValidationService {
                     System.Label.RD2_DayOfMonthMustBeValid,
                     new String[]{ rd.Day_of_Month__c })
             );
+        }
+    }
+
+    /***
+    * @description Validates Day of Month Change on Recurring Donation
+    * @param rd The Recurring Donation to validate
+    * @param oldRd The previous version of the Recurring Donation
+    * @return void
+    */
+    private void validateDayOfMonthChange(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled()
+            && String.isNotBlank(rd.CommitmentId__c)
+            && (rd.npe03__Installment_Period__c == RD_Constants.INSTALLMENT_PERIOD_MONTHLY
+                && rd.npe03__Installment_Period__c == oldRd.npe03__Installment_Period__c
+                && rd.Day_of_Month__c != oldRd.Day_of_Month__c)) {
+                errorCollection.addError(System.Label.RD2_ElevateRDDayOfMonthCannotChange);
         }
     }
 
