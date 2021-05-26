@@ -1217,7 +1217,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        if self.latest_api_version == 51.0 and dropdown not in ("Installment Period","Role"):
+        if self.latest_api_version == 51.0 or self.latest_api_version == 52.0 and dropdown not in ("Installment Period","Role"):
             self.click_flexipage_dropdown(dropdown,value)
         else:
             if dropdown in ("Open Ended Status","Payment Method"):
@@ -1230,7 +1230,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            if self.latest_api_version == 51.0 and dropdown in ("Installment Period","Role"):
+            if self.latest_api_version == 51.0 or self.latest_api_version == 52.0 and dropdown in ("Installment Period","Role"):
                 locator =  npsp_lex_locators['record']['select_dropdown']
                 selection_value = npsp_lex_locators["record"]["select_value"].format(value)
                 if self.npsp.check_if_element_exists(locator):
