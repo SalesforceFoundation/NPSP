@@ -27,7 +27,10 @@ global with sharing class pkBandingService {
         Integer band;        
         Integer numberOfEvents;
         Integer eventLimit;
-        String lastOffset;        
+        String lastOffset;   
+        
+        // rd2 evaluation service instance
+        RD2_OpportunityEvaluationService evalService;
 
         try {
 
@@ -35,45 +38,73 @@ global with sharing class pkBandingService {
             request = (Cursor) JSON.deserialize(
                 RestContext.request.requestBody.toString(),
                 Cursor.class
-            );            
+            );   
+                                    
+            // cursor logic
+            if (request!=null && request.isCursor) {
+                
+                // init aux vars
+                numberOfEvents = 0;
+                band = request.band;
+                eventLimit = request.batchSize;
+                lastOffset = request.offset;
 
-            // init aux vars
-            numberOfEvents = 0;
-            band = request.band;
-            eventLimit = request.batchSize;
-            lastOffset = request.offset;
+                // init response
+                dResponse.init(request);
 
-            // init response
-            dResponse.init(request);
+                // init pk banding service
+                UTIL_pkBanding pkb = new UTIL_pkBanding();
+                // set resp obj
+                pkb.resp = dResponse;
+                // get next batch
+                events = pkb.getNextBatch();
+                // get resp obj from service
+                dResponse = pkb.resp;
+                dResponse.numberProcessed = events.size();
 
-            // init pk banding service
-            UTIL_pkBanding pkb = new UTIL_pkBanding();
-            // set resp obj
-            pkb.resp = dResponse;
-            // get next batch
-            events = pkb.getNextBatch();
-            // get resp obj from service
-            dResponse = pkb.resp;
-            dResponse.numberProcessed = events.size();
+                // process RDs if result == true
+                if (dResponse.numberProcessed>0 && dResponse.result) {
+                
+                    // disable rollups
+                    TDTM_Config_API.disableAllRollupTriggers();
+                    // execute RD service
+                    evalService = new RD2_OpportunityEvaluationService().withBatchContext()
+                                                                        .withRds(UTIL_SObject.extractIds(events))
+                                                                        .withCurrentDate(Date.Today())
+                                                                        .evaluateOpportunities();
 
-            // process RDs if result == true
-            if (dResponse.numberProcessed>0 && dResponse.result) {
-              
+                    // capture after execution results
+                    failedCount = evalService.getRecordsFailed();
+                    failedIds = evalService.getRecordsFailedId();
+                    failedIdsMap = evalService.getRecordsFailedMap();
+
+                } 
+
+
+            } else if (request!=null && !request.isCursor && request.recordIds!=null && request.recordIds.size()>0 ) {
+
+                // static logic
+                // init response
+                dResponse.init(request);
+                dResponse.cursor.isCursor = false;
+                dResponse.result = true;
+                dResponse.numberProcessed = request.recordIds.size();
+                dResponse.completed = request.batchSize <= dResponse.numberProcessed;
+
                 // disable rollups
                 TDTM_Config_API.disableAllRollupTriggers();
                 // execute RD service
-                RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService()
-                                                                    .withBatchContext()
-                                                                    .withRds(UTIL_SObject.extractIds(events))
+                evalService = new RD2_OpportunityEvaluationService().withBatchContext()
+                                                                    .withRds(request.recordIds)
                                                                     .withCurrentDate(Date.Today())
                                                                     .evaluateOpportunities();
-
                 // capture after execution results
                 failedCount = evalService.getRecordsFailed();
                 failedIds = evalService.getRecordsFailedId();
                 failedIdsMap = evalService.getRecordsFailedMap();
 
-            } 
+            }
+
 
         } catch (Exception e) {
             System.debug('EXCEPTION: ' + e.getMessage());
@@ -99,10 +130,10 @@ global with sharing class pkBandingService {
         public String error;
         public Integer numberProcessed;
         public Integer numberErrors;
-        public Map<Id,String> failedRecords = new Map<Id,String>();
-        public Set<Id> failedRecordsIds = new Set<Id>();
+        public Map<Id,String> failedRecords;
+        public Set<Id> failedRecordsIds;
         public Boolean completed; // consumed all records in band
-        public Cursor cursor = new Cursor();
+        public Cursor cursor = new Cursor();       
 
         public void init(Cursor request) {
             cursor = request;
@@ -110,8 +141,11 @@ global with sharing class pkBandingService {
             completed = false;
             numberProcessed = 0;
             error = '';
+            failedRecords = new Map<Id,String>();
+            failedRecordsIds = new Set<Id>();
         }
     }
+
     public class Cursor {
         public Integer band; // same as shard/subshard in TL
         public Integer partitionBits; // Not yet used (currently 3 bits - 8 bands)
@@ -121,6 +155,8 @@ global with sharing class pkBandingService {
         public String offset; // Last Id queried (not necessarily processed)
         public String url;
         public String session;
+        public Set<Id> recordIds;
+        public Boolean isCursor;
     }
 
 }
