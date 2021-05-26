@@ -191,20 +191,47 @@ public with sharing class BDI_GAUAllocationsUtil {
     public static void processAllocations(BDI_DataImportService bdi, List<DataImport__c> dataImports) {
         Set<Id> opptIdsForAllocProcessing = new Set<Id>();
         DataImport__c[] diForAlloProcessing = new DataImport__c[]{};
+        Map<Id,DataImport__c> diByCreatedRDId = new Map<Id,DataImport__c>();
+        Map<Id,Id> openOpptIdByDIId = new Map<Id,Id>();
+
         for (DataImport__c di : dataImports) {
 
-            // If the DI doesn't have a failure and it isn't in dry run mode and there is
-            // a donation imported id and a donation or a payment was created then run allocation processing for all
-            // donation ids.
-            if (di.Status__c != System.label.bdiFailed &&
-                    !bdi.isDryRun  &&
-                    di.DonationImported__c != null && (
+            // If the DI doesn't have a failure and it isn't in dry run mode then determine if there are Opportunities
+            // that need processing.
+            if (di.Status__c != System.label.bdiFailed && !bdi.isDryRun) {
+
+                // If there is a donation imported id and a donation or a payment was created then run allocation
+                // processing for all donation imported ids.
+                if (di.DonationImported__c != null && (
                     di.PaymentImportStatus__c == System.label.bdiCreated
                             || di.PaymentImportStatus__c == System.label.bdiUpdated
-                            || di.DonationImportStatus__c == System.label.bdiCreated)) {
+                            || di.DonationImportStatus__c == System.label.bdiCreated
+                            || di.DonationImportStatus__c == System.label.bdiMatchedByUser
+                            || di.DonationImportStatus__c == System.label.bdiMatched)) {
 
-                opptIdsForAllocProcessing.add(di.DonationImported__c);
-                diForAlloProcessing.add(di);
+                    opptIdsForAllocProcessing.add(di.DonationImported__c);
+                    diForAlloProcessing.add(di);
+                }
+
+                // If a Recurring Donation was created without a donation then add it to a list to query for any
+                // open opportunities under the new RD to make sure they get assigned the appropriate GAU allocations.
+                if (di.RecurringDonationImportStatus__c == System.label.bdiCreated &&
+                        di.RecurringDonationImported__c != null &&
+                        di.DonationImported__c == null) {
+                    diByCreatedRDId.put(di.RecurringDonationImported__c,di);
+                }
+            }
+        }
+
+        // If there are any created RDs without DI donations then query for open Opportunities for allocation processing
+        if (diByCreatedRDId.size() > 0) {
+            for (Opportunity oppt : [SELECT Id, npe03__Recurring_Donation__c
+                                    FROM Opportunity
+                                    WHERE IsClosed = FALSE
+                                        AND npe03__Recurring_Donation__c IN: diByCreatedRDID.keySet()]) {
+                opptIdsForAllocProcessing.add(oppt.Id);
+                openOpptIdByDIId.put(diByCreatedRDId.get(oppt.npe03__Recurring_Donation__c).Id,oppt.Id);
+                diForAlloProcessing.add(diByCreatedRDId.get(oppt.npe03__Recurring_Donation__c));
             }
         }
 
@@ -226,11 +253,19 @@ public with sharing class BDI_GAUAllocationsUtil {
             for (DataImport__c di : diForAlloProcessing) {
                 Error__c errorObj;
 
+                Id opptId;
+
+                if (di.DonationImported__c == null) {
+                    opptId = openOpptIdByDIId.get(di.Id);
+                } else {
+                    opptId = di.DonationImported__c;
+                }
+
                 // Retrieve the error object out of either the insert or update errors
-                if (errors.insRecordErrors.containsKey(di.DonationImported__c)) {
-                    errorObj = errors.insRecordErrors.get(di.DonationImported__c);
-                } else if (errors.updRecordErrors.containsKey(di.DonationImported__c)) {
-                    errorObj = errors.updRecordErrors.get(di.DonationImported__c);
+                if (errors.insRecordErrors.containsKey(opptId)) {
+                    errorObj = errors.insRecordErrors.get(opptId);
+                } else if (errors.updRecordErrors.containsKey(opptId)) {
+                    errorObj = errors.updRecordErrors.get(opptId);
                 }
 
                 if (errorObj != null) {
