@@ -329,6 +329,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                         Field_Mappings: this.getObjectMappingFieldMappings(objMappingDevName)
                     };
 
+                    if (shouldMappingBeExcluded(objectMapping.Field_Mappings)) {
+                        continue;
+                    }
+
                     objectMappings.push(objectMapping)
                 }
             }
@@ -336,6 +340,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         return objectMappings;
     };
+
+    shouldMappingBeExcluded(objectFieldMappings) {
+        return !Array.isArray(objectFieldMappings) || !objectFieldMappings.length;
+    }
 
     /*******************************************************************************
     * @description Check if the provided object mapping developer name is allowed
