@@ -145,11 +145,12 @@ public without sharing class HouseholdNamingService {
     }
 
     private Boolean numberOfHouseholdMembersIsIncorrect(SObject household, List<Contact> householdMembers) {
-        Object obj = household.get('Number_of_Household_Members__c');
+        Integer numberOfMembersStoredOnTheHousehold =
+                Integer.valueOf(household.get('Number_of_Household_Members__c'));
         if (householdMembers != null) {
-            return obj != householdMembers.size();
+            return numberOfMembersStoredOnTheHousehold != householdMembers.size();
         } else {
-            if (Integer.valueOf(obj) > 0) {
+            if (numberOfMembersStoredOnTheHousehold > 0) {
                 return true;
             } else {
                 return false;
