@@ -27,11 +27,14 @@ import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
-import DONATION_RECORD_TYPE_NAME
-    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import PAYMENT_STATUS_DISPLAY_VALUE from '@salesforce/schema/DataImport__c.Payment_Status_Display_Value__c';
+
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 const REFERENCE = 'REFERENCE';
+const FIELD = 'field';
+const FIELDS = 'fields';
 
 const columnTypeByDescribeType = {
     'DATE': 'date-local',
@@ -247,7 +250,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     buildColumnsFromSections() {
         this.sections.forEach(section => {
-            section.elements.filter(e => e.elementType === 'field')
+            section.elements.filter(e => e.elementType === FIELD)
                 .forEach(fieldElement => {
                     const fieldMapping =
                         GeFormService.getFieldMappingWrapper(
@@ -259,13 +262,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
-        this.includePaymentStatusDisplayField();
+        this.includePaymentStatusDisplayValueField();
         this._columnsLoaded = true;
     }
 
-    includePaymentStatusDisplayField() {
-        if (hasNestedProperty(this._dataImportObjectInfo, 'fields', 'Payment_Status_Display_Value__c')) {
-            const paymentStatusDisplayValue = this._dataImportObjectInfo.fields.Payment_Status_Display_Value__c;
+    includePaymentStatusDisplayValueField() {
+        const paymentStatusDisplayValueApiName = apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE);
+
+        if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, paymentStatusDisplayValueApiName)) {
+            const paymentStatusDisplayValue = this._dataImportObjectInfo?.fields[paymentStatusDisplayValueApiName];
             this._columnsBySourceFieldApiName[paymentStatusDisplayValue.apiName] = {
                 label: paymentStatusDisplayValue.label,
                 fieldName: paymentStatusDisplayValue.apiName,
