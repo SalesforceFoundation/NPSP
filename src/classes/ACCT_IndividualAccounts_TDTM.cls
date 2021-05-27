@@ -36,6 +36,7 @@
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     private Boolean isBeforeInsert = false;
+    private static Boolean isConInsert = false;
     public static Boolean isInsertingNewHouseholdAccount = false;
 
     @TestVisible
@@ -124,6 +125,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         this.triggerAction = triggerAction;
         this.dmlWrapper = new DmlWrapper();
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
+                triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            isConInsert = true;
+        }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             handleBefore();
@@ -279,7 +285,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     private Boolean isNewContactInsertOperation() {
-        return HH_Households_TDTM.isConInsert;
+        return isConInsert || HH_Households_TDTM.isConInsert;
     }
 
     /**
