@@ -87,9 +87,9 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
     * @return set of strings of all fields referenced from Contact.
     */
-    private static Set<String> setHouseholdNameFieldsOnContact;
-    public Set<String> setHouseholdNameFieldsOnContact() {
-        if (setHouseholdNameFieldsOnContact == null) {
+    private static Set<String> householdNamingFields;
+    public Set<String> householdNamingFields() {
+        if (householdNamingFields == null) {
             Set<String> setStrField = new Set<String>();
             NameSpec ns;
             ns = new NameSpec(hns, 'Household_Name_Format__c');
@@ -98,9 +98,9 @@ public with sharing class HH_INamingImpl implements HH_INaming {
             setStrField.addAll(ns.setStrFieldsInNameSpec());
             ns = new NameSpec(hns, 'Informal_Greeting_Format__c');
             setStrField.addAll(ns.setStrFieldsInNameSpec());
-            setHouseholdNameFieldsOnContact = setStrField;
+            householdNamingFields = setStrField;
         }
-        return setHouseholdNameFieldsOnContact;
+        return householdNamingFields;
     }
 
     /*******************************************************************************************************

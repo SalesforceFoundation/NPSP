@@ -232,10 +232,10 @@ public without sharing class HouseholdNamingService {
     //Todo: move to Household Settings?
     public Set<String> getHouseholdNamingContactFields() {
         if (!settings.isAdvancedHouseholdNaming()
-                || householdNamingImpl.setHouseholdNameFieldsOnContact() == null) {
+                || householdNamingImpl.householdNamingFields() == null) {
             return new Set<String>();
         } else {
-            return householdNamingImpl.setHouseholdNameFieldsOnContact();
+            return householdNamingImpl.householdNamingFields();
         }
     }
 
