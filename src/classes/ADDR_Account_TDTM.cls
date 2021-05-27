@@ -36,8 +36,6 @@
 */
 public class ADDR_Account_TDTM extends TDTM_Runnable {
 
-    public static Boolean isRunningInsert = false;
-
     @TestVisible
     private OrgConfig orgConfig {
         get {
