@@ -80,9 +80,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
 
         }
-        for (Id id : defaultAndSeasonalAddressesByHouseholdAccountId.keySet()) {
-            if (!accountsWithExistingDefaultAddresses.contains(id)) {
-                defaultAndSeasonalAddressesByHouseholdAccountId.remove(id);
+        for (Id acctId : defaultAndSeasonalAddressesByHouseholdAccountId.keySet()) {
+            if (!accountsWithExistingDefaultAddresses.contains(acctId)) {
+                defaultAndSeasonalAddressesByHouseholdAccountId.remove(acctId);
             }
         }
 
