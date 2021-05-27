@@ -1653,7 +1653,40 @@
     <fields>
         <fullName>Payment_Status_Display_Value__c</fullName>
         <externalId>false</externalId>
-        <formula>IF(Payment_Status__c = &apos;EXPIRED&apos;, &apos;Expired Authorization&apos;, &apos;&apos;)</formula>
+        <formula>
+            CASE(Payment_Status__c,
+                &apos;PENDING&apos;,
+                &apos;Pending&apos;,
+
+                &apos;CAPTURED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;NONRETRYABLEERROR&apos;,
+                &apos;Failed&apos;,
+
+                &apos;RETRYABLEERROR&apos;,
+                &apos;Failed&apos;,
+
+                &apos;DECLINED&apos;,
+                &apos;Declined&apos;,
+
+                &apos;REFUNDISSUED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;SUBMITTED&apos;,
+                &apos;Submitted&apos;,
+
+                &apos;SETTLED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;AUTHORIZED&apos;,
+                &apos;Authorized&apos;,
+
+                &apos;EXPIRED&apos;,
+                &apos;Expired Authorization&apos;,
+
+            &apos;&apos;)
+        </formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Payment Status</label>
         <required>false</required>
