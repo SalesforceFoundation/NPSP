@@ -42,7 +42,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household name
     */
-    public string getHouseholdName(list<Contact> listCon) {
+    public String getHouseholdName(List<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Household_Name_Format__c');
         return strNameFromNameSpec(ns, listCon);
     }
@@ -54,7 +54,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household Formal Greeting
     */
-    public string getHouseholdFormalGreeting(list<Contact> listCon) {
+    public String getHouseholdFormalGreeting(List<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Formal_Greeting_Format__c');
         return strNameFromNameSpec(ns, listCon);
     }
@@ -66,19 +66,19 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household Informal Greeting
     */
-    public string getHouseholdInformalGreeting(list<Contact> listCon) {
+    public String getHouseholdInformalGreeting(List<Contact> listCon) {
         NameSpec ns = new NameSpec(hns, 'Informal_Greeting_Format__c');
         return strNameFromNameSpec(ns, listCon);
     }
 
     /*******************************************************************************************************
     * @description For the Settings page, get the formatted name or greeting for the list of Contacts.
-    * @param hns an in-memory Household Naming Settings object
+    * @param hnsMem an in-memory Household Naming Settings object
     * @param strField is one of: Household_Name_Format__c, Formal_Greeting_Format__c, or Informal_Greeting_Format__c.
     * @param listCon the list of Contacts in the Household
     * @return the appropriate Household name or greeting
     */
-    public string getExampleName(Household_Naming_Settings__c hnsMem, string strField, list<Contact> listCon) {
+    public String getExampleName(Household_Naming_Settings__c hnsMem, String strField, List<Contact> listCon) {
         NameSpec ns = new NameSpec(hnsMem, strField);
         return strNameFromNameSpec(ns, listCon);
     }
@@ -88,9 +88,9 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @return set of strings of all fields referenced from Contact.
     */
     private static Set<String> setHouseholdNameFieldsOnContact;
-    public set<string> setHouseholdNameFieldsOnContact() {
+    public Set<String> setHouseholdNameFieldsOnContact() {
         if (setHouseholdNameFieldsOnContact == null) {
-            set<string> setStrField = new set<string>();
+            Set<String> setStrField = new Set<String>();
             NameSpec ns;
             ns = new NameSpec(hns, 'Household_Name_Format__c');
             setStrField.addAll(ns.setStrFieldsInNameSpec());
@@ -108,14 +108,16 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     */
     private Household_Naming_Settings__c hns {
     	get {
-    		if (hns == null) hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+    		if (hns == null) {
+                hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
+            }
     		return hns;
     	}
     	set;
     }
 
-    private static string chLToken = '{!';
-    private static string chRToken = '}';
+    private static String chLToken = '{!';
+    private static String chRToken = '}';
 
     /*******************************************************************************************************
     * @description
@@ -128,26 +130,26 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     *
     */
     private class NameSpec {
-        private string strPrefix { get; set; }
-        private string strSuffix { get; set; }
-        private string strFirstNameSpec { get; set; }
-        private string strFullNameSpec { get; set; }
-        private string strAnd { get; set; }
-        private string strOverrun { get; set; }
-        private integer cMaxUseOverrun { get; set; }
-        private string strHNSField { get; set; }
+        private String strPrefix { get; set; }
+        private String strSuffix { get; set; }
+        private String strFirstNameSpec { get; set; }
+        private String strFullNameSpec { get; set; }
+        private String strAnd { get; set; }
+        private String strOverrun { get; set; }
+        private Integer cMaxUseOverrun { get; set; }
+        private String strHNSField { get; set; }
 
         /*******************************************************************************************************
         * @description NameSpec Constructor
         * @param hns An instance of Household Naming Settings to use.
         * @param strField The namespec field in Settings to use.
         */
-        private NameSpec(Household_Naming_Settings__c hns, string strField) {
+        private NameSpec(Household_Naming_Settings__c hns, String strField) {
             strHNSField = strField;
-            string strNameSpec = string.valueOf(hns.get(strField));
+            String strNameSpec = String.valueOf(hns.get(strField));
             strAnd = (hns.Name_Connector__c == null ? ' ' : ' ' + hns.Name_Connector__c + ' ');
             strOverrun = hns.Name_Overrun__c;
-            cMaxUseOverrun = integer.valueOf(hns.Contact_Overrun_Count__c);
+            cMaxUseOverrun = Integer.valueOf(hns.Contact_Overrun_Count__c);
             parseNameSpec(strNameSpec);
         }
 
@@ -155,17 +157,18 @@ public with sharing class HH_INamingImpl implements HH_INaming {
         * @description Given the namespec string, parses out its constituent parts, and sets them in the class.
         * @param strNameSpec The namespec
         */
-        private void parseNameSpec(string strNameSpec) {
+        private void parseNameSpec(String strNameSpec) {
             strPrefix = '';
             strSuffix = '';
             strFirstNameSpec = '';
             strFullNameSpec = '';
 
-            if (strNameSpec == null)
+            if (strNameSpec == null) {
                 return;
+            }
 
             // get optional Prefix
-            integer ich = strNameSpec.indexOf(chLToken);
+            Integer ich = strNameSpec.indexOf(chLToken);
             if (ich > 0) {
                 // don't include any tokens immediately next to the '{' in the prefix
                 //while (ich > 0 && strNameSpec.substring(ich, ich+1) != ' ') ich--;
@@ -183,11 +186,11 @@ public with sharing class HH_INamingImpl implements HH_INaming {
             }
 
             // extract FirstNameSpec
-            string str = strFNameSpecFromStrNameSpec(strNameSpec);
+            String str = strFNameSpecFromStrNameSpec(strNameSpec);
 
             // replace the firstnamespec with a token in our fullnamespec
             ich = str.indexOf(chLToken);
-            integer ichR = str.lastIndexOf(chRToken);
+            Integer ichR = str.lastIndexOf(chRToken);
             if (ich >= 0 && ichR > 0) {
                 strFullNameSpec = strNameSpec.replace(str, 'FirstNameSpec');
                 strFirstNameSpec = str.substring(ich + chLToken.length(), ichR);
@@ -200,12 +203,14 @@ public with sharing class HH_INamingImpl implements HH_INaming {
         * @description Returns a set of all field names in all parts of the namespec
         * @return string
         */
-        public set<string> setStrFieldsInNameSpec() {
-            set<string> setStrField = new set<string>();
-            if (strFirstNameSpec != null)
+        public Set<String> setStrFieldsInNameSpec() {
+            Set<String> setStrField = new Set<String>();
+            if (strFirstNameSpec != null) {
                 setStrField.addAll(setStrFieldFromStrFSpec(strFirstNameSpec));
-            if (strFullNameSpec != null)
+            }
+            if (strFullNameSpec != null) {
                 setStrField.addAll(setStrFieldFromStrFSpec(strFullNameSpec));
+            }
             setStrField.add('LastName');
             return setStrField;
         }
@@ -219,7 +224,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param listCon the list of Contacts in the Household
     * return string
     */
-    private static string strNameFromNameSpec(NameSpec ns, list<Contact> listCon) {
+    private static String strNameFromNameSpec(NameSpec ns, List<Contact> listCon) {
         Integer cCon = listCon.size();
         Boolean isNoLastnames = ns.strFullNameSpec.toUpperCase().indexOf(chLToken + 'LASTNAME' + chRToken) == -1;
         Boolean isLastNameOnlyFormat = !isNoLastnames && ns.setStrFieldsInNameSpec().size() == 1;
@@ -228,9 +233,9 @@ public with sharing class HH_INamingImpl implements HH_INaming {
 
         if (cCon == 0) {
             names.add(
-                ns.strHNSField == 'Household_Name_Format__c'
-                    ? label.npo02.HouseholdAnonymousName
-                    : label.npo02.HouseholdAnonymousGreeting
+                    ns.strHNSField == 'Household_Name_Format__c' ?
+                            Label.npo02.HouseholdAnonymousName :
+                            Label.npo02.HouseholdAnonymousGreeting
             );
         }
 
@@ -246,17 +251,17 @@ public with sharing class HH_INamingImpl implements HH_INaming {
             String strFname = strConFspec(listCon[i], ns.strFirstNameSpec);
 
             // get the set of additional fname's for this lname
-            list<String> listFname = new list<String>();
+            List<String> listFname = new List<String>();
             for (; next < cCon && (isNoLastnames || listCon[next].LastName == strLname); next++) {
                 String nextFname = strConFspec(listCon[next], ns.strFirstNameSpec);
 
                 if (nextFname != '') {
-                    listFName.add(nextFname);
+                    listFname.add(nextFname);
                 }
             }
 
             // now put those additional fname's together
-            for (Integer k = 0; k < listFName.size(); k++) {
+            for (Integer k = 0; k < listFname.size(); k++) {
                 // if we've hit the limit, then bail out
                 if (i+k+1 == ns.cMaxUseOverrun) {
                     // reached max contact count limit
@@ -265,15 +270,15 @@ public with sharing class HH_INamingImpl implements HH_INaming {
                 }
 
                 // we want to use And if this is the last person in this lastname, or the last one we will include
-                if (k == listFName.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
-                    strFname += ns.strAnd + listFName[k];
+                if (k == listFname.size()-1 || (!isNoLastnames && (i+k+2) == ns.cMaxUseOverrun)) {
+                    strFname += ns.strAnd + listFname[k];
                 } else {
-                    strFName += ', ' + listFname[k];
+                    strFname += ', ' + listFname[k];
                 }
             }
 
             // create lname part using first contact with that lastname
-            String name = strConFSpec(listCon[i], ns.strFullNameSpec);
+            String name = strConFspec(listCon[i], ns.strFullNameSpec);
             name = name.replace('FirstNameSpec', strFname);
             if (strFname == '') {
                 name = name.trim();
@@ -325,8 +330,8 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param strFspec The namespec string
     * return string
     */
-    private static string strConFspec(Contact con, string strFspec) {
-        string str = strFspec;
+    private static String strConFspec(Contact con, String strFspec) {
+        String str = strFspec;
 
         // First, instantiate a new Pattern object looking for {...} without any nested {'s.
         Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
@@ -335,34 +340,34 @@ public with sharing class HH_INamingImpl implements HH_INaming {
 
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
-            string strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
+            String strField = strFspec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
 
             //separate cross object references, i.e. account.name
-            list<string> splitField = (strField.split('\\.',0));
+            List<String> splitField = (strField.split('\\.',0));
 
             //remove the field name itself to only include parent object references
-            string fieldName = splitField[splitField.size()-1].trim();
+            String fieldName = splitField[splitField.size()-1].trim();
             splitField.remove(splitField.size()-1);
 
             //use the correct sObject
-            sObject thisObj;
+            SObject thisObj;
             if (!splitField.isEmpty()) {
-                thisObj = con.getsObject(splitField[0]);
+                thisObj = con.getSObject(splitField[0]);
                 splitField.remove(0);
             } else {
                 thisObj = con;
             }
 
             //traverse parent relationships until the last one
-            for (string parentObj : splitField) {
+            for (String parentObj : splitField) {
                 if (thisObj != null) {
-                    thisObj = thisObj.getsObject(parentObj);
+                    thisObj = thisObj.getSObject(parentObj);
                 }
             }
 
-            string val;
+            String val;
             if (thisObj != null) {
-                val = string.valueOf(thisObj.get(fieldName));
+                val = String.valueOf(thisObj.get(fieldName));
             }
 
             // add back the {}'s for string substitution
@@ -384,8 +389,8 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param strFspec The namespec string
     * return set<string>
     */
-    private static set<string> setStrFieldFromStrFSpec(string strFSpec) {
-        set<string> setStrField = new set<string>();
+    private static Set<String> setStrFieldFromStrFSpec(String strFSpec) {
+        Set<String> setStrField = new Set<String>();
 
         // First, instantiate a new Pattern object looking for {...} without any nested {'s.
         Pattern MyPattern = Pattern.compile('\\{![^\\{!]*\\}');
@@ -394,7 +399,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
 
         while (MyMatcher.find()) {
             // get the fieldname without the {}'s
-            string strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
+            String strField = strFSpec.substring(MyMatcher.start() + chLToken.length(), MyMatcher.end()-chRToken.length());
             setStrField.add(strField.trim());
         }
         return setStrField;
@@ -406,7 +411,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @param strNameSpec The namespec string, ie. {!lastname} {! {!firstname} foo {!bar}} Family
     * return string The firstnamespec string, ie. {! {!firstname} foo {!bar}}
     */
-    private static string strFNameSpecFromStrNameSpec(string strNameSpec) {
+    private static String strFNameSpecFromStrNameSpec(String strNameSpec) {
 
         // First, instantiate a new Pattern object looking for {! {! xxxx } }
         Pattern MyPattern = Pattern.compile('\\{![^\\}]*\\{!.*\\}[^\\{!]*\\}');
