@@ -358,17 +358,14 @@ public without sharing class HouseholdNamingService {
     }
 
     /*******************************************************************************************************
-    * @description for the list of Household or Account Ids, update their Household Names
+    * @description for the list of Household or Account Ids, update their Household Names.
+    * This operation does not need to run for new Contact Inserts that are getting new
+    * Households, since the name is already set correctly in that flow.
     * @param accountIds the list of Household or Account Ids that need updating.
-    * @return void
     */
     public void renameHouseholdAccounts(List<Id> accountIds) {
         if (!ACCT_IndividualAccounts_TDTM.isInsertingNewHouseholdAccount) {
             renameHHAccounts(accountIds);
-        } else {
-            UTIL_Debug.debug(LoggingLevel.ERROR, '*** ##### Inserting a new Household Account ' +
-                    'as part of Contact Insert.  No need to analyze for a rename since the ' +
-                    'Household Name has already been set using the Contact. Exiting. ######');
         }
     }
 
