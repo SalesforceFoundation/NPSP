@@ -35,7 +35,6 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    private Boolean isBeforeInsert = false;
     private static Boolean isConInsert = false;
     public static Boolean isInsertingNewHouseholdAccount = false;
 
@@ -214,7 +213,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        isBeforeInsert = true;
         createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
     }
