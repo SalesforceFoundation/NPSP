@@ -91,10 +91,17 @@ public inherited sharing class GiftBatch {
         captureGroupService.enqueuePaymentCaptureJobFor(
             batchId, gifts?.capturableGroupIds());
         gifts.authorizedToPaymentProcessingStatus();
+        updateRecords();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
         gifts.failGiftsByCaptureIdWithReason(failReasonByCaptureGroupId);
+    }
+
+    public void processGifts() {
+        gifts.giftsToProcessingStatus();
+        captureAuthorizedGifts();
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
     }
 
     public void updateRecords() {

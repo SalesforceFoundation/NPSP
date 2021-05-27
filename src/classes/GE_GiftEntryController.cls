@@ -219,9 +219,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static void processPaymentsFor(Id batchId) {
+    public static void processGiftsFor(Id batchId) {
        try {
-           giftBatchService.processPaymentsFor(batchId);
+           giftBatchService.processGiftsFor(batchId);
        } catch (Exception ex) {
           throw new AuraHandledException(ex.getMessage());
        }

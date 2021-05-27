@@ -16,7 +16,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
-import processPayments from '@salesforce/apex/GE_GiftEntryController.processPaymentsFor';
+import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 /*******************************************************************************
 * @description Schema imports
@@ -57,13 +57,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     dataImportRecord = {};
     errorCallback;
-    isFailedPurchase = false;
+    _isBatchProcessing = false;
     isElevateCustomer = false;
 
     namespace;
     count;
     total;
     batch = {};
+    asyncIntervals = [];
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -86,10 +87,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
-
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        if (this._isBatchProcessing) return;
+        await this.startPolling();
     }
 
     /*******************************************************************************
@@ -279,6 +282,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             } catch (error) {
                 handleError(error);
             } finally {
+                this._isBatchProcessing = true;
                 if (this.shouldDisplayExpiredAuthorizationWarning()) {
                     this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
                         async () => {
@@ -298,17 +302,30 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
-    async processBatch() {
-        await this.processPayments();
-        this.navigateToDataImportProcessingPage(); 
+    get isBatchProcessing() {
+        return this._isBatchProcessing;
     }
 
-    async processPayments() {
-        await processPayments({
-                batchId: this.batchId
+    async processBatch() {
+        await processBatch({
+            batchId: this.batchId
         }).catch(error => {
             handleError(error);
+        }).finally(() => {
+            this.startPolling();
         });
+    }
+
+    async startPolling() {
+        const poll = window.setInterval(() => {
+            Promise.resolve(true).then(() => {
+                this.refreshBatchTotals();
+            }).then(() => {
+                if (!this._isBatchProcessing) {
+                    window.clearInterval(poll);
+                }
+            })
+        }, 5000);
     }
 
     navigateToDataImportProcessingPage() {
@@ -326,10 +343,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async refreshBatchTotals() {
-        if(this.isElevateCustomer) {
+        if (this.isElevateCustomer) {
             this._hasDisplayedExpiredAuthorizationWarning = false;
-            this.batchTotals = await BatchTotals(this.batchId);
-        }        
+        }
+        this.batchTotals = await BatchTotals(this.batchId);
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        console.log('this._isBatchProcessing: '+ this._isBatchProcessing);
     }
 
     bdiDataImportPageName() {

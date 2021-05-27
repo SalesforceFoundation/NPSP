@@ -7,38 +7,54 @@
                 is-elevate-customer={isElevateCustomer}
                 onbatchdryrun={handleBatchDryRun}
                 onedit={handleEditBatch}
+                is-batch-processing={isBatchProcessing}
                 onprocessbatch={handleProcessBatch}>
         </c-ge-batch-gift-entry-header>
     </template>
 
-    <c-ge-form-renderer
-            batch-id={recordId}
-            onsubmit={handleSubmit}
-            onsectionsretrieved={handleSectionsRetrieved}
-            onpermissionerror={handlePermissionErrors}
-            ontogglemodal={handleToggleModal}
-            onnavigate={handleNavigateEvent}
-            loading-text={loadingText}
-            batch-currency-iso-code={batchCurrencyIsoCode}>
-    </c-ge-form-renderer>
+    <div if:true={isBatchProcessing} class='spinner-container'>
+        <div class='slds-card'>
+            <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                               variant='brand'
+                               size='large'>
+            </lightning-spinner>
+            <p class='loading-text slds-text-heading_medium'>Processing Batch...</p>
+            <c-util-stencil row-count=20 column-count=4></c-util-stencil>
+        </div>
 
-    <template if:false={isPermissionError}>
-        <template if:true={isBatchMode}>
-            <c-ge-batch-gift-entry-table
-                    title={giftsTableTitle}
-                    count={count}
-                    expected-count={expectedCountOfGifts}
-                    total={total}
-                    expected-total={expectedTotalBatchAmount}
-                    user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
-                    batch-id={recordId}
-                    onloaddata={handleLoadData}
-                    ondelete={handleDelete}
-                    oncountchanged={handleCountChanged}
-                    ontotalchanged={handleTotalChanged}
-                    onselectcolumns={handleSelectColumns}
-                    batch-currency-iso-code={batchCurrencyIsoCode}>
-            </c-ge-batch-gift-entry-table>
+    </div>
+
+    <template if:false={isBatchProcessing}>
+        <c-ge-form-renderer
+                batch-id={recordId}
+                onsubmit={handleSubmit}
+                onsectionsretrieved={handleSectionsRetrieved}
+                onpermissionerror={handlePermissionErrors}
+                ontogglemodal={handleToggleModal}
+                onnavigate={handleNavigateEvent}
+                loading-text={loadingText}
+                batch-currency-iso-code={batchCurrencyIsoCode}>
+        </c-ge-form-renderer>
+
+        <template if:false={isPermissionError}>
+            <template if:true={isBatchMode}>
+                <c-ge-batch-gift-entry-table
+                        title={giftsTableTitle}
+                        count={count}
+                        expected-count={expectedCountOfGifts}
+                        total={total}
+                        expected-total={expectedTotalBatchAmount}
+                        user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
+                        batch-id={recordId}
+                        onloaddata={handleLoadData}
+                        ondelete={handleDelete}
+                        oncountchanged={handleCountChanged}
+                        ontotalchanged={handleTotalChanged}
+                        onselectcolumns={handleSelectColumns}
+                        batch-currency-iso-code={batchCurrencyIsoCode}>
+                </c-ge-batch-gift-entry-table>
+            </template>
         </template>
     </template>
+
 </template>

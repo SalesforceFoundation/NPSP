@@ -54,8 +54,23 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
+    public void giftsToProcessingStatus() {
+        for (DataImport__c gift : dataImports) {
+            if (isProcessableGift(gift)) {
+                gift.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.add(gift);
+            }
+        }
+        updateRecords();
+    }
+
+    private Boolean isProcessableGift(DataImport__c gift) {
+        return gift.Status__c != BDI_DataImport_API.bdiImported;
+    }
+
     public void updateRecords() {
         update giftsToUpdate;
+        giftsToUpdate.clear();
     }
 
     public Set<String> capturableGroupIds() {
