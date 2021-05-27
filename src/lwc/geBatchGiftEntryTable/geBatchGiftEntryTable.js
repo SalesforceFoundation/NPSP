@@ -74,6 +74,7 @@ const ACTIONS_COLUMN = {
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
+    @api isElevateCustomer = false;
 
     get ready() {
         return this._columnsLoaded && this._dataImportModel;
@@ -267,14 +268,16 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     includePaymentStatusDisplayValueField() {
-        const paymentStatusDisplayValueApiName = apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE);
+        if (this.isElevateCustomer) {
+            const paymentStatusDisplayValueApiName = apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE);
 
-        if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, paymentStatusDisplayValueApiName)) {
-            const paymentStatusDisplayValue = this._dataImportObjectInfo?.fields[paymentStatusDisplayValueApiName];
-            this._columnsBySourceFieldApiName[paymentStatusDisplayValue.apiName] = {
-                label: paymentStatusDisplayValue.label,
-                fieldName: paymentStatusDisplayValue.apiName,
-                type: paymentStatusDisplayValue.dataType
+            if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, paymentStatusDisplayValueApiName)) {
+                const paymentStatusDisplayValue = this._dataImportObjectInfo?.fields[paymentStatusDisplayValueApiName];
+                this._columnsBySourceFieldApiName[paymentStatusDisplayValue.apiName] = {
+                    label: paymentStatusDisplayValue.label,
+                    fieldName: paymentStatusDisplayValue.apiName,
+                    type: paymentStatusDisplayValue.dataType
+                }
             }
         }
     }

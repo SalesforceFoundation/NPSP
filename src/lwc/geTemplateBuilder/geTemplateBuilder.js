@@ -2,6 +2,7 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeFormTemplate';
 import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
+import checkForElevateCustomer  from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -99,6 +100,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     existingFormTemplateName;
     currentNamespace;
+    isElevateCustomer = false;
     @api isClone = false;
     @track isLoading = true;
     @track activeTab = this.tabs.INFO.id;
@@ -262,6 +264,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.buildBatchTableColumnOptions(this.formSections);
             this.setInitialActiveFormSection();
 
+            this.isElevateCustomer = await checkForElevateCustomer();
             this.isLoading = false;
         } catch (error) {
             handleError(error);
@@ -430,7 +433,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     includePaymentStatusDisplayField() {
-        if (hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE))) {
+        const hasPaymentStatusDisplayValueField =
+            hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE));
+
+        if (this.isElevateCustomer && hasPaymentStatusDisplayValueField) {
             this.availableBatchTableColumnOptions = [
                 ...this.availableBatchTableColumnOptions,
                 {
