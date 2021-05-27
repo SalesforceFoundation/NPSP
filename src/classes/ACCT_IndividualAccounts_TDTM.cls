@@ -279,7 +279,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     private Boolean isNewContactInsertOperation() {
-        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert);
+        return HH_Households_TDTM.isConInsert;
     }
 
     /**

@@ -37,6 +37,8 @@
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
+    public static Boolean isConInsert = false;
+
     @TestVisible
     private HouseholdSettings settings {
         get {
@@ -66,8 +68,10 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             when BeforeInsert {
                 //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
+                isConInsert = true;
                 Contacts contacts = new Contacts(newlist);
                 contacts.onBeforeInsert();
+                isConInsert = false;
             }
             when BeforeUpdate {
                 Contacts contacts = new Contacts(newlist, oldlist);
