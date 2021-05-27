@@ -33,7 +33,7 @@
 * @group Households
 * @description Interface for classes that will provide Household Naming functionality.
 */
-global Interface HH_INaming {
+global interface HH_INaming {
     
     /*******************************************************************************************************
     * @description Get the Household name for the list of Contacts from a single Household.
@@ -42,7 +42,7 @@ global Interface HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household name
     */ 
-    string getHouseholdName(list<Contact> listCon);
+    String getHouseholdName(List<Contact> listCon);
 
     /*******************************************************************************************************
     * @description Get the Household Formal Greeting for the list of Contacts from a single Household.
@@ -51,7 +51,7 @@ global Interface HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household Formal Greeting
     */ 
-    string getHouseholdFormalGreeting(list<Contact> listCon);
+    String getHouseholdFormalGreeting(List<Contact> listCon);
 
     /*******************************************************************************************************
     * @description Get the Household Informal Greeting for the list of Contacts from a single Household.
@@ -60,7 +60,7 @@ global Interface HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the Household Informal Greeting
     */ 
-    string getHouseholdInformalGreeting(list<Contact> listCon);
+    String getHouseholdInformalGreeting(List<Contact> listCon);
     
     /*******************************************************************************************************
     * @description For the Settings page, get the formatted name or greeting for the list of Contacts.
@@ -69,11 +69,11 @@ global Interface HH_INaming {
     * @param listCon the list of Contacts in the Household
     * @return the appropriate Household name or greeting
     */ 
-    string getExampleName(Household_Naming_Settings__c hns, string strField, list<Contact> listCon);
+    String getExampleName(Household_Naming_Settings__c hns, String strField, List<Contact> listCon);
     
     /*******************************************************************************************************
     * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
     * @return set of strings of all fields referenced from Contact.
     */
-    set<string> householdNamingFields();
+    Set<String> householdNamingFields();
 }
