@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchWindowException
@@ -1164,7 +1165,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['object_dd']
         view=npsp_lex_locators['link'].format(view_name,view_name)
         self.selenium.wait_until_page_contains("List Views")
-        self.selenium.get_webelement(locator).click()
+        self.selenium.wait_until_element_is_visible(locator,30)
+        try:
+            self.selenium.get_webelement(locator).click()
+        except ElementClickInterceptedException:
+            self.selenium.execute_javascript("window.scrollBy(0,100)")
+            ele = self.selenium.driver.find_element_by_xpath(locator)
+            self.selenium.driver.execute_script('arguments[0].click()', ele)
         element = self.selenium.driver.find_element_by_xpath(view)
         self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)

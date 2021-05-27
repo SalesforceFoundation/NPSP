@@ -14,7 +14,7 @@ npsp_lex_locators={
 	'app_launcher':{
 		'select-option':'//span/mark[text()="{}"]',
 	},
-	'object_dd':'//h1[contains(@class,"slds-page-header__title")]//a',
+	'object_dd':'//div[contains(@class,"slds-dropdown-trigger slds-dropdown-trigger_click")]//button/lightning-icon',
 	'main-header':{
 		"header_text": "//h1/div/span",
 		"header_text_spl": "//h1//lightning-formatted-text",
@@ -98,7 +98,7 @@ npsp_lex_locators={
 	'name':'//tbody/tr/th/span/a',
 	'select_name':'//tbody//a[text()= "{}"]',
 	'opportunities_dropdown':"css:a.slds-button.slds-button--icon-border-filled",
-	'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
+	'locate_dropdown':'//tbody/tr[{}]/td/span//div/a',
 	'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
 	'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
 	'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
