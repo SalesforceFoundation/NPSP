@@ -35,8 +35,8 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    private static Boolean isConInsert = false;
-    public static Boolean isInsertingNewHouseholdAccount = false;
+    private static Boolean isNewContactInsert = false;
+    public static Boolean isNewHouseholdAccountInsert = false;
 
     @TestVisible
     private OrgConfig orgConfig {
@@ -127,7 +127,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
                 triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            isConInsert = true;
+            isNewContactInsert = true;
         }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
@@ -291,7 +291,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     private Boolean isNewContactInsertOperation() {
-        return isConInsert || HH_Households_TDTM.isConInsert;
+        return isNewContactInsert || HH_Households_TDTM.isNewContactInsert;
     }
 
     /**
@@ -582,7 +582,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         if (!accountInserts.isEmpty()) {
-            isInsertingNewHouseholdAccount = true;
+            isNewHouseholdAccountInsert = true;
             List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
             for (Integer index = 0; index < insertResults.size(); index++) {
                 Database.SaveResult insertResult = insertResults[index];
@@ -596,7 +596,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     }
                 }
             }
-            isInsertingNewHouseholdAccount = false;
+            isNewHouseholdAccountInsert = false;
         }
 
         // now update each contact's accountId

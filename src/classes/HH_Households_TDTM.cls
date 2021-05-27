@@ -37,7 +37,7 @@
 */
 public without sharing class HH_Households_TDTM extends TDTM_Runnable {
 
-    public static Boolean isConInsert = false;
+    public static Boolean isNewContactInsert = false;
 
     @TestVisible
     private HouseholdSettings settings {
@@ -68,17 +68,17 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             when BeforeInsert {
                 //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
-                isConInsert = true;
+                isNewContactInsert = true;
                 Contacts contacts = new Contacts(newlist);
                 contacts.onBeforeInsert();
-                isConInsert = false;
+                isNewContactInsert = false;
             }
             when BeforeUpdate {
                 Contacts contacts = new Contacts(newlist, oldlist);
                 contacts.onBeforeUpdate();
             }
             when AfterInsert {
-                isConInsert = true;
+                isNewContactInsert = true;
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
                 //since we don't have the contact's household ids until after the insert
@@ -88,7 +88,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                             ContactsInLegacyHouseholds.newInstance(newlist);
                     legacyHouseholdContacts.onAfterInsert();
                 }
-                isConInsert = false;
+                isNewContactInsert = false;
             }
             when AfterDelete {
                 Contacts contacts = new Contacts(oldlist);
