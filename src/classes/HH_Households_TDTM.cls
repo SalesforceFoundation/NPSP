@@ -78,6 +78,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 contacts.onBeforeUpdate();
             }
             when AfterInsert {
+                isConInsert = true;
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
                 //AFTER INSERT - NOTE: naming has to be handled inside othe household inserts,
                 //since we don't have the contact's household ids until after the insert
@@ -87,6 +88,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                             ContactsInLegacyHouseholds.newInstance(newlist);
                     legacyHouseholdContacts.onAfterInsert();
                 }
+                isConInsert = false;
             }
             when AfterDelete {
                 Contacts contacts = new Contacts(oldlist);
