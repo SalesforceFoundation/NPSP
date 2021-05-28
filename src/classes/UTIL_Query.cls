@@ -61,6 +61,7 @@ public with sharing class UTIL_Query {
     private Boolean isToLabelSalutation = false;
     /** @description Indicates if fls and user profile permissions should be enforced */
     private Boolean isSecurityEnforced = false;
+    private Boolean isForUpdate = false;
 
     /*********************************************************************************************************
     * @description The constructor
@@ -180,6 +181,15 @@ public with sharing class UTIL_Query {
     }
 
     /*********************************************************************************************************
+    * @description Registers a clause to be used in the FOR UPDATE clause
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withForUpdate() {
+        this.isForUpdate = true;
+        return this;
+    }
+
+    /*********************************************************************************************************
     * @description Validates and builds a SOQL
     * @return String The SOQL
     */
@@ -201,7 +211,8 @@ public with sharing class UTIL_Query {
                 buildWhereClause(),
                 buildSecurityEnforcedClause(),
                 buildOrderByClause(),
-                buildLimitClause()
+                buildLimitClause(),
+                buildForUpdateClause()
             }
         ).trim();
     }
@@ -296,5 +307,13 @@ public with sharing class UTIL_Query {
         }
 
         return ' WITH SECURITY_ENFORCED ';
+    }
+
+    private String buildForUpdateClause() {
+        if(!isForUpdate) {
+            return '';
+        }
+
+        return ' FOR UPDATE ';
     }
 }
