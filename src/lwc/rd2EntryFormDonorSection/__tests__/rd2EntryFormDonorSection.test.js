@@ -122,6 +122,13 @@ describe('existing recurring account donation', () => {
         await flushPromises();
 
         expect(getAccountLookup(element)).toBeNull();
+
+        changeDonorType(element, 'Account');
+        await flushPromises();
+
+        const accountLookup = getAccountLookup(element);
+        expect(accountLookup).toBeTruthy();
+        expect(accountLookup.value).toBeFalsy();
     });
 });
 
