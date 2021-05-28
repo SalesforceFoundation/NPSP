@@ -24,8 +24,7 @@ global with sharing class pkBandingService {
         Set<Id> failedIds = new Set<Id>();
         
         // aux vars
-        Integer band;        
-        Integer numberOfEvents;
+        Integer band;                
         Integer eventLimit;
         String lastOffset;   
         
@@ -43,8 +42,7 @@ global with sharing class pkBandingService {
             // cursor logic
             if (request!=null && request.isCursor) {
                 
-                // init aux vars
-                numberOfEvents = 0;
+                // init aux vars                
                 band = request.band;
                 eventLimit = request.batchSize;
                 lastOffset = request.offset;
@@ -80,22 +78,46 @@ global with sharing class pkBandingService {
 
                 } 
 
-
+            // re-try logic 
             } else if (request!=null && !request.isCursor && request.recordIds!=null && request.recordIds.size()>0 ) {
 
-                // static logic
+                // aux var
+                Set<Id> auxIds = new Set<Id>();
+                Set<Id> rdIds = new Set<Id>();
+                                
                 // init response
                 dResponse.init(request);
                 dResponse.cursor.isCursor = false;
                 dResponse.result = true;
-                dResponse.numberProcessed = request.recordIds.size();
-                dResponse.completed = request.batchSize <= dResponse.numberProcessed;
+                dResponse.completed = request.batchSize >= request.recordIds.size();
+
+                // if not completed, build set(recordIds) for next execution
+                if (!dResponse.completed) {
+
+                    // get array values to proccess in next batch
+                    List<Id> listIds = new List<Id> (request.recordIds);
+                    for (Integer i=request.batchSize; i<request.recordIds.size(); i++) {
+                        auxIds.add(listIds[i]);
+                    }
+                    // remove them from the records to be processed in this execution
+                    request.recordIds.removeAll(auxIds);
+                    // HAD-TO use aux SET<ID> because of bug after using removeAll()
+                    rdIds = request.recordIds;
+                    // add to cursor to process later
+                    dResponse.cursor.recordIds = auxIds;
+
+                } else {
+                    // HAD-TO use aux SET<ID> because of bug after using removeAll()
+                    rdIds = request.recordIds;
+                }
+                // set num processed
+                dResponse.numberProcessed = rdIds.size();
 
                 // disable rollups
                 TDTM_Config_API.disableAllRollupTriggers();
                 // execute RD service
                 evalService = new RD2_OpportunityEvaluationService().withBatchContext()
-                                                                    .withRds(request.recordIds)
+                                                                    .withRds(rdIds)
                                                                     .withCurrentDate(Date.Today())
                                                                     .evaluateOpportunities();
                 // capture after execution results
@@ -108,10 +130,12 @@ global with sharing class pkBandingService {
 
         } catch (Exception e) {
             System.debug('EXCEPTION: ' + e.getMessage());
-            // update response object
+            // update response object with error details
             dResponse.cursor.offset = lastOffset;
-            dResponse.numberProcessed = numberOfEvents; // TODO: accomodate this number
+            dResponse.numberProcessed = 0;
             dResponse.numberErrors = failedCount;
+            dResponse.failedRecords = failedIdsMap;
+            dResponse.failedRecordsIds = failedIds;
             dResponse.result = false;
             dResponse.error =  ERR_CLASS_NAME + e.getMessage();
             response.responseBody = Blob.valueOf(JSON.serialize(dResponse));
