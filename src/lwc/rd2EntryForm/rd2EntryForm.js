@@ -235,6 +235,15 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleElevateWidgetDisplayState(event) {
+
+        const shouldResetPaymentMethodInEditMode = this.isEdit
+            && event.isDisabled
+            && this._paymentMethod !== this.existingPaymentMethod
+            && this.isCommitmentEdit;
+
+        if(shouldResetPaymentMethodInEditMode) {
+            this.resetPaymentMethod();
+        }
         this.hasUserDisabledElevateWidget = event.isDisabled;
     }
 
@@ -780,6 +789,11 @@ export default class rd2EntryForm extends LightningElement {
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
         }
+    }
+
+    resetPaymentMethod() {
+        const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
+        field.reset();
     }
 
     /**
