@@ -324,17 +324,27 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
-                    showToast(
-                        this.CUSTOM_LABELS.PageMessagesConfirm,
-                        this.batchName + ' was processed.',
-                        'success',
-                        'dismissible',
-                        null
-                    );
+                    this.handleProcessedBatch();
                     window.clearInterval(poll);
                 }
             })
         }, 5000);
+    }
+
+    handleProcessedBatch() {
+        this.collapseForm();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            this.batchName + ' was processed.',
+            'success',
+            'dismissible',
+            null
+        );
+    }
+
+    collapseForm() {
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.collapse();
     }
 
     async refreshBatchTotals() {
