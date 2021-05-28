@@ -509,7 +509,7 @@ private class BDI_RecurringDonations_TEST {
     */
     @isTest
     static void shouldRunBDIDryRunAndMatchAndImportNewDonationOnExistingRD() {
-
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Account testAccount = new Account(name = 'testAcct');
         insert testAccount;
 
