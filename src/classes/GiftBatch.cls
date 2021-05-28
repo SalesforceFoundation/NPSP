@@ -91,7 +91,6 @@ public inherited sharing class GiftBatch {
         captureGroupService.enqueuePaymentCaptureJobFor(
             batchId, gifts?.capturableGroupIds());
         gifts.authorizedToPaymentProcessingStatus();
-        updateRecords();
     }
 
     public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {

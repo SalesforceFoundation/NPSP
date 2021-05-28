@@ -55,6 +55,7 @@ public with sharing class Gifts {
     }
 
     public void giftsToProcessingStatus() {
+        giftsToUpdate.clear();
         for (DataImport__c gift : dataImports) {
             if (isProcessableGift(gift)) {
                 gift.Status__c = BDI_DataImport_API.bdiProcessing;
