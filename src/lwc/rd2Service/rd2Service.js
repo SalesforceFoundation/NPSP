@@ -188,4 +188,4 @@ class RecurringDonation {
     }
 }
 
-export { Rd2Service, ELEVATE_PAYMENT_METHODS, DONOR_TYPE_ACCOUNT, DONOR_TYPE_CONTACT }
+export { Rd2Service, ELEVATE_PAYMENT_METHODS }
