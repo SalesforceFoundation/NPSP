@@ -335,7 +335,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.collapseForm();
         showToast(
             this.CUSTOM_LABELS.PageMessagesConfirm,
-            this.batchName + ' was processed.',
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geBatchProcessingSuccess,
+                [this.batchName]),
             'success',
             'dismissible',
             null

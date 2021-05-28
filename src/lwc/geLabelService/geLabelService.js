@@ -72,6 +72,7 @@ import geAssistiveShowMenu from '@salesforce/label/c.geAssistiveShowMenu';
 import geAssistiveSpinner from '@salesforce/label/c.geAssistiveSpinner';
 import geAuthorizedCreditCardSuccess from '@salesforce/label/c.geAuthorizedCreditCardSuccess';
 import geAuthorizingCreditCard from '@salesforce/label/c.geAuthorizingCreditCard';
+import geBatchProcessingSuccess from'@salesforce/label/c.geBatchProcessingSuccess';
 import geBodyAdvancedFieldMapping from '@salesforce/label/c.geBodyAdvancedFieldMapping';
 import geBodyBatchDefaultValues from '@salesforce/label/c.geBodyBatchDefaultValues';
 import geBodyBatchFieldBundleInfo from '@salesforce/label/c.geBodyBatchFieldBundleInfo';
@@ -203,6 +204,7 @@ import gePaymentProcessError from '@salesforce/label/c.gePaymentProcessError';
 import gePaymentProcessingErrorBanner from '@salesforce/label/c.gePaymentProcessingErrorBanner';
 import gePaymentRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
 import geProcessAnyway from '@salesforce/label/c.geProcessAnyway';
+import geProcessingBatch from '@salesforce/label/c.geProcessingBatch';
 import geProcessingErrors from '@salesforce/label/c.geProcessingErrors';
 import geSearchPlaceholder from '@salesforce/label/c.geSearchPlaceholder';
 import geSelectBatchTableColumns from '@salesforce/label/c.geSelectBatchTableColumns';
@@ -316,6 +318,7 @@ class GeLabelService {
         geAssistiveSpinner,
         geAuthorizedCreditCardSuccess,
         geAuthorizingCreditCard,
+        geBatchProcessingSuccess,
         geBodyAdvancedFieldMapping,
         geBodyBatchDefaultValues,
         geBodyBatchFieldBundleInfo,
@@ -447,6 +450,7 @@ class GeLabelService {
         gePaymentProcessingErrorBanner,
         gePaymentRequestTimedOut,
         geProcessAnyway,
+        geProcessingBatch,
         geProcessingErrors,
         geSearchPlaceholder,
         geSelectBatchTableColumns,
