@@ -154,7 +154,6 @@ export default class GeFormRenderer extends LightningElement{
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
-    @api isFormCollapsed = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -182,6 +181,8 @@ export default class GeFormRenderer extends LightningElement{
         paymentTransactionStatusValues: undefined
     }
     @track isAccessible = true;
+
+    _isFormCollapsed = false;
     _shouldInformParent = true;
 
     set selectedDonationOrPaymentRecord(record) {
@@ -2609,7 +2610,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     get isFormCollapsed() {
-        return this.isFormCollapsed;
+        return this._isFormCollapsed;
     }
 
     get altTextLabel() {
@@ -2619,7 +2620,7 @@ export default class GeFormRenderer extends LightningElement{
 
     expandForm() {
         if (this.isFormCollapsed) {
-            this.isFormCollapsed = false;
+            this._isFormCollapsed = false;
         }
     }
 
@@ -2628,7 +2629,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCollapse(event) {
-        this.isFormCollapsed = event.detail.isCollapsed;
+        this._isFormCollapsed = event.detail.isCollapsed;
     }
 
     get showMismatchedCurrencyWarning() {
