@@ -61,27 +61,31 @@ describe('c-rd2-edit-payment-information-modal', () => {
     * or there is no error after the latest successful payment
     */
     describe('on open of the Edit Payment Information Modal', () => {
-        beforeEach(() => {
+        beforeEach(async () => {
             component.rdRecord = recurringDonation;
             setupUpdateCommitmentResponse(mockPaymentResultBody);
             document.body.appendChild(component);
+            await flushPromises();
         });
 
         it('should display credit card edit form', async () => {
-            return global.flushPromises()
-            .then(async () => {
-                const widget = getElevateWidget(component);
-                assertElevateCreditCardWidget(component);
+            const widget = getElevateWidget(component);
+            assertElevateCreditCardWidget(component);
 
-                const expectedDate = new Date(recurringDonation.fields.npe03__Next_Payment_Date__c.value);
-                const utcDate = new Date(expectedDate.getUTCFullYear(), expectedDate.getUTCMonth(), expectedDate.getUTCDate());
-                expect(widget.nextDonationDate.toISOString()).toBe(utcDate.toISOString());
-            });
+            const expectedDate = new Date(recurringDonation.fields.npe03__Next_Payment_Date__c.value);
+            const utcDate = new Date(expectedDate.getUTCFullYear(), expectedDate.getUTCMonth(), expectedDate.getUTCDate());
+            expect(widget.nextDonationDate.toISOString()).toBe(utcDate.toISOString());
         });
 
-        it('should display save and cancel buttons', async () => {
+        it('should display save and cancel buttons', () => {
             assertAllButtons(component);
         });
+
+        it('should not display do not use elevate button', () => {
+            const widget = getElevateWidget(component);
+            const doNotUseElevate = widget.shadowRoot.querySelector('[data-qa-locator="button Do Not Use Elevate"]');
+            expect(doNotUseElevate).toBeNull();
+        })
 
         it('should close the modal when cancel icon is clicked', async () => {
             const handler = jest.fn();
