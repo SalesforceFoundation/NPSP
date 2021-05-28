@@ -982,6 +982,10 @@ private with sharing  class ALLO_PaymentSync_TEST {
         System.assertEquals(null, oppAllocation.Percent__c, 'Default Allocation Percentage');
     }
     
+    /*******************************************************************************************************
+    * @description Test specific for rounding bug in allocation sync reported in W-9271810. Irrational
+    * numbers extended out to 31 digits led to a rounding error in the last 2 digits.
+    ********************************************************************************************************/
     @isTest
     static void testRoundingBug() {
         setupForTests();
