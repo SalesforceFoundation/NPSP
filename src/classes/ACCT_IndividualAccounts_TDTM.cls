@@ -290,6 +290,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return contactRecord.AccountId != null;
     }
 
+    /**
+     * @description Tells whether a new Contact is being inserted - either by this class or by
+     * the NPSP Trigger Handler that inserts Household objects.
+     */
     private Boolean isNewContactInsertOperation() {
         return isNewContactInsert || HH_Households_TDTM.isNewContactInsert;
     }
