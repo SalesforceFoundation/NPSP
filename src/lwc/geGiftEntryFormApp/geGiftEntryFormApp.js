@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace } from 'c/utilCommon';
+import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -37,7 +37,6 @@ import BatchTotals from './helpers/batchTotals';
 /*******************************************************************************
 * @description Constants
 */
-const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
@@ -90,7 +89,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
-        if (this._isBatchProcessing) return;
+        if (!this._isBatchProcessing) return;
         await this.startPolling();
     }
 
@@ -255,7 +254,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         recordId: '$recordId',
         fields: [
             BATCH_ID_FIELD,
-            BATCH_NAME
+            BATCH_NAME,
         ],
         optionalFields: [
             BATCH_CURRENCY_ISO_CODE,
@@ -325,7 +324,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
-                    this.collapseForm();
+                    showToast(
+                        this.CUSTOM_LABELS.PageMessagesConfirm,
+                        this.batchName + ' was processed.',
+                        'success',
+                        'dismissible',
+                        null
+                    );
                     window.clearInterval(poll);
                 }
             })
@@ -338,11 +343,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
         this.batchTotals = await BatchTotals(this.batchId);
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
-    }
-
-    collapseForm() {
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.isFormCollapsed = true;
     }
 
     requireTotalMatch() {
