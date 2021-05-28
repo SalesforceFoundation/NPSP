@@ -64,7 +64,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     count;
     total;
     batch = {};
-    asyncIntervals = [];
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -293,12 +292,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     await this.processBatch();
                 }
             }
+            return;
+        }
+        this.handleBatchProcessingErrors();
+    }
+
+    handleBatchProcessingErrors() {
+        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+            handleError(geBatchGiftsExpectedTotalsMessage);
         } else {
-            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-                handleError(geBatchGiftsExpectedTotalsMessage);
-            } else {
-                handleError(geBatchGiftsExpectedCountOrTotalMessage);
-            }
+            handleError(geBatchGiftsExpectedCountOrTotalMessage);
         }
     }
 
@@ -322,24 +325,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
+                    this.collapseForm();
                     window.clearInterval(poll);
                 }
             })
         }, 5000);
-    }
-
-    navigateToDataImportProcessingPage() {
-        let url = '/apex/' + this.bdiDataImportPageName() +
-            '?batchId=' + this.recordId + '&retURL=' + this.recordId;
-
-        this[NavigationMixin.Navigate]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: url
-                }
-            },
-            true
-        );
     }
 
     async refreshBatchTotals() {
@@ -348,14 +338,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
         this.batchTotals = await BatchTotals(this.batchId);
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
-        console.log('this._isBatchProcessing: '+ this._isBatchProcessing);
     }
 
-    bdiDataImportPageName() {
-        return this.namespace ?
-            `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
-            BDI_DATA_IMPORT_PAGE;
-    };
+    collapseForm() {
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.isFormCollapsed = true;
+    }
 
     requireTotalMatch() {
         return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
