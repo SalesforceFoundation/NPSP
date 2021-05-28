@@ -57,7 +57,7 @@ public inherited sharing class GiftBatchStatusGroup {
     }
 
     public Boolean isProcessing() {
-        return status == 'Processing';
+        return status == BDI_DataImport_API.bdiProcessing;
     }
 
     public Boolean isPaymentFailed() {
