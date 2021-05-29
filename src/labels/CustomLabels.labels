@@ -1626,6 +1626,22 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_DisabledAdvancedMappingError</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for DIs with populated RD fields when Advanced Mapping is disabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can process Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DisabledRD2Error</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for DIs with populated RD fields when RD2 is disabled.</shortDescription>
+        <value>You must enable Enhanced Recurring Donations before you can process Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateCancelInProgress</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
