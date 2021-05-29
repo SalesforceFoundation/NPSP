@@ -166,8 +166,7 @@ public class BDI_RecurringDonations {
             // If the imported Id is null, and the amount is null then its not an update and it can't be a valid new RD,
             // so it should be skipped.
             // This will need to be changed once we support more matching types.
-            if (dataImport.RecurringDonationImported__c == null
-                    && dataImport.Recurring_Donation_Amount__c == null ) {
+            if (!areRDFieldsPopulated(dataImport)) {
                 continue;
             }
 
@@ -182,6 +181,16 @@ public class BDI_RecurringDonations {
         }
         
         return diWithRDForProcessing;
+    }
+
+    /**************************************************
+     * @description This checks whether or not the specific set of RD fields are populated. If they are
+     *              we consider it as an RD to be processed.
+     * @param  dataImport The DI to check whether the RD fields are populated. 
+     * @return            Returns whether or not RD fields are populated for the provided DI. 
+     */ 
+    public static Boolean areRDFieldsPopulated(DataImport__c dataImport) {
+        return (dataImport.RecurringDonationImported__c != null || dataImport.Recurring_Donation_Amount__c != null);
     }
 
     /*******************************************************************************************************

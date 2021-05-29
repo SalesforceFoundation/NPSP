@@ -50,6 +50,8 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
     public static final String ACH_PAYMENT_METHOD = 'ACH';
+    public static final String DI_WITH_RD_FIELDS_NO_RD2 = System.label.RD2_DisabledRD2Error;
+    public static final String DI_WITH_RD_FIELDS_NO_ADV_MAPPING = System.label.RD2_DisabledAdvancedMappingError;
 
     public BDI_MappingService mappingService;
 
@@ -572,6 +574,8 @@ global with sharing class BDI_DataImportService {
             // updated with their respective FLS exceptions at the end of this block
             this.listDI = flsService.getValidRecords();
 
+            this.listDI = checkRDFields(listDI);
+
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
 
@@ -692,6 +696,31 @@ global with sharing class BDI_DataImportService {
             perfLogger.stop();
             perfLogger.save();
         }
+    }
+
+    /**
+     * @description Checks the DI for RD fields that are populated. 
+     *              If they are populated, make sure RD2 is enabled. If it is not, fail the DI. 
+     * @param  dataImports A list of DI's to check. 
+     * @return             Returns the DIs after they have been checked. 
+     */ 
+    private List<DataImport__c> checkRDFields(List<DataImport__C> dataImports) {
+        String RDImportStatusField = 'RecurringDonationImportStatus__c';
+        
+        for (DataImport__c DI : dataImports) {
+            if (BDI_RecurringDonations.areRDFieldsPopulated(DI)) {
+                        
+                if (!(mappingService instanceof BDI_MappingServiceAdvanced)) {
+                    LogBDIError(DI, DI_WITH_RD_FIELDS_NO_ADV_MAPPING, RDImportStatusField);
+                }
+
+                if (!RD2_EnablementService.isRecurringDonations2Enabled) { 
+                    LogBDIError(DI, DI_WITH_RD_FIELDS_NO_RD2, RDImportStatusField);
+                }
+            }
+        }
+
+        return dataImports;
     }
 
     /**
