@@ -1,11 +1,10 @@
-import apexAddToElevateBatch from '@salesforce/apex/NPSP_Batch.addToElevateBatch';
-import NPSP_DATA_IMPORT_BATCH_FIELD from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
-import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
+import stageGift from '@salesforce/apex/NPSP_Batch.stageGift';
 
 class GiftBatch {
 
-    constructor(batchId) {
-        this.batchId = batchId;
+    constructor(elevateBatchId) {
+        this.elevateBatchId = elevateBatchId;
+        this._hasAddRun = false;
     }
 
     async add(dataImport) {
@@ -14,8 +13,8 @@ class GiftBatch {
         }
 
         try {
-            const authorizedGift = await apexAddToElevateBatch(
-                {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
+            const authorizedGift = await stageGift(
+                { tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId }
             );
             return authorizedGift;
         } catch (ex) {
@@ -29,6 +28,10 @@ class GiftBatch {
         }
     }
 
+    async create() {
+        const elevateBatch = await apexCreateElevateBatch();
+        return elevateBatch.elevateBatchId;
+    }
 }
 
 export default GiftBatch;

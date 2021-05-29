@@ -140,6 +140,27 @@ public with sharing class GE_GiftEntryController {
         ERR_Handler.processError(ex, ERR_Handler_API.Context.GE);
     }
 
+    // TODO elevateBatchId should come from ElevateBatchService, not front end
+    @AuraEnabled
+    public static Gift stageGift(Gift tokenizedGift, String elevateBatchId) {
+        Gift authorizedGift;
+        if( tokenizedGift.isTokenized() ) {
+            try {
+                authorizedGift = elevateBatchService.addToElevateBatch(tokenizedGift, elevateBatchId);
+            } catch (AuraHandledException ex) {
+                UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+            }
+            return authorizedGift;
+        }
+        return tokenizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateBatch createElevateBatch() {
+        ElevateBatch elevateBatch = elevateBatchService.createElevateBatch();
+        return elevateBatch;
+    }
+
     /*******************************************************************************************************
     * @description Creates an DmlException with the specified error message
     *

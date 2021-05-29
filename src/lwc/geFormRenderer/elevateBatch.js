@@ -1,5 +1,5 @@
-import apexAddToElevateBatch from '@salesforce/apex/NPSP_Batch.addToElevateBatch';
-import apexCreateElevateBatch from '@salesforce/apex/NPSP_Batch.createElevateBatch';
+import stageGift from '@salesforce/apex/GE_GiftEntryController.stageGift';
+import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 
 class ElevateBatch {
 
@@ -14,7 +14,7 @@ class ElevateBatch {
         }
 
         try {
-            const authorizedGift = await apexAddToElevateBatch(
+            const authorizedGift = await stageGift(
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
             return authorizedGift;

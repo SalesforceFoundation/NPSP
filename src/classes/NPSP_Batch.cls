@@ -74,27 +74,6 @@ public inherited sharing class NPSP_Batch {
         return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
     }
 
-    @AuraEnabled
-    public static ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
-        ElevateAuthorizedGift authorizedGift;
-        try {
-            authorizedGift = elevateBatchService.addToElevateBatch(tokenizedGift, elevateBatchId);
-        } catch (AuraHandledException ex) {
-            UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
-        }
-        return authorizedGift;
-    }
-
-    @AuraEnabled
-    public static ElevateBatch createElevateBatch() {
-        ElevateBatch elevateBatch = elevateBatchService.createElevateBatch();
-        return elevateBatch;
-    }
-
-    public void addGift(DataImport__c aGift) {
-        aGift.NPSP_Data_Import_Batch__c = batchId;
-    }
-
     public void processPayments() {
         List<ElevateBatchResponse> elevateBatchResponses =
                 elevateBatchService.capture(authorizedGifts.elevateBatchIds());
