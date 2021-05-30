@@ -995,7 +995,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_link_with_spantext(self,text):
         locator = npsp_lex_locators['custom_objects']['option'].format(text)
-        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.wait_until_page_contains_element(locator,30)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.click_element(element)
         time.sleep(1)
