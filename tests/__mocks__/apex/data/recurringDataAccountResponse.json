@@ -1,0 +1,6 @@
+{
+  "DonorType": "Account",
+  "Period": "Monthly",
+  "Frequency": 1,
+  "RecurringType": "Open"
+}
