@@ -66,7 +66,7 @@ public with sharing class Gifts {
     }
 
     private Boolean isProcessableGift(DataImport__c gift) {
-        return gift.Status__c != BDI_DataImport_API.bdiImported;
+        return gift.Status__c == BDI_DataImport_API.bdiDryRunValidated;
     }
 
     public void updateRecords() {
