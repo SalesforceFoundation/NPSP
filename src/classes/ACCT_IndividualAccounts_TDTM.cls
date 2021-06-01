@@ -137,6 +137,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             handleAfter();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            isNewHouseholdAccountInsert = false;
             processAccountsAfterDelete(oldSObjects);
         }
 
