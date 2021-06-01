@@ -28,7 +28,7 @@ import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureI
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
-import PAYMENT_STATUS_DISPLAY_VALUE from '@salesforce/schema/DataImport__c.Payment_Status_Display_Value__c';
+import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -263,20 +263,20 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
-        this.includePaymentStatusDisplayValueField();
+        this.includeElevatePaymentStatusField();
         this._columnsLoaded = true;
     }
 
-    includePaymentStatusDisplayValueField() {
+    includeElevatePaymentStatusField() {
         if (this.isElevateCustomer) {
-            const paymentStatusDisplayValueApiName = apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE);
+            const elevatePaymentStatusApiName = apiNameFor(ELEVATE_PAYMENT_STATUS);
 
-            if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, paymentStatusDisplayValueApiName)) {
-                const paymentStatusDisplayValue = this._dataImportObjectInfo?.fields[paymentStatusDisplayValueApiName];
-                this._columnsBySourceFieldApiName[paymentStatusDisplayValue.apiName] = {
-                    label: paymentStatusDisplayValue.label,
-                    fieldName: paymentStatusDisplayValue.apiName,
-                    type: paymentStatusDisplayValue.dataType
+            if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, elevatePaymentStatusApiName)) {
+                const elevatePaymentStatus = this._dataImportObjectInfo?.fields[elevatePaymentStatusApiName];
+                this._columnsBySourceFieldApiName[elevatePaymentStatus.apiName] = {
+                    label: elevatePaymentStatus.label,
+                    fieldName: elevatePaymentStatus.apiName,
+                    type: elevatePaymentStatus.dataType
                 }
             }
         }

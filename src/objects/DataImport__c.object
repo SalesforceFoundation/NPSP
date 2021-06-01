@@ -1651,8 +1651,10 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Payment_Status_Display_Value__c</fullName>
+        <fullName>Elevate_Payment_Status__c</fullName>
+        <description>The transaction status shown in Elevate.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The transaction status shown in Elevate.</inlineHelpText>
         <formula>
             CASE(Payment_Status__c,
                 &apos;PENDING&apos;,
@@ -1688,7 +1690,7 @@
             &apos;&apos;)
         </formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <label>Payment Status</label>
+        <label>Elevate Payment Status</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Text</type>

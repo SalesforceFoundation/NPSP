@@ -1215,6 +1215,7 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.Elevate_Custom_Metadata__c</members>
+        <members>DataImport__c.Elevate_Payment_Status__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -1270,7 +1271,6 @@
         <members>DataImport__c.Payment_Origin_Type__c</members>
         <members>DataImport__c.Payment_Paid__c</members>
         <members>DataImport__c.Payment_Possible_Matches__c</members>
-        <members>DataImport__c.Payment_Status_Display_Value__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
         <members>DataImport__c.RecurringDonationImportStatus__c</members>
@@ -1852,6 +1852,8 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_DisabledAdvancedMappingError</members>
+        <members>RD2_DisabledRD2Error</members>
         <members>RD2_ElevateCancelInProgress</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>

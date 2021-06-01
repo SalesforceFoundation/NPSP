@@ -42,7 +42,7 @@ import DONATION_DATE_FIELD from '@salesforce/schema/DataImport__c.Donation_Date_
 import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
-import PAYMENT_STATUS_DISPLAY_VALUE from '@salesforce/schema/DataImport__c.Payment_Status_Display_Value__c';
+import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
 
 const DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS = [
     DONATION_AMOUNT_FIELD.fieldApiName,
@@ -431,15 +431,15 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     includePaymentStatusDisplayField() {
-        const hasPaymentStatusDisplayValueField =
-            hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE));
-
-        if (TemplateBuilderService.isElevateCustomer && hasPaymentStatusDisplayValueField) {
-            const paymentStatusDisplayValueOption = {
-                label: this._dataImportObject.fields.Payment_Status_Display_Value__c.label,
-                value: this._dataImportObject.fields.Payment_Status_Display_Value__c.apiName
+        const hasElevatePaymentStatusField =
+            hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(ELEVATE_PAYMENT_STATUS));
+        console.log('TemplateBuilderService.isElevateCustomer: ', TemplateBuilderService.isElevateCustomer);
+        if (TemplateBuilderService.isElevateCustomer && hasElevatePaymentStatusField) {
+            const elevatePaymentStatusOption = {
+                label: this._dataImportObject.fields.Elevate_Payment_Status__c.label,
+                value: this._dataImportObject.fields.Elevate_Payment_Status__c.apiName
             };
-            this.availableBatchTableColumnOptions.push(paymentStatusDisplayValueOption);
+            this.availableBatchTableColumnOptions.push(elevatePaymentStatusOption);
         }
     }
 
