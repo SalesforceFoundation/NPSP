@@ -34,6 +34,8 @@ Setup Test Data
     Set suite variable    ${ui_date}
     ${date} =       Get Current Date                   result_format=%Y-%m-%d
     Set suite variable    ${date}
+    ${batch_name} =  Generate Random String
+    Set Suite Variable    ${batch_name}
 
 *** Test Cases ***
 
@@ -91,7 +93,7 @@ Edit GE Template And Verify Changes
     ...                              ${org_ns}custom_acc_text__c=${msg}
     # Create a new batch and verify default values are displayed on the Batch Gift Form
     Go To Page                       Landing                       GE_Gift_Entry
-    Create Gift Entry Batch          Default Gift Entry Template   Automation Batch
+    Create Gift Entry Batch          Default Gift Entry Template   ${batch_name}
     Current Page Should Be           Form                          Gift Entry
     ${batch_id} =                    Save Current Record ID For Deletion     ${ns}DataImportBatch__c
     Verify Field Default Value
@@ -112,8 +114,7 @@ Edit GE Template And Verify Changes
     Verify Gift Count                1
     Scroll Page To Location          0      0
     Click Gift Entry Button          Process Batch
-    Click Data Import Button         NPSP Data Import              button       Begin Data Import Process
-    Wait For Batch To Process        BDI_DataImport_BATCH          Completed
+    Wait Until BGE Batch Processes   ${batch_name}
     Click Button With Value          Close
     # Verify default values stored on payment and custom_account_text field doesn't have value on houshold account as its not relavent
     Current Page Should Be           Form                          Gift Entry

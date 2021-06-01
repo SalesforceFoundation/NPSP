@@ -1732,3 +1732,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         flow_config = self.cumulusci.project_config.get_flow(flow_name)
         flow = FlowCoordinator(self.cumulusci.project_config, flow_config, flow_name)
         flow.run(self.cumulusci.org)
+
+    @capture_screenshot_on_error
+    def wait_until_bge_batch_processes(self, batch_name):
+        """Waits for the BGE batch processing to complete when BDI is skipped."""
+        batchsuccess=npsp_lex_locators["gift_entry"]["success_toast"].format(batch_name)
+        self.selenium.wait_until_page_does_not_contain("This can take a while. Check back in a bit!",90)
+        self.selenium.wait_until_element_is_visible(batchsuccess,90)
