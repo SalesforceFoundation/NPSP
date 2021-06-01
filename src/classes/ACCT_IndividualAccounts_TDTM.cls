@@ -558,11 +558,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : [
-            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-            FROM Account
-            WHERE npe01__One2OneContact__c IN :contactIds
-        ]) {
+        for (Account accountRecord : getAccountsFor(contactIds)) {
             accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
         }
 
@@ -597,18 +593,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (!accountInserts.isEmpty()) {
             isNewHouseholdAccountInsert = true;
             List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-            for (Integer index = 0; index < insertResults.size(); index++) {
-                Database.SaveResult insertResult = insertResults[index];
-                if (!insertResult.isSuccess()) {
-                    for (Database.Error err : insertResult.getErrors()) {
-                        accountInserts[index].addError(err.getMessage());
-                        Contact contactRecord = contacts[index];
-                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
-                                contactRecord.FirstName, contactRecord.LastName, err.getMessage()
-                        }));
-                    }
-                }
-            }
+            addErrorsToRecords(insertResults, accountInserts, contacts);
         }
 
         // now update each contact's accountId
@@ -616,6 +601,29 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         for (Contact contactRecord : contacts) {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
+        }
+    }
+
+    private List<Account> getAccountsFor(List<Id> contactIds) {
+        return [
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE npe01__One2OneContact__c IN :contactIds
+        ];
+    }
+
+    private void addErrorsToRecords(List<Database.SaveResult> insertResults, List<Account> accountInserts, List<Contact> contacts) {
+        for (Integer index = 0; index < insertResults.size(); index++) {
+            Database.SaveResult insertResult = insertResults[index];
+            if (!insertResult.isSuccess()) {
+                for (Database.Error err : insertResult.getErrors()) {
+                    accountInserts[index].addError(err.getMessage());
+                    Contact contactRecord = contacts[index];
+                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
+                            contactRecord.FirstName, contactRecord.LastName, err.getMessage()
+                    }));
+                }
+            }
         }
     }
 
