@@ -3,12 +3,13 @@ import { handleError } from 'c/utilTemplateBuilder';
 import { mutable } from 'c/utilCommon';
 import GeWidgetService from 'c/geWidgetService';
 import labelGeHeaderFieldBundles from '@salesforce/label/c.geHeaderFieldBundles';
-import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 class GeTemplateBuilderService {
     fieldMappingByDevName = null;
     fieldMappingsByObjMappingDevName = null;
     objectMappingByDevName = null;
+    isElevateCustomer = null;
 
     init = async (fieldMappingSetName, refresh) => {
         if (this.fieldMappingByDevName === null ||
@@ -16,6 +17,10 @@ class GeTemplateBuilderService {
             this.objectMappingByDevName === null ||
             refresh === true) {
             await this.handleGetFieldMappingSet(fieldMappingSetName);
+        }
+
+        if (this.isElevateCustomer === null) {
+            this.isElevateCustomer = await checkForElevateCustomer();
         }
     }
 
@@ -96,17 +101,10 @@ class GeTemplateBuilderService {
         ];
 
         // If the org is an Elevate customer, add the Salesforce.org Elevate widget
-        isElevateCustomer()
-            .then(isElevateCustomer => {
-                if (isElevateCustomer) {
-                    fieldMappingByDevName.geFormWidgetTokenizeCard =
-                        GeWidgetService.definitions.geFormWidgetTokenizeCard;
-                    fieldMappingsByObjMappingDevName.Widgets.push(
-                        fieldMappingByDevName.geFormWidgetTokenizeCard
-                    );
-                }
-            })
-            .catch(error => handleError(error));
+        if (this.isElevateCustomer) {
+            fieldMappingByDevName.geFormWidgetTokenizeCard = GeWidgetService.definitions.geFormWidgetTokenizeCard;
+            fieldMappingsByObjMappingDevName.Widgets.push(fieldMappingByDevName.geFormWidgetTokenizeCard);
+        }
     }
 }
 

@@ -100,7 +100,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
     existingFormTemplateName;
     currentNamespace;
-    isElevateCustomer = false;
     @api isClone = false;
     @track isLoading = true;
     @track activeTab = this.tabs.INFO.id;
@@ -264,7 +263,6 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
             this.buildBatchTableColumnOptions(this.formSections);
             this.setInitialActiveFormSection();
 
-            this.isElevateCustomer = await checkForElevateCustomer();
             this.isLoading = false;
         } catch (error) {
             handleError(error);
@@ -436,14 +434,12 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const hasPaymentStatusDisplayValueField =
             hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(PAYMENT_STATUS_DISPLAY_VALUE));
 
-        if (this.isElevateCustomer && hasPaymentStatusDisplayValueField) {
-            this.availableBatchTableColumnOptions = [
-                ...this.availableBatchTableColumnOptions,
-                {
-                    label: this._dataImportObject.fields.Payment_Status_Display_Value__c.label,
-                    value: this._dataImportObject.fields.Payment_Status_Display_Value__c.apiName
-                }
-            ];
+        if (TemplateBuilderService.isElevateCustomer && hasPaymentStatusDisplayValueField) {
+            const paymentStatusDisplayValueOption = {
+                label: this._dataImportObject.fields.Payment_Status_Display_Value__c.label,
+                value: this._dataImportObject.fields.Payment_Status_Display_Value__c.apiName
+            };
+            this.availableBatchTableColumnOptions.push(paymentStatusDisplayValueOption);
         }
     }
 
