@@ -280,11 +280,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
             }
 
-            if ((!isNewContactInsertOperation() &&
-                    isHouseholdMember(contactRecord)) ||
-                    (isNewContactInsertOperation() &&
-                            isBeingAddedToAHousehold(contactRecord))) {
+            if ((!isNewContactInsertOperation() ||
+                    isNewContactInsertOperation() && isBeingAddedToAHousehold(contactRecord)) &&
+                    isHouseholdMember(contactRecord)) {
                 householdIdsToRename.add(contactRecord.AccountId);
+
             }
         }
 
