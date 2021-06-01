@@ -254,7 +254,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         recordId: '$recordId',
         fields: [
             BATCH_ID_FIELD,
-            BATCH_NAME,
+            BATCH_NAME
         ],
         optionalFields: [
             BATCH_CURRENCY_ISO_CODE,
