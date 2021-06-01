@@ -83,7 +83,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             return fieldApiNames;
         }
 
-        fieldApiNames.addAll(getDataImportElevateFields());
+        fieldApiNames.addAll(getDataImportElevateFields(batchId));
         fieldApiNames.add(getNewBatchGiftEntryVersionFields());
 
         for (String field : dataImportCoreFields) {
@@ -187,16 +187,23 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
     @TestVisible
-    private static List<String> getDataImportElevateFields() {
+    private static List<String> getDataImportElevateFields(Id batchId) {
         List<String> elevateFieldApiNames = new List<String>();
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             elevateFieldApiNames = new List<String>{
-                String.valueOf(DataImport__c.Payment_Declined_Reason__c),
-                String.valueOf(DataImport__c.Payment_Status_Display_Value__c)
+                String.valueOf(DataImport__c.Payment_Declined_Reason__c)
             };
+
+            if (hasElevateWidgetOnTemplate(batchId)) {
+                elevateFieldApiNames.add(String.valueOf(DataImport__c.Elevate_Payment_Status__c));
+            }
         }
 
         return elevateFieldApiNames;
+    }
+
+    private static Boolean hasElevateWidgetOnTemplate(Id batchId) {
+        return new GiftBatch(batchId).hasElevateWidget();
     }
 
     /*******************************************************************************************************
