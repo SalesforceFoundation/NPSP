@@ -365,8 +365,8 @@ public without sharing class HouseholdNamingService {
     * @param accountIds the list of Household or Account Ids that need updating.
     */
     public void renameHouseholdAccounts(List<Id> accountIds) {
-        if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert &&
-                !HH_Households_TDTM.isNewContactInsert) {
+        if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert
+                && !HH_Households_TDTM.isNewContactInsert) {
             renameHHAccounts(accountIds);
         }
     }
