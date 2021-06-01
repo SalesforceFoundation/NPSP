@@ -12,15 +12,15 @@ class GeTemplateBuilderService {
     isElevateCustomer = null;
 
     init = async (fieldMappingSetName, refresh) => {
+        if (this.isElevateCustomer === null) {
+            this.isElevateCustomer = await checkForElevateCustomer();
+        }
+
         if (this.fieldMappingByDevName === null ||
             this.fieldMappingsByObjMappingDevName === null ||
             this.objectMappingByDevName === null ||
             refresh === true) {
             await this.handleGetFieldMappingSet(fieldMappingSetName);
-        }
-
-        if (this.isElevateCustomer === null) {
-            this.isElevateCustomer = await checkForElevateCustomer();
         }
     }
 
