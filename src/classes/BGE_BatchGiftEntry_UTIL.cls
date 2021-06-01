@@ -189,14 +189,13 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     @TestVisible
     private static List<String> getDataImportElevateFields(Id batchId) {
         List<String> elevateFieldApiNames = new List<String>();
-        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
-            elevateFieldApiNames = new List<String>{
-                String.valueOf(DataImport__c.Payment_Declined_Reason__c)
-            };
+        if (GE_PaymentServices.getInstance().isElevateCustomer()
+            && hasElevateWidgetOnTemplate(batchId)) {
 
-            if (hasElevateWidgetOnTemplate(batchId)) {
-                elevateFieldApiNames.add(String.valueOf(DataImport__c.Elevate_Payment_Status__c));
-            }
+            elevateFieldApiNames = new List<String>{
+                String.valueOf(DataImport__c.Payment_Declined_Reason__c),
+                String.valueOf(DataImport__c.Elevate_Payment_Status__c)
+            };
         }
 
         return elevateFieldApiNames;
