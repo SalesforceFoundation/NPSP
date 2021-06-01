@@ -37,6 +37,7 @@
 
 public with sharing class BDI_GAUAllocationsUtil {
     public static Allocations_Settings__c alloSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+    public static final String GAU_ALLOCATION_NAME = 'GAU_Allocation';
 
 
     /**
@@ -51,7 +52,7 @@ public with sharing class BDI_GAUAllocationsUtil {
         // the DI GAU fields filled out
         for (DataImport__c di : dataImports) {
             if (di.Additional_Object_JSON__c != null) {
-                if (di.Additional_Object_JSON__c.contains('GAU_Allocation')) {
+                if (di.Additional_Object_JSON__c.contains(GAU_ALLOCATION_NAME)) {
                     diWithGAUToProcess.put(di.Id,di);
                 }
             }
@@ -88,7 +89,8 @@ public with sharing class BDI_GAUAllocationsUtil {
 
             // if the total percent is over 100 then fail the record and log an error.
             if (totalPercent > 100) {
-                bdi.LogBDIError(di,label.bdiErrorGAUAllocationOver100,'GAU_Allocation_1_Import_Status__c');
+                bdi.LogBDIError(di,label.bdiErrorGAUAllocationOver100,
+                        SObjectType.DataImport__c.fields.GAU_Allocation_1_Import_Status__c.Name);
             } else {
                 // If the percent is less than 100 or they were null then pass it through for
                 // more processing
@@ -156,7 +158,7 @@ public with sharing class BDI_GAUAllocationsUtil {
 
                 Allocation__c[] existingAllos = Database.query(queryString);
 
-                if (existingAllos != null){
+                if (existingAllos != null) {
                     for (Allocation__c allo: existingAllos) {
                         DataImport__c[] opptAlloMatchingDIs;
                         DataImport__c[] paymentAlloMatchingDIs;

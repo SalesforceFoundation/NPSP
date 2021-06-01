@@ -38,6 +38,7 @@
 
 public class BDI_RecurringDonations {
 
+    public static final String RD_OBJ_MAPPING_NAME = 'Recurring_Donation';
 
     /*******************************************************************************************************
     * @description The Batch Data Import Service the helper should use
@@ -59,7 +60,7 @@ public class BDI_RecurringDonations {
     }
 
 
-    private final String IMPORT_STATUS_FIELD = UTIL_Namespace.StrTokenNSPrefix('RecurringDonationImportStatus__c');
+    private final String IMPORT_STATUS_FIELD = SObjectType.DataImport__c.fields.RecurringDonationImportStatus__c.Name;
     private final String CONTACT_1 = 'Contact1';
     private final String ACCOUNT_1 = 'Account1';
 
@@ -70,7 +71,7 @@ public class BDI_RecurringDonations {
         get {
             if (dataImportFieldToRDField == null) {
                 dataImportFieldToRDField = bdi.mapDataImportFields(
-                    'Recurring_Donation', 'npe03__Recurring_Donation__c',
+                        RD_OBJ_MAPPING_NAME, SObjectType.npe03__Recurring_Donation__c.getName(),
                     BDI_DataImportService.listStrDataImportFields);
             }
             return dataImportFieldToRDField;
