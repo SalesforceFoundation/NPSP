@@ -119,6 +119,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        // Reset this flag to false for each call to run(), since some NPSP tests
+        // insert Contacts in multiple DML statements.  This flag functions then as
+        // protection against recursion for each call to the method.
+        isNewHouseholdAccountInsert = false;
+
         this.contacts = newSObjects;
         this.oldContactById = oldSObjects == null ? null : new Map<Id, Contact>((List<Contact>) oldSObjects);
         this.triggerAction = triggerAction;
