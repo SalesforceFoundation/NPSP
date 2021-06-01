@@ -182,6 +182,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            isNewHouseholdAccountInsert = false;
             processAccountsAfterUpdate();
         }
 
@@ -600,7 +601,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     }
                 }
             }
-            isNewHouseholdAccountInsert = false;
         }
 
         // now update each contact's accountId
