@@ -111,9 +111,9 @@ public inherited sharing class NPSP_HouseholdAccount {
                     householdAccount, 'Shipping');
         }
         householdAccount.npe01__SYSTEM_AccountType__c =
-                CAO_Constants.isHHAccountModel() ?
-                        CAO_Constants.HH_ACCOUNT_TYPE :
-                        CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                CAO_Constants.isHHAccountModel()
+                        ? CAO_Constants.HH_ACCOUNT_TYPE
+                        : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
         if (individualRecordTypeId != null) {
             householdAccount.put('RecordTypeID', individualRecordTypeId);
         }
