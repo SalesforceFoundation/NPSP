@@ -67,6 +67,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     */
     private Boolean isBatchContext = false;
 
+    private Boolean isRecurringDonationLocked = false;
+
     /***
     * @description Recurring Donation custom settings
     */
@@ -207,7 +209,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> rds {
         get {
             if (rds == null && rdIds != null) {
-                rds = queryService.getRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate);
+
+                rds = (isRecurringDonationLocked == true)
+                    ? queryService.getLockRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate) 
+                    : queryService.getRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate);
             }
             return rds;
         } set;
@@ -259,6 +264,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      */
     public RD2_OpportunityEvaluationService withBatchContext() {
         isBatchContext = true;
+        return this;
+    }
+
+    public RD2_OpportunityEvaluationService lockRecurringDonations() {
+        this.isRecurringDonationLocked = true;
         return this;
     }
 

@@ -2000,7 +2000,7 @@ private class RD2_OpportunityEvaluationService_TEST {
             'The pause reason shuold be clear out when pause is over');
     }
 
-        /**
+    /**
     * @description Verifies that when RD is entering the paused,
     * the next installment will be created with close date after the pause
     */
@@ -2037,6 +2037,39 @@ private class RD2_OpportunityEvaluationService_TEST {
 
             System.assert(!installmentsClosedDate.contains(pauseStartDate),
             'No installment should be created with close date during the pause');
+    }
+
+    @isTest
+    private static void shouldNotCreateDuplicateInstallmentsWhenMultipleServicesAreEnqueue() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id).build();
+        insert rd;
+
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        for (Opportunity installment : installments) {
+            installment.StageName = UTIL_UnitTestData_TEST.getClosedLostStage();
+        }
+
+        rd.npe03__Amount__c = rd.npe03__Amount__c + 10;
+
+        Test.startTest();
+        List<SObject> toUpdate = new List<SObject>();
+        toUpdate.addAll(installments);
+        toUpdate.add(rd);
+        Database.update(toUpdate);
+        Test.stopTest();
+
+        List<Opportunity> updatedInstallments = oppGateway.getRecords(rd);
+
+        System.assertEquals(2, updatedInstallments.size(), '2 installments should be under the RD');
+ 
+        for (Opportunity updatedInstallment : updatedInstallments) {
+            if (updatedInstallment.Id != installments[0].Id) {
+                System.assertEquals('Pledged', updatedInstallment.StageName, 'The new installment stage should be set to Pledged');
+            }
+        }
     }
 
     // Helpers

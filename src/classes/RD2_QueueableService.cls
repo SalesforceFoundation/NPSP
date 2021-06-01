@@ -35,7 +35,6 @@
 *
 */
 public class RD2_QueueableService {
-
     /**
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
@@ -68,7 +67,7 @@ public class RD2_QueueableService {
      * @param rdIdsWhereScheduleChanged - Ids of Recurring Donation for which a schedule has been changed
      * @return void
      */
-    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) { 
+    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
         EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
@@ -137,6 +136,7 @@ public class RD2_QueueableService {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
                 .withScheduleChanged(rdIdsWhereScheduleChanged)
+                .lockRecurringDonations()
                 .evaluateOpportunities();
         }
     }

@@ -204,7 +204,7 @@ public with sharing class UTIL_Query {
         }
 
         return String.format(
-            'SELECT {0} FROM {1}{2}{3}{4}{5}',
+            'SELECT {0} FROM {1}{2}{3}{4}{5}{6}',
             new String[] {
                 String.join(uniqueSelectFields, ', '),
                 entity,
@@ -309,6 +309,10 @@ public with sharing class UTIL_Query {
         return ' WITH SECURITY_ENFORCED ';
     }
 
+    /*********************************************************************************************************
+    * @description Builds the FOR UPDATE clause
+    * @return String The FOR UPDATE clause
+    */
     private String buildForUpdateClause() {
         if(!isForUpdate) {
             return '';
