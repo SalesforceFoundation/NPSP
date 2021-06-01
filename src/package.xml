@@ -1848,6 +1848,8 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_DisabledAdvancedMappingError</members>
+        <members>RD2_DisabledRD2Error</members>
         <members>RD2_ElevateCancelInProgress</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>
