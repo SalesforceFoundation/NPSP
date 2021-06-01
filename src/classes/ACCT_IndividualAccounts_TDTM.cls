@@ -184,12 +184,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         contacts = Database.query(buildContactSoql());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            processAccountsAfterInsert();
+            processHouseholdAccountsAfterContactInsert();
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             isNewHouseholdAccountInsert = false;
-            processAccountsAfterUpdate();
+            processHouseholdAccountsAfterContactUpdate();
         }
 
     }
@@ -267,7 +267,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     /**
      * @description Sets the primary contact on the account when needed and renames the household.
      */
-    private void processAccountsAfterInsert() {
+    private void processHouseholdAccountsAfterContactInsert() {
         Map<Id, Id> primaryContactByAccountId = new Map<Id, Id>();
         List<Id> householdIdsToRename = new List<Id>();
 
@@ -311,7 +311,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * move opportunities related to contacts changing accounts, update household accounts, rename household accounts
      * update account owners based on the change in contact owner
      */
-    private void processAccountsAfterUpdate() {
+    private void processHouseholdAccountsAfterContactUpdate() {
         List<Id> householdIdsToUpdate = new List<Id>();
         List<Id> householdIdsToRename = new List<Id>();
         List<Contact> oneToOneContactsToUpdate = new List<Contact>();
