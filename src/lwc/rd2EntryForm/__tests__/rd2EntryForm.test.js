@@ -403,8 +403,8 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             expect(mockGetIframeReply).toHaveBeenCalled();
-            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
-            validateIframeMessage(mockGetIframeReply.mock.calls[1], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(1);
+            validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_INDIVIDUAL_ACH_PARAMS);
 
             const EXPECTED_RECORD = {
                 "RecurringType__c": "Open",

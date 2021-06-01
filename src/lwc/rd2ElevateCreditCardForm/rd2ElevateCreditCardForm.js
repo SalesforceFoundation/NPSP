@@ -184,7 +184,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     shouldLoadInDisabledMode() {
-        return (this.isEditMode && !this.paymentMethodEdited() && !this.updatePaymentMode) && this.rd2RecordId;
+        if(this.updatePaymentMode) {
+            return false;
+        } else {
+            return !this.paymentMethodEdited() && this.rd2RecordId;
+        }
     }
 
     /***
