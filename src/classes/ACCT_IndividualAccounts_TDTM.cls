@@ -130,8 +130,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         this.dmlWrapper = new DmlWrapper();
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert ||
-                triggerAction == TDTM_Runnable.Action.AfterInsert) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert
+                || triggerAction == TDTM_Runnable.Action.AfterInsert) {
             isNewContactInsert = true;
         }
 
@@ -280,9 +280,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
             }
 
-            if ((!isNewContactInsertOperation() ||
-                    isNewContactInsertOperation() && isBeingAddedToAHousehold(contactRecord)) &&
-                    isHouseholdMember(contactRecord)) {
+            if ((!isNewContactInsertOperation()
+                    || isNewContactInsertOperation()
+                    && isBeingAddedToAHousehold(contactRecord))
+                    && isHouseholdMember(contactRecord)) {
                 householdIdsToRename.add(contactRecord.AccountId);
 
             }

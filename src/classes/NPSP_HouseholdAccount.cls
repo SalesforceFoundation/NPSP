@@ -82,9 +82,9 @@ public inherited sharing class NPSP_HouseholdAccount {
 
     public NPSP_HouseholdAccount(Contact con) {
         householdAccount = new Account();
-        householdAccount.Name = CAO_Constants.isHHAccountModel() ?
-                ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con) :
-                ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
+        householdAccount.Name = CAO_Constants.isHHAccountModel()
+                ? ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con)
+                : ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
         householdAccount.Number_of_Household_Members__c = 1;
         if (isAdvancedNamingEnabled()) {
             setHouseholdGreetings(con, householdAccount);
@@ -117,7 +117,9 @@ public inherited sharing class NPSP_HouseholdAccount {
         if (individualRecordTypeId != null) {
             householdAccount.put('RecordTypeID', individualRecordTypeId);
         }
-        householdAccount.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+        householdAccount.Type = CAO_Constants.isHHAccountModel()
+                ? CAO_Constants.HH_TYPE
+                : '';
         householdAccount.npe01__SYSTEMIsIndividual__c = true;
     }
 
