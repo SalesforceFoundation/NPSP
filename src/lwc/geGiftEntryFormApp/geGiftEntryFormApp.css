@@ -20,3 +20,7 @@
     vertical-align: middle;
     text-align: center;
 }
+
+.slds-card-body_extension {
+    min-height: var(--lwc-sizeSmall, 15rem);
+}

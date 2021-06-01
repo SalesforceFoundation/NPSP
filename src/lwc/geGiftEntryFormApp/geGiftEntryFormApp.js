@@ -63,6 +63,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     count;
     total;
     batch = {};
+    isLoading = true;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -89,6 +90,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
     }
