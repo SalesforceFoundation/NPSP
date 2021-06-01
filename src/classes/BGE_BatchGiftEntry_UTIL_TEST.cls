@@ -149,8 +149,9 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
         );
         GE_PaymentServices.setInstance(paymentServicesMock);
         Test.startTest();
-            List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields();
-            System.assert(!elevateFields.isEmpty(), 'Elevate fields should be returned for an Elevate customer.');
+        Id dummyId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields(dummyId);
+        System.assert(!elevateFields.isEmpty(), 'Elevate fields should be returned for an Elevate customer.');
         Test.stopTest();
     }
 
@@ -165,9 +166,10 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
         );
         GE_PaymentServices.setInstance(paymentServicesMock);
         Test.startTest();
-            List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields();
-            System.assert(elevateFields.isEmpty(), 'Elevate fields should not returned when the user is not an ' +
-                'Elevate customer.');
+        Id dummyId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields(dummyId);
+        System.assert(elevateFields.isEmpty(), 'Elevate fields should not returned when the user is not an ' +
+            'Elevate customer.');
         Test.stopTest();
     }
 
