@@ -74,13 +74,6 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions'
     { virtual: true }
 );
 
-jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
-    () => {
-        return { default: jest.fn() }
-    },
-    { virtual: true }
-);
-
 jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
     () => {
         return { default: jest.fn() }
