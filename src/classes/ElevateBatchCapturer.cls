@@ -35,81 +35,81 @@
 * @description Makes the callout to the Elevate endpoint for capturing
 * payments in Elevate Batches.
 */
-public without sharing class ElevateCaptureGroupCapturer implements Queueable, Database.AllowsCallouts {
+public without sharing class ElevateBatchCapturer implements Queueable, Database.AllowsCallouts {
 
     private Id giftBatchId;
-    @TestVisible private QueueableCaptureGroups queueableCaptureGroups;
-    @TestVisible private Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
-    @TestVisible GiftBatchService giftBatchService = new GiftBatchService();
-    private ElevateCaptureGroupService captureGroupService = new ElevateCaptureGroupService();
+    @TestVisible private queueableElevateBatches queueableElevateBatches;
+    @TestVisible private Map<String, String> failReasonByElevateBatchId = new Map<String, String>();
+    @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
+    @TestVisible private ElevateBatchService elevateBatchService = new ElevateBatchService();
 
-    public ElevateCaptureGroupCapturer(Id batchId, Set<String> capturableGroupIds) {
+    public ElevateBatchCapturer(Id batchId, Set<String> elevateBatchIds) {
         this.giftBatchId = batchId;
-        queueableCaptureGroups = new QueueableCaptureGroups(capturableGroupIds);
+        queueableElevateBatches = new queueableElevateBatches(elevateBatchIds);
     }
 
-    public ElevateCaptureGroupCapturer(Id batchId, QueueableCaptureGroups queueableCaptureGroups) {
+    public ElevateBatchCapturer(Id batchId, queueableElevateBatches queueableElevateBatches) {
         this.giftBatchId = batchId;
-        this.queueableCaptureGroups = queueableCaptureGroups;
+        this.queueableElevateBatches = queueableElevateBatches;
     }
 
     public void execute(QueueableContext context) {
-        captureGroups();
+        elevateBatches();
         if (hasGiftsThatFailedCapture()) {
             updatePendingGiftsWithFailure();
         }
         chainNextJob();
     }
 
-    private void captureGroups() {
-        for (String captureGroupId : queueableCaptureGroups.idsToCapture()) {
-            ElevateCaptureGroupResponse response = captureGroupService.capture(captureGroupId);
-            handleCaptureResponseFrom(captureGroupId, response);
+    private void elevateBatches() {
+        for (String elevateBatchId : queueableElevateBatches.idsToCapture()) {
+            ElevateBatchResponse response = elevateBatchService.capture(elevateBatchId);
+            handleCaptureResponseFrom(elevateBatchId, response);
         }
     }
 
-    private void handleCaptureResponseFrom(String captureGroupId, ElevateCaptureGroupResponse captureResponse) {
+    private void handleCaptureResponseFrom(String elevateBatchId, ElevateBatchResponse captureResponse) {
         if (captureResponse.isValidCaptureResponse() == false) {
-            failReasonByCaptureGroupId.put(captureGroupId, captureResponse.firstError());
+            failReasonByElevateBatchId.put(elevateBatchId, captureResponse.firstError());
         }
     }
 
     private Boolean hasGiftsThatFailedCapture() {
-        return failReasonByCaptureGroupId.keySet().size() > 0;
+        return failReasonByElevateBatchId.keySet().size() > 0;
     }
 
     private void updatePendingGiftsWithFailure() {
-        giftBatchService.giftsFailedCaptureFor(giftBatchId, failReasonByCaptureGroupId);
+        giftBatchService.giftsFailedCaptureFor(giftBatchId, failReasonByElevateBatchId);
     }
 
     private void chainNextJob() {
-        if (queueableCaptureGroups.hasGroupsToCapture()) {
-            ElevateCaptureGroupCapturer capturer =
-                new ElevateCaptureGroupCapturer(giftBatchId, queueableCaptureGroups);
+        if (queueableElevateBatches.hasGroupsToCapture()) {
+            ElevateBatchCapturer capturer =
+                new ElevateBatchCapturer(giftBatchId, queueableElevateBatches);
             if (!Test.isRunningTest()) { System.enqueueJob(capturer); }
         }
     }
 
-    private class QueueableCaptureGroups {
-        private List<String> captureGroupIds;
-        private List<List<String>> partitionedGroupIds;
+    private class queueableElevateBatches {
+        private List<String> elevateBatchIds;
+        private List<List<String>> partitionedElevateBatchIds;
         private final Integer MAX_COUNT = 50;
         private Integer currentPartitionIndex = 0;
 
-        public QueueableCaptureGroups(Set<String> captureGroupIds) {
-            this.captureGroupIds = new List<String>();
-            this.captureGroupIds.addAll(captureGroupIds);
-            partitionedGroupIds = partitionCaptureGroupIds(this.captureGroupIds);
+        public queueableElevateBatches(Set<String> elevateBatchIds) {
+            this.elevateBatchIds = new List<String>();
+            this.elevateBatchIds.addAll(elevateBatchIds);
+            partitionedElevateBatchIds = partitionElevateBatchIds(this.elevateBatchIds);
         }
 
         public List<String> idsToCapture() {
-            List<String> currentIdsToCapture = partitionedGroupIds[currentPartitionIndex];
+            List<String> currentIdsToCapture = partitionedElevateBatchIds[currentPartitionIndex];
             currentPartitionIndex++;
             return currentIdsToCapture;
         }
 
         public Integer partitionSize() {
-            return partitionedGroupIds.size();
+            return partitionedElevateBatchIds.size();
         }
 
         public Integer currentPartitionIndex() {
@@ -120,26 +120,26 @@ public without sharing class ElevateCaptureGroupCapturer implements Queueable, D
             return partitionSize() > currentPartitionIndex();
         }
 
-        private List<List<String>> partitionCaptureGroupIds(List<String> captureGroupIds) {
-            List<List<String>> partitionedCaptureGroupIds = new List<List<String>>();
+        private List<List<String>> partitionElevateBatchIds(List<String> elevateBatchIds) {
+            List<List<String>> partitionedElevateBatchIds = new List<List<String>>();
             List<String> currentList = new List<String>();
             Integer currentCount = 0;
 
-            for (Integer i = 0; i < captureGroupIds.size(); i++) {
-                currentList.add(captureGroupIds[i]);
+            for (Integer i = 0; i < elevateBatchIds.size(); i++) {
+                currentList.add(elevateBatchIds[i]);
                 currentCount++;
 
                 Boolean isAtPartitionLimit = currentCount == MAX_COUNT;
-                Boolean isLastIdToAdd = (i == captureGroupIds.size() - 1 && currentList.size() > 0);
+                Boolean isLastIdToAdd = (i == elevateBatchIds.size() - 1 && currentList.size() > 0);
 
                 if (isAtPartitionLimit || isLastIdToAdd) {
-                    partitionedCaptureGroupIds.add(currentList);
+                    partitionedElevateBatchIds.add(currentList);
                     currentCount = 0;
                     currentList = new List<String>();
                 }
             }
 
-            return partitionedCaptureGroupIds;
+            return partitionedElevateBatchIds;
         }
     }
 }

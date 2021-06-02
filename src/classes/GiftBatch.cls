@@ -68,12 +68,12 @@ public inherited sharing class GiftBatch {
     }
 
     @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
+    private ElevateBatchService elevateBatchService {
         get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
             }
-            return captureGroupService;
+            return elevateBatchService;
         }
         set;
     }
@@ -88,13 +88,13 @@ public inherited sharing class GiftBatch {
     }
 
     public void captureAuthorizedGifts() {
-        captureGroupService.enqueuePaymentCaptureJobFor(
-            batchId, gifts?.capturableGroupIds());
+        elevateBatchService.enqueuePaymentCaptureJobFor(
+            batchId, gifts?.elevateBatchIds());
         gifts.authorizedToPaymentProcessingStatus();
     }
 
-    public void failGiftsWithReason(Map<String, String> failReasonByCaptureGroupId) {
-        gifts.failGiftsByCaptureIdWithReason(failReasonByCaptureGroupId);
+    public void failGiftsWithReason(Map<String, String> failReasonByElevateBatchId) {
+        gifts.failGiftsByElevateBatchIdWithReason(failReasonByElevateBatchId);
     }
 
     public void updateRecords() {

@@ -40,7 +40,7 @@ private class Gifts_TEST {
 
         Gifts gifts = new Gifts(dummyGifts);
         System.assertEquals(dummyGifts.size(), gifts.dataImports?.size());
-        System.assertEquals(2, gifts.capturableGroupIds()?.size());
+        System.assertEquals(2, gifts.elevateBatchIds()?.size());
     }
 
     @isTest static void shouldReturnCorrectNumberOfAuthorizedToPaymentProcessingGifts() {
@@ -58,13 +58,13 @@ private class Gifts_TEST {
 
     @isTest static void shouldReturnCorrectNumberOfGiftsWithFailReason() {
         final Integer numberOfFailedGifts = 15;
-        final String captureGroupId = 'DUMMY_ELEVATE_ID_1';
+        final String elevateBatchId = 'DUMMY_ELEVATE_ID_1';
 
         List<DataImport__c> dummyAuthorizedGifts = buildGifts(
-            numberOfFailedGifts, ElevateTransactionStatus.AUTHORIZED.name(), captureGroupId);
+            numberOfFailedGifts, ElevateTransactionStatus.AUTHORIZED.name(), elevateBatchId);
 
         Gifts gifts = new Gifts(dummyAuthorizedGifts);
-        gifts.failGiftsByCaptureIdWithReason(buildFailReasonByCaptureGroupId(numberOfFailedGifts, captureGroupId));
+        gifts.failGiftsByElevateBatchIdWithReason(buildFailReasonByElevateBatchId(numberOfFailedGifts, elevateBatchId));
 
         System.assertEquals(numberOfFailedGifts, gifts.giftsToUpdate.size());
         for (DataImport__c gift : gifts.giftsToUpdate) {
@@ -95,11 +95,11 @@ private class Gifts_TEST {
         return dummyAuthorizedGifts;
     }
 
-    private static Map<String, String> buildFailReasonByCaptureGroupId(Integer numberOfGifts, String captureGroupId) {
-        Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+    private static Map<String, String> buildFailReasonByElevateBatchId(Integer numberOfGifts, String elevateBatchId) {
+        Map<String, String> failReasonByElevateBatchId = new Map<String, String>();
         for (Integer i = 0; i < numberOfGifts; i++) {
-            failReasonByCaptureGroupId.put(captureGroupId, 'DUMMY FAIL REASON');
+            failReasonByElevateBatchId.put(elevateBatchId, 'DUMMY FAIL REASON');
         }
-        return failReasonByCaptureGroupId;
+        return failReasonByElevateBatchId;
     }
 }

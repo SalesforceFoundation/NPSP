@@ -8,7 +8,7 @@ import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServic
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
-import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
+import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
@@ -68,7 +68,7 @@ import {
     showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateCaptureGroup from './elevateCaptureGroup';
+import ElevateBatch from './elevateBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -169,7 +169,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
-    latestCaptureGroupId = null;
+    latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
 
@@ -341,7 +341,7 @@ export default class GeFormRenderer extends LightningElement{
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
                 apiNameFor(PAYMENT_STATUS),
-                apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID),
+                apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID),
                 apiNameFor(PAYMENT_ELEVATE_ID),
                 apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID),
                 apiNameFor(PAYMENT_LAST_4),
@@ -742,15 +742,15 @@ export default class GeFormRenderer extends LightningElement{
         if (tokenizedGift) {
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
-
-                const currentCaptureGroup = new ElevateCaptureGroup();
-                const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+    
+                const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
+                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
                 if (isAuthorized) {
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: currentCaptureGroup.elevateBatchId,
+                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: currentElevateBatch.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
