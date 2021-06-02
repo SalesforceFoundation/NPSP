@@ -48,6 +48,15 @@ Review Donation And Update Opportunity For Batch Gift
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and update a payment link is active and update opportunity is disabled
     Go To Page                           Landing                       GE_Gift_Entry
+    Current Page Should Be               Landing                       GE_Gift_Entry
+    Click Link                           Templates
+    Select Template Action               Default Gift Entry Template   Edit
+    Current Page Should Be               Template                      GE_Gift_Entry
+    Click Gift Entry Button              Next: Form Fields
+    Click Gift Entry Button              Next: Batch Settings
+    Add Batch Table Columns              Donor Name     Donation Name       Status      Failure Information    Donation Date   Donation Amount
+    Click Gift Entry Button              Save & Close
+    Current Page Should Be               Landing                       GE_Gift_Entry
     Create Gift Entry Batch              Default Gift Entry Template   ${CONTACT}[Name]Automation Batch
     Current Page Should Be               Form                          Gift Entry
     ${batch_id} =                        Save Current Record ID For Deletion     ${NS}DataImportBatch__c

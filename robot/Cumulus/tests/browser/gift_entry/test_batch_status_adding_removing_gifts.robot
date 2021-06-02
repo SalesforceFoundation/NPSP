@@ -104,6 +104,7 @@ Test Batch Status Adding Removig Gifts
 
     #Scroll to the top of the page, add gift for contact associated with org account
     Scroll Page To Location           0      0
+    Click Element                    npsp:gift_entry.collapse_header
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=${CONTACT2}[Name]
