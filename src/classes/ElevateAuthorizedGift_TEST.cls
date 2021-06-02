@@ -62,7 +62,7 @@ public with sharing class ElevateAuthorizedGift_TEST {
         System.assertEquals(DUMMY_ID, authorizedGift.paymentId());
         System.assertEquals(DUMMY_ID, authorizedGift.gatewayTransactionId());
         System.assertEquals(DUMMY_ID, authorizedGift.originalTransactionId());
-        System.assertEquals(DUMMY_ID, authorizedGift.groupId());
+        System.assertEquals(DUMMY_ID, authorizedGift.elevateBatchId());
         System.assertEquals(System.today().addDays(1), authorizedGift.authExpiration());
         System.assertEquals(DUMMY_STATUS, authorizedGift.status());
         System.assertEquals(DUMMY_EXPIRATION_YEAR, authorizedGift.cardExpirationYear());

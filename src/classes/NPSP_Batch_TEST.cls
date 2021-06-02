@@ -30,7 +30,7 @@
 
 @IsTest
 private class NPSP_Batch_TEST {
-    @isTest static void chargeCreditCardCaptureGroupShouldReturnSuccessResponse() {
+    @isTest static void chargeCreditCardElevateBatchShouldReturnSuccessResponse() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         AuraHandledException auraException;
         List<DataImport__c> dataImports = new List<DataImport__c>{
@@ -43,7 +43,7 @@ private class NPSP_Batch_TEST {
         try {
             NPSP_Batch batch = new NPSP_Batch(new Gifts(dataImports));
             String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
-            UTIL_Http_TEST.mockChargeCaptureGroup(validResponse);
+            UTIL_Http_TEST.mockChargeElevateBatch(validResponse);
             batch.processPayments();
         } catch (AuraHandledException ex) {
             auraException = ex;
