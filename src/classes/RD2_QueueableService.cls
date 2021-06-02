@@ -104,16 +104,16 @@ public class RD2_QueueableService {
             alreadyEnqueuedIds = new Set<Id>();
         }
 
-        Set<Id> toProcess = new Set<Id>();
+        Set<Id> rdIdsToProcess = new Set<Id>();
 
         for(Id rdId : rdIds) {
             if(!alreadyEnqueuedIds.contains(rdId)) {
-                toProcess.add(rdId);
+                rdIdsToProcess.add(rdId);
                 alreadyEnqueuedIds.add(rdId);
             }
         }
 
-        return toProcess;
+        return rdIdsToProcess;
     }
 
     /**
