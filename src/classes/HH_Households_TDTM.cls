@@ -74,6 +74,7 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 isNewContactInsert = false;
             }
             when BeforeUpdate {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
                 Contacts contacts = new Contacts(newlist, oldlist);
                 contacts.onBeforeUpdate();
             }

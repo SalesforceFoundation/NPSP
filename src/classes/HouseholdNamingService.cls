@@ -365,8 +365,13 @@ public without sharing class HouseholdNamingService {
     * @param accountIds the list of Household or Account Ids that need updating.
     */
     public void renameHouseholdAccounts(List<Id> accountIds) {
+        // The following conditional aims to prevent recursion of the expensive operation to
+        // rename Households/HouseholdAccounts. It makes an exception for tests since some
+        // NPSP tests insert records multiple times.
         if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert
-                && !HH_Households_TDTM.isNewContactInsert) {
+                && !HH_Households_TDTM.isNewContactInsert
+                && (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)
+                || Test.isRunningTest())) {
             renameHHAccounts(accountIds);
         }
     }

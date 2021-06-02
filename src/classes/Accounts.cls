@@ -80,7 +80,8 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (settings.isAdvancedHouseholdNaming()) {
+        if (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)
+                && settings.isAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdate();
         }
     }

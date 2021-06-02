@@ -65,6 +65,7 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
                 }
             }
             when AfterUpdate {
+                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
                 Accounts accounts = new Accounts(listNew, listOld);
                 accounts.onAfterUpdate();
             }
