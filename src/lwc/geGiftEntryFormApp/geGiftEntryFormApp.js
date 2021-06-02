@@ -282,20 +282,29 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             } catch (error) {
                 handleError(error);
             } finally {
-                this._isBatchProcessing = true;
-                if (this.shouldDisplayExpiredAuthorizationWarning()) {
-                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
-                        async () => {
-                            await this.processBatch();
-                        } 
-                    );
-                } else {
-                    await this.processBatch();
-                }
+                await this.startBatchProcessing();
             }
             return;
         }
         this.handleBatchProcessingErrors();
+    }
+
+    async startBatchProcessing() {
+        this._isBatchProcessing = true;
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
+            this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                this.processBatchAndCloseAuthorizationWarningModal()
+            );
+            return;
+        }
+        await this.processBatch();
+    }
+
+    processBatchAndCloseAuthorizationWarningModal() {
+        return async () => {
+            await this.processBatch();
+            this.dispatchEvent(new CustomEvent('closemodal'));
+        };
     }
 
     handleBatchProcessingErrors() {
@@ -352,9 +361,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async refreshBatchTotals() {
-        if (this.isElevateCustomer) {
-            this._hasDisplayedExpiredAuthorizationWarning = false;
-        }
+        this._hasDisplayedExpiredAuthorizationWarning = false;
         this.batchTotals = await BatchTotals(this.batchId);
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
     }
