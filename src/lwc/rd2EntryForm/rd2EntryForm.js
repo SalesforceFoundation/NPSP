@@ -235,16 +235,17 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleElevateWidgetDisplayState(event) {
-
-        const shouldResetPaymentMethodInEditMode = this.isEdit
-            && event.isDisabled
-            && this._paymentMethod !== this.existingPaymentMethod
-            && this.isCommitmentEdit;
-
-        if(shouldResetPaymentMethodInEditMode) {
+        if(this.shouldResetPaymentMethodOnStateChange(event)) {
             this.resetPaymentMethod();
         }
         this.hasUserDisabledElevateWidget = event.isDisabled;
+    }
+
+    shouldResetPaymentMethodOnStateChange(event) {
+        return event.isDisabled
+            && this.isEdit
+            && this._paymentMethod !== this.existingPaymentMethod
+            && this.isCommitmentEdit;
     }
 
     /***
