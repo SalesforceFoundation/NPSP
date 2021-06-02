@@ -113,8 +113,6 @@ public inherited sharing class RD2_QueryService {
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
-        String soql = constructRecurringDonationsWithRelatedRecordsQuery(rdIds, startDate, false);
-
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
