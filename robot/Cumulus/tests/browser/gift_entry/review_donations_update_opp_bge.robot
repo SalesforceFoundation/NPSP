@@ -87,9 +87,7 @@ Review Donation And Update Opportunity For Batch Gift
     ...                                  Donation Date=${UI_DATE}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            Completed
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${CONTACT}[Name]Automation Batch
     #verify opportunity record is updated with new amount and date and is closed won
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=80.0
