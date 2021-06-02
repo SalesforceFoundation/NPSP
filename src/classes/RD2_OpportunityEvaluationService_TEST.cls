@@ -2041,9 +2041,8 @@ private class RD2_OpportunityEvaluationService_TEST {
             'No installment should be created with close date during the pause');
     }
 
-       /**
-    * @description Verifies that when RD is entering the paused,
-    * the next installment will be created with close date after the pause
+    /**
+    * @description Verifies that only 1 new Pledged should be created when RD and Opp are updated together
     */
     @isTest
     private static void shouldOnlyCreateOneNewPledgeOpportunityWhenInstallmentAndRDUpdateInOneTransaction() {
