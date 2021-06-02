@@ -16,6 +16,8 @@ import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessag
 import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
+const DONOR_TYPE_ACCOUNT = 'Account';
+const DONOR_TYPE_CONTACT = 'Contact';
 
 class Rd2Service {
 
@@ -79,9 +81,9 @@ class Rd2Service {
     }
 
     accountHolderTypeFor(donorType) {
-        if(donorType === 'Contact') {
+        if(donorType === DONOR_TYPE_CONTACT) {
             return ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if(donorType === 'Account') {
+        } else if(donorType === DONOR_TYPE_ACCOUNT) {
             return ACCOUNT_HOLDER_TYPES.BUSINESS;
         }
     }
