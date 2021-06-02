@@ -35,8 +35,12 @@
 *
 */
 public class RD2_QueueableService {
+    /**
+    * @desciprtion A set of Recurring Donation Id to keep track of which RD has been queue up to process in a single transaction
+    * to prevent race condition.
+    */
     @TestVisible
-    private static Set<Id> alreadyProcessedIds;
+    private static Set<Id> alreadyEnqueueedIds;
     /**
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
@@ -70,7 +74,7 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
-        Set<Id> toProcess = removeAlreadyProcessedRecurringDonations(rdIds);
+        Set<Id> toProcess = removeAlreadyEnqueuedRecurringDonations(rdIds);
 
         if (toProcess.size() == 0) {
             return;
@@ -86,17 +90,26 @@ public class RD2_QueueableService {
         }
     }
 
-    private static Set<Id> removeAlreadyProcessedRecurringDonations(Set<Id> rdIds) {
-        if(alreadyProcessedIds == null) {
-            alreadyProcessedIds = new Set<Id>();
+    /**
+    * @description Remove already Recurring Donation Ids that are already queue up to be evaluate to prevent being queue
+    * up the second time. Skip the removal if the process is synchronize since there will not be a potential race condition.
+    * @return Set<Id> Recurring Donation Ids 
+    */
+    private static Set<Id> removeAlreadyEnqueuedRecurringDonations(Set<Id> rdIds) {
+        if (Limits.getQueueableJobs() >= Limits.getLimitQueueableJobs()) {
+            return rdIds;
+        }
+
+        if (alreadyEnqueueedIds == null) {
+            alreadyEnqueueedIds = new Set<Id>();
         }
 
         Set<Id> toProcess = new Set<Id>();
 
         for(Id rdId : rdIds) {
-            if(!alreadyProcessedIds.contains(rdId)) {
+            if(!alreadyEnqueueedIds.contains(rdId)) {
                 toProcess.add(rdId);
-                alreadyProcessedIds.add(rdId);
+                alreadyEnqueueedIds.add(rdId);
             }
         }
 
