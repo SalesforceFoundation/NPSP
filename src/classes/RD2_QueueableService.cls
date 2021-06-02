@@ -35,6 +35,8 @@
 *
 */
 public class RD2_QueueableService {
+    @TestVisible
+    private static Set<Id> alreadyProcessedIds;
     /**
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
@@ -68,7 +70,13 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
-        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged);
+        Set<Id> toProcess = removeAlreadyProcessedRecurringDonations(rdIds);
+
+        if (toProcess.size() == 0) {
+            return;
+        }
+
+        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
@@ -76,6 +84,23 @@ public class RD2_QueueableService {
         } else {
             service.executeOppEvaluationService();
         }
+    }
+
+    private static Set<Id> removeAlreadyProcessedRecurringDonations(Set<Id> rdIds) {
+        if(alreadyProcessedIds == null) {
+            alreadyProcessedIds = new Set<Id>();
+        }
+
+        Set<Id> toProcess = new Set<Id>();
+
+        for(Id rdId : rdIds) {
+            if(!alreadyProcessedIds.contains(rdId)) {
+                toProcess.add(rdId);
+                alreadyProcessedIds.add(rdId);
+            }
+        }
+
+        return toProcess;
     }
 
     /**
@@ -136,7 +161,6 @@ public class RD2_QueueableService {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
                 .withScheduleChanged(rdIdsWhereScheduleChanged)
-                .lockRecurringDonations()
                 .evaluateOpportunities();
         }
     }

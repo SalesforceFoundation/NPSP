@@ -103,29 +103,6 @@ public inherited sharing class RD2_QueryService {
     };
 
     /**
-     * @description Populate and lock the collection of Recurring Donation records, querying ALL fields,
-     * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
-     * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
-     * query excludes Large Text Area fields larger than 4KB. These would only be custom fields.
-     * The query will perform 1 retry before throwing an error
-     * @param rdIds Recurring Donation Ids
-     * @param startDate offset by the Next Donation Date match days before the year start date
-     *      so past Opportunities matching future projected installments are returned.
-     * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
-     */
-    public List<npe03__Recurring_Donation__c> getLockRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
-        String soql = constructRecurringDonationsWithRelatedRecordsQuery(rdIds, startDate, true);
-
-        List<npe03__Recurring_Donation__c> recurringDonations;
-        try {
-            recurringDonations = Database.query(soql);
-        } catch (QueryException ex) {
-            recurringDonations = Database.query(soql);
-        }
-        return recurringDonations;
-    }
-
-    /**
      * @description Populate the collection of Recurring Donation records, querying ALL fields,
      * with the related Installment Opportunities and Active Schedule Records. Due to a core KI (W-2503825)
      * this query needs to exclude CLOB fields. Since there is no pure definition of that for a Describe, the
@@ -138,19 +115,6 @@ public inherited sharing class RD2_QueryService {
     public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
         String soql = constructRecurringDonationsWithRelatedRecordsQuery(rdIds, startDate, false);
 
-        return Database.query(soql);
-    }
-
-    /**
-     * @description Construct the query String of the Recurring Donations with ALL fields, related Installments
-     * and Active Schedule Records.
-     * @param rdIds Recurring Donation Ids
-     * @param startDate offset by the Next Donation Date match days before the year start date
-     *      so past Opportunities matching future projected installments are returned.
-     * @param lockRecords determine if the query should be lock for the specific context
-     * @return String The soql query string of the Recurring Donations with related installment Opportunities and active Schedules
-     */
-    private String constructRecurringDonationsWithRelatedRecordsQuery(Set<Id> rdIds, Date startDate, Boolean lockRecords) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
@@ -163,16 +127,13 @@ public inherited sharing class RD2_QueryService {
             queryFields.add('CurrencyIsoCode');
         }
 
-        UTIL_Query queryConstructor = new UTIL_Query()
+        String soql = = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(queryFields)
-            .withWhere('Id IN :rdIds');
+            .withWhere('Id IN :rdIds')
+            .build();
 
-        if (lockRecords) {
-            queryConstructor.withForUpdate();
-        }
-
-        return queryConstructor.build();
+        return Database.query(soql);
     }
 
     /**
