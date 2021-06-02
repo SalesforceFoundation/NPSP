@@ -1,68 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de vérification d&apos;adresse - DÉPRÉCIÉ</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de vérification d&apos;adresse - DÉPRÉCIÉ</value>
-    </caseValues>
-    <fields>
-        <help>URL utilisée pour la vérification d’adresse.</help>
-        <label>Point de term. de vérif. d’adr.-DÉPRÉCIÉ</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>L’ID d’authentification de votre paire de clés secrètes.</help>
-        <label>ID d’authentification-DÉPRÉCIÉ</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>Le jeton d’authentification de votre paire de clés secrètes.</help>
-        <label>Jeton d’authentification-DÉPRÉCIÉ</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Si cette option est activée, les adresses modifiées seront mises à jour automatiquement avec la réponse du service (lorsqu’un résultat vérifié existe).</help>
-        <label>Mise à jour autom. des adresses-DÉPRÉCIÉ</label>
-        <name>Auto_Update_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Classe Salesforce responsable de contacter l’API SmartyStreets et de vérifier les adresses.</help>
-        <label>Classe-DÉPRÉCIÉ</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Si cette option est activée, toute adresse de compte aux États-Unis marquée comme non livrable par le service sera automatiquement effacée. (Vous pouvez examiner l’entrée non valide dans l’enregistrement d’adresse.)</help>
-        <label>Vider les adresses non valides-DÉPRÉCIÉ</label>
-        <name>Clear_Invalid_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Active la vérification automatique des nouvelles adresses.</help>
-        <label>Activer la vérification autom.-DÉPRÉCIÉ</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Marque les adresses ambiguës comme non valides, lorsque l’API renvoie plus d’une adresse. Si cette option n’est pas sélectionnée, Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
-        <label>Rejeter les adresses ambiguës-DÉPRÉCIÉ</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Délai d’expiration d’appel en secondes</help>
-        <label>Délai d&apos;expiration-DÉPRÉCIÉ</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Indique si vous utilisez le service de vérification d’adresse SmartyStreets.</help>
-        <label>Utilisation de SmartyStreets-DÉPRÉCIÉ</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>URL utilisée pour la vérification de code postal.</help>
-        <label>Point term. vérif. code postal-DÉPRÉCIÉ</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>URL utilisée pour la vérification d’adresse.</help>
+    <label>Point de term. de vérif. d’adr.-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>L’ID d’authentification de votre paire de clés secrètes.</help>
+    <label>ID d’authentification-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>Le jeton d’authentification de votre paire de clés secrètes.</help>
+    <label>Jeton d’authentification-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Auto_Update_Addresses__c</name>
+    <help>Si cette option est activée, les adresses modifiées seront mises à jour automatiquement avec la réponse du service (lorsqu’un résultat vérifié existe).</help>
+    <label>Mise à jour autom. des adresses-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Classe Salesforce responsable de contacter l’API SmartyStreets et de vérifier les adresses.</help>
+    <label>Classe-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Clear_Invalid_Addresses__c</name>
+    <help>Si cette option est activée, toute adresse de compte aux États-Unis marquée comme non livrable par le service sera automatiquement effacée. (Vous pouvez examiner l’entrée non valide dans l’enregistrement d’adresse.)</help>
+    <label>Vider les adresses non valides-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>Active la vérification automatique des nouvelles adresses.</help>
+    <label>Activer la vérification autom.-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Marque les adresses ambiguës comme non valides, lorsque l’API renvoie plus d’une adresse. Si cette option n’est pas sélectionnée, Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
+    <label>Rejeter les adresses ambiguës-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>Délai d’expiration d’appel en secondes</help>
+    <label>Délai d'expiration-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>Indique si vous utilisez le service de vérification d’adresse SmartyStreets.</help>
+    <label>Utilisation de SmartyStreets-DÉPRÉCIÉ</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>URL utilisée pour la vérification de code postal.</help>
+    <label>Point term. vérif. code postal-DÉPRÉCIÉ</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de vérification d'adresse - DÉPRÉCIÉ</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de vérification d'adresse - DÉPRÉCIÉ</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de nomenclatura de hogares</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de nomenclatura de hogares</value>
-    </caseValues>
-    <fields>
-        <help>Especifica la cantidad de contactos a listar explícitamente en un nombre. Después de esa cantidad, se utilizará la sustitución de nombres.</help>
-        <label>Recuento de sustituciones de contactos</label>
-        <name>Contact_Overrun_Count__c</name>
-    </fields>
-    <fields>
-        <help>El formato a usar para Saludo formal de hogar.</help>
-        <label>Formato de saludo formal</label>
-        <name>Formal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>El formato a usar para el nombre del hogar.</help>
-        <label>Formato de nombre de hogar</label>
-        <name>Household_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Nombre de la clase que implementa la interfaz de HH_Inaming para usar para la asignación de nombres de hogares</help>
-        <label>Clase de implementación</label>
-        <name>Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>El formato a usar para Saludo informal de hogar.</help>
-        <label>Formato de saludo informal</label>
-        <name>Informal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>La palabra a utilizar para conectar pares en un nombre. Por ejemplo, Juan y María, o Juan &amp; María.</help>
-        <label>Conector de nombres</label>
-        <name>Name_Connector__c</name>
-    </fields>
-    <fields>
-        <help>La cadena a utilizar cuando se sustituye una lista larga de nombres.</help>
-        <label>Sustitución de nombres</label>
-        <name>Name_Overrun__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Contact_Overrun_Count__c</name>
+    <help>Especifica la cantidad de contactos a listar explícitamente en un nombre. Después de esa cantidad, se utilizará la sustitución de nombres.</help>
+    <label>Recuento de sustituciones de contactos</label>
+  </fields>
+  <fields>
+    <name>Formal_Greeting_Format__c</name>
+    <help>El formato a usar para Saludo formal de hogar.</help>
+    <label>Formato de saludo formal</label>
+  </fields>
+  <fields>
+    <name>Household_Name_Format__c</name>
+    <help>El formato a usar para el nombre del hogar.</help>
+    <label>Formato de nombre de hogar</label>
+  </fields>
+  <fields>
+    <name>Implementing_Class__c</name>
+    <help>Nombre de la clase que implementa la interfaz de HH_Inaming para usar para la asignación de nombres de hogares</help>
+    <label>Clase de implementación</label>
+  </fields>
+  <fields>
+    <name>Informal_Greeting_Format__c</name>
+    <help>El formato a usar para Saludo informal de hogar.</help>
+    <label>Formato de saludo informal</label>
+  </fields>
+  <fields>
+    <name>Name_Connector__c</name>
+    <help>La palabra a utilizar para conectar pares en un nombre. Por ejemplo, Juan y María, o Juan &amp; María.</help>
+    <label>Conector de nombres</label>
+  </fields>
+  <fields>
+    <name>Name_Overrun__c</name>
+    <help>La cadena a utilizar cuando se sustituye una lista larga de nombres.</help>
+    <label>Sustitución de nombres</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de nomenclatura de hogares</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de nomenclatura de hogares</value>
+  </caseValues>
 </CustomObjectTranslation>

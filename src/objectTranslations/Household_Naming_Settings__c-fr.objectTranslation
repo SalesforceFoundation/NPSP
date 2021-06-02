@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de nommage de foyer</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de nommage de foyer</value>
-    </caseValues>
-    <fields>
-        <help>Indique le nombre de contacts à afficher explicitement dans un nom. Après ce montant, le dépassement de nom sera utilisé.</help>
-        <label>Compte de dépassement de contact</label>
-        <name>Contact_Overrun_Count__c</name>
-    </fields>
-    <fields>
-        <help>Le format à utiliser pour la salutation formelle du foyer.</help>
-        <label>Format de salutation formelle</label>
-        <name>Formal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>Le format à utiliser pour le nom du foyer.</help>
-        <label>Format de nom du foyer</label>
-        <name>Household_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d’une classe implémentant l’interface HH_INaming à utiliser pour la dénomination du foyer.</help>
-        <label>Classe d’implémentation</label>
-        <name>Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Le format à utiliser pour la salutation informelle du foyer.</help>
-        <label>Format de salutation informelle</label>
-        <name>Informal_Greeting_Format__c</name>
-    </fields>
-    <fields>
-        <help>La chaîne de caractères à utiliser pour connecter des paires dans un nom. Par exemple, Jean &amp; Jeanne, ou Jean et Jeanne.</help>
-        <label>Connecteur de nom</label>
-        <name>Name_Connector__c</name>
-    </fields>
-    <fields>
-        <help>La chaîne de caractères à utiliser pour le remplacement de longues listes de noms.</help>
-        <label>Dépassement de nom</label>
-        <name>Name_Overrun__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Contact_Overrun_Count__c</name>
+    <help>Indique le nombre de contacts à afficher explicitement dans un nom. Après ce montant, le dépassement de nom sera utilisé.</help>
+    <label>Compte de dépassement de contact</label>
+  </fields>
+  <fields>
+    <name>Formal_Greeting_Format__c</name>
+    <help>Le format à utiliser pour la salutation formelle du foyer.</help>
+    <label>Format de salutation formelle</label>
+  </fields>
+  <fields>
+    <name>Household_Name_Format__c</name>
+    <help>Le format à utiliser pour le nom du foyer.</help>
+    <label>Format de nom du foyer</label>
+  </fields>
+  <fields>
+    <name>Implementing_Class__c</name>
+    <help>Le nom d’une classe implémentant l’interface HH_INaming à utiliser pour la dénomination du foyer.</help>
+    <label>Classe d’implémentation</label>
+  </fields>
+  <fields>
+    <name>Informal_Greeting_Format__c</name>
+    <help>Le format à utiliser pour la salutation informelle du foyer.</help>
+    <label>Format de salutation informelle</label>
+  </fields>
+  <fields>
+    <name>Name_Connector__c</name>
+    <help>La chaîne de caractères à utiliser pour connecter des paires dans un nom. Par exemple, Jean &amp; Jeanne, ou Jean et Jeanne.</help>
+    <label>Connecteur de nom</label>
+  </fields>
+  <fields>
+    <name>Name_Overrun__c</name>
+    <help>La chaîne de caractères à utiliser pour le remplacement de longues listes de noms.</help>
+    <label>Dépassement de nom</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de nommage de foyer</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de nommage de foyer</value>
+  </caseValues>
 </CustomObjectTranslation>

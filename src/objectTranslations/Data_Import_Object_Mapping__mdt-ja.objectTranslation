@@ -1,80 +1,80 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポートオブジェクトの対応付け</value>
-    </caseValues>
-    <fields>
-        <help>カスタム Apex ロジックを使用してこのオブジェクトの項目を対応付ける必要がある場合、BDI_ObjectMappingLogic クラスを拡張し、populateObject メソッドを上書きするクラスの名前 (必要に応じて名前空間を含める) でこの項目を入力する必要があります。</help>
-        <label>カスタム対応付けロジッククラス</label>
-        <name>Custom_Mapping_Logic_Class__c</name>
-    </fields>
-    <fields>
-        <help>このレコードが含まれるデータインポートオブジェクトグループ。</help>
-        <label>データインポートオブジェクトの対応付けセット</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>データインポートオブジェクトの対応付け</relationshipLabel>
-    </fields>
-    <fields>
-        <help>インポートが成功したときにインポートされたレコードの ID が配置される NPSP データインポートオブジェクトの項目 API 参照名。これは、コードでこのレコードがインポートまたは照合されたかどうかを検証する場所でもあります。</help>
-        <label>インポートされたレコードの項目名</label>
-        <name>Imported_Record_Field_Name__c</name>
-    </fields>
-    <fields>
-        <help>NPSP データインポートレコードのインポートの成功または失敗が記録される項目 API 参照名。</help>
-        <label>インポートされたレコードの状況項目名</label>
-        <name>Imported_Record_Status_Field_Name__c</name>
-    </fields>
-    <fields>
-        <label>削除済み</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>このデータインポートオブジェクトグループのベースとなるオブジェクトの従来のデータインポートオブジェクト名。</help>
-        <label>従来のデータインポートオブジェクト名</label>
-        <name>Legacy_Data_Import_Object_Name__c</name>
-    </fields>
-    <fields>
-        <help>このオブジェクトグループの対象オブジェクトの API 参照名。</help>
-        <label>オブジェクト API 参照名</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>このレコード (親または子) を作成する前に存在している必要のあるデータインポートオブジェクトグループレコード。</help>
-        <label>前提要素</label>
-        <name>Predecessor__c</name>
-    </fields>
-    <fields>
-        <help>このオブジェクトグループが前提要素の子である場合、この項目で親を参照する必要があります。このオブジェクトグループが前提要素の親である場合、この項目が子レコードの参照項目になっている必要があります。</help>
-        <label>リレーション項目</label>
-        <name>Relationship_Field__c</name>
-    </fields>
-    <fields>
-        <help>これは、このオブジェクトが前提要素の親または子であることを示します。</help>
-        <label>前提要素とのリレーション</label>
-        <name>Relationship_To_Predecessor__c</name>
-        <picklistValues>
-            <masterLabel>Child</masterLabel>
-            <translation>子ども</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Predecessor</masterLabel>
-            <translation>前提要素なし</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Parent</masterLabel>
-            <translation>親</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>カスタムオブジェクトリレーションの詳細</label>
-            <section>Custom Object Relationship Details</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Custom_Mapping_Logic_Class__c</name>
+    <help>カスタム Apex ロジックを使用してこのオブジェクトの項目を対応付ける必要がある場合、BDI_ObjectMappingLogic クラスを拡張し、populateObject メソッドを上書きするクラスの名前 (必要に応じて名前空間を含める) でこの項目を入力する必要があります。</help>
+    <label>カスタム対応付けロジッククラス</label>
+  </fields>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>このレコードが含まれるデータインポートオブジェクトグループ。</help>
+    <relationshipLabel>データインポートオブジェクトの対応付け</relationshipLabel>
+    <label>データインポートオブジェクトの対応付けセット</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Field_Name__c</name>
+    <help>インポートが成功したときにインポートされたレコードの ID が配置される NPSP データインポートオブジェクトの項目 API 参照名。これは、コードでこのレコードがインポートまたは照合されたかどうかを検証する場所でもあります。</help>
+    <label>インポートされたレコードの項目名</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Status_Field_Name__c</name>
+    <help>NPSP データインポートレコードのインポートの成功または失敗が記録される項目 API 参照名。</help>
+    <label>インポートされたレコードの状況項目名</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>削除済み</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>このオブジェクトグループの対象オブジェクトの API 参照名。</help>
+    <label>オブジェクト API 参照名</label>
+  </fields>
+  <fields>
+    <name>Legacy_Data_Import_Object_Name__c</name>
+    <help>このデータインポートオブジェクトグループのベースとなるオブジェクトの従来のデータインポートオブジェクト名。</help>
+    <label>従来のデータインポートオブジェクト名</label>
+  </fields>
+  <fields>
+    <name>Predecessor__c</name>
+    <help>このレコード (親または子) を作成する前に存在している必要のあるデータインポートオブジェクトグループレコード。</help>
+    <label>前提要素</label>
+  </fields>
+  <fields>
+    <name>Relationship_Field__c</name>
+    <help>このオブジェクトグループが前提要素の子である場合、この項目で親を参照する必要があります。このオブジェクトグループが前提要素の親である場合、この項目が子レコードの参照項目になっている必要があります。</help>
+    <label>リレーション項目</label>
+  </fields>
+  <fields>
+    <name>Relationship_To_Predecessor__c</name>
+    <help>これは、このオブジェクトが前提要素の親または子であることを示します。</help>
+    <label>前提要素とのリレーション</label>
+    <picklistValues>
+      <masterLabel>Parent</masterLabel>
+      <translation>親</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Child</masterLabel>
+      <translation>子ども</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Predecessor</masterLabel>
+      <translation>前提要素なし</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Data Import Object Mapping Layout</layout>
+    <sections>
+      <label>カスタムオブジェクトリレーションの詳細</label>
+      <section>Custom Object Relationship Details</section>
+    </sections>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <caseValues>
+    <plural>false</plural>
+    <value>データインポートオブジェクトの対応付け</value>
+  </caseValues>
 </CustomObjectTranslation>

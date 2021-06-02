@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>[TRUE] の場合、カスタムリレーション項目の同期が有効になります。</help>
-        <label>カスタム項目同期の有効化</label>
-        <name>Enable_Custom_Field_Sync__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Enable_Custom_Field_Sync__c</name>
+    <help>[TRUE] の場合、カスタムリレーション項目の同期が有効になります。</help>
+    <label>カスタム項目同期の有効化</label>
+  </fields>
+</CustomObjectTranslation>

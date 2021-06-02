@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Evento de implementación</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Eventos de implementaciones</value>
-    </caseValues>
-    <fields>
-        <label>Fecha de realización</label>
-        <name>CompletedDate__c</name>
-    </fields>
-    <fields>
-        <label>Id. de Implementación</label>
-        <name>DeploymentId__c</name>
-    </fields>
-    <fields>
-        <label>Estado</label>
-        <name>Status__c</name>
-    </fields>
-    <gender>Masculine</gender>
+  <fields>
+    <name>CompletedDate__c</name>
+    <label>Fecha de realización</label>
+  </fields>
+  <fields>
+    <name>DeploymentId__c</name>
+    <label>Id. de Implementación</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>Estado</label>
+  </fields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Evento de implementación</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Eventos de implementaciones</value>
+  </caseValues>
 </CustomObjectTranslation>

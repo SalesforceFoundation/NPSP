@@ -1,63 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre d&apos;erreur</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres d&apos;erreur</value>
-    </caseValues>
-    <fields>
-        <help>Utilisé pour garder une trace de l’exécution la plus récente de l’enregistreur d’erreur de tâche asynchrone</help>
-        <label>Dernière exéc. vérif. d’erreur async.</label>
-        <name>Async_Error_Check_Last_Run__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, le Contrôle d&apos;intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d&apos;exécution du Contrôle d&apos;intégrité.</help>
-        <label>Désactiver contrôles données enregistr.</label>
-        <name>DisableRecordDataHealthChecks__c</name>
-    </fields>
-    <fields>
-        <help>Si cette option est activée, l&apos;infrastructure de gestion d’erreur de NPSP est désactivée.</help>
-        <label>Désactiver la gestion d’erreur</label>
-        <name>Disable_Error_Handling__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, NPSP ne planifiera pas automatiquement les tâches récurrentes par défaut. Ces tâches calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs.</help>
-        <label>Pas de planif. auto. tâches NPSP par déf</label>
-        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    </fields>
-    <fields>
-        <help>Active les instructions de débogage dans le code du package géré.</help>
-        <label>Activer le débogage</label>
-        <name>Enable_Debug__c</name>
-    </fields>
-    <fields>
-        <help>Cochez cette case si vous souhaitez que le système envoie des notifications pour certains types d’erreurs.</help>
-        <label>Notifications d’erreur</label>
-        <name>Error_Notifications_On__c</name>
-    </fields>
-    <fields>
-        <help>Sélectionnez le type d’utilisateur auquel envoyer les notifications.</help>
-        <label>Destinataires de notifications d’erreur</label>
-        <name>Error_Notifications_To__c</name>
-    </fields>
-    <fields>
-        <help>Ne pas mettre à jour. Réservé au test pilote Salesforce.org. Accorde un accès limité au paramètre PilotEnabled dans les organisations tests pour prendre en charge le test pilote dans les organisations qui n&apos;ont pas de Licence produit associée dans la LMO.</help>
-        <label>Remplacement org. test : pilote activé</label>
-        <name>OverrideFeature_PilotEnabled__c</name>
-    </fields>
-    <fields>
-        <help>Param. d’une règle de dupl. qui contrôle si les enreg. en double sont autorisés. Lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser » (dans Règles de dupl. sous Config.), les doubles seront enregistrés.</help>
-        <label>Respecter paramètres règle duplication</label>
-        <name>Respect_Duplicate_Rule_Settings__c</name>
-    </fields>
-    <fields>
-        <help>Cochez cette case si vous souhaitez que les erreurs soient enregistrées dans la base de données.</help>
-        <label>Enregistrer les erreurs</label>
-        <name>Store_Errors_On__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>Utilisé pour garder une trace de l’exécution la plus récente de l’enregistreur d’erreur de tâche asynchrone</help>
+    <label>Dernière exéc. vérif. d’erreur async.</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>Si cette option est activée, l'infrastructure de gestion d’erreur de NPSP est désactivée.</help>
+    <label>Désactiver la gestion d’erreur</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>Lorsque cette option est sélectionnée, le Contrôle d'intégrité identifie les erreurs dans vos paramètres de configuration NPSP. Sélectionnez-la si votre organisation a de nombreux enregistrements et en cas de problème d'exécution du Contrôle d'intégrité.</help>
+    <label>Désactiver contrôles données enregistr.</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>Lorsque cette option est sélectionnée, NPSP ne planifiera pas automatiquement les tâches récurrentes par défaut. Ces tâches calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs.</help>
+    <label>Pas de planif. auto. tâches NPSP par déf</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>Active les instructions de débogage dans le code du package géré.</help>
+    <label>Activer le débogage</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>Cochez cette case si vous souhaitez que le système envoie des notifications pour certains types d’erreurs.</help>
+    <label>Notifications d’erreur</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>Sélectionnez le type d’utilisateur auquel envoyer les notifications.</help>
+    <label>Destinataires de notifications d’erreur</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>Ne pas mettre à jour. Réservé au test pilote Salesforce.org. Accorde un accès limité au paramètre PilotEnabled dans les organisations tests pour prendre en charge le test pilote dans les organisations qui n'ont pas de Licence produit associée dans la LMO.</help>
+    <label>Remplacement org. test : pilote activé</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>Param. d’une règle de dupl. qui contrôle si les enreg. en double sont autorisés. Lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser » (dans Règles de dupl. sous Config.), les doubles seront enregistrés.</help>
+    <label>Respecter paramètres règle duplication</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>Cochez cette case si vous souhaitez que les erreurs soient enregistrées dans la base de données.</help>
+    <label>Enregistrer les erreurs</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre d'erreur</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres d'erreur</value>
+  </caseValues>
 </CustomObjectTranslation>

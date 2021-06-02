@@ -1,98 +1,98 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Filterregel</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Filterregels</value>
-    </caseValues>
-    <fields>
-        <label>Waarde</label>
-        <name>Constant__c</name>
-    </fields>
-    <fields>
-        <label>Veld</label>
-        <name>Field__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Filtergroep</label>
-        <name>Filter_Group__c</name>
-        <relationshipLabel>Filterregels</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Verwijderd</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <label>Object</label>
-        <name>Object__c</name>
-        <relationshipLabel>Filter_Rules</relationshipLabel>
-    </fields>
-    <fields>
-        <label>Operator</label>
-        <name>Operator__c</name>
-        <picklistValues>
-            <masterLabel>Contains</masterLabel>
-            <translation>Bevat</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Does Not Contain</masterLabel>
-            <translation>Bevat niet</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Equals</masterLabel>
-            <translation>Is gelijk aan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater Than</masterLabel>
-            <translation>Groter dan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Greater or Equal</masterLabel>
-            <translation>Groter dan of Gelijk aan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In List</masterLabel>
-            <translation>In Lijst</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Included</masterLabel>
-            <translation>Is Inbegrepen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Is Not Included</masterLabel>
-            <translation>Is Niet Inbegrepen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less Than</masterLabel>
-            <translation>Kleiner dan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Less or Equal</masterLabel>
-            <translation>Kleiner dan of Gelijk aan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Equals</masterLabel>
-            <translation>Is niet gelijk aan</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not In List</masterLabel>
-            <translation>Niet in Lijst</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Starts With</masterLabel>
-            <translation>Begint met</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Constant__c</name>
+    <label>Waarde</label>
+  </fields>
+  <fields>
+    <name>Field__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>Veld</label>
+  </fields>
+  <fields>
+    <name>Filter_Group__c</name>
+    <relationshipLabel>Filterregels</relationshipLabel>
+    <label>Filtergroep</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Verwijderd</label>
+  </fields>
+  <fields>
+    <name>Object__c</name>
+    <relationshipLabel>Filter_Rules</relationshipLabel>
+    <label>Object</label>
+  </fields>
+  <fields>
+    <name>Operator__c</name>
+    <label>Operator</label>
+    <picklistValues>
+      <masterLabel>Equals</masterLabel>
+      <translation>Is gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not Equals</masterLabel>
+      <translation>Is niet gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater Than</masterLabel>
+      <translation>Groter dan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less Than</masterLabel>
+      <translation>Kleiner dan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Greater or Equal</masterLabel>
+      <translation>Groter dan of Gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Less or Equal</masterLabel>
+      <translation>Kleiner dan of Gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Starts With</masterLabel>
+      <translation>Begint met</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contains</masterLabel>
+      <translation>Bevat</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Does Not Contain</masterLabel>
+      <translation>Bevat niet</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In List</masterLabel>
+      <translation>In Lijst</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Not In List</masterLabel>
+      <translation>Niet in Lijst</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Included</masterLabel>
+      <translation>Is Inbegrepen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Is Not Included</masterLabel>
+      <translation>Is Niet Inbegrepen</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Filter Rule Layout</layout>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Filterregel</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Filterregels</value>
+  </caseValues>
 </CustomObjectTranslation>

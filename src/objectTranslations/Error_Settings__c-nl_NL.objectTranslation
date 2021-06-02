@@ -1,62 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Foutinstellingen</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Foutinstellingen</value>
-    </caseValues>
-    <fields>
-        <help>Wordt gebruikt om de meest recente uitvoering van het foutenlogboek voor Asynchrone taken bij te houden</help>
-        <label>Laatste Uitvoering Async Foutencontrole</label>
-        <name>Async_Error_Check_Last_Run__c</name>
-    </fields>
-    <fields>
-        <help>Als deze optie wordt geselecteerd, worden met &apos;Controle van de Toestand&apos; alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
-        <label>Statuscontroles recordgegevens uitsch.</label>
-        <name>DisableRecordDataHealthChecks__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, wordt het NPSP-raamwerk voor foutafhandeling uitgeschakeld.</help>
-        <label>Foutafhandeling uitschakelen</label>
-        <name>Disable_Error_Handling__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, zal NPSP standaard terugkerende taken niet automatisch plannen. Deze terugkerende taken berekenen totaliseringen, werken terugkerende donaties en seizoenadressen bij en voeren foutenafhandeling uit.</help>
-        <label>Standaard NPSP-Taken niet Auto. Plannen</label>
-        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    </fields>
-    <fields>
-        <help>Vink dit aan om debug-instructies in beheerde pakketcode in te schakelen.</help>
-        <label>Debug Inschakelen</label>
-        <name>Enable_Debug__c</name>
-    </fields>
-    <fields>
-        <help>Vink aan wanneer u wilt dat het systeem meldingen plaatst voor bepaalde soorten fouten.</help>
-        <label>Foutmeldingen</label>
-        <name>Error_Notifications_On__c</name>
-    </fields>
-    <fields>
-        <help>Selecteer het type gebruiker dat meldingen moet ontvangen.</help>
-        <label>Ontvangers Foutmeldingen</label>
-        <name>Error_Notifications_To__c</name>
-    </fields>
-    <fields>
-        <help>Niet bijwerken. Alleen voor testen van Salesforce-org.-proef. Staat overschrijven van beperkte toegang van parameter van voorziening PilotEnabled toe in Scratch-organisaties voor proeftesten in organisaties zonder gekoppelde productlicentie in de LMO.</help>
-        <label>Scratch-overschr.: proef ingeschakeld</label>
-        <name>OverrideFeature_PilotEnabled__c</name>
-    </fields>
-    <fields>
-        <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op &apos;Toestaan&apos;, worden duplicaten bewaard.</help>
-        <label>Duplicaatregelinstellingen respecteren</label>
-        <name>Respect_Duplicate_Rule_Settings__c</name>
-    </fields>
-    <fields>
-        <help>Vink aan wanneer u fouten wilt bewaren in de database.</help>
-        <label>Fouten bewaren</label>
-        <name>Store_Errors_On__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>Wordt gebruikt om de meest recente uitvoering van het foutenlogboek voor Asynchrone taken bij te houden</help>
+    <label>Laatste Uitvoering Async Foutencontrole</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>Indien aangevinkt, wordt het NPSP-raamwerk voor foutafhandeling uitgeschakeld.</help>
+    <label>Foutafhandeling uitschakelen</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>Als deze optie wordt geselecteerd, worden met 'Controle van de Toestand' alleen de NPSP-configuratie-instellingen gecontroleerd op problemen. Selecteer deze optie als uw organisatie veel records heeft en de functie niet kan worden voltooid.</help>
+    <label>Statuscontroles recordgegevens uitsch.</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>Indien aangevinkt, zal NPSP standaard terugkerende taken niet automatisch plannen. Deze terugkerende taken berekenen totaliseringen, werken terugkerende donaties en seizoenadressen bij en voeren foutenafhandeling uit.</help>
+    <label>Standaard NPSP-Taken niet Auto. Plannen</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>Vink dit aan om debug-instructies in beheerde pakketcode in te schakelen.</help>
+    <label>Debug Inschakelen</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>Vink aan wanneer u wilt dat het systeem meldingen plaatst voor bepaalde soorten fouten.</help>
+    <label>Foutmeldingen</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>Selecteer het type gebruiker dat meldingen moet ontvangen.</help>
+    <label>Ontvangers Foutmeldingen</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>Niet bijwerken. Alleen voor testen van Salesforce-org.-proef. Staat overschrijven van beperkte toegang van parameter van voorziening PilotEnabled toe in Scratch-organisaties voor proeftesten in organisaties zonder gekoppelde productlicentie in de LMO.</help>
+    <label>Scratch-overschr.: proef ingeschakeld</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>Respecteer de Duplicaatregelinstellingen die regelen of duplicaatrecords toegestaan zijn. Controleer instellingen onder Set-up en Duplicaatregels. Wanneer Actie bij Aanmaken of Actie bij Bewerken ingesteld zijn op 'Toestaan', worden duplicaten bewaard.</help>
+    <label>Duplicaatregelinstellingen respecteren</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>Vink aan wanneer u fouten wilt bewaren in de database.</help>
+    <label>Fouten bewaren</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Foutinstellingen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Foutinstellingen</value>
+  </caseValues>
 </CustomObjectTranslation>

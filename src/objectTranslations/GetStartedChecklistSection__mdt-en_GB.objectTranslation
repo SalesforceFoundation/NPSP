@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Description_Label__c</name>
+    <help>The API name for the Description label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</help>
+    <label>Description Label Name</label>
+  </fields>
+  <fields>
+    <name>Page_Type__c</name>
+    <help>The type of Get Started page (Admin or End User) where this section will appear.</help>
+    <label>Page Type</label>
+    <picklistValues>
+      <masterLabel>Admin</masterLabel>
+      <translation>Admin</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>End User</masterLabel>
+      <translation>End User</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>The position of this section on the Get Started page.</help>
+    <label>Position</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>The API Name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</help>
+    <label>Title Label Name</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Section Layout</layout>
+    <sections>
+      <label>Custom Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP Get Started Checklist Section</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>NPSP Get Started Checklist Sections</value>
+  </caseValues>
+</CustomObjectTranslation>

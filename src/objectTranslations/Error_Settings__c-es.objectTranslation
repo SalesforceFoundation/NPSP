@@ -1,62 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de errores</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de errores</value>
-    </caseValues>
-    <fields>
-        <help>Se utiliza para el seguimiento de la ejecución más reciente del registrador de errores de trabajos asíncronos.</help>
-        <label>Últ ejecución comprobación error asíncr</label>
-        <name>Async_Error_Check_Last_Run__c</name>
-    </fields>
-    <fields>
-        <help>Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas. Seleccione esta opción si su organización tiene un gran número de registros y Comprobación de estado está teniendo dificultades para completarse.</help>
-        <label>Desac. comprobac. estado datos registros</label>
-        <name>DisableRecordDataHealthChecks__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se marca, se deshabilita el marco de trabajo de control de errores de NPSP.</help>
-        <label>Deshabilitar control de errores</label>
-        <name>Disable_Error_Handling__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se marca, NPSP no programará automáticamente trabajos recurrentes predeterminado. Estos trabajos recurrentes calculan totalizaciones, actualizan donaciones recurrentes y direcciones de temporada y realizan el control de errores.</help>
-        <label>No programar autom trabajos NPSP predet</label>
-        <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
-    </fields>
-    <fields>
-        <help>Active esta opción para habilitar instrucciones de depuración en el código del paquetes gestionado.</help>
-        <label>Habilitar depuración</label>
-        <name>Enable_Debug__c</name>
-    </fields>
-    <fields>
-        <help>Marque esta opción si se desea que el sistema publique notificaciones de cierto tipo de errores.</help>
-        <label>Notificaciones de error</label>
-        <name>Error_Notifications_On__c</name>
-    </fields>
-    <fields>
-        <help>Seleccione el tipo de usuario al que enviar notificaciones.</help>
-        <label>Destinatario de notificación de errores</label>
-        <name>Error_Notifications_To__c</name>
-    </fields>
-    <fields>
-        <help>No actualizar. Solo para pruebas del piloto de Salesforce.org. Permite la sustitución de acceso limitado del parámetro de PilotEnabled en organizaciones borrador para la cobertura de prueba en organizaciones donde no hay licencia de producto en el LMO.</help>
-        <label>Sustituc org borrador: Piloto habilitado</label>
-        <name>OverrideFeature_PilotEnabled__c</name>
-    </fields>
-    <fields>
-        <help>Respeta parámetros en una regla de duplicados que controla registros duplicados. Para la configuración, vaya a Reglas de duplicados bajo Configuración. Cuando Acción al crear o Acción al modificar se establecen en &quot;Permitir&quot;, se guardarán los duplicados.</help>
-        <label>Respetar parámetros reglas de duplicados</label>
-        <name>Respect_Duplicate_Rule_Settings__c</name>
-    </fields>
-    <fields>
-        <help>Marque esta opción si se quiere que los errores se guarden en la base de datos.</help>
-        <label>Guardar errores</label>
-        <name>Store_Errors_On__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>Se utiliza para el seguimiento de la ejecución más reciente del registrador de errores de trabajos asíncronos.</help>
+    <label>Últ ejecución comprobación error asíncr</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>Cuando se marca, se deshabilita el marco de trabajo de control de errores de NPSP.</help>
+    <label>Deshabilitar control de errores</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas. Seleccione esta opción si su organización tiene un gran número de registros y Comprobación de estado está teniendo dificultades para completarse.</help>
+    <label>Desac. comprobac. estado datos registros</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>Cuando se marca, NPSP no programará automáticamente trabajos recurrentes predeterminado. Estos trabajos recurrentes calculan totalizaciones, actualizan donaciones recurrentes y direcciones de temporada y realizan el control de errores.</help>
+    <label>No programar autom trabajos NPSP predet</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>Active esta opción para habilitar instrucciones de depuración en el código del paquetes gestionado.</help>
+    <label>Habilitar depuración</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>Marque esta opción si se desea que el sistema publique notificaciones de cierto tipo de errores.</help>
+    <label>Notificaciones de error</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>Seleccione el tipo de usuario al que enviar notificaciones.</help>
+    <label>Destinatario de notificación de errores</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>No actualizar. Solo para pruebas del piloto de Salesforce.org. Permite la sustitución de acceso limitado del parámetro de PilotEnabled en organizaciones borrador para la cobertura de prueba en organizaciones donde no hay licencia de producto en el LMO.</help>
+    <label>Sustituc org borrador: Piloto habilitado</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>Respeta parámetros en una regla de duplicados que controla registros duplicados. Para la configuración, vaya a Reglas de duplicados bajo Configuración. Cuando Acción al crear o Acción al modificar se establecen en "Permitir", se guardarán los duplicados.</help>
+    <label>Respetar parámetros reglas de duplicados</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>Marque esta opción si se quiere que los errores se guarden en la base de datos.</help>
+    <label>Guardar errores</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de errores</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de errores</value>
+  </caseValues>
 </CustomObjectTranslation>

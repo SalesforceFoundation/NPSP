@@ -1,28 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-
-  <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
-  <fields>
-    <label>廃止:Always use last day of month</label>
-    <name>%%%NAMESPACE%%%Always_Use_Last_Day_Of_Month__c</name>
-  </fields>
-  <fields>
-    <label>廃止:単価</label>
-    <name>npe03__Installment_Amount__c</name>
-  </fields>
-  <fields>
-    <label>廃止:状況</label>
-    <name>npe03__Open_Ended_Status__c</name>
-  </fields>
-  <fields>
-    <label>廃止:スケジュールタイプ</label>
-    <name>npe03__Schedule_Type__c</name>
-  </fields>
-  <fields>
-    <label>廃止:合計</label>
-    <name>npe03__Total__c</name>
-  </fields>
-  <!-- END MANUALLY COPIED DEPRECATED FIELDS -->
   <fields>
     <name>npe03__Amount__c</name>
     <help>割賦商談の 1 回の支払額。</help>
@@ -307,4 +284,13 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  </CustomObjectTranslation>
+  <nameFieldLabel>継続支援名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>継続支援名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>継続支援</value>
+  </caseValues>
+</CustomObjectTranslation>

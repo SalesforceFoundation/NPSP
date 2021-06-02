@@ -1,121 +1,124 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>エンゲージメント計画 ToDo</value>
-    </caseValues>
-    <fields>
-        <help>この項目は ToDo の [割り当て先] 項目に対応付けられます。空白のままにした場合、ToDo はテンプレートの空白割り当てルールに基づいて割り当てられます。</help>
-        <label>割り当て先</label>
-        <name>Assigned_To__c</name>
-        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
-    </fields>
-    <fields>
-        <help>ToDo に対するコメント</help>
-        <label>コメント</label>
-        <name>Comments__c</name>
-    </fields>
-    <fields>
-        <help>エンゲージメント計画の作成日からの日数、またはこの ToDo の期日である親 ToDo の期日からの日数。</help>
-        <label>経過日数</label>
-        <name>Days_After__c</name>
-    </fields>
-    <fields>
-        <help>このエンゲージメント計画 ToDo のテンプレート。</help>
-        <label>エンゲージメント計画テンプレート</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>エンゲージメント計画 ToDo</relationshipLabel>
-    </fields>
-    <fields>
-        <help>このエンゲージメント計画 ToDo は親 ToDo に依存していることを示します。</help>
-        <label>親 ToDo</label>
-        <name>Parent_Task__c</name>
-        <relationshipLabel>エンゲージメント計画 ToDo</relationshipLabel>
-    </fields>
-    <fields>
-        <help>この ToDo の優先度</help>
-        <label>優先度</label>
-        <name>Priority__c</name>
-        <picklistValues>
-            <masterLabel>High</masterLabel>
-            <translation>高</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Low</masterLabel>
-            <translation>低</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Medium</masterLabel>
-            <translation>中</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>期日にアラームを表示する時間。</help>
-        <label>アラーム時刻</label>
-        <name>Reminder_Time__c</name>
-    </fields>
-    <fields>
-        <help>ToDo のアラームを設定します。</help>
-        <label>アラーム</label>
-        <name>Reminder__c</name>
-    </fields>
-    <fields>
-        <help>ToDo が有効になったときに ToDo の [割り当て先] 項目内のユーザにメールを送信するかどうかを決定します。連動 ToDo はその親 ToDo の完了時に有効になります。</help>
-        <label>メールを送信</label>
-        <name>Send_Email__c</name>
-    </fields>
-    <fields>
-        <help>ToDo の状況連動 ToDo はその親 ToDo の完了まで [親 ToDo を待機中] に設定されます。</help>
-        <label>状況</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>完了</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deferred</masterLabel>
-            <translation>延期</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>進行中</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Started</masterLabel>
-            <translation>未開始</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Waiting on someone else</masterLabel>
-            <translation>他のユーザを待機中</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>ToDo の種別</help>
-        <label>種別</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Call</masterLabel>
-            <translation>電話</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>メール</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Meeting</masterLabel>
-            <translation>ミーティング</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>その他</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Engagement Plan Task Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>件名</nameFieldLabel>
+  <fields>
+    <name>Assigned_To__c</name>
+    <help>この項目は ToDo の [割り当て先] 項目に対応付けられます。空白のままにした場合、ToDo はテンプレートの空白割り当てルールに基づいて割り当てられます。</help>
+    <label>割り当て先</label>
+  </fields>
+  <fields>
+    <name>Comments__c</name>
+    <help>ToDo に対するコメント</help>
+    <label>コメント</label>
+  </fields>
+  <fields>
+    <name>Days_After__c</name>
+    <help>エンゲージメント計画の作成日からの日数、またはこの ToDo の期日である親 ToDo の期日からの日数。</help>
+    <label>経過日数</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>このエンゲージメント計画 ToDo のテンプレート。</help>
+    <relationshipLabel>エンゲージメント計画 ToDo</relationshipLabel>
+    <label>エンゲージメント計画テンプレート</label>
+  </fields>
+  <fields>
+    <name>Parent_Task__c</name>
+    <help>このエンゲージメント計画 ToDo は親 ToDo に依存していることを示します。</help>
+    <relationshipLabel>エンゲージメント計画 ToDo</relationshipLabel>
+    <label>親 ToDo</label>
+  </fields>
+  <fields>
+    <name>Priority__c</name>
+    <help>この ToDo の優先度</help>
+    <label>優先度</label>
+    <picklistValues>
+      <masterLabel>High</masterLabel>
+      <translation>高</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Medium</masterLabel>
+      <translation>中</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Low</masterLabel>
+      <translation>低</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Reminder_Time__c</name>
+    <help>期日にアラームを表示する時間。</help>
+    <label>アラーム時刻</label>
+  </fields>
+  <fields>
+    <name>Reminder__c</name>
+    <help>ToDo のアラームを設定します。</help>
+    <label>アラーム</label>
+  </fields>
+  <fields>
+    <name>Send_Email__c</name>
+    <help>ToDo が有効になったときに ToDo の [割り当て先] 項目内のユーザにメールを送信するかどうかを決定します。連動 ToDo はその親 ToDo の完了時に有効になります。</help>
+    <label>メールを送信</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>ToDo の状況連動 ToDo はその親 ToDo の完了まで [親 ToDo を待機中] に設定されます。</help>
+    <label>状況</label>
+    <picklistValues>
+      <masterLabel>Not Started</masterLabel>
+      <translation>未開始</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>進行中</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>完了</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Waiting on someone else</masterLabel>
+      <translation>他のユーザを待機中</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deferred</masterLabel>
+      <translation>延期</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>ToDo の種別</help>
+    <label>種別</label>
+    <picklistValues>
+      <masterLabel>Call</masterLabel>
+      <translation>電話</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Meeting</masterLabel>
+      <translation>ミーティング</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>その他</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>メール</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Task Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>件名</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>件名</label>
+  </standardFields>
+  <caseValues>
+    <plural>false</plural>
+    <value>エンゲージメント計画 ToDo</value>
+  </caseValues>
 </CustomObjectTranslation>

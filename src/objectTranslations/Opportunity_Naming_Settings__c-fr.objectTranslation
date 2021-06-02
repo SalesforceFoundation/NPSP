@@ -1,33 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de nommage d&apos;opportunité</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de nommage d&apos;opportunité</value>
-    </caseValues>
-    <fields>
-        <help>Détermine si ce paramètre s’applique aux opportunités individuelles, organisationnelles, ou les deux.</help>
-        <label>Attribution</label>
-        <name>Attribution__c</name>
-    </fields>
-    <fields>
-        <help>Le format des dates incluses dans ce nom d’opportunité.</help>
-        <label>Format de date</label>
-        <name>Date_Format__c</name>
-    </fields>
-    <fields>
-        <help>Le format à utiliser pour la dénomination des opportunités.</help>
-        <label>Format de nom des opportunités</label>
-        <name>Opportunity_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Indique le type d’enregistrement d’opportunité utilisant ce format de nom.</help>
-        <label>Types d’enregistrement d’opportunité</label>
-        <name>Opportunity_Record_Types__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Attribution__c</name>
+    <help>Détermine si ce paramètre s’applique aux opportunités individuelles, organisationnelles, ou les deux.</help>
+    <label>Attribution</label>
+  </fields>
+  <fields>
+    <name>Date_Format__c</name>
+    <help>Le format des dates incluses dans ce nom d’opportunité.</help>
+    <label>Format de date</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Name_Format__c</name>
+    <help>Le format à utiliser pour la dénomination des opportunités.</help>
+    <label>Format de nom des opportunités</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Record_Types__c</name>
+    <help>Indique le type d’enregistrement d’opportunité utilisant ce format de nom.</help>
+    <label>Types d’enregistrement d’opportunité</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de nommage d'opportunité</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de nommage d'opportunité</value>
+  </caseValues>
 </CustomObjectTranslation>

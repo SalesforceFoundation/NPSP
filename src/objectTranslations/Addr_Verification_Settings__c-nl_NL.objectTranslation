@@ -1,62 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Instellingen voor adresverificatie</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Instellingen voor adresverificatie</value>
-    </caseValues>
-    <fields>
-        <help>URL die wordt gebruikt voor adresverificatie.</help>
-        <label>URL voor Adresverificatie</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>Het Authenticatie-ID</help>
-        <label>Auth.-ID</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>Het Authenticatie-token</help>
-        <label>Auth.-token</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Salesforce-klasse verantwoordelijk voor het contacteren van de webdienst en het verifiëren van adressen.</help>
-        <label>Verificatiedienst</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Schakelt automatische adresverificatie voor nieuwe adressen in.</help>
-        <label>Automatische Verificatie inschakelen</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Voorkomt dat de Cicero API tijdens de verificatie Adressen overschrijft.</help>
-        <label>Overschrijven van Adressen Voorkomen</label>
-        <name>Prevent_Address_Overwrite__c</name>
-    </fields>
-    <fields>
-        <help>Markeert dubbelzinnige adressen als ongeldig, wanneer de API meer dan één adres oplevert. Indien niet aangevinkt, zal Salesforce het eerste gesuggereerde adres als het geldige adres aanvaarden.</help>
-        <label>Dubbelzinnige Adressen Weigeren</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Melding time-out in seconden.</help>
-        <label>Time-out</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of u gebruikmaakt van de adresverificatiedienst van SmartyStreets.</help>
-        <label>VEROUDERD - SmartyStreets gebruiken</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>URL die wordt gebruikt voor postcodeverificatie.</help>
-        <label>Eindpunt voor Postcodeverificatie</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>URL die wordt gebruikt voor adresverificatie.</help>
+    <label>URL voor Adresverificatie</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>Het Authenticatie-ID</help>
+    <label>Auth.-ID</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>Het Authenticatie-token</help>
+    <label>Auth.-token</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Salesforce-klasse verantwoordelijk voor het contacteren van de webdienst en het verifiëren van adressen.</help>
+    <label>Verificatiedienst</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>Schakelt automatische adresverificatie voor nieuwe adressen in.</help>
+    <label>Automatische Verificatie inschakelen</label>
+  </fields>
+  <fields>
+    <name>Prevent_Address_Overwrite__c</name>
+    <help>Voorkomt dat de Cicero API tijdens de verificatie Adressen overschrijft.</help>
+    <label>Overschrijven van Adressen Voorkomen</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Markeert dubbelzinnige adressen als ongeldig, wanneer de API meer dan één adres oplevert. Indien niet aangevinkt, zal Salesforce het eerste gesuggereerde adres als het geldige adres aanvaarden.</help>
+    <label>Dubbelzinnige Adressen Weigeren</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>Melding time-out in seconden.</help>
+    <label>Time-out</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>Geeft aan of u gebruikmaakt van de adresverificatiedienst van SmartyStreets.</help>
+    <label>VEROUDERD - SmartyStreets gebruiken</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>URL die wordt gebruikt voor postcodeverificatie.</help>
+    <label>Eindpunt voor Postcodeverificatie</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Instellingen voor adresverificatie</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Instellingen voor adresverificatie</value>
+  </caseValues>
 </CustomObjectTranslation>

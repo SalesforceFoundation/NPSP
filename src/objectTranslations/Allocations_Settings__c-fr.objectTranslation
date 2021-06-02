@@ -1,48 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre d&apos;allocation</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres d&apos;allocation</value>
-    </caseValues>
-    <fields>
-        <help>L’activation des allocations par défaut crée un objet d’allocation pour chaque opportunité. Ceci permet des rapports sur les allocations pour une unité comptable générale par défaut, mais utilise plus d’espace de stockage.</help>
-        <label>Allocations par défaut activées</label>
-        <name>Default_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Contient l’ID de l’unité comptable générale par défaut pour la création d’allocations par défaut ou pour l’allocation de montants non alloués.</help>
-        <label>Unité comptable générale par défaut</label>
-        <name>Default__c</name>
-    </fields>
-    <fields>
-        <help>Les types d’enregistrement d’opportunité à exclure des calculs de cumuls d’allocations.</help>
-        <label>Types d’enr. d’opp. exclus</label>
-        <name>Excluded_Opp_RecTypes__c</name>
-    </fields>
-    <fields>
-        <help>Types d’opportunités exclus des cumuls d’allocation.</help>
-        <label>Types d’opportunités exclus</label>
-        <name>Excluded_Opp_Types__c</name>
-    </fields>
-    <fields>
-        <help>Indique si les allocations peuvent être définies au niveau du paiement. Vérifiez la documentation sur les allocations au niveau du paiement avant de modifier ce paramètre.</help>
-        <label>Allocations de paiement activées</label>
-        <name>Payment_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Cette valeur affecte le nombre de jours à compter pour les champs de cumul d’allocations sur N jours.</help>
-        <label>Valeur de cumul N jours</label>
-        <name>Rollup_N_Day_Value__c</name>
-    </fields>
-    <fields>
-        <help>Totaux de cumul d’alloc. respectant les années fiscales au lieu des années civiles. Pour définir les infor. d’année fiscale, accédez à Config.-&gt;Profil d’entreprise-&gt;Année fiscale. Les paramètres d’année fiscale personnalisés ne sont PAS pris en charge.</help>
-        <label>Utiliser l’année fiscale pour les cumuls</label>
-        <name>Use_Fiscal_Year_for_Rollups__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Default_Allocations_Enabled__c</name>
+    <help>L’activation des allocations par défaut crée un objet d’allocation pour chaque opportunité. Ceci permet des rapports sur les allocations pour une unité comptable générale par défaut, mais utilise plus d’espace de stockage.</help>
+    <label>Allocations par défaut activées</label>
+  </fields>
+  <fields>
+    <name>Default__c</name>
+    <help>Contient l’ID de l’unité comptable générale par défaut pour la création d’allocations par défaut ou pour l’allocation de montants non alloués.</help>
+    <label>Unité comptable générale par défaut</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_RecTypes__c</name>
+    <help>Les types d’enregistrement d’opportunité à exclure des calculs de cumuls d’allocations.</help>
+    <label>Types d’enr. d’opp. exclus</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_Types__c</name>
+    <help>Types d’opportunités exclus des cumuls d’allocation.</help>
+    <label>Types d’opportunités exclus</label>
+  </fields>
+  <fields>
+    <name>Payment_Allocations_Enabled__c</name>
+    <help>Indique si les allocations peuvent être définies au niveau du paiement. Vérifiez la documentation sur les allocations au niveau du paiement avant de modifier ce paramètre.</help>
+    <label>Allocations de paiement activées</label>
+  </fields>
+  <fields>
+    <name>Rollup_N_Day_Value__c</name>
+    <help>Cette valeur affecte le nombre de jours à compter pour les champs de cumul d’allocations sur N jours.</help>
+    <label>Valeur de cumul N jours</label>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+    <help>Totaux de cumul d’alloc. respectant les années fiscales au lieu des années civiles. Pour définir les infor. d’année fiscale, accédez à Config.-&gt;Profil d’entreprise-&gt;Année fiscale. Les paramètres d’année fiscale personnalisés ne sont PAS pris en charge.</help>
+    <label>Utiliser l’année fiscale pour les cumuls</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre d'allocation</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres d'allocation</value>
+  </caseValues>
 </CustomObjectTranslation>

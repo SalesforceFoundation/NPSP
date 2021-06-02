@@ -1,127 +1,130 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Tâche du plan d&apos;engagement</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Tâches du plan d&apos;engagement</value>
-    </caseValues>
-    <fields>
-        <help>Recherche de l&apos;utilisateur auquel vous souhaitez attribuer la tâche. Si vous laissez ce champ vide, NPSP attribuera la tâche en fonction du destinataire par défaut du modèle de plan d’engagement.</help>
-        <label>Attribué à</label>
-        <name>Assigned_To__c</name>
-        <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
-    </fields>
-    <fields>
-        <help>Informations supplémentaires sur la tâche.</help>
-        <label>Commentaires</label>
-        <name>Comments__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de jours entre la date de création du plan d’engagement ou la date d’échéance de la tâche parente et la date d’échéance de cette tâche.</help>
-        <label>Jours après</label>
-        <name>Days_After__c</name>
-    </fields>
-    <fields>
-        <help>Modèle pour cette tâche de plan d’engagement.</help>
-        <label>Modèle de plan d’engagement</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indique que cette tâche de plan d’engagement dépend d’une tâche parente.</help>
-        <label>Tâche parente</label>
-        <name>Parent_Task__c</name>
-        <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La priorité de cette tâche.</help>
-        <label>Priorité</label>
-        <name>Priority__c</name>
-        <picklistValues>
-            <masterLabel>High</masterLabel>
-            <translation>Élevé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Low</masterLabel>
-            <translation>Faible</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Medium</masterLabel>
-            <translation>Moyen</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>L’heure à laquelle le rappel apparait à la date d’échéance.</help>
-        <label>Heure de rappel</label>
-        <name>Reminder_Time__c</name>
-    </fields>
-    <fields>
-        <help>Définit un rappel pour la tâche.</help>
-        <label>Rappel</label>
-        <name>Reminder__c</name>
-    </fields>
-    <fields>
-        <help>Détermine si un e-mail est envoyé à l’utilisateur du champ « Attribué à » de la tâche lorsque la tâche devient active. Les tâches dépendantes sont actives lorsque leur tâche parente est terminée.</help>
-        <label>Envoyer l’e-mail</label>
-        <name>Send_Email__c</name>
-    </fields>
-    <fields>
-        <help>Le statut d’une tâche. Les tâches dépendantes sont définies comme « En attente de la tâche parente » jusqu’à ce que leur tâche parente soit terminée.</help>
-        <label>Statut</label>
-        <name>Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Terminé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Deferred</masterLabel>
-            <translation>Reporté</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>In Progress</masterLabel>
-            <translation>En cours</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Not Started</masterLabel>
-            <translation>Pas commencé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Waiting on someone else</masterLabel>
-            <translation>En attente d’une autre personne</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Le type de tâche.</help>
-        <label>Type</label>
-        <name>Type__c</name>
-        <picklistValues>
-            <masterLabel>Call</masterLabel>
-            <translation>Appel</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>E-mail</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Meeting</masterLabel>
-            <translation>Réunion</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Other</masterLabel>
-            <translation>Autre</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Engagement Plan Task Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Sujet</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Assigned_To__c</name>
+    <help>Recherche de l'utilisateur auquel vous souhaitez attribuer la tâche. Si vous laissez ce champ vide, NPSP attribuera la tâche en fonction du destinataire par défaut du modèle de plan d’engagement.</help>
+    <label>Attribué à</label>
+  </fields>
+  <fields>
+    <name>Comments__c</name>
+    <help>Informations supplémentaires sur la tâche.</help>
+    <label>Commentaires</label>
+  </fields>
+  <fields>
+    <name>Days_After__c</name>
+    <help>Le nombre de jours entre la date de création du plan d’engagement ou la date d’échéance de la tâche parente et la date d’échéance de cette tâche.</help>
+    <label>Jours après</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>Modèle pour cette tâche de plan d’engagement.</help>
+    <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
+    <label>Modèle de plan d’engagement</label>
+  </fields>
+  <fields>
+    <name>Parent_Task__c</name>
+    <help>Indique que cette tâche de plan d’engagement dépend d’une tâche parente.</help>
+    <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
+    <label>Tâche parente</label>
+  </fields>
+  <fields>
+    <name>Priority__c</name>
+    <help>La priorité de cette tâche.</help>
+    <label>Priorité</label>
+    <picklistValues>
+      <masterLabel>High</masterLabel>
+      <translation>Élevé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Medium</masterLabel>
+      <translation>Moyen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Low</masterLabel>
+      <translation>Faible</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Reminder_Time__c</name>
+    <help>L’heure à laquelle le rappel apparait à la date d’échéance.</help>
+    <label>Heure de rappel</label>
+  </fields>
+  <fields>
+    <name>Reminder__c</name>
+    <help>Définit un rappel pour la tâche.</help>
+    <label>Rappel</label>
+  </fields>
+  <fields>
+    <name>Send_Email__c</name>
+    <help>Détermine si un e-mail est envoyé à l’utilisateur du champ « Attribué à » de la tâche lorsque la tâche devient active. Les tâches dépendantes sont actives lorsque leur tâche parente est terminée.</help>
+    <label>Envoyer l’e-mail</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <help>Le statut d’une tâche. Les tâches dépendantes sont définies comme « En attente de la tâche parente » jusqu’à ce que leur tâche parente soit terminée.</help>
+    <label>Statut</label>
+    <picklistValues>
+      <masterLabel>Not Started</masterLabel>
+      <translation>Pas commencé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>In Progress</masterLabel>
+      <translation>En cours</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>Terminé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Waiting on someone else</masterLabel>
+      <translation>En attente d’une autre personne</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Deferred</masterLabel>
+      <translation>Reporté</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Type__c</name>
+    <help>Le type de tâche.</help>
+    <label>Type</label>
+    <picklistValues>
+      <masterLabel>Call</masterLabel>
+      <translation>Appel</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Meeting</masterLabel>
+      <translation>Réunion</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Other</masterLabel>
+      <translation>Autre</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>E-mail</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Task Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Sujet</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Sujet</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Tâche du plan d'engagement</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Tâches du plan d'engagement</value>
+  </caseValues>
 </CustomObjectTranslation>

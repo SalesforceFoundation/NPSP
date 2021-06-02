@@ -1,58 +1,58 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Batch-Dateneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Batch-Dateneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Batch-Dateneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Batch-Dateneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Batch-Dateneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Batch-Dateneintragseinstellungen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Batch-Dateneintragseinstellung</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Batch-Dateneintragseinstellungen</value>
-    </caseValues>
-    <fields>
-        <help>Wenn diese Option ausgewählt ist, werden bei der Batch-Dateneingabe niemals Opportunity-Namen vergeben, auch wenn die Felder leer sind (nicht auf der BDE-Seite enthalten).</help>
-        <label>Leere Felder für Opport.-Namen zulassen</label>
-        <name>Allow_Blank_Opportunity_Names__c</name>
-    </fields>
-    <fields>
-        <help>Durch diese Einstellung wird basierend auf dem Wert in den aufgefüllten Feldern automatisch der Datensatzname für Opportunity-Datensätze generiert, die als Batch eingegeben wurden.</help>
-        <label>Opportunity-Benennung</label>
-        <name>Opportunity_Naming__c</name>
-    </fields>
-    <fields>
-        <label>Einstellungsbenachrichtigung angesehen</label>
-        <name>Viewed_Retirement_Alert__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+    <help>Wenn diese Option ausgewählt ist, werden bei der Batch-Dateneingabe niemals Opportunity-Namen vergeben, auch wenn die Felder leer sind (nicht auf der BDE-Seite enthalten).</help>
+    <label>Leere Felder für Opport.-Namen zulassen</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Naming__c</name>
+    <help>Durch diese Einstellung wird basierend auf dem Wert in den aufgefüllten Feldern automatisch der Datensatzname für Opportunity-Datensätze generiert, die als Batch eingegeben wurden.</help>
+    <label>Opportunity-Benennung</label>
+  </fields>
+  <fields>
+    <name>Viewed_Retirement_Alert__c</name>
+    <label>Einstellungsbenachrichtigung angesehen</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>Batch-Dateneintragseinstellung</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Accusative</caseType>
+    <value>Batch-Dateneintragseinstellung</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Dative</caseType>
+    <value>Batch-Dateneintragseinstellung</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Genitive</caseType>
+    <value>Batch-Dateneintragseinstellung</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>Batch-Dateneintragseinstellungen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Accusative</caseType>
+    <value>Batch-Dateneintragseinstellungen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Dative</caseType>
+    <value>Batch-Dateneintragseinstellungen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Genitive</caseType>
+    <value>Batch-Dateneintragseinstellungen</value>
+  </caseValues>
 </CustomObjectTranslation>

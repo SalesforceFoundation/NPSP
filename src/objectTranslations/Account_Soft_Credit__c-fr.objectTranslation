@@ -1,48 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Compte crédit indirect</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Compte crédits indirects</value>
-    </caseValues>
-    <fields>
-        <help>Le compte qui obtient ce crédit indirect.</help>
-        <label>Compte</label>
-        <name>Account__c</name>
-        <relationshipLabel>Compte crédits indirects</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Le montant du crédit indirect.</help>
-        <label>Montant</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>L’opportunité à laquelle ce crédit indirect s’applique.</help>
-        <label>Opportunité</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Compte crédits indirects</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Le rôle associé à ce crédit indirect Le rôle décrit la manière dont le compte a été impliqué dans l’opportunité.</help>
-        <label>Rôle</label>
-        <name>Role__c</name>
-        <picklistValues>
-            <masterLabel>Donation Source</masterLabel>
-            <translation>Source du don</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Influencer</masterLabel>
-            <translation>Influenceur</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Match</masterLabel>
-            <translation>Correspondance</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nom du compte du crédit indirect</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Account__c</name>
+    <help>Le compte qui obtient ce crédit indirect.</help>
+    <relationshipLabel>Compte crédits indirects</relationshipLabel>
+    <label>Compte</label>
+  </fields>
+  <fields>
+    <name>Amount__c</name>
+    <help>Le montant du crédit indirect.</help>
+    <label>Montant</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>L’opportunité à laquelle ce crédit indirect s’applique.</help>
+    <relationshipLabel>Compte crédits indirects</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <fields>
+    <name>Role__c</name>
+    <help>Le rôle associé à ce crédit indirect Le rôle décrit la manière dont le compte a été impliqué dans l’opportunité.</help>
+    <label>Rôle</label>
+    <picklistValues>
+      <masterLabel>Donation Source</masterLabel>
+      <translation>Source du don</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Influencer</masterLabel>
+      <translation>Influenceur</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Match</masterLabel>
+      <translation>Correspondance</translation>
+    </picklistValues>
+  </fields>
+  <nameFieldLabel>Nom du compte du crédit indirect</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du compte du crédit indirect</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Compte crédit indirect</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Compte crédits indirects</value>
+  </caseValues>
 </CustomObjectTranslation>

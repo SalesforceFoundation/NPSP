@@ -1,131 +1,131 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Elemento de lista de comprobación de Empezar a trabajar de NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Elementos de listas de comprobación de Empezar a trabajar de NPSP</value>
-    </caseValues>
-    <fields>
-        <help>El nombre de API para la etiqueta Descripción de este elemento en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de descripción</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API de la etiqueta Información adicional, que proporciona información extra sobre un elemento de la sección (como la longitud de un vídeo, PDF, etc.). Se muestra en la esquina superior derecha.</help>
-        <label>Nombre etiqueta de información adicional</label>
-        <name>Extra_Info_Label__c</name>
-    </fields>
-    <fields>
-        <help>La sección en la página Empezar a trabajar de la que forma parte este elemento.</help>
-        <label>Sección de lista de comprobación de GS</label>
-        <name>GS_Checklist_Section__c</name>
-        <relationshipLabel>Elementos de lista de comprobación de GS</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Indica si el elemento tiene un vínculo para mostrar.</help>
-        <label>Tiene vínculo</label>
-        <name>Has_Link__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de archivo de la imagen en el recurso estático CumulusResources (en la carpeta gsAssets/step) para representar.</help>
-        <label>Imagen</label>
-        <name>Image__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API para la etiqueta Vínculo en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de vínculo</label>
-        <name>Link_Label__c</name>
-    </fields>
-    <fields>
-        <help>La URL de destino para un vínculo en la página Empezar a trabajar.</help>
-        <label>URL de vínculo</label>
-        <name>Link_URL__c</name>
-    </fields>
-    <fields>
-        <help>La posición de este elemento de sección en la página Empezar a trabajar.</help>
-        <label>Posición</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API para la etiqueta Botón principal en un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de botón principal</label>
-        <name>Primary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>El tipo de acción relacionada con el botón principal. Indica si el botón está desactivado, abre una nueva ficha de Salesforce o abre una página externa.</help>
-        <label>Tipo de botón principal</label>
-        <name>Primary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Desactivado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Página externa</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Nueva ficha de SFDC</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Acción del botón principal. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es &quot;{referenciaPágina}:{objetoONombreApiPágina}:{acción}&quot;. Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
-        <label>Valor de botón principal</label>
-        <name>Primary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API para la etiqueta Botón secundario en un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de botón secundario</label>
-        <name>Secondary_Button_Label__c</name>
-    </fields>
-    <fields>
-        <help>El tipo de acción relacionada con el botón secundario. Indica si el botón está desactivado, abre una nueva ficha de Salesforce o abre una página externa.</help>
-        <label>Tipo de botón secundario</label>
-        <name>Secondary_Button_Type__c</name>
-        <picklistValues>
-            <masterLabel>Disabled</masterLabel>
-            <translation>Desactivado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>External Page</masterLabel>
-            <translation>Página externa</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>SFDC New Tab</masterLabel>
-            <translation>Nueva ficha de SFDC</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Acción del botón secundario. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es &quot;{referenciaPágina}:{objetoONombreApiPágina}:{acción}&quot;. Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
-        <label>Valor de botón secundario</label>
-        <name>Secondary_Button_Value__c</name>
-    </fields>
-    <fields>
-        <help>El nombre de API para la etiqueta Título de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
-        <label>Nombre de etiqueta de título</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>GS Checklist Item Layout</layout>
-        <sections>
-            <label>Botones</label>
-            <section>Buttons</section>
-        </sections>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Información</label>
-            <section>Info</section>
-        </sections>
-        <sections>
-            <label>Vínculo</label>
-            <section>Link</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>El nombre de API para la etiqueta Descripción de este elemento en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de descripción</label>
+  </fields>
+  <fields>
+    <name>Extra_Info_Label__c</name>
+    <help>El nombre de API de la etiqueta Información adicional, que proporciona información extra sobre un elemento de la sección (como la longitud de un vídeo, PDF, etc.). Se muestra en la esquina superior derecha.</help>
+    <label>Nombre etiqueta de información adicional</label>
+  </fields>
+  <fields>
+    <name>GS_Checklist_Section__c</name>
+    <help>La sección en la página Empezar a trabajar de la que forma parte este elemento.</help>
+    <relationshipLabel>Elementos de lista de comprobación de GS</relationshipLabel>
+    <label>Sección de lista de comprobación de GS</label>
+  </fields>
+  <fields>
+    <name>Has_Link__c</name>
+    <help>Indica si el elemento tiene un vínculo para mostrar.</help>
+    <label>Tiene vínculo</label>
+  </fields>
+  <fields>
+    <name>Image__c</name>
+    <help>El nombre de archivo de la imagen en el recurso estático CumulusResources (en la carpeta gsAssets/step) para representar.</help>
+    <label>Imagen</label>
+  </fields>
+  <fields>
+    <name>Link_Label__c</name>
+    <help>El nombre de API para la etiqueta Vínculo en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de vínculo</label>
+  </fields>
+  <fields>
+    <name>Link_URL__c</name>
+    <help>La URL de destino para un vínculo en la página Empezar a trabajar.</help>
+    <label>URL de vínculo</label>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>La posición de este elemento de sección en la página Empezar a trabajar.</help>
+    <label>Posición</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Label__c</name>
+    <help>El nombre de API para la etiqueta Botón principal en un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de botón principal</label>
+  </fields>
+  <fields>
+    <name>Primary_Button_Type__c</name>
+    <help>El tipo de acción relacionada con el botón principal. Indica si el botón está desactivado, abre una nueva ficha de Salesforce o abre una página externa.</help>
+    <label>Tipo de botón principal</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>Desactivado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>Nueva ficha de SFDC</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>Página externa</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Primary_Button_Value__c</name>
+    <help>Acción del botón principal. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es "{referenciaPágina}:{objetoONombreApiPágina}:{acción}". Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
+    <label>Valor de botón principal</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Label__c</name>
+    <help>El nombre de API para la etiqueta Botón secundario en un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de botón secundario</label>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Type__c</name>
+    <help>El tipo de acción relacionada con el botón secundario. Indica si el botón está desactivado, abre una nueva ficha de Salesforce o abre una página externa.</help>
+    <label>Tipo de botón secundario</label>
+    <picklistValues>
+      <masterLabel>Disabled</masterLabel>
+      <translation>Desactivado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>SFDC New Tab</masterLabel>
+      <translation>Nueva ficha de SFDC</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>External Page</masterLabel>
+      <translation>Página externa</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Secondary_Button_Value__c</name>
+    <help>Acción del botón secundario. Para Página externa, la URL externa. Para Nueva ficha de SFDC, el formato es "{referenciaPágina}:{objetoONombreApiPágina}:{acción}". Vea la documentación de NavigationMixin para consultar ejemplos y todas las especificaciones.</help>
+    <label>Valor de botón secundario</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>El nombre de API para la etiqueta Título de un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de título</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Item Layout</layout>
+    <sections>
+      <label>Información</label>
+      <section>Info</section>
+    </sections>
+    <sections>
+      <label>Vínculo</label>
+      <section>Link</section>
+    </sections>
+    <sections>
+      <label>Botones</label>
+      <section>Buttons</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Elemento de lista de comprobación de Empezar a trabajar de NPSP</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Elementos de listas de comprobación de Empezar a trabajar de NPSP</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Async_Error_Check_Last_Run__c</name>
+    <help>Used to keep track of the most recent execution of the Async job error logger</help>
+    <label>Async Error Check Last Run</label>
+  </fields>
+  <fields>
+    <name>Disable_Error_Handling__c</name>
+    <help>If checked, NPSP's error handling framework is disabled.</help>
+    <label>Disable Error Handling</label>
+  </fields>
+  <fields>
+    <name>DisableRecordDataHealthChecks__c</name>
+    <help>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organisation has a large volume of records and Health Check is having problems completing.</help>
+    <label>Disable Record Data Health Checks</label>
+  </fields>
+  <fields>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+    <help>When checked, NPSP won't automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</help>
+    <label>Don't Auto Schedule Default NPSP Jobs</label>
+  </fields>
+  <fields>
+    <name>Enable_Debug__c</name>
+    <help>Turn this on to enable debug statements in managed package code.</help>
+    <label>Enable Debug</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_On__c</name>
+    <help>Check this if you'd like the system to post notifications for certain type of errors.</help>
+    <label>Error Notifications</label>
+  </fields>
+  <fields>
+    <name>Error_Notifications_To__c</name>
+    <help>Select the type of user to send notifications to.</help>
+    <label>Error Notification Recipients</label>
+  </fields>
+  <fields>
+    <name>OverrideFeature_PilotEnabled__c</name>
+    <help>Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product Licence in the LMO.</help>
+    <label>Scratch Org Override: Pilot Enabled</label>
+  </fields>
+  <fields>
+    <name>Respect_Duplicate_Rule_Settings__c</name>
+    <help>Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to "Allow," duplicates will be saved.</help>
+    <label>Respect Duplicate Rule Settings</label>
+  </fields>
+  <fields>
+    <name>Store_Errors_On__c</name>
+    <help>Check this if you'd like errors to be stored in the database.</help>
+    <label>Store Errors</label>
+  </fields>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Error Settings</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Error Settings</value>
+  </caseValues>
+</CustomObjectTranslation>

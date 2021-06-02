@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de asignaciones</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de asignaciones</value>
-    </caseValues>
-    <fields>
-        <help>Al habilitar Asignaciones predeterminadas se crea un registro de asignación por cada oportunidad. Esto permite la creación de informes de asignaciones a la cuenta contable general de forma predeterminada, pero utiliza más espacio.</help>
-        <label>Habilitar asignaciones predeterminadas</label>
-        <name>Default_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Contiene el Id. de la cuenta contable general predeterminada para la creación predeterminada de asignaciones o para la asignación de importes no asignados.</help>
-        <label>Cuenta Contable General predeterminada</label>
-        <name>Default__c</name>
-    </fields>
-    <fields>
-        <help>Tipos de registro de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
-        <label>Tipos de registros de op. excluidos</label>
-        <name>Excluded_Opp_RecTypes__c</name>
-    </fields>
-    <fields>
-        <help>Tipos de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
-        <label>Tipos de oportunidades excluidos</label>
-        <name>Excluded_Opp_Types__c</name>
-    </fields>
-    <fields>
-        <help>Indica si las asignaciones pueden establecer en el nivel de pagos. Revise la documentación sobre las asignaciones a nivel de pagos antes de cambiar este parámetro.</help>
-        <label>Asignaciones de pagos habilitadas</label>
-        <name>Payment_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Este valor define la cantidad de días que se cuentan para los totales con N días.</help>
-        <label>Valor de N en totales</label>
-        <name>Rollup_N_Day_Value__c</name>
-    </fields>
-    <fields>
-        <help>Esta casilla hace que los totales de las asignaciones respeten el año fiscal en vez del año calendario. Para establecer el año fiscal, vaya a Configuración -&gt; Perfil de la empresa -&gt; Año fiscal. NOTA: NO se admiten parámetros de año fiscal personalizados.</help>
-        <label>Usar año fiscal en totales</label>
-        <name>Use_Fiscal_Year_for_Rollups__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Allocations_Enabled__c</name>
+    <help>Al habilitar Asignaciones predeterminadas se crea un registro de asignación por cada oportunidad. Esto permite la creación de informes de asignaciones a la cuenta contable general de forma predeterminada, pero utiliza más espacio.</help>
+    <label>Habilitar asignaciones predeterminadas</label>
+  </fields>
+  <fields>
+    <name>Default__c</name>
+    <help>Contiene el Id. de la cuenta contable general predeterminada para la creación predeterminada de asignaciones o para la asignación de importes no asignados.</help>
+    <label>Cuenta Contable General predeterminada</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_RecTypes__c</name>
+    <help>Tipos de registro de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
+    <label>Tipos de registros de op. excluidos</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_Types__c</name>
+    <help>Tipos de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
+    <label>Tipos de oportunidades excluidos</label>
+  </fields>
+  <fields>
+    <name>Payment_Allocations_Enabled__c</name>
+    <help>Indica si las asignaciones pueden establecer en el nivel de pagos. Revise la documentación sobre las asignaciones a nivel de pagos antes de cambiar este parámetro.</help>
+    <label>Asignaciones de pagos habilitadas</label>
+  </fields>
+  <fields>
+    <name>Rollup_N_Day_Value__c</name>
+    <help>Este valor define la cantidad de días que se cuentan para los totales con N días.</help>
+    <label>Valor de N en totales</label>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+    <help>Esta casilla hace que los totales de las asignaciones respeten el año fiscal en vez del año calendario. Para establecer el año fiscal, vaya a Configuración -&gt; Perfil de la empresa -&gt; Año fiscal. NOTA: NO se admiten parámetros de año fiscal personalizados.</help>
+    <label>Usar año fiscal en totales</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de asignaciones</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de asignaciones</value>
+  </caseValues>
 </CustomObjectTranslation>

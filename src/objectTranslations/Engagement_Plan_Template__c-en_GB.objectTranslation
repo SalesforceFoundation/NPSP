@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+    <help>Recalculates a child Task's due date based on when the parent Task was actually completed.</help>
+    <label>Automatically Update Child Task Due Date</label>
+  </fields>
+  <fields>
+    <name>Default_Assignee__c</name>
+    <help>When an Engagement Plan Task's Assigned To field is left blank, who should the Task be assigned to?</help>
+    <label>Default Assignee</label>
+    <picklistValues>
+      <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+      <translation>Owner of Object for Engagement Plan</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>User Creating Engagement Plan</masterLabel>
+      <translation>User Creating Engagement Plan</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <label>Description</label>
+  </fields>
+  <fields>
+    <name>Reschedule_To__c</name>
+    <help>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</help>
+    <label>Reschedule To</label>
+    <picklistValues>
+      <masterLabel>Monday</masterLabel>
+      <translation>Monday</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Friday</masterLabel>
+      <translation>Friday</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Skip_Weekends__c</name>
+    <help>If selected, Tasks created in this Engagement Plan will not have Due Dates that fall on Saturday or Sunday.</help>
+    <label>Skip Weekends</label>
+  </fields>
+  <fields>
+    <name>Total_Engagement_Plans__c</name>
+    <label>Total Engagement Plans</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>Total Tasks</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Template</name>
+    <label>Manage Template</label>
+  </webLinks>
+  <layouts>
+    <layout>Engagement Plan Template Layout</layout>
+    <sections>
+      <label>Custom Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Engagement Plan Template Name</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Engagement Plan Template Name</label>
+  </standardFields>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Engagement Plan Template</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Engagement Plan Templates</value>
+  </caseValues>
+</CustomObjectTranslation>

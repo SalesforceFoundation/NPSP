@@ -1,425 +1,409 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <fields>
-        <help>Fecha de acuse de recibo</help>
-        <label>Fecha de acuse de recibo</label>
-        <name>Acknowledgment_Date__c</name>
-    </fields>
-    <fields>
-        <help>Estado de acuse de recibo de esta donación</help>
-        <label>Estado de acuse de recibo</label>
-        <name>Acknowledgment_Status__c</name>
-        <picklistValues>
-            <masterLabel>Acknowledged</masterLabel>
-            <translation>Acuse de recibo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>No enviar acuse de recibo</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Not Sent</masterLabel>
-            <translation>Acuse de recibo de correo electrónico no enviado</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email Acknowledgment Now</masterLabel>
-            <translation>Enviar Acuse de recibo del correo electrónico ahora</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Para acusar recibo</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>La fecha en la que se pidió al donante esta donación. Puede ser diferente a la fecha en que la recibió.</help>
-        <label>Fecha de petición</label>
-        <name>Ask_Date__c</name>
-    </fields>
-    <fields>
-        <help>El número de lote que creó esta oportunidad. Este campo se rellena automáticamente en base a su configuración de números de lote en Configuraciónd e NPSP.</help>
-        <label>Número de lote</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <label>Lote</label>
-        <name>Batch__c</name>
-        <relationshipLabel>Oportunidades</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Notas sobre el motivo por el que la petición de la donación no fue satisfactoria.</help>
-        <label>Motivo de cerrada perdida</label>
-        <name>Closed_Lost_Reason__c</name>
-    </fields>
-    <fields>
-        <help>Identificador externo para la integración del servicio de pagos de Salesforce.org.</help>
-        <label>Id. de Recurrente de Elevate</label>
-        <name>CommitmentId__c</name>
-    </fields>
-    <fields>
-        <help>Cuando se selecciona, deshabilita varios aspectos de la automatización de funciones de contacto de oportunidades de NPSP, dando como resultado datos potencialmente incorrectos o duplicados. Consulte la documentación del producto para obtener más detalles.</help>
-        <label>Deshabilitar automat. función contacto</label>
-        <name>DisableContactRoleAutomation__c</name>
-    </fields>
-    <fields>
-        <help>El justiprecio de mercado de un regalo en especie.</help>
-        <label>Justiprecio de mercado</label>
-        <name>Fair_Market_Value__c</name>
-    </fields>
-    <fields>
-        <help>Categoriza el tipo de petición para esta oportunidad, como por ejemplo, Nuevo donante.</help>
-        <label>Estrategia de regalos</label>
-        <name>Gift_Strategy__c</name>
-        <picklistValues>
-            <masterLabel>New Donor</masterLabel>
-            <translation>Nuevo donante</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Renewal</masterLabel>
-            <translation>Renovación</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Upgrade</masterLabel>
-            <translation>Actualización</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Fecha de inicio de la beca, de acuerdo a la documentación o el contrato enviado por la organización que otorga la beca.</help>
-        <label>Fecha de contrato de beca</label>
-        <name>Grant_Contract_Date__c</name>
-    </fields>
-    <fields>
-        <help>Contiene números exclusivos que a veces son asignados por organizaciones que otorgan becas.</help>
-        <label>Número del contrato de beca</label>
-        <name>Grant_Contract_Number__c</name>
-    </fields>
-    <fields>
-        <label>Fecha de finalización de período de beca</label>
-        <name>Grant_Period_End_Date__c</name>
-    </fields>
-    <fields>
-        <label>Fecha de inicio de período de beca</label>
-        <name>Grant_Period_Start_Date__c</name>
-    </fields>
-    <fields>
-        <help>Describe las áreas financiadas por la beca o la donación. Por ejemplo, los nombres de los programas para los que está designada la beca o la donación.</help>
-        <label>Áreas de programa</label>
-        <name>Grant_Program_Area_s__c</name>
-    </fields>
-    <fields>
-        <help>Una URL que lleva a los requisitos de la beca en el sitio web del otorgante de la beca.</help>
-        <label>Sitio web de requisitos de beca</label>
-        <name>Grant_Requirements_Website__c</name>
-    </fields>
-    <fields>
-        <help>El contacto existente al cual esta donación homenajea</help>
-        <label>Contacto homenajeado</label>
-        <name>Honoree_Contact__c</name>
-        <relationshipLabel>Oportunidades (Contacto homenajeado)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Nombre del homenajeado como es provisto por el donante. Si este campo se deja en blanco, y el campo Contacto homenajeado contiene un valor, NPSP automáticamente rellena este valor con ese valor.</help>
-        <label>Nombre del homenajeado</label>
-        <name>Honoree_Name__c</name>
-    </fields>
-    <fields>
-        <help>Es una descripción de texto enriquecido del regalo en especie, incluyendo imágenes.</help>
-        <label>Descripción en especie</label>
-        <name>In_Kind_Description__c</name>
-    </fields>
-    <fields>
-        <help>Indica si el donante proporcionó el justiprecio de mercado para este regalo en especie.</help>
-        <label>Valor declarado de donante en especie</label>
-        <name>In_Kind_Donor_Declared_Value__c</name>
-    </fields>
-    <fields>
-        <help>El tipo de regalo en especie, como por ejemplo bienes o servicios.</help>
-        <label>Tipo en especie</label>
-        <name>In_Kind_Type__c</name>
-        <picklistValues>
-            <masterLabel>Goods</masterLabel>
-            <translation>Bienes</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Services</masterLabel>
-            <translation>Servicios</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Indica que la beca es una renovación de una beca anterior.</help>
-        <label>Es renovación de beca</label>
-        <name>Is_Grant_Renewal__c</name>
-    </fields>
-    <fields>
-        <help>Búsqueda del registro de cuenta de la empresa que iguala esta donación.</help>
-        <label>Cuenta de regalo igualado</label>
-        <name>Matching_Gift_Account__c</name>
-        <relationshipLabel>Regalos igualados</relationshipLabel>
-    </fields>
-    <fields>
-        <help>El nombre de la empresa que igualará esta donación</help>
-        <label>Empleador de regalo igualado</label>
-        <name>Matching_Gift_Employer__c</name>
-    </fields>
-    <fields>
-        <help>El estado del regalo igualado para esta donación, como por ejemplo presentado o recibido.</help>
-        <label>Estado de regalo igualado</label>
-        <name>Matching_Gift_Status__c</name>
-        <picklistValues>
-            <masterLabel>Potential</masterLabel>
-            <translation>Potencial</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Received</masterLabel>
-            <translation>Recibido</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Submitted</masterLabel>
-            <translation>Presentado</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Búsqueda del registro de oportunidad para el regalo que iguala para esta donación.</help>
-        <label>Regalo que iguala</label>
-        <name>Matching_Gift__c</name>
-        <relationshipLabel>Regalos igualados</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La fecha de vencimiento para la próxima entrega de esta oportunidad (solo lectura).</help>
-        <label>Próxima fecha de entrega</label>
-        <name>Next_Grant_Deadline_Due_Date__c</name>
-    </fields>
-    <fields>
-        <help>Un mensaje personalizado para el destinatario de la notificación</help>
-        <label>Mensaje de notificación</label>
-        <name>Notification_Message__c</name>
-    </fields>
-    <fields>
-        <help>Indica cómo debe ser notificado el receptor, como por ejemplo por correo electrónico o teléfono.</help>
-        <label>Preferencia de notificación</label>
-        <name>Notification_Preference__c</name>
-        <picklistValues>
-            <masterLabel>Do Not Notify</masterLabel>
-            <translation>No notificar</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Email</masterLabel>
-            <translation>Correo electrónico</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Phone</masterLabel>
-            <translation>Teléfono</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Postal Mail</masterLabel>
-            <translation>Correo</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Consulta del registro del contacto de la persona que debe notificarse sobre esta donación.</help>
-        <label>Contacto destinatario de la notificación</label>
-        <name>Notification_Recipient_Contact__c</name>
-        <relationshipLabel>Oportunidades (destinatario de notificación)</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Introduzca cualquier información de contacto como la dirección, el teléfono o el correo electrónico que el donante proporcionó para el destinatario de la notificación.</help>
-        <label>Información destinatario de notificación</label>
-        <name>Notification_Recipient_Information__c</name>
-    </fields>
-    <fields>
-        <help>El nombre que el donante proporcionó de la persona que debe ser notificada sobre la donación. Si este campo se deja en blanco y campo Contacto destinatario de la notificación contiene un valor, NPSP automáticamente completa este campo con ese valor.</help>
-        <label>Nombre del destinatario de notificación</label>
-        <name>Notification_Recipient_Name__c</name>
-    </fields>
-    <fields>
-        <help>Si esta beca es una renovación de una beca anterior, use este campo para relacionar este registro con la beca anterior.</help>
-        <label>Oportunidad de beca/regalo previa</label>
-        <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>Becas/Regalos relacionados</relationshipLabel>
-    </fields>
-    <fields>
-        <help>El estado que NPSP utiliza al crear un miembro de campaña para contacto principal y origen de campaña de oportunidad. En blanco para que el valor sea estado respondido para oportunidades cerradas ganadas, y estado no respondido para otras oportunidades.</help>
-        <label>Estado miembro campañ contacto principal</label>
-        <name>Primary_Contact_Campaign_Member_Status__c</name>
-    </fields>
-    <fields>
-        <help>El contacto principal para esta oportunidad. Si es una donación individual, NPSP atribuye la donación al contacto principal. Si es una donación organizativa, NPSP atribuye un crédito blando al contacto principal.</help>
-        <label>Contacto principal</label>
-        <name>Primary_Contact__c</name>
-        <relationshipLabel>Oportunidades</relationshipLabel>
-    </fields>
-    <fields>
-        <help>La fecha en la que su organización identificó a este donante como apto para esta donación.</help>
-        <label>Fecha de aptitud</label>
-        <name>Qualified_Date__c</name>
-    </fields>
-    <fields>
-        <help>Nombre de las cuotas para incluir en el nombre de la oportunidad. Muestra el número de cuotas en paréntesis para donaciones recurrentes de final abierto, o el número de cuotas del total de una donación recurrentes con un número fijo de cuotas</help>
-        <label>Nombre de cuota de donación recurrente</label>
-        <name>Recurring_Donation_Installment_Name__c</name>
-    </fields>
-    <fields>
-        <help>El número de cuota de la donación recurrente de esta oportunidad.</help>
-        <label>Número de cuota de donación recurrente</label>
-        <name>Recurring_Donation_Installment_Number__c</name>
-    </fields>
-    <fields>
-        <help>El importe que se solicita. Este número puede ser diferente al importe otorgado al final.</help>
-        <label>Importe solicitado</label>
-        <name>Requested_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Indica si la donación es en honor o memoria de una persona,</help>
-        <label>Tipo de tributo</label>
-        <name>Tribute_Type__c</name>
-        <picklistValues>
-            <masterLabel>Honor</masterLabel>
-            <translation>Homenaje</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Memorial</masterLabel>
-            <translation>En memoria</translation>
-        </picklistValues>
-    </fields>
-    <layouts>
-        <layout>Donation Layout</layout>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Información del regalo que iguala</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Información del pago</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Información del tributo</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Grant Layout</layout>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Información de la beca</label>
-            <section>Grant Information</section>
-        </sections>
-        <sections>
-            <label>Información del pago</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>In-Kind Gift Layout</layout>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Información del regalo en especie</label>
-            <section>In-Kind Information</section>
-        </sections>
-        <sections>
-            <label>Información del tributo</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Major Gift Layout</layout>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Información de regalo importante</label>
-            <section>Major Gift Information</section>
-        </sections>
-        <sections>
-            <label>Información del regalo que iguala</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Información del pago</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Información del tributo</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Matching Gift Layout</layout>
-        <sections>
-            <label>Información de la donación</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Información del pago</label>
-            <section>Payment Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Membership Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Campos</label>
-            <section>Fields</section>
-        </sections>
-        <sections>
-            <label>Información del miembro</label>
-            <section>Member Information</section>
-        </sections>
-        <sections>
-            <label>Información del pago</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Información del sistema</label>
-            <section>System Information</section>
-        </sections>
-    </layouts>
-    <quickActions>
-        <label>Nuevo pago</label>
-        <name>New_Payment</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Acuse de recibo por correo electrónico</label>
-        <name>Email_Acknowledgment</name>
-    </webLinks>
-    <webLinks>
-        <label>Enviar Acuses de recibo</label>
-        <name>Email_Acknowledgments</name>
-    </webLinks>
-    <webLinks>
-        <label>Encontrar regalos igualados</label>
-        <name>Find_Matched_Gifts</name>
-    </webLinks>
-    <webLinks>
-        <label>Gestionar créditos blandos</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
-    <webLinks>
-        <label>Actualizar nombre</label>
-        <name>Refresh_Name</name>
-    </webLinks>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Acknowledgment_Date__c</name>
+    <help>Fecha de acuse de recibo</help>
+    <label>Fecha de acuse de recibo</label>
+  </fields>
+  <fields>
+    <name>Acknowledgment_Status__c</name>
+    <help>Estado de acuse de recibo de esta donación</help>
+    <label>Estado de acuse de recibo</label>
+    <picklistValues>
+      <masterLabel>To Be Acknowledged</masterLabel>
+      <translation>Para acusar recibo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Acknowledged</masterLabel>
+      <translation>Acuse de recibo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Acknowledge</masterLabel>
+      <translation>No enviar acuse de recibo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Now</masterLabel>
+      <translation>Enviar Acuse de recibo del correo electrónico ahora</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+      <translation>Acuse de recibo de correo electrónico no enviado</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Ask_Date__c</name>
+    <help>La fecha en la que se pidió al donante esta donación. Puede ser diferente a la fecha en que la recibió.</help>
+    <label>Fecha de petición</label>
+  </fields>
+  <fields>
+    <name>Batch__c</name>
+    <relationshipLabel>Oportunidades</relationshipLabel>
+    <label>Lote</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>El número de lote que creó esta oportunidad. Este campo se rellena automáticamente en base a su configuración de números de lote en Configuraciónd e NPSP.</help>
+    <label>Número de lote</label>
+  </fields>
+  <fields>
+    <name>Closed_Lost_Reason__c</name>
+    <help>Notas sobre el motivo por el que la petición de la donación no fue satisfactoria.</help>
+    <label>Motivo de cerrada perdida</label>
+  </fields>
+  <fields>
+    <name>CommitmentId__c</name>
+    <help>Identificador externo para la integración del servicio de pagos de Salesforce.org.</help>
+    <label>Id. de Recurrente de Elevate</label>
+  </fields>
+  <fields>
+    <name>DisableContactRoleAutomation__c</name>
+    <help>Cuando se selecciona, deshabilita varios aspectos de la automatización de funciones de contacto de oportunidades de NPSP, dando como resultado datos potencialmente incorrectos o duplicados. Consulte la documentación del producto para obtener más detalles.</help>
+    <label>Deshabilitar automat. función contacto</label>
+  </fields>
+  <fields>
+    <name>Fair_Market_Value__c</name>
+    <help>El justiprecio de mercado de un regalo en especie.</help>
+    <label>Justiprecio de mercado</label>
+  </fields>
+  <fields>
+    <name>Gift_Strategy__c</name>
+    <help>Categoriza el tipo de petición para esta oportunidad, como por ejemplo, Nuevo donante.</help>
+    <label>Estrategia de regalos</label>
+    <picklistValues>
+      <masterLabel>New Donor</masterLabel>
+      <translation>Nuevo donante</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Renewal</masterLabel>
+      <translation>Renovación</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Upgrade</masterLabel>
+      <translation>Actualización</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Date__c</name>
+    <help>Fecha de inicio de la beca, de acuerdo a la documentación o el contrato enviado por la organización que otorga la beca.</help>
+    <label>Fecha de contrato de beca</label>
+  </fields>
+  <fields>
+    <name>Grant_Contract_Number__c</name>
+    <help>Contiene números exclusivos que a veces son asignados por organizaciones que otorgan becas.</help>
+    <label>Número del contrato de beca</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_End_Date__c</name>
+    <label>Fecha de finalización de período de beca</label>
+  </fields>
+  <fields>
+    <name>Grant_Period_Start_Date__c</name>
+    <label>Fecha de inicio de período de beca</label>
+  </fields>
+  <fields>
+    <name>Grant_Program_Area_s__c</name>
+    <help>Describe las áreas financiadas por la beca o la donación. Por ejemplo, los nombres de los programas para los que está designada la beca o la donación.</help>
+    <label>Áreas de programa</label>
+  </fields>
+  <fields>
+    <name>Grant_Requirements_Website__c</name>
+    <help>Una URL que lleva a los requisitos de la beca en el sitio web del otorgante de la beca.</help>
+    <label>Sitio web de requisitos de beca</label>
+  </fields>
+  <fields>
+    <name>Honoree_Contact__c</name>
+    <help>El contacto existente al cual esta donación homenajea</help>
+    <relationshipLabel>Oportunidades (Contacto homenajeado)</relationshipLabel>
+    <label>Contacto homenajeado</label>
+  </fields>
+  <fields>
+    <name>Honoree_Name__c</name>
+    <help>Nombre del homenajeado como es provisto por el donante. Si este campo se deja en blanco, y el campo Contacto homenajeado contiene un valor, NPSP automáticamente rellena este valor con ese valor.</help>
+    <label>Nombre del homenajeado</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Description__c</name>
+    <help>Es una descripción de texto enriquecido del regalo en especie, incluyendo imágenes.</help>
+    <label>Descripción en especie</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Donor_Declared_Value__c</name>
+    <help>Indica si el donante proporcionó el justiprecio de mercado para este regalo en especie.</help>
+    <label>Valor declarado de donante en especie</label>
+  </fields>
+  <fields>
+    <name>In_Kind_Type__c</name>
+    <help>El tipo de regalo en especie, como por ejemplo bienes o servicios.</help>
+    <label>Tipo en especie</label>
+    <picklistValues>
+      <masterLabel>Goods</masterLabel>
+      <translation>Bienes</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Services</masterLabel>
+      <translation>Servicios</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Is_Grant_Renewal__c</name>
+    <help>Indica que la beca es una renovación de una beca anterior.</help>
+    <label>Es renovación de beca</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Account__c</name>
+    <help>Búsqueda del registro de cuenta de la empresa que iguala esta donación.</help>
+    <relationshipLabel>Regalos igualados</relationshipLabel>
+    <label>Cuenta de regalo igualado</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Employer__c</name>
+    <help>El nombre de la empresa que igualará esta donación</help>
+    <label>Empleador de regalo igualado</label>
+  </fields>
+  <fields>
+    <name>Matching_Gift_Status__c</name>
+    <help>El estado del regalo igualado para esta donación, como por ejemplo presentado o recibido.</help>
+    <label>Estado de regalo igualado</label>
+    <picklistValues>
+      <masterLabel>Potential</masterLabel>
+      <translation>Potencial</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Submitted</masterLabel>
+      <translation>Presentado</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Received</masterLabel>
+      <translation>Recibido</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Matching_Gift__c</name>
+    <help>Búsqueda del registro de oportunidad para el regalo que iguala para esta donación.</help>
+    <relationshipLabel>Regalos igualados</relationshipLabel>
+    <label>Regalo que iguala</label>
+  </fields>
+  <fields>
+    <name>Next_Grant_Deadline_Due_Date__c</name>
+    <help>La fecha de vencimiento para la próxima entrega de esta oportunidad (solo lectura).</help>
+    <label>Próxima fecha de entrega</label>
+  </fields>
+  <fields>
+    <name>Notification_Message__c</name>
+    <help>Un mensaje personalizado para el destinatario de la notificación</help>
+    <label>Mensaje de notificación</label>
+  </fields>
+  <fields>
+    <name>Notification_Preference__c</name>
+    <help>Indica cómo debe ser notificado el receptor, como por ejemplo por correo electrónico o teléfono.</help>
+    <label>Preferencia de notificación</label>
+    <picklistValues>
+      <masterLabel>Email</masterLabel>
+      <translation>Correo electrónico</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Postal Mail</masterLabel>
+      <translation>Correo</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Phone</masterLabel>
+      <translation>Teléfono</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Do Not Notify</masterLabel>
+      <translation>No notificar</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Contact__c</name>
+    <help>Consulta del registro del contacto de la persona que debe notificarse sobre esta donación.</help>
+    <relationshipLabel>Oportunidades (destinatario de notificación)</relationshipLabel>
+    <label>Contacto destinatario de la notificación</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Information__c</name>
+    <help>Introduzca cualquier información de contacto como la dirección, el teléfono o el correo electrónico que el donante proporcionó para el destinatario de la notificación.</help>
+    <label>Información destinatario de notificación</label>
+  </fields>
+  <fields>
+    <name>Notification_Recipient_Name__c</name>
+    <help>El nombre que el donante proporcionó de la persona que debe ser notificada sobre la donación. Si este campo se deja en blanco y campo Contacto destinatario de la notificación contiene un valor, NPSP automáticamente completa este campo con ese valor.</help>
+    <label>Nombre del destinatario de notificación</label>
+  </fields>
+  <fields>
+    <name>Previous_Grant_Opportunity__c</name>
+    <help>Si esta beca es una renovación de una beca anterior, use este campo para relacionar este registro con la beca anterior.</help>
+    <relationshipLabel>Becas/Regalos relacionados</relationshipLabel>
+    <label>Oportunidad de beca/regalo previa</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact_Campaign_Member_Status__c</name>
+    <help>El estado que NPSP utiliza al crear un miembro de campaña para contacto principal y origen de campaña de oportunidad. En blanco para que el valor sea estado respondido para oportunidades cerradas ganadas, y estado no respondido para otras oportunidades.</help>
+    <label>Estado miembro campañ contacto principal</label>
+  </fields>
+  <fields>
+    <name>Primary_Contact__c</name>
+    <help>El contacto principal para esta oportunidad. Si es una donación individual, NPSP atribuye la donación al contacto principal. Si es una donación organizativa, NPSP atribuye un crédito blando al contacto principal.</help>
+    <relationshipLabel>Oportunidades</relationshipLabel>
+    <label>Contacto principal</label>
+  </fields>
+  <fields>
+    <name>Qualified_Date__c</name>
+    <help>La fecha en la que su organización identificó a este donante como apto para esta donación.</help>
+    <label>Fecha de aptitud</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Name__c</name>
+    <help>Nombre de las cuotas para incluir en el nombre de la oportunidad. Muestra el número de cuotas en paréntesis para donaciones recurrentes de final abierto, o el número de cuotas del total de una donación recurrentes con un número fijo de cuotas</help>
+    <label>Nombre de cuota de donación recurrente</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation_Installment_Number__c</name>
+    <help>El número de cuota de la donación recurrente de esta oportunidad.</help>
+    <label>Número de cuota de donación recurrente</label>
+  </fields>
+  <fields>
+    <name>Requested_Amount__c</name>
+    <help>El importe que se solicita. Este número puede ser diferente al importe otorgado al final.</help>
+    <label>Importe solicitado</label>
+  </fields>
+  <fields>
+    <name>Tribute_Type__c</name>
+    <help>Indica si la donación es en honor o memoria de una persona,</help>
+    <label>Tipo de tributo</label>
+    <picklistValues>
+      <masterLabel>Honor</masterLabel>
+      <translation>Homenaje</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Memorial</masterLabel>
+      <translation>En memoria</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Email_Acknowledgment</name>
+    <label>Acuse de recibo por correo electrónico</label>
+  </webLinks>
+  <webLinks>
+    <name>Email_Acknowledgments</name>
+    <label>Enviar Acuses de recibo</label>
+  </webLinks>
+  <webLinks>
+    <name>Find_Matched_Gifts</name>
+    <label>Encontrar regalos igualados</label>
+  </webLinks>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Gestionar créditos blandos</label>
+  </webLinks>
+  <webLinks>
+    <name>Refresh_Name</name>
+    <label>Actualizar nombre</label>
+  </webLinks>
+  <layouts>
+    <layout>Grant Layout</layout>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información de la beca</label>
+      <section>Grant Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>In-Kind Gift Layout</layout>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del regalo en especie</label>
+      <section>In-Kind Information</section>
+    </sections>
+    <sections>
+      <label>Información del tributo</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Donation Layout</layout>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Información del regalo que iguala</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Información del tributo</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Major Gift Layout</layout>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información de regalo importante</label>
+      <section>Major Gift Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Información del regalo que iguala</label>
+      <section>Matching Gift Information</section>
+    </sections>
+    <sections>
+      <label>Información del tributo</label>
+      <section>Tribute Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Matching Gift Layout</layout>
+    <sections>
+      <label>Información de la donación</label>
+      <section>Donation Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+  </layouts>
+  <layouts>
+    <layout>Membership Layout</layout>
+    <sections>
+      <label>Campos</label>
+      <section>Fields</section>
+    </sections>
+    <sections>
+      <label>Información del miembro</label>
+      <section>Member Information</section>
+    </sections>
+    <sections>
+      <label>Información del pago</label>
+      <section>Payment Information</section>
+    </sections>
+    <sections>
+      <label>Vínculos personalizados</label>
+      <section>Custom Links</section>
+    </sections>
+    <sections>
+      <label>Información del sistema</label>
+      <section>System Information</section>
+    </sections>
+  </layouts>
+</CustomObjectTranslation>

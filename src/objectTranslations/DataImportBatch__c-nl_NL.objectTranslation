@@ -1,206 +1,206 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP-Gegevensimportbatch</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>NPSP-Gegevensimportbatches</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
-        <name>BatchGiftEntryTabColumns</name>
-    </fieldSets>
-    <fields>
-        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
-        <label>Aangepast Uniek ID voor Account</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <label>Actieve Velden</label>
-        <name>Active_Fields__c</name>
-    </fields>
-    <fields>
-        <help>De standaardveldwaarden voor een batch in Opgave van gift. Niet rechtstreeks bewerken. Dit moet worden bijgewerkt in de UI waar u uw batch bewerkt.</help>
-        <label>Standaardwaarden voor Batch</label>
-        <name>Batch_Defaults__c</name>
-    </fields>
-    <fields>
-        <help>Een optionele beschrijving van deze batch.</help>
-        <label>Batchomschrijving</label>
-        <name>Batch_Description__c</name>
-    </fields>
-    <fields>
-        <help>De versie van de voorziening Batchinvoer van giften, die is gebruikt om deze batch te maken.</help>
-        <label>Versie van Batchinvoer van giften</label>
-        <name>Batch_Gift_Entry_Version__c</name>
-    </fields>
-    <fields>
-        <help>De unieke, automatisch gegenereerde aanduiding voor deze batch.</help>
-        <label>Batchnummer</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
-        <label>Verwerkingsgrootte van Batch</label>
-        <name>Batch_Process_Size__c</name>
-    </fields>
-    <fields>
-        <help>De batchstatus wordt gebaseerd op de importstatus van de NPSP-gegevensimportrecords in de batch. Als één record niet wordt geïmporteerd, wordt de status van de batch Mislukt - Controle vereist.</help>
-        <label>Batchstatus</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Voltooid</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Failed - Needs Review</masterLabel>
-            <translation>Mislukt - Controle vereist</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Open</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Lijst met API-namen van velden die zijn opgenomen in de batch gifttabellen. Opgeslagen als JSON.</help>
-        <label>Batchtabelkolommen</label>
-        <name>Batch_Table_Columns__c</name>
-    </fields>
-    <fields>
-        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
-        <label>Aangepast Uniek ID voor Contactpersoon</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan welke regel moet worden gevolgd wanneer er geprobeerd wordt overeenkomsten te vinden tussen Contactpersonen in Gegevensimportrecords en bestaande Contactpersonen.</help>
-        <label>Contactpersoonovereenkomstregel</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Voer het aantal dagen vanaf de Donatiedatum in dat moet worden overwogen bij het zoeken naar een overeenk. Opp. of Betaling. NPSP kiest de overeenk. Opp. of Betaling waarvan de datum binnen het aantal dagen valt EN die het dichtst bij de Donatiedatum is.</help>
-        <label>Aantal Dagen vanaf Donatiedatum</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Definieert hoe NPSP moet omgaan met overeenkomende Donaties.</help>
-        <label>Overeenkomstenpatroon voor donatie</label>
-        <name>Donation_Matching_Behavior__c</name>
-        <picklistValues>
-            <masterLabel>Best Match</masterLabel>
-            <translation>Beste Overeenkomst</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Match or Create</masterLabel>
-            <translation>Beste Overeenkomst of Maken</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Match</masterLabel>
-            <translation>Niet Laten Overeenkomen</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Match</masterLabel>
-            <translation>Geen Overeenkomst</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match</masterLabel>
-            <translation>Enkelvoudige Overeenkomst</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match or Create</masterLabel>
-            <translation>Enkelvoudige Overeenkomst of Maken</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De developernaam van een Apex-klasse die de BDI_IMatching-interface voor Donaties implementeert. Laat dit leeg om overeenkomst over te laten aan NPSP.</help>
-        <label>Implementatieklasse Overeenkomst Donatie</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan welke velden moeten overeenkomen wanneer wordt geprobeerd Donaties in batchrecords te laten overeenkomen met bestaande Opportunities en Betalingen.</help>
-        <label>Donatieovereenkomstregel</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
-        <label>Verwachte aantal giften</label>
-        <name>Expected_Count_of_Gifts__c</name>
-    </fields>
-    <fields>
-        <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
-        <label>Verwachte totale bedrag van batch</label>
-        <name>Expected_Total_Batch_Amount__c</name>
-    </fields>
-    <fields>
-        <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
-        <label>Formuliersjabloon</label>
-        <name>Form_Template__c</name>
-        <relationshipLabel>Batches van NPSP-gegevensimport</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
-        <label>Giftbatch</label>
-        <name>GiftBatch__c</name>
-    </fields>
-    <fields>
-        <help>De datum en tijd van de laatste verwerking van de Batch.</help>
-        <label>Laatst Verwerkt Op</label>
-        <name>Last_Processed_On__c</name>
-    </fields>
-    <fields>
-        <help>De developernaam van een Apex-klasse die de BDI__PostProcess-interface voor NPSP-batchrecords implementeert.</help>
-        <label>Implementatieklasse Na Verwerking</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, wordt de batch automatisch verwerkt in overeenkomst met de planning voor de gekoppelde opdracht.</help>
-        <label>Verwerken met Geplande Opdracht</label>
-        <name>Process_Using_Scheduled_Job__c</name>
-    </fields>
-    <fields>
-        <help>Laat het aantal records zien die niet succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
-        <label>Records Mislukt</label>
-        <name>Records_Failed__c</name>
-    </fields>
-    <fields>
-        <help>Laat het aantal records zien die succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
-        <label>Records Succesvol Verwerkt</label>
-        <name>Records_Successfully_Processed__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer aangevinkt, moet het totale aantal giften en het totale bedrag overeenkomen met de verwachte totalen die voor de batch zijn opgegeven.</help>
-        <label>Overeenkomst Verwachte Totalen vereisen</label>
-        <name>RequireTotalMatch__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
-        <label>Donatietotalisering met Batch berekenen</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>NPSP Data Import Batch Layout</layout>
-        <sections>
-            <label>Overeenkomst Contactpersoon en Account</label>
-            <section>Contact &amp; Account Matching</section>
-        </sections>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Donatieovereenkomst</label>
-            <section>Donation Matching</section>
-        </sections>
-        <sections>
-            <label>Uitbreidbaarheid</label>
-            <section>Extensibility</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Batchnaam</nameFieldLabel>
-    <webLinks>
-        <label>Batch verwerken</label>
-        <name>Process_Batch</name>
-    </webLinks>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
+    <label>Aangepast Uniek ID voor Account</label>
+  </fields>
+  <fields>
+    <name>Active_Fields__c</name>
+    <label>Actieve Velden</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>De unieke, automatisch gegenereerde aanduiding voor deze batch.</help>
+    <label>Batchnummer</label>
+  </fields>
+  <fields>
+    <name>Batch_Defaults__c</name>
+    <help>De standaardveldwaarden voor een batch in Opgave van gift. Niet rechtstreeks bewerken. Dit moet worden bijgewerkt in de UI waar u uw batch bewerkt.</help>
+    <label>Standaardwaarden voor Batch</label>
+  </fields>
+  <fields>
+    <name>Batch_Table_Columns__c</name>
+    <help>Lijst met API-namen van velden die zijn opgenomen in de batch gifttabellen. Opgeslagen als JSON.</help>
+    <label>Batchtabelkolommen</label>
+  </fields>
+  <fields>
+    <name>Batch_Description__c</name>
+    <help>Een optionele beschrijving van deze batch.</help>
+    <label>Batchomschrijving</label>
+  </fields>
+  <fields>
+    <name>Batch_Gift_Entry_Version__c</name>
+    <help>De versie van de voorziening Batchinvoer van giften, die is gebruikt om deze batch te maken.</help>
+    <label>Versie van Batchinvoer van giften</label>
+  </fields>
+  <fields>
+    <name>Batch_Process_Size__c</name>
+    <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
+    <label>Verwerkingsgrootte van Batch</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
+    <label>Aangepast Uniek ID voor Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>Geeft aan welke regel moet worden gevolgd wanneer er geprobeerd wordt overeenkomsten te vinden tussen Contactpersonen in Gegevensimportrecords en bestaande Contactpersonen.</help>
+    <label>Contactpersoonovereenkomstregel</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>Voer het aantal dagen vanaf de Donatiedatum in dat moet worden overwogen bij het zoeken naar een overeenk. Opp. of Betaling. NPSP kiest de overeenk. Opp. of Betaling waarvan de datum binnen het aantal dagen valt EN die het dichtst bij de Donatiedatum is.</help>
+    <label>Aantal Dagen vanaf Donatiedatum</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>Definieert hoe NPSP moet omgaan met overeenkomende Donaties.</help>
+    <label>Overeenkomstenpatroon voor donatie</label>
+    <picklistValues>
+      <masterLabel>Do Not Match</masterLabel>
+      <translation>Niet Laten Overeenkomen</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Match</masterLabel>
+      <translation>Geen Overeenkomst</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match</masterLabel>
+      <translation>Enkelvoudige Overeenkomst</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match or Create</masterLabel>
+      <translation>Enkelvoudige Overeenkomst of Maken</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match</masterLabel>
+      <translation>Beste Overeenkomst</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match or Create</masterLabel>
+      <translation>Beste Overeenkomst of Maken</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>De developernaam van een Apex-klasse die de BDI_IMatching-interface voor Donaties implementeert. Laat dit leeg om overeenkomst over te laten aan NPSP.</help>
+    <label>Implementatieklasse Overeenkomst Donatie</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>Geeft aan welke velden moeten overeenkomen wanneer wordt geprobeerd Donaties in batchrecords te laten overeenkomen met bestaande Opportunities en Betalingen.</help>
+    <label>Donatieovereenkomstregel</label>
+  </fields>
+  <fields>
+    <name>Expected_Count_of_Gifts__c</name>
+    <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
+    <label>Verwachte aantal giften</label>
+  </fields>
+  <fields>
+    <name>Expected_Total_Batch_Amount__c</name>
+    <help>Het verwachte totale bedrag van alle giften ingevoerd in deze Batch.</help>
+    <label>Verwachte totale bedrag van batch</label>
+  </fields>
+  <fields>
+    <name>Form_Template__c</name>
+    <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
+    <relationshipLabel>Batches van NPSP-gegevensimport</relationshipLabel>
+    <label>Formuliersjabloon</label>
+  </fields>
+  <fields>
+    <name>GiftBatch__c</name>
+    <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
+    <label>Giftbatch</label>
+  </fields>
+  <fields>
+    <name>Last_Processed_On__c</name>
+    <help>De datum en tijd van de laatste verwerking van de Batch.</help>
+    <label>Laatst Verwerkt Op</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>De developernaam van een Apex-klasse die de BDI__PostProcess-interface voor NPSP-batchrecords implementeert.</help>
+    <label>Implementatieklasse Na Verwerking</label>
+  </fields>
+  <fields>
+    <name>Process_Using_Scheduled_Job__c</name>
+    <help>Indien aangevinkt, wordt de batch automatisch verwerkt in overeenkomst met de planning voor de gekoppelde opdracht.</help>
+    <label>Verwerken met Geplande Opdracht</label>
+  </fields>
+  <fields>
+    <name>Records_Failed__c</name>
+    <help>Laat het aantal records zien die niet succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
+    <label>Records Mislukt</label>
+  </fields>
+  <fields>
+    <name>Records_Successfully_Processed__c</name>
+    <help>Laat het aantal records zien die succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
+    <label>Records Succesvol Verwerkt</label>
+  </fields>
+  <fields>
+    <name>RequireTotalMatch__c</name>
+    <help>Wanneer aangevinkt, moet het totale aantal giften en het totale bedrag overeenkomen met de verwachte totalen die voor de batch zijn opgegeven.</help>
+    <label>Overeenkomst Verwachte Totalen vereisen</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
+    <label>Donatietotalisering met Batch berekenen</label>
+  </fields>
+  <fields>
+    <name>Batch_Status__c</name>
+    <help>De batchstatus wordt gebaseerd op de importstatus van de NPSP-gegevensimportrecords in de batch. Als één record niet wordt geïmporteerd, wordt de status van de batch Mislukt - Controle vereist.</help>
+    <label>Batchstatus</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Open</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>Voltooid</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Failed - Needs Review</masterLabel>
+      <translation>Mislukt - Controle vereist</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Process_Batch</name>
+    <label>Batch verwerken</label>
+  </webLinks>
+  <layouts>
+    <layout>NPSP Data Import Batch Layout</layout>
+    <sections>
+      <label>Overeenkomst Contactpersoon en Account</label>
+      <section>Contact &amp; Account Matching</section>
+    </sections>
+    <sections>
+      <label>Donatieovereenkomst</label>
+      <section>Donation Matching</section>
+    </sections>
+    <sections>
+      <label>Uitbreidbaarheid</label>
+      <section>Extensibility</section>
+    </sections>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Batchnaam</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Batchnaam</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP-Gegevensimportbatch</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>NPSP-Gegevensimportbatches</value>
+  </caseValues>
 </CustomObjectTranslation>

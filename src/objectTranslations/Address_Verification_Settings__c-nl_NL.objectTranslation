@@ -1,67 +1,67 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Instellingen voor adresverificatie-VEROUDERD</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Instellingen voor adresverificatie-VEROUDERD</value>
-    </caseValues>
-    <fields>
-        <help>URL die wordt gebruikt voor adresverificatie.</help>
-        <label>Eindpunt voor Adresverificatie-VEROUDERD</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>Het Auth.-ID van uw Geheime Sleutelpaar.</help>
-        <label>Auth.-ID-VEROUDERD</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>Het Auth.-token van uw Geheime Sleutelpaar.</help>
-        <label>Auth.-token-VEROUDERD</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, worden gewijzigde adressen automatisch bijgewerkt met het antwoord van de dienst (als er één geverifieerd resultaat is).</help>
-        <label>Adressen Automatisch Bijwerken-VEROUDERD</label>
-        <name>Auto_Update_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Salesforce-klasse verantwoordelijk voor het contacteren van de SmartyStreets-API en het verifiëren van adressen.</help>
-        <label>Klasse-VEROUDERD</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Indien aangevinkt, worden alle accountadressen van de VS die door de dienst als niet-leverbaar worden gemarkeerd, automatisch geleegd. (U kunt het ongeldige gegeven in de Adresrecord bekijken).</help>
-        <label>Ongeldige Adressen Wissen-VEROUDERD</label>
-        <name>Clear_Invalid_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Schakelt automatische adresverificatie voor nieuwe adressen in.</help>
-        <label>Autom. Verificatie inschakelen-VEROUDERD</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Markeert dubbelzinnige adressen als ongeldig, als de API meer dan één adres oplevert. Indien niet geselecteerd, zal Salesforce het eerste gesuggereerde adres als het geldige adres aanvaarden.</help>
-        <label>Ambigue Adressen weigeren-VEROUDERD</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Melding time-out in seconden</help>
-        <label>Time-out-VEROUDERD</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of u gebruikmaakt van de adresverificatiedienst van SmartyStreets.</help>
-        <label>SmartyStreets gebruiken-VEROUDERD</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>URL die wordt gebruikt voor postcodeverificatie.</help>
-        <label>Eindpunt Postcodeverificatie-VEROUDERD</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>URL die wordt gebruikt voor adresverificatie.</help>
+    <label>Eindpunt voor Adresverificatie-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>Het Auth.-ID van uw Geheime Sleutelpaar.</help>
+    <label>Auth.-ID-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>Het Auth.-token van uw Geheime Sleutelpaar.</help>
+    <label>Auth.-token-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Auto_Update_Addresses__c</name>
+    <help>Indien aangevinkt, worden gewijzigde adressen automatisch bijgewerkt met het antwoord van de dienst (als er één geverifieerd resultaat is).</help>
+    <label>Adressen Automatisch Bijwerken-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Salesforce-klasse verantwoordelijk voor het contacteren van de SmartyStreets-API en het verifiëren van adressen.</help>
+    <label>Klasse-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Clear_Invalid_Addresses__c</name>
+    <help>Indien aangevinkt, worden alle accountadressen van de VS die door de dienst als niet-leverbaar worden gemarkeerd, automatisch geleegd. (U kunt het ongeldige gegeven in de Adresrecord bekijken).</help>
+    <label>Ongeldige Adressen Wissen-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>Schakelt automatische adresverificatie voor nieuwe adressen in.</help>
+    <label>Autom. Verificatie inschakelen-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Markeert dubbelzinnige adressen als ongeldig, als de API meer dan één adres oplevert. Indien niet geselecteerd, zal Salesforce het eerste gesuggereerde adres als het geldige adres aanvaarden.</help>
+    <label>Ambigue Adressen weigeren-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>Melding time-out in seconden</help>
+    <label>Time-out-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>Geeft aan of u gebruikmaakt van de adresverificatiedienst van SmartyStreets.</help>
+    <label>SmartyStreets gebruiken-VEROUDERD</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>URL die wordt gebruikt voor postcodeverificatie.</help>
+    <label>Eindpunt Postcodeverificatie-VEROUDERD</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Instellingen voor adresverificatie-VEROUDERD</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Instellingen voor adresverificatie-VEROUDERD</value>
+  </caseValues>
 </CustomObjectTranslation>

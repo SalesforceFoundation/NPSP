@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+  <fields>
+    <name>Account__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Account</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Campaign</label>
+  </fields>
+  <fields>
+    <name>Case__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Case</label>
+  </fields>
+  <fields>
+    <name>Completed_Tasks__c</name>
+    <label>Completed Tasks</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Contact</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Engagement Plan Template</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>Engagement Plans</relationshipLabel>
+    <label>Recurring Donation</label>
+  </fields>
+  <fields>
+    <name>Status__c</name>
+    <label>Status</label>
+  </fields>
+  <fields>
+    <name>Total_EP_Tasks__c</name>
+    <label>Total EP Tasks</label>
+  </fields>
+  <fields>
+    <name>Total_Tasks__c</name>
+    <label>Total Tasks</label>
+  </fields>
+  <layouts>
+    <layout>Engagement Plan Layout</layout>
+    <sections>
+      <label>Custom Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Engagement Plan Number</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Engagement Plan Number</label>
+  </standardFields>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Engagement Plan</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Engagement Plans</value>
+  </caseValues>
+</CustomObjectTranslation>

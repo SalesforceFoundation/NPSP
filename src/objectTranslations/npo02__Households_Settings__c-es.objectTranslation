@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar &quot;Donante con coincidencia&quot;.</help>
-        <label>Función del donante coincidente</label>
-        <name>Matched_Donor_Role__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se establece una dirección estacional como dirección postal.</help>
-        <label>Tamaño de lote de dirección estacional</label>
-        <name>Seasonal_Addresses_Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>Marque para tipos de cambio con fecha cuando Gestión de divisas avanzada está habilitada en la organización. Si se marca y ACM está habilitado, todas las totalizaciones de NPSP utilizarán el tipo de cambio predeterminado para la divisa.</help>
-        <label>Usar tipos de cambio con fecha si hay</label>
-        <name>Use_Dated_Conversion_Rates__c</name>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Matched_Donor_Role__c</name>
+    <help>La función de contacto que desea utilizar para donantes coincidentes. Recomendamos utilizar "Donante con coincidencia".</help>
+    <label>Función del donante coincidente</label>
+  </fields>
+  <fields>
+    <name>Use_Dated_Conversion_Rates__c</name>
+    <help>Marque para tipos de cambio con fecha cuando Gestión de divisas avanzada está habilitada en la organización. Si se marca y ACM está habilitado, todas las totalizaciones de NPSP utilizarán el tipo de cambio predeterminado para la divisa.</help>
+    <label>Usar tipos de cambio con fecha si hay</label>
+  </fields>
+  <fields>
+    <name>Seasonal_Addresses_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se establece una dirección estacional como dirección postal.</help>
+    <label>Tamaño de lote de dirección estacional</label>
+  </fields>
+</CustomObjectTranslation>
