@@ -9,11 +9,21 @@ import spinnerAltText from '@salesforce/label/c.geAssistiveSpinner';
 import elevateDisableButtonLabel from '@salesforce/label/c.RD2_ElevateDisableButtonLabel';
 import elevateDisabledMessage from '@salesforce/label/c.RD2_ElevateDisabledMessage';
 import nextPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextPaymentDonationDateInfo';
+import nextACHPaymentDonationDateMessage from '@salesforce/label/c.RD2_NextACHPaymentDonationDateInfo';
 import cardholderNameLabel from '@salesforce/label/c.commonCardholderName';
 import elevateEnableButtonLabel from '@salesforce/label/c.RD2_ElevateEnableButtonLabel';
-import updatePaymentButtonLabel from '@salesforce/label/c.RD2_UpdatePaymentInformation';
+import updatePaymentButtonLabel from '@salesforce/label/c.commonEditPaymentInformation';
 import cancelButtonLabel from '@salesforce/label/c.commonCancel';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
+import { isNull } from 'c/util';
+import {
+    ACCOUNT_HOLDER_BANK_TYPES,
+    ACCOUNT_HOLDER_TYPES,
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+    TOKENIZE_ACH_EVENT_ACTION
+} from 'c/geConstants';
+
+import { Rd2Service } from 'c/rd2Service';
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -21,7 +31,7 @@ import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 */
 const WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
-const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
+const DEFAULT_ACH_CODE = 'WEB';
 
 /***
 * @description Payment services Elevate credit card widget on the Recurring Donation entry form
@@ -38,21 +48,32 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         updatePaymentButtonLabel,
         cancelButtonLabel,
         nextPaymentDonationDateMessage,
+        nextACHPaymentDonationDateMessage,
         commonExpirationDate
     };
+    
+    rd2Service = new Rd2Service();
 
     @track isLoading = true;
     @track isDisabled = false;
     @track alert = {};
 
-    _paymentMethod = undefined;
-    _nextDonationDate = undefined;
+    _paymentMethod;
+    _nextDonationDate;
     _isEditPayment = false;
     
     @api isEditMode;
+    @api existingPaymentMethod;
     @api cardLastFour;
     @api cardLastFourLabel;
     @api cardExpDate;
+    @api achLastFourLabel;
+    @api achLastFour;
+
+    @api payerOrganizationName;
+    @api payerFirstName;
+    @api payerLastName;
+    @api achAccountType;
 
     @api
     get paymentMethod() {
@@ -60,7 +81,25 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     set paymentMethod(value) {
+        this.notifyIframePaymentMethodChanged(value);
         this._paymentMethod = value;
+    }
+
+    notifyIframePaymentMethodChanged(newValue) {
+        const iframe = this.selectIframe();
+        if(this.shouldNotifyIframe(newValue)) {
+            this.handleUserEnabledWidget();
+            if (!isNull(iframe)) {
+                tokenHandler.setPaymentMethod(
+                    iframe,
+                    newValue,
+                    this.handleError,
+                    this.resolveMount
+                ).catch(err => {
+                    this.handleError(err);
+                });
+            }
+        }
     }
 
     @api
@@ -72,10 +111,35 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         this._isEditPayment = value;
     }
 
-    get nextPaymentDonationDateMessage() {
-        return (this.nextDonationDate == null)
-        ? ''
-        : this.labels.nextPaymentDonationDateMessage.replace('{{DATE}}', ' ');
+    get currentPaymentIsCard() {
+        return this.rd2Service.isCard(this.paymentMethod);
+    }
+
+    currentPaymentIsAch() {
+        return this.rd2Service.isACH(this.paymentMethod);
+    }
+
+    get existingPaymentIsAch() {
+        return this.rd2Service.isACH(this.existingPaymentMethod);
+    }
+
+    get existingPaymentIsCard() {
+        return this.rd2Service.isCard(this.existingPaymentMethod);
+    }
+
+    get nextPaymentDateMessage() {
+        if(this.currentPaymentIsAch()) {
+            return this.labels.nextACHPaymentDonationDateMessage;
+        } else if(this.currentPaymentIsCard) {
+            return this.labels.nextPaymentDonationDateMessage;
+        }
+    }
+
+    shouldNotifyIframe(newPaymentMethod) {
+        const oldPaymentMethod = this._paymentMethod;
+        const changed = (oldPaymentMethod !== undefined) && (oldPaymentMethod !== newPaymentMethod);
+        const newMethodValidForElevate = this.rd2Service.isElevatePaymentMethod(newPaymentMethod);
+        return changed && newMethodValidForElevate;
     }
 
     @api 
@@ -93,7 +157,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
-        if(this.isEditMode){
+        if(this.isEditMode) {
             this.isDisabled = true;
         }
 
@@ -137,7 +201,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * the tokenization iframe.
     */
     requestMount() {
-        const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
+        const iframe = this.selectIframe();
         tokenHandler.mount(iframe, this.paymentMethod, this.handleError, this.resolveMount);
     }
 
@@ -155,14 +219,62 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     requestToken() {
         this.clearError();
 
-        const iframe = this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
-        const params = { nameOnCard : this.getCardholderName() };
+        const iframe = this.selectIframe();
+        if(this.rd2Service.isCard(this.paymentMethod)) {
+            return this.requestCardToken(iframe);
+        } else if(this.rd2Service.isACH(this.paymentMethod)) {
+            return this.requestAchToken(iframe);
+        }
+    }
+
+    selectIframe() {
+        return this.template.querySelector(`[data-id='${this.labels.elevateWidgetLabel}']`);
+    }
+
+    requestCardToken(iframe) {
+        const params = {nameOnCard: this.getCardholderName()};
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
             eventAction: TOKENIZE_CREDIT_CARD_EVENT_ACTION,
             handleError: this.handleError,
         });
+    }
+
+    requestAchToken(iframe) {
+        const params = JSON.stringify(this.getAchParams());
+        return tokenHandler.requestToken({
+            iframe: iframe,
+            tokenizeParameters: params,
+            eventAction: TOKENIZE_ACH_EVENT_ACTION,
+            handleError: this.handleError,
+        });
+    }
+
+    getAchParams() {
+        if(this.achAccountType === ACCOUNT_HOLDER_TYPES.INDIVIDUAL) {
+            return {
+                accountHolder: {
+                    firstName: this.payerFirstName,
+                    lastName: this.payerLastName,
+                    type: this.achAccountType,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
+                },
+                achCode: DEFAULT_ACH_CODE,
+                nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
+            };
+        } else if(this.achAccountType === ACCOUNT_HOLDER_TYPES.BUSINESS) {
+            return {
+                accountHolder: {
+                    businessName: this.payerLastName,
+                    accountName: this.payerOrganizationName,
+                    type: this.achAccountType,
+                    bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
+                },
+                achCode: DEFAULT_ACH_CODE,
+                nameOnAccount: this.payerOrganizationName
+            };
+        }
     }
 
     /***

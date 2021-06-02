@@ -1,0 +1,21 @@
+{
+  "id": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+  "amountPaidToDate": 100,
+  "commitmentType": "SUSTAINER",
+  "statusReason": "PARTIALLY_PAID",
+  "currency": "USD",
+  "currencyCode": "USD",
+  "firstName": "Testing",
+  "lastName": "Contact",
+  "accountName": "Testing Contact",
+  "achData": {
+    "last4": "5432",
+    "consentMessage": "true",
+    "accountHolderType": "INDIVIDUAL",
+    "accountHolderBankType": "CHECKING",
+    "achCode": "WEB"
+  },
+  "status": "ACTIVE",
+  "paymentMethodType": "ACH",
+  "version": 10
+}

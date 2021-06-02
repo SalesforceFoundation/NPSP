@@ -3,15 +3,17 @@ import { LightningElement, api, track, wire } from 'lwc';
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
+import validateAuthorizedGiftEdit from '@salesforce/apex/GE_GiftEntryController.validateAuthorizedGiftEdit';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
 import PAYMENT_GATEWAY_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_ID__c';
-import PAYMENT_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
+import PAYMENT_GATEWAY_TRANSACTION_ID from '@salesforce/schema/DataImport__c.Payment_Gateway_Payment_ID__c';
 import PAYMENT_AUTHORIZED_AT from '@salesforce/schema/DataImport__c.Payment_Authorized_UTC_Timestamp__c';
 import PAYMENT_CREATED_AT from '@salesforce/schema/DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c';
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
@@ -34,6 +36,7 @@ import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
+    buildErrorMessage,
     DONATION_DONOR_FIELDS,
     DONATION_DONOR,
     handleError,
@@ -61,9 +64,12 @@ import {
     validateJSONString,
     relatedRecordFieldNameFor,
     apiNameFor,
-    isString
+    isString,
+    showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
+import ElevateCaptureGroup from './elevateCaptureGroup';
+import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
 import BATCH_DEFAULTS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Defaults__c';
@@ -107,6 +113,8 @@ import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PARENT_OPPORTUNITY_FIELD
     from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
+import ELEVATE_PAYMENT_STATUS_FIELD
+    from '@salesforce/schema/npe01__OppPayment__c.Elevate_Payment_API_Status__c';
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
 import DATA_IMPORT_ACCOUNT1_NAME
     from '@salesforce/schema/DataImport__c.Account1_Name__c';
@@ -125,8 +133,9 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     ACCOUNT1: 'Account1',
     CONTACT1: 'Contact1'
 });
-const CREDIT_CARD_WIDGET_NAME = 'geFormWidgetTokenizeCard';
+
 const ACH_CONSENT_MESSAGE = 'true';
+const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -159,13 +168,21 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
+    latestCaptureGroupId = null;
     cardholderNamesNotInTemplate = {};
+    _openedGiftId;
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
 
-    @track widgetConfig = { sourceFieldsUsedInTemplate: undefined }
+    @track widgetConfig = {
+        hasPaymentMethodFieldInForm: undefined,
+        paymentTransactionStatusValues: undefined
+    }
     @track isAccessible = true;
+
+    _isFormCollapsed = false;
+    _shouldInformParent = true;
 
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
@@ -187,7 +204,9 @@ export default class GeFormRenderer extends LightningElement{
             [apiNameFor(DATA_IMPORT_DONATION_IMPORTED_FIELD)]:
                 record[apiNameFor(PARENT_OPPORTUNITY_FIELD)],
             [apiNameFor(DATA_IMPORT_PAYMENT_IMPORT_STATUS_FIELD)]: userSelectedMatch,
-            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch
+            [apiNameFor(DATA_IMPORT_DONATION_IMPORT_STATUS_FIELD)]: userSelectedMatch,
+            [apiNameFor(PAYMENT_STATUS)]:
+                record[apiNameFor(ELEVATE_PAYMENT_STATUS_FIELD)],
         };
         this.updateFormState(updatedData);
     }
@@ -264,7 +283,9 @@ export default class GeFormRenderer extends LightningElement{
             });
         registerListener('paymentError', this.handleAsyncWidgetError, this);
         registerListener('doNotChargeState', this.handleDisableElevateWidgetState, this);
-        registerListener('geDonationMatchingEvent', this.handleChangeSelectedDonation, this);
+        registerListener('geModalCloseEvent', this.handleChangeSelectedDonation, this);
+        registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
+        registerListener('widgetStateChange', this.handleWidgetStateChange, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -304,6 +325,22 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         });
+    }
+
+    handleWidgetStateChange(changeEvent) {
+        if (changeEvent.state === 'readOnly') {
+            this._isElevateWidgetInDisabledState = true;
+        }
+    }
+
+    handleNullPaymentFieldsInFormState() {
+        if (this.shouldNotNullPaymentFields()) { return; }
+
+        this.nullPaymentFieldsInFormState([
+            apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
+            apiNameFor(PAYMENT_DECLINED_REASON),
+            apiNameFor(PAYMENT_STATUS)
+        ]);
     }
 
     initializeDonationDonorTypeInFormState(donorApiName) {
@@ -353,7 +390,8 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     initializeWidgetConfig() {
-        this.widgetConfig.sourceFieldsUsedInTemplate = this.sourceFieldsUsedInTemplate();
+        this.widgetConfig.hasPaymentMethodFieldInForm = this.sourceFieldsUsedInTemplate().includes(apiNameFor(PAYMENT_METHOD));
+        this.widgetConfig.paymentTransactionStatusValues = this.PAYMENT_TRANSACTION_STATUS_ENUM;
     }
 
     appendRecordTypeLocationInfoToPicklistElements() {
@@ -482,17 +520,18 @@ export default class GeFormRenderer extends LightningElement{
     * @param {string} modalBodyComponentName: Name of the LWC to render in the
     * overlay library modal's body.
     */
-    toggleModalByComponentName(modalBodyComponentName) {
+    toggleModalByComponentName(modalBodyComponentName, componentProperties) {
         const detail = {
             modalProperties: {
                 componentName: modalBodyComponentName,
                 showCloseButton: false
-            }
+            }, 
+            componentProperties
         };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    handleSaveBatchGiftEntry(dataImportRecord, formControls) {
+    handleSaveBatchGiftEntry(dataImportRecord, formControls, isCreditCardAuth) {
         // reset function for callback
         const reset = () => this.reset();
         // handle error on callback from promise
@@ -505,6 +544,16 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
+                    
+                    if (isCreditCardAuth) {
+                        showToast(
+                            this.CUSTOM_LABELS.PageMessagesConfirm,
+                            this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
+                            'success', 
+                            'dismissible', 
+                            null
+                        );
+                    }
                 },
                 error: (error) => {
                     formControls.enableSaveButton();
@@ -622,13 +671,22 @@ export default class GeFormRenderer extends LightningElement{
 
         if (isFormReadyToSave) {
             // Disable save button
+            this.loadingText = '';
             event.target.disable = true;
             const formControls = this.getFormControls(event);
             formControls.toggleSpinner();
 
+            let tokenizedGift = null;
             try {
                 if (this.shouldTokenizeCard()) {
-                    await this.tokenizeCard(sectionsList)
+                    tokenizedGift = new ElevateTokenizeableGift(
+                        this.cardholderNames,
+                        getCurrencyLowestCommonDenominator(
+                            this.getFieldValueFromFormState(DONATION_AMOUNT)
+                        )
+                    );
+
+                    this.updateFormState(await tokenizedGift.tokenize(sectionsList));
                 }
             } catch(ex) {
                 // exceptions that we expect here are all async widget-related
@@ -640,31 +698,91 @@ export default class GeFormRenderer extends LightningElement{
 
             // handle save depending mode
             if (this.batchId) {
-                this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls);
+                await this.prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift);
             } else {
                 await this.submitSingleGift(dataImportFromFormState);
             }
         }
     }
 
-    tokenizeCard = async (sections) => {
-        let widgetValues = [];
-        sections.forEach(section => {
-            if (section.isPaymentWidgetAvailable) {
-                widgetValues = widgetValues.concat(
-                    section.paymentToken
-                );
-            }
-        });
-        if (widgetValues) {
-            const tokenResponse = await Promise.all(
-                [widgetValues[0].payload]
-            );
+    async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
+        if (tokenizedGift) {
+            try {
+                this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
+    
+                const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
+                const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+                if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
+                    this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
 
-            if (tokenResponse) {
-                this.updateFormState(tokenResponse[0]);
+                    this.updateFormState({
+                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                        [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
+                        [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
+                        [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
+                        [apiNameFor(PAYMENT_DECLINED_REASON)]: authorizedGift.declineReason,
+                        [apiNameFor(PAYMENT_LAST_4)]: authorizedGift.cardLast4,
+                        [apiNameFor(PAYMENT_CARD_NETWORK)]: authorizedGift.cardNetwork,
+                        [apiNameFor(PAYMENT_EXPIRATION_MONTH)]: authorizedGift.cardExpirationMonth,
+                        [apiNameFor(PAYMENT_EXPIRATION_YEAR)]: authorizedGift.cardExpirationYear,
+                        [apiNameFor(PAYMENT_AUTHORIZED_AT)]: authorizedGift.authorizedAt,
+                        [apiNameFor(PAYMENT_GATEWAY_ID)]: authorizedGift.gatewayId,
+                        [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: authorizedGift.gatewayTransactionId
+                    });
+
+                    this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
+                    dataImportFromFormState = this.saveableFormState();
+                } else {
+                    const errors = [{ message: authorizedGift.declineReason }];
+                    this.handleElevateAPIErrors(errors);
+                    return;                
+                }
+            } catch (ex) {
+                const errors = [{ message: buildErrorMessage(ex) }];
+                this.handleElevateAPIErrors(errors);
+                return;
             }
+        }  else if (this.isGiftAuthorized()) {
+            const canUpdate = await this.canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls);
+            if (!canUpdate) { return; }
         }
+        
+        this.handleSaveBatchGiftEntry(dataImportFromFormState, formControls, !!tokenizedGift);
+    }
+
+    /*******************************************************************************
+    * @description On an authorized data import record where re-tokenization is not
+    * required, validate that certain payment-related fields have not been modified
+    *
+    * @param {object} dataImportFromFormState: Representing data import record
+    * @param {object} formControls: Used to drive UI elements like spinner and button
+    * visibility
+    *
+    * @return {boolean}: True if the gift can be saved in its current state
+    */
+    async canAuthorizedGiftBeUpdated(dataImportFromFormState, formControls) {
+        try {
+            await validateAuthorizedGiftEdit({dataImport: dataImportFromFormState});
+        } catch (ex) {
+            this.handleCatchOnSave(ex.body.message);
+            formControls.enableSaveButton();
+            formControls.toggleSpinner();
+            return false;
+        }
+
+        return true;
+    }
+
+    isGiftAuthorized() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED;
+    }
+
+    isGiftExpired() {
+        return this.formState[apiNameFor(PAYMENT_STATUS)] === this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED;
+    }
+    
+    shouldNotNullPaymentFields() {
+        return (this.isGiftAuthorized() || this.isGiftExpired());
     }
 
     shouldTokenizeCard() {
@@ -915,22 +1033,33 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     loadDataImportRecord(dataImport) {
+        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
+        if (isAlreadyOpen) {
+            return;
+        }
+
+        this.expandForm();
         const dataImportWithNullValuesAppended =
             this.appendNullValuesForMissingFields(dataImport);
 
         dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
             convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-
+        this.reset();
         this.updateFormState(dataImportWithNullValuesAppended);
+        this._openedGiftId = dataImport.Id;
     }
 
     reset() {
+        this.clearErrors();
         this.resetFormState();
+        this._openedGiftId = null;
     }
 
     resetFormState() {
         fireEvent(this, 'resetReviewDonationsEvent', {});
         this.initializeFormState();
+        this.resetElevateWidget();
+        this._isElevateWidgetInDisabledState = false;
     }
 
     resetFieldsForObjMappingApplyDefaults(objectMappingDeveloperName) {
@@ -1049,7 +1178,7 @@ export default class GeFormRenderer extends LightningElement{
     handleDisableElevateWidgetState (event) {
         this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
         if (this._isElevateWidgetInDisabledState) {
-            this.removePaymentFieldsFromFormState([
+            this.nullPaymentFieldsInFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
                 apiNameFor(PAYMENT_STATUS)
@@ -1120,6 +1249,15 @@ export default class GeFormRenderer extends LightningElement{
 
         this.selectedDonationOrPaymentRecord =
             this.selectedDonationCopyForReviewDonationsModal;
+        if (!this.isSingleGiftEntry) {
+            this.expandForm();
+        }
+
+        this.resetElevateWidget();
+    }
+
+    resetElevateWidget() {
+        fireEvent(this, 'resetElevateWidget', {});
     }
 
     hasSelectedDonationOrPayment() {
@@ -1152,8 +1290,6 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 batchDefaultsObject = JSON.parse(this._batchDefaults);
                 sections.forEach(section => {
-                    section.elements = section.elements.filter(element =>
-                        element.componentName !== CREDIT_CARD_WIDGET_NAME);
                     section.elements.forEach(element => {
                         for (let key in batchDefaultsObject) {
                             if (batchDefaultsObject.hasOwnProperty(key)) {
@@ -1971,6 +2107,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+
         return dataImportRecord;
     }
 
@@ -2005,9 +2142,14 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     hasChargeableTransactionStatus = () => {
-        if (this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH &&
-            this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+        const nonChargeableForSingleGift = this.selectedPaymentMethod() !== PAYMENT_METHODS.ACH
+            && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+        if (this.isSingleGiftEntry && nonChargeableForSingleGift) {
+            return false;
+        }
 
+        const nonChargeableForBatchGift = this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+        if (!this.isSingleGiftEntry && nonChargeableForBatchGift) {
             return false;
         }
 
@@ -2019,6 +2161,7 @@ export default class GeFormRenderer extends LightningElement{
             case undefined:
             case null:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
             case PAYMENT_UNKNOWN_ERROR_STATUS:
@@ -2066,6 +2209,7 @@ export default class GeFormRenderer extends LightningElement{
             : this.CUSTOM_LABELS.geTextSaving;
 
         try {
+            delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
             const upsertResponse = await upsertDataImport({
                 dataImport: dataImportFromFormState
             });
@@ -2168,7 +2312,7 @@ export default class GeFormRenderer extends LightningElement{
     processPurchaseResponse = async (responseBody) => {
         if (responseBody.errors) {
             this.updateFormStateWithFailedPurchaseCall(responseBody.errors);
-            this.handlePurchaseCallValidationErrors(responseBody.errors);
+            this.handleElevateAPIErrors(responseBody.errors);
             this.hasFailedPurchaseRequest = true;
         }
 
@@ -2223,7 +2367,7 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    handlePurchaseCallValidationErrors(errors) {
+    handleElevateAPIErrors(errors) {
         const errorMessage = JSON.stringify(
             errors.map(error => error.message))
             || this.CUSTOM_LABELS.commonUnknownError;
@@ -2252,7 +2396,7 @@ export default class GeFormRenderer extends LightningElement{
             [apiNameFor(PAYMENT_STATUS)]: responseBody.status,
             [apiNameFor(PAYMENT_DECLINED_REASON)]: '',
             [apiNameFor(PAYMENT_GATEWAY_ID)]: responseBody.gatewayId,
-            [apiNameFor(PAYMENT_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
+            [apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID)]: responseBody.gatewayTransactionId,
             [apiNameFor(PAYMENT_AUTHORIZED_AT)]: responseBody.authorizedAt,
             [apiNameFor(PAYMENT_CREATED_AT)]: responseBody.createdAt
         };
@@ -2300,9 +2444,11 @@ export default class GeFormRenderer extends LightningElement{
 
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+        this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
+        const dataImportRecord = this.saveableFormState();
 
         submitDataImportToBDI({
-            dataImport: this.saveableFormState(),
+            dataImport: dataImportRecord,
             updateGift: this.hasSelectedDonationOrPayment()
         })
             .then(opportunityId => {
@@ -2332,9 +2478,32 @@ export default class GeFormRenderer extends LightningElement{
 
     }
 
+    get elevateTransactionWarning() {
+        return format(this.CUSTOM_LABELS.gePaymentProcessedWarning, [this.CUSTOM_LABELS.commonPaymentServices]);
+    }
+
+    get showElevateTransactionWarning() {
+        const paymentStatus = this.getFieldValueFromFormState(PAYMENT_STATUS);
+        return paymentStatus &&
+            (paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.CAPTURED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SUBMITTED
+                || paymentStatus === this.PAYMENT_TRANSACTION_STATUS_ENUM.SETTLED
+            );
+    }
+
     handleElevateTransactionBDIError(exceptionDataError) {
         this.dispatchDisablePaymentServicesWidgetEvent(this.CUSTOM_LABELS.geErrorCardChargedBDIFailed);
-        this.toggleModalByComponentName('gePurchaseCallModalError');
+        this.toggleModalByComponentName('geModalPrompt',
+            {
+                'variant': 'error',
+                'title': this.CUSTOM_LABELS.commonCriticalError,
+                'message': this.CUSTOM_LABELS.geErrorCardChargedBDIFailed,
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonReviewForm,
+                        action: () => { fireEvent(this.pageRef, 'geModalCloseEvent', {}) }
+                    }]
+            });
 
         const pageLevelError = this.buildElevateTransactionBDIError(exceptionDataError);
         this.addPageLevelErrorMessage(pageLevelError);
@@ -2378,9 +2547,9 @@ export default class GeFormRenderer extends LightningElement{
         return sourceField === apiNameFor(DATA_IMPORT_PAYMENT_IMPORTED_FIELD);
     }
 
-    removePaymentFieldsFromFormState(paymentFields) {
+    nullPaymentFieldsInFormState(paymentFields) {
         paymentFields.forEach(field => {
-            this.deleteFieldFromFormState(field);
+            this.updateFormState({ [field]: null });
         });
     }
 
@@ -2392,8 +2561,31 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    get isFormCollapsed() {
+        return this._isFormCollapsed;
+    }
+
+    get altTextLabel() {
+        return 'Toggle '
+            + this.CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName;
+    }
+
+    expandForm() {
+        if (this.isFormCollapsed) {
+            this._isFormCollapsed = false;
+        }
+    }
+
+    get expandableContainerId() {
+        return EXPANDABLE_SECTION_CONTAINER;
+    }
+
+    handleCollapse(event) {
+        this._isFormCollapsed = event.detail.isCollapsed;
+    }
+
     get showMismatchedCurrencyWarning() {
-        if(isEmpty(this.batchCurrencyIsoCode)) {
+        if (isEmpty(this.batchCurrencyIsoCode)) {
             return false;
         }
         return this.batchCurrencyIsoCode !== CURRENCY;

@@ -111,10 +111,6 @@ public inherited sharing class RD2_ElevateIntegrationService {
      * @return Boolean
      */
     public Boolean hasUpdatePermissions(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
-        // Do not check changed fields if
-        // 1. the Recurring Donation is not referencing an Elevate record or
-        // 2. the Elevate integration is not configured/enabled or
-        // 3. the user *has* the Elevate integration permission to change the Recurring Donation
         if (String.isBlank(rd.CommitmentId__c)
             || !config.isIntegrationEnabled()
             || config.hasIntegrationPermissions()
@@ -125,10 +121,7 @@ public inherited sharing class RD2_ElevateIntegrationService {
         // Check if any of the restricted fields has been changed
         Boolean isChanged = rd.npe03__Contact__c != oldRd.npe03__Contact__c
             || rd.npe03__Organization__c != oldRd.npe03__Organization__c
-            || rd.npe03__Amount__c != oldRd.npe03__Amount__c
-            || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c
             || rd.npe03__Installments__c != oldRd.npe03__Installments__c
-            || rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c
             || rd.npe03__Date_Established__c != oldRd.npe03__Date_Established__c
             || rd.StartDate__c != oldRd.StartDate__c
             || rd.Day_of_Month__c != oldRd.Day_of_Month__c

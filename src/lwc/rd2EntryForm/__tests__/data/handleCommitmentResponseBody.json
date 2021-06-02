@@ -1,0 +1,22 @@
+{
+  "id": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
+  "amountPaidToDate": 100,
+  "commitmentType": "SUSTAINER",
+  "statusReason": "PARTIALLY_PAID",
+  "currency": "USD",
+  "currencyCode": "USD",
+  "firstName": "Testing",
+  "lastName": "Contact",
+  "accountName": "Testing Contact",
+  "cardData": {
+    "last4": "1111",
+    "brand": "Visa",
+    "expirationYear": "2023",
+    "expirationMonth": "05",
+    "firstName": "Some",
+    "lastName": "Cardholder"
+  },
+  "status": "ACTIVE",
+  "paymentMethodType": "CARD",
+  "version": 7
+}
