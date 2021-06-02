@@ -207,7 +207,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     private List<npe03__Recurring_Donation__c> rds {
         get {
             if (rds == null && rdIds != null) {
-
                 rds = queryService.getRecurringDonationsWithRelatedRecords(this.rdIds, this.startDate);
             }
             return rds;
