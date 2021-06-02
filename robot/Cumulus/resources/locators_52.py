@@ -340,7 +340,9 @@ npsp_lex_locators={
 		'batch_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//div[text()="{}"]/following-sibling::span[text()="{}"]',
 		'close_error':'//div[@role="alert" and contains(@class,"slds-theme--error")]//child::button',
 		'perms_error':'//div[@class="slds-illustration slds-illustration_large"]',
-		'template_required_checkbox':'//lightning-input[@data-qa-locator="checkbox Required {}"]'
+		'template_required_checkbox':'//lightning-input[@data-qa-locator="checkbox Required {}"]',
+		'success_toast':'//span[contains(text(),"{} was processed.")]',
+        'collapse_header':'//span[contains(@title,"Gift Entry Form")]'
 	},
 	# Enhanced Recurring Donation (erd) related element locators
 	'erd':{
