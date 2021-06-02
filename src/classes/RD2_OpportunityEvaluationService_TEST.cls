@@ -1144,7 +1144,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert opps;
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
         update rd;
         Test.stopTest();
@@ -1292,7 +1292,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert opps;
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.Status__c = RD2_Constants.STATUS_CLOSED;
         update rd;
         Test.stopTest();
@@ -1685,7 +1685,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert opps;
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.StartDate__c = today;
         rd.Day_of_Month__c = dayOfMonthNew;
         update rd;
@@ -1746,7 +1746,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert opps;
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.StartDate__c = today;
         rd.Day_of_Month__c = dayOfMonthNew;
         update rd;
@@ -1811,7 +1811,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         insert opps;
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.StartDate__c = today;
         rd.Day_of_Month__c = dayOfMonthNew;
         update rd;
@@ -2039,6 +2039,49 @@ private class RD2_OpportunityEvaluationService_TEST {
 
             System.assert(!installmentsClosedDate.contains(pauseStartDate),
             'No installment should be created with close date during the pause');
+    }
+
+       /**
+    * @description Verifies that when RD is entering the paused,
+    * the next installment will be created with close date after the pause
+    */
+    @isTest
+    private static void shouldOnlyCreateOneNewPledgeOpportunityWhenInstallmentAndRDUpdateInOneTransaction() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseStartDate = Date.newInstance(2020, 2, 1);
+        Date pauseEndDate = Date.newInstance(2020, 3, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .withStatusPaused()
+            .build();
+
+        insert rd;
+
+        Opportunity installment = oppGateway.getRecords(rd)[0];
+
+        Test.startTest();
+        rd.npe03__Amount__c = rd.npe03__Amount__c + 10;
+        installment.StageName = 'Closed Lost';
+
+        List<SObject> toUpdate = new List<SObject>{rd, installment};
+        Database.update(toUpdate);
+        Test.stopTest();
+
+        List<Opportunity> installments = oppGateway.getRecords(rd);
+
+        System.assertEquals(2, installments.size(),
+            'There should only be 2 installments under the RD');
+
+        for (Opportunity opp : installments) {
+            if (opp.Id != installment.Id) {
+                System.assertEquals('Pledged', opp.StageName,
+                    'The newly created Opportunity should be in Pledged status');
+            }
+        }
     }
 
     // Helpers

@@ -40,7 +40,7 @@ public class RD2_QueueableService {
     * to prevent race condition.
     */
     @TestVisible
-    private static Set<Id> alreadyEnqueueedIds;
+    private static Set<Id> alreadyEnqueuedIds;
     /**
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
@@ -100,16 +100,16 @@ public class RD2_QueueableService {
             return rdIds;
         }
 
-        if (alreadyEnqueueedIds == null) {
-            alreadyEnqueueedIds = new Set<Id>();
+        if (alreadyEnqueuedIds == null) {
+            alreadyEnqueuedIds = new Set<Id>();
         }
 
         Set<Id> toProcess = new Set<Id>();
 
         for(Id rdId : rdIds) {
-            if(!alreadyEnqueueedIds.contains(rdId)) {
+            if(!alreadyEnqueuedIds.contains(rdId)) {
                 toProcess.add(rdId);
-                alreadyEnqueueedIds.add(rdId);
+                alreadyEnqueuedIds.add(rdId);
             }
         }
 

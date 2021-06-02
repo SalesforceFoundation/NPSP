@@ -687,7 +687,7 @@ private with sharing class RD2_OpportunityService_TEST {
         Date nextDonationDate = Date.newInstance(nextCloseDate.year(), nextCloseDate.month(), newDayOfMonth);
 
         Test.startTest();
-        RD2_QueueableService.alreadyProcessedIds = null;
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         rd.Day_Of_Month__c = String.valueOf(newDayOfMonth);
         rd.StartDate__c = nextDonationDate;
         update rd;
