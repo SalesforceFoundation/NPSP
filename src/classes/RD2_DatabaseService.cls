@@ -145,11 +145,7 @@ public without sharing class RD2_DatabaseService {
                     for (Database.Error err : lErr) {                                  
                         sErr = String.isBlank(sErr) 
                                 ? err.getMessage() 
-                                : sErr + ', ' + err.getMessage();
-                        System.debug('ERROR RD processing:');
-                        System.debug(err.getStatusCode() + ': ' + err.getMessage());
-                        System.debug('Fields affected: ' + err.getFields());
-
+                                : sErr + ', ' + err.getMessage();           
                     }
 
                     failedRDIds.add((Id) records[i].get('npe03__Recurring_Donation__c'));
@@ -160,8 +156,7 @@ public without sharing class RD2_DatabaseService {
             }
 
         } else if (recordSObjectType == rdSObjectType) {
-            for (Error__c error : dmlErrors.errorRecords) {
-                System.debug('ERROR RD processing: ' + error.Related_Record_ID__c +', ' + error.Full_Message__c);
+            for (Error__c error : dmlErrors.errorRecords) {                
                 failedRDIds.add(error.Related_Record_ID__c);
                 if (error.Related_Record_ID__c!=null) {
                     failedRDIdsMap.put(error.Related_Record_ID__c, error.Full_Message__c);
