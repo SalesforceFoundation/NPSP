@@ -987,7 +987,7 @@ private with sharing  class ALLO_PaymentSync_TEST {
     * numbers extended out to 31 digits led to a rounding error in the last 2 digits.
     ********************************************************************************************************/
     @isTest
-    static void testRoundingBug() {
+    static void confirmGeneratedAllocationIsProperlyRoundedForIrrationalNumbers() {
         setupForTests();
         opportunity = [SELECT Id, Amount FROM Opportunity WHERE Name = 'Opp' LIMIT 1];
         opportunity.Amount = 32200;
