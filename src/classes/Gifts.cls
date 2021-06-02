@@ -35,23 +35,23 @@
 
 public with sharing class Gifts {
 
-    private Set<String> captureGroupIds;
+    private Set<String> elevateBatchIds;
     private List<DataImport__c> dataImports;
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
-        setCaptureGroupIds(dataImports);
+        setElevateBatchIds(dataImports);
     }
 
-    private void setCaptureGroupIds(List<DataImport__c> dataImports) {
-        captureGroupIds = new Set<String>();
+    private void setElevateBatchIds(List<DataImport__c> dataImports) {
+        elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImports) {
-            captureGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
+            elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
         }
     }
 
-    public Set<String> captureGroupIds() {
-        return captureGroupIds;
+    public Set<String> elevateBatchIds() {
+        return elevateBatchIds;
     }
 
     public List<DataImport__c> dataImports() {
