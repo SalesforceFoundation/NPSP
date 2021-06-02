@@ -271,7 +271,6 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
-        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>ContactSelector</members>
         <members>ContactService</members>
@@ -315,11 +314,11 @@
         <members>ElevateAuthorizedGift</members>
         <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateAuthorizedGift_TEST</members>
-        <members>ElevateCaptureGroup</members>
-        <members>ElevateCaptureGroupResponse</members>
-        <members>ElevateCaptureGroupService</members>
-        <members>ElevateCaptureGroupServiceInvalidRequest</members>
-        <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevateBatch</members>
+        <members>ElevateBatchResponse</members>
+        <members>ElevateBatchService</members>
+        <members>ElevateBatchServiceInvalidRequest</members>
+        <members>ElevateBatchServiceValidRequest</members>
         <members>ElevatePaymentMethod</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
