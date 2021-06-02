@@ -36,6 +36,9 @@
 */
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
+    @TestVisible
+    private static GiftBatch giftBatch;
+
     /*******************************************************************************************************
     * @description Currently limit the set of allowed objects, and point to their BDI-defined 
     *  Object group name
@@ -202,7 +205,10 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
     private static Boolean hasElevateWidgetOnTemplate(Id batchId) {
-        return new GiftBatch(batchId).hasElevateWidget();
+        if (giftBatch == null) {
+            giftBatch = new GiftBatch(batchId);
+        }
+        return giftBatch.hasElevateWidget();
     }
 
     /*******************************************************************************************************

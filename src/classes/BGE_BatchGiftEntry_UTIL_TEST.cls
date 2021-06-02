@@ -142,6 +142,8 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
     static void shouldReturnElevateFieldsForElevateCustomer() {
         GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
         mockInstance.withIsElevateCustomer(true);
+        GiftBatchMock giftBatchMock = new GiftBatchMock();
+        BGE_BatchGiftEntry_UTIL.giftBatch = stubFor(giftBatchMock);
 
         GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
             GE_PaymentServices.class,
@@ -190,4 +192,25 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
         }
     }
 
+    public class GiftBatchMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'hasElevateWidget' {
+                    return true;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftBatch stubFor(GiftBatchMock giftBatchMock) {
+        return (GiftBatch) Test.createStub(GiftBatch.class, giftBatchMock);
+    }
 }
