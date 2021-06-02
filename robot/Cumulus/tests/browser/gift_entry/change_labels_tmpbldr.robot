@@ -86,6 +86,7 @@ Verify Changing Labels on Template Gets Updated on Batches
     ...                                     ${RECORD_TYPE}[Field Label]=Donation
     ...                                     ${DATE}[Field Label]=${UI_DATE}
     Click Gift Entry Button                 Process Batch
-    Wait Until BGE Batch Processes          ${CAMPAIGN_REC}[Name] Automation Batch
+    Click Data Import Button                NPSP Data Import                button       Begin Data Import Process
+    Wait For Batch To Process               BDI_DataImport_BATCH            Completed
     Click Button With Value                 Close
 

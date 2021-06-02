@@ -54,7 +54,9 @@ Process And Validate Batch
     [Arguments]                          ${status}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Wait Until BGE Batch Processes       ${MSG}
+    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
+    Wait For Batch To Process            BDI_DataImport_BATCH            ${status}
+    Click Button With Value              Close
     Current Page Should Be               Form                            Gift Entry
 
 
