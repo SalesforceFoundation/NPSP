@@ -83,27 +83,27 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     set paymentMethod(value) {
-        this.notifyIframePaymentMethodChanged(value);
+        if(this.shouldNotifyIframe(value)) {
+            this.notifyIframePaymentMethodChanged(value);
+        }
         this._paymentMethod = value;
         this.enableWidgetOnPaymentMethodChange = true;
     }
 
     notifyIframePaymentMethodChanged(newValue) {
         const iframe = this.selectIframe();
-        if(this.shouldNotifyIframe(newValue)) {
-            if(this.shouldEnableWidgetOnPaymentMethodChange(newValue)) {
-                this.handleUserEnabledWidget();
-            }
-            if (!isNull(iframe)) {
-                tokenHandler.setPaymentMethod(
-                    iframe,
-                    newValue,
-                    this.handleError,
-                    this.resolveMount
-                ).catch(err => {
-                    this.handleError(err);
-                });
-            }
+        if(this.shouldEnableWidgetOnPaymentMethodChange(newValue)) {
+            this.handleUserEnabledWidget();
+        }
+        if (!isNull(iframe)) {
+            tokenHandler.setPaymentMethod(
+                iframe,
+                newValue,
+                this.handleError,
+                this.resolveMount
+            ).catch(err => {
+                this.handleError(err);
+            });
         }
     }
 
@@ -153,7 +153,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     shouldEnableWidgetOnPaymentMethodChange(newPaymentMethod) {
-        return this.enableWidgetOnPaymentMethodChange && this.paymentMethodEdited(newPaymentMethod);
+        return this.enableWidgetOnPaymentMethodChange && this.isPaymentMethodChanged(newPaymentMethod);
     }
 
     @api 
@@ -187,7 +187,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         if(this.updatePaymentMode) {
             return false;
         } else {
-            return !this.paymentMethodEdited() && this.rd2RecordId;
+            return !this.isPaymentMethodChanged() && this.rd2RecordId;
         }
     }
 
@@ -299,7 +299,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         }
     }
 
-    paymentMethodEdited(newPaymentMethod) {
+    isPaymentMethodChanged(newPaymentMethod) {
         const paymentMethod = newPaymentMethod ? newPaymentMethod : this.paymentMethod;
         return this.existingPaymentMethod !== paymentMethod;
     }
@@ -319,7 +319,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
      */
     handleUserCancelledWidget() {
         this.hideWidget();
-        if(this.paymentMethodEdited()) {
+        if(this.isPaymentMethodChanged()) {
             this.enableWidgetOnPaymentMethodChange = false;
         }
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
