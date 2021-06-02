@@ -28,39 +28,39 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 /**
-* @description Used to mock invalid elevate capture group requests for unit tests
+* @description Used to mock invalid elevate batch requests for unit tests
  */
 @isTest
-public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGroupService {
+public class ElevateBatchServiceInvalidRequest extends ElevateBatchService {
 
     @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
+    private ElevateBatchService elevateBatchService {
         get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
             }
-            return captureGroupService;
+            return elevateBatchService;
         }
         set;
     }
 
-    public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupErrorMessage();
-        captureGroupService.checkForAuthorizedGiftErrorsIn(giftResponse);
+    public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+        ElevateAuthorizedGiftResponse giftResponse = addElevateBatchErrorMessage();
+        elevateBatchService.checkForAuthorizedGiftErrorsIn(giftResponse);
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
 
-    public override ElevateCaptureGroup createCaptureGroup() {
-        ElevateCaptureGroupResponse captureGroupResponse = createCaptureGroupErrorMessage();
-        captureGroupService.checkForCaptureGroupErrorsIn(captureGroupResponse);
+    public override ElevateBatch createElevateBatch() {
+        ElevateBatchResponse elevateBatchResponse = createElevateBatchErrorMessage();
+        elevateBatchService.checkForElevateBatchErrorsIn(elevateBatchResponse);
 
-        ElevateCaptureGroup captureGroup = new ElevateCaptureGroup();
+        ElevateBatch elevateBatch = new ElevateBatch();
 
-        return captureGroup;
+        return elevateBatch;
     }
 
-    public ElevateAuthorizedGiftResponse addCaptureGroupErrorMessage() {
+    public ElevateAuthorizedGiftResponse addElevateBatchErrorMessage() {
         return (ElevateAuthorizedGiftResponse)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
@@ -72,8 +72,8 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
                 '}', ElevateAuthorizedGiftResponse.class);
     }
 
-    public ElevateCaptureGroupResponse createCaptureGroupErrorMessage() {
-        return (ElevateCaptureGroupResponse)JSON.deserialize('{\n' +
+    public ElevateBatchResponse createElevateBatchErrorMessage() {
+        return (ElevateBatchResponse)JSON.deserialize('{\n' +
                 '  "errors": [\n' +
                 '    {\n' +
                 '      "message": "create failed",\n' +
@@ -81,7 +81,7 @@ public class ElevateCaptureGroupServiceInvalidRequest extends ElevateCaptureGrou
                 '      "detailedMessage": "create failed"\n' +
                 '    }\n' +
                 '  ]\n' +
-                '}', ElevateCaptureGroupResponse.class);
+                '}', ElevateBatchResponse.class);
     }
 
 }

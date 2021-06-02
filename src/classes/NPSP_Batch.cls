@@ -47,12 +47,12 @@ public inherited sharing class NPSP_Batch {
         set;
     }
 
-    private ElevateCaptureGroupService captureGroupService {
+    private ElevateBatchService elevateBatchService {
         get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
             }
-            return captureGroupService;
+            return elevateBatchService;
         }
         set;
     }
@@ -75,14 +75,14 @@ public inherited sharing class NPSP_Batch {
     }
 
     public void processPayments() {
-        List<ElevateCaptureGroupResponse> captureGroupResponses =
-                captureGroupService.capture(authorizedGifts.captureGroupIds());
-        handleCaptureGroupResponses(captureGroupResponses);
+        List<ElevateBatchResponse> elevateBatchResponses =
+                elevateBatchService.capture(authorizedGifts.elevateBatchIds());
+        handleElevateBatchResponses(elevateBatchResponses);
     }
 
-    private void handleCaptureGroupResponses(List<ElevateCaptureGroupResponse> captureGroupResponses) {
+    private void handleElevateBatchResponses(List<ElevateBatchResponse> elevateBatchResponses) {
         for (DataImport__c dataImport : authorizedGifts.dataImports()) {
-            for (ElevateCaptureGroupResponse response : captureGroupResponses) {
+            for (ElevateBatchResponse response : elevateBatchResponses) {
                 if(response.isValidCaptureResponse(dataImport)) {
                     dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
                 }

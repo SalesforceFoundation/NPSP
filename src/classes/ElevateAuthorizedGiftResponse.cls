@@ -111,7 +111,7 @@ public with sharing class ElevateAuthorizedGiftResponse {
         return this.originalTransactionId;
     }
 
-    public String groupId() {
+    public String elevateBatchId() {
         return this.batchId;
     }
 }

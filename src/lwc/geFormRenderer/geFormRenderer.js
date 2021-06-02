@@ -8,7 +8,7 @@ import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServic
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
-import PAYMENT_ELEVATE_CAPTURE_GROUP_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
+import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 import PAYMENT_CARD_NETWORK from '@salesforce/schema/DataImport__c.Payment_Card_Network__c';
 import PAYMENT_EXPIRATION_YEAR from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Year__c';
 import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_Card_Expiration_Month__c';
@@ -68,7 +68,7 @@ import {
     showToast
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateCaptureGroup from './elevateCaptureGroup';
+import ElevateBatch from './elevateBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -168,7 +168,7 @@ export default class GeFormRenderer extends LightningElement{
     _batchDefaults;
     _isElevateWidgetInDisabledState = false;
     _hasPaymentWidget = false;
-    latestCaptureGroupId = null;
+    latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
 
@@ -710,13 +710,13 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const currentCaptureGroup = new ElevateCaptureGroup(this.latestCaptureGroupId);
-                const authorizedGift = await currentCaptureGroup.add(tokenizedGift);
+                const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
+                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
                 if (authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED) {
-                    this.latestCaptureGroupId = currentCaptureGroup.elevateBatchId;
+                    this.latestElevateBatchId = currentElevateBatch.elevateBatchId;
 
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_CAPTURE_GROUP_ID)]: this.latestCaptureGroupId,
+                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.latestElevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: authorizedGift.status,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
