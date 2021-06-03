@@ -47,7 +47,7 @@ public class TDTM_ProcessControl {
         return mock != null ? mock : new TDTM_ProcessControl();
     }
 
-    private Boolean allowRecursionInTests = false;
+    private Boolean isRecursionAllowedInTests = false;
 
     /*******************************************************************************************************
     * @description Enum to define the various recursion prevention types used by all the related TDTM classes
@@ -133,8 +133,8 @@ public class TDTM_ProcessControl {
         }
     }
 
-    public Boolean allowRecursionInTests() {
-       return allowRecursionInTests;
+    public Boolean isRecursionAllowedInTests() {
+       return isRecursionAllowedInTests;
     }
 
     /**
@@ -149,7 +149,7 @@ public class TDTM_ProcessControl {
                 List<String> listOfParamNames,
                 List<Object> listOfArgs) {
             switch on (stubbedMethodName) {
-                when 'allowRecursionInTests' {
+                when 'isRecursionAllowedInTests' {
                     return true;
                 }
             }

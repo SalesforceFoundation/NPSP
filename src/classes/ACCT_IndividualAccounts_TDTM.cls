@@ -321,7 +321,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     if (!isNewlyInsertedAccount(contactRecord.AccountId)) {
                         householdIdsToRename.add(contactRecord.AccountId);
                     } else {
-                        if (Test.isRunningTest() && processController.allowRecursionInTests()) {
+                        if (Test.isRunningTest() && processController.isRecursionAllowedInTests()) {
                             // Allow renaming for tests that insert Contacts into Household Accounts that were created
                             // in the same context: see ACCT_IndividualAccounts_TEST.undeleteContactToExistingHH
                             householdIdsToRename.add(contactRecord.AccountId);

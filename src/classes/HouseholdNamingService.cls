@@ -383,7 +383,7 @@ public without sharing class HouseholdNamingService {
         if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert
                 && !HH_Households_TDTM.isNewContactInsert
                 && (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)
-                || (Test.isRunningTest() && processController.allowRecursionInTests()))) {
+                || (Test.isRunningTest() && processController.isRecursionAllowedInTests()))) {
             renameHHAccounts(accountIds);
         }
     }
