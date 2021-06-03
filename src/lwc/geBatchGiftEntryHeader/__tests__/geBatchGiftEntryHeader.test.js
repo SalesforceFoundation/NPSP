@@ -1,13 +1,8 @@
 import { createElement } from 'lwc';
 import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
-import { getRecord } from 'lightning/uiRecordApi';
-import { registerLdsTestWireAdapter, registerApexTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
-
-import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import { getRecord } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiRecordApi/uiRecordApi";
 
 const mockGetRecord = require('./data/getRecord.json');
-const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
-const isElevateCustomerAdapter = registerApexTestWireAdapter(isElevateCustomer);
 
 describe('c-ge-batch-gift-entry-header', () => {
     afterEach(() => {
@@ -24,7 +19,7 @@ describe('c-ge-batch-gift-entry-header', () => {
             is: GeBatchGiftEntryHeader
         });
         document.body.appendChild(element);
-        getRecordAdapter.emit(mockGetRecord);
+        getRecord.emit(mockGetRecord);
         return element;
     }
 
@@ -62,7 +57,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 expiredPaymentsCount: 0
             }
 
-            isElevateCustomerAdapter.emit(false);
+            getRecord.emit(false);
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -99,7 +94,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 failedGiftsCount: 5,
                 expiredPaymentsCount: 0
             }
-            isElevateCustomerAdapter.emit(true);
+            getRecord.emit(true);
 
             await flushPromises();
 

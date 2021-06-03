@@ -50,10 +50,9 @@ public with sharing class GiftBatchService {
         return groupedTotals.totalsFor(batchId);
     }
 
-    public void processPaymentsFor(Id batchId) {
+    public void processGiftsFor(Id batchId) {
         GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.captureAuthorizedGifts();
-        giftBatch.updateRecords();
+        giftBatch.processGifts();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {

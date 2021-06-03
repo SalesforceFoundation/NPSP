@@ -39,6 +39,7 @@ public inherited sharing class GiftBatchTotals {
     private Integer failedGifts = 0;
     private Integer expiredPayments = 0;
     private Integer authorizedPayments = 0;
+    private Integer processingGifts = 0;
 
     public GiftBatchTotals() {}
 
@@ -50,6 +51,7 @@ public inherited sharing class GiftBatchTotals {
             addToFailedGiftsCountFor(statusGroup);
             addToExpiredPaymentGiftsCountFor(statusGroup);
             addToAuthorizedPaymentGiftsCountFor(statusGroup);
+            addToProcessingGiftsCountFor(statusGroup);
         }
     }
 
@@ -60,7 +62,8 @@ public inherited sharing class GiftBatchTotals {
             GiftBatchAggregateGroupName.FAILED.name()=> this.failedGifts,
             GiftBatchAggregateGroupName.FAILED_PAYMENT.name() => this.failedPayments,
             GiftBatchAggregateGroupName.EXPIRED_PAYMENT.name() => this.expiredPayments,
-            GiftBatchAggregateGroupName.AUTHORIZED_PAYMENT.name() => this.authorizedPayments
+            GiftBatchAggregateGroupName.AUTHORIZED_PAYMENT.name() => this.authorizedPayments,
+            GiftBatchAggregateGroupName.PROCESSING.name() => this.processingGifts
         };
     }
 
@@ -92,6 +95,12 @@ public inherited sharing class GiftBatchTotals {
     private void addToAuthorizedPaymentGiftsCountFor(GiftBatchStatusGroup statusGroup) {
         if (statusGroup.isPaymentAuthorized()) {
             authorizedPayments += statusGroup.recordCount();
+        }
+    }
+
+    private void addToProcessingGiftsCountFor(GiftBatchStatusGroup statusGroup) {
+        if (statusGroup.isProcessing()) {
+             processingGifts += statusGroup.recordCount();
         }
     }
 }

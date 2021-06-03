@@ -6477,6 +6477,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Batch Amount</value>
     </labels>
     <labels>
+        <fullName>geBatchProcessingSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing success message</shortDescription>
+        <value>{0} was processed.</value>
+    </labels>
+    <labels>
         <fullName>geBodyAdvancedFieldMapping</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8788,6 +8796,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Button to Process Anyway</shortDescription>
         <value>Process Anyway</value>
+    </labels>
+    <labels>
+        <fullName>geProcessingBatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status of batch being processed</shortDescription>
+        <value>Processing Batch...
+            This can take a while. Check back in a bit!</value>
     </labels>
     <labels>
         <fullName>geProcessingErrors</fullName>
