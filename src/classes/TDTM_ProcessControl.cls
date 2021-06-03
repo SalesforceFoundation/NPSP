@@ -137,10 +137,6 @@ public class TDTM_ProcessControl {
        return allowRecursionInTests;
     }
 
-    public void allowRecursionInTests(Boolean isEnabled){
-        this.allowRecursionInTests = isEnabled;
-    }
-
     /**
      * @description Stub definition for the TDTM Process Controller that can be used for
      * NPSP tests that need to allow recursion in order to complete their test data setup.
