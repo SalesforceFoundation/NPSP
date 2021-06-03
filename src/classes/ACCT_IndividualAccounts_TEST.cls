@@ -1158,6 +1158,7 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Undelete a contact back to an existing Household Account
     */
     private static testMethod void undeleteContactToExistingHH() {
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 

@@ -51,6 +51,7 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Household account model
     */
     static testMethod void newLeadConversion_TestHHAccount(){
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -699,6 +700,7 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Household account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestHHAccountOppOCR(){
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -910,6 +912,7 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversion_TestOppAFF with the Household account model and verify Opp created for affiliation.
     */
     static testMethod void newLeadConversion_TestHHAccountOppAFF(){
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 

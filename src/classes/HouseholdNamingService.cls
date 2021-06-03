@@ -72,6 +72,18 @@ public without sharing class HouseholdNamingService {
         set;
     }
 
+    @TestVisible
+    private TDTM_ProcessControl processController {
+        get {
+            if (processController == null) {
+                // Use a factory so that allowRecursion can be stubbed in tests
+                processController = TDTM_ProcessControl.newInstance();
+            }
+            return processController;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -371,7 +383,7 @@ public without sharing class HouseholdNamingService {
         if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert
                 && !HH_Households_TDTM.isNewContactInsert
                 && (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)
-                || Test.isRunningTest())) {
+                || (Test.isRunningTest() && processController.allowRecursionInTests()))) {
             renameHHAccounts(accountIds);
         }
     }

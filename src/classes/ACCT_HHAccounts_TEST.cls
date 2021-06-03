@@ -176,6 +176,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    hh accounts' primary contact not updated
     **********************************************************************************************************/
     static testMethod void NewContactsNonEmptyHHAccounts() {
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -977,6 +978,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    the Account's Number of Household Members is still updated
     **********************************************************************************************************/
     static testMethod void addContactCheckNumberHHMembers() {
+        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 

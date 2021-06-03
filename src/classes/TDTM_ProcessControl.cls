@@ -37,6 +37,18 @@
 ***/
 public class TDTM_ProcessControl {
 
+    private static TDTM_ProcessControl mock;
+    @TestVisible
+    private static void setMock(TDTM_ProcessControl mockInstance) {
+        mock = mockInstance;
+    }
+
+    public static TDTM_ProcessControl newInstance(){
+        return mock != null ? mock : new TDTM_ProcessControl();
+    }
+
+    private Boolean allowRecursionInTests = false;
+
     /*******************************************************************************************************
     * @description Enum to define the various recursion prevention types used by all the related TDTM classes
     * Address Triggers:
@@ -120,4 +132,44 @@ public class TDTM_ProcessControl {
             }
         }
     }
+
+    public Boolean allowRecursionInTests() {
+       return allowRecursionInTests;
+    }
+
+    public void allowRecursionInTests(Boolean isEnabled){
+        this.allowRecursionInTests = isEnabled;
+    }
+
+    /**
+     * @description Stub definition for the TDTM Process Controller that can be used for
+     * NPSP tests that need to allow recursion in order to complete their test data setup.
+     */
+    public class TDTM_ProcessControlMockWithAllowRecursionInTests implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+            switch on (stubbedMethodName) {
+                when 'allowRecursionInTests' {
+                    return true;
+                }
+            }
+            return null;
+        }
+    }
+
+    /**
+     * @description Factory for test stubs. This method is used by multiple test methods
+     * that need to allow recursion when they are setting up their test data.
+     */
+    @TestVisible
+    private static TDTM_ProcessControl processControllerWithAllowRecursion() {
+        TDTM_ProcessControl.TDTM_ProcessControlMockWithAllowRecursionInTests mock =
+                new TDTM_ProcessControl.TDTM_ProcessControlMockWithAllowRecursionInTests();
+        return (TDTM_ProcessControl) Test.createStub(TDTM_ProcessControl.class, mock);
+    }
+
 }
