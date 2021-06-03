@@ -8,9 +8,9 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
@@ -19,6 +19,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
+import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
@@ -99,6 +100,24 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     connectedCallback() {
         this.loadBatch();
+        registerListener('refreshtable', this.refreshTable, this);
+    }
+
+    refreshTable() {
+        let refreshedRows = [];
+        getDataImportRows({ batchId: this.batchId, offset: 0 })
+            .then(rows => {
+                rows.forEach(row => {
+                    refreshedRows.push(
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this._dataImportObjectInfo)));
+                });
+                this.data = [ ...refreshedRows ];
+            })
+            .catch(error => {
+                handleError(error);
+            });
     }
 
     get hasData() {
@@ -283,6 +302,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             }
         }));
         this.notifyGiftBatchHeaderOfTableChange();
+        this.requestFormRendererReset();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            bgeGridGiftDeleted,
+            'success',
+            'dismissible',
+            null
+        );
     }
 
     loadMoreData(event) {
@@ -470,6 +497,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     notifyGiftBatchHeaderOfTableChange = () => {
         fireEvent(this, 'geBatchGiftEntryTableChangeEvent', {});
+    }
+
+    requestFormRendererReset() {
+        fireEvent(this, 'formRendererReset', {});
     }
 
     _dataImportObjectInfo;

@@ -28,7 +28,7 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 public with sharing class ElevateTokenizedGift {
-    @AuraEnabled public Decimal amount {get; set;}
+    @AuraEnabled public Integer amount {get; set;}
     @AuraEnabled public String firstName {get; set;}
     @AuraEnabled public String paymentMethodToken {get; set;}
     public String merchantId;
@@ -60,7 +60,7 @@ public with sharing class ElevateTokenizedGift {
         configService = new PS_IntegrationServiceConfig.Service();
     }
 
-    public virtual Decimal amount() {
+    public virtual Integer amount() {
         return amount;
     }
 
