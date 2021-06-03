@@ -94,6 +94,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void NewContactsEmptyHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
