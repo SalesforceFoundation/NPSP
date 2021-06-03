@@ -305,7 +305,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     householdIdsToRename.add(contactRecord.AccountId);
                 }
             } else {
-                System.debug(LoggingLevel.ERROR, '*** ##### has run! ######');
                 if (isBeingAddedToAHousehold(contactRecord)) {
                     if (!isNewlyInsertedAccount(contactRecord.AccountId)) {
                         householdIdsToRename.add(contactRecord.AccountId);

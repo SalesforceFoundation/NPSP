@@ -451,6 +451,7 @@ public class HouseholdNamingService_TEST {
     public static testMethod void testNamingOrder2() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         Contact con0 = new Contact(FirstName='c0', LastName='smith');
         insert con0;

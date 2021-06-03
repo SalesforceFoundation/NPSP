@@ -145,7 +145,7 @@ public class TDTM_ProcessControl {
      * @description Stub definition for the TDTM Process Controller that can be used for
      * NPSP tests that need to allow recursion in order to complete their test data setup.
      */
-    public class TDTM_ProcessControlMockWithAllowRecursionInTests implements StubProvider {
+    private class TDTM_ProcessControlMockWithAllowRecursionInTests implements StubProvider {
         public Object handleMethodCall(Object stubbedObject,
                 String stubbedMethodName,
                 Type returnType,
@@ -165,11 +165,15 @@ public class TDTM_ProcessControl {
      * @description Factory for test stubs. This method is used by multiple test methods
      * that need to allow recursion when they are setting up their test data.
      */
-    @TestVisible
     private static TDTM_ProcessControl processControllerWithAllowRecursion() {
         TDTM_ProcessControl.TDTM_ProcessControlMockWithAllowRecursionInTests mock =
                 new TDTM_ProcessControl.TDTM_ProcessControlMockWithAllowRecursionInTests();
         return (TDTM_ProcessControl) Test.createStub(TDTM_ProcessControl.class, mock);
+    }
+
+    @TestVisible
+    private static void allowRecursionForComplexTestDataSetup() {
+        setMock(processControllerWithAllowRecursion());
     }
 
 }

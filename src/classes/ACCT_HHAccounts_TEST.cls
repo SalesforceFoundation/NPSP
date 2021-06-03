@@ -176,9 +176,9 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    hh accounts' primary contact not updated
     **********************************************************************************************************/
     static testMethod void NewContactsNonEmptyHHAccounts() {
-        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -978,9 +978,9 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    the Account's Number of Household Members is still updated
     **********************************************************************************************************/
     static testMethod void addContactCheckNumberHHMembers() {
-        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         // turn off household naming
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(

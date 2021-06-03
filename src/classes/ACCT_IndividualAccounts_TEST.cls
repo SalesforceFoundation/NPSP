@@ -1158,9 +1158,9 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Undelete a contact back to an existing Household Account
     */
     private static testMethod void undeleteContactToExistingHH() {
-        TDTM_ProcessControl.setMock(TDTM_ProcessControl.processControllerWithAllowRecursion());
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
