@@ -2461,6 +2461,7 @@
         <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geBatchGiftsHeader</members>
         <members>geBatchGiftsTotal</members>
+        <members>geBatchProcessingSuccess</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -2602,6 +2603,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geProcessAnyway</members>
+        <members>geProcessingBatch</members>
         <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
