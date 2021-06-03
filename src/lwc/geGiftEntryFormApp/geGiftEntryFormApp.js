@@ -290,7 +290,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async startBatchProcessing() {
-        this._isBatchProcessing = true;
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
                 this.processBatchAndCloseAuthorizationWarningModal()
@@ -322,6 +321,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async processBatch() {
         await processBatch({
             batchId: this.batchId
+        }).then(() => {
+            this._isBatchProcessing = true;
         }).catch(error => {
             handleError(error);
         }).finally(() => {
