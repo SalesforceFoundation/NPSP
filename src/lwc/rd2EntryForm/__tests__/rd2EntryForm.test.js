@@ -126,6 +126,7 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             const elevateWidget = controller.elevateWidget();
+            expect(controller.disableElevateButton()).toBeTruthy();
             expect(elevateWidget).toBeTruthy();
 
         });
@@ -144,6 +145,8 @@ describe('c-rd2-entry-form', () => {
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
+            expect(controller.cancelUpdatePaymentButton()).toBeFalsy();
         });
     });
 
@@ -178,6 +181,7 @@ describe('c-rd2-entry-form', () => {
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
             expect(elevateWidget.payerFirstName).toBe('John');
             expect(elevateWidget.payerLastName).toBe('Smith');
 
@@ -364,6 +368,8 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeTruthy();
+            expect(controller.cancelUpdatePaymentButton()).toBeFalsy();
         });
 
         it('rd2 record, when editing, uses existing contact information in tokenization', async () => {
@@ -397,8 +403,8 @@ describe('c-rd2-entry-form', () => {
             await flushPromises();
 
             expect(mockGetIframeReply).toHaveBeenCalled();
-            expect(mockGetIframeReply).toHaveBeenCalledTimes(2);
-            validateIframeMessage(mockGetIframeReply.mock.calls[1], EXPECTED_INDIVIDUAL_ACH_PARAMS);
+            expect(mockGetIframeReply).toHaveBeenCalledTimes(1);
+            validateIframeMessage(mockGetIframeReply.mock.calls[0], EXPECTED_INDIVIDUAL_ACH_PARAMS);
 
             const EXPECTED_RECORD = {
                 "RecurringType__c": "Open",
@@ -447,6 +453,7 @@ describe('c-rd2-entry-form', () => {
 
             expect(controller.updatePaymentButton()).toBeFalsy();
             expect(controller.cancelUpdatePaymentButton()).toBeTruthy();
+            expect(controller.disableElevateButton()).toBeFalsy();
 
             controller.saveButton().click();
             await flushPromises();
