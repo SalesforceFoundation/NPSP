@@ -60,10 +60,12 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
 
     _paymentMethod;
     _nextDonationDate;
-    _isEditPayment = false;
-    
-    @api isEditMode;
+    _updatePaymentMode = false;
+    enableWidgetOnPaymentMethodChange = true;
+
+    @api rd2RecordId;
     @api existingPaymentMethod;
+    @api isEditMode;
     @api cardLastFour;
     @api cardLastFourLabel;
     @api cardExpDate;
@@ -81,34 +83,42 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     set paymentMethod(value) {
-        this.notifyIframePaymentMethodChanged(value);
+        if(this.shouldNotifyIframe(value)) {
+            this.notifyIframePaymentMethodChanged(value);
+        }
         this._paymentMethod = value;
+        this.enableWidgetOnPaymentMethodChange = true;
     }
 
     notifyIframePaymentMethodChanged(newValue) {
         const iframe = this.selectIframe();
-        if(this.shouldNotifyIframe(newValue)) {
+        if(this.shouldEnableWidgetOnPaymentMethodChange(newValue)) {
             this.handleUserEnabledWidget();
-            if (!isNull(iframe)) {
-                tokenHandler.setPaymentMethod(
-                    iframe,
-                    newValue,
-                    this.handleError,
-                    this.resolveMount
-                ).catch(err => {
-                    this.handleError(err);
-                });
-            }
+        }
+        if (!isNull(iframe)) {
+            tokenHandler.setPaymentMethod(
+                iframe,
+                newValue,
+                this.handleError,
+                this.resolveMount
+            ).catch(err => {
+                this.handleError(err);
+            });
         }
     }
 
+    /**
+     * When TRUE, widget does not allow user to disable it or cancel.
+     * Only TRUE when this component is hosted by rd2EditPaymentInformationModal
+     * @return {boolean}
+     */
     @api
-    get isEditPayment() {
-        return this._isEditPayment;
+    get updatePaymentMode() {
+        return this._updatePaymentMode;
     }
 
-    set isEditPayment(value) {
-        this._isEditPayment = value;
+    set updatePaymentMode(value) {
+        this._updatePaymentMode = value;
     }
 
     get currentPaymentIsCard() {
@@ -120,11 +130,11 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     get existingPaymentIsAch() {
-        return this.rd2Service.isACH(this.existingPaymentMethod);
+        return this.isEditMode && this.rd2Service.isACH(this.existingPaymentMethod);
     }
 
     get existingPaymentIsCard() {
-        return this.rd2Service.isCard(this.existingPaymentMethod);
+        return this.isEditMode && this.rd2Service.isCard(this.existingPaymentMethod);
     }
 
     get nextPaymentDateMessage() {
@@ -136,10 +146,14 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     shouldNotifyIframe(newPaymentMethod) {
-        const oldPaymentMethod = this._paymentMethod;
+        const oldPaymentMethod = this._paymentMethod ? this._paymentMethod : this.existingPaymentMethod;
         const changed = (oldPaymentMethod !== undefined) && (oldPaymentMethod !== newPaymentMethod);
         const newMethodValidForElevate = this.rd2Service.isElevatePaymentMethod(newPaymentMethod);
         return changed && newMethodValidForElevate;
+    }
+
+    shouldEnableWidgetOnPaymentMethodChange(newPaymentMethod) {
+        return this.enableWidgetOnPaymentMethodChange && this.isPaymentMethodChanged(newPaymentMethod);
     }
 
     @api 
@@ -157,7 +171,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     * in order to determine the Visualforce origin URL so that origin source can be verified.
     */
     async connectedCallback() {
-        if(this.isEditMode) {
+        if(this.shouldLoadInDisabledMode()) {
             this.isDisabled = true;
         }
 
@@ -167,6 +181,14 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
             });
 
         tokenHandler.setVisualforceOriginURLs(domainInfo);
+    }
+
+    shouldLoadInDisabledMode() {
+        if(this.updatePaymentMode) {
+            return false;
+        } else {
+            return !this.isPaymentMethodChanged() && this.rd2RecordId;
+        }
     }
 
     /***
@@ -277,11 +299,29 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
         }
     }
 
+    isPaymentMethodChanged(newPaymentMethod) {
+        const paymentMethod = newPaymentMethod ? newPaymentMethod : this.paymentMethod;
+        return this.existingPaymentMethod !== paymentMethod;
+    }
+
     /***
     * @description Handles user onclick event for disabling the widget.
     */
     handleUserDisabledWidget() {
         this.hideWidget();
+        tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
+            isDisabled: true
+        });
+    }
+
+    /***
+     * @description Handles user onclick event for disabling the widget.
+     */
+    handleUserCancelledWidget() {
+        this.hideWidget();
+        if(this.isPaymentMethodChanged()) {
+            this.enableWidgetOnPaymentMethodChange = false;
+        }
         tokenHandler.dispatchApplicationEvent(WIDGET_EVENT_NAME, {
             isDisabled: true
         });
