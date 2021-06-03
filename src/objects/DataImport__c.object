@@ -1687,6 +1687,9 @@
                 &apos;EXPIRED&apos;,
                 &apos;Expired Authorization&apos;,
 
+                &apos;PAYMENTPROCESSING&apos;,
+                &apos;Pending&apos;,
+
             &apos;&apos;)
         </formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
