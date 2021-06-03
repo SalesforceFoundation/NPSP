@@ -23,26 +23,30 @@
                                             </lightning-button>
                                         </template>
                                         <template if:false={isDisabled}>
-                                            <lightning-button variant="base"
-                                                label={labels.cancelButtonLabel}
-                                                icon-name='utility:close'
-                                                icon-position="right"
-                                                onclick={handleUserDisabledWidget}
-                                                class='slds-button slds-button_base slds-float_right hide-card-button'
-                                                data-qa-locator='button Cancel Update Payment Information'>
-                                            </lightning-button>
+                                            <template if:false={updatePaymentMode}>
+                                                <lightning-button variant="base"
+                                                    label={labels.cancelButtonLabel}
+                                                    icon-name='utility:close'
+                                                    icon-position="right"
+                                                    onclick={handleUserCancelledWidget}
+                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    data-qa-locator='button Cancel Update Payment Information'>
+                                                </lightning-button>
+                                            </template>
                                         </template>
                                     </template>
-                                    <template if:false={isEditPayment}>
+                                    <template if:false={isEditMode}>
                                         <template if:false={isDisabled}>
-                                            <lightning-button variant="base" 
-                                                label={labels.elevateDisableButtonLabel}
-                                                icon-name='utility:close' 
-                                                icon-position="right"
-                                                onclick={handleUserDisabledWidget}
-                                                class='slds-button slds-button_base slds-float_right hide-card-button'
-                                                data-qa-locator='button Do Not Use Elevate'>
-                                            </lightning-button>
+                                            <template if:false={updatePaymentMode}>
+                                                <lightning-button variant="base"
+                                                    label={labels.elevateDisableButtonLabel}
+                                                    icon-name='utility:close'
+                                                    icon-position="right"
+                                                    onclick={handleUserDisabledWidget}
+                                                    class='slds-button slds-button_base slds-float_right hide-card-button'
+                                                    data-qa-locator='button Do Not Use Elevate'>
+                                                </lightning-button>
+                                            </template>
                                         </template>
                                     </template>
                                 </lightning-layout-item>
@@ -115,7 +119,7 @@
                                                      icon={alert.icon} message={alert.message} data-qa-locator='alert Message'>
                                 </c-util-alert-banner>
                             </div>
-                            <template if:true={isEditPayment}>
+                            <template if:true={updatePaymentMode}>
                                 <div class="slds-p-bottom_medium">
                                     <c-formatted-text-with-date value={nextPaymentDateMessage} date={nextDonationDate}></c-formatted-text-with-date>
                                 </div>
