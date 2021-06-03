@@ -1,4 +1,5 @@
 import { api, LightningElement, wire } from 'lwc';
+import { refreshApex } from '@salesforce/apex';
 import GeLabelService from 'c/geLabelService';
 import tokenHandler from 'c/psElevateTokenHandler';
 import { apiNameFor, format, isEmpty, isNotEmpty } from 'c/utilCommon';
@@ -51,6 +52,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     _cardLast4;
     _cardExpirationDate;
     _widgetDataFromState;
+    _readOnlyData;
 
     constructor() {
         super();
@@ -60,7 +62,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         registerListener('resetElevateWidget', this.handleElevateWidgetReset, this);
     }
 
-     async connectedCallback() {
+    async connectedCallback() {
         const domainInfo = await GeFormService.getOrgDomain();
         tokenHandler.setVisualforceOriginURLs(domainInfo);
     }
@@ -80,13 +82,17 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     @wire(getObjectInfo, { objectApiName: apiNameFor(DATA_IMPORT) })
     dataImportObjectDescribe;
 
-    @wire(getRecord, {recordId: '$dataImportId', optionalFields: [
-            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]})
-    wiredDataImportRecord({data, error}) {
-        if (data) {
-            this.setReadOnlyData(data);
-        } else if (error) {
-            this.handleError(error);
+    @wire(getRecord, {
+        recordId: '$dataImportId', optionalFields: [
+            PAYMENT_LAST_4, PAYMENT_EXPIRATION_MONTH, PAYMENT_EXPIRATION_YEAR]
+    })
+    wiredDataImportRecord(response) {
+        this._readOnlyData = response;
+        if (response && response.data) {
+            this.setReadOnlyData(response.data);
+        }
+        if (response && response.error) {
+            this.handleError(response.error);
         }
     }
 
@@ -111,6 +117,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
         this.setCurrentPaymentMethod();
         if (this.shouldHandleWidgetDataChange()) {
             this.dataImportId = this._widgetDataFromState[apiNameFor(DATA_IMPORT_ID)];
+            refreshApex(this._readOnlyData);
         }
 
         this.updateDisplayState();
@@ -226,6 +233,10 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayStateWhenInBatchGiftEntry() {
+        if (this.isPaymentStatusAuthorized() && !this.isPaymentMethodCreditCard()) {
+            this.display.transitionTo('resetToDeactivated');
+        }
+
         if (this.isPaymentStatusAuthorized() && this.isPaymentMethodCreditCard()) {
             this.display.transitionTo('readOnly');
         } else if (this.isPaymentMethodCreditCard()) {
@@ -241,7 +252,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             if (this.isMounted) {
                 this.requestSetPaymentMethod(PAYMENT_METHOD_CREDIT_CARD);
             }
-        } else if ((this.isPaymentMethodCreditCard() || this.isPaymentMethodAch()))  {
+        } else if ((this.isPaymentMethodCreditCard() || this.isPaymentMethodAch())) {
             this.display.transitionTo('charge');
             if (this.isMounted) {
                 this.requestSetPaymentMethod(this._currentPaymentMethod);
@@ -367,8 +378,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     setReadOnlyData(data) {
         this._cardLast4 = getFieldValue(data, PAYMENT_LAST_4);
-        this._cardExpirationDate = getFieldValue(data, PAYMENT_EXPIRATION_MONTH) + '/' +
-            getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        const hasExpiryDateValue =
+            getFieldValue(data, PAYMENT_EXPIRATION_MONTH)
+            && getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        if (hasExpiryDateValue) {
+            this._cardExpirationDate =
+                getFieldValue(data, PAYMENT_EXPIRATION_MONTH)
+                + '/' +
+                getFieldValue(data, PAYMENT_EXPIRATION_YEAR);
+        }
         if (this._cardLast4 && this._cardExpirationDate) {
             this.display.transitionTo('readOnly');
         }
