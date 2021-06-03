@@ -235,7 +235,17 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleElevateWidgetDisplayState(event) {
+        if(this.shouldResetPaymentMethodOnStateChange(event)) {
+            this.resetPaymentMethod();
+        }
         this.hasUserDisabledElevateWidget = event.isDisabled;
+    }
+
+    shouldResetPaymentMethodOnStateChange(event) {
+        return event.isDisabled
+            && this.isEdit
+            && this._paymentMethod !== this.existingPaymentMethod
+            && this.isCommitmentEdit;
     }
 
     /***
@@ -463,10 +473,17 @@ export default class rd2EntryForm extends LightningElement {
         const period = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
         const campaignId = getFieldValue(this.record, FIELD_CAMPAIGN);
 
-        return amount !== Number(allFields[FIELD_AMOUNT.fieldApiName])
-            || frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName])
-            || period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName]
-            || campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
+
+        const hasFrequencyField = allFields.hasOwnProperty(FIELD_INSTALLMENT_FREQUENCY.fieldApiName);
+        const amountChanged = amount !== Number(allFields[FIELD_AMOUNT.fieldApiName]);
+        const frequencyChanged = hasFrequencyField && (frequency !== Number(allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName]));
+        const installmentPeriodChanged = period !== allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
+        const campaignChanged = campaignId !== allFields[FIELD_CAMPAIGN.fieldApiName];
+
+        return amountChanged
+            || frequencyChanged
+            || installmentPeriodChanged
+            || campaignChanged;
     }
 
     /***
@@ -773,6 +790,11 @@ export default class rd2EntryForm extends LightningElement {
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();
         }
+    }
+
+    resetPaymentMethod() {
+        const field = this.template.querySelector('lightning-input-field[data-id="paymentMethod"]');
+        field.reset();
     }
 
     /**
