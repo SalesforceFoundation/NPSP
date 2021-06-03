@@ -61,8 +61,7 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   ...                                   Contact 1: Contact1 Checkbox To Checkbox=check
   Click Gift Entry Button               Save & Enter New Gift
   Click Gift Entry Button               Process Batch
-  Click Data Import Button              NPSP Data Import                button       Begin Data Import Process
-  Wait For Batch To Process             BDI_DataImport_BATCH            Completed
+  Wait Until BGE Batch Processes        ${template} Batch
   Verify Expected Values                nonns             Contact    ${CONTACT}[Id]
   ...                                   Checkbox_to_checkbox__c=True
   ...                                   Checkbox_to_picklist__c=False

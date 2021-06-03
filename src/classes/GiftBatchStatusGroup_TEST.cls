@@ -114,4 +114,15 @@ private with sharing class GiftBatchStatusGroup_TEST {
         System.assertEquals(3, statusGroup.recordCount());
     }
 
+    @IsTest
+    private static void shouldReturnCorrectRecordCountForProcessingGifts() {
+        AggregateResultProxy resultProxy = new AggregateResultProxy()
+                .withAliasAndValue(
+                        String.valueOf(DataImport__c.fields.Status__c),
+                        BDI_DataImport_API.bdiProcessing)
+                .withAliasAndValue('recordCount', 5);
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(resultProxy);
+        System.assert(statusGroup.isProcessing());
+    }
+
 }

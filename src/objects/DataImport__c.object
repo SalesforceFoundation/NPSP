@@ -1877,6 +1877,11 @@
                     <default>false</default>
                     <label>Failed</label>
                 </value>
+                <value>
+                    <fullName>Processing</fullName>
+                    <default>false</default>
+                    <label>Processing</label>
+                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
