@@ -1,47 +1,47 @@
-import apexAddToCaptureGroup from '@salesforce/apex/GE_GiftEntryController.addToCaptureGroup';
-import apexCreateCaptureGroup from '@salesforce/apex/GE_GiftEntryController.createCaptureGroup';
+import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addToElevateBatch';
+import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 
-jest.mock('@salesforce/apex/GE_GiftEntryController.addToCaptureGroup',
+jest.mock('@salesforce/apex/GE_GiftEntryController.addToElevateBatch',
     () => ({ default : jest.fn() }),
     { virtual: true }
 );
-jest.mock('@salesforce/apex/GE_GiftEntryController.createCaptureGroup',
+jest.mock('@salesforce/apex/GE_GiftEntryController.createElevateBatch',
     () => ({ default : jest.fn() }),
     { virtual: true }
 );
 
-import ElevateCaptureGroup from "../elevateCaptureGroup";
+import ElevateBatch from "../elevateBatch";
 import ElevateTokenizeableGift from "../elevateTokenizeableGift";
 
-describe('elevate-capture-group', () => {
+describe('elevate-elevate-batch', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('create capture group returns id of a new capture group', async () => {
-        apexCreateCaptureGroup.mockResolvedValue({
-            "groupId" : "fake-capture-group-id"
+    it('create elevate batch returns id of a new elevate batch', async () => {
+        apexCreateElevateBatch.mockResolvedValue({
+            "elevateBatchId" : "fake-elevate-batch-id"
         });
 
-        const captureGroup = new ElevateCaptureGroup();
-        const elevateBatchId = await captureGroup.create();
+        const elevateBatch = new ElevateBatch();
+        const elevateBatchId = await elevateBatch.create();
 
-        expect(elevateBatchId).toBe('fake-capture-group-id');
+        expect(elevateBatchId).toBe('fake-elevate-batch-id');
     });
 
-    it('new capture group without id when adding gift then group has id', async () => {
-        apexCreateCaptureGroup.mockResolvedValue({
-            "groupId" : "fake-capture-group-id"
+    it('new elevate batch without id when adding gift then elevate batch has id', async () => {
+        apexCreateElevateBatch.mockResolvedValue({
+            "elevateBatchId" : "fake-elevate-batch-id"
         });
 
         const tokenizableGift = getDummyGift();
 
-        const captureGroup = new ElevateCaptureGroup();
-        await captureGroup.add(tokenizableGift);
+        const elevateBatch = new ElevateBatch();
+        await elevateBatch.add(tokenizableGift);
 
-        expect(apexAddToCaptureGroup).toHaveBeenLastCalledWith({
-            "groupId": "fake-capture-group-id",
+        expect(apexAddToElevateBatch).toHaveBeenLastCalledWith({
+            "elevateBatchId": "fake-elevate-batch-id",
             tokenizedGift: tokenizableGift
         });
 

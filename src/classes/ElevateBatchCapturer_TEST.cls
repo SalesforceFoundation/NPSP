@@ -29,55 +29,55 @@
 */
 
 @IsTest
-private class ElevateCaptureGroupCapturer_TEST {
+private class ElevateBatchCapturer_TEST {
 
-    @IsTest static void shouldHaveGroupsToCaptureInCaptureGroup() {
-        ElevateCaptureGroupCapturer capturer = new ElevateCaptureGroupCapturer(
+    @IsTest static void shouldHaveGroupsToCaptureInElevateBatches() {
+        ElevateBatchCapturer capturer = new ElevateBatchCapturer(
                 UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
-                buildCapturableGroupIds(200));
-        System.assert(capturer.queueableCaptureGroups.hasGroupsToCapture());
-        System.assertEquals(4, capturer.queueableCaptureGroups.partitionSize());
-        System.assertEquals(50, capturer.queueableCaptureGroups.idsToCapture().size());
+                buildElevateBatchIds(200));
+        System.assert(capturer.queueableElevateBatches.hasGroupsToCapture());
+        System.assertEquals(4, capturer.queueableElevateBatches.partitionSize());
+        System.assertEquals(50, capturer.queueableElevateBatches.idsToCapture().size());
     }
 
-    @IsTest static void shouldCaptureEnqueuedCaptureGroups() {
+    @IsTest static void shouldCaptureEnqueuedElevateBatches() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-        ElevateCaptureGroupCapturer capturer = new ElevateCaptureGroupCapturer(
+        ElevateBatchCapturer capturer = new ElevateBatchCapturer(
                 UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
-                buildCapturableGroupIds(200));
+                buildElevateBatchIds(200));
         Test.startTest();
         String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
-        UTIL_Http_TEST.mockChargeCaptureGroup(validResponse);
+        UTIL_Http_TEST.mockChargeElevateBatch(validResponse);
         capturer.execute(null);
         Test.stopTest();
-        System.assert(capturer.failReasonByCaptureGroupId.isEmpty());
+        System.assert(capturer.failReasonByElevateBatchId.isEmpty());
     }
 
     @IsTest static void shouldPopulateFailReasonMapForFailedCaptures() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
-        ElevateCaptureGroupCapturer capturer = new ElevateCaptureGroupCapturer(
+        ElevateBatchCapturer capturer = new ElevateBatchCapturer(
                 UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
-                buildCapturableGroupIds(50));
+                buildElevateBatchIds(50));
         GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
         capturer.giftBatchService = stubFor(giftBatchServiceMock);
 
         Test.startTest();
         String invalidResponse = '{"errors":[{"message":"id: Must be a valid UUID","localizedPaymentsMessage":"Bad Request","detailedMessage":"id: Must be a valid UUID"}]}';
-        UTIL_Http_TEST.mockChargeCaptureGroup(invalidResponse);
+        UTIL_Http_TEST.mockChargeElevateBatch(invalidResponse);
         capturer.execute(null);
         Test.stopTest();
 
         System.assert(giftBatchServiceMock.giftsFailedCaptureForCalled);
-        System.assertEquals(50, capturer.failReasonByCaptureGroupId.size());
-        System.assertEquals(capturer.failReasonByCaptureGroupId.values()[0], 'id: Must be a valid UUID');
+        System.assertEquals(50, capturer.failReasonByElevateBatchId.size());
+        System.assertEquals(capturer.failReasonByElevateBatchId.values()[0], 'id: Must be a valid UUID');
     }
 
-    static Set<String> buildCapturableGroupIds(Integer numOfCaptureGroupIds) {
-        Set<String> captureGroupIds = new Set<String>();
-        for (Integer i=0; i < numOfCaptureGroupIds; i++) {
-            captureGroupIds.add('sjdj-12334-fhdh-0'+ i);
+    static Set<String> buildElevateBatchIds(Integer numOfElevateBatchIds) {
+        Set<String> elevateBatchIds = new Set<String>();
+        for (Integer i=0; i < numOfElevateBatchIds; i++) {
+            elevateBatchIds.add('sjdj-12334-fhdh-0'+ i);
         }
-        return captureGroupIds;
+        return elevateBatchIds;
     }
 
     public class GiftBatchServiceMock implements StubProvider {

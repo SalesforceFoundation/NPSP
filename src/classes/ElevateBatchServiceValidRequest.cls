@@ -28,27 +28,27 @@
  *     POSSIBILITY OF SUCH DAMAGE.
  */
 @isTest
-public with sharing class ElevateCaptureGroupServiceValidRequest extends ElevateCaptureGroupService {
+public with sharing class ElevateBatchServiceValidRequest extends ElevateBatchService {
 
-    public override ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
-        ElevateAuthorizedGiftResponse giftResponse = addCaptureGroupSuccessMessage();
+    public override ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
+        ElevateAuthorizedGiftResponse giftResponse = addElevateBatchSuccessMessage();
 
         return new ElevateAuthorizedGift(tokenizedGift, giftResponse);
     }
 
-    public override ElevateCaptureGroup createCaptureGroup() {
-        ElevateCaptureGroupResponse captureGroupResponse = createCaptureGroupSuccessMessage();
-        return new ElevateCaptureGroup(captureGroupResponse);
+    public override ElevateBatch createElevateBatch() {
+        ElevateBatchResponse elevateBatchResponse = createElevateBatchSuccessMessage();
+        return new ElevateBatch(elevateBatchResponse);
     }
 
-    public ElevateCaptureGroupResponse createCaptureGroupSuccessMessage() {
-        return (ElevateCaptureGroupResponse)JSON.deserialize('{\n' +
+    public ElevateBatchResponse createElevateBatchSuccessMessage() {
+        return (ElevateBatchResponse)JSON.deserialize('{\n' +
                 '  "id": "test-id",\n' +
                 '  "status": "Open"\n' +
-                '}', ElevateCaptureGroupResponse.class);
+                '}', ElevateBatchResponse.class);
     }
 
-    public ElevateAuthorizedGiftResponse addCaptureGroupSuccessMessage() {
+    public ElevateAuthorizedGiftResponse addElevateBatchSuccessMessage() {
         return (ElevateAuthorizedGiftResponse)JSON.deserialize(
                 '{\n' +
                     '"id": "test-valid-id",\n' +

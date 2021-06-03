@@ -34,14 +34,14 @@ private class GiftBatch_TEST {
         final Integer numberOfGifts = 10;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
-        ElevateCaptureGroupServiceMock captureGroupServiceMock = new ElevateCaptureGroupServiceMock();
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
 
-        giftBatch.captureGroupService = stubFor(captureGroupServiceMock);
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
         giftBatch.captureAuthorizedGifts();
 
-        System.assert(captureGroupServiceMock.enqueuePaymentCaptureJobForCalled);
+        System.assert(elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
         for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
             System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
@@ -52,12 +52,12 @@ private class GiftBatch_TEST {
         final Integer numberOfGifts = 5;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
-        ElevateCaptureGroupServiceMock captureGroupServiceMock = new ElevateCaptureGroupServiceMock();
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
 
-        giftBatch.captureGroupService = stubFor(captureGroupServiceMock);
-        giftBatch.failGiftsWithReason(buildFailReasonByCaptureGroupId(numberOfGifts));
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+        giftBatch.failGiftsWithReason(buildFailReasonByElevateBatchId(numberOfGifts));
 
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
         for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
@@ -66,7 +66,7 @@ private class GiftBatch_TEST {
         }
     }
 
-    public class ElevateCaptureGroupServiceMock implements StubProvider {
+    public class ElevateBatchServiceMock implements StubProvider {
         public Boolean enqueuePaymentCaptureJobForCalled = false;
 
         public Object handleMethodCall(Object stubbedObject,
@@ -86,10 +86,10 @@ private class GiftBatch_TEST {
         }
     }
 
-    private static ElevateCaptureGroupService stubFor(ElevateCaptureGroupServiceMock captureGroupServiceMock) {
-        return (ElevateCaptureGroupService) Test.createStub(
-            ElevateCaptureGroupService.class,
-            captureGroupServiceMock
+    private static ElevateBatchService stubFor(ElevateBatchServiceMock elevateBatchServiceMock) {
+        return (ElevateBatchService) Test.createStub(
+            ElevateBatchService.class,
+            elevateBatchServiceMock
         );
     }
 
@@ -111,11 +111,11 @@ private class GiftBatch_TEST {
         return dummyAuthorizedGifts;
     }
 
-    private static Map<String, String> buildFailReasonByCaptureGroupId(Integer numberOfGifts) {
-        Map<String, String> failReasonByCaptureGroupId = new Map<String, String>();
+    private static Map<String, String> buildFailReasonByElevateBatchId(Integer numberOfGifts) {
+        Map<String, String> failReasonByElevateBatchId = new Map<String, String>();
         for (Integer i = 0; i < numberOfGifts; i++) {
-            failReasonByCaptureGroupId.put('DUMMY_ELEVATE_BATCH_ID_' + i, 'DUMMY FAIL REASON');
+            failReasonByElevateBatchId.put('DUMMY_ELEVATE_BATCH_ID_' + i, 'DUMMY FAIL REASON');
         }
-        return failReasonByCaptureGroupId;
+        return failReasonByElevateBatchId;
     }
 }

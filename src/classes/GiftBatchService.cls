@@ -56,9 +56,9 @@ public with sharing class GiftBatchService {
         giftBatch.updateRecords();
     }
 
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByCaptureGroupId) {
+    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
         GiftBatch giftBatch = new GiftBatch(batchId);
-        giftBatch.failGiftsWithReason(failReasonByCaptureGroupId);
+        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
         giftBatch.updateRecords();
     }
 }

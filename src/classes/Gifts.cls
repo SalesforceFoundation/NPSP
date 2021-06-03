@@ -35,13 +35,13 @@
 
 public with sharing class Gifts {
 
-    private Set<String> capturableGroupIds;
+    private Set<String> elevateBatchIds;
     @TestVisible private List<DataImport__c> dataImports;
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
-        setCapturableGroupIds(dataImports);
+        setElevateBatchIds(dataImports);
     }
 
     public List<DataImport__c> authorizedGifts() {
@@ -58,8 +58,8 @@ public with sharing class Gifts {
         update giftsToUpdate;
     }
 
-    public Set<String> capturableGroupIds() {
-        return capturableGroupIds;
+    public Set<String> elevateBatchIds() {
+        return elevateBatchIds;
     }
 
     public void authorizedToPaymentProcessingStatus() {
@@ -69,37 +69,37 @@ public with sharing class Gifts {
         }
     }
 
-    public void failGiftsByCaptureIdWithReason(Map<String, String> failReasonByCaptureGroupId) {
-        for (String captureGroupId : failReasonByCaptureGroupId.keySet()) {
-            List<DataImport__c> giftsInCaptureGroup = findGiftsByCaptureGroupId(captureGroupId);
-            String failReason = failReasonByCaptureGroupId.get(captureGroupId);
-            applyFailReasonToGiftsIn(giftsInCaptureGroup, failReason);
+    public void failGiftsByElevateBatchIdWithReason(Map<String, String> failReasonByElevateBatchId) {
+        for (String elevateBatchId : failReasonByElevateBatchId.keySet()) {
+            List<DataImport__c> giftsInElevateBatch = findGiftsByElevateBatchId(elevateBatchId);
+            String failReason = failReasonByElevateBatchId.get(elevateBatchId);
+            applyFailReasonToGiftsIn(giftsInElevateBatch, failReason);
         }
     }
 
-    private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInCaptureGroup, String failReason) {
-        for (DataImport__c gift : giftsInCaptureGroup) {
+    private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInElevateBatch, String failReason) {
+        for (DataImport__c gift : giftsInElevateBatch) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
             gift.FailureInformation__c = failReason;
             giftsToUpdate.add(gift);
         }
     }
 
-    private List<DataImport__c> findGiftsByCaptureGroupId(String captureGroupId) {
-        List<DataImport__c> giftsInCaptureGroup = new List<DataImport__c>();
+    private List<DataImport__c> findGiftsByElevateBatchId(String elevateBatchId) {
+        List<DataImport__c> giftsInElevateBatch = new List<DataImport__c>();
         for (DataImport__c gift : dataImports) {
-            if (gift.Payment_Elevate_Batch_ID__c == captureGroupId) {
-                giftsInCaptureGroup.add(gift);
+            if (gift.Payment_Elevate_Batch_ID__c == elevateBatchId) {
+                giftsInElevateBatch.add(gift);
             }
         }
-        return giftsInCaptureGroup;
+        return giftsInElevateBatch;
     }
 
-    private void setCapturableGroupIds(List<DataImport__c> dataImports) {
-        capturableGroupIds = new Set<String>();
+    private void setElevateBatchIds(List<DataImport__c> dataImports) {
+        elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImports) {
             if (dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
-                capturableGroupIds.add(dataImport.Payment_Elevate_Batch_ID__c);
+                elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }
     }
