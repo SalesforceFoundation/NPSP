@@ -2,7 +2,6 @@ import { LightningElement, track, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import storeFormTemplate from '@salesforce/apex/GE_GiftEntryController.storeFormTemplate';
 import retrieveFormTemplateById from '@salesforce/apex/GE_GiftEntryController.retrieveFormTemplateById';
-import checkForElevateCustomer  from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -433,11 +432,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     includePaymentStatusDisplayField() {
         const hasElevatePaymentStatusField =
             hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(ELEVATE_PAYMENT_STATUS));
-        console.log('TemplateBuilderService.isElevateCustomer: ', TemplateBuilderService.isElevateCustomer);
+
         if (TemplateBuilderService.isElevateCustomer && hasElevatePaymentStatusField) {
             const elevatePaymentStatusOption = {
-                label: this._dataImportObject.fields.Elevate_Payment_Status__c.label,
-                value: this._dataImportObject.fields.Elevate_Payment_Status__c.apiName
+                label: this._dataImportObject.fields[apiNameFor(ELEVATE_PAYMENT_STATUS)]?.label,
+                value: this._dataImportObject.fields[apiNameFor(ELEVATE_PAYMENT_STATUS)]?.apiName
             };
             this.availableBatchTableColumnOptions.push(elevatePaymentStatusOption);
         }

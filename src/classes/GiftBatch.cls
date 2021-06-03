@@ -106,13 +106,17 @@ public inherited sharing class GiftBatch {
         Boolean hasWidget = false;
         for (GE_Template.Section section : formTemplate.layout.sections) {
             for (GE_Template.Element element : section.elements) {
-                if (element.componentName != null
-                    && element.componentName == 'geFormWidgetTokenizeCard') {
+                if (isElevateWidget(element)) {
                     hasWidget = true;
                 }
             }
         }
         return hasWidget;
+    }
+
+    private Boolean isElevateWidget(GE_Template.Element element) {
+        return element.componentName != null
+            && element.componentName == 'geFormWidgetTokenizeCard';
     }
 
     public void captureAuthorizedGifts() {
