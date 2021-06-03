@@ -72,6 +72,18 @@ public without sharing class HouseholdNamingService {
         set;
     }
 
+    @TestVisible
+    private TDTM_ProcessControl processController {
+        get {
+            if (processController == null) {
+                // Use a factory so that allowRecursion can be stubbed in tests
+                processController = TDTM_ProcessControl.newInstance();
+            }
+            return processController;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description turns off household naming in the current execution context.  provided for other
     * components, like Batch Data Import, to momentarily turn off the household naming logic.  there is no
@@ -365,8 +377,13 @@ public without sharing class HouseholdNamingService {
     * @param accountIds the list of Household or Account Ids that need updating.
     */
     public void renameHouseholdAccounts(List<Id> accountIds) {
+        // The following conditional aims to prevent recursion of the expensive operation to
+        // rename Households/HouseholdAccounts. It makes an exception for tests since some
+        // NPSP tests insert records multiple times.
         if (!ACCT_IndividualAccounts_TDTM.isNewHouseholdAccountInsert
-                && !HH_Households_TDTM.isNewContactInsert) {
+                && !HH_Households_TDTM.isNewContactInsert
+                && (!TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH)
+                || (Test.isRunningTest() && processController.allowRecursionInTests()))) {
             renameHHAccounts(accountIds);
         }
     }

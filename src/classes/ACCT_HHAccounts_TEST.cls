@@ -178,6 +178,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void NewContactsNonEmptyHHAccounts() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -979,6 +980,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     static testMethod void addContactCheckNumberHHMembers() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         // turn off household naming
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(

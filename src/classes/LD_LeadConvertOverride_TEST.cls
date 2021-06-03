@@ -53,6 +53,7 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newLeadConversion_TestHHAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         newLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
@@ -701,6 +702,7 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newLeadConversion_TestHHAccountOppOCR(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         newLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
@@ -912,6 +914,7 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newLeadConversion_TestHHAccountOppAFF(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         newLeadConversion_TestOppAFF(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
