@@ -331,16 +331,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async startPolling() {
-        const poll = window.setInterval(() => {
+        const poll = setInterval(() => {
             Promise.resolve(true).then(() => {
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
                     this.handleProcessedBatch();
-                    window.clearInterval(poll);
+                    clearInterval(poll);
+                }
+                if (!this.isBatchGiftEntryInFocus()) {
+                    clearInterval(poll);
                 }
             })
         }, 5000);
+    }
+
+    isBatchGiftEntryInFocus() {
+        return location.href.includes(this.batchId);
     }
 
     handleProcessedBatch() {
