@@ -1253,6 +1253,7 @@ private class ACCT_IndividualAccounts_TEST {
     public static testMethod void undeleteHHContactWithOpp() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+        TDTM_ProcessControl.allowRecursionForComplexTestDataSetup();
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));

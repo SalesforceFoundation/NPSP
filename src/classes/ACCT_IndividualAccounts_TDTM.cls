@@ -73,6 +73,18 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         set;
     }
 
+    @TestVisible
+    private TDTM_ProcessControl processController {
+        get {
+            if (processController == null) {
+                // Use a factory so that allowRecursion can be stubbed in tests
+                processController = TDTM_ProcessControl.newInstance();
+            }
+            return processController;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description the current Contact Settings object
      */
@@ -309,7 +321,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     if (!isNewlyInsertedAccount(contactRecord.AccountId)) {
                         householdIdsToRename.add(contactRecord.AccountId);
                     } else {
-                        if (Test.isRunningTest()) {
+                        if (Test.isRunningTest() && processController.allowRecursionInTests()) {
                             // Allow renaming for tests that insert Contacts into Household Accounts that were created
                             // in the same context: see ACCT_IndividualAccounts_TEST.undeleteContactToExistingHH
                             householdIdsToRename.add(contactRecord.AccountId);
