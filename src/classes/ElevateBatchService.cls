@@ -66,17 +66,23 @@ public virtual with sharing class ElevateBatchService {
                 .build();
     }
 
-    public List<ElevateBatchResponse> capture(Set<String> ElevateBatchIds) {
-        List<ElevateBatchResponse> ElevateBatchResponses = new List<ElevateBatchResponse>();
-        for (String elevateBatchId : ElevateBatchIds) {
-            UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                    captureRequest(elevateBatchId)
-            );
-            ElevateBatchResponse ElevateBatchResponse = (ElevateBatchResponse)JSON.deserialize(
-                    response.body, ElevateBatchResponse.class);
-            ElevateBatchResponses.add(ElevateBatchResponse);
+    public void enqueuePaymentCaptureJobFor(Id batchId, Set<String> elevateBatchIds) {
+        if (elevateBatchIds.isEmpty()) {
+            return;
         }
-        return ElevateBatchResponses;
+        ElevateBatchCapturer capturer =
+            new ElevateBatchCapturer(batchId, elevateBatchIds);
+        System.enqueueJob(capturer);
+    }
+
+    public ElevateBatchResponse capture(String elevateBatchId) {
+        HttpRequest captureRequest = captureRequest(elevateBatchId);
+        UTIL_Http.Response response =
+            new UTIL_Http.RequestService().sendRequest(captureRequest);
+
+        ElevateBatchResponse captureResponse = (ElevateBatchResponse)
+            JSON.deserialize(response.body, ElevateBatchResponse.class);
+        return captureResponse;
     }
 
     @TestVisible

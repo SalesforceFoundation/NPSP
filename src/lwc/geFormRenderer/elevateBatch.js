@@ -2,30 +2,16 @@ import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addTo
 import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 
 class ElevateBatch {
-
-    constructor(elevateBatchId) {
-        this.elevateBatchId = elevateBatchId;
-        this._hasAddRun = false;
-    }
-
     async add(tokenizedGift) {
-        if (!this.elevateBatchId) {
-            this.elevateBatchId = await this.create();
-        }
-
         try {
+            this.elevateBatchId = await this.create();
             const authorizedGift = await apexAddToElevateBatch(
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
+
             return authorizedGift;
-        } catch (ex) {
-            if (!this._hasAddRun) {
-                this._hasAddRun = true;
-                this.elevateBatchId = await this.create();
-                return this.add(tokenizedGift);
-            } else {
-                throw(ex); // Propagate error to calling function for error handling
-            }
+        } catch (exception) {
+            throw (exception);
         }
     }
 
@@ -33,7 +19,6 @@ class ElevateBatch {
         const elevateBatch = await apexCreateElevateBatch();
         return elevateBatch.elevateBatchId;
     }
-
 }
 
 export default ElevateBatch;

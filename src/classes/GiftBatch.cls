@@ -33,10 +33,30 @@
 * @description Batch entity class in NPSP.
 */
 
-public inherited sharing class NPSP_Batch {
+public inherited sharing class GiftBatch {
 
     private Id batchId;
-    private Gifts authorizedGifts;
+
+    private Gifts gifts {
+        get {
+            if (gifts == null) {
+                gifts = new Gifts(giftSelector.getGiftsFor(this.batchId));
+            }
+            return gifts;
+        }
+        set;
+    }
+
+    private GiftBatchSelector giftBatchSelector {
+        get {
+            if (giftBatchSelector == null) {
+                giftBatchSelector = new GiftBatchSelector();
+            }
+            return giftBatchSelector;
+        }
+        set;
+    }
+
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
@@ -47,6 +67,7 @@ public inherited sharing class NPSP_Batch {
         set;
     }
 
+    @TestVisible
     private ElevateBatchService elevateBatchService {
         get {
             if (elevateBatchService == null) {
@@ -58,36 +79,25 @@ public inherited sharing class NPSP_Batch {
     }
 
     @TestVisible
-    private NPSP_Batch(Gifts authorizedGifts) {
-        this.authorizedGifts = authorizedGifts;
+    private GiftBatch(Gifts gifts) {
+        this.gifts = gifts;
     }
 
-    public NPSP_Batch(Id batchId) {
+    public GiftBatch(Id batchId) {
         this.batchId = batchId;
-        this.authorizedGifts = authorizedGifts();
     }
 
-    private Gifts authorizedGifts() {
-        if (authorizedGifts != null) {
-            return authorizedGifts;
-        }
-        return new Gifts(giftSelector.getAuthorizedGiftsFor(this.batchId));
+    public void captureAuthorizedGifts() {
+        elevateBatchService.enqueuePaymentCaptureJobFor(
+            batchId, gifts?.elevateBatchIds());
+        gifts.authorizedToPaymentProcessingStatus();
     }
 
-    public void processPayments() {
-        List<ElevateBatchResponse> elevateBatchResponses =
-                elevateBatchService.capture(authorizedGifts.elevateBatchIds());
-        handleElevateBatchResponses(elevateBatchResponses);
+    public void failGiftsWithReason(Map<String, String> failReasonByElevateBatchId) {
+        gifts.failGiftsByElevateBatchIdWithReason(failReasonByElevateBatchId);
     }
 
-    private void handleElevateBatchResponses(List<ElevateBatchResponse> elevateBatchResponses) {
-        for (DataImport__c dataImport : authorizedGifts.dataImports()) {
-            for (ElevateBatchResponse response : elevateBatchResponses) {
-                if(response.isValidCaptureResponse(dataImport)) {
-                    dataImport.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-                }
-            }
-        }
-        update authorizedGifts.dataImports();
+    public void updateRecords() {
+        gifts.updateRecords();
     }
 }
