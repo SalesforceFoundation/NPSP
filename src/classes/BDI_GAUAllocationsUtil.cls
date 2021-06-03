@@ -215,11 +215,10 @@ public with sharing class BDI_GAUAllocationsUtil {
                     diForAlloProcessing.add(di);
                 }
 
-                // If a Recurring Donation was created without a donation then add it to a list to query for any
-                // open opportunities under the new RD to make sure they get assigned the appropriate GAU allocations.
+                // If a Recurring Donation was created then check for open opportunities that may need to have their
+                // GAU Allocations set.
                 if (di.RecurringDonationImportStatus__c == System.label.bdiCreated &&
-                        di.RecurringDonationImported__c != null &&
-                        di.DonationImported__c == null) {
+                        di.RecurringDonationImported__c != null) {
                     diByCreatedRDId.put(di.RecurringDonationImported__c,di);
                 }
             }
