@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace } from 'c/utilCommon';
+import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -16,7 +16,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
-import processPayments from '@salesforce/apex/GE_GiftEntryController.processPaymentsFor';
+import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 /*******************************************************************************
 * @description Schema imports
@@ -37,7 +37,6 @@ import BatchTotals from './helpers/batchTotals';
 /*******************************************************************************
 * @description Constants
 */
-const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
@@ -57,13 +56,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     dataImportRecord = {};
     errorCallback;
-    isFailedPurchase = false;
+    _isBatchProcessing = false;
     isElevateCustomer = false;
 
     namespace;
     count;
     total;
     batch = {};
+    isLoading = true;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -86,10 +86,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async retrieveBatchTotals() {
         this.batchTotals = await BatchTotals(this.batchId);
-
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this.isLoading = false;
+        if (!this._isBatchProcessing) return;
+        await this.startPolling();
     }
 
     /*******************************************************************************
@@ -279,64 +282,89 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             } catch (error) {
                 handleError(error);
             } finally {
-                if (this.shouldDisplayExpiredAuthorizationWarning()) {
-                    this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
-                        async () => {
-                            await this.processBatch();
-                        } 
-                    );
-                } else {
-                    await this.processBatch();
-                }
+                await this.startBatchProcessing();
             }
+            return;
+        }
+        this.handleBatchProcessingErrors();
+    }
+
+    async startBatchProcessing() {
+        this._isBatchProcessing = true;
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
+            this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                this.processBatchAndCloseAuthorizationWarningModal()
+            );
+            return;
+        }
+        await this.processBatch();
+    }
+
+    processBatchAndCloseAuthorizationWarningModal() {
+        return async () => {
+            await this.processBatch();
+            this.dispatchEvent(new CustomEvent('closemodal'));
+        };
+    }
+
+    handleBatchProcessingErrors() {
+        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+            handleError(geBatchGiftsExpectedTotalsMessage);
         } else {
-            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-                handleError(geBatchGiftsExpectedTotalsMessage);
-            } else {
-                handleError(geBatchGiftsExpectedCountOrTotalMessage);
-            }
+            handleError(geBatchGiftsExpectedCountOrTotalMessage);
         }
     }
 
-    async processBatch() {
-        await this.processPayments();
-        this.navigateToDataImportProcessingPage(); 
+    get isBatchProcessing() {
+        return this._isBatchProcessing;
     }
 
-    async processPayments() {
-        await processPayments({
-                batchId: this.batchId
+    async processBatch() {
+        await processBatch({
+            batchId: this.batchId
         }).catch(error => {
             handleError(error);
+        }).finally(() => {
+            this.startPolling();
         });
     }
 
-    navigateToDataImportProcessingPage() {
-        let url = '/apex/' + this.bdiDataImportPageName() +
-            '?batchId=' + this.recordId + '&retURL=' + this.recordId;
-
-        this[NavigationMixin.Navigate]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: url
+    async startPolling() {
+        const poll = window.setInterval(() => {
+            Promise.resolve(true).then(() => {
+                this.refreshBatchTotals();
+            }).then(() => {
+                if (!this._isBatchProcessing) {
+                    this.handleProcessedBatch();
+                    window.clearInterval(poll);
                 }
-            },
-            true
+            })
+        }, 5000);
+    }
+
+    handleProcessedBatch() {
+        this.collapseForm();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geBatchProcessingSuccess,
+                [this.batchName]),
+            'success',
+            'dismissible',
+            null
         );
     }
 
-    async refreshBatchTotals() {
-        if(this.isElevateCustomer) {
-            this._hasDisplayedExpiredAuthorizationWarning = false;
-            this.batchTotals = await BatchTotals(this.batchId);
-        }        
+    collapseForm() {
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.collapse();
     }
 
-    bdiDataImportPageName() {
-        return this.namespace ?
-            `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
-            BDI_DATA_IMPORT_PAGE;
-    };
+    async refreshBatchTotals() {
+        this._hasDisplayedExpiredAuthorizationWarning = false;
+        this.batchTotals = await BatchTotals(this.batchId);
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+    }
 
     requireTotalMatch() {
         return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);

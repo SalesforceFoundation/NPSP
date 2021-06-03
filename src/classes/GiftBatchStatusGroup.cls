@@ -56,6 +56,10 @@ public inherited sharing class GiftBatchStatusGroup {
         return status == BDI_DataImport_API.bdiFailed;
     }
 
+    public Boolean isProcessing() {
+        return status == BDI_DataImport_API.bdiProcessing;
+    }
+
     public Boolean isPaymentFailed() {
       return paymentStatus == ElevateTransactionStatus.DECLINED.name()
           || paymentStatus == ElevateTransactionStatus.EXPIRED.name()

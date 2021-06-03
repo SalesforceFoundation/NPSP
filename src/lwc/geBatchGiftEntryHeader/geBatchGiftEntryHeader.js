@@ -17,6 +17,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     @api batchTotals = {};
     @api isPermissionError;
     @api isElevateCustomer;
+    @api isBatchProcessing;
 
     @wire(getRecord, {
         recordId: '$batchId',
