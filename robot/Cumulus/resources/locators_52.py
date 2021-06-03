@@ -342,7 +342,8 @@ npsp_lex_locators={
 		'perms_error':'//div[@class="slds-illustration slds-illustration_large"]',
 		'template_required_checkbox':'//lightning-input[@data-qa-locator="checkbox Required {}"]',
 		'success_toast':'//span[contains(text(),"{} was processed.")]',
-        'collapse_header':'//span[contains(@title,"Gift Entry Form")]'
+        'collapse_header':'//span[contains(@title,"Gift Entry Form")]',
+		'form_header':'//span[contains(text(),"{}")]'
 	},
 	# Enhanced Recurring Donation (erd) related element locators
 	'erd':{
