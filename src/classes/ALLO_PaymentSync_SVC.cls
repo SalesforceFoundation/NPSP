@@ -410,7 +410,7 @@ public class ALLO_PaymentSync_SVC {
             Decimal percentGAU = (totalAllPayments != 0) ? totalPaymentAllocations / totalAllPayments : 0;
 
             // Calculate the proposed amount (based on the Opportunity amount, multiplied by the GAU Percentage)
-            Decimal newGAUAmtForOpp = context.opportunity.Amount * percentGAU;
+            Decimal newGAUAmtForOpp = (context.opportunity.Amount * percentGAU).setScale(2);
 
             //if we have opportunity allocations for this GAU
             if (context.opportunityAllocationsByGAU.containsKey(gau)) {

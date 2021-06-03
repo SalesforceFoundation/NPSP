@@ -981,6 +981,62 @@ private with sharing  class ALLO_PaymentSync_TEST {
 
         System.assertEquals(null, oppAllocation.Percent__c, 'Default Allocation Percentage');
     }
+    
+    /*******************************************************************************************************
+    * @description Test specific for rounding bug in allocation sync reported in W-9271810. Irrational
+    * numbers extended out to 31 digits led to a rounding error in the last 2 digits.
+    ********************************************************************************************************/
+    @isTest
+    static void confirmGeneratedAllocationIsProperlyRoundedForIrrationalNumbers() {
+        setupForTests();
+        opportunity = [SELECT Id, Amount FROM Opportunity WHERE Name = 'Opp' LIMIT 1];
+        opportunity.Amount = 32200;
+        update(opportunity);
+        
+        makePayments(32200, 1);
+        makeGAUs(3);
+
+        List<Allocation__c> alloForInsert = new List<Allocation__c>();
+
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 2000, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 5000, General_Accounting_Unit__c = gaus[1].Id));
+        alloForInsert.add(new Allocation__c(Opportunity__c=opportunity.Id, Amount__c = 25200, General_Accounting_Unit__c = gaus[2].Id));
+        insert alloForInsert;
+
+        List<Allocation__c> queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        
+        //original opportunity allocations
+        assertAllocation(queryAllocations[0], 2000, gaus[0].Id, true);
+        assertAllocation(queryAllocations[1], 5000, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 25200, gaus[2].Id, true);
+        //synced payment allocations
+        assertAllocation(queryAllocations[3], 2000, gaus[0].Id, false);
+        assertAllocation(queryAllocations[4], 5000, gaus[1].Id, false);
+        assertAllocation(queryAllocations[5], 25200, gaus[2].Id, false);
+        
+        Id paymentId = [SELECT Id FROM npe01__OppPayment__c LIMIT 1].Id;
+        
+        delete([SELECT Id FROM Allocation__c WHERE Payment__c =: paymentId]);
+        alloForInsert = new List<Allocation__c>();
+        alloForInsert.add(new Allocation__c(Payment__c = paymentId, Amount__c = 2000, General_Accounting_Unit__c = gaus[0].Id));
+        alloForInsert.add(new Allocation__c(Payment__c = paymentId, Amount__c = 5000, General_Accounting_Unit__c = gaus[1].Id));
+        alloForInsert.add(new Allocation__c(Payment__c = paymentId, Amount__c = 25200, General_Accounting_Unit__c = gaus[2].Id));
+        insert alloForInsert;
+        
+        queryAllocations = getAllocationsOrderByAmount();
+        System.assertEquals(6, queryAllocations.size(), 'Six allocations should exist.');
+        
+        //opportunity allocations
+        assertAllocation(queryAllocations[0], 2000, gaus[0].Id, true);
+        assertAllocation(queryAllocations[1], 5000, gaus[1].Id, true);
+        assertAllocation(queryAllocations[2], 25200, gaus[2].Id, true);
+        //payment allocations
+        assertAllocation(queryAllocations[3], 2000, gaus[0].Id, false);
+        assertAllocation(queryAllocations[4], 5000, gaus[1].Id, false);
+        assertAllocation(queryAllocations[5], 25200, gaus[2].Id, false);
+        
+    }
 
     /*** Helpers ***/
 
