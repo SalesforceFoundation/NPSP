@@ -129,6 +129,12 @@ public inherited sharing class GiftBatch {
         gifts.failGiftsByElevateBatchIdWithReason(failReasonByElevateBatchId);
     }
 
+    public void processGifts() {
+        gifts.giftsToProcessingStatus();
+        captureAuthorizedGifts();
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
+    }
+
     public void updateRecords() {
         gifts.updateRecords();
     }

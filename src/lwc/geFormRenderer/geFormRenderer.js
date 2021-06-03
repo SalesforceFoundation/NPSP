@@ -2625,6 +2625,11 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
+    @api
+    collapse() {
+        this._isFormCollapsed = true;
+    }
+
     get expandableContainerId() {
         return EXPANDABLE_SECTION_CONTAINER;
     }
