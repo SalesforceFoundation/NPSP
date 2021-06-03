@@ -245,10 +245,10 @@ public without sharing class HouseholdNamingService {
     //Todo: move to Household Settings?
     public Set<String> getHouseholdNamingContactFields() {
         if (!settings.isAdvancedHouseholdNaming()
-                || householdNamingImpl.householdNamingFields() == null) {
+                || householdNamingImpl.setHouseholdNameFieldsOnContact() == null) {
             return new Set<String>();
         } else {
-            return householdNamingImpl.householdNamingFields();
+            return householdNamingImpl.setHouseholdNameFieldsOnContact();
         }
     }
 

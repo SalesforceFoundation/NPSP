@@ -88,7 +88,7 @@ public with sharing class HH_INamingImpl implements HH_INaming {
     * @return set of strings of all fields referenced from Contact.
     */
     private static Set<String> householdNamingFields;
-    public Set<String> householdNamingFields() {
+    public Set<String> setHouseholdNameFieldsOnContact() {
         if (householdNamingFields == null) {
             Set<String> setStrField = new Set<String>();
             NameSpec ns;

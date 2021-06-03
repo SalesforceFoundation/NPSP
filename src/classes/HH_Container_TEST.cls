@@ -190,7 +190,7 @@ private class HH_Container_TEST {
 
         //verify Household Naming Contact Names are included in the output
         HH_INamingImpl hhNamingImpl = new HH_INamingImpl();
-        Set<String> hhNamingContactFields = hhNamingImpl.householdNamingFields();
+        Set<String> hhNamingContactFields = hhNamingImpl.setHouseholdNameFieldsOnContact();
 
         for (String fieldName : hhNamingContactFields) {
             System.assert(fieldNames.contains(fieldName), fieldName + ' should be in: ' + fieldNames);

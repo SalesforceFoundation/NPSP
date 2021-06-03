@@ -75,5 +75,5 @@ global interface HH_INaming {
     * @description To allow the NPSP code to know which fields to query for on Contact, before handing them off to the naming routines.
     * @return set of strings of all fields referenced from Contact.
     */
-    Set<String> householdNamingFields();
+    Set<String> setHouseholdNameFieldsOnContact();
 }
