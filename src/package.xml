@@ -271,7 +271,6 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
-        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>ContactSelector</members>
         <members>ContactService</members>
@@ -315,11 +314,13 @@
         <members>ElevateAuthorizedGift</members>
         <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateAuthorizedGift_TEST</members>
-        <members>ElevateCaptureGroup</members>
-        <members>ElevateCaptureGroupResponse</members>
-        <members>ElevateCaptureGroupService</members>
-        <members>ElevateCaptureGroupServiceInvalidRequest</members>
-        <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevateBatch</members>
+        <members>ElevateBatchCapturer</members>
+        <members>ElevateBatchCapturer_TEST</members>
+        <members>ElevateBatchResponse</members>
+        <members>ElevateBatchService</members>
+        <members>ElevateBatchServiceInvalidRequest</members>
+        <members>ElevateBatchServiceValidRequest</members>
         <members>ElevatePaymentMethod</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
@@ -340,6 +341,7 @@
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>Gift</members>
+        <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
@@ -348,10 +350,12 @@
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
+        <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftSelector</members>
         <members>Gift_Test</members>
         <members>Gifts</members>
+        <members>Gifts_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -402,8 +406,6 @@
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
-        <members>NPSP_Batch</members>
-        <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
         <members>NPSP_Contact_TEST</members>
         <members>NPSP_Household</members>

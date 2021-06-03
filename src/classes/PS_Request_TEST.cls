@@ -139,17 +139,17 @@ private with sharing class PS_Request_TEST {
             String roles;
             if (endpoint == PS_Request.ElevateEndpoint.TOKENIZE) {
                 roles = PS_Request.ROLE_PAYMENT_TOKENS;
-
             } else if (endpoint == PS_Request.ElevateEndpoint.PURCHASE) {
                 roles = PS_Request.ROLE_PAYMENT_PURCHASE;
 
             } else if (endpoint == PS_Request.ElevateEndpoint.COMMITMENT
-                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL
-                ) {
+                || endpoint == PS_Request.ElevateEndpoint.COMMITMENT_CANCEL) {
+
                 roles = PS_Request.ROLE_PAYMENT_COMMITMENTS;
-            } else if (endpoint == PS_Request.ElevateEndpoint.ADD_TO_CAPTURE_GROUP
-                || endpoint == PS_Request.ElevateEndpoint.CREATE_CAPTURE_GROUP
-                    || endpoint == PS_Request.ElevateEndpoint.CHARGE_CAPTURE_GROUP) {
+            } else if (endpoint == PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH
+                || endpoint == PS_Request.ElevateEndpoint.CREATE_ELEVATE_BATCH
+                || endpoint == PS_Request.ElevateEndpoint.CHARGE_ELEVATE_BATCH) {
+
                 roles = PS_Request.ROLE_PAYMENT_BATCH;
             }
 

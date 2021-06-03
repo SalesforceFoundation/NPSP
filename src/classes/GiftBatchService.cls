@@ -49,5 +49,16 @@ public with sharing class GiftBatchService {
         GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
         return groupedTotals.totalsFor(batchId);
     }
-    
+
+    public void processPaymentsFor(Id batchId) {
+        GiftBatch giftBatch = new GiftBatch(batchId);
+        giftBatch.captureAuthorizedGifts();
+        giftBatch.updateRecords();
+    }
+
+    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
+        GiftBatch giftBatch = new GiftBatch(batchId);
+        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
+        giftBatch.updateRecords();
+    }
 }
