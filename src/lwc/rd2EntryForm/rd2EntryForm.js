@@ -389,6 +389,10 @@ export default class rd2EntryForm extends LightningElement {
         this.handleElevateWidgetDisplay();
     }
 
+    handleRecurringPeriodChange(event) {
+        this.handleElevateWidgetDisplay();
+    }
+
     /***
      * @description Currency change might hide or display the credit card widget
      * @param event
@@ -437,18 +441,29 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget() {
-        const isOpenSchedule = (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN);
+        const isScheduleSupported = this.isScheduleSupported();
         const isValidPaymentMethod = this.isElevatePaymentMethod();
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && isValidPaymentMethod
-            && isOpenSchedule
+            && isScheduleSupported
             && currencySupported
             && countrySupported);
 
         this.populateCardHolderName();
+    }
+
+    isScheduleSupported() {
+        if(this.scheduleComponent) {
+            const isValidRecurringType = this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN;
+            const isValidInstallmentPeriod = this.scheduleComponent.getInstallmentPeriod() !== '1st and 15th';
+
+            return isValidRecurringType && isValidInstallmentPeriod;
+        }
+
+        return false;
     }
 
     isElevatePaymentMethod() {

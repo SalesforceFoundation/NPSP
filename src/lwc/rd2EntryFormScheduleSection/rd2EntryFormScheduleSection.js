@@ -332,6 +332,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     onHandleAdvancedPeriodChange(event) {
         let advancedPeriod = event.target.value;
         this.updateScheduleFieldVisibility(this.customPeriod, advancedPeriod);
+        this.dispatchEvent(new CustomEvent(
+            'periodchange',
+            { detail: { advancedPeriod }}
+        ));
     }
 
     /**
@@ -488,9 +492,17 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     @api
     getRecurringType() {
-        const recurringType = this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`)
+        const recurringType = this.template.querySelector(`lightning-input-field[data-id='${FIELD_RECURRING_TYPE.fieldApiName}']`);
         
         return recurringType ? recurringType.value : null;
+    }
+
+
+    @api
+    getInstallmentPeriod() {
+        const installmentPeriod = this.template.querySelector(`lightning-combobox[data-id='installmentPeriod']`);
+
+        return installmentPeriod ? installmentPeriod.value : null;
     }
 
     /**

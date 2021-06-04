@@ -148,6 +148,32 @@ describe('c-rd2-entry-form', () => {
             expect(controller.disableElevateButton()).toBeTruthy();
             expect(controller.cancelUpdatePaymentButton()).toBeFalsy();
         });
+
+
+        it('does not render widget when 1st and 15th installment period selected', async () => {
+            const element = createRd2EntryForm();
+            const controller = new RD2FormController(element);
+            await flushPromises();
+
+            await setupWireMocksForElevate();
+
+            controller.setDefaultInputFieldValues();
+            controller.paymentMethod().changeValue('ACH');
+            await flushPromises();
+
+            expect(controller.elevateWidget()).toBeTruthy();
+
+            controller.recurringPeriod().changeValue('Advanced');
+            await flushPromises();
+
+            expect(controller.installmentPeriod()).toBeTruthy();
+
+            controller.installmentPeriod().changeValue('1st and 15th');
+            await flushPromises();
+
+            const elevateWidget = controller.elevateWidget();
+            expect(elevateWidget).toBeFalsy();
+        });
     });
 
     describe('tokenization', () => {
@@ -730,6 +756,18 @@ class RD2FormController {
     recurringType() {
         const scheduleSection = this.scheduleSection();
         const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="RecurringType__c"]');
+        return new RD2FormField(field);
+    }
+
+    recurringPeriod() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="recurringPeriod"]');
+        return new RD2FormField(field);
+    }
+
+    installmentPeriod() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="installmentPeriod"]');
         return new RD2FormField(field);
     }
 
