@@ -26,7 +26,9 @@ import {
     getNamespace,
     removeByProperty,
     removeFromArray,
-    isEmpty
+    isEmpty,
+    hasNestedProperty,
+    apiNameFor
 } from 'c/utilCommon';
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
@@ -39,6 +41,7 @@ import DONATION_DATE_FIELD from '@salesforce/schema/DataImport__c.Donation_Date_
 import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
 import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
 
 const DEFAULT_BATCH_TABLE_HEADERS_WITH_FIELD_MAPPINGS = [
     DONATION_AMOUNT_FIELD.fieldApiName,
@@ -74,6 +77,7 @@ const ERROR = 'error';
 const EVENT_TOGGLE_MODAL = 'togglemodal';
 const WARNING = 'warning';
 const FIELD = 'field';
+const FIELDS = 'fields';
 const WIDGET = 'widget';
 const VALUE = 'value';
 
@@ -421,6 +425,21 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
                 }
             ];
         });
+
+        this.includePaymentStatusDisplayField();
+    }
+
+    includePaymentStatusDisplayField() {
+        const hasElevatePaymentStatusField =
+            hasNestedProperty(this._dataImportObject, FIELDS, apiNameFor(ELEVATE_PAYMENT_STATUS));
+
+        if (TemplateBuilderService.isElevateCustomer && hasElevatePaymentStatusField) {
+            const elevatePaymentStatusOption = {
+                label: this._dataImportObject.fields[apiNameFor(ELEVATE_PAYMENT_STATUS)]?.label,
+                value: this._dataImportObject.fields[apiNameFor(ELEVATE_PAYMENT_STATUS)]?.apiName
+            };
+            this.availableBatchTableColumnOptions.push(elevatePaymentStatusOption);
+        }
     }
 
     /*******************************************************************************
