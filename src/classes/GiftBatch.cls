@@ -36,6 +36,20 @@
 public inherited sharing class GiftBatch {
 
     private Id batchId;
+    private DataImportBatch__c batch;
+
+    private GE_Template.Template formTemplate {
+        get {
+            if (formTemplate == null) {
+                formTemplate =
+                    (GE_Template.Template) JSON.deserialize(
+                        batch.Form_Template__r.Template_JSON__c,
+                        GE_Template.Template.class);
+            }
+            return formTemplate;
+        }
+        set;
+    }
 
     private Gifts gifts {
         get {
@@ -85,6 +99,24 @@ public inherited sharing class GiftBatch {
 
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
+        this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+    }
+
+    public Boolean hasElevateWidget() {
+        Boolean hasWidget = false;
+        for (GE_Template.Section section : formTemplate.layout.sections) {
+            for (GE_Template.Element element : section.elements) {
+                if (isElevateWidget(element)) {
+                    hasWidget = true;
+                }
+            }
+        }
+        return hasWidget;
+    }
+
+    private Boolean isElevateWidget(GE_Template.Element element) {
+        return element.componentName != null
+            && element.componentName == 'geFormWidgetTokenizeCard';
     }
 
     public void captureAuthorizedGifts() {
