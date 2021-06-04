@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor, showToast} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
@@ -27,11 +27,14 @@ import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
-import DONATION_RECORD_TYPE_NAME
-    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
+
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 const REFERENCE = 'REFERENCE';
+const FIELD = 'field';
+const FIELDS = 'fields';
 
 const columnTypeByDescribeType = {
     'DATE': 'date-local',
@@ -71,6 +74,7 @@ const ACTIONS_COLUMN = {
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
+    @api isElevateCustomer = false;
 
     get ready() {
         return this._columnsLoaded && this._dataImportModel;
@@ -247,7 +251,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     buildColumnsFromSections() {
         this.sections.forEach(section => {
-            section.elements.filter(e => e.elementType === 'field')
+            section.elements.filter(e => e.elementType === FIELD)
                 .forEach(fieldElement => {
                     const fieldMapping =
                         GeFormService.getFieldMappingWrapper(
@@ -259,7 +263,23 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
+        this.includeElevatePaymentStatusField();
         this._columnsLoaded = true;
+    }
+
+    includeElevatePaymentStatusField() {
+        if (this.isElevateCustomer) {
+            const elevatePaymentStatusApiName = apiNameFor(ELEVATE_PAYMENT_STATUS);
+
+            if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, elevatePaymentStatusApiName)) {
+                const elevatePaymentStatus = this._dataImportObjectInfo?.fields[elevatePaymentStatusApiName];
+                this._columnsBySourceFieldApiName[elevatePaymentStatus.apiName] = {
+                    label: elevatePaymentStatus.label,
+                    fieldName: elevatePaymentStatus.apiName,
+                    type: elevatePaymentStatus.dataType
+                }
+            }
+        }
     }
 
     @api

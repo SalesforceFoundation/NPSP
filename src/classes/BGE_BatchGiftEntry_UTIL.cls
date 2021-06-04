@@ -36,6 +36,9 @@
 */
 public with sharing class BGE_BatchGiftEntry_UTIL {
 
+    @TestVisible
+    private static GiftBatch giftBatch;
+
     /*******************************************************************************************************
     * @description Currently limit the set of allowed objects, and point to their BDI-defined 
     *  Object group name
@@ -83,7 +86,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             return fieldApiNames;
         }
 
-        fieldApiNames.addAll(getDataImportElevateFields());
+        fieldApiNames.addAll(getDataImportElevateFields(batchId));
         fieldApiNames.add(getNewBatchGiftEntryVersionFields());
 
         for (String field : dataImportCoreFields) {
@@ -187,15 +190,25 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     }
 
     @TestVisible
-    private static List<String> getDataImportElevateFields() {
+    private static List<String> getDataImportElevateFields(Id batchId) {
         List<String> elevateFieldApiNames = new List<String>();
-        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
+        if (GE_PaymentServices.getInstance().isElevateCustomer()
+            && hasElevateWidgetOnTemplate(batchId)) {
+
             elevateFieldApiNames = new List<String>{
-                String.valueOf(DataImport__c.Payment_Declined_Reason__c)
+                String.valueOf(DataImport__c.Payment_Declined_Reason__c),
+                String.valueOf(DataImport__c.Elevate_Payment_Status__c)
             };
         }
 
         return elevateFieldApiNames;
+    }
+
+    private static Boolean hasElevateWidgetOnTemplate(Id batchId) {
+        if (giftBatch == null) {
+            giftBatch = new GiftBatch(batchId);
+        }
+        return giftBatch.hasElevateWidget();
     }
 
     /*******************************************************************************************************
@@ -314,6 +327,11 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
         List<String> fieldsWithoutPermission = new List<String>();
 
         for (DescribeFieldResult dfr : fieldsToCheck) {
+            Boolean canReadCustomFormulaField =
+                dfr.isCalculated() && UTIL_Permissions.canRead(dfr, false);
+            if (canReadCustomFormulaField) {
+                continue;
+            }
             if (!UTIL_Permissions.canUpdate(dfr, false)) {
                 hasPermission = false;
                 fieldsWithoutPermission.add(dfr.getLabel());

@@ -8836,7 +8836,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning about processing batch when authorizations have expired</shortDescription>
-        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with Expired Authorization Payment Status.</value>
+        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorization.</value>
     </labels>
     <labels>
         <fullName>gePaymentProcessedWarning</fullName>

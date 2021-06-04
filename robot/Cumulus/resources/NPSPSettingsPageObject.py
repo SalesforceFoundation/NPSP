@@ -105,7 +105,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """ specify the partial id of submenu under which the checkbox exists """
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         self.selenium.capture_page_screenshot()
         self.selenium.get_webelement(locator).click()
         self.selenium.capture_page_screenshot()

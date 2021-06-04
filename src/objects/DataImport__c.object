@@ -1651,6 +1651,55 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Elevate_Payment_Status__c</fullName>
+        <description>The transaction status shown in Elevate.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The transaction status shown in Elevate.</inlineHelpText>
+        <formula>
+            CASE(Payment_Status__c,
+                &apos;PENDING&apos;,
+                &apos;Pending&apos;,
+
+                &apos;CAPTURED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;NONRETRYABLEERROR&apos;,
+                &apos;Failed&apos;,
+
+                &apos;RETRYABLEERROR&apos;,
+                &apos;Failed&apos;,
+
+                &apos;DECLINED&apos;,
+                &apos;Declined&apos;,
+
+                &apos;REFUNDISSUED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;SUBMITTED&apos;,
+                &apos;Submitted&apos;,
+
+                &apos;SETTLED&apos;,
+                &apos;Succeeded&apos;,
+
+                &apos;AUTHORIZED&apos;,
+                &apos;Authorized&apos;,
+
+                &apos;EXPIRED&apos;,
+                &apos;Expired Authorization&apos;,
+
+                &apos;PAYMENTPROCESSING&apos;,
+                &apos;Pending&apos;,
+
+            &apos;&apos;)
+        </formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Elevate Payment Status</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>RecurringDonationImportStatus__c</fullName>
         <description>The status from attempting to insert the Recurring Donation.</description>
         <externalId>false</externalId>

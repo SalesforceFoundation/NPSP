@@ -1214,6 +1214,7 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.Elevate_Custom_Metadata__c</members>
+        <members>DataImport__c.Elevate_Payment_Status__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
