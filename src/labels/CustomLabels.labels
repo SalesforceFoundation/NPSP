@@ -3960,7 +3960,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorExistingDonationAllocations</shortDescription>
-        <value>There are existing allocations on the donation which may conflict with the GAU allocations entered.</value>
+        <value>The provided GAU Allocations conflict with existing Allocations on the donation Opportunity record. Remove the Allocations from the Opportunity record, or from the NPSP Data Import record, then re-process with NPSP Data Importer.</value>
     </labels>
     <labels>
         <fullName>bdiErrorExistingPaymentAllocations</fullName>
@@ -3968,7 +3968,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorExistingPaymentAllocations</shortDescription>
-        <value>There are existing allocations on the payment which may conflict with the GAU Allocations entered.</value>
+        <value>The provided GAU Allocations conflict with existing Allocations on the donation Payment record. Remove the Allocations from the Payment record, or from the NPSP Data Import record, then re-process with NPSP Data Importer.</value>
     </labels>
     <labels>
         <fullName>bdiErrorGAUAllocationOver100</fullName>
