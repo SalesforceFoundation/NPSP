@@ -661,6 +661,7 @@ public with sharing class RD2_PauseForm_TEST {
         pause.pausedReason = new RD2_PauseForm_CTRL.PausedReason();
         pause.pausedReason.value = PAUSED_REASON_VALUE;
 
+        RD2_QueueableService.alreadyEnqueuedIds = null;
         RD2_PauseForm_CTRL.savePause(JSON.serialize(pause));
 
         return pause;
