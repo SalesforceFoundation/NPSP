@@ -62,19 +62,20 @@
 
                 <template if:false={isPermissionError}>
                     <c-ge-batch-gift-entry-table
-                            title={giftsTableTitle}
-                            count={count}
-                            expected-count={expectedCountOfGifts}
-                            total={total}
-                            expected-total={expectedTotalBatchAmount}
-                            user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
-                            batch-id={recordId}
-                            onloaddata={handleLoadData}
-                            ondelete={handleDelete}
-                            oncountchanged={handleCountChanged}
-                            ontotalchanged={handleTotalChanged}
-                            onselectcolumns={handleSelectColumns}
-                            batch-currency-iso-code={batchCurrencyIsoCode}>
+                        title={giftsTableTitle}
+                        count={count}
+                        expected-count={expectedCountOfGifts}
+                        total={total}
+                        expected-total={expectedTotalBatchAmount}
+                        user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
+                        batch-id={recordId}
+                        onloaddata={handleLoadData}
+                        ondelete={handleDelete}
+                        oncountchanged={handleCountChanged}
+                        ontotalchanged={handleTotalChanged}
+                        onselectcolumns={handleSelectColumns}
+                        batch-currency-iso-code={batchCurrencyIsoCode}
+                        is-elevate-customer={isElevateCustomer}>
                     </c-ge-batch-gift-entry-table>
                 </template>
             </template>
@@ -94,6 +95,5 @@
                 batch-currency-iso-code={batchCurrencyIsoCode}>
         </c-ge-form-renderer>
     </template>
-
 
 </template>

@@ -2209,6 +2209,7 @@ export default class GeFormRenderer extends LightningElement{
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED:
             case this.PAYMENT_TRANSACTION_STATUS_ENUM.RETRYABLEERROR:
+            case this.PAYMENT_TRANSACTION_STATUS_ENUM.EXPIRED:
             case PAYMENT_UNKNOWN_ERROR_STATUS:
                 return true;
 
