@@ -27,7 +27,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     // These are exposed to the parent component
     @api parentId;
     @api recordId;
-    @api parentSObjectType
+    @api parentSObjectType;
 
     @track isLoading = true;
     isRecordReady = false;

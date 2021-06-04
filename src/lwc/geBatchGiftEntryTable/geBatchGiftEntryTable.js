@@ -8,9 +8,9 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
-import { fireEvent } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
@@ -19,6 +19,7 @@ import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
+import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 import GeLabelService from 'c/geLabelService';
 
 import DATA_IMPORT_OBJECT from '@salesforce/schema/DataImport__c';
@@ -26,11 +27,14 @@ import STATUS_FIELD from '@salesforce/schema/DataImport__c.Status__c';
 import FAILURE_INFORMATION_FIELD from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
-import DONATION_RECORD_TYPE_NAME
-    from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
+import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
+
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
 const REFERENCE = 'REFERENCE';
+const FIELD = 'field';
+const FIELDS = 'fields';
 
 const columnTypeByDescribeType = {
     'DATE': 'date-local',
@@ -70,6 +74,7 @@ const ACTIONS_COLUMN = {
 
 export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
+    @api isElevateCustomer = false;
 
     get ready() {
         return this._columnsLoaded && this._dataImportModel;
@@ -99,6 +104,24 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     connectedCallback() {
         this.loadBatch();
+        registerListener('refreshtable', this.refreshTable, this);
+    }
+
+    refreshTable() {
+        let refreshedRows = [];
+        getDataImportRows({ batchId: this.batchId, offset: 0 })
+            .then(rows => {
+                rows.forEach(row => {
+                    refreshedRows.push(
+                        Object.assign(row,
+                            this.appendUrlColumnProperties.call(row.record,
+                                this._dataImportObjectInfo)));
+                });
+                this.data = [ ...refreshedRows ];
+            })
+            .catch(error => {
+                handleError(error);
+            });
     }
 
     get hasData() {
@@ -228,7 +251,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     buildColumnsFromSections() {
         this.sections.forEach(section => {
-            section.elements.filter(e => e.elementType === 'field')
+            section.elements.filter(e => e.elementType === FIELD)
                 .forEach(fieldElement => {
                     const fieldMapping =
                         GeFormService.getFieldMappingWrapper(
@@ -240,7 +263,23 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     }
                 });
         });
+        this.includeElevatePaymentStatusField();
         this._columnsLoaded = true;
+    }
+
+    includeElevatePaymentStatusField() {
+        if (this.isElevateCustomer) {
+            const elevatePaymentStatusApiName = apiNameFor(ELEVATE_PAYMENT_STATUS);
+
+            if (hasNestedProperty(this._dataImportObjectInfo, FIELDS, elevatePaymentStatusApiName)) {
+                const elevatePaymentStatus = this._dataImportObjectInfo?.fields[elevatePaymentStatusApiName];
+                this._columnsBySourceFieldApiName[elevatePaymentStatus.apiName] = {
+                    label: elevatePaymentStatus.label,
+                    fieldName: elevatePaymentStatus.apiName,
+                    type: elevatePaymentStatus.dataType
+                }
+            }
+        }
     }
 
     @api
@@ -283,6 +322,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             }
         }));
         this.notifyGiftBatchHeaderOfTableChange();
+        this.requestFormRendererReset();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            bgeGridGiftDeleted,
+            'success',
+            'dismissible',
+            null
+        );
     }
 
     loadMoreData(event) {
@@ -470,6 +517,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     notifyGiftBatchHeaderOfTableChange = () => {
         fireEvent(this, 'geBatchGiftEntryTableChangeEvent', {});
+    }
+
+    requestFormRendererReset() {
+        fireEvent(this, 'formRendererReset', {});
     }
 
     _dataImportObjectInfo;

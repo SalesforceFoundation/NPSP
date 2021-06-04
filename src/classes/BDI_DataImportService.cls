@@ -50,6 +50,8 @@ global with sharing class BDI_DataImportService {
     public static final String FM_HELP_TEXT = 'Help Text';
     public static final String FM_DATA_IMPORT_FIELD_MAPPING = 'Data Import Field Mapping';
     public static final String ACH_PAYMENT_METHOD = 'ACH';
+    public static final String DI_WITH_RD_FIELDS_NO_RD2 = System.label.RD2_DisabledRD2Error;
+    public static final String DI_WITH_RD_FIELDS_NO_ADV_MAPPING = System.label.RD2_DisabledAdvancedMappingError;
 
     public BDI_MappingService mappingService;
 
@@ -572,8 +574,30 @@ global with sharing class BDI_DataImportService {
             // updated with their respective FLS exceptions at the end of this block
             this.listDI = flsService.getValidRecords();
 
+            this.listDI = checkRDFields(listDI);
+
             // do any performance optimizations to avoid unnecessary code
             disableAllOppRollups();
+
+            // Determine if there are any DI records that have GAUs for processing either in the GAU Allocation
+            // fields or the Additional Object JSON field.  If so, we will disable GAU allocations triggers so that
+            // they can be correctly applied.
+            Map<Id, DataImport__c> diWithGAUToProcessById = BDI_GAUAllocationsUtil.getDIsWithGAUtoProcess(this.listDI);
+
+            Boolean alloTriggersDisabled = false;
+            // Disabling Allocation triggers if there are GAU on the DI since we will be directly calling allocation
+            // processing
+            if (!isDryRun && diWithGAUToProcessById.size() > 0) {
+                // validate the GAU percentages for DI records with GAU Allocation 1 or 2 populated.  If the percentages
+                // are invalid (ex. add to more than 100%) then remove from the map and fail the DI Records.
+                diWithGAUToProcessById = BDI_GAUAllocationsUtil.validateDIGAUPercentages(this,dataImports);
+
+                // Only disable allocation triggers if there are still DIs with GAUs that are valid
+                if (diWithGAUToProcessById.size() > 0) {
+                    ALLO_AllocationsUtil.disableAllocationTriggers();
+                    alloTriggersDisabled = true;
+                }
+            }
 
             pl = perfLogger.newPerfLog('importContactsAndHouseholds');
             contactService.importContactsAndHouseholds();
@@ -595,6 +619,11 @@ global with sharing class BDI_DataImportService {
             importCampaigns();
             pl.stop();
 
+            pl = perfLogger.newPerfLog('importRecurringDonations');
+            BDI_RecurringDonations bdiRDs= new BDI_RecurringDonations(this);
+            bdiRDs.importRecurringDonations();
+            pl.stop();
+
             pl = perfLogger.newPerfLog('importDonations');
             BDI_Donations bdiDonations = new BDI_Donations(this);
             bdiDonations.importDonations();
@@ -604,10 +633,23 @@ global with sharing class BDI_DataImportService {
             importCampaignMembers();
             pl.stop();
 
+            // For DIs with GAUs, before running the Additional object service which includes the insertion of GAUs,
+            // first determine if there are any existing allocations on the Donation or Payment which could lead to
+            // errors in GAU processing.  If so, fail those records.
+            if (!isDryRun && diWithGAUToProcessById.size() > 0) {
+                BDI_GAUAllocationsUtil.checkForExistingAllocations(this, diWithGAUToProcessById.values());
+            }
+
             if (additionalObjectService != null && isDryRun == false) {
                 pl = perfLogger.newPerfLog('importAdditionalObjects');
                 additionalObjectService.importAdditionalObjects();
                 pl.stop();
+            }
+
+            // Processing allocations and Re-enabling allocation triggers after BDI processing is complete.
+            if (!isDryRun && alloTriggersDisabled) {
+                BDI_GAUAllocationsUtil.processAllocations(this,listDI);
+                ALLO_AllocationsUtil.enableAllocationTriggers();
             }
 
             pl = perfLogger.newPerfLog('updateDIStatuses');
@@ -654,6 +696,31 @@ global with sharing class BDI_DataImportService {
             perfLogger.stop();
             perfLogger.save();
         }
+    }
+
+    /**
+     * @description Checks the DI for RD fields that are populated. 
+     *              If they are populated, make sure RD2 is enabled. If it is not, fail the DI. 
+     * @param  dataImports A list of DI's to check. 
+     * @return             Returns the DIs after they have been checked. 
+     */ 
+    private List<DataImport__c> checkRDFields(List<DataImport__C> dataImports) {
+        String RDImportStatusField = 'RecurringDonationImportStatus__c';
+        
+        for (DataImport__c DI : dataImports) {
+            if (BDI_RecurringDonations.areRDFieldsPopulated(DI)) {
+                        
+                if (!(mappingService instanceof BDI_MappingServiceAdvanced)) {
+                    LogBDIError(DI, DI_WITH_RD_FIELDS_NO_ADV_MAPPING, RDImportStatusField);
+                }
+
+                if (!RD2_EnablementService.isRecurringDonations2Enabled) { 
+                    LogBDIError(DI, DI_WITH_RD_FIELDS_NO_RD2, RDImportStatusField);
+                }
+            }
+        }
+
+        return dataImports;
     }
 
     /**
@@ -842,7 +909,14 @@ global with sharing class BDI_DataImportService {
     */
     public void LogBDIError(DataImport__c dataImport, String errorMessage, String statusField) {
         dataImport.Status__c = BDI_DataImport_API.bdiFailed;
-        dataImport.FailureInformation__c = errorMessage;
+
+        // Set the failure information to the error or append it if there already is one.
+        if (dataImport.FailureInformation__c != null) {
+            dataImport.FailureInformation__c += '\n\n' + errorMessage;
+        } else {
+            dataImport.FailureInformation__c = errorMessage;
+        }
+
         if (statusField != null) {
             dataImport.put(statusField, errorMessage.left(255));
         }

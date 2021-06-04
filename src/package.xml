@@ -118,6 +118,8 @@
         <members>BDI_DynamicSourceGroup</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingSet</members>
+        <members>BDI_GAUAllocationsUtil</members>
+        <members>BDI_GAUAllocationsUtil_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
@@ -138,6 +140,8 @@
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
+        <members>BDI_RecurringDonations</members>
+        <members>BDI_RecurringDonations_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
         <members>BDI_TargetFields</members>
@@ -267,7 +271,6 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
-        <members>CaptureGroup</members>
         <members>ContactAndOrgSettings</members>
         <members>ContactSelector</members>
         <members>ContactService</members>
@@ -311,11 +314,13 @@
         <members>ElevateAuthorizedGift</members>
         <members>ElevateAuthorizedGiftResponse</members>
         <members>ElevateAuthorizedGift_TEST</members>
-        <members>ElevateCaptureGroup</members>
-        <members>ElevateCaptureGroupResponse</members>
-        <members>ElevateCaptureGroupService</members>
-        <members>ElevateCaptureGroupServiceInvalidRequest</members>
-        <members>ElevateCaptureGroupServiceValidRequest</members>
+        <members>ElevateBatch</members>
+        <members>ElevateBatchCapturer</members>
+        <members>ElevateBatchCapturer_TEST</members>
+        <members>ElevateBatchResponse</members>
+        <members>ElevateBatchService</members>
+        <members>ElevateBatchServiceInvalidRequest</members>
+        <members>ElevateBatchServiceValidRequest</members>
         <members>ElevatePaymentMethod</members>
         <members>ElevateTokenizedGift</members>
         <members>ElevateTransactionStatus</members>
@@ -336,6 +341,7 @@
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
         <members>Gift</members>
+        <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
@@ -344,10 +350,12 @@
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
+        <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftSelector</members>
         <members>Gift_Test</members>
         <members>Gifts</members>
+        <members>Gifts_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -398,8 +406,6 @@
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
         <members>NPSP_Address</members>
-        <members>NPSP_Batch</members>
-        <members>NPSP_Batch_TEST</members>
         <members>NPSP_Contact</members>
         <members>NPSP_Contact_TEST</members>
         <members>NPSP_Household</members>
@@ -1208,6 +1214,7 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.Elevate_Custom_Metadata__c</members>
+        <members>DataImport__c.Elevate_Payment_Status__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -1265,6 +1272,22 @@
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
+        <members>DataImport__c.RecurringDonationImportStatus__c</members>
+        <members>DataImport__c.RecurringDonationImported__c</members>
+        <members>DataImport__c.Recurring_Donation_Amount__c</members>
+        <members>DataImport__c.Recurring_Donation_Date_Established__c</members>
+        <members>DataImport__c.Recurring_Donation_Day_of_Month__c</members>
+        <members>DataImport__c.Recurring_Donation_Effective_Date__c</members>
+        <members>DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c</members>
+        <members>DataImport__c.Recurring_Donation_End_Date__c</members>
+        <members>DataImport__c.Recurring_Donation_Installment_Frequency__c</members>
+        <members>DataImport__c.Recurring_Donation_Installment_Period__c</members>
+        <members>DataImport__c.Recurring_Donation_Name__c</members>
+        <members>DataImport__c.Recurring_Donation_Payment_Method__c</members>
+        <members>DataImport__c.Recurring_Donation_Planned_Installments__c</members>
+        <members>DataImport__c.Recurring_Donation_Recurring_Type__c</members>
+        <members>DataImport__c.Recurring_Donation_Status_Reason__c</members>
+        <members>DataImport__c.Recurring_Donation_Status__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
@@ -1828,6 +1851,8 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_DisabledAdvancedMappingError</members>
+        <members>RD2_DisabledRD2Error</members>
         <members>RD2_ElevateCancelInProgress</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>
@@ -2130,6 +2155,9 @@
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorDonationRequireNoMatch</members>
+        <members>bdiErrorExistingDonationAllocations</members>
+        <members>bdiErrorExistingPaymentAllocations</members>
+        <members>bdiErrorGAUAllocationOver100</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidIMatchDonations</members>
@@ -2434,6 +2462,7 @@
         <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geBatchGiftsHeader</members>
         <members>geBatchGiftsTotal</members>
+        <members>geBatchProcessingSuccess</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -2575,6 +2604,7 @@
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
         <members>geProcessAnyway</members>
+        <members>geProcessingBatch</members>
         <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
@@ -3533,11 +3563,13 @@
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.Home_City</members>
         <members>Data_Import_Field_Mapping.Home_Country</members>
         <members>Data_Import_Field_Mapping.Home_State_Province</members>
@@ -3572,6 +3604,21 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
         <members>Data_Import_Field_Mapping.Payment_Paid</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Amount</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Campaign</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Date_Established</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Day_of_Month</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Effective_Date</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Elevate_Recurring_Id</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_End_Date</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Installment_Frequency</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Installment_Period</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Name</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Payment_Method</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Planned_Installments</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Recurring_Type</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Status</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Status_Reason</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
         <members>Data_Import_Object_Mapping.Account2</members>
@@ -3585,6 +3632,7 @@
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_1</members>
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
+        <members>Data_Import_Object_Mapping.Recurring_Donation</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GetStartedChecklistItem.Add_User</members>
         <members>GetStartedChecklistItem.Capture_Donor_Intent</members>
