@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from robot.libraries.BuiltIn import RobotNotRunningError
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoSuchWindowException
@@ -31,12 +32,14 @@ from cumulusci.core.config import TaskConfig
 
 from tasks.salesforce_robot_library_base import SalesforceRobotLibraryBase
 from BaseObjects import BaseNPSPPage
+from locators_52 import npsp_lex_locators as locators_52
 from locators_51 import npsp_lex_locators as locators_51
 from locators_50 import npsp_lex_locators as locators_50
 
 locators_by_api_version = {
-    50.0: locators_50,   # winter '21
-    51.0: locators_51   # spring '21
+    52.0: locators_52,  # summer '21
+    51.0: locators_51,  # spring '21
+    50.0: locators_50   # winter '21
 }
 # will get populated in _init_locators
 npsp_lex_locators = {}
@@ -992,7 +995,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def click_link_with_spantext(self,text):
         locator = npsp_lex_locators['custom_objects']['option'].format(text)
-        self.selenium.wait_until_page_contains_element(locator)
+        self.selenium.wait_until_page_contains_element(locator,30)
         element = self.selenium.driver.find_element_by_xpath(locator)
         self.selenium.click_element(element)
         time.sleep(1)
@@ -1162,7 +1165,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator=npsp_lex_locators['object_dd']
         view=npsp_lex_locators['link'].format(view_name,view_name)
         self.selenium.wait_until_page_contains("List Views")
-        self.selenium.get_webelement(locator).click()
+        self.selenium.wait_until_element_is_visible(locator,30)
+        try:
+            self.selenium.get_webelement(locator).click()
+        except ElementClickInterceptedException:
+            self.selenium.execute_javascript("window.scrollBy(0,100)")
+            ele = self.selenium.driver.find_element_by_xpath(locator)
+            self.selenium.driver.execute_script('arguments[0].click()', ele)
         element = self.selenium.driver.find_element_by_xpath(view)
         self.selenium.driver.execute_script('arguments[0].click()', element)
         self.selenium.wait_until_page_contains(view_name)
@@ -1215,7 +1224,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
     @capture_screenshot_on_error
     def select_value_from_dropdown(self,dropdown,value):
         """Select given value in the dropdown field"""
-        if self.latest_api_version == 51.0 and dropdown not in ("Installment Period","Role"):
+        if self.latest_api_version == 51.0 or self.latest_api_version == 52.0 and dropdown not in ("Installment Period","Role"):
             self.click_flexipage_dropdown(dropdown,value)
         else:
             if dropdown in ("Open Ended Status","Payment Method"):
@@ -1228,7 +1237,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
-            if self.latest_api_version == 51.0 and dropdown in ("Installment Period","Role"):
+            if self.latest_api_version == 51.0 or self.latest_api_version == 52.0 and dropdown in ("Installment Period","Role"):
                 locator =  npsp_lex_locators['record']['select_dropdown']
                 selection_value = npsp_lex_locators["record"]["select_value"].format(value)
                 if self.npsp.check_if_element_exists(locator):
