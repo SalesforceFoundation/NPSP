@@ -55,6 +55,7 @@ public class CallableApiParameters {
     public static final String PARAM_RECORD_IDS = 'RecordIds';
     public static final String PARAM_START_DATE = 'StartDate';
     public static final String PARAM_END_DATE = 'EndDate';
+    public static final String PARAM_PAUSE_DATA = 'PauseData';
 
     private Map<String, Object> params;
 
@@ -298,7 +299,7 @@ public class CallableApiParameters {
      * @return List<CRLP_Rollup>
      */
     public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
-        validateRequiredParameter('List<CRLP_Rollup', paramName);
+        validateRequiredParameter('List<CRLP_Rollup>', paramName);
         try {
             String rollupDefsJson = getString(paramName);
             return (List<CRLP_Rollup>)JSON.deserialize(rollupDefsJson, List<CRLP_Rollup>.class);
@@ -323,6 +324,18 @@ public class CallableApiParameters {
         } catch (Exception ex) {
             throwParameterException(paramType, paramName);
         }
+        return null;
+    }
+
+    public Map<Id, RD2_ApiService.PauseObject> getPauseObjectsById(String paramName) {
+        String paramType = 'Map<Id, RD2_ApiService.PauseObject>';
+        validateRequiredParameter(paramType, paramName);
+        try {
+            return (Map<Id, RD2_ApiService.PauseObject>)params.get(paramName);
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, RD2_ApiService.PauseObject>', paramName);
+        }
+
         return null;
     }
 

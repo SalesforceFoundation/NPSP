@@ -393,6 +393,183 @@ private class RD2_ApiService_TEST {
             pausedCount + ' Recurring donation installments should be returned when there is a three month pause');
     }
 
+    @IsTest // TODO: AC1
+    private static void shouldReturnMapOfIDsAndOKMessagesForSuccessfulPause() {
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
+        System.debug('in = ' + pauseObjectsByIdIn);
+        String pauseData = JSON.serialize(pauseObjectsByIdIn);
+
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
+            (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(pauseData, Map<Id, RD2_ApiService.PauseObject>.class);
+        System.debug('out = ' + pauseObjectsByIdIn);
+
+        System.assertEquals(pauseObjectsByIdIn, pauseObjectsByIdOut,
+            'Initial implementation just returns what we passed in.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWhenEnhancedRecurringDonationsIsNotEnabled() {
+        String pauseResult = new RD2_ApiService().pause(
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(System.Label.RD2_EnhancedRecurringDonationsNotEnabled, pauseResult,
+            'Result should be message that RD2 is not enabled.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWhenMaximumRecordsExceeded() {
+        setUpEnv();
+
+        RD2_ApiService.MAXIMUM_RECORDS_TO_PROCESS = 0;
+
+        String pauseResult = new RD2_ApiService().pause(
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(String.format(System.Label.CallableApiMaximumRecordsExceeded,
+            new List<String> { String.valueOf(RD2_ApiService.MAXIMUM_RECORDS_TO_PROCESS) }), pauseResult,
+            'Result should be message that maximum number of records was exceeded.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForUnPauseWhenDatesPopulated() {
+        RD2_ApiService.PauseObject pauseObject =
+            new RD2_ApiService.PauseObject(true);
+        pauseObject.startDate = Date.today();
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+
+        System.assertEquals(System.Label.RD2_UnPauseRequestCannotIncludeDates, pauseObject.error,
+            'Result should be message that dates cannot be specified for an unPause request.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWhenEndDateIsPriorToStartDate() {
+        RD2_ApiService.PauseObject pauseObject =
+            new RD2_ApiService.PauseObject(Date.today(), Date.today().addMonths(-3), 'Vacation');
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+
+        System.assertEquals(System.Label.RD2_PauseEndDateMustBeGreaterThanStartDate, pauseObject.error,
+            'Result should be message that end date must be greater than start date.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWhenStartDateIsPriorToToday() {
+        RD2_ApiService.PauseObject pauseObject = new RD2_ApiService.PauseObject(
+            Date.today().addMonths(-1), Date.today().addMonths(3), 'Vacation');
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+
+        System.assertEquals(System.Label.RD2_PauseStartDateMustBeTodayOrLater, pauseObject.error,
+            'Result should be message that start date must be today or later.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWhenEndDateIsMoreThanTwelveMonthsAfterStartDate() {
+        RD2_ApiService.PauseObject pauseObject = new RD2_ApiService.PauseObject(
+            Date.today(), Date.today().addDays(367), 'Vacation');
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+
+        System.assertEquals(System.Label.RD2_PauseEndDateCannotBeMoreThanTwelveMonths, pauseObject.error,
+            'Result should be message that end date cannot be more than 12 months from start date.');
+    }
+
+    @IsTest // TODO: AC6
+    private static void shouldReturnErrorForPauseWhenRecurringDonationStatusIsNotMappedToActiveOrPaused() {
+        RD2_ApiService.PauseObject pauseObject = new RD2_ApiService.PauseObject(
+            Date.today(), Date.today().addMonths(3), 'Vacation');
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+
+        System.assertEquals(System.Label.RD2_PauseEndDateCannotBeMoreThanTwelveMonths, pauseObject.error,
+            'Result should be message that end date cannot be more than 12 months from start date.');
+    }
+
+    @IsTest // TODO: AC7 - Design doc has clarification on how to specify activate currently paused RD (use unPause Boolean)
+    private static void shouldActivatePausedRecurringDonationWhenUnpauseIsTrue() {
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
+
+        String pauseObjectsByIdOut =
+            new RD2_ApiService().pause(
+                new Map<Id, RD2_ApiService.PauseObject>{
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(JSON.serialize(pauseObjectsByIdIn), pauseObjectsByIdOut,
+            'Initial implementation just returns what we passed in.');
+    }
+
+    @IsTest // TODO: AC7 - Design doc has clarification on how to specify activate currently paused RD (use unPause Boolean)
+    private static void shouldReturnErrorForPauseWhenUnpauseIsFalseAndStartAndEndDateAreMissing() {
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
+
+        String pauseObjectsByIdOut =
+            new RD2_ApiService().pause(
+                new Map<Id, RD2_ApiService.PauseObject>{
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(JSON.serialize(pauseObjectsByIdIn), pauseObjectsByIdOut,
+            'Initial implementation just returns what we passed in.');
+    }
+
+    @IsTest // TODO: AC8
+    private static void shouldPermitNewStartAndEndDateForPausedRecurringDonation() {
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
+
+        String pauseObjectsByIdOut =
+            new RD2_ApiService().pause(
+                new Map<Id, RD2_ApiService.PauseObject>{
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(JSON.serialize(pauseObjectsByIdIn), pauseObjectsByIdOut,
+            'Initial implementation just returns what we passed in.');
+    }
+
+    @IsTest
+    private static void shouldReturnErrorForPauseWithOneStartDateOrMissingEndDate() {
+        RD2_ApiService.PauseObject pauseObject = new RD2_ApiService.PauseObject(
+            null, null, 'Vacation');
+
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+        System.assertEquals(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate, pauseObject.error,
+            'Result should be message that both dates must be populated for pause request.');
+
+        pauseObject = new RD2_ApiService.PauseObject(Date.today(), null, 'Vacation');
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+        System.assertEquals(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate, pauseObject.error,
+            'Result should be message that both dates must be populated for pause request.');
+
+        pauseObject = new RD2_ApiService.PauseObject(null, Date.today(), 'Vacation');
+        new RD2_ApiService().isValidPauseData(pauseObject, null);
+        System.assertEquals(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate, pauseObject.error,
+            'Result should be message that both dates must be populated for pause request.');
+    }
+
+    @IsTest // TODO: AC10
+    private static void shouldReturnErrorForPauseOfElevateRecurringDonation() {
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+            new Map<Id, RD2_ApiService.PauseObject>{
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
+
+        String pauseObjectsByIdOut =
+            new RD2_ApiService().pause(
+                new Map<Id, RD2_ApiService.PauseObject>{
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
+
+        System.assertEquals(JSON.serialize(pauseObjectsByIdIn), pauseObjectsByIdOut,
+            'Initial implementation just returns what we passed in.');
+    }
+
 
     //// Helpers
     //////////////////////////
