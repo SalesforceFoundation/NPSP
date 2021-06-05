@@ -479,7 +479,8 @@ private class RD2_ApiService_TEST {
             'Result should be message that end date cannot be more than 12 months from start date.');
     }
 
-    @IsTest // TODO: AC6
+    @IsTest // TODO: AC6 - Build JSON-based query mock. Pretty sure Mike has built something I can clone.
+            // TODO: Better yet, Stub out RD2_RecurringDonation and return the record set you want.
     private static void shouldReturnErrorForPauseWhenRecurringDonationStatusIsNotMappedToActiveOrPaused() {
         RD2_ApiService.PauseObject pauseObject = new RD2_ApiService.PauseObject(
             Date.today(), Date.today().addMonths(3), 'Vacation');

@@ -289,7 +289,7 @@ public inherited sharing class RD2_ApiService {
         List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
         List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
 
-        Map<Id, npe03__Recurring_Donation__c> recurringDonationsById;
+        Map<Id, RD2_RecurringDonation> recurringDonationsById;
         recurringDonationsById = getRecurringDonationsById(pauseData.keySet());
 
         for (Id recurringDonationId : pauseData.keySet()) {
@@ -315,7 +315,7 @@ public inherited sharing class RD2_ApiService {
     }
 
     @TestVisible
-    private Boolean isValidPauseData(PauseObject pause, npe03__Recurring_Donation__c recurringDonation) {
+    private Boolean isValidPauseData(PauseObject pause, RD2_RecurringDonation recurringDonation) {
         validateRecurringDonationStatus(pause, recurringDonation);
         validateUnPause(pause);
         validateDatesArePopulated(pause);
@@ -387,7 +387,7 @@ public inherited sharing class RD2_ApiService {
         }
     }
 
-    private void validateRecurringDonationStatus(PauseObject pause, npe03__Recurring_Donation__c recurringDonation) {
+    private void validateRecurringDonationStatus(PauseObject pause, RD2_RecurringDonation recurringDonation) {
         if (pause.unPause || !pause.isSuccess) {
             return;
         }
@@ -422,18 +422,20 @@ public inherited sharing class RD2_ApiService {
         return pauseData;
     }
 
-    private Map<Id, npe03__Recurring_Donation__c> getRecurringDonationsById(Set<Id> rdIds) {
-        Map<Id, npe03__Recurring_Donation__c> recurringDonationsById;
-        String soql = getRecurringDonationQuery();
+    private Map<Id, RD2_RecurringDonation> getRecurringDonationsById(Set<Id> rdIds) {
+        Map<Id, RD2_RecurringDonation> recurringDonationsById = new Map<Id, RD2_RecurringDonation>();
 
-        recurringDonationsById = new Map<Id, npe03__Recurring_Donation__c>(
-            (List<npe03__Recurring_Donation__c>)Database.query(soql)
-        );
+        String soql = getRecurringDonationQuery();
+        for (npe03__Recurring_Donation__c recurringDonation :
+                (List<npe03__Recurring_Donation__c>) Database.query(soql))
+        {
+            recurringDonationsById.put(recurringDonation.Id, new RD2_RecurringDonation(recurringDonation));
+        }
 
         return recurringDonationsById;
     }
 
-    private RecurringDonationSchedule__c createPauseSchedule(PauseObject pause, npe03__Recurring_Donation__c recurringDonation) {
+    private RecurringDonationSchedule__c createPauseSchedule(PauseObject pause, RD2_RecurringDonation recurringDonation) {
         // TODO: Use RD2_ScheduleService.PauseHandler to manage single pause record
         //       - same approach for deactivate
         //       - everything is getting passed in
@@ -442,7 +444,7 @@ public inherited sharing class RD2_ApiService {
         return null;
     }
 
-    private RecurringDonationSchedule__c deactivatePauseSchedule(PauseObject pause, npe03__Recurring_Donation__c recurringDonation) {
+    private RecurringDonationSchedule__c deactivatePauseSchedule(PauseObject pause, RD2_RecurringDonation recurringDonation) {
         return null;
     }
 
