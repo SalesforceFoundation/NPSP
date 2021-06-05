@@ -38,7 +38,7 @@
 public with sharing class BDI_GAUAllocationsUtil_TEST {
 
     @IsTest
-    static void gauValidationsShouldBeEnforced() {
+    static void gauValidationsShouldBeEnforcedAndGAUsAssignedCorrectly() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -81,7 +81,6 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                         Contact1_Lastname__c = 'TestGroupA01',
                         Contact1_Other_Phone__c = '555-456-0001',
                         Contact1_Personal_Email__c = 'testgroupAcontact01Personal@fakedata.com',
-                        Contact1_Preferred_Email__c = 'testgroupAcontact01Preferred@fakedata.com',
                         Contact1_Preferred_Phone__c = '555-567-0001',
                         Recurring_Donation_Amount__c = 100,
                         Recurring_Donation_Date_Established__c = System.Date.Today(),
@@ -118,7 +117,6 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                         Contact1_Lastname__c = 'TestGroupB01',
                         Contact1_Other_Phone__c = '555-456-0001',
                         Contact1_Personal_Email__c = 'testgroupBcontact01Personal@fakedata.com',
-                        Contact1_Preferred_Email__c = 'testgroupBcontact01Preferred@fakedata.com',
                         Contact1_Preferred_Phone__c = '555-567-0001',
                         Donation_Donor__c = 'Contact1',
                         Donation_Amount__c = 100,
@@ -182,10 +180,53 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                         GAU_Allocation_1_Percent__c = 50,
                         GAU_Allocation_1_GAU__c = gau1.Id);
 
+        // Tests that Recurring donation without first installment creates normally and has open child opportunity with
+        // correct GAU allocations.
+        DataImport__c testDataImportE =
+                new DataImport__c(
+                        Contact1_Firstname__c = 'Josie',
+                        Contact1_Home_Phone__c = '555-321-0006',
+                        Contact1_Lastname__c = 'TestGroupE01',
+                        Contact1_Other_Phone__c = '555-456-0006',
+                        Contact1_Personal_Email__c = 'testgroupEcontact01Personal@fakedata.com',
+                        Contact1_Preferred_Phone__c = '555-567-0006',
+                        Recurring_Donation_Amount__c = 100,
+                        Recurring_Donation_Date_Established__c = System.Date.Today(),
+                        Recurring_Donation_Day_of_Month__c = '12',
+                        Recurring_Donation_Installment_Frequency__c = 1,
+                        Recurring_Donation_Installment_Period__c = 'Monthly',
+                        Recurring_Donation_Effective_Date__c = System.Date.Today(),
+                        Recurring_Donation_End_Date__c = null,
+                        Recurring_Donation_Planned_Installments__c = null,
+                        Recurring_Donation_Recurring_Type__c = 'Open',
+                        GAU_Allocation_1_Percent__c = 50,
+                        GAU_Allocation_1_GAU__c = gau2.Id);
+
+        // Tests that error is received when GAUs are overallocated by Amount
+        DataImport__c testDataImportF =
+                new DataImport__c(
+                        Contact1_Firstname__c = 'Nate',
+                        Contact1_Home_Phone__c = '555-321-0007',
+                        Contact1_Lastname__c = 'TestGroupF01',
+                        Contact1_Other_Phone__c = '555-456-0007',
+                        Contact1_Personal_Email__c = 'testgroupFcontact01Personal@fakedata.com',
+                        Contact1_Preferred_Phone__c = '555-567-0007',
+                        Donation_Donor__c = 'Contact1',
+                        Donation_Amount__c = 100,
+                        Donation_Date__c = System.Date.Today(),
+                        Payment_Check_Reference_Number__c = '452',
+                        Payment_Method__c = 'Check',
+                        GAU_Allocation_1_Amount__c = 60,
+                        GAU_Allocation_1_GAU__c = gau1.Id,
+                        GAU_Allocation_2_Amount__c = 60,
+                        GAU_Allocation_2_GAU__c = gau2.Id);
+
         DataImport__c[] testDIs = new DataImport__c[]{testDataImportA,
                                                         testDataImportB,
                                                         testDataImportC,
-                                                        testDataImportD};
+                                                        testDataImportD,
+                                                        testDataImportE,
+                                                        testDataImportF};
         insert testDIs;
 
         Test.StartTest();
@@ -197,6 +238,8 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         DataImport__c testDIResultB;
         DataImport__c testDIResultC;
         DataImport__c testDIResultD;
+        DataImport__c testDIResultE;
+        DataImport__c testDIResultF;
 
         for (DataImport__c di : [SELECT Id,
                 Status__c,
@@ -241,6 +284,10 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                 testDIResultC = di;
             } else if (di.Id == testDataImportD.Id) {
                 testDIResultD = di;
+            } else if (di.Id == testDataImportE.Id) {
+                testDIResultE = di;
+            } else if (di.Id == testDataImportF.Id) {
+                testDIResultF = di;
             }
         }
 
@@ -300,12 +347,57 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         System.assertNotEquals(null,testDIResultD.HomeAddressImported__c);
         System.assertNotEquals(null,testDIResultD.GAU_Allocation_1_Imported__c);
 
+        // Test that the RD record was created successfully, and the partial GAU allocation was created
+        System.assertEquals(null,testDIResultE.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported,testDIResultE.Status__c);
+        System.assertNotEquals(null,testDIResultE.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultE.Contact1ImportStatus__c);
+        System.assertEquals('Contact1',testDIResultE.Donation_Donor__c);
+        System.assertEquals(null,testDIResultE.DonationImported__c);
+        System.assertNotEquals(null,testDIResultE.RecurringDonationImported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultE.RecurringDonationImportStatus__c);
+        System.assertNotEquals(null,testDIResultE.HouseholdAccountImported__c);
+        System.assertNotEquals(null,testDIResultE.GAU_Allocation_1_Imported__c);
+
+
+        // Test that the record failed due to GAU overallocation by amount
+        System.assertNotEquals(null,testDIResultF.FailureInformation__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed,testDIResultF.Status__c);
+        System.assertNotEquals(null,testDIResultF.Contact1Imported__c);
+        System.assertEquals(System.label.bdiCreated,testDIResultF.Contact1ImportStatus__c);
+        System.assertEquals('Contact1',testDIResultF.Donation_Donor__c);
+        System.assertNotEquals(null,testDIResultF.DonationImported__c);
+        System.assertNotEquals(null,testDIResultF.HouseholdAccountImported__c);
+        // Confirm that the created GAUs were deleted automatically and errors were placed
+        System.assertEquals(null,testDIResultF.GAU_Allocation_1_Imported__c);
+        System.assertNotEquals(null,testDIResultF.GAU_Allocation_1_Import_Status__c);
+        System.assertEquals(null,testDIResultF.GAU_Allocation_2_Imported__c);
+        System.assertNotEquals(null,testDIResultF.GAU_Allocation_2_Import_Status__c);
+
+        // Query the pledged Oppt for the recurring donation.
+        Opportunity diTestEOppt;
+
+        Set<Id> rdIds = new Set<Id>{testDIResultF.RecurringDonationImported__c,
+                                        testDIResultE.RecurringDonationImported__c};
+
+        for (Opportunity oppt : [SELECT Id, npe03__Recurring_Donation__c
+                                    FROM Opportunity
+                                    WHERE npe03__Recurring_Donation__c IN: rdIds AND IsClosed = FALSE]) {
+            if (oppt.npe03__Recurring_Donation__c == testDIResultE.RecurringDonationImported__c) {
+                diTestEOppt = oppt;
+            }
+        }
+
+        System.assertNotEquals(null,diTestEOppt);
         Allocation__c opptB1Alloc;
         Allocation__c pymtB1Alloc;
         Allocation__c opptDgau1Alloc;
         Allocation__c opptDgau3Alloc;
         Allocation__c pymtDgau1Alloc;
         Allocation__c pymtDgau3Alloc;
+        Allocation__c rdEgau2Alloc;
+        Allocation__c opptEgau2Alloc;
+        Allocation__c opptEgau3Alloc;
 
         for(Allocation__c alloc : [SELECT Id,
                 Opportunity__c,
@@ -315,7 +407,6 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
                 Amount__c,
                 Percent__c
         FROM Allocation__c]) {
-            System.debug('Allocation is: ' + alloc);
             if (alloc.Opportunity__c == testDIResultB.DonationImported__c) {
                 opptB1Alloc = alloc;
             } else if (alloc.Payment__c == testDIResultB.PaymentImported__c) {
@@ -332,6 +423,15 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
             } else if (alloc.Payment__c == testDIResultD.PaymentImported__c &&
                     alloc.General_Accounting_Unit__c == gau3.Id) {
                 pymtDgau3Alloc = alloc;
+            } else if (alloc.Recurring_Donation__c == testDIResultE.RecurringDonationImported__c &&
+                    alloc.General_Accounting_Unit__c == gau2.Id) {
+                rdEgau2Alloc = alloc;
+            } else if (alloc.Opportunity__c == diTestEOppt.Id &&
+                    alloc.General_Accounting_Unit__c == gau2.Id) {
+                opptEgau2Alloc = alloc;
+            } else if (alloc.Opportunity__c == diTestEOppt.Id &&
+                    alloc.General_Accounting_Unit__c == gau3.Id) {
+                opptEgau3Alloc = alloc;
             }
         }
 
@@ -341,6 +441,9 @@ public with sharing class BDI_GAUAllocationsUtil_TEST {
         System.assertNotEquals(null,opptDgau3Alloc);
         System.assertNotEquals(null,pymtDgau1Alloc);
         System.assertNotEquals(null,pymtDgau3Alloc);
+        System.assertNotEquals(null,rdEgau2Alloc);
+        System.assertNotEquals(null,opptEgau2Alloc);
+        System.assertNotEquals(null,opptEgau3Alloc);
         System.assertEquals(opptB1Alloc.General_Accounting_Unit__c,gau3.id);
         System.assertEquals(pymtB1Alloc.General_Accounting_Unit__c,gau3.id);
 
