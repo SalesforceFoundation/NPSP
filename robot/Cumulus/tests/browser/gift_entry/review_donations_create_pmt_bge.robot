@@ -41,6 +41,15 @@ Review Donation And Create Payment For Batch Gift
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and create a payment
     Go To Page                           Landing                       GE_Gift_Entry
+    Current Page Should Be               Landing                       GE_Gift_Entry
+    Click Link                           Templates
+    Select Template Action               Default Gift Entry Template   Edit
+    Current Page Should Be               Template                      GE_Gift_Entry
+    Click Gift Entry Button              Next: Form Fields
+    Click Gift Entry Button              Next: Batch Settings
+    Add Batch Table Columns              Donor Name     Donation Name       Status       Donation Date     Donation Amount
+    Click Gift Entry Button              Save & Close
+    Current Page Should Be               Landing                       GE_Gift_Entry
     Create Gift Entry Batch              Default Gift Entry Template   ${CONTACT}[Name]Automation Batch
     Current Page Should Be               Form                          Gift Entry
     ${batch_id} =                        Save Current Record ID For Deletion     ${NS}DataImportBatch__c
@@ -64,9 +73,7 @@ Review Donation And Create Payment For Batch Gift
     ...                                  Donation Date=${UI_DATE}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            Completed
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${CONTACT}[Name]Automation Batch
     #verify a payment record is created and paid but opportunity values did not change
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0
@@ -81,6 +88,7 @@ Review Donation And Create Payment For Batch Gift
     ...                                  npe01__Payment_Date__c=${CUR_DATE}
     ...                                  npe01__Paid__c=True
     #create another payment for opportunity higher than opportunity amount
+    Click Element                        npsp:gift_entry.collapse_header
     Fill Gift Entry Form
     ...                                  Donor Type=Contact1
     ...                                  Existing Donor Contact=${CONTACT}[Name]
@@ -95,9 +103,7 @@ Review Donation And Create Payment For Batch Gift
     Verify Gift Count                    2
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            Completed
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${CONTACT}[Name]Automation Batch
     #verify opportunity is closed with correct date and amount and intial payment record is still open
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0

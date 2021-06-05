@@ -34,6 +34,16 @@
 */
 public inherited sharing class GiftBatchSelector {
 
+    public DataImportBatch__c selectGiftBatchById(Id id) {
+        return [
+            SELECT Id,
+                Form_Template__r.Template_JSON__c
+            FROM DataImportBatch__c
+            WHERE Id = :id
+            WITH SECURITY_ENFORCED
+        ];
+    }
+
     public List<DataImportBatch__c> selectGiftBatchesById(Set<Id> ids) {
         return [
             SELECT Id

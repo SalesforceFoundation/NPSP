@@ -1626,6 +1626,22 @@
         <value>&lt;b&gt;WARNING: You have Enhanced Recurring Donations enabled. If you disable Customizable Rollups, rollups to Recurring Donations will no longer function.&lt;/b&gt;</value>
     </labels>
     <labels>
+        <fullName>RD2_DisabledAdvancedMappingError</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for DIs with populated RD fields when Advanced Mapping is disabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can process Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_DisabledRD2Error</fullName>
+        <categories>Recurring Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error for DIs with populated RD fields when RD2 is disabled.</shortDescription>
+        <value>You must enable Enhanced Recurring Donations before you can process Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateCancelInProgress</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
@@ -3992,7 +4008,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorExistingDonationAllocations</shortDescription>
-        <value>There are existing allocations on the donation which may conflict with the GAU allocations entered.</value>
+        <value>The provided GAU Allocations conflict with existing Allocations on the donation Opportunity record. Remove the Allocations from the Opportunity record, or from the NPSP Data Import record, then re-process with NPSP Data Importer.</value>
     </labels>
     <labels>
         <fullName>bdiErrorExistingPaymentAllocations</fullName>
@@ -4000,7 +4016,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bdiErrorExistingPaymentAllocations</shortDescription>
-        <value>There are existing allocations on the payment which may conflict with the GAU Allocations entered.</value>
+        <value>The provided GAU Allocations conflict with existing Allocations on the donation Payment record. Remove the Allocations from the Payment record, or from the NPSP Data Import record, then re-process with NPSP Data Importer.</value>
     </labels>
     <labels>
         <fullName>bdiErrorGAUAllocationOver100</fullName>
@@ -6517,6 +6533,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Batch Amount</value>
     </labels>
     <labels>
+        <fullName>geBatchProcessingSuccess</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing success message</shortDescription>
+        <value>{0} was processed.</value>
+    </labels>
+    <labels>
         <fullName>geBodyAdvancedFieldMapping</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -6981,7 +7005,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Instructions to reenter payment details when updating authorized attributes</shortDescription>
-        <value>To update donor, date or amount, reenter card details to reauthorized the payment.</value>
+        <value>To update donor, date or amount, reenter card details to reauthorize the payment.</value>
     </labels>
     <labels>
         <fullName>geErrorBatchGiftEntryCurrencyMismatch</fullName>
@@ -8830,6 +8854,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Process Anyway</value>
     </labels>
     <labels>
+        <fullName>geProcessingBatch</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status of batch being processed</shortDescription>
+        <value>Processing Batch...
+            This can take a while. Check back in a bit!</value>
+    </labels>
+    <labels>
         <fullName>geProcessingErrors</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8859,7 +8892,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning about processing batch when authorizations have expired</shortDescription>
-        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with Expired Authorization Payment Status.</value>
+        <value>One or more card authorizations expired. To ensure these payments are charged when processing the batch, reenter the payment information for donations with an Elevate Payment Status of Expired Authorization.</value>
     </labels>
     <labels>
         <fullName>gePaymentProcessedWarning</fullName>

@@ -34,7 +34,7 @@ public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public String status;
     @AuraEnabled public String paymentMethod;
     @AuraEnabled public String originalTransactionId;
-    @AuraEnabled public String groupId;
+    @AuraEnabled public String elevateBatchId;
     @AuraEnabled public String declineReason;
     @AuraEnabled public String cardLast4;
     @AuraEnabled public String cardNetwork;
@@ -52,7 +52,7 @@ public with sharing class ElevateAuthorizedGift {
         this.status = authorizedGiftResponse.status().name();
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
         this.paymentMethod = authorizedGiftResponse.paymentMethod();
-        this.groupId = authorizedGiftResponse.groupId();
+        this.elevateBatchId  = authorizedGiftResponse.elevateBatchId();
         this.originalTransactionId = authorizedGiftResponse.originalTransactionId();
         this.declineReason = authorizedGiftResponse.declineReason();
         this.cardLast4 = authorizedGiftResponse.last4();
@@ -64,8 +64,8 @@ public with sharing class ElevateAuthorizedGift {
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
     }
 
-    public String groupId() {
-        return groupId;
+    public String elevateBatchId() {
+        return elevateBatchId;
     }
 
     public String gatewayId() {

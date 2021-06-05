@@ -42,12 +42,12 @@ public with sharing class GE_GiftEntryController {
     private static GiftBatchService giftBatchService = new GiftBatchService();
 
     @TestVisible
-    private static ElevateCaptureGroupService captureGroupService {
+    private static ElevateBatchService elevateBatchService {
         get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
+            if (elevateBatchService == null) {
+                elevateBatchService = new ElevateBatchService();
             }
-            return captureGroupService;
+            return elevateBatchService;
         }
         set;
     }
@@ -194,10 +194,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateAuthorizedGift addToCaptureGroup(ElevateTokenizedGift tokenizedGift, String groupId) {
+    public static ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         ElevateAuthorizedGift authorizedGift;
         try {
-            authorizedGift = captureGroupService.addToCaptureGroup(tokenizedGift, groupId);
+            authorizedGift = elevateBatchService.addToElevateBatch(tokenizedGift, elevateBatchId);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
@@ -205,9 +205,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static ElevateCaptureGroup createCaptureGroup() {
-        ElevateCaptureGroup captureGroup = captureGroupService.createCaptureGroup();
-        return captureGroup;
+    public static ElevateBatch createElevateBatch() {
+        ElevateBatch elevateBatch = elevateBatchService.createElevateBatch();
+        return elevateBatch;
     }
 
     @AuraEnabled
@@ -219,10 +219,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static void processPaymentsFor(Id batchId) {
+    public static void processGiftsFor(Id batchId) {
        try {
-           NPSP_Batch batch = new NPSP_Batch(batchId);
-           batch.processPayments();
+           giftBatchService.processGiftsFor(batchId);
        } catch (Exception ex) {
           throw new AuraHandledException(ex.getMessage());
        }

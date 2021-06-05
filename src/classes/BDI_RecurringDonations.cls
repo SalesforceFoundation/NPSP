@@ -38,6 +38,7 @@
 
 public class BDI_RecurringDonations {
 
+    public static final String RD_OBJ_MAPPING_NAME = 'Recurring_Donation';
 
     /*******************************************************************************************************
     * @description The Batch Data Import Service the helper should use
@@ -59,7 +60,7 @@ public class BDI_RecurringDonations {
     }
 
 
-    private final String IMPORT_STATUS_FIELD = UTIL_Namespace.StrTokenNSPrefix('RecurringDonationImportStatus__c');
+    private final String IMPORT_STATUS_FIELD = SObjectType.DataImport__c.fields.RecurringDonationImportStatus__c.Name;
     private final String CONTACT_1 = 'Contact1';
     private final String ACCOUNT_1 = 'Account1';
 
@@ -70,7 +71,7 @@ public class BDI_RecurringDonations {
         get {
             if (dataImportFieldToRDField == null) {
                 dataImportFieldToRDField = bdi.mapDataImportFields(
-                    'Recurring_Donation', 'npe03__Recurring_Donation__c',
+                        RD_OBJ_MAPPING_NAME, SObjectType.npe03__Recurring_Donation__c.getName(),
                     BDI_DataImportService.listStrDataImportFields);
             }
             return dataImportFieldToRDField;
@@ -166,8 +167,7 @@ public class BDI_RecurringDonations {
             // If the imported Id is null, and the amount is null then its not an update and it can't be a valid new RD,
             // so it should be skipped.
             // This will need to be changed once we support more matching types.
-            if (dataImport.RecurringDonationImported__c == null
-                    && dataImport.Recurring_Donation_Amount__c == null ) {
+            if (!areRDFieldsPopulated(dataImport)) {
                 continue;
             }
 
@@ -182,6 +182,16 @@ public class BDI_RecurringDonations {
         }
         
         return diWithRDForProcessing;
+    }
+
+    /**************************************************
+     * @description This checks whether or not the specific set of RD fields are populated. If they are
+     *              we consider it as an RD to be processed.
+     * @param  dataImport The DI to check whether the RD fields are populated. 
+     * @return            Returns whether or not RD fields are populated for the provided DI. 
+     */ 
+    public static Boolean areRDFieldsPopulated(DataImport__c dataImport) {
+        return (dataImport.RecurringDonationImported__c != null || dataImport.Recurring_Donation_Amount__c != null);
     }
 
     /*******************************************************************************************************
