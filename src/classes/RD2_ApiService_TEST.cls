@@ -506,21 +506,6 @@ private class RD2_ApiService_TEST {
             'Initial implementation just returns what we passed in.');
     }
 
-    @IsTest // TODO: AC7 - Design doc has clarification on how to specify activate currently paused RD (use unPause Boolean)
-    private static void shouldReturnErrorForPauseWhenUnpauseIsFalseAndStartAndEndDateAreMissing() {
-        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
-            new Map<Id, RD2_ApiService.PauseObject>{
-                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) };
-
-        String pauseObjectsByIdOut =
-            new RD2_ApiService().pause(
-                new Map<Id, RD2_ApiService.PauseObject>{
-                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true) });
-
-        System.assertEquals(JSON.serialize(pauseObjectsByIdIn), pauseObjectsByIdOut,
-            'Initial implementation just returns what we passed in.');
-    }
-
     @IsTest // TODO: AC8
     private static void shouldPermitNewStartAndEndDateForPausedRecurringDonation() {
         Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =

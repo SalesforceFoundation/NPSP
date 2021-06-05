@@ -1730,6 +1730,14 @@
         <value>Please enter a valid Amount. The Amount cannot be less than 1.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotBePaused</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate RD cannot be paused</shortDescription>
+        <value>An Elevate Recurring Donation cannot be paused.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2758,6 +2766,14 @@
         <protected>true</protected>
         <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeActiveOrPause</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pause request requires Active or Paused status</shortDescription>
+        <value>A pause request requires a Recurring Donation in Active or Paused status.</value>
     </labels>
     <labels>
         <fullName>RD2_UnPauseRequestCannotIncludeDates</fullName>
