@@ -590,7 +590,7 @@ global with sharing class BDI_DataImportService {
             if (!isDryRun && diWithGAUToProcessById.size() > 0) {
                 // validate the GAU percentages for DI records with GAU Allocation 1 or 2 populated.  If the percentages
                 // are invalid (ex. add to more than 100%) then remove from the map and fail the DI Records.
-                diWithGAUToProcessById = BDI_GAUAllocationsUtil.validateDIGAUPercentages(this,dataImports);
+                diWithGAUToProcessById = BDI_GAUAllocationsUtil.validateDIGAUPercentages(this,diWithGAUToProcessById.values());
 
                 // Only disable allocation triggers if there are still DIs with GAUs that are valid
                 if (diWithGAUToProcessById.size() > 0) {
