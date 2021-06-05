@@ -116,8 +116,14 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
         //replacing formula with actual fields, as formula was null for tests
         String mailingAddress = '';
-        if (addr.MailingStreet__c!=null)
+        String unitNumber = '';
+        if (addr.MailingStreet__c!=null) {
             mailingAddress += addr.MailingStreet__c.trim();
+            if (addr.MailingStreet__c.split(',').size() > 1) {
+                // prevent unit number from getting overwritten
+                unitNumber = addr.MailingStreet__c.split(',')[1]
+            }
+        }
         if (addr.MailingStreet2__c!=null)
             mailingAddress += ' ' + addr.MailingStreet2__c.trim();
         if (mailingAddress!='')
@@ -197,6 +203,10 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
                         if(!settings.Prevent_Address_Overwrite__c){
                             addr.MailingStreet__c = candidate.match_addr.split(',')[0].trim();
+                            if (unitNumber != '') {
+                                // append unit number to the end of MailingStreet__c
+                                addr.MailingStreet__c += ',' + unitNumber
+                            }
                             addr.MailingCity__c = candidate.match_city;
                             addr.MailingState__c = candidate.match_region;
                             addr.MailingPostalCode__c = candidate.match_postal;
