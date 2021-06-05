@@ -27,38 +27,42 @@
  *     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *     POSSIBILITY OF SUCH DAMAGE.
  */
-public with sharing class ElevateCaptureGroup implements CaptureGroup {
-    @AuraEnabled public String groupId;
+public with sharing class ElevateBatchResponse {
+    public String id;
+    public List<Errors> errors;
+    public String status;
 
-    @TestVisible
-    private ElevateCaptureGroupService captureGroupService {
-        get {
-            if (captureGroupService == null) {
-                captureGroupService = new ElevateCaptureGroupService();
-            }
-            return captureGroupService;
+    public class Errors {
+        public String message;
+        public String failure_reason;
+    }
+
+    public String id() {
+        return id;
+    }
+
+    public String status() {
+        return status;
+    }
+
+    public List<Errors> errors() {
+        return errors;
+    }
+
+    public Boolean isValidCaptureResponse (DataImport__c dataImport) {
+        return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
+                && errors == null
+                && status == System.Label.BatchProgressStatusProcessing;
+    }
+
+    public Boolean isValidCaptureResponse() {
+        return errors == null && status == System.Label.BatchProgressStatusProcessing;
+    }
+
+    public String firstError() {
+        if (!isValidCaptureResponse()) {
+            return errors()[0].message;
         }
-        set;
-    }
-    public ElevateCaptureGroup() {}
-
-    public ElevateCaptureGroup(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public ElevateCaptureGroup(ElevateCaptureGroupResponse captureGroupResponse) {
-        this.groupId = captureGroupResponse.id();
-    }
-
-    public ElevateCaptureGroup create() {
-        return captureGroupService.getCaptureGroup();
-    }
-
-    public ElevateAuthorizedGift add(ElevateTokenizedGift tokenizedGift) {
-        return captureGroupService.sendAddRequest(tokenizedGift, groupId());
-    }
-
-    public String groupId() {
-        return groupId;
+        return null;
     }
 }

@@ -43,7 +43,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         #     self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
-        if self.npsp.latest_api_version==51.0:
+        if self.npsp.latest_api_version==51.0 or self.npsp.latest_api_version==52.0:
             self.npsp.click_related_list_dd_button('Payments', 'Show more actions', 'Writeoff_Payments')
         else:
             self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
