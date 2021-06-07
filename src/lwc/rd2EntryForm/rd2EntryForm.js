@@ -138,6 +138,8 @@ export default class rd2EntryForm extends LightningElement {
     organizationAccountId;
     organizationAccountName;
     accountHolderType;
+    recurringPeriod;
+    periodType;
 
     contact = {
         MailingCountry: null
@@ -390,8 +392,15 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleRecurringPeriodChange(event) {
+        this.recurringPeriod = event.detail.period;
         this.handleElevateWidgetDisplay();
     }
+
+    handleRecurringPeriodTypeChange(event) {
+        this.periodType = event.detail.periodType;
+        this.handleElevateWidgetDisplay();
+    }
+
 
     /***
      * @description Currency change might hide or display the credit card widget
@@ -458,7 +467,7 @@ export default class rd2EntryForm extends LightningElement {
     isScheduleSupported() {
         if(this.scheduleComponent) {
             const isValidRecurringType = this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.scheduleComponent.getInstallmentPeriod() !== '1st and 15th';
+            const isValidInstallmentPeriod = this.periodType === 'Monthly' || this.recurringPeriod !== '1st and 15th';
 
             return isValidRecurringType && isValidInstallmentPeriod;
         }

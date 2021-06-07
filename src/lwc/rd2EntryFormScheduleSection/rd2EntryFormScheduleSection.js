@@ -322,6 +322,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     onHandleRecurringPeriodChange(event) {
         let recurringPeriod = event.target.value;
         this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
+        this.dispatchEvent(new CustomEvent(
+            'periodtypechange',
+            { detail: { periodType: recurringPeriod }}
+        ));
     }
 
     /**
@@ -330,11 +334,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @param event
      */
     onHandleAdvancedPeriodChange(event) {
-        let advancedPeriod = event.target.value;
-        this.updateScheduleFieldVisibility(this.customPeriod, advancedPeriod);
+        const period = event.target.value;
+        this.updateScheduleFieldVisibility(this.customPeriod, period);
         this.dispatchEvent(new CustomEvent(
             'periodchange',
-            { detail: { advancedPeriod }}
+            { detail: { period }}
         ));
     }
 

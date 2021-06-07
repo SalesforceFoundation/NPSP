@@ -298,6 +298,7 @@ public with sharing class RD2_ValidationService {
         }
         validateAmount(rd, errorCollection);
         validateInstallmentPeriod(rd, errorCollection);
+        validateElevateInstallmentPeriod(recurringDonation, errorCollection);
         validateDayOfMonth(rd, errorCollection);
         validateFixedLength(rd, errorCollection);
         validatePaymentMethod(recurringDonation, errorCollection);
@@ -332,6 +333,19 @@ public with sharing class RD2_ValidationService {
                     System.Label.RD2_InstallmentPeriodMustBeValid,
                     new String[]{ rd.npe03__Installment_Period__c })
             );
+        }
+    }
+
+    private void validateElevateInstallmentPeriod(RD2_RecurringDonation rdRecord, ErrorRecord errorCollection) {
+        if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rdRecord.isElevateRecord()) {
+            if (rdRecord.isFirstAndFifteenthPeriod()
+                    && rdRecord.isElevateRecord()) {
+                String errorMessage = String.format(
+                        System.Label.RD2_ElevateInstallmentPeriodMustBeValid,
+                        new String[]{ rdRecord.getInstallmentPeriod() }
+                );
+                errorCollection.addError(errorMessage);
+            }
         }
     }
 
