@@ -539,9 +539,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getColumn(element, fieldMapping) {
-        const isReferenceField = element.dataType === REFERENCE &&
-            fieldMapping.Source_Field_API_Name !== DONATION_RECORD_TYPE_NAME.fieldApiName;
-
+        let isRecordType = fieldMapping.Source_Field_API_Name === DONATION_RECORD_TYPE_NAME.fieldApiName;
+        const isReferenceField = element.dataType === REFERENCE && !isRecordType;
         const columnFieldName =
             fieldMapping.Source_Field_API_Name.toLowerCase().endsWith('id')
                 ? fieldMapping.Source_Field_API_Name.slice(0, -2)
@@ -552,7 +551,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             fieldName: isReferenceField ?
                 `${columnFieldName}${URL_SUFFIX}` :
                 fieldMapping.Source_Field_API_Name,
-            type: this.getColumnTypeFromFieldType(element.dataType)
+            type: isRecordType ? columnTypeByDescribeType.STRING : this.getColumnTypeFromFieldType(element.dataType)
         };
 
         if (column.fieldName === DONATION_AMOUNT.fieldApiName) {
