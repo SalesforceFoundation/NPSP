@@ -338,8 +338,7 @@ public with sharing class RD2_ValidationService {
 
     private void validateElevateInstallmentPeriod(RD2_RecurringDonation rdRecord, ErrorRecord errorCollection) {
         if (RD2_ElevateIntegrationService.isIntegrationEnabled() && rdRecord.isElevateRecord()) {
-            if (rdRecord.isFirstAndFifteenthPeriod()
-                    && rdRecord.isElevateRecord()) {
+            if (rdRecord.isFirstAndFifteenthPeriod()) {
                 String errorMessage = String.format(
                         System.Label.RD2_ElevateInstallmentPeriodMustBeValid,
                         new String[]{ rdRecord.getInstallmentPeriod() }
