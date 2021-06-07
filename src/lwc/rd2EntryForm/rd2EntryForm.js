@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { Rd2Service } from 'c/rd2Service';
+import { Rd2Service, PERIOD } from 'c/rd2Service';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
 import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
@@ -468,7 +468,8 @@ export default class rd2EntryForm extends LightningElement {
     isScheduleSupported() {
         if(this.scheduleComponent) {
             const isValidRecurringType = this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.periodType === 'Monthly' || this.recurringPeriod !== '1st and 15th';
+            const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
+                || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
 
             return isValidRecurringType && isValidInstallmentPeriod;
         }

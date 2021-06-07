@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
-
+import { PERIOD, RECURRING_PERIOD_ADVANCED } from 'c/rd2Service';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
@@ -22,16 +22,10 @@ import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Don
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 
-const RECURRING_PERIOD_ADVANCED = 'Advanced';
 
 // Constants from RD2_Constants class
 const RECURRING_TYPE_FIXED = 'Fixed';
 const LAST_DAY_OF_MONTH = 'Last_Day';
-const PERIOD_MONTHLY = 'Monthly';
-const PERIOD_YEARLY = 'Yearly';
-const PERIOD_WEEKLY = 'Weekly';
-const PERIOD_DAILY = 'Daily';
-const PERIOD_FIRST_AND_FIFTEENTH = '1st and 15th';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
 
@@ -56,7 +50,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
     @track showDayOfMonth = true;
     @track showNumPlannedInstallments = false;
-    @track customPeriod = PERIOD_MONTHLY; // default
+    @track customPeriod = PERIOD.MONTHLY; // default
     @track customPeriodAdvancedMode;
 
     @track fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
@@ -92,7 +86,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     init() {
         if (isNull(this.recordId)) {
             this.isNew = true;
-            this.updateScheduleFieldVisibility(PERIOD_MONTHLY, PERIOD_MONTHLY);
+            this.updateScheduleFieldVisibility(PERIOD.MONTHLY, PERIOD.MONTHLY);
             this.updatePlannedInstallmentsVisibility();
         } else {
             /**
@@ -103,8 +97,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                 .then(response => {
                     this.customPeriod = response.Period;
                     this.inputFieldInstallmentFrequency = response.Frequency;
-                    if (response.Period !== PERIOD_MONTHLY
-                        || (response.Period === PERIOD_MONTHLY && this.inputFieldInstallmentFrequency > 1)
+                    if (response.Period !== PERIOD.MONTHLY
+                        || (response.Period === PERIOD.MONTHLY && this.inputFieldInstallmentFrequency > 1)
                     ) {
                         this.customPeriod = RECURRING_PERIOD_ADVANCED;
                     }
@@ -226,7 +220,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         if (!this.isNew || !this.defaultInstallmentPeriodValue) {
             return;
         }
-        if (this.defaultInstallmentPeriodValue !== PERIOD_MONTHLY) {
+        if (this.defaultInstallmentPeriodValue !== PERIOD.MONTHLY) {
             this.updateScheduleFieldVisibility(RECURRING_PERIOD_ADVANCED, this.defaultInstallmentPeriodValue);
         }
     }
@@ -352,17 +346,17 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         this.customPeriod = customPeriod;
         this.customPeriodAdvancedMode = advancedPeriod;
 
-        if (customPeriod === PERIOD_MONTHLY) {
+        if (customPeriod === PERIOD.MONTHLY) {
             this.isAdvancedMode = false;
             this.showDayOfMonth = true;
             this.scheduleRowColumnSize = 6;
 
         } else if (customPeriod === RECURRING_PERIOD_ADVANCED) {
             this.isAdvancedMode = true;
-            this.showDayOfMonth = (this.customPeriodAdvancedMode === PERIOD_MONTHLY);
+            this.showDayOfMonth = (this.customPeriodAdvancedMode === PERIOD.MONTHLY);
             this.scheduleRowColumnSize = (this.showDayOfMonth ? 3 : 4);
 
-            if (advancedPeriod === PERIOD_MONTHLY) {
+            if (advancedPeriod === PERIOD.MONTHLY) {
                 this.showDayOfMonth = true;
                 this.scheduleRowColumnSize = 3;
             } else {
@@ -390,18 +384,18 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @description Custom Period picklist options - Advanced and Monthly (using the correct labels)
      */
     get customPeriodOptions() {
-        let monthlyLabel = PERIOD_MONTHLY;
+        let monthlyLabel = PERIOD.MONTHLY;
 
         // Get the translated labels for Monthly if there is one
         this.installmentPeriodPicklistValues
             .forEach(pl => {
-                if (pl.value === PERIOD_MONTHLY) {
+                if (pl.value === PERIOD.MONTHLY) {
                     monthlyLabel = pl.label;
                 }
             });
 
         return [
-            { label: monthlyLabel, value: PERIOD_MONTHLY },
+            { label: monthlyLabel, value: PERIOD.MONTHLY },
             { label: this.customLabels.picklistLabelAdvanced, value: RECURRING_PERIOD_ADVANCED },
         ];
     }
@@ -416,27 +410,27 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         this.installmentPeriodPicklistValues
             .forEach(pl => {
                 switch (pl.value) {
-                    case PERIOD_DAILY:
+                    case PERIOD.DAILY:
                         advancedPeriodPicklistValues.push(
                             {label: this.customLabels.periodPluralDays, value: pl.value}
                         );
                         break;
-                    case PERIOD_WEEKLY:
+                    case PERIOD.WEEKLY:
                         advancedPeriodPicklistValues.push(
                             {label: this.customLabels.periodPluralWeeks, value: pl.value}
                         );
                         break;
-                    case PERIOD_MONTHLY:
+                    case PERIOD.MONTHLY:
                         advancedPeriodPicklistValues.push(
                             {label: this.customLabels.periodPluralMonths, value: pl.value}
                         );
                         break;
-                    case PERIOD_YEARLY:
+                    case PERIOD.YEARLY:
                         advancedPeriodPicklistValues.push(
                             {label: this.customLabels.periodPluralYears, value: pl.value}
                         );
                         break;
-                    case PERIOD_FIRST_AND_FIFTEENTH:
+                    case PERIOD.FIRST_AND_FIFTEENTH:
                         advancedPeriodPicklistValues.push(
                             {label: pl.label, value: pl.value}
                         );
