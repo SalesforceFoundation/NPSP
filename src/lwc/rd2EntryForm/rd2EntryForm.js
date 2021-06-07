@@ -427,11 +427,7 @@ export default class rd2EntryForm extends LightningElement {
         const statusField = getFieldValue(this.record, FIELD_STATUS);
 
         if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
-            // On load, we can't rely on the schedule component, but we should when detecting changes
-            let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
-                recurringType = this.scheduleComponent.getRecurringType();
-            }
+            const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
             this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
@@ -468,7 +464,8 @@ export default class rd2EntryForm extends LightningElement {
 
     isScheduleSupported() {
         if(this.scheduleComponent) {
-            const isValidRecurringType = this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN;
+            const recurringType = this.getRecurringType();
+            const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
             const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
                 || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
 
@@ -665,6 +662,18 @@ export default class rd2EntryForm extends LightningElement {
         return !isEmpty(this.commitmentId)
             ? this.commitmentId
             : null;
+    }
+
+    getRecurringType() {
+        let recurringType;
+        // Use value from record until schedule component is present
+        if(this.record) {
+            recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
+        }
+        if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
+            recurringType = this.scheduleComponent.getRecurringType();
+        }
+        return recurringType;
     }
 
     /***

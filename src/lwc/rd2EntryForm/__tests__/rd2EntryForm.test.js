@@ -687,7 +687,7 @@ class RD2FormController {
     }
 
     setDefaultInputFieldValues() {
-        this.recurringType().changeValue('Open');
+        this.recurringType().setValue('Open');
         this.recurringPeriod().changeValue('Monthly');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
