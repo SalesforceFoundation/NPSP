@@ -437,6 +437,7 @@ export default class rd2EntryForm extends LightningElement {
 
             this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
+                && this.isScheduleSupported()
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
 
