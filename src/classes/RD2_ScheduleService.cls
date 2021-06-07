@@ -531,7 +531,7 @@ public without sharing class RD2_ScheduleService {
     public Date getNextDonationDateGreaterThan(RecurringDonationSchedule__c schedule, Date referenceDate) {
         Date firstValid = getFirstPossibleDonationDateFromStart(schedule);
 
-        if (firstValid > referenceDate) {
+        if (firstValid >= referenceDate) {
             return firstValid;
         }
 
