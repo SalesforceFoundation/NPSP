@@ -100,11 +100,19 @@ global class ERR_Handler_API {
      * @param dmlResult The results of a single DML operation performed using the Database class.
      * @param records The records the DML operation was performed on.
      * @param context The context the errors were raised on
+     * @param displayErrors Indicates if errors should be displayed on a page
      */
 
-    global static void processDMLError(List<Object> dmlResult, List<SObject> records, String context) {
+    global static void processDMLErrors(
+            List<Object> dmlResult, List<SObject> records, String context, Boolean displayErrors) {
 
-        ERR_Handler.Errors errors = ERR_Handler.getErrors(dmlResult, records);
+        ERR_Handler.Errors errors = new ERR_Handler.Errors();
+
+        if (displayErrors) {
+            errors = ERR_Handler.getErrors(dmlResult, records);
+        } else {
+            errors = ERR_Handler.getErrorsOnly(dmlResult, records);
+        }
 
         if (errors.errorsExist) {
             ERR_Handler.processErrorsOnly(errors, context);
