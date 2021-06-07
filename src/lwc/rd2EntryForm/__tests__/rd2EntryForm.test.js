@@ -317,6 +317,9 @@ describe('c-rd2-entry-form', () => {
             });
 
             await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+            await flushPromises();
+
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
 
@@ -337,6 +340,8 @@ describe('c-rd2-entry-form', () => {
             });
 
             await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+            await flushPromises();
 
             const elevateWidget = controller.elevateWidget();
             expect(elevateWidget).toBeTruthy();
@@ -361,6 +366,8 @@ describe('c-rd2-entry-form', () => {
             });
 
             await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+            await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
 
@@ -470,6 +477,7 @@ describe('c-rd2-entry-form', () => {
             await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
             controller.setupSubmitMock();
+            await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
             expect(controller.updatePaymentButton()).toBeTruthy();
@@ -525,6 +533,7 @@ describe('c-rd2-entry-form', () => {
             await setupWireMocksForElevate();
             controller.setDefaultInputFieldValuesEdit();
             controller.setupSubmitMock();
+            await flushPromises();
 
             expect(controller.elevateWidget()).toBeTruthy();
             expect(controller.updatePaymentButton()).toBeTruthy();
@@ -679,6 +688,7 @@ class RD2FormController {
 
     setDefaultInputFieldValues() {
         this.recurringType().changeValue('Open');
+        this.recurringPeriod().changeValue('Monthly');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
         this.dayOfMonth().setValue('6');
