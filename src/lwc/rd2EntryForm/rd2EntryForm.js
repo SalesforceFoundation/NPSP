@@ -305,6 +305,7 @@ export default class rd2EntryForm extends LightningElement {
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
+            this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
