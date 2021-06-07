@@ -918,6 +918,37 @@ private with sharing class RD2_ValidationService_TEST {
             'Elvate RD cannot update to future Effective Date.');
     }
 
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWith1st15hInstallmentPeriod() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+                .withIsIntegrationEnabled(true)
+                .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+                PS_IntegrationServiceConfig.class,
+                configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+                .withContact(getContact().Id)
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+                .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+                .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+                new List<npe03__Recurring_Donation__c>{rd},
+                new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+        System.assertEquals('1st and 15th is not a supported value for Installment Period. Select Daily, Weekly, Monthly, or Yearly.', errorRecords[0].getFirstError());
+    }
+
     /**
     * @description Verifies that Elevate RD update will fail when Campaign is update to null
     */
