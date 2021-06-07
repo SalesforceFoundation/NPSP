@@ -573,9 +573,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
         return column;
     }
-    
+
     isDonationRecordType(fieldMapping) {
-        return  fieldMapping.Source_Field_API_Name === DONATION_RECORD_TYPE_NAME.fieldApiName;
+        return fieldMapping.Source_Field_API_Name === DONATION_RECORD_TYPE_NAME.fieldApiName;
     }
 
 }
