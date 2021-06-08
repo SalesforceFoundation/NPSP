@@ -311,7 +311,6 @@
                         if (Math.round(perc)===100) {
 
                             show_element(false,'spinner');
-                            clearInterval(timer);
                             log(' -----------------------------------------------------');
                             log(` >> ${totalBands} web-workes are finished (${timer})! `);                            
                             log(' -----------------------------------------------------');
@@ -321,7 +320,7 @@
                                 // display spinner and panel of results
                                 show_element(true,'spinner');                            
                                 show_element(true,'fixed-panel');
-                                // TODO?: timer for re-try logic
+                                // TODO?: additional timer for re-try logic
                                 // reTryTimer = setInterval(setTime, 1000);
 
                                 log(rowLock);                                
@@ -342,6 +341,9 @@
                                 // post and clean rowLock
                                 documentworker.postMessage(requestData);
                                 rowLock = [];
+                            } else {
+                                // no rowlock retry needed, stop clock
+                                clearInterval(timer);
                             }
                         }
                         // update progress bar
@@ -370,7 +372,10 @@
 
                     // when completed
                     if (eData.completed) {
-                        show_element(false,'spinner');                        
+
+                        show_element(false,'spinner');    
+                        clearInterval(timer);
+
                         log(' =============================================');
                         log(` &emsp; #error-ratio: <b>${fixed_errorRatio}%</b>`);
                         log(` &emsp; #failed events: ${format_num(fixed_totalFailed)}`);
@@ -518,30 +523,30 @@
                 }
             } 
 
-            function fixed_run() {
-                // init app variables
-                clean_log();
-                // fixed array
-                rowLock = ["a095e000000BG5ZAAW", "a095e000000BG5aAAG", "a095e000000BG5bAAG", "a095e000000BG5cAAG", "a095e000000BG5dAAG", "a095e000000BG5eAAG", "a095e000000BG5fAAG", "a095e000000BG5gAAG", "a095e000000BG5hAAG", "a095e000000BG5iAAG", "a095e000000BG5jAAG", "a095e000000BG5kAAG", "a095e000000BG5lAAG", "a095e000000BG5mAAG", "a095e000000BG5nAAG", "a095e000000Bm7GAAS", "a095e000000Bm7HAAS", "a095e000000Bm7IAAS", "a095e000000Bm7JAAS", "a095e000000Bm7KAAS", "a095e000000Bm7LAAS", "a095e000000Bm7MAAS", "a095e000000Bm7NAAS", "a095e000000Bm7OAAS", "a095e000000Bm7PAAS", "a095e000000Bm7QAAS", "a095e000000Bm7RAAS", "a095e000000Bm7SAAS", "a095e000000Bm7TAAS", "a095e000000Bm7UAAS", "a095e000000BW7VAAW", "a095e000000BW7WAAW", "a095e000000BW7XAAW", "a095e000000BW7YAAW", "a095e000000BW7ZAAW", "a095e000000BW7aAAG", "a095e000000BW7bAAG", "a095e000000BW7cAAG", "a095e000000BW7dAAG", "a095e000000BW7eAAG", "a095e000000BW7fAAG", "a095e000000BW7gAAG", "a095e000000BW7hAAG", "a095e000000BW7iAAG", "a095e000000BW7jAAG", "a095e000000BOv6AAG", "a095e000000BOv7AAG", "a095e000000BOv8AAG", "a095e000000BOv9AAG", "a095e000000BOvAAAW", "a095e000000BOvBAAW", "a095e000000BOvCAAW", "a095e000000BOvDAAW", "a095e000000BOvEAAW", "a095e000000BOvFAAW", "a095e000000BOvGAAW", "a095e000000BOvHAAW", "a095e000000BOvIAAW", "a095e000000BOvJAAW", "a095e000000BOvKAAW", "a095e000000Bn1dAAC", "a095e000000Bn1eAAC", "a095e000000Bn1fAAC", "a095e000000Bn1gAAC", "a095e000000Bn1hAAC", "a095e000000Bn1iAAC", "a095e000000Bn1jAAC", "a095e000000Bn1kAAC", "a095e000000Bn1lAAC", "a095e000000Bn1mAAC", "a095e000000Bn1nAAC", "a095e000000Bn1oAAC", "a095e000000Bn1pAAC", "a095e000000Bn1qAAC", "a095e000000Bn1rAAC", "a095e000000B6stAAC", "a095e000000B6suAAC", "a095e000000B6svAAC", "a095e000000B6swAAC", "a095e000000B6sxAAC", "a095e000000B6syAAC", "a095e000000B6szAAC", "a095e000000B6t0AAC", "a095e000000B6t1AAC", "a095e000000B6t2AAC", "a095e000000B6t3AAC", "a095e000000B6t4AAC", "a095e000000B6t5AAC", "a095e000000B6t6AAC", "a095e000000B6t7AAC", "a095e000000BfQ4AAK"];
-                log(`>> Re-try logic is needed for ${rowLock.length} record IDs caused by ${__lock} exceptions. Preparing fixed web-worker request...`);
-                show_element(true,'fixed-panel');
-                // call web_worker with rowLock ids --- batch size hardcoded to 200
-                let requestData = {
-                    band: null,
-                    chunkBits: null,                                    
-                    partitionBits: null,
-                    offset: null,
-                    session: __sfdcSessionId,
-                    url: __serviceUrl,
-                    isCursor: false,
-                    recordIds: rowLock,
-                    batchSize: 20
-                };
-                // post
-                documentworker.postMessage(requestData);
-                rowLock = [];
+            // function fixed_run() {
+            //     // init app variables
+            //     clean_log();
+            //     // fixed array
+            //     rowLock = ["a095e000000BG5ZAAW", "a095e000000BG5aAAG", "a095e000000BG5bAAG", "a095e000000BG5cAAG", "a095e000000BG5dAAG", "a095e000000BG5eAAG", "a095e000000BG5fAAG", "a095e000000BG5gAAG", "a095e000000BG5hAAG", "a095e000000BG5iAAG", "a095e000000BG5jAAG", "a095e000000BG5kAAG", "a095e000000BG5lAAG", "a095e000000BG5mAAG", "a095e000000BG5nAAG", "a095e000000Bm7GAAS", "a095e000000Bm7HAAS", "a095e000000Bm7IAAS", "a095e000000Bm7JAAS", "a095e000000Bm7KAAS", "a095e000000Bm7LAAS", "a095e000000Bm7MAAS", "a095e000000Bm7NAAS", "a095e000000Bm7OAAS", "a095e000000Bm7PAAS", "a095e000000Bm7QAAS", "a095e000000Bm7RAAS", "a095e000000Bm7SAAS", "a095e000000Bm7TAAS", "a095e000000Bm7UAAS", "a095e000000BW7VAAW", "a095e000000BW7WAAW", "a095e000000BW7XAAW", "a095e000000BW7YAAW", "a095e000000BW7ZAAW", "a095e000000BW7aAAG", "a095e000000BW7bAAG", "a095e000000BW7cAAG", "a095e000000BW7dAAG", "a095e000000BW7eAAG", "a095e000000BW7fAAG", "a095e000000BW7gAAG", "a095e000000BW7hAAG", "a095e000000BW7iAAG", "a095e000000BW7jAAG", "a095e000000BOv6AAG", "a095e000000BOv7AAG", "a095e000000BOv8AAG", "a095e000000BOv9AAG", "a095e000000BOvAAAW", "a095e000000BOvBAAW", "a095e000000BOvCAAW", "a095e000000BOvDAAW", "a095e000000BOvEAAW", "a095e000000BOvFAAW", "a095e000000BOvGAAW", "a095e000000BOvHAAW", "a095e000000BOvIAAW", "a095e000000BOvJAAW", "a095e000000BOvKAAW", "a095e000000Bn1dAAC", "a095e000000Bn1eAAC", "a095e000000Bn1fAAC", "a095e000000Bn1gAAC", "a095e000000Bn1hAAC", "a095e000000Bn1iAAC", "a095e000000Bn1jAAC", "a095e000000Bn1kAAC", "a095e000000Bn1lAAC", "a095e000000Bn1mAAC", "a095e000000Bn1nAAC", "a095e000000Bn1oAAC", "a095e000000Bn1pAAC", "a095e000000Bn1qAAC", "a095e000000Bn1rAAC", "a095e000000B6stAAC", "a095e000000B6suAAC", "a095e000000B6svAAC", "a095e000000B6swAAC", "a095e000000B6sxAAC", "a095e000000B6syAAC", "a095e000000B6szAAC", "a095e000000B6t0AAC", "a095e000000B6t1AAC", "a095e000000B6t2AAC", "a095e000000B6t3AAC", "a095e000000B6t4AAC", "a095e000000B6t5AAC", "a095e000000B6t6AAC", "a095e000000B6t7AAC", "a095e000000BfQ4AAK"];
+            //     log(`>> Re-try logic is needed for ${rowLock.length} record IDs caused by ${__lock} exceptions. Preparing fixed web-worker request...`);
+            //     show_element(true,'fixed-panel');
+            //     // call web_worker with rowLock ids --- batch size hardcoded to 200
+            //     let requestData = {
+            //         band: null,
+            //         chunkBits: null,                                    
+            //         partitionBits: null,
+            //         offset: null,
+            //         session: __sfdcSessionId,
+            //         url: __serviceUrl,
+            //         isCursor: false,
+            //         recordIds: rowLock,
+            //         batchSize: 20
+            //     };
+            //     // post
+            //     documentworker.postMessage(requestData);
+            //     rowLock = [];
 
-            }     
+            // }     
 
         </script>
     </head>
@@ -617,9 +622,9 @@
                             </div>
                             <div id="actionContainer" class="slds-col">
                                 <!-- Action Buttons -->    
-                                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                                <!-- <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
                                     <input type="button" value="Fixed Run" onclick="fixed_run()" class="slds-button slds-button_outline-brand" />
-                                </div>                            
+                                </div>                             -->
                                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
                                     <input type="button" value="Call Workers" onclick="execute_parallel(true)" tabindex="4" class="slds-button slds-button_outline-brand" />
                                 </div>
