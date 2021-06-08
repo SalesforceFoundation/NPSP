@@ -2377,7 +2377,7 @@
         <fullName>RD2_ElevateInstallmentPeriodMustBeValid</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
+        <shortDescription>Validation message for installment period on Elevate Recurring Donations</shortDescription>
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, Monthly, or Yearly.</value>
     </labels>
     <labels>
