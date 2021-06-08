@@ -139,7 +139,8 @@ public with sharing class UTIL_HtmlOutput_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Verifies that non-allowed javascript event code is stripped from url
+    * @description Verifies that non-allowed javascript event code is stripped from url, regardless of
+    * the text case of the javascript
     */
     @isTest
     private static void shouldStripJavaScriptFromUrlRegardlessOfCase() {
