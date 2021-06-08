@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -33,20 +33,20 @@
 * @description test class for Error Handling API
 * @group ErrorHandling
 */
-@isTest
+@IsTest(IsParallel=true)
 private class ERR_Handler_API_TEST {
 
-    private static final String TEST_ACCOUNT_NAME = 'ERR_Handler_API Acct';
     private static final String ERR_CONTEXT = 'ERR_Handler_API_TEST';
+    private static final TEST_SObjectGateway.ErrorGateway errorGateway = new TEST_SObjectGateway.ErrorGateway();
 
     @TestSetup
-    static void setupInitalAccount() {
-        Account account = new Account(Name = TEST_ACCOUNT_NAME);
+    static void setupInitialAccount() {
+        Account account = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null)[0];
         insert account;
     }
 
     /**
-     * @description Verifies DML error is created and the error is displayed on a page
+     * @description When a DML error occurs, verify an Error__c record is created and the error is displayed on a page
      */
     @IsTest
     private static void shouldCreateErrorFromDMLAndDisplayOnPage() {
@@ -54,7 +54,7 @@ private class ERR_Handler_API_TEST {
         Test.setCurrentPage(Page.STG_SettingsManager);
 
         // set test account name to null to trigger update error (Required fields are missing: [Name])
-        Account acct = [SELECT Id, Name FROM Account WHERE Name = :TEST_ACCOUNT_NAME LIMIT 1];
+        Account acct = [SELECT Id, Name FROM Account LIMIT 1];
         acct.Name = null;
         List<Account> accounts = new List<Account>{acct};
 
@@ -64,29 +64,28 @@ private class ERR_Handler_API_TEST {
         Test.stopTest();
 
         // query Error__c record result for asserts
-        List<Error__c> errors = new List<Error__c>([SELECT Id, Related_Record_ID__c, Context_Type__c FROM Error__c]);
+        List<Error__c> errors = errorGateway.getRecords();
 
         // assert error is created
-        System.assertEquals(1, errors.size());
+        System.assertEquals(1, errors.size(), 'There should be only a single Error record created');
         // assert error fields match
         System.assertEquals(acct.Id, errors[0].Related_Record_ID__c);
         System.assertEquals(ERR_CONTEXT, errors[0].Context_Type__c);
         // assert page error is displayed
-        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
-        System.assertEquals(1, pageMessages.size(), 'Error message should be displayed on the page: ' + pageMessages);
+        UTIL_UnitTestData_TEST.assertPageHasError(errors[0].Full_Message__c);
 
     }
 
     /**
-      * @description Verifies DML error is created and the error is displayed on a page
-      */
+    * @description When a DML error occurs, verify DML error is created but do not displayed error on a page
+    */
     @IsTest
     private static void shouldCreateErrorFromDMLButDoNotDisplayOnPage() {
 
         Test.setCurrentPage(Page.STG_SettingsManager);
 
         // set test account name to null to trigger update error (Required fields are missing: [Name])
-        Account acct = [SELECT Id, Name FROM Account WHERE Name = :TEST_ACCOUNT_NAME LIMIT 1];
+        Account acct = [SELECT Id, Name FROM Account LIMIT 1];
         acct.Name = null;
         List<Account> accounts = new List<Account>{acct};
 
@@ -95,12 +94,40 @@ private class ERR_Handler_API_TEST {
         ERR_Handler_API.processDMLErrors(saveResults, accounts, ERR_CONTEXT, false);
         Test.stopTest();
 
+        // query Error__c record result for asserts
+        List<Error__c> errors = errorGateway.getRecords();
+
         // assert error is created
-        System.assertEquals(1, [SELECT COUNT() FROM Error__c]);
-        // assert page error is NOT displayed
-        List<ApexPages.Message> pageMessages = ApexPages.getMessages();
-        System.assertEquals(0, pageMessages.size(), 'Error message should not be displayed on the page: ' +
-                pageMessages);
+        System.assertEquals(1, errors.size(), 'There should be only a single Error record created');
+        // assert error is not displayed on page
+        UTIL_UnitTestData_TEST.assertPageHasNoErrors();
+
+    }
+
+    /**
+     * @description If a DML error does not take place, verify no Error__c records are not created
+     */
+    @IsTest
+    private static void shouldNotCreateErrorFromDmlIfNoErrorsGenerated() {
+
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        Account acct = [SELECT Id, Name FROM Account LIMIT 1];
+        acct.Name = 'NewName';
+        List<Account> accounts = new List<Account>{acct};
+
+        Test.startTest();
+        List<Database.SaveResult> saveResults = Database.update(accounts, false);
+        ERR_Handler_API.processDMLErrors(saveResults, accounts, ERR_CONTEXT, true);
+        Test.stopTest();
+
+        // query Error__c record result for asserts
+        List<Error__c> errors = errorGateway.getRecords();
+
+        // assert no errors created
+        System.assertEquals(0, errors.size(), 'There should not be any Error records created');
+        // assert no page error
+        UTIL_UnitTestData_TEST.assertPageHasNoErrors();
 
     }
 }
