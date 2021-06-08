@@ -304,6 +304,7 @@ npsp_lex_locators={
        },
     'gift_entry':{
         'id':'//*[contains(@data-qa-locator,"{}")]',
+        'lightning-button':'//lightning-button/button[contains(text(),"{}")]',
         'button':'//*[contains(@data-qa-locator,"{}")]/button',
         'field_input':'//*[contains(@data-qa-locator,"{}")]//child::{}',
         'field_span':'//*[contains(@data-qa-locator,"{}")]//child::span[text()="{}"]',

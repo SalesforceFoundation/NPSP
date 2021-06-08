@@ -48,7 +48,6 @@ Batch Template Default values Setting
     ...                             Leave default values blank and verify they do not auto popuate in batch form
 
     [Tags]                           unstable               feature:GE          W-8279550
-
     Go To Page                       Landing                GE_Gift_Entry
     Click Link                       Templates
     Click Gift Entry Button          Create Template
@@ -92,6 +91,7 @@ Batch Template Default values Setting
     Fill Gift Entry Form
     ...                              Data Import: Donation Donor=Contact1
     ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
+
     Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        Batch Gifts
     ...                              Donor Name=${CONTACT}[Name]
@@ -129,13 +129,13 @@ Batch Template Default values Setting
     Wait Until Modal Is Open
     Click Gift Entry Button          Next
     Clear Form Fields
-    ...                              Opportunity: Close Date=
+    ...                              Opportunity: Close Date=Null
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
     ...                              Opportunity: Record Type=NPSP Default
     Click Gift Entry Button          Wizard Save
     Verify Field Default Value
-    ...                              Opportunity: Close Date=
+    ...                              Opportunity: Close Date=Null
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
     ...                              Opportunity: Record Type=NPSP Default
