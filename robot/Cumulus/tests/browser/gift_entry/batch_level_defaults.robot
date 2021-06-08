@@ -134,7 +134,7 @@ Batch Template Default values Setting
     ...                              Opportunity: Record Type=NPSP Default
     Click Gift Entry Button          Wizard Save
     Verify Field Default Value
-    ...                              Opportunity: Close Date=Null
+    ...                              Opportunity: Close Date=
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
     ...                              Opportunity: Record Type=NPSP Default
