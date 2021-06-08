@@ -17,6 +17,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
+import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 
 /*******************************************************************************
 * @description Schema imports
@@ -163,9 +164,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             form.showSpinner = !form.showSpinner
         };
         form.showSpinner = true;
-
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.runBatchDryRun(toggleSpinner);
+        this.runBatchDryRun(toggleSpinner);
     }
 
     handleLoadData(event) {
@@ -572,4 +571,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         };
     }
 
+    runBatchDryRun(callback) {
+        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
+        runBatchDryRun({
+            batchId: this.batchId,
+            numberOfRowsToReturn: table.rowCount()
+        })
+            .then(result => {
+                const dataImportModel = JSON.parse(result);
+                table._count = dataImportModel.totalCountOfRows;
+                table._total = dataImportModel.batchTotalRowAmount;
+                table.upsertDryRunResults(dataImportModel.dataImportRows);
+            })
+            .catch(error => {
+                handleError(error);
+            })
+            .finally(() => {
+                callback();
+            });
+    }
 }

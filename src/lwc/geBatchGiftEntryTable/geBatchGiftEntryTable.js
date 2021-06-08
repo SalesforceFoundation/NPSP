@@ -3,7 +3,6 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
-import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
@@ -361,31 +360,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             });
     }
 
-    @api
-    runBatchDryRun(callback) {
-        runBatchDryRun({
-            batchId: this.batchId,
-            numberOfRowsToReturn: this.data.length
-        })
-            .then(result => {
-                const dataImportModel = JSON.parse(result);
-                this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.batchTotalRowAmount;
-                dataImportModel.dataImportRows.forEach(row => {
-                    this.upsertData(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)), 'Id');
-                });
-            })
-            .catch(error => {
-                handleError(error);
-            })
-            .finally(() => {
-                callback();
-            });
-    }
-
     get geBatchGiftsCountLabel() {
         return geBatchGiftsCount;
     }
@@ -574,4 +548,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return column;
     }
 
+    @api
+    rowCount() {
+        return this.data.length;
+    }
+
+    @api
+    upsertDryRunResults(dataImportRows) {
+        dataImportRows.forEach(row => {
+            this.upsertData(
+                Object.assign(row,
+                    this.appendUrlColumnProperties.call(row.record,
+                        this._dataImportObjectInfo)), 'Id');
+        });
+    }
 }
