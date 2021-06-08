@@ -91,7 +91,6 @@ Batch Template Default values Setting
     Fill Gift Entry Form
     ...                              Data Import: Donation Donor=Contact1
     ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
-
     Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        Batch Gifts
     ...                              Donor Name=${CONTACT}[Name]
@@ -99,9 +98,9 @@ Batch Template Default values Setting
     ...                              Payment: Payment Method=Credit Card
     ...                              Opportunity: custom_text=text
     ...                              Opportunity: Record Type=Major Gift
-    Click Gift Entry Button           Edit Batch Info
+    Click Gift Entry Button          Edit Batch Info
     Wait Until Modal Is Open
-    Click Gift Entry Button           Next
+    Click Gift Entry Button          Next
     Wait Until Modal Is Open
     Fill Modal Form  
     ...                              Opportunity: Close Date=${FUT_DATE}
