@@ -946,7 +946,10 @@ private with sharing class RD2_ValidationService_TEST {
         Test.startTest();
         List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
         Test.stopTest();
-        System.assertEquals('1st and 15th is not a supported value for Installment Period. Select Daily, Weekly, Monthly, or Yearly.', errorRecords[0].getFirstError());
+
+        String expectedLabel = String.format(System.Label.RD2_ElevateInstallmentPeriodMustBeValid, new List<String>{RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH});
+
+        System.assertEquals(expectedLabel, errorRecords[0].getFirstError());
     }
 
     /**

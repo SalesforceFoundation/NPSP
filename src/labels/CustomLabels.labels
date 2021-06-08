@@ -2378,7 +2378,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Validation message for installment period on Elevate Recurring Donations</shortDescription>
-        <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, Monthly, or Yearly.</value>
+        <value>{0} is not a supported Installment Period for Elevate connected Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
