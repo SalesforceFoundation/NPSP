@@ -13,13 +13,13 @@
   </fields>
   <fields>
     <name>Current_Address__c</name>
-    <help>Lookup to the current Address record for this Contact. NPSP populates the Contact's Mailing Address field with the street, city, state, and postal code from the current Address record.</help>
+    <help>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</help>
     <relationshipLabel>Contacts (Current Address)</relationshipLabel>
     <label>Current Address</label>
   </fields>
   <fields>
     <name>CustomizableRollups_UseSkewMode__c</name>
-    <help>When checked, Customisable Rollups will always use 'Skew Mode' to rollup Hard Credit and Soft Credits for this record.</help>
+    <help>When checked, Customisable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</help>
     <label>Customisable Rollups: Force Skew Mode</label>
   </fields>
   <fields>
@@ -49,12 +49,12 @@
   </fields>
   <fields>
     <name>First_Soft_Credit_Amount__c</name>
-    <help>The amount of this Contact's earliest soft credit.</help>
+    <help>The amount of this Contact&apos;s earliest soft credit.</help>
     <label>First Soft Credit Amount</label>
   </fields>
   <fields>
     <name>First_Soft_Credit_Date__c</name>
-    <help>The date of this Contact's earliest soft credit.</help>
+    <help>The date of this Contact&apos;s earliest soft credit.</help>
     <label>First Soft Credit Date</label>
   </fields>
   <fields>
@@ -64,22 +64,22 @@
   </fields>
   <fields>
     <name>Largest_Soft_Credit_Amount__c</name>
-    <help>The amount of this Contact's largest soft credit.</help>
+    <help>The amount of this Contact&apos;s largest soft credit.</help>
     <label>Largest Soft Credit Amount</label>
   </fields>
   <fields>
     <name>Largest_Soft_Credit_Date__c</name>
-    <help>The date of this Contact's largest soft credit.</help>
+    <help>The date of this Contact&apos;s largest soft credit.</help>
     <label>Largest Soft Credit Date</label>
   </fields>
   <fields>
     <name>Last_Soft_Credit_Amount__c</name>
-    <help>The amount of this Contact's most recent soft credit.</help>
+    <help>The amount of this Contact&apos;s most recent soft credit.</help>
     <label>Last Soft Credit Amount</label>
   </fields>
   <fields>
     <name>Last_Soft_Credit_Date__c</name>
-    <help>The date of this Contact's most recent soft credit.</help>
+    <help>The date of this Contact&apos;s most recent soft credit.</help>
     <label>Last Soft Credit Date</label>
   </fields>
   <fields>
@@ -109,7 +109,7 @@
   </fields>
   <fields>
     <name>Primary_Affiliation__c</name>
-    <help>The Account marked as Primary in this Contact's list of Organisation Affiliations.</help>
+    <help>The Account marked as Primary in this Contact&apos;s list of Organisation Affiliations.</help>
     <relationshipLabel>Do Not Use.  Use Organisation Affiliations.</relationshipLabel>
     <label>Primary Affiliation</label>
   </fields>
@@ -125,7 +125,7 @@
   </fields>
   <fields>
     <name>is_Address_Override__c</name>
-    <help>When selected, NPSP will not sync this Contact's address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</help>
+    <help>When selected, NPSP will not sync this Contact&apos;s address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</help>
     <label>Address Override</label>
   </fields>
   <webLinks>

@@ -84,7 +84,7 @@
   </fields>
   <fields>
     <name>Grant_Contract_Date__c</name>
-    <help>The date of the Grant's inception, according to the document or contract sent by the grantmaking organisation.</help>
+    <help>The date of the Grant&apos;s inception, according to the document or contract sent by the grantmaking organisation.</help>
     <label>Grant Contract Date</label>
   </fields>
   <fields>
@@ -107,7 +107,7 @@
   </fields>
   <fields>
     <name>Grant_Requirements_Website__c</name>
-    <help>A URL that points to the grant requirements on the grantmaker's website.</help>
+    <help>A URL that points to the grant requirements on the grantmaker&apos;s website.</help>
     <label>Grant Requirements Website</label>
   </fields>
   <fields>
@@ -185,7 +185,7 @@
   </fields>
   <fields>
     <name>Next_Grant_Deadline_Due_Date__c</name>
-    <help>The due date for this Opportunity's next Deliverable (read only).</help>
+    <help>The due date for this Opportunity&apos;s next Deliverable (read only).</help>
     <label>Next Deliverable Date</label>
   </fields>
   <fields>
@@ -238,7 +238,7 @@
   </fields>
   <fields>
     <name>Primary_Contact_Campaign_Member_Status__c</name>
-    <help>The status NPSP uses when it creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</help>
+    <help>The status NPSP uses when it creates a Campaign Member for this Opportunity&apos;s Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</help>
     <label>Primary Contact Campaign Member Status</label>
   </fields>
   <fields>
@@ -259,7 +259,7 @@
   </fields>
   <fields>
     <name>Recurring_Donation_Installment_Number__c</name>
-    <help>The installment number of this Opportunity's Recurring Donation schedule.</help>
+    <help>The installment number of this Opportunity&apos;s Recurring Donation schedule.</help>
     <label>Recurring Donation Installment Number</label>
   </fields>
   <fields>

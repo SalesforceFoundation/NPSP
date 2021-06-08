@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>Active__c</name>
@@ -157,12 +157,12 @@
   </fields>
   <fields>
     <name>InstallmentFrequency__c</name>
-    <help>Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as "every 3 months".</help>
+    <help>Defines the installment schedule of this Recurring Donation along with Installment Period. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</help>
     <label>Installment Frequency</label>
   </fields>
   <fields>
     <name>InstallmentPeriod__c</name>
-    <help>Defines the installment schedule of this Recurring Donation along with Installment Frequency. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as "every 3 months".</help>
+    <help>Defines the installment schedule of this Recurring Donation along with Installment Frequency. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule would be defined as &quot;every 3 months&quot;.</help>
     <label>Installment Period</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>

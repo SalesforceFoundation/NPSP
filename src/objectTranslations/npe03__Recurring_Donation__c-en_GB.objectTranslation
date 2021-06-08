@@ -61,7 +61,7 @@
   </fields>
   <fields>
     <name>CurrentYearValue__c</name>
-    <help>This Recurring Donation's total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</help>
+    <help>This Recurring Donation&apos;s total amount for the current calendar or fiscal year (read only). Includes Closed Won Opportunities plus future installments for the rest of the year.</help>
     <label>Current Year Value</label>
   </fields>
   <fields>
@@ -205,7 +205,7 @@
   </fields>
   <fields>
     <name>InstallmentFrequency__c</name>
-    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
+    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
     <label>Installment Frequency</label>
   </fields>
   <fields>
@@ -220,7 +220,7 @@
   </fields>
   <fields>
     <name>NextYearValue__c</name>
-    <help>This Recurring Donation's total expected amount for the next calendar or fiscal year (read only).</help>
+    <help>This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only).</help>
     <label>Next Year Value</label>
   </fields>
   <fields>

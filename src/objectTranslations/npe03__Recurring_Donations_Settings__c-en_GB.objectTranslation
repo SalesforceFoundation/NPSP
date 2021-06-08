@@ -37,7 +37,7 @@
   </fields>
   <fields>
     <name>NextDonationDateMatchRangeDays__c</name>
-    <help>The number of days before or after the Next Donation Date that NPSP won't create a new installment Opportunity if the next open Opportunity's Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</help>
+    <help>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to Recurring Donations where Installment Period is Monthly.</help>
     <label>Next Donation Date Match Range</label>
   </fields>
   <fields>

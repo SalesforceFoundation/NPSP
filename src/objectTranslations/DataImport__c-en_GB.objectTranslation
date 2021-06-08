@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>ACH_Consent__c</name>
@@ -16,42 +16,34 @@
   </fields>
   <fields>
     <name>Account1_City__c</name>
-    <help>Account1.BillingCity</help>
     <label>Account1 City</label>
   </fields>
   <fields>
     <name>Account1_Country__c</name>
-    <help>Account1.BillingCountry</help>
     <label>Account1 Country</label>
   </fields>
   <fields>
     <name>Account1_Name__c</name>
-    <help>Account1.Name</help>
     <label>Account1 Name</label>
   </fields>
   <fields>
     <name>Account1_Phone__c</name>
-    <help>Account1.Phone</help>
     <label>Account1 Phone</label>
   </fields>
   <fields>
     <name>Account1_State_Province__c</name>
-    <help>Account1.BillingState</help>
     <label>Account1 State/Province</label>
   </fields>
   <fields>
     <name>Account1_Street__c</name>
-    <help>Account1.BillingStreet</help>
     <label>Account1 Street</label>
   </fields>
   <fields>
     <name>Account1_Website__c</name>
-    <help>Account1.Website</help>
     <label>Account1 Website</label>
   </fields>
   <fields>
     <name>Account1_Zip_Postal_Code__c</name>
-    <help>Account1.BillingPostalCode</help>
     <label>Account1 Zip/Postal Code</label>
   </fields>
   <fields>
@@ -65,42 +57,34 @@
   </fields>
   <fields>
     <name>Account2_City__c</name>
-    <help>Account2.BillingCity</help>
     <label>Account2 City</label>
   </fields>
   <fields>
     <name>Account2_Country__c</name>
-    <help>Account2.BillingCountry</help>
     <label>Account2 Country</label>
   </fields>
   <fields>
     <name>Account2_Name__c</name>
-    <help>Account2.Name</help>
     <label>Account2 Name</label>
   </fields>
   <fields>
     <name>Account2_Phone__c</name>
-    <help>Account2.Phone</help>
     <label>Account2 Phone</label>
   </fields>
   <fields>
     <name>Account2_State_Province__c</name>
-    <help>Account2.BillingState</help>
     <label>Account2 State/Province</label>
   </fields>
   <fields>
     <name>Account2_Street__c</name>
-    <help>Account2.BillingStreet</help>
     <label>Account2 Street</label>
   </fields>
   <fields>
     <name>Account2_Website__c</name>
-    <help>Account2.Website</help>
     <label>Account2 Website</label>
   </fields>
   <fields>
     <name>Account2_Zip_Postal_Code__c</name>
-    <help>Account2.BillingPostalCode</help>
     <label>Account2 Zip/Postal Code</label>
   </fields>
   <fields>
@@ -128,12 +112,10 @@
   </fields>
   <fields>
     <name>Contact1_Alternate_Email__c</name>
-    <help>Contact1.npe01__AlternateEmail__c</help>
     <label>Contact1 Alternate Email</label>
   </fields>
   <fields>
     <name>Contact1_Birthdate__c</name>
-    <help>Contact1.Birthdate</help>
     <label>Contact1 Birthdate</label>
   </fields>
   <fields>
@@ -148,37 +130,30 @@
   </fields>
   <fields>
     <name>Contact1_Firstname__c</name>
-    <help>Contact1.Firstname</help>
     <label>Contact1 First Name</label>
   </fields>
   <fields>
     <name>Contact1_Home_Phone__c</name>
-    <help>Contact1.HomePhone</help>
     <label>Contact1 Home Phone</label>
   </fields>
   <fields>
     <name>Contact1_Lastname__c</name>
-    <help>Contact1.Lastname</help>
     <label>Contact1 Last Name</label>
   </fields>
   <fields>
     <name>Contact1_Mobile_Phone__c</name>
-    <help>Contact1.MobilePhone</help>
     <label>Contact1 Mobile Phone</label>
   </fields>
   <fields>
     <name>Contact1_Other_Phone__c</name>
-    <help>Contact1.OtherPhone</help>
     <label>Contact1 Other Phone</label>
   </fields>
   <fields>
     <name>Contact1_Personal_Email__c</name>
-    <help>Contact1.npe01__HomeEmail__c</help>
     <label>Contact1 Personal Email</label>
   </fields>
   <fields>
     <name>Contact1_Preferred_Email__c</name>
-    <help>Contact1.npe01__Preferred_Email__c</help>
     <label>Contact1 Preferred Email</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -195,7 +170,6 @@
   </fields>
   <fields>
     <name>Contact1_Preferred_Phone__c</name>
-    <help>Contact1.npe01__PreferredPhone__c</help>
     <label>Contact1 Preferred Phone</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -216,22 +190,18 @@
   </fields>
   <fields>
     <name>Contact1_Salutation__c</name>
-    <help>Contact1.Salutation</help>
     <label>Contact1 Salutation</label>
   </fields>
   <fields>
     <name>Contact1_Title__c</name>
-    <help>Contact1.Title</help>
     <label>Contact1 Title</label>
   </fields>
   <fields>
     <name>Contact1_Work_Email__c</name>
-    <help>Contact1.npe01__WorkEmail__c</help>
     <label>Contact1 Work Email</label>
   </fields>
   <fields>
     <name>Contact1_Work_Phone__c</name>
-    <help>Contact1.npe01__WorkPhone__c</help>
     <label>Contact1 Work Phone</label>
   </fields>
   <fields>
@@ -245,47 +215,38 @@
   </fields>
   <fields>
     <name>Contact2_Alternate_Email__c</name>
-    <help>Contact2.npe01__AlternateEmail__c</help>
     <label>Contact2 Alternate Email</label>
   </fields>
   <fields>
     <name>Contact2_Birthdate__c</name>
-    <help>Contact2.Birthdate</help>
     <label>Contact2 Birthdate</label>
   </fields>
   <fields>
     <name>Contact2_Firstname__c</name>
-    <help>Contact2.Firstname</help>
     <label>Contact2 First Name</label>
   </fields>
   <fields>
     <name>Contact2_Home_Phone__c</name>
-    <help>Contact2.HomePhone</help>
     <label>Contact2 Home Phone</label>
   </fields>
   <fields>
     <name>Contact2_Lastname__c</name>
-    <help>Contact2.Lastname</help>
     <label>Contact2 Last Name</label>
   </fields>
   <fields>
     <name>Contact2_Mobile_Phone__c</name>
-    <help>Contact2.MobilePhone</help>
     <label>Contact2 Mobile Phone</label>
   </fields>
   <fields>
     <name>Contact2_Other_Phone__c</name>
-    <help>Contact2.OtherPhone</help>
     <label>Contact2 Other Phone</label>
   </fields>
   <fields>
     <name>Contact2_Personal_Email__c</name>
-    <help>Contact2.npe01__HomeEmail__c</help>
     <label>Contact2 Personal Email</label>
   </fields>
   <fields>
     <name>Contact2_Preferred_Email__c</name>
-    <help>Contact2.npe01__Preferred_Email__c</help>
     <label>Contact2 Preferred Email</label>
     <picklistValues>
       <masterLabel>Personal</masterLabel>
@@ -302,7 +263,6 @@
   </fields>
   <fields>
     <name>Contact2_Preferred_Phone__c</name>
-    <help>Contact2.npe01__PreferredPhone__c</help>
     <label>Contact2 Preferred Phone</label>
     <picklistValues>
       <masterLabel>Home</masterLabel>
@@ -323,22 +283,18 @@
   </fields>
   <fields>
     <name>Contact2_Salutation__c</name>
-    <help>Contact2.Salutation</help>
     <label>Contact2 Salutation</label>
   </fields>
   <fields>
     <name>Contact2_Title__c</name>
-    <help>Contact2.Title</help>
     <label>Contact2 Title</label>
   </fields>
   <fields>
     <name>Contact2_Work_Email__c</name>
-    <help>Contact2.npe01__WorkEmail__c</help>
     <label>Contact2 Work Email</label>
   </fields>
   <fields>
     <name>Contact2_Work_Phone__c</name>
-    <help>Contact2.npe01__WorkPhone__c</help>
     <label>Contact2 Work Phone</label>
   </fields>
   <fields>
@@ -347,7 +303,6 @@
   </fields>
   <fields>
     <name>DonationCampaignImported__c</name>
-    <help>Opportunity.CampaignId</help>
     <relationshipLabel>NPSP Data Imports</relationshipLabel>
     <label>Donation Campaign Source</label>
   </fields>
@@ -362,7 +317,6 @@
   </fields>
   <fields>
     <name>Donation_Amount__c</name>
-    <help>Opportunity.Amount</help>
     <label>Donation Amount</label>
   </fields>
   <fields>
@@ -371,12 +325,10 @@
   </fields>
   <fields>
     <name>Donation_Date__c</name>
-    <help>Opportunity.CloseDate</help>
     <label>Donation Date</label>
   </fields>
   <fields>
     <name>Donation_Description__c</name>
-    <help>Opportunity.Description</help>
     <label>Donation Description</label>
   </fields>
   <fields>
@@ -399,27 +351,22 @@
   </fields>
   <fields>
     <name>Donation_Member_Level__c</name>
-    <help>Opportunity.npe01__Member_Level__c</help>
     <label>Donation Member Level</label>
   </fields>
   <fields>
     <name>Donation_Membership_End_Date__c</name>
-    <help>Opportunity.npe01__Membership_End_Date__c</help>
     <label>Donation Membership End Date</label>
   </fields>
   <fields>
     <name>Donation_Membership_Origin__c</name>
-    <help>Opportunity.npe01__Membership_Origin__c</help>
     <label>Donation Membership Origin</label>
   </fields>
   <fields>
     <name>Donation_Membership_Start_Date__c</name>
-    <help>Opportunity.npe01__Membership_Start_Date__c</help>
     <label>Donation Membership Start Date</label>
   </fields>
   <fields>
     <name>Donation_Name__c</name>
-    <help>Opportunity.Name</help>
     <label>Donation Name</label>
   </fields>
   <fields>
@@ -429,17 +376,14 @@
   </fields>
   <fields>
     <name>Donation_Record_Type_Name__c</name>
-    <help>Opportunity.RecordTypeId</help>
     <label>Donation Record Type Name</label>
   </fields>
   <fields>
     <name>Donation_Stage__c</name>
-    <help>Opportunity.StageName</help>
     <label>Donation Stage</label>
   </fields>
   <fields>
     <name>Donation_Type__c</name>
-    <help>Opportunity.Type</help>
     <label>Donation Type</label>
   </fields>
   <fields>
@@ -454,7 +398,7 @@
   </fields>
   <fields>
     <name>GAU_Allocation_1_Amount__c</name>
-    <help>The monetary amount attributed to the Opportunity's first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
+    <help>The monetary amount attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
     <label>GAU Allocation 1: Amount</label>
   </fields>
   <fields>
@@ -476,12 +420,12 @@
   </fields>
   <fields>
     <name>GAU_Allocation_1_Percent__c</name>
-    <help>The percent attributed to the Opportunity's first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
+    <help>The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
     <label>GAU Allocation 1: Percent</label>
   </fields>
   <fields>
     <name>GAU_Allocation_2_Amount__c</name>
-    <help>The monetary amount attributed to the Opportunity's second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
+    <help>The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
     <label>GAU Allocation 2: Amount</label>
   </fields>
   <fields>
@@ -503,7 +447,7 @@
   </fields>
   <fields>
     <name>GAU_Allocation_2_Percent__c</name>
-    <help>The percent attributed to the Opportunity's second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
+    <help>The percent attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</help>
     <label>GAU Allocation 2: Percent</label>
   </fields>
   <fields>
@@ -517,27 +461,22 @@
   </fields>
   <fields>
     <name>Home_City__c</name>
-    <help>Address.npsp__MailingCity__c</help>
     <label>Home City</label>
   </fields>
   <fields>
     <name>Home_Country__c</name>
-    <help>Address.npsp__MailingCountry__c</help>
     <label>Home Country</label>
   </fields>
   <fields>
     <name>Home_State_Province__c</name>
-    <help>Address.npsp__MailingState__c</help>
     <label>Home State/Province</label>
   </fields>
   <fields>
     <name>Home_Street__c</name>
-    <help>Address.npsp__MailingStreet__c</help>
     <label>Home Street</label>
   </fields>
   <fields>
     <name>Home_Zip_Postal_Code__c</name>
-    <help>Address.npsp__MailingPostalCode__c</help>
     <label>Home Zip/Postal Code</label>
   </fields>
   <fields>
@@ -547,7 +486,6 @@
   </fields>
   <fields>
     <name>Household_Phone__c</name>
-    <help>Household.Phone</help>
     <label>Household Phone</label>
   </fields>
   <fields>
@@ -573,7 +511,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_1_Role__c</name>
-    <help>The role that the Opportunity Contact Role should be created with.  For example enter 'Soft Credit' to create a soft credit opportunity contact role.</help>
+    <help>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</help>
     <label>Opportunity Contact Role 1: Role</label>
   </fields>
   <fields>
@@ -588,7 +526,7 @@
   </fields>
   <fields>
     <name>Opportunity_Contact_Role_2_Role__c</name>
-    <help>The role that the Opportunity Contact Role should be created with.  For example enter 'Soft Credit' to create a soft credit opportunity contact role.</help>
+    <help>The role that the Opportunity Contact Role should be created with.  For example enter &apos;Soft Credit&apos; to create a soft credit opportunity contact role.</help>
     <label>Opportunity Contact Role 2: Role</label>
   </fields>
   <fields>
@@ -647,7 +585,6 @@
   </fields>
   <fields>
     <name>Payment_Check_Reference_Number__c</name>
-    <help>Payment.npe01__Check_Reference_Number__c</help>
     <label>Payment Check/Reference Number</label>
   </fields>
   <fields>
@@ -697,7 +634,6 @@
   </fields>
   <fields>
     <name>Payment_Method__c</name>
-    <help>Payment.npe01__Payment_Method__c</help>
     <label>Payment Method</label>
   </fields>
   <fields>
@@ -766,7 +702,7 @@
   </fields>
   <fields>
     <name>Recurring_Donation_Day_of_Month__c</name>
-    <help>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don't have that many days.</help>
+    <help>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days.</help>
     <label>Recurring Donation Day of Month</label>
   </fields>
   <fields>
@@ -786,12 +722,12 @@
   </fields>
   <fields>
     <name>Recurring_Donation_Installment_Frequency__c</name>
-    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
+    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
     <label>Recurring Donation Installment Frequency</label>
   </fields>
   <fields>
     <name>Recurring_Donation_Installment_Period__c</name>
-    <help>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
+    <help>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
     <label>Recurring Donation Installment Period</label>
   </fields>
   <fields>

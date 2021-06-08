@@ -8,7 +8,7 @@
   </fields>
   <fields>
     <name>CustomizableRollups_UseSkewMode__c</name>
-    <help>When checked, Customisable Rollups will always use 'Skew Mode' to rollup Hard Credit and Soft Credits for this record.</help>
+    <help>When checked, Customisable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record.</help>
     <label>Customisable Rollups: Force Skew Mode</label>
   </fields>
   <fields>
@@ -51,7 +51,7 @@
   </fields>
   <fields>
     <name>Matching_Gift_Administrator_Name__c</name>
-    <help>The name of the company's Matching Gift administrator.</help>
+    <help>The name of the company&apos;s Matching Gift administrator.</help>
     <label>Matching Gift Administrator Name</label>
   </fields>
   <fields>
@@ -71,7 +71,7 @@
   </fields>
   <fields>
     <name>Matching_Gift_Comments__c</name>
-    <help>Additional notes about the company's Matching Gift program.</help>
+    <help>Additional notes about the company&apos;s Matching Gift program.</help>
     <label>Matching Gift Comments</label>
   </fields>
   <fields>
@@ -81,7 +81,7 @@
   </fields>
   <fields>
     <name>Matching_Gift_Email__c</name>
-    <help>Email of the company's Matching Gift administrator.</help>
+    <help>Email of the company&apos;s Matching Gift administrator.</help>
     <label>Matching Gift Email</label>
   </fields>
   <fields>
@@ -96,7 +96,7 @@
   </fields>
   <fields>
     <name>Matching_Gift_Phone__c</name>
-    <help>The phone number of the company's Matching Gift administrator.</help>
+    <help>The phone number of the company&apos;s Matching Gift administrator.</help>
     <label>Matching Gift Phone</label>
   </fields>
   <fields>
