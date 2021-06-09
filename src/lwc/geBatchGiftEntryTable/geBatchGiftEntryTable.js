@@ -539,7 +539,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     getColumn(element, fieldMapping) {
-        const isReferenceField = element.dataType === REFERENCE && !this.isDonationRecordType();
+        const isReferenceField = element.dataType === REFERENCE && !this.isDonationRecordType(fieldMapping);
         const columnFieldName =
             fieldMapping.Source_Field_API_Name.toLowerCase().endsWith('id')
                 ? fieldMapping.Source_Field_API_Name.slice(0, -2)
