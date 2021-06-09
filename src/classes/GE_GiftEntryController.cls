@@ -1026,6 +1026,77 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
+    * @description queries the DataImport__c records associated with the given batchId
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param offset: next offset to query
+    * @return list of custom DataImportRow objects for use in the lightning:datatable
+    */
+    @AuraEnabled
+    public static List<DataImportRow> getDataImportRows(Id batchId, Integer offset){
+
+        try {
+            List<DataImportRow> rows = new List<DataImportRow>();
+            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
+            for (DataImport__c dataImportRecord : dataImports) {
+                rows.add(new DataImportRow(dataImportRecord));
+            }
+
+            return rows;
+        }
+        catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description the number of additional data import records to load on each infinite scroll query
+    */
+    private static integer loadsize = 100;
+
+    /*******************************************************************************************************
+    * @description returns an offset list of DataImport__c records from a batch Id
+    * @param batchId a Data Import Batch Id
+    * @param offset Offset on the query
+    * @return List<DataImport__c>
+    */
+    private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
+        String query = getDataImportQuery(batchId, null, loadSize, offset);
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description Builds DataImport__c query based on provided parameters
+    * @param batchId a Data Import Batch Id
+    * @param dataImportIds List of Data Import Ids
+    * @param numRows Limit on the query
+    * @param offset Offset on the query
+    * @return Query string
+    */
+    public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
+        List<String> dataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+        String query =  'SELECT ' + String.join(dataImportFields,', ') +
+                ' FROM DataImport__c' +
+                ' WHERE NPSP_Data_Import_Batch__c = :batchId';
+
+        if (dataImportIds != null && dataImportIds.size() > 0) {
+            query += ' AND Id IN :dataImportIds';
+        }
+
+        query += ' ORDER BY CreatedDate DESC';
+
+        if (numRows != null) {
+            query += ' LIMIT ' + numRows;
+        }
+
+        if (offset != null) {
+            query += ' OFFSET ' + offset;
+        }
+
+        return query;
+    }
+
+    /*******************************************************************************************************
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
     */
