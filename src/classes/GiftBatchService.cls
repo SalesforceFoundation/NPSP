@@ -132,7 +132,8 @@ public with sharing class GiftBatchService {
         }
 
         //todo: need to eliminate this dependency on BGE_BatchGiftEntry_UTIL
-        List<String> fields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+        GiftBatch giftBatch = new GiftBatch(batchId);
+        List<String> fields = giftBatch.getDataImportFields(true);
 
         if (isQueryException || batchGiftEntryVersion < 2) {
             BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
@@ -703,4 +704,25 @@ public with sharing class GiftBatchService {
                     });
         }
     }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
+    * @return List<String> list of DataImport__c field api names
+    */
+    public List<String> getDataImportFields(Id batchId) {
+        return getDataImportFields(batchId, true);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the Batch Gift Entry UI needs in SOQL
+    * @param batchId the batch for which to get all fields for soql
+    * @param includeRelationshipFields whether to include relationship fields in the returned list
+    * @return List<String> list of DataImport__c field api names
+    */
+    public List<String> getDataImportFields(Id batchId, Boolean includeRelationshipFields) {
+        GiftBatch giftBatch = new GiftBatch(batchId);
+        return giftBatch.getDataImportFields(includeRelationshipFields);
+    }
+
 }
