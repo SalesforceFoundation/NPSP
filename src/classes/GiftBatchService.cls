@@ -99,6 +99,150 @@ public with sharing class GiftBatchService {
     }
 
     /*******************************************************************************************************
+    * @description initializes the data model for the BGE_DataImportBatchEntry component
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return serialized string of dataImportModel
+    */
+    public String getDataImportModel(Id batchId) {
+        if (batchId == null) {
+            throw new AuraHandledException('Data Import Model must receive a Batch ID.');
+        }
+        DataImportModel dataImportModel = new DataImportModel();
+        dataImportModel.id = batchId;
+        dataImportModel.dataImportRows = getDataImportRows(batchId, 0);
+        dataImportModel.setColumns();
+        dataImportModel.labels = getBatchDataImportLabels();
+        dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
+        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(dataImportModel.dataImportRows);
+        checkBatchGiftEntryFieldPermissions (batchId);
+        return JSON.serialize(dataImportModel);
+    }
+
+    private void checkBatchGiftEntryFieldPermissions(Id batchId) {
+        Decimal batchGiftEntryVersion;
+        Boolean isQueryException = false;
+        try {
+            batchGiftEntryVersion = getBatchGiftEntryVersion(batchId);
+        } catch (QueryException qe) {
+            // If User doesn't have access to Version field, treat as 1.0.
+            isQueryException = true;
+        }
+
+        //todo: need to eliminate this dependency on BGE_BatchGiftEntry_UTIL
+        List<String> fields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+
+        if (isQueryException || batchGiftEntryVersion < 2) {
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    fields
+            );
+        } else {
+            List<String> nonNameFields = getNonNameFields(fields);
+            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+                    String.valueOf(DataImport__c.SObjectType),
+                    nonNameFields
+            );
+        }
+    }
+
+    private Decimal getBatchGiftEntryVersion(Id batchId) {
+        return [
+                SELECT Batch_Gift_Entry_Version__c
+                FROM DataImportBatch__c
+                WHERE Id = :batchId
+                WITH SECURITY_ENFORCED
+        ][0].Batch_Gift_Entry_Version__c;
+    }
+
+    private static List<String> getNonNameFields(List<String> fields) {
+        List<String> nonNameFields = new List<String>();
+        for (String str : fields) {
+            Boolean isNameField = str.contains('.');
+            if (isNameField) {
+                continue;
+            } else if (!nonNameFields.contains(str)) {
+                nonNameFields.add(str);
+            }
+        }
+        return nonNameFields;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves required schema information for the component.
+    * @return Map of DataImport__c object and field name keys to their labels.
+    */
+    private static Map<String, String> getBatchDataImportLabels() {
+
+        Map<String, String> labels = new Map<String, String> {
+                'accountObject' => Schema.SObjectType.Account.getLabel(),
+                'accountLookup' => Schema.SObjectType.DataImport__c.fields.Account1Imported__c.getName(),
+                'batchIdField' => Schema.SObjectType.DataImport__c.fields.NPSP_Data_Import_Batch__c.getName(),
+                'bdiBatchClass' => UTIL_Namespace.StrTokenNSPrefix('BDI_DataImport'),
+                'contactLookup' => Schema.SObjectType.DataImport__c.fields.Contact1Imported__c.getName(),
+                'contactObject' => Schema.SObjectType.Contact.getLabel(),
+                'dataImportObject' => Schema.SObjectType.DataImport__c.getName(),
+                'donationDonor' => Schema.SObjectType.DataImport__c.fields.Donation_Donor__c.getName(),
+                'donationAmountField' => Schema.SObjectType.DataImport__c.fields.Donation_Amount__c.getName(),
+                'expectedCountField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Count_of_Gifts__c.getName(),
+                'expectedTotalField' => Schema.SObjectType.DataImportBatch__c.fields.Expected_Total_Batch_Amount__c.getName(),
+                'noDataImportsFound' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.DataImport__c.getName()}),
+                'opportunityImportedLookupField' => Schema.SObjectType.DataImport__c.fields.DonationImported__c.getName(),
+                'opportunityImportedStatusField' => Schema.SObjectType.DataImport__c.fields.DonationImportStatus__c.getName(),
+                'opportunityAmount' => Schema.SObjectType.Opportunity.fields.Amount.getLabel(),
+                'opportunityObject' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityName' => Schema.SObjectType.Opportunity.getLabel(),
+                'opportunityStage' => Schema.SObjectType.Opportunity.fields.StageName.getLabel(),
+                'paymentAmount' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Payment_Amount__c.getLabel(),
+                'paymentObject' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'paymentScheduledDate' => Schema.SObjectType.npe01__OppPayment__c.fields.npe01__Scheduled_Date__c.getLabel(),
+                'paymentImportedLookupField' => Schema.SObjectType.DataImport__c.fields.PaymentImported__c.getName(),
+                'paymentImportedStatusField' => Schema.SObjectType.DataImport__c.fields.PaymentImportStatus__c.getName(),
+                'requireTotalMatch' => Schema.SObjectType.DataImportBatch__c.fields.RequireTotalMatch__c.getName()
+        };
+
+        return labels;
+    }
+
+    /*******************************************************************************************************
+    * @description queries the DataImport__c records associated with the given batchId
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @param offset: next offset to query
+    * @return list of custom DataImportRow objects for use in the lightning:datatable
+    */
+    private List<DataImportRow> getDataImportRows(Id batchId, Integer offset){
+        try {
+            List<DataImportRow> rows = new List<DataImportRow>();
+            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
+            for (DataImport__c dataImportRecord : dataImports) {
+                rows.add(new DataImportRow(dataImportRecord));
+            }
+            return rows;
+        }
+        catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description the number of additional data import records to load on each infinite scroll query
+    */
+    private static integer loadsize = 100;
+
+    /*******************************************************************************************************
+    * @description returns an offset list of DataImport__c records from a batch Id
+    * @param batchId a Data Import Batch Id
+    * @param offset Offset on the query
+    * @return List<DataImport__c>
+    */
+    private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
+        String query = getDataImportQuery(batchId, null, loadSize, offset);
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
     * @description returns a list of all DataImport__c records from a batch Id
     * @param batchId a Data Import Batch Id
     @ param numberOfRowsToReturn Limit on the query
@@ -156,6 +300,17 @@ public with sharing class GiftBatchService {
         dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(batchId);
 
         return dataImportModel;
+    }
+
+    private static Decimal getBatchTotalRowAmount(List<DataImportRow> dataImportRows) {
+        Decimal totalAmount = 0;
+
+        for (DataImportRow dataImportRow: dataImportRows) {
+            totalAmount+= dataImportRow.record.Donation_Amount__c == null
+                    ? 0
+                    : dataImportRow.record.Donation_Amount__c;
+        }
+        return totalAmount;
     }
 
     private static Decimal getBatchTotalRowAmount(Id batchId) {
