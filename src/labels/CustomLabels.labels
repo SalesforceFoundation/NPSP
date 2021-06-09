@@ -2406,7 +2406,7 @@
     </labels>
     <labels>
         <fullName>RD2_InvalidRecurringDonationId</fullName>
-        <categories>Data Import</categories>
+        <categories>Recurring-Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error when the Recurring Donation Id provided is invalid.</shortDescription>
