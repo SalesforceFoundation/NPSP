@@ -550,7 +550,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             fieldName: isReferenceField ?
                 `${columnFieldName}${URL_SUFFIX}` :
                 fieldMapping.Source_Field_API_Name,
-            type: this.isDonationRecordType()
+            type: this.isDonationRecordType(fieldMapping)
                 ? columnTypeByDescribeType.STRING
                 : this.getColumnTypeFromFieldType(element.dataType)
         };
