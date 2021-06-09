@@ -134,8 +134,14 @@
 
                                 </lightning-layout>
 
-                                <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"
-                                    onerrorevent={handleChildComponentError} ontypechange={handleRecurringTypeChange} if:true={isSettingReady}>
+                                <c-rd2-entry-form-schedule-section
+                                        record-id={recordId}
+                                        data-id="scheduleComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        ontypechange={handleRecurringTypeChange}
+                                        onperiodchange={handleRecurringPeriodChange}
+                                        onperiodtypechange={handleRecurringPeriodTypeChange}
+                                        if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">

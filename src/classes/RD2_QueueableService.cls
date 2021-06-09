@@ -35,7 +35,12 @@
 *
 */
 public class RD2_QueueableService {
-
+    /**
+    * @desciprtion A set of Recurring Donation Id to keep track of which RD has been queue up to process in a single transaction
+    * to prevent race condition.
+    */
+    @TestVisible
+    private static Set<Id> alreadyEnqueuedIds;
     /**
      * @description Queues up Opp eval service to recalculate Next Donation Date,
      * Current/Next Year Value and re-evaluate Opportunities on the Recurring Donation.
@@ -68,8 +73,14 @@ public class RD2_QueueableService {
      * @param rdIdsWhereScheduleChanged - Ids of Recurring Donation for which a schedule has been changed
      * @return void
      */
-    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) { 
-        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged);
+    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
+        Set<Id> toProcess = removeAlreadyEnqueuedRecurringDonations(rdIds);
+
+        if (toProcess.size() == 0) {
+            return;
+        }
+
+        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
@@ -77,6 +88,32 @@ public class RD2_QueueableService {
         } else {
             service.executeOppEvaluationService();
         }
+    }
+
+    /**
+    * @description Remove already Recurring Donation Ids that are already queue up to be evaluate to prevent being queue
+    * up the second time. Skip the removal if the process is synchronize since there will not be a potential race condition.
+    * @return Set<Id> Recurring Donation Ids 
+    */
+    private static Set<Id> removeAlreadyEnqueuedRecurringDonations(Set<Id> rdIds) {
+        if (Limits.getQueueableJobs() >= Limits.getLimitQueueableJobs()) {
+            return rdIds;
+        }
+
+        if (alreadyEnqueuedIds == null) {
+            alreadyEnqueuedIds = new Set<Id>();
+        }
+
+        Set<Id> rdIdsToProcess = new Set<Id>();
+
+        for(Id rdId : rdIds) {
+            if(!alreadyEnqueuedIds.contains(rdId)) {
+                rdIdsToProcess.add(rdId);
+                alreadyEnqueuedIds.add(rdId);
+            }
+        }
+
+        return rdIdsToProcess;
     }
 
     /**
