@@ -197,7 +197,7 @@ public with sharing class GiftBatchService {
     * @param missingPermissions list of Strings identifying the fields with missing permissions
     * @return void Throws an exception if user lacks permissions on any field
     */
-    private static void handleMissingPermissions(List<String> missingPermissions) {
+    private void handleMissingPermissions(List<String> missingPermissions) {
 
         if (!missingPermissions.isEmpty()) {
             String errorMsg = Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']';
@@ -205,6 +205,19 @@ public with sharing class GiftBatchService {
             ex.setMessage(errorMsg);
             throw ex;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Handles missing field permissions
+    * @param missingPermissions list of DescribeFieldResult records for which permissions are lacking
+    * @return void Throws an exception if user lacks permissions on any field
+    */
+    public void handleMissingPermissions(List<DescribeFieldResult> missingPermissions) {
+        List<String> fieldNames = new List<String>();
+        for (DescribeFieldResult fieldResult : missingPermissions) {
+            fieldNames.add(fieldResult.getLabel());
+        }
+        handleMissingPermissions(fieldNames);
     }
 
     /*******************************************************************************************************
@@ -316,7 +329,7 @@ public with sharing class GiftBatchService {
     * @param offset Offset on the query
     * @return List<DataImport__c>
     */
-    private static List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
+    private List<DataImport__c> getDataImportRecordsByBatchId(Id batchId, Integer offset) {
         String query = getDataImportQuery(batchId, null, loadSize, offset);
         return Database.query(query);
     }
@@ -327,7 +340,7 @@ public with sharing class GiftBatchService {
     @ param numberOfRowsToReturn Limit on the query
     * @return List<DataImport__c>
     */
-    private static List<DataImport__c> getNumOfDataImportRecordsByBatchId(Id batchId, Integer numberOfRowsToReturn) {
+    private List<DataImport__c> getNumOfDataImportRecordsByBatchId(Id batchId, Integer numberOfRowsToReturn) {
         String query = getDataImportQuery(batchId, null, numberOfRowsToReturn, null);
         return Database.query(query);
     }
@@ -340,8 +353,8 @@ public with sharing class GiftBatchService {
     * @param offset Offset on the query
     * @return Query string
     */
-    public static String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
-        List<String> dataImportFields = BGE_BatchGiftEntry_UTIL.getDataImportFields(batchId);
+    public String getDataImportQuery(Id batchId, List<Id> dataImportIds, Integer numRows, Integer offset) {
+        List<String> dataImportFields = getDataImportFields(batchId);
 
         String query =  'SELECT ' + String.join(dataImportFields,', ') +
                 ' FROM DataImport__c' +
