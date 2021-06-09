@@ -538,6 +538,7 @@ public with sharing class GiftBatchService {
             this.columns = columns;
         }
 
+
         /*******************************************************************************************************
         * @description Retrieves the related list of columns defined by users in the Batch record Active_Fields__c
         * @return list of Columns to use in BGE_DataImportBatchEntry table
@@ -571,7 +572,7 @@ public with sharing class GiftBatchService {
                             String targetObject = '';
                             String targetField = '';
                             BDI_TargetFields targetFields =
-                                    BGE_BatchGiftEntry_UTIL.targetFieldsBySourceField.get(
+                                    targetFieldsBySourceField.get(
                                             dataImportDFR.getSObjectField());
 
                             if (targetFields == null) {
@@ -590,7 +591,7 @@ public with sharing class GiftBatchService {
                             // match
                             for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
                                 String aTargetObjectName = targetSObjType.getDescribe().getName();
-                                if (BGE_BatchGiftEntry_UTIL.objectGroupNameByAllowedObjects.containsKey(
+                                if (objectGroupNameByAllowedObjects.containsKey(
                                         aTargetObjectName)) {
 
                                     targetObject = aTargetObjectName;
@@ -614,7 +615,7 @@ public with sharing class GiftBatchService {
                             // lookups aren't editable in the grid since we don't have lookup support there
                             col.readOnly = col.type == 'reference' ? true : false;
                             col.typeAttributes = '{}';
-                            col.options = BGE_BatchGiftEntry_UTIL.getPicklistOptions(col.fieldName);
+                            col.options = getPicklistOptions(col.fieldName);
 
                             if (dataImportDFR.type == Schema.DisplayType.Reference) {
                                 if (targetDFR.getReferenceTo() == dataImportDFR.getReferenceTo()) {
@@ -646,7 +647,8 @@ public with sharing class GiftBatchService {
                     }
                 }
 
-                BGE_BatchGiftEntry_UTIL.handleMissingPermissions(unpermittedFields);
+                GiftBatchService giftBatchService = new GiftBatchService();
+                giftBatchService.handleMissingPermissions(unpermittedFields);
 
                 if (!unmappedFields.isEmpty()) {
                     notices.add(new UnmappedFieldsNotice(unmappedFields));
@@ -655,6 +657,79 @@ public with sharing class GiftBatchService {
 
             return columns;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Provides field mapping configuration used by BGE
+    */
+    public static Map<SObjectField, BDI_TargetFields> targetFieldsBySourceField =
+            BDI_DataImportService.getDefaultMappingService().getTargetFieldsBySourceField();
+
+    /*******************************************************************************************************
+    * @description Currently limit the set of allowed objects, and point to their BDI-defined
+    *  Object group name
+    */
+    public static Map<String, String> objectGroupNameByAllowedObjects = new Map<String,
+            String> {
+            'Opportunity' => 'Opportunity',
+            'npe01__OppPayment__c' => 'Payment'
+    };
+
+    /*******************************************************************************************************
+    * @description Returns the source field's options formatted for lightning:select if the source field is a picklist
+    * or the target field's options if the source field is a string and the target field is a picklist.
+    * Returns an empty map if neither case applies.
+    */
+
+    public static List<Map<String, String>> getPicklistOptions(String dataImportField){
+        List<Map<String, String>> options = new List<Map<String, String>>();
+
+        String dataImportObject = UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
+
+        Schema.DisplayType rawSourceFieldType = UTIL_Describe.getFieldDisplaytype(
+                dataImportObject, dataImportField.toLowerCase());
+
+        Schema.DescribeFieldResult sourceFieldDFR = UTIL_Describe.getFieldDescribe(
+                dataImportObject, dataImportField.toLowerCase());
+
+        if (rawSourceFieldType == Schema.DisplayType.Picklist) {
+            options = UTIL_Describe.getLightningSelectOptions(dataImportObject, dataImportField);
+
+        } else if (rawSourceFieldType == Schema.DisplayType.String) {
+
+            if (targetFieldsBySourceField.containsKey(sourceFieldDFR.getSObjectField())) {
+                BDI_TargetFields targetFields = targetFieldsBySourceField.get(sourceFieldDFR.getSObjectField());
+                Map<SObjectType, Set<SObjectField>> targetFieldsByTargetObject =
+                        targetFields.getTargetFieldsByTargetObject();
+
+                String targetObject = '';
+                String targetField = '';
+
+                // One DI field can be mapped to multiple target fields although it will be rare and presents some
+                // issues with picklists; here we will return info for the first match
+                for (Schema.SObjectType targetSObjType: targetFieldsByTargetObject.keySet()) {
+                    String aTargetObjectName = targetSObjType.getDescribe().getName();
+                    if (objectGroupNameByAllowedObjects.containsKey(aTargetObjectName)) {
+                        targetObject = aTargetObjectName;
+                        List<SObjectField> mappedTargetFields =
+                                new List<SObjectField> (targetFieldsByTargetObject.get(targetSObjType));
+                        if(mappedTargetFields.size() > 0) {
+                            targetField = mappedTargetFields[0].getDescribe().getName();
+                        }
+                    }
+                }
+
+                Schema.DisplayType targetFieldType = UTIL_Describe.getFieldDisplaytype(targetObject, targetField);
+
+                if (targetFieldType == Schema.DisplayType.PICKLIST) {
+                    options = UTIL_Describe.getLightningSelectOptions(targetObject, targetField);
+                } else if (targetField == 'RecordTypeId') {
+                    options = UTIL_RecordTypes.getStringRecordTypesForLightningSelect(
+                            UTIL_Describe.getSObjectType(targetObject));
+                }
+            }
+        }
+        return options;
     }
 
     /*******************************************************************************************************
