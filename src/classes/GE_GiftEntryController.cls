@@ -39,7 +39,17 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
-    private static GiftBatchService giftBatchService = new GiftBatchService();
+
+    @TestVisible
+    private static GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -978,6 +988,24 @@ public with sharing class GE_GiftEntryController {
         }
 
         return isNameValid;
+    }
+
+    /*******************************************************************************************************
+      * @description Runs BDI Dry Run for all Gifts in a Batch.
+      * @param batchId: ID of the NPSP_Data_Import_Batch__c
+      * @param numberOfRowsToReturn: The desired number of Gifts to return in
+      * the GiftBatchUIModel.
+      * @return DataImportModel with updated data import record row and updated totals for the batch
+      */
+    @AuraEnabled
+    public static String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
+        try {
+            String giftBatchUIModel =
+                    giftBatchService.runBatchDryRun(batchId, numberOfRowsToReturn);
+            return giftBatchUIModel;
+        } catch (Exception ex){
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
     }
 
     /*******************************************************************************************************

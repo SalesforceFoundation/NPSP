@@ -67,40 +67,35 @@ public with sharing class GiftBatchService {
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel with updated data import record row and updated totals for the batch
     */
-    @AuraEnabled
-    public static String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
-        try {
-            Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
+    public String runBatchDryRun(Id batchId, Integer numberOfRowsToReturn) {
+        Data_Import_Settings__c dataImportSettings = BDI_DataImportService.loadSettings(batchId);
 
-            List<DataImport__c> allRawDataImports = getAllDataImportRecordsForDryRunByBatchId(batchId);
-            List<DataImport__c> rawDataImportsToPrepareForDryRun = new List<DataImport__c>();
-            for (DataImport__c di : allRawDataImports) {
-                if (di.Status__c != BDI_DataImport_API.bdiImported) {
-                    rawDataImportsToPrepareForDryRun.add(di);
-                }
+        List<DataImport__c> allRawDataImports = getAllDataImportRecordsForDryRunByBatchId(batchId);
+        List<DataImport__c> rawDataImportsToPrepareForDryRun = new List<DataImport__c>();
+        for (DataImport__c di : allRawDataImports) {
+            if (di.Status__c != BDI_DataImport_API.bdiImported) {
+                rawDataImportsToPrepareForDryRun.add(di);
             }
-
-            if (rawDataImportsToPrepareForDryRun.size() > 0) {
-                List<DataImport__c> dataImportListToRun =
-                    prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
-                BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
-            }
-
-            DataImportModel dataImportModel = getUpdatedTotals(batchId);
-
-            List<DataImportRow> rows = new List<DataImportRow>();
-            List<DataImport__c> dataImportsToReturn =
-                getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
-            for (DataImport__c di : dataImportsToReturn) {
-                DataImportRow processedDataImportRow = new DataImportRow(di);
-                rows.add(processedDataImportRow);
-            }
-            dataImportModel.dataImportRows = rows;
-
-            return JSON.serialize(dataImportModel);
-        } catch (Exception ex){
-            throw new AuraHandledException('ERROR: ' + ex.getMessage());
         }
+
+        if (rawDataImportsToPrepareForDryRun.size() > 0) {
+            List<DataImport__c> dataImportListToRun =
+                    prepareDataImportsForDryRun(rawDataImportsToPrepareForDryRun);
+            BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
+        }
+
+        DataImportModel dataImportModel = getUpdatedTotals(batchId);
+
+        List<DataImportRow> rows = new List<DataImportRow>();
+        List<DataImport__c> dataImportsToReturn =
+                getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
+        for (DataImport__c di : dataImportsToReturn) {
+            DataImportRow processedDataImportRow = new DataImportRow(di);
+            rows.add(processedDataImportRow);
+        }
+        dataImportModel.dataImportRows = rows;
+
+        return JSON.serialize(dataImportModel);
     }
 
     /*******************************************************************************************************
