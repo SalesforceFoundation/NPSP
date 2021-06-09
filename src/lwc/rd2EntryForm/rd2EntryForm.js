@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { Rd2Service } from 'c/rd2Service';
+import { Rd2Service, PERIOD } from 'c/rd2Service';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
 import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
@@ -138,6 +138,8 @@ export default class rd2EntryForm extends LightningElement {
     organizationAccountId;
     organizationAccountName;
     accountHolderType;
+    recurringPeriod;
+    periodType;
 
     contact = {
         MailingCountry: null
@@ -303,6 +305,7 @@ export default class rd2EntryForm extends LightningElement {
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
+            this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
@@ -389,6 +392,17 @@ export default class rd2EntryForm extends LightningElement {
         this.handleElevateWidgetDisplay();
     }
 
+    handleRecurringPeriodChange(event) {
+        this.recurringPeriod = event.detail.period;
+        this.handleElevateWidgetDisplay();
+    }
+
+    handleRecurringPeriodTypeChange(event) {
+        this.periodType = event.detail.periodType;
+        this.handleElevateWidgetDisplay();
+    }
+
+
     /***
      * @description Currency change might hide or display the credit card widget
      * @param event
@@ -413,17 +427,14 @@ export default class rd2EntryForm extends LightningElement {
         const statusField = getFieldValue(this.record, FIELD_STATUS);
 
         if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
-            // On load, we can't rely on the schedule component, but we should when detecting changes
-            let recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-            if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
-                recurringType = this.scheduleComponent.getRecurringType();
-            }
+            const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
             this.hasUserDisabledElevateWidget = this.isCommitmentEdit;
 
             this.isElevateEditWidgetEnabled = this.isElevatePaymentMethod()
                 && recurringType === RECURRING_TYPE_OPEN
+                && this.isScheduleSupported()
                 && this.isCurrencySupported()
                 && this.isCountrySupported();
 
@@ -437,18 +448,31 @@ export default class rd2EntryForm extends LightningElement {
     * @param paymentMethod Payment method
     */
     evaluateElevateWidget() {
-        const isOpenSchedule = (this.scheduleComponent && this.scheduleComponent.getRecurringType() === RECURRING_TYPE_OPEN);
+        const isScheduleSupported = this.isScheduleSupported();
         const isValidPaymentMethod = this.isElevatePaymentMethod();
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && isValidPaymentMethod
-            && isOpenSchedule
+            && isScheduleSupported
             && currencySupported
             && countrySupported);
 
         this.populateCardHolderName();
+    }
+
+    isScheduleSupported() {
+        if(this.scheduleComponent) {
+            const recurringType = this.getRecurringType();
+            const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
+            const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
+                || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
+
+            return isValidRecurringType && isValidInstallmentPeriod;
+        }
+
+        return false;
     }
 
     isElevatePaymentMethod() {
@@ -638,6 +662,18 @@ export default class rd2EntryForm extends LightningElement {
         return !isEmpty(this.commitmentId)
             ? this.commitmentId
             : null;
+    }
+
+    getRecurringType() {
+        let recurringType;
+        // Use value from record until schedule component is present
+        if(this.record) {
+            recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
+        }
+        if(this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
+            recurringType = this.scheduleComponent.getRecurringType();
+        }
+        return recurringType;
     }
 
     /***

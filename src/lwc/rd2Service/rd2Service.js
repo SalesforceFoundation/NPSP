@@ -19,6 +19,15 @@ const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD]
 const DONOR_TYPE_ACCOUNT = 'Account';
 const DONOR_TYPE_CONTACT = 'Contact';
 
+const RECURRING_PERIOD_ADVANCED = 'Advanced';
+const PERIOD = {
+    MONTHLY: 'Monthly',
+    YEARLY: 'Yearly',
+    WEEKLY: 'Weekly',
+    DAILY: 'Daily',
+    FIRST_AND_FIFTEENTH: '1st and 15th'
+};
+
 class Rd2Service {
 
     /***
@@ -188,4 +197,4 @@ class RecurringDonation {
     }
 }
 
-export { Rd2Service, ELEVATE_PAYMENT_METHODS }
+export { Rd2Service, ELEVATE_PAYMENT_METHODS, PERIOD, RECURRING_PERIOD_ADVANCED }

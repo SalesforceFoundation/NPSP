@@ -2372,7 +2372,15 @@
         <shortDescription>Displayed when Installment Frequency on a Recurring Donation is not valid</shortDescription>
         <value>Installment Frequency is required. Enter a value between 1 and 20.</value>
     </labels>
-     <labels>
+    <labels>
+        <categories>Recurring-Donations, Error</categories>
+        <fullName>RD2_ElevateInstallmentPeriodMustBeValid</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Validation message for installment period on Elevate Recurring Donations</shortDescription>
+        <value>{0} is not a supported Installment Period for Elevate connected Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_InstallmentPeriodMustBeValid</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2380,7 +2388,7 @@
         <shortDescription>Validate Recurring Donations data if it is valid install period</shortDescription>
         <value>{0} is not a supported value for Installment Period. Select Daily, Weekly, 1st and 15th, Monthly, or Yearly.</value>
     </labels>
-     <labels>
+    <labels>
         <fullName>RD2_InstallmentStatusSkipped</fullName>
         <categories>Recurring-Donations, Info</categories>
         <language>en_US</language>
