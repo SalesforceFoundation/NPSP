@@ -17,7 +17,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
-import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+import runBatchDryRun from '@salesforce/apex/GE_GiftEntryController.runBatchDryRun';
 
 /*******************************************************************************
 * @description Schema imports
