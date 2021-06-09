@@ -331,7 +331,7 @@ public inherited sharing class PS_CommitmentRequest {
 
         List<Schedule> schedules = new List<Schedule>();
         for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
-            schedules.add(new Schedule(rdSchedule, currencyMultiplier));
+            schedules.add(new Schedule(rdSchedule, currencyMultiplier, reqBody.isCommitmentUpdate()));
         }
 
         reqBody.withSchedules(schedules);
@@ -615,6 +615,14 @@ public inherited sharing class PS_CommitmentRequest {
         public Boolean isACH() {
             return this.paymentMethodType == ElevatePaymentMethod.ACH.name();
         }
+
+        /**
+         * @description Returns true if this request has a Commitment Id
+         * @return Boolean
+         */
+        public Boolean isCommitmentUpdate() {
+            return this.id != null;
+        }
     }
 
     /***
@@ -628,11 +636,21 @@ public inherited sharing class PS_CommitmentRequest {
         public String operation;
 
         /**
-         * @description Schedule constructor
+         * @description Default Schedule constructor
          * @param rdSchedule Recurring Donation Schedule
          * @param currencyMultiplier Currency multiplier
          */
-        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
+        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier){
+            this(rdSchedule, currencyMultiplier, false);
+        }
+
+        /**
+         * @description Schedule constructor for Update requests
+         * @param rdSchedule Recurring Donation Schedule
+         * @param currencyMultiplier Currency multiplier
+         * @param isUpdate True if this Request has a Commitment Id
+         */
+        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier, Boolean isUpdate) {
             Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
             this.amount = amount == null ? null : Integer.valueOf(amount);
 
@@ -641,7 +659,7 @@ public inherited sharing class PS_CommitmentRequest {
                 ? null
                 : Integer.valueOf(rdSchedule.InstallmentFrequency__c);
 
-            this.firstOccurrenceOnTimestamp = getNextDonationDate(rdSchedule);
+            this.firstOccurrenceOnTimestamp = getNextDonationDate(rdSchedule, isUpdate);
 
             this.operation = 'CREATE';
         }
@@ -651,9 +669,16 @@ public inherited sharing class PS_CommitmentRequest {
          * @param rdSchedule Recurring Donation Schedule
          * @return String ISO8601 date-time string
          */
-        private String getNextDonationDate(RecurringDonationSchedule__c rdSchedule) {
+        private String getNextDonationDate(RecurringDonationSchedule__c rdSchedule, Boolean isUpdate) {
+
+            Date earliestDonationDate = RD2_ScheduleService.currentDate;
+            // If this is an update, don't use current Date
+            if(isUpdate){
+                earliestDonationDate = earliestDonationDate.addDays(1);
+            }
+
             Date donationDate = new RD2_ScheduleService()
-                .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
+                .getNextDonationDateGreaterThan(rdSchedule, earliestDonationDate);
 
             Datetime donationDatetime = donationDate == Datetime.now().date()
                 ? Datetime.now()
