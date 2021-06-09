@@ -95,6 +95,23 @@ public with sharing class GE_GiftEntryController {
         return response.body;
     }
 
+    /*******************************************************************************************************
+    * @description initializes the data model for the BGE_DataImportBatchEntry component
+    * @param batchId: ID of the NPSP_Data_Import_Batch__c
+    * @return serialized string of dataImportModel
+    */
+    @AuraEnabled
+    public static String getDataImportModel(Id batchId) {
+        if (batchId == null) {
+            throw new AuraHandledException('Data Import Model must receive a Batch ID.');
+        }
+        try {
+            return giftBatchService.getDataImportModel(batchId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     /***
     * @description Sends the purchase request to Elevate and logs an error on a timeout error.
     * This method is used in tests instead of the sendPurchaseRequest() in order to skip JSON.deserialize(response)
