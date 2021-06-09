@@ -84,7 +84,7 @@ public with sharing class GiftBatchService {
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
         }
 
-        DataImportModel dataImportModel = getUpdatedTotals(batchId);
+        GiftBatchUIModel dataImportModel = getUpdatedTotals(batchId);
 
         List<DataImportRow> rows = new List<DataImportRow>();
         List<DataImport__c> dataImportsToReturn =
@@ -107,7 +107,7 @@ public with sharing class GiftBatchService {
         if (batchId == null) {
             throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
-        DataImportModel dataImportModel = new DataImportModel();
+        GiftBatchUIModel dataImportModel = new GiftBatchUIModel();
         dataImportModel.id = batchId;
         dataImportModel.dataImportRows = getDataImportRows(batchId, 0);
         dataImportModel.setColumns();
@@ -382,8 +382,8 @@ public with sharing class GiftBatchService {
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel updated model with total amount and number of rows
     */
-    public static DataImportModel getUpdatedTotals(Id batchId) {
-        DataImportModel dataImportModel = new DataImportModel();
+    public static GiftBatchUIModel getUpdatedTotals(Id batchId) {
+        GiftBatchUIModel dataImportModel = new GiftBatchUIModel();
 
         dataImportModel.id = batchId;
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
