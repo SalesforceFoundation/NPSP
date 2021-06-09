@@ -71,7 +71,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @param rd Recurring Donation record
     */
     public RD2_RecurringDonation(npe03__Recurring_Donation__c rd) {
-        this(rd, rd.npe03__Donations__r);
+        this(rd, rd?.npe03__Donations__r);
     }
 
     /**
@@ -399,7 +399,7 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
-            if (rdSchedule.Active__c && rdSchedule.IsPause__c) {
+            if (rdSchedule.IsPause__c && rdSchedule.StartDate__c <= rdSchedule.EndDate__c) {
                 return rdSchedule;
             }
         }

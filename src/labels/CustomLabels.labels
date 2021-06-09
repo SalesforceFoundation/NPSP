@@ -2405,6 +2405,14 @@
         <value>Paused</value>
     </labels>
     <labels>
+        <fullName>RD2_InvalidRecurringDonationId</fullName>
+        <categories>Data Import</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when the Recurring Donation Id provided is invalid.</shortDescription>
+        <value>The Recurring Donation Id {0} is invalid.</value>
+    </labels>
+    <labels>
         <fullName>RD2_NextPaymentDonationDateInfo</fullName>
         <categories>Recurring-Donations, Elevate</categories>
         <language>en_US</language>

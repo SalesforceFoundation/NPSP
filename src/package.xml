@@ -1948,6 +1948,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_InvalidRecurringDonationId</members>
         <members>RD2_NextACHPaymentDonationDateInfo</members>
         <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>

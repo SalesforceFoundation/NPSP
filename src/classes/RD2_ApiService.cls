@@ -74,7 +74,8 @@ public inherited sharing class RD2_ApiService {
         Set<String> queryFields = new Set<String>{
             'Id',
             'CommitmentId__c',
-            'EndDate__c'
+            'EndDate__c',
+            'Status__c'
         };
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add('CurrencyIsoCode');
@@ -271,20 +272,6 @@ public inherited sharing class RD2_ApiService {
         return JSON.serialize(handlePauseRequests(pauseData));
     }
 
-    // TODO: AC1 Happy path pause
-    //           - New pause requires insert only
-    // TODO: AC7 Happy path unpause
-    //           - Unpause requires deactivate only
-    // TODO: AC8 Happy path new pause
-    //           - Existing pause requires deactivate, then insert
-    //           - The insert is the same as AC1
-    //           - The deactivate is the same as AC7
-
-    // TODO: Can get a lot of the save logic from RD2_PauseForm_CTRL.savePause
-
-    // TODO: For now, just build everything in RD2_ApiService
-    //           - refactor, if necessary, after writing
-
     private Map<Id, PauseObject> handlePauseRequests(Map<Id, PauseObject> pauseData) {
         List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
         List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
@@ -297,11 +284,16 @@ public inherited sharing class RD2_ApiService {
             RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(recurringDonationsById.get(rdId));
             PauseObject pauseInfo = pauseData.get(rdId);
 
-            if (!isValidPauseData(pauseInfo, rdRecord)) {
+            populateDefaultValue(pauseInfo);
+
+            if (!isValidPauseData(rdId, pauseInfo, rdRecord)) {
                 continue;
             }
 
-            schedulesToUpdate.add(deactivatePauseSchedule(rdRecord));
+            RecurringDonationSchedule__c updateSchedule = deactivatePauseSchedule(rdRecord);
+            if (updateSchedule != null) {
+                schedulesToUpdate.add(updateSchedule);
+            }
 
             if (!pauseInfo.unPause) {
                 schedulesToInsert.add(createPauseSchedule(pauseInfo, rdId));
@@ -311,14 +303,29 @@ public inherited sharing class RD2_ApiService {
         return commitScheduleUpdates(pauseData, schedulesToInsert, schedulesToUpdate);
     }
 
+    private void populateDefaultValue(PauseObject pause) {
+        pause.isSuccess = true;
+        pause.unPause = (pause.unPause == null)
+            ? false
+            : pause.unPause;
+    }
+
     @TestVisible
-    private Boolean isValidPauseData(PauseObject pause, RD2_RecurringDonation recurringDonation) {
+    private Boolean isValidPauseData(Id rdId, PauseObject pause, RD2_RecurringDonation recurringDonation) {
+        validateRecurringDonationId(pause, rdId);
         validateStateShouldBeActive(pause, recurringDonation);
         validateRecurringDonationNotLinkedToElevate(pause, recurringDonation);
         validateUnPause(pause);
         validateDateRange(pause);
 
         return pause.isSuccess;
+    }
+
+    private void validateRecurringDonationId(PauseObject pause, Id recordId) {
+        if (UTIL_Describe.isObjectIdThisType(recordId, 'npe03__Recurring_Donation__c') == false) {
+            pause.addError(String.format(System.Label.RD2_InvalidRecurringDonationId,
+                new List<String> { recordId }));
+        }
     }
 
     private void validateStateShouldBeActive(PauseObject pause, RD2_RecurringDonation recurringDonation) {
@@ -387,7 +394,7 @@ public inherited sharing class RD2_ApiService {
             return;
         }
 
-        if (pause.startDate < Date.today()) {
+        if (pause.startDate < RD2_ScheduleService.currentDate) {
             pause.addError(System.Label.RD2_PauseStartDateMustBeTodayOrLater);
         }
     }
@@ -417,7 +424,6 @@ public inherited sharing class RD2_ApiService {
         if (updateIds != null) {
             recurringDonationIds.addAll(updateIds);
         }
-
         if (!recurringDonationIds.isEmpty()) {
             RD2_QueueableService.enqueueOppEvalService(recurringDonationIds, recurringDonationIds);
         }
@@ -488,21 +494,6 @@ public inherited sharing class RD2_ApiService {
         public Boolean unPause { get; set; }
         public Boolean isSuccess { get; set; }
         public String error { get; set; }
-
-        public PauseObject(Date startDate, Date endDate, String statusReason) {
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.statusReason = statusReason;
-            this.unPause = false;
-            this.isSuccess = true;
-            error = 'OK';
-        }
-
-        public PauseObject(Boolean unPause) {
-            this.unPause = unPause;
-            this.isSuccess = true;
-            error = 'OK';
-        }
 
         public PauseObject addError(String errorString) {
             this.isSuccess = false;

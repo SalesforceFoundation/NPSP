@@ -331,12 +331,30 @@ public class CallableApiParameters {
         String paramType = 'Map<Id, RD2_ApiService.PauseObject>';
         validateRequiredParameter(paramType, paramName);
         try {
-            return (Map<Id, RD2_ApiService.PauseObject>)params.get(paramName);
+            return convertObjectIntoPauseObject((Map<Id, Object>) params.get(paramName));
         } catch (Exception ex) {
             throwParameterException('Map<Id, RD2_ApiService.PauseObject>', paramName);
         }
 
         return null;
+    }
+
+    private Map<Id, RD2_ApiService.PauseObject> convertObjectIntoPauseObject(Map<Id, Object> pauseParams) {
+        Map<Id, RD2_ApiService.PauseObject> pauseData = new Map<Id, RD2_ApiService.PauseObject>();
+
+        for (Id key : pauseParams.keySet()) {
+            Object pauseObject = pauseParams.get(key);
+
+            if (!(pauseObject instanceof String)) {
+                pauseObject = JSON.serialize(pauseObject);
+            }
+            RD2_ApiService.PauseObject convertedPauseStructure = 
+                (RD2_ApiService.PauseObject) JSON.deserialize((String) pauseObject, RD2_ApiService.PauseObject.class);
+
+            pauseData.put(key, convertedPauseStructure);
+        }
+
+        return pauseData;
     }
 
     /**
