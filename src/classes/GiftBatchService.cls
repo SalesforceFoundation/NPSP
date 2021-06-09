@@ -131,22 +131,100 @@ public with sharing class GiftBatchService {
             isQueryException = true;
         }
 
-        //todo: need to eliminate this dependency on BGE_BatchGiftEntry_UTIL
         GiftBatch giftBatch = new GiftBatch(batchId);
         List<String> fields = giftBatch.getDataImportFields(true);
 
         if (isQueryException || batchGiftEntryVersion < 2) {
-            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+            checkFieldPermissions(
                     String.valueOf(DataImport__c.SObjectType),
                     fields
             );
         } else {
             List<String> nonNameFields = getNonNameFields(fields);
-            BGE_BatchGiftEntry_UTIL.checkFieldPermissions(
+            checkFieldPermissions(
                     String.valueOf(DataImport__c.SObjectType),
                     nonNameFields
             );
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Checks to see whether the running user has permission to edit a given list of fields
+    * @param fieldsToCheck list of DescribeFieldResult records to check
+    * @return void Throws an exception if user lacks edit permissions on any field
+    */
+    public void checkFieldPermissions(List<DescribeFieldResult> fieldsToCheck) {
+        Boolean hasPermission = true;
+        List<String> fieldsWithoutPermission = new List<String>();
+
+        for (DescribeFieldResult dfr : fieldsToCheck) {
+            Boolean canReadCustomFormulaField =
+                    dfr.isCalculated() && UTIL_Permissions.canRead(dfr, false);
+            if (canReadCustomFormulaField) {
+                continue;
+            }
+            if (!UTIL_Permissions.canUpdate(dfr, false)) {
+                hasPermission = false;
+                fieldsWithoutPermission.add(dfr.getLabel());
+            }
+        }
+
+        if (!hasPermission) {
+            handleMissingPermissions(fieldsWithoutPermission);
+        }
+
+    }
+
+    public void checkFieldPermissions(String objectName, List<String> fieldNamesToCheck) {
+        List<DescribeFieldResult> fieldResults = new List<DescribeFieldResult>();
+        for (String fieldName : fieldNamesToCheck) {
+            if (fieldName.contains('__r')) {
+                fieldName = fieldName.substringBefore('__r') + '__c';
+            }
+
+            DescribeFieldResult fieldResult =
+                    UTIL_Describe.getFieldDescribe(UTIL_Namespace.StrAllNSPrefix(objectName), fieldName);
+
+            if (fieldName != 'Id' && !fieldResults.contains(fieldResult)) {
+                fieldResults.add(fieldResult);
+            }
+        }
+        checkFieldPermissions(fieldResults);
+    }
+
+    /*******************************************************************************************************
+    * @description Handles missing field permissions
+    * @param missingPermissions list of Strings identifying the fields with missing permissions
+    * @return void Throws an exception if user lacks permissions on any field
+    */
+    private static void handleMissingPermissions(List<String> missingPermissions) {
+
+        if (!missingPermissions.isEmpty()) {
+            String errorMsg = Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']';
+            AuraHandledException ex = new AuraHandledException(errorMsg);
+            ex.setMessage(errorMsg);
+            throw ex;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Takes a list of strings and converts it to a string of a subset of the original list
+    * @param items list of Strings
+    * @param maxItems the maximum number of Strings from the list to retain
+    * @return String the truncated list of strings, separated by a comma
+    * @example truncateList(new List<String>{ 'apple', 'orange', 'banana', 'pear' }, 2); // returns 'apple,
+    *  orange ...'
+    */
+    @TestVisible
+    private static String truncateList(List<String> items, Integer maxItems) {
+        Integer totalItems = items.size();
+        List<String> limitedItems = new List<String>();
+
+        for (Integer i = 0; i < maxItems && i < items.size(); i++) {
+            limitedItems.add(items[i]);
+        }
+
+        return String.join(limitedItems, ', ') + (totalItems > maxItems ? ' ...' : '');
     }
 
     private Decimal getBatchGiftEntryVersion(Id batchId) {
