@@ -259,7 +259,7 @@ private class CallableApiParameters_TEST {
             'Set<Id>' => new Set<Id>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID },
             'Map<Id, RD2_ApiService.PauseObject>' =>
                 new Map<Id, RD2_ApiService.PauseObject>{
-                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject(true)
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject()
                 }
         };
 
