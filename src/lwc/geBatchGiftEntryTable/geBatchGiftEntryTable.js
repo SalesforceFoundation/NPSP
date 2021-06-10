@@ -2,7 +2,7 @@ import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
-import getDataImportModel from '@salesforce/apex/GE_GiftEntryController.getDataImportModel';
+import getDataImportModel from '@salesforce/apex/GE_GiftEntryController.getGiftBatchUIModel';
 import getDataImportRows from '@salesforce/apex/GE_GiftEntryController.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 

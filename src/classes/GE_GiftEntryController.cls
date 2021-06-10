@@ -101,7 +101,7 @@ public with sharing class GE_GiftEntryController {
     * @return serialized string of dataImportModel
     */
     @AuraEnabled
-    public static String getDataImportModel(Id batchId) {
+    public static String getGiftBatchUIModel(Id batchId) {
         if (batchId == null) {
             throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
