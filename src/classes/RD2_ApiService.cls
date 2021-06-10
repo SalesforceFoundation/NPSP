@@ -284,7 +284,7 @@ public inherited sharing class RD2_ApiService {
             RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(recurringDonationsById.get(rdId));
             PauseObject pauseInfo = pauseData.get(rdId);
 
-            populateDefaultValue(pauseInfo);
+            pauseInfo.populateDefaultValue();
 
             if (!isValidPauseData(rdId, pauseInfo, rdRecord)) {
                 continue;
@@ -301,13 +301,6 @@ public inherited sharing class RD2_ApiService {
         }
 
         return commitScheduleUpdates(pauseData, schedulesToInsert, schedulesToUpdate);
-    }
-
-    private void populateDefaultValue(PauseObject pause) {
-        pause.isSuccess = true;
-        pause.unPause = (pause.unPause == null)
-            ? false
-            : pause.unPause;
     }
 
     @TestVisible
@@ -414,6 +407,15 @@ public inherited sharing class RD2_ApiService {
         public PauseObject addError(String errorString) {
             this.isSuccess = false;
             error = errorString;
+
+            return this;
+        }
+
+        public PauseObject populateDefaultValue() {
+            this.isSuccess = true;
+            this.unPause = (this.unPause == null)
+                ? false
+                : this.unPause;
 
             return this;
         }
