@@ -429,12 +429,13 @@ public inherited sharing class RD2_ApiService {
         }
 
         public void validatePauseData(Id rdId, RD2_RecurringDonation recurringDonation) {
+            validateRecurringDonationId(rdId);
+            validateStateShouldBeActive(recurringDonation);
+            validateRecurringDonationNotLinkedToElevate(recurringDonation);
+
             if (this.pause.unPause) {
                 validateUnPause();
             } else {
-                validateRecurringDonationId(rdId);
-                validateStateShouldBeActive(recurringDonation);
-                validateRecurringDonationNotLinkedToElevate(recurringDonation);
                 validateDateRange();
             }
         }
