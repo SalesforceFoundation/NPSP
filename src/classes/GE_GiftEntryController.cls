@@ -1011,7 +1011,7 @@ public with sharing class GE_GiftEntryController {
       * @description Runs BDI Dry Run for all Gifts in a Batch.
       * @param batchId: ID of the NPSP_Data_Import_Batch__c
       * @param numberOfRowsToReturn: The desired number of Gifts to return in
-      * the GiftBatchUIModel.
+      * the GiftBatchView.
       * @return DataImportModel with updated data import record row and updated totals for the batch
       */
     @AuraEnabled
@@ -1035,13 +1035,7 @@ public with sharing class GE_GiftEntryController {
     public static List<GiftUIModel> getGifts(Id batchId, Integer offset){
 
         try {
-            List<GiftUIModel> rows = new List<GiftUIModel>();
-            List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
-            for (DataImport__c dataImportRecord : dataImports) {
-                rows.add(new GiftUIModel(dataImportRecord));
-            }
-
-            return rows;
+            return giftBatchService.getGiftsUiModels(batchId, offset);
         }
         catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());

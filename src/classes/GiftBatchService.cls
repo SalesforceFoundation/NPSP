@@ -61,6 +61,7 @@ public with sharing class GiftBatchService {
         giftBatch.updateRecords();
     }
 
+    //todo: strongly type the return type from String to GiftBatchView
     /*******************************************************************************************************
     * @description runs BDI Dry Run against all Data Import records based on the processing settings of a
     *  given batch
@@ -84,7 +85,7 @@ public with sharing class GiftBatchService {
             BDI_DataImport_API.processDataImportRecords(dataImportSettings, dataImportListToRun, true);
         }
 
-        GiftBatchUIModel dataImportModel = getUpdatedTotals(batchId);
+        GiftBatchView dataImportModel = getUpdatedTotals(batchId);
 
         List<GiftUIModel> rows = new List<GiftUIModel>();
         List<DataImport__c> dataImportsToReturn =
@@ -107,7 +108,7 @@ public with sharing class GiftBatchService {
         if (batchId == null) {
             throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
-        GiftBatchUIModel giftBatchUIModel = new GiftBatchUIModel();
+        GiftBatchView giftBatchUIModel = new GiftBatchView();
         giftBatchUIModel.id = batchId;
         giftBatchUIModel.dataImportRows = getGifts(batchId, 0);
         giftBatchUIModel.setColumns();
@@ -198,7 +199,7 @@ public with sharing class GiftBatchService {
     * @return void Throws an exception if user lacks permissions on any field
     */
     private void handleMissingPermissions(List<String> missingPermissions) {
-
+//todo: this should not throw an AHE
         if (!missingPermissions.isEmpty()) {
             String errorMsg = Label.bgeFLSError + ' [' + truncateList(missingPermissions, 3) + ']';
             AuraHandledException ex = new AuraHandledException(errorMsg);
@@ -382,8 +383,8 @@ public with sharing class GiftBatchService {
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return DataImportModel updated model with total amount and number of rows
     */
-    public static GiftBatchUIModel getUpdatedTotals(Id batchId) {
-        GiftBatchUIModel dataImportModel = new GiftBatchUIModel();
+    public static GiftBatchView getUpdatedTotals(Id batchId) {
+        GiftBatchView dataImportModel = new GiftBatchView();
 
         dataImportModel.id = batchId;
         dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
@@ -418,6 +419,16 @@ public with sharing class GiftBatchService {
                     : dataImport.Donation_Amount__c;
         }
         return totalAmount;
+    }
+
+    public List<GiftUIModel> getGiftsUiModels(Id batchId, Integer offset) {
+        List<GiftUIModel> giftUIModels = new List<GiftUIModel>();
+        List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
+        for (DataImport__c dataImportRecord : dataImports) {
+            giftUIModels.add(new GiftUIModel(dataImportRecord));
+        }
+
+        return giftUIModels;
     }
 
     /*******************************************************************************************************

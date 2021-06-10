@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * @description a class to retrieve and save the required information for the Batch Data Import component.
 */
-public class GiftBatchUIModel {
+public class GiftBatchView {
     @AuraEnabled public Id id;
     @AuraEnabled public List<GiftUIModel> dataImportRows;
     @AuraEnabled public List<Column> columns;
