@@ -81,7 +81,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     @api
-    upsertDryRunResults(dataImportRows) {
+    upsertGifts(dataImportRows) {
         dataImportRows.forEach(row => {
             this.upsertData(
                 Object.assign(row,

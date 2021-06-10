@@ -581,7 +581,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 const dataImportModel = JSON.parse(result);
                 table._count = dataImportModel.totalCountOfRows;
                 table._total = dataImportModel.batchTotalRowAmount;
-                table.upsertDryRunResults(dataImportModel.dataImportRows);
+                table.upsertGifts(dataImportModel.dataImportRows);
             })
             .catch(error => {
                 handleError(error);
