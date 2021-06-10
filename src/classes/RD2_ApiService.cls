@@ -312,11 +312,8 @@ public inherited sharing class RD2_ApiService {
 
     @TestVisible
     private Boolean isValidPauseData(Id rdId, PauseObject pause, RD2_RecurringDonation recurringDonation) {
-        validateRecurringDonationId(pause, rdId);
-        validateStateShouldBeActive(pause, recurringDonation);
-        validateRecurringDonationNotLinkedToElevate(pause, recurringDonation);
-        validateUnPause(pause);
-        validateDateRange(pause);
+        PauseValidator validator = new PauseValidator(pause);
+        validator.validatePauseData(rdId, recurringDonation);
 
         return pause.isSuccess;
     }
@@ -325,87 +322,6 @@ public inherited sharing class RD2_ApiService {
         if (UTIL_Describe.isObjectIdThisType(recordId, 'npe03__Recurring_Donation__c') == false) {
             pause.addError(String.format(System.Label.RD2_InvalidRecurringDonationId,
                 new List<String> { recordId }));
-        }
-    }
-
-    private void validateStateShouldBeActive(PauseObject pause, RD2_RecurringDonation recurringDonation) {
-        if (pause.unPause || !pause.isSuccess) {
-            return;
-        }
-
-        if (!recurringDonation.isActive()) {
-            pause.addError(System.Label.RD2_StatusMustBeActiveOrPause);
-        }
-    }
-
-    private void validateRecurringDonationNotLinkedToElevate(PauseObject pause, RD2_RecurringDonation recurringDonation) {
-        if (pause.unPause || !pause.isSuccess) {
-            return;
-        }
-
-        if (recurringDonation.isElevateRecord()) {
-            pause.addError(System.Label.RD2_ElevateRDCannotBePaused);
-        }
-    }
-
-    private void validateUnPause(PauseObject pause) {
-        if (!pause.unPause || !pause.isSuccess) {
-            return;
-        }
-
-        if (pause.startDate != null || pause.endDate != null) {
-            pause.addError(System.Label.RD2_UnPauseRequestCannotIncludeDates);
-        }
-    }
-
-    private void validateDateRange( PauseObject pause) {
-        if (pause.unPause) {
-            return;
-        }
-
-        validateDatesArePopulated(pause);
-        validateEndDateGreaterThanOrEqualToStartDate(pause);
-        validateStartDateGreaterThanOrEqualToToday(pause);
-        validateEndDateNoGreaterThanTwelveMonthsFromStartDate(pause);
-    }
-
-    private void validateDatesArePopulated(PauseObject pause) {
-        if (!pause.isSuccess) {
-            return;
-        }
-
-        if (pause.startDate == null || pause.endDate == null) {
-            pause.addError(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate);
-        }
-    }
-
-    private void validateEndDateGreaterThanOrEqualToStartDate(PauseObject pause) {
-        if (!pause.isSuccess) {
-            return;
-        }
-
-        if (pause.isSuccess && pause.startDate > pause.endDate) {
-            pause.addError(System.Label.RD2_PauseEndDateMustBeGreaterThanStartDate);
-        }
-    }
-
-    private void validateStartDateGreaterThanOrEqualToToday(PauseObject pause) {
-        if (!pause.isSuccess) {
-            return;
-        }
-
-        if (pause.startDate < RD2_ScheduleService.currentDate) {
-            pause.addError(System.Label.RD2_PauseStartDateMustBeTodayOrLater);
-        }
-    }
-
-    private void validateEndDateNoGreaterThanTwelveMonthsFromStartDate(PauseObject pause) {
-        if (!pause.isSuccess) {
-            return;
-        }
-
-        if (pause.endDate > pause.startDate.addYears(1).addDays(1)) {
-            pause.addError(System.Label.RD2_PauseEndDateCannotBeMoreThanTwelveMonths);
         }
     }
 
@@ -500,6 +416,110 @@ public inherited sharing class RD2_ApiService {
             error = errorString;
 
             return this;
+        }
+    }
+
+    public class PauseValidator {
+        PauseObject pause;
+
+        PauseValidator(PauseObject pause) {
+            this.pause = pause;
+        }
+
+        public void validatePauseData(Id rdId, RD2_RecurringDonation recurringDonation) {
+            validateRecurringDonationId(rdId);
+            validateStateShouldBeActive(recurringDonation);
+            validateRecurringDonationNotLinkedToElevate(recurringDonation);
+            validateUnPause();
+            validateDateRange();
+        }
+
+        private void validateRecurringDonationId(Id recordId) {
+            if (UTIL_Describe.isObjectIdThisType(recordId, 'npe03__Recurring_Donation__c') == false) {
+                pause.addError(String.format(System.Label.RD2_InvalidRecurringDonationId,
+                        new List<String> { recordId }));
+            }
+        }
+
+        private void validateStateShouldBeActive(RD2_RecurringDonation recurringDonation) {
+            if (pause.unPause || !pause.isSuccess) {
+                return;
+            }
+
+            if (!recurringDonation.isActive()) {
+                pause.addError(System.Label.RD2_StatusMustBeActiveOrPause);
+            }
+        }
+
+        private void validateRecurringDonationNotLinkedToElevate(RD2_RecurringDonation recurringDonation) {
+            if (pause.unPause || !pause.isSuccess) {
+                return;
+            }
+
+            if (recurringDonation.isElevateRecord()) {
+                pause.addError(System.Label.RD2_ElevateRDCannotBePaused);
+            }
+        }
+
+        private void validateUnPause() {
+            if (!pause.unPause || !pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate != null || pause.endDate != null) {
+                pause.addError(System.Label.RD2_UnPauseRequestCannotIncludeDates);
+            }
+        }
+
+        private void validateEndDateGreaterThanOrEqualToStartDate() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.isSuccess && pause.startDate > pause.endDate) {
+                pause.addError(System.Label.RD2_PauseEndDateMustBeGreaterThanStartDate);
+            }
+        }
+
+        private void validateDateRange() {
+            if (pause.unPause) {
+                return;
+            }
+
+            validateDatesArePopulated();
+            validateEndDateGreaterThanOrEqualToStartDate();
+            validateStartDateGreaterThanOrEqualToToday();
+            validateEndDateNoGreaterThanTwelveMonthsFromStartDate();
+        }
+
+        private void validateDatesArePopulated() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate == null || pause.endDate == null) {
+                pause.addError(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate);
+            }
+        }
+
+        private void validateEndDateNoGreaterThanTwelveMonthsFromStartDate() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.endDate > pause.startDate.addYears(1).addDays(1)) {
+                pause.addError(System.Label.RD2_PauseEndDateCannotBeMoreThanTwelveMonths);
+            }
+        }
+
+        private void validateStartDateGreaterThanOrEqualToToday() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate < RD2_ScheduleService.currentDate) {
+                pause.addError(System.Label.RD2_PauseStartDateMustBeTodayOrLater);
+            }
         }
     }
 }
