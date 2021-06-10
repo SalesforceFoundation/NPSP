@@ -1032,13 +1032,13 @@ public with sharing class GE_GiftEntryController {
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
     @AuraEnabled
-    public static List<DataImportRow> getDataImportRows(Id batchId, Integer offset){
+    public static List<GiftUIModel> getDataImportRows(Id batchId, Integer offset){
 
         try {
-            List<DataImportRow> rows = new List<DataImportRow>();
+            List<GiftUIModel> rows = new List<GiftUIModel>();
             List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
             for (DataImport__c dataImportRecord : dataImports) {
-                rows.add(new DataImportRow(dataImportRecord));
+                rows.add(new GiftUIModel(dataImportRecord));
             }
 
             return rows;

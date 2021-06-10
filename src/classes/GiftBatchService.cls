@@ -86,11 +86,11 @@ public with sharing class GiftBatchService {
 
         GiftBatchUIModel dataImportModel = getUpdatedTotals(batchId);
 
-        List<DataImportRow> rows = new List<DataImportRow>();
+        List<GiftUIModel> rows = new List<GiftUIModel>();
         List<DataImport__c> dataImportsToReturn =
                 getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
         for (DataImport__c di : dataImportsToReturn) {
-            DataImportRow processedDataImportRow = new DataImportRow(di);
+            GiftUIModel processedDataImportRow = new GiftUIModel(di);
             rows.add(processedDataImportRow);
         }
         dataImportModel.dataImportRows = rows;
@@ -304,12 +304,12 @@ public with sharing class GiftBatchService {
     * @param offset: next offset to query
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
-    private List<DataImportRow> getDataImportRows(Id batchId, Integer offset){
+    private List<GiftUIModel> getDataImportRows(Id batchId, Integer offset){
         try {
-            List<DataImportRow> rows = new List<DataImportRow>();
+            List<GiftUIModel> rows = new List<GiftUIModel>();
             List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
             for (DataImport__c dataImportRecord : dataImports) {
-                rows.add(new DataImportRow(dataImportRecord));
+                rows.add(new GiftUIModel(dataImportRecord));
             }
             return rows;
         }
@@ -394,10 +394,10 @@ public with sharing class GiftBatchService {
         return dataImportModel;
     }
 
-    private static Decimal getBatchTotalRowAmount(List<DataImportRow> dataImportRows) {
+    private static Decimal getBatchTotalRowAmount(List<GiftUIModel> dataImportRows) {
         Decimal totalAmount = 0;
 
-        for (DataImportRow dataImportRow: dataImportRows) {
+        for (GiftUIModel dataImportRow: dataImportRows) {
             totalAmount+= dataImportRow.record.Donation_Amount__c == null
                     ? 0
                     : dataImportRow.record.Donation_Amount__c;
