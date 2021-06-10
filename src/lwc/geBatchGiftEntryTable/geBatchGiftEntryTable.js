@@ -3,7 +3,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
 import getDataImportModel from '@salesforce/apex/GE_GiftEntryController.getGiftBatchUIModel';
-import getDataImportRows from '@salesforce/apex/GE_GiftEntryController.getDataImportRows';
+import getDataImportRows from '@salesforce/apex/GE_GiftEntryController.getGifts';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
