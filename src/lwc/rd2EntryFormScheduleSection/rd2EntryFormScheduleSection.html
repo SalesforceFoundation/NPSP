@@ -36,6 +36,7 @@
                                 onchange={onHandleRecurringPeriodChange}
                                 field-level-help={customLabels.customPeriodHelpText}
                                 disabled={disablePeriodPicklistField}
+                                data-id="recurringPeriod"
                                 required
                         >
                         </lightning-combobox>
@@ -71,6 +72,7 @@
                                 field-level-help={fields.period.inlineHelpText}
                                 options={advancedPeriodOptions}
                                 onchange={onHandleAdvancedPeriodChange}
+                                data-id="installmentPeriod"
                                 disabled={disablePeriodPicklistField}
                                 required>
                             </lightning-combobox>

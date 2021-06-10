@@ -419,6 +419,11 @@ public inherited sharing class RD2_RecurringDonation {
         return state;
     }
 
+
+    public String getInstallmentPeriod() {
+        return rd.npe03__Installment_Period__c;
+    }
+
     /**
     * @description Returns true if the RD record is in enhanced Recurring Donation format
     */
@@ -442,6 +447,10 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.InstallmentFrequency__c != null
             && rd.InstallmentFrequency__c >= 1
             && rd.InstallmentFrequency__c <= 20;
+    }
+
+    public Boolean isFirstAndFifteenthPeriod() {
+        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     }
 
     /**

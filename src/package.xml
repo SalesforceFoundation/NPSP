@@ -1861,6 +1861,7 @@
         <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateInformationHeader</members>
         <members>RD2_ElevateInformationStatusSuccess</members>
+        <members>RD2_ElevateInstallmentPeriodMustBeValid</members>
         <members>RD2_ElevateNotSupported</members>
         <members>RD2_ElevatePaymentMethodChangeError</members>
         <members>RD2_ElevatePendingStatus</members>
