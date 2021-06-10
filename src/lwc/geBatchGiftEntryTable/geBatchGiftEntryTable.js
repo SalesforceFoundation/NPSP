@@ -75,6 +75,21 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api batchId;
     @api isElevateCustomer = false;
 
+    @api
+    rowCount() {
+        return this.data.length;
+    }
+
+    @api
+    upsertDryRunResults(dataImportRows) {
+        dataImportRows.forEach(row => {
+            this.upsertData(
+                Object.assign(row,
+                    this.appendUrlColumnProperties.call(row.record,
+                        this._dataImportObjectInfo)), 'Id');
+        });
+    }
+
     get ready() {
         return this._columnsLoaded && this._dataImportModel;
     }
