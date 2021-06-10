@@ -575,7 +575,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const table = this.template.querySelector('c-ge-batch-gift-entry-table');
         runBatchDryRun({
             batchId: this.batchId,
-            numberOfRowsToReturn: table.rowCount()
+            numberOfRowsToReturn: table.countOfRows()
         })
             .then(result => {
                 const dataImportModel = JSON.parse(result);

@@ -76,7 +76,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api isElevateCustomer = false;
 
     @api
-    rowCount() {
+    countOfRows() {
         return this.data.length;
     }
 
