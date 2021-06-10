@@ -425,11 +425,19 @@ private class RD2_ApiService_TEST {
 
     @IsTest
     private static void shouldReturnErrorForPauseWhenEnhancedRecurringDonationsIsNotEnabled() {
-        String pauseResult = new RD2_ApiService().pause(
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
             new Map<Id, RD2_ApiService.PauseObject>{
-                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => createUnPauseObject(true) });
+                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => createUnPauseObject(true)};
 
-        System.assertEquals(System.Label.RD2_EnhancedRecurringDonationsNotEnabled, pauseResult,
+        Test.startTest();
+        RD2_ApiService apiService = new RD2_ApiService();
+        String response = apiService.pause(pauseObjectsByIdIn);
+        Test.stopTest();
+
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
+            (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
+
+        System.assertEquals(System.Label.RD2_EnhancedRecurringDonationsNotEnabled, pauseObjectsByIdOut.values()[0].error,
             'Result should be message that RD2 is not enabled.');
     }
 
@@ -439,12 +447,21 @@ private class RD2_ApiService_TEST {
 
         RD2_ApiService.MAXIMUM_RECORDS_TO_PROCESS = 0;
 
-        String pauseResult = new RD2_ApiService().pause(
-            new Map<Id, RD2_ApiService.PauseObject>{
-                UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => createUnPauseObject(true) });
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdIn =
+        new Map<Id, RD2_ApiService.PauseObject>{
+            UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => createUnPauseObject(true)};
 
-        System.assertEquals(String.format(System.Label.CallableApiMaximumRecordsExceeded,
-            new List<String> { String.valueOf(RD2_ApiService.MAXIMUM_RECORDS_TO_PROCESS) }), pauseResult,
+        Test.startTest();
+        RD2_ApiService apiService = new RD2_ApiService();
+        String response = apiService.pause(pauseObjectsByIdIn);
+        Test.stopTest();
+
+        Map<Id, RD2_ApiService.PauseObject> pauseObjectsByIdOut =
+            (Map<Id, RD2_ApiService.PauseObject>) JSON.deserialize(response, Map<Id, RD2_ApiService.PauseObject>.class);
+        
+        String expectedErrorMessage = String.format(System.Label.CallableApiMaximumRecordsExceeded,
+        new List<String> { String.valueOf(RD2_ApiService.MAXIMUM_RECORDS_TO_PROCESS) });
+        System.assertEquals(expectedErrorMessage, pauseObjectsByIdOut.values()[0].error,
             'Result should be message that maximum number of records was exceeded.');
     }
 

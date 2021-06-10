@@ -260,16 +260,33 @@ public inherited sharing class RD2_ApiService {
     }
 
     public String pause(Map<Id, PauseObject> pauseData) {
-        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
-            return System.Label.RD2_EnhancedRecurringDonationsNotEnabled;
-        }
-
-        if (pauseData.size() > MAXIMUM_RECORDS_TO_PROCESS) {
-            return String.format(System.Label.CallableApiMaximumRecordsExceeded,
-                new List<String> { String.valueOf(MAXIMUM_RECORDS_TO_PROCESS) });
+        Boolean isEnvironmentValid = validateEnvironment(pauseData);
+        if (!isEnvironmentValid) {
+            return JSON.serialize(pauseData);
         }
 
         return JSON.serialize(handlePauseRequests(pauseData));
+    }
+
+    private Boolean validateEnvironment(Map<Id, PauseObject> pauseData) {
+        String errorMessage;
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            errorMessage = System.Label.RD2_EnhancedRecurringDonationsNotEnabled;
+
+        } else if (pauseData.size() > MAXIMUM_RECORDS_TO_PROCESS) {
+           errorMessage = String.format(System.Label.CallableApiMaximumRecordsExceeded,
+            new List<String> { String.valueOf(MAXIMUM_RECORDS_TO_PROCESS) });
+        }
+
+        if (String.isNotBlank(errorMessage)) {
+            for (PauseObject pause : pauseData.values()) {
+                pause.AddError(errorMessage);
+            }
+            return false;
+        }
+
+        return true;
     }
 
     private Map<Id, PauseObject> handlePauseRequests(Map<Id, PauseObject> pauseData) {
