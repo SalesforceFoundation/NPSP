@@ -1735,7 +1735,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Elevate RD cannot be paused</shortDescription>
-        <value>An Elevate Recurring Donation cannot be paused.</value>
+        <value>You can&apos;t pause Elevate connected Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
@@ -2522,7 +2522,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2 Pause end date must be 1 year or less from start date</shortDescription>
-        <value>The End Date of a Pause cannot be more than 12 months greater than the Start Date.</value>
+        <value>You can&apos;t pause Recurring Donations for more than a year. The pause End Date must be less than one year after the Start Date.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseEndDateMustBeGreaterThanStartDate</fullName>
@@ -2530,7 +2530,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2 Pause end date must be greater than start date</shortDescription>
-        <value>The End Date of a Pause must be greater than the Start Date.</value>
+        <value>The pause End Date must be greater than the Start Date.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
@@ -2578,7 +2578,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2 Pause start date must be today or later</shortDescription>
-        <value>The Start Date of a Pause must be today or later.</value>
+        <value>You can&apos;t set a pause Start Date in the past. The pause Start Date must be today or later.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseRequestMustIncludeBothStartDateAndEndDate</fullName>
@@ -2586,7 +2586,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD2 Pause start date and end date must be populated</shortDescription>
-        <value>A Pause request must include both Start Date and End Date.</value>
+        <value>A pause request must include both Start Date and End Date.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseStatusMustExist</fullName>
@@ -2781,7 +2781,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Pause request requires Active or Paused status</shortDescription>
-        <value>A pause request requires a Recurring Donation in Active or Paused status.</value>
+        <value>A pause request requires that the Recurring Donation Status is Active or Paused.</value>
     </labels>
     <labels>
         <fullName>RD2_UnPauseRequestCannotIncludeDates</fullName>
