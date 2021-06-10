@@ -42,7 +42,7 @@ private with sharing class Callable_API_TEST {
     private static final String RD2_EXECUTE_MIGRATION_ACTION = 'RD2.ExecuteDataMigration';
     private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
     private static final String JOB_SCHEDULE_ACTION = 'Apex.ScheduleJob';
-    private static final String RD2_PAUSE_ACTION = 'RD2.Pause';
+    private static final String RD2_PAUSE_ACTION = 'rd2.pause';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -174,7 +174,7 @@ private with sharing class Callable_API_TEST {
         Callable callable = (System.Callable)Type.forName('', 'Callable_Api').newInstance();
         
         Test.startTest();
-        String response = (String) callable.call('rd2.pause', params);
+        String response = (String) callable.call(RD2_PAUSE_ACTION, params);
         Test.stopTest();
     
         Map<String, RD2_ApiService.PauseObject> result =

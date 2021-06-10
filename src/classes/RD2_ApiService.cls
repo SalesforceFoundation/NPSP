@@ -284,7 +284,7 @@ public inherited sharing class RD2_ApiService {
             RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(recurringDonationsById.get(rdId));
             PauseObject pauseInfo = pauseData.get(rdId);
 
-            pauseInfo.populateDefaultValue();
+            pauseInfo.populateDefaultValues();
 
             if (!isValidPauseData(rdId, pauseInfo, rdRecord)) {
                 continue;
@@ -397,21 +397,21 @@ public inherited sharing class RD2_ApiService {
 
     public class PauseObject {
 
-        public Date startDate { get; set; }
-        public Date endDate { get; set; }
-        public String statusReason { get; set; }
-        public Boolean unPause { get; set; }
-        public Boolean isSuccess { get; set; }
-        public String error { get; set; }
+        public Date startDate;
+        public Date endDate;
+        public String statusReason;
+        public Boolean unPause;
+        public Boolean isSuccess;
+        public String error;
 
         public PauseObject addError(String errorString) {
             this.isSuccess = false;
-            error = errorString;
+            this.error = errorString;
 
             return this;
         }
 
-        public PauseObject populateDefaultValue() {
+        public PauseObject populateDefaultValues() {
             this.isSuccess = true;
             this.unPause = (this.unPause == null)
                 ? false
@@ -429,11 +429,14 @@ public inherited sharing class RD2_ApiService {
         }
 
         public void validatePauseData(Id rdId, RD2_RecurringDonation recurringDonation) {
-            validateRecurringDonationId(rdId);
-            validateStateShouldBeActive(recurringDonation);
-            validateRecurringDonationNotLinkedToElevate(recurringDonation);
-            validateUnPause();
-            validateDateRange();
+            if (this.pause.unPause) {
+                validateUnPause();
+            } else {
+                validateRecurringDonationId(rdId);
+                validateStateShouldBeActive(recurringDonation);
+                validateRecurringDonationNotLinkedToElevate(recurringDonation);
+                validateDateRange();
+            }
         }
 
         private void validateRecurringDonationId(Id recordId) {
@@ -444,7 +447,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         private void validateStateShouldBeActive(RD2_RecurringDonation recurringDonation) {
-            if (pause.unPause || !pause.isSuccess) {
+            if (!pause.isSuccess) {
                 return;
             }
 
@@ -454,7 +457,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         private void validateRecurringDonationNotLinkedToElevate(RD2_RecurringDonation recurringDonation) {
-            if (pause.unPause || !pause.isSuccess) {
+            if (!pause.isSuccess) {
                 return;
             }
 
@@ -464,7 +467,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         private void validateUnPause() {
-            if (!pause.unPause || !pause.isSuccess) {
+            if (!pause.isSuccess) {
                 return;
             }
 
@@ -478,16 +481,12 @@ public inherited sharing class RD2_ApiService {
                 return;
             }
 
-            if (pause.isSuccess && pause.startDate > pause.endDate) {
+            if (pause.startDate > pause.endDate) {
                 pause.addError(System.Label.RD2_PauseEndDateMustBeGreaterThanStartDate);
             }
         }
 
         private void validateDateRange() {
-            if (pause.unPause) {
-                return;
-            }
-
             validateDatesArePopulated();
             validateEndDateGreaterThanOrEqualToStartDate();
             validateStartDateGreaterThanOrEqualToToday();
