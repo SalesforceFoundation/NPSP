@@ -106,7 +106,7 @@ public with sharing class GE_GiftEntryController {
             throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
         try {
-            return giftBatchService.getDataImportModel(batchId);
+            return giftBatchService.getGiftBatchUIModel(batchId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

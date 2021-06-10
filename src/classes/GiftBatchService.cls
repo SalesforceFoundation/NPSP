@@ -103,22 +103,22 @@ public with sharing class GiftBatchService {
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @return serialized string of dataImportModel
     */
-    public String getDataImportModel(Id batchId) {
+    public String getGiftBatchUIModel(Id batchId) {
         if (batchId == null) {
             throw new AuraHandledException('Data Import Model must receive a Batch ID.');
         }
-        GiftBatchUIModel dataImportModel = new GiftBatchUIModel();
-        dataImportModel.id = batchId;
-        dataImportModel.dataImportRows = getDataImportRows(batchId, 0);
-        dataImportModel.setColumns();
-        dataImportModel.labels = getBatchDataImportLabels();
-        dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
-        dataImportModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
+        GiftBatchUIModel giftBatchUIModel = new GiftBatchUIModel();
+        giftBatchUIModel.id = batchId;
+        giftBatchUIModel.dataImportRows = getGifts(batchId, 0);
+        giftBatchUIModel.setColumns();
+        giftBatchUIModel.labels = getBatchDataImportLabels();
+        giftBatchUIModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
+        giftBatchUIModel.totalCountOfRows = getDataImportBatchTotalCount(batchId);
         AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
-        dataImportModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
-        dataImportModel.batchTotalRowAmount = getBatchTotalRowAmount(dataImportModel.dataImportRows);
+        giftBatchUIModel.totalRowAmount = (Decimal)aggResult[0].get('amount');
+        giftBatchUIModel.batchTotalRowAmount = getBatchTotalRowAmount(giftBatchUIModel.dataImportRows);
         checkBatchGiftEntryFieldPermissions (batchId);
-        return JSON.serialize(dataImportModel);
+        return JSON.serialize(giftBatchUIModel);
     }
 
     private void checkBatchGiftEntryFieldPermissions(Id batchId) {
@@ -304,7 +304,7 @@ public with sharing class GiftBatchService {
     * @param offset: next offset to query
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
-    private List<GiftUIModel> getDataImportRows(Id batchId, Integer offset){
+    private List<GiftUIModel> getGifts(Id batchId, Integer offset){
         try {
             List<GiftUIModel> rows = new List<GiftUIModel>();
             List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
