@@ -3,7 +3,7 @@
 */
 public class GiftBatchView {
     @AuraEnabled public Id id;
-    @AuraEnabled public List<GiftUIModel> dataImportRows;
+    @AuraEnabled public List<GiftView> dataImportRows;
     @AuraEnabled public List<Column> columns;
     @AuraEnabled public Boolean isNamespaced;
     @AuraEnabled public Map<String, String> labels;

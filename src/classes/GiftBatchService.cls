@@ -87,11 +87,11 @@ public with sharing class GiftBatchService {
 
         GiftBatchView dataImportModel = getUpdatedTotals(batchId);
 
-        List<GiftUIModel> rows = new List<GiftUIModel>();
+        List<GiftView> rows = new List<GiftView>();
         List<DataImport__c> dataImportsToReturn =
                 getNumOfDataImportRecordsByBatchId(batchId, numberOfRowsToReturn);
         for (DataImport__c di : dataImportsToReturn) {
-            GiftUIModel processedDataImportRow = new GiftUIModel(di);
+            GiftView processedDataImportRow = new GiftView(di);
             rows.add(processedDataImportRow);
         }
         dataImportModel.dataImportRows = rows;
@@ -305,12 +305,12 @@ public with sharing class GiftBatchService {
     * @param offset: next offset to query
     * @return list of custom DataImportRow objects for use in the lightning:datatable
     */
-    private List<GiftUIModel> getGifts(Id batchId, Integer offset){
+    private List<GiftView> getGifts(Id batchId, Integer offset){
         try {
-            List<GiftUIModel> rows = new List<GiftUIModel>();
+            List<GiftView> rows = new List<GiftView>();
             List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
             for (DataImport__c dataImportRecord : dataImports) {
-                rows.add(new GiftUIModel(dataImportRecord));
+                rows.add(new GiftView(dataImportRecord));
             }
             return rows;
         }
@@ -395,10 +395,10 @@ public with sharing class GiftBatchService {
         return dataImportModel;
     }
 
-    private static Decimal getBatchTotalRowAmount(List<GiftUIModel> dataImportRows) {
+    private static Decimal getBatchTotalRowAmount(List<GiftView> dataImportRows) {
         Decimal totalAmount = 0;
 
-        for (GiftUIModel dataImportRow: dataImportRows) {
+        for (GiftView dataImportRow: dataImportRows) {
             totalAmount+= dataImportRow.record.Donation_Amount__c == null
                     ? 0
                     : dataImportRow.record.Donation_Amount__c;
@@ -421,11 +421,11 @@ public with sharing class GiftBatchService {
         return totalAmount;
     }
 
-    public List<GiftUIModel> getGiftsUiModels(Id batchId, Integer offset) {
-        List<GiftUIModel> giftUIModels = new List<GiftUIModel>();
+    public List<GiftView> getGiftsUiModels(Id batchId, Integer offset) {
+        List<GiftView> giftUIModels = new List<GiftView>();
         List<DataImport__c> dataImports = getDataImportRecordsByBatchId(batchId, offset);
         for (DataImport__c dataImportRecord : dataImports) {
-            giftUIModels.add(new GiftUIModel(dataImportRecord));
+            giftUIModels.add(new GiftView(dataImportRecord));
         }
 
         return giftUIModels;

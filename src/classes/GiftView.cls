@@ -1,7 +1,7 @@
 /*******************************************************************************************************
 * @description a class to retrieve DataImport__c records with derived donor information.
 */
-public class GiftUIModel {
+public class GiftView {
     @AuraEnabled public String donorName;
     @AuraEnabled public String donorLink;
     @AuraEnabled public String matchedRecordUrl;
@@ -9,7 +9,7 @@ public class GiftUIModel {
     @AuraEnabled public DataImport__c record;
     @AuraEnabled public List<String> errors;
 
-    public GiftUIModel(DataImport__c record) {
+    public GiftView(DataImport__c record) {
         getDonorInfo(record);
         setDryRunRecordInfo(record);
         this.record = record;
