@@ -563,18 +563,4 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return column;
     }
 
-    @api
-    rowCount() {
-        return this.data.length;
-    }
-
-    @api
-    upsertDryRunResults(dataImportRows) {
-        dataImportRows.forEach(row => {
-            this.upsertData(
-                Object.assign(row,
-                    this.appendUrlColumnProperties.call(row.record,
-                        this._dataImportObjectInfo)), 'Id');
-        });
-    }
 }
