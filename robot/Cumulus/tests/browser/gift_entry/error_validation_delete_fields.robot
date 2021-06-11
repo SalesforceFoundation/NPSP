@@ -42,7 +42,6 @@ Validate Errors When Field Is Deleted
     ...                                 warning
     ...                                 This form contains fields that can't be found. Please check with your administrator.
     Perform Action On Object Field      unselect                      Account 1          Field not found
-    Sleep  15
     Click Gift Entry Button             Cancel
     Go To Page                          Landing                       GE_Gift_Entry
     Click Gift Entry Button             New Single Gift
