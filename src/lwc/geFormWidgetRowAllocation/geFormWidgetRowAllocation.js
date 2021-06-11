@@ -1,5 +1,4 @@
 import {LightningElement, api, track} from 'lwc';
-import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
