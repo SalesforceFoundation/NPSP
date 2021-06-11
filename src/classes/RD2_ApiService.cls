@@ -265,13 +265,13 @@ public inherited sharing class RD2_ApiService {
         return JSON.serialize(handlePauseRequests(pauseData));
     }
 
-    private void validateEnvironment(Integer recordToBeProcess) {
+    private void validateEnvironment(Integer recordsCount) {
         String errorMessage;
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             errorMessage = System.Label.RD2_EnhancedRecurringDonationsNotEnabled;
 
-        } else if (recordToBeProcess > MAXIMUM_RECORDS_TO_PROCESS) {
+        } else if (recordsCount > MAXIMUM_RECORDS_TO_PROCESS) {
            errorMessage = String.format(System.Label.CallableApiMaximumRecordsExceeded,
             new List<String> { String.valueOf(MAXIMUM_RECORDS_TO_PROCESS) });
         }
