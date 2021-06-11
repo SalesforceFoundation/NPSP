@@ -87,6 +87,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
             })
         });
         this.addRows(rowList);
+        this.validate();
     }
 
     get totalAmount() {
