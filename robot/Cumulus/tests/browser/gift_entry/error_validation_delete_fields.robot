@@ -65,7 +65,7 @@ Validate Errors When Field Is Deleted
     Click Link                          Templates
     Select Template Action              Default Gift Entry Template   Edit
     Current Page Should Be              Template                      GE_Gift_Entry
-    Load Page Object                    Template                      GE_Gift_Entry
+    Load Page Object                    Template                      GE_Gift_Entry  #this is to fix issues with incorrect form states displaying
     Click Gift Entry Button             Next: Form Fields
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     gift_entry.object_field_checkbox    Account 1  Field not found
