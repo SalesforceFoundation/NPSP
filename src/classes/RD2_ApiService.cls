@@ -277,13 +277,13 @@ public inherited sharing class RD2_ApiService {
         }
 
         if (String.isNotBlank(errorMessage)) {
-            throwRecurringDonationApiException(errorMessage);
+            throwRecurringDonationApiException('rd2.pause', errorMessage);
         }
     }
 
-    private void throwRecurringDonationApiException(String errorString) {
+    private void throwRecurringDonationApiException(String jobType, String errorString) {
         throw new RecurringDonationApiException(String.format( System.Label.CallableApiProcessingError,
-                new List<String>{ 'rd2.pause', errorString} ));
+                new List<String>{ jobType, errorString} ));
     }
 
     private class RecurringDonationApiException extends Exception {}
