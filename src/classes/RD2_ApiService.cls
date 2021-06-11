@@ -453,7 +453,10 @@ public inherited sharing class RD2_ApiService {
             if (this.pause.unPause) {
                 validateUnPause();
             } else {
-                validateDateRange();
+                validateDatesArePopulated();
+                validateEndDateGreaterThanOrEqualToStartDate();
+                validateStartDateGreaterThanOrEqualToToday();
+                validateEndDateNoGreaterThanTwelveMonthsFromStartDate();
             }
         }
 
@@ -505,10 +508,7 @@ public inherited sharing class RD2_ApiService {
         }
 
         private void validateDateRange() {
-            validateDatesArePopulated();
-            validateEndDateGreaterThanOrEqualToStartDate();
-            validateStartDateGreaterThanOrEqualToToday();
-            validateEndDateNoGreaterThanTwelveMonthsFromStartDate();
+           
         }
 
         private void validateDatesArePopulated() {
