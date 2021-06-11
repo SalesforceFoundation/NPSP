@@ -260,34 +260,33 @@ public inherited sharing class RD2_ApiService {
     }
 
     public String pause(Map<Id, PauseObject> pauseData) {
-        Boolean isEnvironmentValid = validateEnvironment(pauseData);
-        if (!isEnvironmentValid) {
-            return JSON.serialize(pauseData);
-        }
+        validateEnvironment(pauseData.size());
 
         return JSON.serialize(handlePauseRequests(pauseData));
     }
 
-    private Boolean validateEnvironment(Map<Id, PauseObject> pauseData) {
+    private void validateEnvironment(Integer recordToBeProcess) {
         String errorMessage;
 
         if (!RD2_EnablementService.isRecurringDonations2Enabled) {
             errorMessage = System.Label.RD2_EnhancedRecurringDonationsNotEnabled;
 
-        } else if (pauseData.size() > MAXIMUM_RECORDS_TO_PROCESS) {
+        } else if (recordToBeProcess > MAXIMUM_RECORDS_TO_PROCESS) {
            errorMessage = String.format(System.Label.CallableApiMaximumRecordsExceeded,
             new List<String> { String.valueOf(MAXIMUM_RECORDS_TO_PROCESS) });
         }
 
         if (String.isNotBlank(errorMessage)) {
-            for (PauseObject pause : pauseData.values()) {
-                pause.AddError(errorMessage);
-            }
-            return false;
+            throwRecurringDonationApiException(errorMessage);
         }
-
-        return true;
     }
+
+    private void throwRecurringDonationApiException(String errorString) {
+        throw new RecurringDonationApiException(String.format( System.Label.CallableApiProcessingError,
+                new List<String>{ 'rd2.pause', errorString} ));
+    }
+
+    private class RecurringDonationApiException extends Exception {}
 
     private Map<Id, PauseObject> handlePauseRequests(Map<Id, PauseObject> pauseData) {
         List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
