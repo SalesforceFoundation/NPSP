@@ -24,7 +24,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
            'tgt_fld' arg in Target Field Label box"""
         self.selenium.wait_until_page_contains("Field Mappings", timeout=60)
         btns=npsp_lex_locators['button-with-text'].format("Create New Field Mapping")
-        self.salesforce.scroll_element_into_view(btns)
+        self.selenium.scroll_element_into_view(btns)
         self.selenium.click_button(btns)
         mdl_open=npsp_lex_locators['adv_mappings']["modal_open"]
         self.selenium.wait_until_page_contains_element(mdl_open, timeout=15,
@@ -57,7 +57,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         self.selenium.wait_until_page_contains(obj, timeout=30, error=f"{obj} did not load in 30 seconds")
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(obj)
         self.selenium.wait_until_element_is_enabled(locator)
-        self.salesforce.scroll_element_into_view(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("View Field Mappings", timeout=60)
         self.selenium.click_link("View Field Mappings")
@@ -68,7 +68,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         """Click the dropdown for fieldname and select edit and wait for model is open.
            Once modal is open click on Target field to open a dropdown and select 'target_field' from available options"""
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)
-        self.salesforce.scroll_element_into_view(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("Edit", timeout=60)
         self.selenium.click_link("Edit")
@@ -90,7 +90,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
         """Click the dropdown for fld_name and select Delete and wait for field mapping to not present on the page."""
         locator=npsp_lex_locators['adv_mappings']['dropdown'].format(fld_name)
         deleted=npsp_lex_locators['adv_mappings']['field-label'].format(fld_name)
-        self.salesforce.scroll_element_into_view(locator)
+        self.selenium.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
         self.selenium.wait_until_page_contains("Delete", timeout=60)
         self.selenium.click_link("Delete")
@@ -138,7 +138,7 @@ class AdvancedMappingPage(BaseNPSPPage, BasePage):
             self.selenium.input_text(name_fld,obj_grp_name)
             for key,value in kwargs.items():
                 field_name=npsp_lex_locators['adv_mappings']['field_mapping'].format(key)
-                self.salesforce.scroll_element_into_view(field_name)
+                self.selenium.scroll_element_into_view(field_name)
                 self.selenium.click_element(field_name)
                 dd=npsp_lex_locators['adv_mappings']['combobox']
                 self.selenium.wait_until_page_contains_element(dd, error=f"{key} field dropdown did not open")

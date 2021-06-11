@@ -42,6 +42,7 @@ Validate Errors When Field Is Deleted
     ...                                 warning
     ...                                 This form contains fields that can't be found. Please check with your administrator.
     Perform Action On Object Field      unselect                      Account 1          Field not found
+    Sleep  15
     Click Gift Entry Button             Cancel
     Go To Page                          Landing                       GE_Gift_Entry
     Click Gift Entry Button             New Single Gift
@@ -53,7 +54,7 @@ Validate Errors When Field Is Deleted
     ...                                 Donation Amount=10
     ...                                 Donation Date=Today
     Click Gift Entry Button             Save
-    Page Should Contain Element         npsp:gift_entry.page_error
+    Wait Until Page Contains Element    npsp:gift_entry.page_error
     #Create the field again and verify errors are automaticlly resolved
     Create Customfield In Object Manager
     ...                                 Object=Account
@@ -64,6 +65,7 @@ Validate Errors When Field Is Deleted
     Click Link                          Templates
     Select Template Action              Default Gift Entry Template   Edit
     Current Page Should Be              Template                      GE_Gift_Entry
+    Load Page Object                    Template                      GE_Gift_Entry
     Click Gift Entry Button             Next: Form Fields
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     gift_entry.object_field_checkbox    Account 1  Field not found
