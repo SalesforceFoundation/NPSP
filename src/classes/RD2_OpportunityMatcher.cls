@@ -216,10 +216,12 @@ public inherited sharing class RD2_OpportunityMatcher {
             matched.attachInstallment(installment);
             return;
         }
-        
+
         //if the Installment period is not monthly, do not attempt to match by +/- match days range
         //and add the installment without matching Opp
-        if (installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+        if (installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY &&
+            installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_YEARLY) {
+
             recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
             return;
         }
