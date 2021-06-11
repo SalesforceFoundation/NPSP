@@ -328,13 +328,6 @@ public inherited sharing class RD2_ApiService {
         return pause.isSuccess;
     }
 
-    private void validateRecurringDonationId(PauseObject pause, Id recordId) {
-        if (UTIL_Describe.isObjectIdThisType(recordId, 'npe03__Recurring_Donation__c') == false) {
-            pause.addError(String.format(System.Label.RD2_InvalidRecurringDonationId,
-                new List<String> { recordId }));
-        }
-    }
-
     private Map<Id, PauseObject> commitScheduleUpdates(Map<Id, PauseObject> pauseData,
         List<RecurringDonationSchedule__c> schedulesToInsert,
         List<RecurringDonationSchedule__c> schedulesToUpdate)
