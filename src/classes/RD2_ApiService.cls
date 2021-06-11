@@ -500,10 +500,6 @@ public inherited sharing class RD2_ApiService {
             }
         }
 
-        private void validateDateRange() {
-           
-        }
-
         private void validateDatesArePopulated() {
             if (!pause.isSuccess) {
                 return;
