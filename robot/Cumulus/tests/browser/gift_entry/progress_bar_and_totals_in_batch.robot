@@ -65,6 +65,7 @@ Progress Bar and Totals in Batch
     ...                                    Existing Donor Contact=${CONTACT2}[Name]
     ...                                    Donation Date=Today
     ...                                    Donation Amount=25.0
+    Verify Field Default Value             Donation Amount=25.0
     Click Gift Entry Button                Save & Enter New Gift
     Wait Until Loading Is Complete
     Verify Progress Bar                    Count of Gifts=2
