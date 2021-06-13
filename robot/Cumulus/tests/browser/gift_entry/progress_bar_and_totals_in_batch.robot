@@ -68,6 +68,7 @@ Progress Bar and Totals in Batch
     Verify Field Default Value             Donation Amount=25.0
     Click Gift Entry Button                Save & Enter New Gift
     Wait Until Page Contains               $50.00 / $50.00
+    Wait Until Page Contains               2 / 2
     Verify Progress Bar                    Count of Gifts=2
     ...                                    Total Batch Amount=$50.00
     Click Gift Entry Button                Process Batch
