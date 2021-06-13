@@ -1738,10 +1738,10 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """Clicks the 'Process Batch' BGE button and waits for the processing to complete."""
         batchsuccess=npsp_lex_locators["gift_entry"]["success_toast"].format(batch_name)
         if contents=='has_cc_gifts':
-            self.builtin.sleep(60,"Waiting for all gifts to process")
+            self.builtin.sleep(180,"Waiting for all gifts to process")
             #Code is commented out until credit card gift processing speed is increased.
             #self.selenium.wait_until_page_does_not_contain("This can take a while. Check back in a bit!",60)
             #self.selenium.wait_until_element_is_visible(batchsuccess,60)
         else:
-            self.selenium.wait_until_page_does_not_contain("This can take a while. Check back in a bit!",60)
-            self.selenium.wait_until_element_is_visible(batchsuccess,60)
+            self.selenium.wait_until_page_does_not_contain("This can take a while. Check back in a bit!",180)
+            self.selenium.wait_until_element_is_visible(batchsuccess,180)
