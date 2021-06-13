@@ -67,13 +67,11 @@ Progress Bar and Totals in Batch
     ...                                    Donation Amount=25.0
     Verify Field Default Value             Donation Amount=25.0
     Click Gift Entry Button                Save & Enter New Gift
-    Wait Until Loading Is Complete
+    Wait Until Page Contains               $50.00 / $50.00
     Verify Progress Bar                    Count of Gifts=2
     ...                                    Total Batch Amount=$50.00
     Click Gift Entry Button                Process Batch
-    Wait Until Loading Is Complete
-    Click Data Import Button               NPSP Data Import       button       Cancel
-    Current Page Should Be                 Form                   Gift Entry 
+    Wait Until BGE Batch Processes         ${BATCH_NAME}
     Perform Action On Datatable Row   	   ${CONTACT1}[Name]      Delete
     Verify Progress Bar                    Count of Gifts=1
     ...                                    Total Batch Amount=$25.00
