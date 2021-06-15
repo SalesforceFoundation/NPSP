@@ -230,14 +230,14 @@ public inherited sharing class RD2_OpportunityMatcher {
         Date endDate = installment.nextDonationDate.addDays(nextDonationDateMatchDays);
 
         //check if there is any match with an Opp with Close Date < current date
-        matched = getMatchedOpportunity(boundaryRecordByCloseDate, startDate, endDate);
+        matched = matchOpportunityByInstallmentDateRange(boundaryRecordByCloseDate, startDate, endDate);
         if (matched != null) {
             addMatchedBoundaryOpp(matched.getOpportunity(), installment);
             return;
         }
 
         //check if there is any match with an Opp with Close Date >= current date
-        matched = getMatchedOpportunity(recordByCloseDate, startDate, endDate);
+        matched = matchOpportunityByInstallmentDateRange(recordByCloseDate, startDate, endDate);
         if (matched != null) {
             matched.attachInstallment(installment);
             return;
@@ -261,7 +261,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @param endDate Installment range end date
      * @return record Matched record
      */
-    private Record getMatchedOpportunity(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
+    private Record matchOpportunityByInstallmentDateRange(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
 
         for (Record record : recordByCloseDate.values()) {
             if (record.isNew() //the record does not contain an Opp to match the installment with
