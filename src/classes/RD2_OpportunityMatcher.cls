@@ -248,8 +248,8 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     private Boolean shouldMatchByOpportunityCloseDateRange(RD2_ScheduleService.Installment installment) {
-        return installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY &&
-                installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_YEARLY;
+        return installment.installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
+                installment.installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_YEARLY;
     }
 
     /***
