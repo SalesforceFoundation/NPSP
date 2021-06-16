@@ -453,7 +453,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
     */
-    public static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
+    private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
         return [
             SELECT Sum(Donation_Amount__c)amount
             FROM DataImport__c
