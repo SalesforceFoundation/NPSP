@@ -110,7 +110,7 @@ public with sharing class UTIL_HtmlOutput_CTRL {
         }
 
         String quoteString = '(\'|\\Q' + SUBSTITUTION_BY_ALLOWED_URL.get('"') + '\\E)';
-        Pattern stripJavaScript = Pattern.compile('on[a-z]*\\s*=\\s*' + quoteString + '.*\\(.*\\)\\s*\\1');
+        Pattern stripJavaScript = Pattern.compile('(?i)on[a-z]*\\s*=\\s*' + quoteString + '.*\\(.*\\)\\s*\\1');
         Matcher matchStrip = stripJavaScript.matcher(unsanitaryLink);
 
         return matchStrip.replaceAll('');
