@@ -1,8 +1,12 @@
 public inherited sharing class GiftBatchDTO {
 
-    private GiftBatch giftBatch;
+    private IGiftBatch giftBatch;
 
-    public GiftBatchDTO(GiftBatch giftBatch) {
+    public GiftBatchDTO(IGiftBatch giftBatch) {
        this.giftBatch = giftBatch;
+    }
+
+    public Money total() {
+        return giftBatch.total();
     }
 }

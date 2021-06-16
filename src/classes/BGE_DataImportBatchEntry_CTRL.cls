@@ -453,12 +453,25 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     * @param recordId the ID of the NPSP_Data_Import_Batch__c
     * @return Decimal amount
     */
-    private static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
+    public static AggregateResult[] getDataImportBatchTotalAmount(Id recordId) {
         return [
             SELECT Sum(Donation_Amount__c)amount
             FROM DataImport__c
             WHERE NPSP_Data_Import_Batch__c =: recordId
         ];
+    }
+
+    /**
+     * @description Instance method to get total amount from Agg Result.  Further
+     * refactoring will move this to the GiftBatch Selector class.
+     * @param batchId
+     *
+     * @return total amount of Gifts in Batch
+     */
+    public Decimal getTotal(Id batchId) {
+        AggregateResult[] aggResult = getDataImportBatchTotalAmount(batchId);
+        Decimal total = (Decimal) aggResult[0].get('amount');
+        return total;
     }
 
     /*******************************************************************************************************

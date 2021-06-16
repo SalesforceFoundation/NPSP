@@ -12,6 +12,23 @@ private class GiftBatchView_TEST {
         System.debug(LoggingLevel.ERROR, '^^^^^^ giftBatchView ^^^^^^');
     }
 
+    @IsTest
+    static void total_count_of_rows_is_initialized() {
+        GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
+        IGiftBatch giftBatchMock =
+                (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
+
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' +
+                JSON.serializePretty(giftBatch200));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ JSON.serializePretty(giftBatch) ^^^^^^');
+        GiftBatchView giftBatchView =
+                new GiftBatchView(new GiftBatchDTO(giftBatchMock));
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' +
+                JSON.serializePretty(giftBatchView));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ giftBatchView ^^^^^^');
+        System.assertEquals(200, giftBatchView.total.amount());
+    }
+
     private static Gifts dummyGifts() {
         return new Gifts(
                 new List<DataImport__c>{
@@ -25,5 +42,21 @@ private class GiftBatchView_TEST {
                         )
                 }
         );
+    }
+
+    public class GiftBatchWithTotalOf200 implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+            switch on (stubbedMethodName) {
+                when 'total' {
+                    return new Money(200, 'US');
+                }
+            }
+            return null;
+        }
     }
 }

@@ -1,6 +1,8 @@
 public inherited sharing class GiftBatchView {
 
-    public GiftBatchView(GiftBatchDTO giftBatchDTO) {
+    @AuraEnabled public Money total;
 
+    public GiftBatchView(GiftBatchDTO giftBatchDTO) {
+        total = giftBatchDTO.total();
     }
 }
