@@ -1,5 +1,4 @@
 import {LightningElement, api, track} from 'lwc';
-import {fireEvent} from 'c/pubsubNoPageRef';
 import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
@@ -28,7 +27,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         return this._remainingAmount;
     }
     set remainingAmount(value) {
-        if (value === this._remainingAmount || value === 0 || isEmpty(value)) {
+        if (value === this._remainingAmount || isEmpty(value)) {
             return;
         }
 
@@ -156,18 +155,25 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get shouldDisablePercent() {
-        if (isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
-            Number.parseFloat(this.row.record[apiNameFor(AMOUNT_FIELD)]) > 0) {
+        if (this.row.disabled 
+            || (isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)])
+                && Number.parseFloat(this.row.record[apiNameFor(AMOUNT_FIELD)]) > 0)) {
             return true;
         }
     }
+
     get shouldDisableAmount() {
-        if (!isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)]) &&
-            Number.parseFloat(this.row.record[apiNameFor(PERCENT_FIELD)]) > 0) {
+        if (this.row.disabled 
+            || (!isEmpty(this.row.record[apiNameFor(PERCENT_FIELD)])
+                && Number.parseFloat(this.row.record[apiNameFor(PERCENT_FIELD)]) > 0)) {
 
             return true;
         }
     }
+
+    get shouldDisableGAULookup() {
+        return this.row.disabled;
+    }    
 
     get qaLocatorDeleteRow() {
         return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
