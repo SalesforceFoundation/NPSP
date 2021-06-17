@@ -30,7 +30,7 @@ private class GiftBatchView_TEST {
     }
 
     @IsTest
-    static void total_count_correct_for_gift_batch_with_total_of_200() {
+    static void total_count_correct_for_gift_batch_with_total_count_of_2() {
         GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
         IGiftBatch giftBatchMock =
                 (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
