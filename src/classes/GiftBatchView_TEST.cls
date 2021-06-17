@@ -14,7 +14,7 @@ private class GiftBatchView_TEST {
 
     @IsTest
     static void total_amount_correct_for_gift_batch_with_total_of_200() {
-        GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
+        GiftBatchOf2WithTotalOf200 giftBatch200 = new GiftBatchOf2WithTotalOf200();
         IGiftBatch giftBatchMock =
                 (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
 
@@ -31,7 +31,7 @@ private class GiftBatchView_TEST {
 
     @IsTest
     static void total_count_correct_for_gift_batch_with_total_count_of_2() {
-        GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
+        GiftBatchOf2WithTotalOf200 giftBatch200 = new GiftBatchOf2WithTotalOf200();
         IGiftBatch giftBatchMock =
                 (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
 
@@ -61,7 +61,7 @@ private class GiftBatchView_TEST {
         );
     }
 
-    public class GiftBatchWithTotalOf200 implements StubProvider {
+    public class GiftBatchOf2WithTotalOf200 implements StubProvider {
         public Object handleMethodCall(Object stubbedObject,
                 String stubbedMethodName,
                 Type returnType,
