@@ -902,6 +902,10 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Elevate 支払サービスから生成された継続支援については、この機能は現時点ではサポートされていません。</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
@@ -7642,10 +7646,6 @@
     <customTabs>
         <label>バッチ支援エントリ</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>取引先責任者のマージ</label>

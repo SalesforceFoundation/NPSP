@@ -137,7 +137,7 @@
         <name>Type__c</name>
     </fields>
     <quickActions>
-        <label><!-- Quick Update --></label>
+        <label>Quick Update</label>
         <name>Quick_Update</name>
     </quickActions>
     </CustomObjectTranslation>

@@ -897,6 +897,10 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Esta función no se admite en estos momentos para Donaciones recurrentes generadas desde Servicios de pago de Elevate.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
@@ -3928,7 +3932,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     </customLabels>
     <customLabels>
         <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
-            seleccione &quot;No introduzca información de pago.&quot; para introducir una donación sin procesar un pago. {0} errores:
+            seleccione &quot;No introduzca información de pago.&quot; para introducir una donación sin procesar un pago. Errores de {0}:
             /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
     </customLabels>
@@ -7632,10 +7636,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customTabs>
         <label>Entrada de regalo en lote</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>Combinar contacto</label>

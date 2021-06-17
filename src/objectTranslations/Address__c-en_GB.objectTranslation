@@ -537,7 +537,7 @@
     </layouts>
     <nameFieldLabel>Address ID</nameFieldLabel>
     <quickActions>
-        <label><!-- Update Address --></label>
+        <label>Update Address</label>
         <name>Update_Address</name>
     </quickActions>
     <startsWith>Vowel</startsWith>

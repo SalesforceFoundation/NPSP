@@ -897,6 +897,10 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Actuellement, cette fonctionnalité n&apos;est pas prise en charge pour des Dons récurrents générés à partir des Services de paiement Elevate.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
@@ -7643,10 +7647,6 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
     <customTabs>
         <label>Saisie de dons par lots</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>Fusion de contact</label>

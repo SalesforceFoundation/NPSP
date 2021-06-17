@@ -6,7 +6,7 @@
         <name>Number_of_Household_Members__c</name>
     </fields>
     <quickActions>
-        <label><!-- Update Household --></label>
+        <label>Update Household</label>
         <name>Update_Household</name>
     </quickActions>
     </CustomObjectTranslation>

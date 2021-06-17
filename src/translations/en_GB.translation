@@ -900,6 +900,10 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>This functionality is currently not supported for Recurring Donations generated from Elevate Payment Services.</label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
@@ -7668,10 +7672,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
     </customTabs>
     <customTabs>
         <label>Contact Merge</label>
-        <name>Contact_Merge</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>

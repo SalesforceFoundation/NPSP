@@ -284,19 +284,19 @@
         </picklistValues>
     </fields>
     <quickActions>
-        <label><!-- Close Recurring Donation --></label>
+        <label>Close Recurring Donation</label>
         <name>Close_Recurring_Donation</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Opportunity --></label>
+        <label>New Opportunity</label>
         <name>New_Opportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- Pause --></label>
+        <label>Pause</label>
         <name>Pause</name>
     </quickActions>
     <quickActions>
-        <label><!-- Quick Update --></label>
+        <label>Quick Update</label>
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
