@@ -1,32 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de nomenclatura de oportunidades</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de nomenclatura de oportunidades</value>
-    </caseValues>
-    <fields>
-        <help>Si esta configuración aplica a oportunidades de individuos, oportunidades de organizaciones o a ambas.</help>
-        <label>Atribución</label>
-        <name>Attribution__c</name>
-    </fields>
-    <fields>
-        <help>El formato de fecha incluido en el nombre de la oportunidad.</help>
-        <label>Formato de fecha</label>
-        <name>Date_Format__c</name>
-    </fields>
-    <fields>
-        <help>El formato a usar para el nombre de la oportunidad.</help>
-        <label>Formato del nombre de la oportunidad</label>
-        <name>Opportunity_Name_Format__c</name>
-    </fields>
-    <fields>
-        <help>Especifica el tipo de registro de oportunidades para el que este esquema de nombres se establece.</help>
-        <label>Tipos de registro de oportunidades</label>
-        <name>Opportunity_Record_Types__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Attribution__c</name>
+    <help>Si esta configuración aplica a oportunidades de individuos, oportunidades de organizaciones o a ambas.</help>
+    <label>Atribución</label>
+  </fields>
+  <fields>
+    <name>Date_Format__c</name>
+    <help>El formato de fecha incluido en el nombre de la oportunidad.</help>
+    <label>Formato de fecha</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Name_Format__c</name>
+    <help>El formato a usar para el nombre de la oportunidad.</help>
+    <label>Formato del nombre de la oportunidad</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Record_Types__c</name>
+    <help>Especifica el tipo de registro de oportunidades para el que este esquema de nombres se establece.</help>
+    <label>Tipos de registro de oportunidades</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de nomenclatura de oportunidades</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de nomenclatura de oportunidades</value>
+  </caseValues>
 </CustomObjectTranslation>

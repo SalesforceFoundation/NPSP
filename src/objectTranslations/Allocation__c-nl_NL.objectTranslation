@@ -1,72 +1,68 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Toewijzing</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Toewijzingen</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <fields>
-        <help>Het bedrag van de Opportunity toegewezen aan deze GAU. Laat blanco voor op procent gebaseerde Toewijzingen.</help>
-        <label>Bedrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>De Campagne die aan deze Toewijzing is gekoppeld. Gebruik dit veld als u wilt dat nieuwe Opportunities die aan deze Campagne zijn gekoppeld op dezelfde wijze worden toegewezen.</help>
-        <label>Campagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De GAU waaraan deze Toewijzing is toegeschreven. Enkel GAU&apos;s die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
-        <label>GAU</label>
-        <lookupFilter>
-            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
-            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
-        </lookupFilter>
-        <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De Opportunity waaraan u deze Toewijzing wilt toeschrijven. NPSP totaliseert alle Opportunities in een Gesloten/Gewonnen fase naar de GAU van deze Toewijzing.</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Schrijft toewijzingen toe aan een Betaling.</help>
-        <label>Betaling</label>
-        <name>Payment__c</name>
-        <relationshipLabel>Betalingstoewijzingen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Percentage van het Opportunitybedrag toegewezen aan de GAU van deze Toewijzing. Als u het Opportunitybedrag later wijzigt, werkt NPSP het toewijzingsbedrag bij op de GAU.</help>
-        <label>Percentage</label>
-        <name>Percent__c</name>
-    </fields>
-    <fields>
-        <help>De Terugkerende Donatie waaraan deze Toewijzing is toegeschreven. NPSP wijst alle nieuwe Opportunities die aan de Terugkerende Donatie zijn gekoppeld automatisch op dezelfde wijze toe. </help>
-        <label>Terugkerende Donatie</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Allocation Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Naam GAU-Toewijzing</nameFieldLabel>
-    <webLinks>
-        <label>Toewijzingen beheren</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>Het bedrag van de Opportunity toegewezen aan deze GAU. Laat blanco voor op procent gebaseerde Toewijzingen.</help>
+    <label>Bedrag</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>De Campagne die aan deze Toewijzing is gekoppeld. Gebruik dit veld als u wilt dat nieuwe Opportunities die aan deze Campagne zijn gekoppeld op dezelfde wijze worden toegewezen.</help>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+    <label>Campagne</label>
+  </fields>
+  <fields>
+    <name>General_Accounting_Unit__c</name>
+    <help>De GAU waaraan deze Toewijzing is toegeschreven. Enkel GAU's die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+    <label>GAU</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>De Opportunity waaraan u deze Toewijzing wilt toeschrijven. NPSP totaliseert alle Opportunities in een Gesloten/Gewonnen fase naar de GAU van deze Toewijzing.</help>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <fields>
+    <name>Payment__c</name>
+    <help>Schrijft toewijzingen toe aan een Betaling.</help>
+    <relationshipLabel>Betalingstoewijzingen</relationshipLabel>
+    <label>Betaling</label>
+  </fields>
+  <fields>
+    <name>Percent__c</name>
+    <help>Percentage van het Opportunitybedrag toegewezen aan de GAU van deze Toewijzing. Als u het Opportunitybedrag later wijzigt, werkt NPSP het toewijzingsbedrag bij op de GAU.</help>
+    <label>Percentage</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <help>De Terugkerende Donatie waaraan deze Toewijzing is toegeschreven. NPSP wijst alle nieuwe Opportunities die aan de Terugkerende Donatie zijn gekoppeld automatisch op dezelfde wijze toe. </help>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+    <label>Terugkerende Donatie</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Allocations</name>
+    <label>Toewijzingen beheren</label>
+  </webLinks>
+  <layouts>
+    <layout>Allocation Layout</layout>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Naam GAU-Toewijzing</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam GAU-Toewijzing</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Toewijzing</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Toewijzingen</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Instellingen voor batchgegevensinvoer</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Instellingen voor batchgegevensinvoer</value>
-    </caseValues>
-    <fields>
-        <help>Indien aangevinkt, zal Batch-Gegevensinvoer Opportunities nooit benoemen, zelfs niet als ze blanco zijn (niet inbegrepen op de BDE-pagina).</help>
-        <label>Blanco Opportunitynamen toestaan</label>
-        <name>Allow_Blank_Opportunity_Names__c</name>
-    </fields>
-    <fields>
-        <help>Deze instelling genereert automatisch de recordnaam voor via batch ingevoerde Opportunityrecords op basis van de waarde van de ingevoerde velden.</help>
-        <label>Benoeming Opportunity</label>
-        <name>Opportunity_Naming__c</name>
-    </fields>
-    <fields>
-        <label>Waarsch. buitengebruikstelling bekeken</label>
-        <name>Viewed_Retirement_Alert__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+    <help>Indien aangevinkt, zal Batch-Gegevensinvoer Opportunities nooit benoemen, zelfs niet als ze blanco zijn (niet inbegrepen op de BDE-pagina).</help>
+    <label>Blanco Opportunitynamen toestaan</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Naming__c</name>
+    <help>Deze instelling genereert automatisch de recordnaam voor via batch ingevoerde Opportunityrecords op basis van de waarde van de ingevoerde velden.</help>
+    <label>Benoeming Opportunity</label>
+  </fields>
+  <fields>
+    <name>Viewed_Retirement_Alert__c</name>
+    <label>Waarsch. buitengebruikstelling bekeken</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Instellingen voor batchgegevensinvoer</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Instellingen voor batchgegevensinvoer</value>
+  </caseValues>
 </CustomObjectTranslation>

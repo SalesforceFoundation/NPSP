@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>Cuando crea una oportunidad para la organización en esta afiliación, NPSP asigna esta función de contacto de oportunidad al contacto afiliado.</help>
-        <label>Función contacto oportunidad relacionada</label>
-        <name>Related_Opportunity_Contact_Role__c</name>
-        <picklistValues>
-            <masterLabel>Soft Credit</masterLabel>
-            <translation>Crédito blando</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Solicitor</masterLabel>
-            <translation>Abogado</translation>
-        </picklistValues>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Related_Opportunity_Contact_Role__c</name>
+    <help>Cuando crea una oportunidad para la organización en esta afiliación, NPSP asigna esta función de contacto de oportunidad al contacto afiliado.</help>
+    <label>Función contacto oportunidad relacionada</label>
+    <picklistValues>
+      <masterLabel>Soft Credit</masterLabel>
+      <translation>Crédito blando</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Solicitor</masterLabel>
+      <translation>Abogado</translation>
+    </picklistValues>
+  </fields>
+</CustomObjectTranslation>

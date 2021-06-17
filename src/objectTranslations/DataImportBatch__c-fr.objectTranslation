@@ -1,207 +1,207 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Lot d&apos;importation de données NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Lots d&apos;importation de données NPSP</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
-        <name>BatchGiftEntryTabColumns</name>
-    </fieldSets>
-    <fields>
-        <help>Un champ facultatif d&apos;ID unique à utiliser pour la correspondance de comptes d&apos;organisation</help>
-        <label>ID unique personnalisé de compte</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <label>Champs actifs</label>
-        <name>Active_Fields__c</name>
-    </fields>
-    <fields>
-        <help>Les valeurs de champ par défaut d&apos;un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l&apos;interface utilisateur à l&apos;emplacement où vous modifiez votre lot.</help>
-        <label>Valeurs par défaut du lot</label>
-        <name>Batch_Defaults__c</name>
-    </fields>
-    <fields>
-        <help>Description facultative de ce lot.</help>
-        <label>Description du lot</label>
-        <name>Batch_Description__c</name>
-    </fields>
-    <fields>
-        <help>La version de la fonctionnalité Entrée de saisie de dons utilisée pour créer ce lot.</help>
-        <label>Version de l&apos;entrée de saisie de dons</label>
-        <name>Batch_Gift_Entry_Version__c</name>
-    </fields>
-    <fields>
-        <help>Identificateur unique automatisé de ce lot.</help>
-        <label>Numéro du lot</label>
-        <name>Batch_Number__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre d’enregistrements à traiter en même temps dans chaque lot.</help>
-        <label>Taille de lot</label>
-        <name>Batch_Process_Size__c</name>
-    </fields>
-    <fields>
-        <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l&apos;importation d&apos;un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
-        <label>Statut du lot</label>
-        <name>Batch_Status__c</name>
-        <picklistValues>
-            <masterLabel>Completed</masterLabel>
-            <translation>Terminé</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Failed - Needs Review</masterLabel>
-            <translation>Échoué - vérification requise</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Open</masterLabel>
-            <translation>Ouvert</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Liste des noms d&apos;API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
-        <label>Colonnes de tableau par lots</label>
-        <name>Batch_Table_Columns__c</name>
-    </fields>
-    <fields>
-        <help>Un identifiant unique optionnel utilisé pour identifier un contact</help>
-        <label>ID unique personnalisé de contact</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
-        <label>Règle de correspondance de contacts</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d&apos;un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
-        <label>Nbre de jours à partir de la date du don</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Définit la manière dont NPSP doit gérer les dons correspondants.</help>
-        <label>Comportement de correspondance de dons</label>
-        <name>Donation_Matching_Behavior__c</name>
-        <picklistValues>
-            <masterLabel>Best Match</masterLabel>
-            <translation>Meilleure correspondance</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Best Match or Create</masterLabel>
-            <translation>Meilleure correspondance ou créer</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Do Not Match</masterLabel>
-            <translation>Ne correspond pas</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Match</masterLabel>
-            <translation>Pas de correspondance</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match</masterLabel>
-            <translation>Correspondance unique</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Single Match or Create</masterLabel>
-            <translation>Correspondance unique ou créer</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
-        <label>Classe d’implém. de corresp. de dons</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Spécifie les champs à faire correspondre lorsque vous essayez de faire correspondre des dons dans les enregistrements par lots avec les opportunités et les paiements existants.</help>
-        <label>Règle de correspondance de dons</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Le nombre de dons qui devraient être saisis dans ce lot.</help>
-        <label>Nombre attendu de dons</label>
-        <name>Expected_Count_of_Gifts__c</name>
-    </fields>
-    <fields>
-        <help>Le montant total attendu de tous les dons saisis dans ce lot.</help>
-        <label>Montant total des lots attendus</label>
-        <name>Expected_Total_Batch_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Le modèle à utiliser pour le formulaire d&apos;entrée de dons pour ce lot.</help>
-        <label>Modèle de formulaire</label>
-        <name>Form_Template__c</name>
-        <relationshipLabel>Lots d’importation de données NPSP</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu&apos;ils sont configurés dans l&apos;onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>
-        <label>Lot de dons</label>
-        <name>GiftBatch__c</name>
-    </fields>
-    <fields>
-        <help>La date et l’heure du dernier traitement du lot.</help>
-        <label>Dernier traitement le</label>
-        <name>Last_Processed_On__c</name>
-    </fields>
-    <fields>
-        <help>Le nom de développeur d&apos;une classe Apex qui implémente l&apos;interface BDI_IPostProcess pour les enregistrements par lots NPSP.</help>
-        <label>Classe d’implém. de traitement de publ.</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, le lot sera automatiquement traité en fonction de la planification de la tâche associée.</help>
-        <label>Processus utilisant une tâche planifiée</label>
-        <name>Process_Using_Scheduled_Job__c</name>
-    </fields>
-    <fields>
-        <help>Affiche le nombre d’enregistrements qui n&apos;ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
-        <label>Échec des enregistrements</label>
-        <name>Records_Failed__c</name>
-    </fields>
-    <fields>
-        <help>Affiche le nombre d’enregistrements qui ont été traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
-        <label>Enregistrements traités avec succès</label>
-        <name>Records_Successfully_Processed__c</name>
-    </fields>
-    <fields>
-        <help>Lorsque cette option est sélectionnée, le nombre total de dons et le montant total doivent correspondre aux totaux attendus saisis pour ce lot.</help>
-        <label>Exiger correspondance totaux attendus</label>
-        <name>RequireTotalMatch__c</name>
-    </fields>
-    <fields>
-        <help>Si coché, NPSP calcule les cumuls de donateurs lorsque les dons sont traités. Si non coché, les cumuls de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
-        <label>Calculer les cumuls de dons par lots</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>NPSP Data Import Batch Layout</layout>
-        <sections>
-            <label>Correspondance contact et compte</label>
-            <section>Contact &amp; Account Matching</section>
-        </sections>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Correspondance de dons</label>
-            <section>Donation Matching</section>
-        </sections>
-        <sections>
-            <label>Extensibilité</label>
-            <section>Extensibility</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du lot</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
-    <webLinks>
-        <label>Traiter le lot</label>
-        <name>Process_Batch</name>
-    </webLinks>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>Un champ facultatif d'ID unique à utiliser pour la correspondance de comptes d'organisation</help>
+    <label>ID unique personnalisé de compte</label>
+  </fields>
+  <fields>
+    <name>Active_Fields__c</name>
+    <label>Champs actifs</label>
+  </fields>
+  <fields>
+    <name>Batch_Number__c</name>
+    <help>Identificateur unique automatisé de ce lot.</help>
+    <label>Numéro du lot</label>
+  </fields>
+  <fields>
+    <name>Batch_Defaults__c</name>
+    <help>Les valeurs de champ par défaut d'un lot dans la Saisie de dons. Ne pas modifier directement. Doivent être mises à jour dans l'interface utilisateur à l'emplacement où vous modifiez votre lot.</help>
+    <label>Valeurs par défaut du lot</label>
+  </fields>
+  <fields>
+    <name>Batch_Table_Columns__c</name>
+    <help>Liste des noms d'API pour les champs inclus dans le tableau des dons par lots. Stocké sous JSON.</help>
+    <label>Colonnes de tableau par lots</label>
+  </fields>
+  <fields>
+    <name>Batch_Description__c</name>
+    <help>Description facultative de ce lot.</help>
+    <label>Description du lot</label>
+  </fields>
+  <fields>
+    <name>Batch_Gift_Entry_Version__c</name>
+    <help>La version de la fonctionnalité Entrée de saisie de dons utilisée pour créer ce lot.</help>
+    <label>Version de l'entrée de saisie de dons</label>
+  </fields>
+  <fields>
+    <name>Batch_Process_Size__c</name>
+    <help>Le nombre d’enregistrements à traiter en même temps dans chaque lot.</help>
+    <label>Taille de lot</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>Un identifiant unique optionnel utilisé pour identifier un contact</help>
+    <label>ID unique personnalisé de contact</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>Indique quelle règle suivre pour mettre en correspondance les contacts des enregistrements d’importation de données avec les contacts existants.</help>
+    <label>Règle de correspondance de contacts</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>Nbre de jours àpd de la date de don à prendre en compte lors de la recherche d’une opp. ou d'un paiement corresp. NPSP choisira l’opp. ou le paiement corresp. dont la date tombe dans le nombre de jours ET se rapproche le plus de la date du don.</help>
+    <label>Nbre de jours à partir de la date du don</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>Définit la manière dont NPSP doit gérer les dons correspondants.</help>
+    <label>Comportement de correspondance de dons</label>
+    <picklistValues>
+      <masterLabel>Do Not Match</masterLabel>
+      <translation>Ne correspond pas</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Match</masterLabel>
+      <translation>Pas de correspondance</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match</masterLabel>
+      <translation>Correspondance unique</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Single Match or Create</masterLabel>
+      <translation>Correspondance unique ou créer</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match</masterLabel>
+      <translation>Meilleure correspondance</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Best Match or Create</masterLabel>
+      <translation>Meilleure correspondance ou créer</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IMatching pour les dons. Laissez le champ vide pour que NPSP gère la correspondance.</help>
+    <label>Classe d’implém. de corresp. de dons</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>Spécifie les champs à faire correspondre lorsque vous essayez de faire correspondre des dons dans les enregistrements par lots avec les opportunités et les paiements existants.</help>
+    <label>Règle de correspondance de dons</label>
+  </fields>
+  <fields>
+    <name>Expected_Count_of_Gifts__c</name>
+    <help>Le nombre de dons qui devraient être saisis dans ce lot.</help>
+    <label>Nombre attendu de dons</label>
+  </fields>
+  <fields>
+    <name>Expected_Total_Batch_Amount__c</name>
+    <help>Le montant total attendu de tous les dons saisis dans ce lot.</help>
+    <label>Montant total des lots attendus</label>
+  </fields>
+  <fields>
+    <name>Form_Template__c</name>
+    <help>Le modèle à utiliser pour le formulaire d'entrée de dons pour ce lot.</help>
+    <relationshipLabel>Lots d’importation de données NPSP</relationshipLabel>
+    <label>Modèle de formulaire</label>
+  </fields>
+  <fields>
+    <name>GiftBatch__c</name>
+    <help>Ce lot est destiné à être utilisé avec une saisie de dons par lots. Les lots sont marqués autom. comme des lots de dons lorsqu'ils sont configurés dans l'onglet Saisie de dons par lots. La modif. manuelle de ce champ peut avoir des conséquences imprévues.</help>
+    <label>Lot de dons</label>
+  </fields>
+  <fields>
+    <name>Last_Processed_On__c</name>
+    <help>La date et l’heure du dernier traitement du lot.</help>
+    <label>Dernier traitement le</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>Le nom de développeur d'une classe Apex qui implémente l'interface BDI_IPostProcess pour les enregistrements par lots NPSP.</help>
+    <label>Classe d’implém. de traitement de publ.</label>
+  </fields>
+  <fields>
+    <name>Process_Using_Scheduled_Job__c</name>
+    <help>Lorsque cette option est sélectionnée, le lot sera automatiquement traité en fonction de la planification de la tâche associée.</help>
+    <label>Processus utilisant une tâche planifiée</label>
+  </fields>
+  <fields>
+    <name>Records_Failed__c</name>
+    <help>Affiche le nombre d’enregistrements qui n'ont pas pu être traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
+    <label>Échec des enregistrements</label>
+  </fields>
+  <fields>
+    <name>Records_Successfully_Processed__c</name>
+    <help>Affiche le nombre d’enregistrements qui ont été traités avec succès à la date répertoriée au champ Dernier traitement le.</help>
+    <label>Enregistrements traités avec succès</label>
+  </fields>
+  <fields>
+    <name>RequireTotalMatch__c</name>
+    <help>Lorsque cette option est sélectionnée, le nombre total de dons et le montant total doivent correspondre aux totaux attendus saisis pour ce lot.</help>
+    <label>Exiger correspondance totaux attendus</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>Si coché, NPSP calcule les cumuls de donateurs lorsque les dons sont traités. Si non coché, les cumuls de donateurs sont calculés lors de la tâche planifiée de nuit par défaut. La sélection de cette case peut ralentir le traitement de ce lot.</help>
+    <label>Calculer les cumuls de dons par lots</label>
+  </fields>
+  <fields>
+    <name>Batch_Status__c</name>
+    <help>Le Statut du lot est basé sur les enregistrements Importation de données NPSP inclus dans le lot. Si l'importation d'un enregistrement échoue, le statut du lot indique « Échoué - vérification requise ».</help>
+    <label>Statut du lot</label>
+    <picklistValues>
+      <masterLabel>Open</masterLabel>
+      <translation>Ouvert</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Completed</masterLabel>
+      <translation>Terminé</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Failed - Needs Review</masterLabel>
+      <translation>Échoué - vérification requise</translation>
+    </picklistValues>
+  </fields>
+  <webLinks>
+    <name>Process_Batch</name>
+    <label>Traiter le lot</label>
+  </webLinks>
+  <layouts>
+    <layout>NPSP Data Import Batch Layout</layout>
+    <sections>
+      <label>Correspondance contact et compte</label>
+      <section>Contact &amp; Account Matching</section>
+    </sections>
+    <sections>
+      <label>Correspondance de dons</label>
+      <section>Donation Matching</section>
+    </sections>
+    <sections>
+      <label>Extensibilité</label>
+      <section>Extensibility</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom du lot</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom du lot</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Lot d'importation de données NPSP</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Lots d'importation de données NPSP</value>
+  </caseValues>
 </CustomObjectTranslation>

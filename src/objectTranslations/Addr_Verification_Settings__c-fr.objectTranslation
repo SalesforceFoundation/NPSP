@@ -1,63 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de vérification d&apos;adresse</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de vérification d&apos;adresse</value>
-    </caseValues>
-    <fields>
-        <help>URL utilisée pour la vérification d’adresse.</help>
-        <label>URL de vérification d’adresse</label>
-        <name>Address_Verification_Endpoint__c</name>
-    </fields>
-    <fields>
-        <help>L’ID d’authentification.</help>
-        <label>ID d’authentification</label>
-        <name>Auth_ID__c</name>
-    </fields>
-    <fields>
-        <help>Le jeton d’authentification.</help>
-        <label>Jeton d’authentification</label>
-        <name>Auth_Token__c</name>
-    </fields>
-    <fields>
-        <help>Classe Salesforce responsable de contacter le service Web et de vérifier les adresses.</help>
-        <label>Service de vérification</label>
-        <name>Class__c</name>
-    </fields>
-    <fields>
-        <help>Active la vérification automatique des nouvelles adresses.</help>
-        <label>Activer la vérification automatique</label>
-        <name>Enable_Automatic_Verification__c</name>
-    </fields>
-    <fields>
-        <help>Empêche l’API Cicero de remplacer les adresses lors de la vérification.</help>
-        <label>Empêcher le remplacement de l’adresse</label>
-        <name>Prevent_Address_Overwrite__c</name>
-    </fields>
-    <fields>
-        <help>Marque les adresses ambiguës comme non valides, lorsque l’API renvoie plus d’une adresse. Si cette option n’est pas sélectionnée, Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
-        <label>Rejeter les adresses ambiguës</label>
-        <name>Reject_Ambiguous_Addresses__c</name>
-    </fields>
-    <fields>
-        <help>Délai d’expiration d’appel en secondes.</help>
-        <label>Expiration</label>
-        <name>Timeout__c</name>
-    </fields>
-    <fields>
-        <help>Indique si vous utilisez le service de vérification d’adresse SmartyStreets.</help>
-        <label>DÉPRÉCIÉ - Utilisation de SmartyStreets</label>
-        <name>Using_SmartyStreets__c</name>
-    </fields>
-    <fields>
-        <help>URL utilisée pour la vérification de code postal.</help>
-        <label>Point term. de vérif. de code postal</label>
-        <name>Zipcode_Verification_Endpoint__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Address_Verification_Endpoint__c</name>
+    <help>URL utilisée pour la vérification d’adresse.</help>
+    <label>URL de vérification d’adresse</label>
+  </fields>
+  <fields>
+    <name>Auth_ID__c</name>
+    <help>L’ID d’authentification.</help>
+    <label>ID d’authentification</label>
+  </fields>
+  <fields>
+    <name>Auth_Token__c</name>
+    <help>Le jeton d’authentification.</help>
+    <label>Jeton d’authentification</label>
+  </fields>
+  <fields>
+    <name>Class__c</name>
+    <help>Classe Salesforce responsable de contacter le service Web et de vérifier les adresses.</help>
+    <label>Service de vérification</label>
+  </fields>
+  <fields>
+    <name>Enable_Automatic_Verification__c</name>
+    <help>Active la vérification automatique des nouvelles adresses.</help>
+    <label>Activer la vérification automatique</label>
+  </fields>
+  <fields>
+    <name>Prevent_Address_Overwrite__c</name>
+    <help>Empêche l’API Cicero de remplacer les adresses lors de la vérification.</help>
+    <label>Empêcher le remplacement de l’adresse</label>
+  </fields>
+  <fields>
+    <name>Reject_Ambiguous_Addresses__c</name>
+    <help>Marque les adresses ambiguës comme non valides, lorsque l’API renvoie plus d’une adresse. Si cette option n’est pas sélectionnée, Salesforce acceptera la première adresse suggérée comme adresse valide.</help>
+    <label>Rejeter les adresses ambiguës</label>
+  </fields>
+  <fields>
+    <name>Timeout__c</name>
+    <help>Délai d’expiration d’appel en secondes.</help>
+    <label>Expiration</label>
+  </fields>
+  <fields>
+    <name>Using_SmartyStreets__c</name>
+    <help>Indique si vous utilisez le service de vérification d’adresse SmartyStreets.</help>
+    <label>DÉPRÉCIÉ - Utilisation de SmartyStreets</label>
+  </fields>
+  <fields>
+    <name>Zipcode_Verification_Endpoint__c</name>
+    <help>URL utilisée pour la vérification de code postal.</help>
+    <label>Point term. de vérif. de code postal</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de vérification d'adresse</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de vérification d'adresse</value>
+  </caseValues>
 </CustomObjectTranslation>

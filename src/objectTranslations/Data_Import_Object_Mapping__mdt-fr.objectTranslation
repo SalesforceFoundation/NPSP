@@ -1,86 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Mappage d&apos;objets d&apos;importation de données</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Mappages d&apos;objets d&apos;importation de données</value>
-    </caseValues>
-    <fields>
-        <help>Si une logique Apex personnalisée doit être utilisée pour mapper les champs de cet objet, un nom de classe (avec espace de noms si nécessaire) qui étend la classe BDI_ObjectMappingLogic et remplace la méthode populateObject doit être saisi dans ce champ.</help>
-        <label>Classe logique de mappage personnalisée</label>
-        <name>Custom_Mapping_Logic_Class__c</name>
-    </fields>
-    <fields>
-        <help>Le Groupe d&apos;objets Importation de données qui contient cet enregistrement.</help>
-        <label>Ensemble mappages objets import. données</label>
-        <name>Data_Import_Object_Mapping_Set__c</name>
-        <relationshipLabel>Mappages d&apos;objets Importation de données</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Le Nom d&apos;API du champ dans l&apos;objet Importation de données NPSP dans lequel l&apos;ID de l&apos;enregistrement importé est placé lorsque l&apos;importation réussit. Permet également au code de vérifier si cet enregistrement a été importé ou mappé.</help>
-        <label>Nom de champ de l&apos;enregistrement importé</label>
-        <name>Imported_Record_Field_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le Nom d&apos;API du champ dans lequel la réussite ou l&apos;échec de l&apos;importation est enregistré pour un enregistrement Importation de données NPSP.</help>
-        <label>Nom champ statut enregistrement importé</label>
-        <name>Imported_Record_Status_Field_Name__c</name>
-    </fields>
-    <fields>
-        <label>Est supprimé</label>
-        <name>Is_Deleted__c</name>
-    </fields>
-    <fields>
-        <help>Le nom de l&apos;objet Importation de données hérité de l&apos;objet sur lequel ce Groupe d&apos;objets Importation de données est basé.</help>
-        <label>Nom objet Importation de données hérité</label>
-        <name>Legacy_Data_Import_Object_Name__c</name>
-    </fields>
-    <fields>
-        <help>Le nom d&apos;API de l&apos;objet cible de ce Groupe d&apos;objets.</help>
-        <label>Nom d&apos;API de l&apos;objet</label>
-        <name>Object_API_Name__c</name>
-    </fields>
-    <fields>
-        <help>L&apos;enregistrement Groupe d&apos;objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
-        <label>Prédécesseur</label>
-        <name>Predecessor__c</name>
-    </fields>
-    <fields>
-        <help>Si ce Groupe d&apos;objets est un enfant du prédécesseur, ce champ doit référencer le parent. S&apos;il est le parent du prédécesseur, doit être le champ de référence dans l&apos;enregistrement enfant.</help>
-        <label>Champ de relation</label>
-        <name>Relationship_Field__c</name>
-    </fields>
-    <fields>
-        <help>Indique si cet objet est un parent ou un enfant du prédécesseur.</help>
-        <label>Relation avec le prédécesseur</label>
-        <name>Relationship_To_Predecessor__c</name>
-        <picklistValues>
-            <masterLabel>Child</masterLabel>
-            <translation>Enfant</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>No Predecessor</masterLabel>
-            <translation>Aucun prédécesseur</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Parent</masterLabel>
-            <translation>Parent</translation>
-        </picklistValues>
-    </fields>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Détails de la relation de l&apos;objet personnalisé</label>
-            <section>Custom Object Relationship Details</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Custom_Mapping_Logic_Class__c</name>
+    <help>Si une logique Apex personnalisée doit être utilisée pour mapper les champs de cet objet, un nom de classe (avec espace de noms si nécessaire) qui étend la classe BDI_ObjectMappingLogic et remplace la méthode populateObject doit être saisi dans ce champ.</help>
+    <label>Classe logique de mappage personnalisée</label>
+  </fields>
+  <fields>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <help>Le Groupe d'objets Importation de données qui contient cet enregistrement.</help>
+    <relationshipLabel>Mappages d'objets Importation de données</relationshipLabel>
+    <label>Ensemble mappages objets import. données</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Field_Name__c</name>
+    <help>Le Nom d'API du champ dans l'objet Importation de données NPSP dans lequel l'ID de l'enregistrement importé est placé lorsque l'importation réussit. Permet également au code de vérifier si cet enregistrement a été importé ou mappé.</help>
+    <label>Nom de champ de l'enregistrement importé</label>
+  </fields>
+  <fields>
+    <name>Imported_Record_Status_Field_Name__c</name>
+    <help>Le Nom d'API du champ dans lequel la réussite ou l'échec de l'importation est enregistré pour un enregistrement Importation de données NPSP.</help>
+    <label>Nom champ statut enregistrement importé</label>
+  </fields>
+  <fields>
+    <name>Is_Deleted__c</name>
+    <label>Est supprimé</label>
+  </fields>
+  <fields>
+    <name>Object_API_Name__c</name>
+    <help>Le nom d'API de l'objet cible de ce Groupe d'objets.</help>
+    <label>Nom d'API de l'objet</label>
+  </fields>
+  <fields>
+    <name>Legacy_Data_Import_Object_Name__c</name>
+    <help>Le nom de l'objet Importation de données hérité de l'objet sur lequel ce Groupe d'objets Importation de données est basé.</help>
+    <label>Nom objet Importation de données hérité</label>
+  </fields>
+  <fields>
+    <name>Predecessor__c</name>
+    <help>L'enregistrement Groupe d'objets Importation de données doit exister pour pouvoir créer cet enregistrement (Parent ou Enfant).</help>
+    <label>Prédécesseur</label>
+  </fields>
+  <fields>
+    <name>Relationship_Field__c</name>
+    <help>Si ce Groupe d'objets est un enfant du prédécesseur, ce champ doit référencer le parent. S'il est le parent du prédécesseur, doit être le champ de référence dans l'enregistrement enfant.</help>
+    <label>Champ de relation</label>
+  </fields>
+  <fields>
+    <name>Relationship_To_Predecessor__c</name>
+    <help>Indique si cet objet est un parent ou un enfant du prédécesseur.</help>
+    <label>Relation avec le prédécesseur</label>
+    <picklistValues>
+      <masterLabel>Parent</masterLabel>
+      <translation>Parent</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Child</masterLabel>
+      <translation>Enfant</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>No Predecessor</masterLabel>
+      <translation>Aucun prédécesseur</translation>
+    </picklistValues>
+  </fields>
+  <layouts>
+    <layout>Data Import Object Mapping Layout</layout>
+    <sections>
+      <label>Détails de la relation de l'objet personnalisé</label>
+      <section>Custom Object Relationship Details</section>
+    </sections>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Mappage d'objets d'importation de données</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Mappages d'objets d'importation de données</value>
+  </caseValues>
 </CustomObjectTranslation>

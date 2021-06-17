@@ -1,22 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Estado de lista de comprobación de realización de Empezar a trabajar</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Estados de listas de comprobación de realización de Empezar a trabajar</value>
-    </caseValues>
-    <fields>
-        <label>Id. de elemento</label>
-        <name>Item_Id__c</name>
-    </fields>
-    <fields>
-        <label>Usuario</label>
-        <name>User__c</name>
-        <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
-    </fields>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nombre de estado de lista de comprobación de realización de Empezar a trabajar</nameFieldLabel>
+  <fields>
+    <name>Item_Id__c</name>
+    <label>Id. de elemento</label>
+  </fields>
+  <fields>
+    <name>User__c</name>
+    <label>Usuario</label>
+  </fields>
+  <nameFieldLabel>Nombre de estado de lista de comprobación de realización de Empezar a trabajar</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nombre de estado de lista de comprobación de realización de Empezar a trabajar</label>
+  </standardFields>
+  <gender>Masculine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Estado de lista de comprobación de realización de Empezar a trabajar</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Estados de listas de comprobación de realización de Empezar a trabajar</value>
+  </caseValues>
 </CustomObjectTranslation>

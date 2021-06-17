@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Paramètre de Saisie de données par lots</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Paramètres de Saisie de données par lots</value>
-    </caseValues>
-    <fields>
-        <help>Si cette option est activée, la saisie de données par lots ne nommera jamais les opportunités, même si les noms sont vides (non inclus sur la page BDE).</help>
-        <label>Autoriser les noms d’opportunités vides</label>
-        <name>Allow_Blank_Opportunity_Names__c</name>
-    </fields>
-    <fields>
-        <help>Ce paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lots en fonction de la valeur des champs saisis.</help>
-        <label>Dénomination des opportunités</label>
-        <name>Opportunity_Naming__c</name>
-    </fields>
-    <fields>
-        <label>Alerte de retrait vue</label>
-        <name>Viewed_Retirement_Alert__c</name>
-    </fields>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
+  <fields>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+    <help>Si cette option est activée, la saisie de données par lots ne nommera jamais les opportunités, même si les noms sont vides (non inclus sur la page BDE).</help>
+    <label>Autoriser les noms d’opportunités vides</label>
+  </fields>
+  <fields>
+    <name>Opportunity_Naming__c</name>
+    <help>Ce paramètre génère automatiquement le nom de l’enregistrement pour les enregistrements d’opportunités saisis par lots en fonction de la valeur des champs saisis.</help>
+    <label>Dénomination des opportunités</label>
+  </fields>
+  <fields>
+    <name>Viewed_Retirement_Alert__c</name>
+    <label>Alerte de retrait vue</label>
+  </fields>
+  <gender>Masculine</gender>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Paramètre de Saisie de données par lots</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Paramètres de Saisie de données par lots</value>
+  </caseValues>
 </CustomObjectTranslation>

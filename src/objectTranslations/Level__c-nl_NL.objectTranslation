@@ -1,86 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Niveau</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Niveaus</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- LevelEdit --></label>
-        <name>LevelEdit</name>
-    </fieldSets>
-    <fields>
-        <help>Geeft aan of dit Niveau momenteel in gebruik is.</help>
-        <label>Actief</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>Beschrijft waar dit Niveau voor dient, of wat het betekent om dit Niveau te bereiken.</help>
-        <label>Beschrijving</label>
-        <name>Description__c</name>
-    </fields>
-    <fields>
-        <help>Het op het Doelobject toe te passen Sjabloon voor Betrokkenheidsplan wanneer dit Niveau is bereikt.</help>
-        <label>Sjabloon voor Betrokkenheidsplan</label>
-        <name>Engagement_Plan_Template__c</name>
-        <relationshipLabel>Niveaus</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Geeft aan welk veld op het doelobject moet worden gebruikt om het huidige Niveau te bewaren.</help>
-        <label>Niveauveld</label>
-        <name>Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag waaronder de waarde moet zitten opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe voor elk bedrag groter dan of gelijk aan het Minimumbedrag van dit Niveau.</help>
-        <label>Maximumbedrag (&lt;)</label>
-        <name>Maximum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Het minimumbedrag dat nodig is opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe aan elk bedrag kleiner dan het Maximumbedrag van dit Niveau.</help>
-        <label>Minimumbedrag (&gt;=)</label>
-        <name>Minimum_Amount__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan welk veld op het doelobject moet worden gebruikt om het vorige Niveau te bewaren.</help>
-        <label>Veld Vorig Niveau</label>
-        <name>Previous_Level_Field__c</name>
-    </fields>
-    <fields>
-        <help>Het veld van het doelobject (developernaam) dat het bedrag en tijdskader definieert waarop dit Niveau moet worden gebaseerd.</help>
-        <label>Bronveld</label>
-        <name>Source_Field__c</name>
-    </fields>
-    <fields>
-        <help>Het object waarop dit Niveau van toepassing is.</help>
-        <label>Doel</label>
-        <name>Target__c</name>
-        <picklistValues>
-            <masterLabel>Account</masterLabel>
-            <translation>Account</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Contact</masterLabel>
-            <translation>Contactpersoon</translation>
-        </picklistValues>
-    </fields>
-    <gender>Neuter</gender>
-    <layouts>
-        <layout>Level Layout</layout>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>sectie lange tekst</label>
-            <section>long text section</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Niveaunaam</nameFieldLabel>
-    <validationRules>
-        <errorMessage>Doel is een verplicht veld op Niveau. Specificeer het Doelobject voor dit Niveau.</errorMessage>
-        <name>Target_Required</name>
-    </validationRules>
+  <fields>
+    <name>Active__c</name>
+    <help>Geeft aan of dit Niveau momenteel in gebruik is.</help>
+    <label>Actief</label>
+  </fields>
+  <fields>
+    <name>Description__c</name>
+    <help>Beschrijft waar dit Niveau voor dient, of wat het betekent om dit Niveau te bereiken.</help>
+    <label>Beschrijving</label>
+  </fields>
+  <fields>
+    <name>Engagement_Plan_Template__c</name>
+    <help>Het op het Doelobject toe te passen Sjabloon voor Betrokkenheidsplan wanneer dit Niveau is bereikt.</help>
+    <relationshipLabel>Niveaus</relationshipLabel>
+    <label>Sjabloon voor Betrokkenheidsplan</label>
+  </fields>
+  <fields>
+    <name>Level_Field__c</name>
+    <help>Geeft aan welk veld op het doelobject moet worden gebruikt om het huidige Niveau te bewaren.</help>
+    <label>Niveauveld</label>
+  </fields>
+  <fields>
+    <name>Maximum_Amount__c</name>
+    <help>Het bedrag waaronder de waarde moet zitten opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe voor elk bedrag groter dan of gelijk aan het Minimumbedrag van dit Niveau.</help>
+    <label>Maximumbedrag (&lt;)</label>
+  </fields>
+  <fields>
+    <name>Minimum_Amount__c</name>
+    <help>Het minimumbedrag dat nodig is opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe aan elk bedrag kleiner dan het Maximumbedrag van dit Niveau.</help>
+    <label>Minimumbedrag (&gt;=)</label>
+  </fields>
+  <fields>
+    <name>Previous_Level_Field__c</name>
+    <help>Geeft aan welk veld op het doelobject moet worden gebruikt om het vorige Niveau te bewaren.</help>
+    <label>Veld Vorig Niveau</label>
+  </fields>
+  <fields>
+    <name>Source_Field__c</name>
+    <help>Het veld van het doelobject (developernaam) dat het bedrag en tijdskader definieert waarop dit Niveau moet worden gebaseerd.</help>
+    <label>Bronveld</label>
+  </fields>
+  <fields>
+    <name>Target__c</name>
+    <help>Het object waarop dit Niveau van toepassing is.</help>
+    <label>Doel</label>
+    <picklistValues>
+      <masterLabel>Account</masterLabel>
+      <translation>Account</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Contact</masterLabel>
+      <translation>Contactpersoon</translation>
+    </picklistValues>
+  </fields>
+  <validationRules>
+    <errorMessage>Doel is een verplicht veld op Niveau. Specificeer het Doelobject voor dit Niveau.</errorMessage>
+    <name>Target_Required</name>
+  </validationRules>
+  <layouts>
+    <layout>Level Layout</layout>
+    <sections>
+      <label>sectie lange tekst</label>
+      <section>long text section</section>
+    </sections>
+    <sections>
+      <label>Aangepaste Koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Niveaunaam</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Niveaunaam</label>
+  </standardFields>
+  <gender>Neuter</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Niveau</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Niveaus</value>
+  </caseValues>
 </CustomObjectTranslation>

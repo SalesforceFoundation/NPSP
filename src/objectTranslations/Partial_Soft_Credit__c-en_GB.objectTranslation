@@ -1,56 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Partial Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Partial Soft Credits</value>
-    </caseValues>
-    <fields>
-        <help>The amount to be soft credited.</help>
-        <label>Amount</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>The full name of the Contact who gets this soft credit (read only).</help>
-        <label>Contact Name</label>
-        <name>Contact_Name__c</name>
-    </fields>
-    <fields>
-        <help>The Opportunity Contact Role this soft credit applies to.</help>
-        <label>Contact Role ID</label>
-        <name>Contact_Role_ID__c</name>
-    </fields>
-    <fields>
-        <help>Lookup to the Contact who gets this soft credit.</help>
-        <label>Contact</label>
-        <name>Contact__c</name>
-        <relationshipLabel>Partial Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>The Opportunity this soft credit applies to.</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Partial Soft Credits</relationshipLabel>
-    </fields>
-    <fields>
-        <help>The Role of this soft credit.</help>
-        <label>Role Name</label>
-        <name>Role_Name__c</name>
-    </fields>
-    <layouts>
-        <layout>Partial Soft Credit Layout</layout>
-        <sections>
-            <label>Custom Links</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Partial Soft Credit Name</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
-    <webLinks>
-        <label>Manage Soft Credits</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>The amount to be soft credited.</help>
+    <label>Amount</label>
+  </fields>
+  <fields>
+    <name>Contact_Name__c</name>
+    <help>The full name of the Contact who gets this soft credit (read only).</help>
+    <label>Contact Name</label>
+  </fields>
+  <fields>
+    <name>Contact_Role_ID__c</name>
+    <help>The Opportunity Contact Role this soft credit applies to.</help>
+    <label>Contact Role ID</label>
+  </fields>
+  <fields>
+    <name>Contact__c</name>
+    <help>Lookup to the Contact who gets this soft credit.</help>
+    <relationshipLabel>Partial Soft Credits</relationshipLabel>
+    <label>Contact</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>The Opportunity this soft credit applies to.</help>
+    <relationshipLabel>Partial Soft Credits</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <fields>
+    <name>Role_Name__c</name>
+    <help>The Role of this soft credit.</help>
+    <label>Role Name</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Soft_Credits</name>
+    <label>Manage Soft Credits</label>
+  </webLinks>
+  <layouts>
+    <layout>Partial Soft Credit Layout</layout>
+    <sections>
+      <label>Custom Links</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Partial Soft Credit Name</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Partial Soft Credit Name</label>
+  </standardFields>
+  <startsWith>Consonant</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Partial Soft Credit</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Partial Soft Credits</value>
+  </caseValues>
 </CustomObjectTranslation>

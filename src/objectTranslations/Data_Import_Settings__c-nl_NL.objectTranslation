@@ -1,88 +1,88 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Gegevensimportinstellingen</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Gegevensimportinstellingen</value>
-    </caseValues>
-    <fields>
-        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
-        <label>Aangepast Uniek ID voor Account</label>
-        <name>Account_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Accounts met een Data Import te matchen tegen bestaande Accounts.</help>
-        <label>Account Matching Regel</label>
-        <name>Account_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch</help>
-        <label>Verwerkingsgrootte van Batch</label>
-        <name>Batch_Size__c</name>
-    </fields>
-    <fields>
-        <help>JSON voor het resultaat van CMT-implementatie 
-{ &quot;jobId&quot;: &quot;response&quot; }</help>
-        <label>Resultaat van CMT API-implementatie</label>
-        <name>CMT_API_Status__c</name>
-    </fields>
-    <fields>
-        <help>Implementatie van ID van aangepaste metagegevens</help>
-        <label>ID van CMT-implementatie</label>
-        <name>CMT_Deployment_ID__c</name>
-    </fields>
-    <fields>
-        <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
-        <label>Aangepast Uniek ID voor Contactpersoon</label>
-        <name>Contact_Custom_Unique_ID__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan welke regel moet worden gevolgd wanneer er geprobeerd wordt overeenkomsten te vinden tussen Contactpersonen in Gegevensimportrecords en bestaande Contactpersonen.</help>
-        <label>Contactpersoonovereenkomstregel</label>
-        <name>Contact_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
-        <label>Std. veldtoew.set voor gegev.import</label>
-        <name>Default_Data_Import_Field_Mapping_Set__c</name>
-    </fields>
-    <fields>
-        <help>Voer het aantal dagen in vanaf de Donatiedatum om een reeks te bepalen bij het zoeken naar een matchende Opp of Betaling. De Data Import kiest een matchende Opp of Betaling die in de reeks valt en het dichtst ligt in de buurt van de Donatiedatum.</help>
-        <label>Aantal Dagen vanaf Donatiedatum</label>
-        <name>Donation_Date_Range__c</name>
-    </fields>
-    <fields>
-        <help>Bepaalt hoe de Data Import omgaat met een Matching Gift. Er moet een waarde gekozen worden.</help>
-        <label>Overeenkomstenpatroon voor donatie</label>
-        <name>Donation_Matching_Behavior__c</name>
-    </fields>
-    <fields>
-        <help>De developer naam van een Apex Klasse dat de BDI_IMatching interface implementeert voor Donaties. Leeg laten om het over te laten aan NPSP.</help>
-        <label>Implementatieklasse Overeenkomst Donatie</label>
-        <name>Donation_Matching_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Bepaalt op welke velden gematcht moet worden bij het matchen van Donaties (Opportunities en Betalingen) met Data import records. Klik op Control of Command om meerdere velden te selecteren.</help>
-        <label>Donatieovereenkomstregel</label>
-        <name>Donation_Matching_Rule__c</name>
-    </fields>
-    <fields>
-        <help>Definieer de manier waarop velden op de record NPSP-gegevensimport worden toegewezen aan andere objecten in Salesforce. De opties zijn Help-tekst of Veldtoewijzing voor gegevensimport.</help>
-        <label>Veldtoewijzingsmethode</label>
-        <name>Field_Mapping_Method__c</name>
-    </fields>
-    <fields>
-        <help>De developer naam van een Apex Klasse dat de BDI__PostProcess interface implementeert voor NPSP Data Import records.</help>
-        <label>Implementatieklasse Na Verwerking</label>
-        <name>Post_Process_Implementing_Class__c</name>
-    </fields>
-    <fields>
-        <help>Wanneer aangevinkt, berekent NPSP donorstatistieken bij de verwerking van de donaties. Wanneer niet aangevinkt, worden donorstatistieken berekend tijdens de standaard Geplande Opdracht &apos;s nachts. Deze selectie kan de verwerking van deze batch vertragen.</help>
-        <label>Donatietotalisering met Batch berekenen</label>
-        <name>Run_Opportunity_Rollups_while_Processing__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Account_Custom_Unique_ID__c</name>
+    <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Organisatieaccounts</help>
+    <label>Aangepast Uniek ID voor Account</label>
+  </fields>
+  <fields>
+    <name>Account_Matching_Rule__c</name>
+    <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Accounts met een Data Import te matchen tegen bestaande Accounts.</help>
+    <label>Account Matching Regel</label>
+  </fields>
+  <fields>
+    <name>Batch_Size__c</name>
+    <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch</help>
+    <label>Verwerkingsgrootte van Batch</label>
+  </fields>
+  <fields>
+    <name>CMT_API_Status__c</name>
+    <help>JSON voor het resultaat van CMT-implementatie 
+{ "jobId": "response" }</help>
+    <label>Resultaat van CMT API-implementatie</label>
+  </fields>
+  <fields>
+    <name>CMT_Deployment_ID__c</name>
+    <help>Implementatie van ID van aangepaste metagegevens</help>
+    <label>ID van CMT-implementatie</label>
+  </fields>
+  <fields>
+    <name>Contact_Custom_Unique_ID__c</name>
+    <help>Een optioneel veld voor Uniek ID, te gebruiken voor overeenkomst van Contactpersonen</help>
+    <label>Aangepast Uniek ID voor Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Contact_Matching_Rule__c</name>
+    <help>Geeft aan welke regel moet worden gevolgd wanneer er geprobeerd wordt overeenkomsten te vinden tussen Contactpersonen in Gegevensimportrecords en bestaande Contactpersonen.</help>
+    <label>Contactpersoonovereenkomstregel</label>
+  </fields>
+  <fields>
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
+    <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
+    <label>Std. veldtoew.set voor gegev.import</label>
+  </fields>
+  <fields>
+    <name>Donation_Date_Range__c</name>
+    <help>Voer het aantal dagen in vanaf de Donatiedatum om een reeks te bepalen bij het zoeken naar een matchende Opp of Betaling. De Data Import kiest een matchende Opp of Betaling die in de reeks valt en het dichtst ligt in de buurt van de Donatiedatum.</help>
+    <label>Aantal Dagen vanaf Donatiedatum</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Behavior__c</name>
+    <help>Bepaalt hoe de Data Import omgaat met een Matching Gift. Er moet een waarde gekozen worden.</help>
+    <label>Overeenkomstenpatroon voor donatie</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Implementing_Class__c</name>
+    <help>De developer naam van een Apex Klasse dat de BDI_IMatching interface implementeert voor Donaties. Leeg laten om het over te laten aan NPSP.</help>
+    <label>Implementatieklasse Overeenkomst Donatie</label>
+  </fields>
+  <fields>
+    <name>Donation_Matching_Rule__c</name>
+    <help>Bepaalt op welke velden gematcht moet worden bij het matchen van Donaties (Opportunities en Betalingen) met Data import records. Klik op Control of Command om meerdere velden te selecteren.</help>
+    <label>Donatieovereenkomstregel</label>
+  </fields>
+  <fields>
+    <name>Field_Mapping_Method__c</name>
+    <help>Definieer de manier waarop velden op de record NPSP-gegevensimport worden toegewezen aan andere objecten in Salesforce. De opties zijn Help-tekst of Veldtoewijzing voor gegevensimport.</help>
+    <label>Veldtoewijzingsmethode</label>
+  </fields>
+  <fields>
+    <name>Post_Process_Implementing_Class__c</name>
+    <help>De developer naam van een Apex Klasse dat de BDI__PostProcess interface implementeert voor NPSP Data Import records.</help>
+    <label>Implementatieklasse Na Verwerking</label>
+  </fields>
+  <fields>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    <help>Wanneer aangevinkt, berekent NPSP donorstatistieken bij de verwerking van de donaties. Wanneer niet aangevinkt, worden donorstatistieken berekend tijdens de standaard Geplande Opdracht 's nachts. Deze selectie kan de verwerking van deze batch vertragen.</help>
+    <label>Donatietotalisering met Batch berekenen</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Gegevensimportinstellingen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Gegevensimportinstellingen</value>
+  </caseValues>
 </CustomObjectTranslation>

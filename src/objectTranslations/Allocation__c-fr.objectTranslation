@@ -1,73 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Allocation UCG</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Allocations UCG</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <fields>
-        <help>Montant de l’opportunité alloué à cette unité comptable générale. Laissez vide pour des allocations par pourcentages.</help>
-        <label>Montant</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>La campagne associée à cette allocation. Utilisez ce champ si vous souhaitez que les nouvelles opportunités associées à cette campagne soient allouées de la même manière.</help>
-        <label>Campagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Allocations UCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>L’unité comptable générale à laquelle cette allocation est attribuée. Seules les unités comptables générales marquées comme actives seront disponibles pour les nouvelles allocations.</help>
-        <label>Unité comptable générale</label>
-        <lookupFilter>
-            <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
-            <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
-        </lookupFilter>
-        <name>General_Accounting_Unit__c</name>
-        <relationshipLabel>Allocations UCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>L&apos;opportunité à laquelle vous souhaitez attribuer cette allocation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette allocation.</help>
-        <label>Opportunité</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Allocations UCG</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Attribue les allocations à un paiement.</help>
-        <label>Paiement</label>
-        <name>Payment__c</name>
-        <relationshipLabel>Allocations de paiement</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette allocation. Si vous modifiez ultérieurement le montant de l&apos;opportunité, NPSP mettra à jour le montant de l&apos;allocation dans l&apos;unité comptable générale.</help>
-        <label>Pourcentage</label>
-        <name>Percent__c</name>
-    </fields>
-    <fields>
-        <help>Le don régulier auquel cette allocation est attribuée. NPSP alloue automatiquement toutes les nouvelles opportunités associées au don régulier de la même manière.</help>
-        <label>Don régulier</label>
-        <name>Recurring_Donation__c</name>
-        <relationshipLabel>Allocations UCG</relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Allocation Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom des Allocations UCG</nameFieldLabel>
-    <startsWith>Vowel</startsWith>
-    <webLinks>
-        <label>Gérer des allocations</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+  <fields>
+    <name>Amount__c</name>
+    <help>Montant de l’opportunité alloué à cette unité comptable générale. Laissez vide pour des allocations par pourcentages.</help>
+    <label>Montant</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>La campagne associée à cette allocation. Utilisez ce champ si vous souhaitez que les nouvelles opportunités associées à cette campagne soient allouées de la même manière.</help>
+    <relationshipLabel>Allocations UCG</relationshipLabel>
+    <label>Campagne</label>
+  </fields>
+  <fields>
+    <name>General_Accounting_Unit__c</name>
+    <help>L’unité comptable générale à laquelle cette allocation est attribuée. Seules les unités comptables générales marquées comme actives seront disponibles pour les nouvelles allocations.</help>
+    <relationshipLabel>Allocations UCG</relationshipLabel>
+    <label>Unité comptable générale</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>L'opportunité à laquelle vous souhaitez attribuer cette allocation. NPSP cumule toutes les opportunités dans une étape Clôturée/Gagnée dans l’unité comptable générale de cette allocation.</help>
+    <relationshipLabel>Allocations UCG</relationshipLabel>
+    <label>Opportunité</label>
+  </fields>
+  <fields>
+    <name>Payment__c</name>
+    <help>Attribue les allocations à un paiement.</help>
+    <relationshipLabel>Allocations de paiement</relationshipLabel>
+    <label>Paiement</label>
+  </fields>
+  <fields>
+    <name>Percent__c</name>
+    <help>Pourcentage du montant de l’opportunité alloué à l’unité comptable générale de cette allocation. Si vous modifiez ultérieurement le montant de l'opportunité, NPSP mettra à jour le montant de l'allocation dans l'unité comptable générale.</help>
+    <label>Pourcentage</label>
+  </fields>
+  <fields>
+    <name>Recurring_Donation__c</name>
+    <help>Le don régulier auquel cette allocation est attribuée. NPSP alloue automatiquement toutes les nouvelles opportunités associées au don régulier de la même manière.</help>
+    <relationshipLabel>Allocations UCG</relationshipLabel>
+    <label>Don régulier</label>
+  </fields>
+  <webLinks>
+    <name>Manage_Allocations</name>
+    <label>Gérer des allocations</label>
+  </webLinks>
+  <layouts>
+    <layout>Allocation Layout</layout>
+    <sections>
+      <label>Liens personnalisés</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nom des Allocations UCG</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nom des Allocations UCG</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <startsWith>Vowel</startsWith>
+  <caseValues>
+    <plural>false</plural>
+    <value>Allocation UCG</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Allocations UCG</value>
+  </caseValues>
 </CustomObjectTranslation>

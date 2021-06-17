@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Niveau-instellingen</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Niveau-instellingen</value>
-    </caseValues>
-    <fields>
-        <label>Begintijd Laatste Taak: Account</label>
-        <name>LastJobStartTimeAccount__c</name>
-    </fields>
-    <fields>
-        <label>Begintijd Laatste Taak: Contactpersoon</label>
-        <name>LastJobStartTimeContact__c</name>
-    </fields>
-    <fields>
-        <help>Aantal te verwerken records per batch bij het opnieuw berekenen van niveaus.</help>
-        <label>Batchgrootte Toewijzing van Niveau</label>
-        <name>Level_Assignment_Batch_Size__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>LastJobStartTimeAccount__c</name>
+    <label>Begintijd Laatste Taak: Account</label>
+  </fields>
+  <fields>
+    <name>LastJobStartTimeContact__c</name>
+    <label>Begintijd Laatste Taak: Contactpersoon</label>
+  </fields>
+  <fields>
+    <name>Level_Assignment_Batch_Size__c</name>
+    <help>Aantal te verwerken records per batch bij het opnieuw berekenen van niveaus.</help>
+    <label>Batchgrootte Toewijzing van Niveau</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Niveau-instellingen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Niveau-instellingen</value>
+  </caseValues>
 </CustomObjectTranslation>

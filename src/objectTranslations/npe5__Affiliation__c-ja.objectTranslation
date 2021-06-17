@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fields>
-        <help>このアフィリエーションの団体の商談を作成すると、この商談取引先責任者の役割がアフィリエーション対象の取引先責任者に割り当てられます。</help>
-        <label>関連する商談取引先責任者の役割</label>
-        <name>Related_Opportunity_Contact_Role__c</name>
-        <picklistValues>
-            <masterLabel>Soft Credit</masterLabel>
-            <translation>ソフトクレジット</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Solicitor</masterLabel>
-            <translation>支援依頼者</translation>
-        </picklistValues>
-    </fields>
-    </CustomObjectTranslation>
+  <fields>
+    <name>Related_Opportunity_Contact_Role__c</name>
+    <help>このアフィリエーションの団体の商談を作成すると、この商談取引先責任者の役割がアフィリエーション対象の取引先責任者に割り当てられます。</help>
+    <label>関連する商談取引先責任者の役割</label>
+    <picklistValues>
+      <masterLabel>Soft Credit</masterLabel>
+      <translation>ソフトクレジット</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Solicitor</masterLabel>
+      <translation>支援依頼者</translation>
+    </picklistValues>
+  </fields>
+</CustomObjectTranslation>

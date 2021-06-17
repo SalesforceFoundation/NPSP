@@ -1,247 +1,251 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Terugkerende donatieplanning</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Terugkerende donatieplanningen</value>
-    </caseValues>
-    <fields>
-        <help>Stelt vast of Terugkerende Donatieplanning actief of niet-actief is op basis van Einddatum. Alleen-lezen.</help>
-        <label>Actief</label>
-        <name>Active__c</name>
-    </fields>
-    <fields>
-        <help>De campagne die is gekoppeld aan de terugkerende donatie wanneer deze planningrecord wordt gemaakt.</help>
-        <label>Gerelateerd campagne</label>
-        <name>Campaign__c</name>
-        <relationshipLabel>Terugkerende donatieplanningen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Stelt de specifieke dag van de maand in voor toekomstige Opportunities voor termijnen wanneer de Termijnperiode Maandelijks is.</help>
-        <label>Dag van de Maand</label>
-        <name>DayOfMonth__c</name>
-        <picklistValues>
-            <masterLabel>1</masterLabel>
-            <translation>1</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>10</masterLabel>
-            <translation>10</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>11</masterLabel>
-            <translation>11</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>12</masterLabel>
-            <translation>12</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>13</masterLabel>
-            <translation>13</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>14</masterLabel>
-            <translation>14</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>15</masterLabel>
-            <translation>15</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>16</masterLabel>
-            <translation>16</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>17</masterLabel>
-            <translation>17</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>18</masterLabel>
-            <translation>18</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>19</masterLabel>
-            <translation>19</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>2</masterLabel>
-            <translation>2</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>20</masterLabel>
-            <translation>20</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>21</masterLabel>
-            <translation>21</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>22</masterLabel>
-            <translation>22</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>23</masterLabel>
-            <translation>23</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>24</masterLabel>
-            <translation>24</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>25</masterLabel>
-            <translation>25</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>26</masterLabel>
-            <translation>26</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>27</masterLabel>
-            <translation>27</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>28</masterLabel>
-            <translation>28</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>29</masterLabel>
-            <translation>29</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>3</masterLabel>
-            <translation>3</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>30</masterLabel>
-            <translation>30</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>4</masterLabel>
-            <translation>4</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>5</masterLabel>
-            <translation>5</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>6</masterLabel>
-            <translation>6</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>7</masterLabel>
-            <translation>7</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>8</masterLabel>
-            <translation>8</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>9</masterLabel>
-            <translation>9</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Last Day Of Month</masterLabel>
-            <translation>Laatste dag van de maand</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De einddatum, indien verplicht, voor deze planningsrecord.</help>
-        <label>Einddatum planning</label>
-        <name>EndDate__c</name>
-    </fields>
-    <fields>
-        <help>Voor integratie met externe services of datawarehouses.</help>
-        <label>ID van externe planning</label>
-        <name>ExternalId__c</name>
-    </fields>
-    <fields>
-        <help>Het bedrag voor de Opportunity van elke termijn.</help>
-        <label>Bedrag</label>
-        <name>InstallmentAmount__c</name>
-    </fields>
-    <fields>
-        <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Termijnperiode. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als &quot;elke 3 maanden&quot;.</help>
-        <label>Frequentie van termijnen</label>
-        <name>InstallmentFrequency__c</name>
-    </fields>
-    <fields>
-        <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Frequentie van termijnen. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als &quot;elke 3 maanden&quot;.</help>
-        <label>Termijnperiode</label>
-        <name>InstallmentPeriod__c</name>
-        <picklistValues>
-            <masterLabel>1st and 15th</masterLabel>
-            <translation>1ste en 15de</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Daily</masterLabel>
-            <translation>Dagelijks</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Monthly</masterLabel>
-            <translation>Maandelijks</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Weekly</masterLabel>
-            <translation>Wekelijks</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Yearly</masterLabel>
-            <translation>Jaarlijks</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>Stel dit in als in de planningsrecords een datumbereik staat voor de onderbreking van de terugkerende donatie</help>
-        <label>Is onderbroken</label>
-        <name>IsPause__c</name>
-    </fields>
-    <fields>
-        <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
-        <label>Betalingswijze</label>
-        <name>PaymentMethod__c</name>
-        <picklistValues>
-            <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Check</masterLabel>
-            <translation>Cheque</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Credit Card</masterLabel>
-            <translation>Creditcard</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>De terugkerende donatie waaraan deze planningsrecord is gekoppeld.</help>
-        <label>Terugkerende donatie</label>
-        <name>RecurringDonation__c</name>
-        <relationshipLabel>Terugkerende donatieplanningen</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De ingangsdatum voor deze planningsrecord.</help>
-        <label>Ingangsdatum</label>
-        <name>StartDate__c</name>
-    </fields>
-    <fields>
-        <help>Bevat aanvullende gegevens van de planning. Bijvoorbeeld de reden voor onderbreking van een planning.</help>
-        <label>Statusreden</label>
-        <name>StatusReason__c</name>
-    </fields>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Recurring Schedule Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Planningsdetails</label>
-            <section>Schedule Details</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nummer van terugkerende planning</nameFieldLabel>
+  <fields>
+    <name>Active__c</name>
+    <help>Stelt vast of Terugkerende Donatieplanning actief of niet-actief is op basis van Einddatum. Alleen-lezen.</help>
+    <label>Actief</label>
+  </fields>
+  <fields>
+    <name>Campaign__c</name>
+    <help>De campagne die is gekoppeld aan de terugkerende donatie wanneer deze planningrecord wordt gemaakt.</help>
+    <relationshipLabel>Terugkerende donatieplanningen</relationshipLabel>
+    <label>Gerelateerd campagne</label>
+  </fields>
+  <fields>
+    <name>DayOfMonth__c</name>
+    <help>Stelt de specifieke dag van de maand in voor toekomstige Opportunities voor termijnen wanneer de Termijnperiode Maandelijks is.</help>
+    <label>Dag van de Maand</label>
+    <picklistValues>
+      <masterLabel>1</masterLabel>
+      <translation>1</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>2</masterLabel>
+      <translation>2</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>3</masterLabel>
+      <translation>3</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>4</masterLabel>
+      <translation>4</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>5</masterLabel>
+      <translation>5</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>6</masterLabel>
+      <translation>6</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>7</masterLabel>
+      <translation>7</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>8</masterLabel>
+      <translation>8</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>9</masterLabel>
+      <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>10</masterLabel>
+      <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>11</masterLabel>
+      <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>12</masterLabel>
+      <translation>12</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>13</masterLabel>
+      <translation>13</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>14</masterLabel>
+      <translation>14</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>15</masterLabel>
+      <translation>15</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>16</masterLabel>
+      <translation>16</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>17</masterLabel>
+      <translation>17</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>18</masterLabel>
+      <translation>18</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>19</masterLabel>
+      <translation>19</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>20</masterLabel>
+      <translation>20</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>21</masterLabel>
+      <translation>21</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>22</masterLabel>
+      <translation>22</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>23</masterLabel>
+      <translation>23</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>24</masterLabel>
+      <translation>24</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>25</masterLabel>
+      <translation>25</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>26</masterLabel>
+      <translation>26</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>27</masterLabel>
+      <translation>27</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>28</masterLabel>
+      <translation>28</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>29</masterLabel>
+      <translation>29</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>30</masterLabel>
+      <translation>30</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Last Day Of Month</masterLabel>
+      <translation>Laatste dag van de maand</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>EndDate__c</name>
+    <help>De einddatum, indien verplicht, voor deze planningsrecord.</help>
+    <label>Einddatum planning</label>
+  </fields>
+  <fields>
+    <name>ExternalId__c</name>
+    <help>Voor integratie met externe services of datawarehouses.</help>
+    <label>ID van externe planning</label>
+  </fields>
+  <fields>
+    <name>InstallmentAmount__c</name>
+    <help>Het bedrag voor de Opportunity van elke termijn.</help>
+    <label>Bedrag</label>
+  </fields>
+  <fields>
+    <name>InstallmentFrequency__c</name>
+    <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Termijnperiode. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als "elke 3 maanden".</help>
+    <label>Frequentie van termijnen</label>
+  </fields>
+  <fields>
+    <name>InstallmentPeriod__c</name>
+    <help>Definieert de planning van termijnen van deze terugkerende donatie, samen met Frequentie van termijnen. Als Termijnperiode bijvoorbeeld Maandelijks zou zijn en Frequentie van termijnen 3, zou de planning worden gedefinieerd als "elke 3 maanden".</help>
+    <label>Termijnperiode</label>
+    <picklistValues>
+      <masterLabel>Monthly</masterLabel>
+      <translation>Maandelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Yearly</masterLabel>
+      <translation>Jaarlijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Weekly</masterLabel>
+      <translation>Wekelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Daily</masterLabel>
+      <translation>Dagelijks</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>1st and 15th</masterLabel>
+      <translation>1ste en 15de</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>IsPause__c</name>
+    <help>Stel dit in als in de planningsrecords een datumbereik staat voor de onderbreking van de terugkerende donatie</help>
+    <label>Is onderbroken</label>
+  </fields>
+  <fields>
+    <name>StatusReason__c</name>
+    <help>Bevat aanvullende gegevens van de planning. Bijvoorbeeld de reden voor onderbreking van een planning.</help>
+    <label>Statusreden</label>
+  </fields>
+  <fields>
+    <name>PaymentMethod__c</name>
+    <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
+    <label>Betalingswijze</label>
+    <picklistValues>
+      <masterLabel>Credit Card</masterLabel>
+      <translation>Creditcard</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Check</masterLabel>
+      <translation>Cheque</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>ACH</masterLabel>
+      <translation>ACH</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>RecurringDonation__c</name>
+    <help>De terugkerende donatie waaraan deze planningsrecord is gekoppeld.</help>
+    <relationshipLabel>Terugkerende donatieplanningen</relationshipLabel>
+    <label>Terugkerende donatie</label>
+  </fields>
+  <fields>
+    <name>StartDate__c</name>
+    <help>De ingangsdatum voor deze planningsrecord.</help>
+    <label>Ingangsdatum</label>
+  </fields>
+  <layouts>
+    <layout>Recurring Schedule Layout</layout>
+    <sections>
+      <label>Planningsdetails</label>
+      <section>Schedule Details</section>
+    </sections>
+    <sections>
+      <label>Aangepaste koppelingen</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <nameFieldLabel>Nummer van terugkerende planning</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Nummer van terugkerende planning</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Terugkerende donatieplanning</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Terugkerende donatieplanningen</value>
+  </caseValues>
 </CustomObjectTranslation>

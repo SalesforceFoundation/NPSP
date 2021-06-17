@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Toewijzingsinstellingen</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Toewijzingsinstellingen</value>
-    </caseValues>
-    <fields>
-        <help>Standaardtoewijzingen inschakelen creëert een Toewijzingsobject voor elke Opportunity. Hierdoor wordt rapportering over toewijzingen aan een standaard GAU mogelijk gemaakt, maar het gebruikt meer gegevensopslag.</help>
-        <label>Standaardtoewijzingen Ingeschakeld</label>
-        <name>Default_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Bevat het ID voor de standaard GAU voor het maken van standaardtoewijzingen of voor de toewijzing van niet-toegewezen bedragen.</help>
-        <label>Standaard GAU</label>
-        <name>Default__c</name>
-    </fields>
-    <fields>
-        <help>Uit berekeningen van Toewijzingstotaliseringen uit te sluiten Opportunityrecordtypen.</help>
-        <label>Uitgesloten Opportunityrecordtypen</label>
-        <name>Excluded_Opp_RecTypes__c</name>
-    </fields>
-    <fields>
-        <help>Uit Toewijzingstotaliseringen uitgesloten Opportunitytypen.</help>
-        <label>Uitgesloten Opportunitytypen</label>
-        <name>Excluded_Opp_Types__c</name>
-    </fields>
-    <fields>
-        <help>Geeft aan of Toewijzingen kunnen worden ingesteld op het Betalingsniveau. Bekijk de documentatie over Toewijzingen op Betalingsniveau voordat u deze instelling wijzigt.</help>
-        <label>Betalingstoewijzingen Ingeschakeld</label>
-        <name>Payment_Allocations_Enabled__c</name>
-    </fields>
-    <fields>
-        <help>Deze waarde heeft invloed op het aantal te tellen dagen voor N Dagen Toewijzingstotaliseringsvelden.</help>
-        <label>Waarde Totalisering N Dag</label>
-        <name>Rollup_N_Day_Value__c</name>
-    </fields>
-    <fields>
-        <help>Door dit aan te vinken, respecteren de Toewijzingstotaliseringstotalen het fiscale jaar, niet kalenderjaar. Fiscaal Jaar instellen: Set-up &gt; Bedrijfsprofiel &gt; Fiscaal Jaar. OPMERKING: Instellingen voor Aangepast Fiscaal Jaar worden NIET ondersteund.</help>
-        <label>Fisc. Jaar voor Totaliseringen gebruiken</label>
-        <name>Use_Fiscal_Year_for_Rollups__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Allocations_Enabled__c</name>
+    <help>Standaardtoewijzingen inschakelen creëert een Toewijzingsobject voor elke Opportunity. Hierdoor wordt rapportering over toewijzingen aan een standaard GAU mogelijk gemaakt, maar het gebruikt meer gegevensopslag.</help>
+    <label>Standaardtoewijzingen Ingeschakeld</label>
+  </fields>
+  <fields>
+    <name>Default__c</name>
+    <help>Bevat het ID voor de standaard GAU voor het maken van standaardtoewijzingen of voor de toewijzing van niet-toegewezen bedragen.</help>
+    <label>Standaard GAU</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_RecTypes__c</name>
+    <help>Uit berekeningen van Toewijzingstotaliseringen uit te sluiten Opportunityrecordtypen.</help>
+    <label>Uitgesloten Opportunityrecordtypen</label>
+  </fields>
+  <fields>
+    <name>Excluded_Opp_Types__c</name>
+    <help>Uit Toewijzingstotaliseringen uitgesloten Opportunitytypen.</help>
+    <label>Uitgesloten Opportunitytypen</label>
+  </fields>
+  <fields>
+    <name>Payment_Allocations_Enabled__c</name>
+    <help>Geeft aan of Toewijzingen kunnen worden ingesteld op het Betalingsniveau. Bekijk de documentatie over Toewijzingen op Betalingsniveau voordat u deze instelling wijzigt.</help>
+    <label>Betalingstoewijzingen Ingeschakeld</label>
+  </fields>
+  <fields>
+    <name>Rollup_N_Day_Value__c</name>
+    <help>Deze waarde heeft invloed op het aantal te tellen dagen voor N Dagen Toewijzingstotaliseringsvelden.</help>
+    <label>Waarde Totalisering N Dag</label>
+  </fields>
+  <fields>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+    <help>Door dit aan te vinken, respecteren de Toewijzingstotaliseringstotalen het fiscale jaar, niet kalenderjaar. Fiscaal Jaar instellen: Set-up &gt; Bedrijfsprofiel &gt; Fiscaal Jaar. OPMERKING: Instellingen voor Aangepast Fiscaal Jaar worden NIET ondersteund.</help>
+    <label>Fisc. Jaar voor Totaliseringen gebruiken</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Toewijzingsinstellingen</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Toewijzingsinstellingen</value>
+  </caseValues>
 </CustomObjectTranslation>

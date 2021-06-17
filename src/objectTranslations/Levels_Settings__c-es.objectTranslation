@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de Niveles</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de Niveles</value>
-    </caseValues>
-    <fields>
-        <label>Hora de inicio de último trabajo: Cuenta</label>
-        <name>LastJobStartTimeAccount__c</name>
-    </fields>
-    <fields>
-        <label>Hora de inicio último trabajo: Contacto</label>
-        <name>LastJobStartTimeContact__c</name>
-    </fields>
-    <fields>
-        <help>Número de registros por lote para procesar cuando se vuelven a calcular los niveles.</help>
-        <label>Tamaño de lote de asignación de niveles</label>
-        <name>Level_Assignment_Batch_Size__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>LastJobStartTimeAccount__c</name>
+    <label>Hora de inicio de último trabajo: Cuenta</label>
+  </fields>
+  <fields>
+    <name>LastJobStartTimeContact__c</name>
+    <label>Hora de inicio último trabajo: Contacto</label>
+  </fields>
+  <fields>
+    <name>Level_Assignment_Batch_Size__c</name>
+    <help>Número de registros por lote para procesar cuando se vuelven a calcular los niveles.</help>
+    <label>Tamaño de lote de asignación de niveles</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Configuración de Niveles</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Configuraciones de Niveles</value>
+  </caseValues>
 </CustomObjectTranslation>

@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Instellingen voor giftopgave</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Instellingen voor giftopgave</value>
-    </caseValues>
-    <fields>
-        <help>Dit is een voor Opgave van gift gebruikte startsjabloon voor het opgeven van enkelvoudige giften of batches van giften. Dit is de standaardsjabloon voor het opgeven van enkelvoudige giften.</help>
-        <label>Standaardsjabloon voor Opgave van gift</label>
-        <name>Default_Gift_Entry_Template__c</name>
-    </fields>
-    <fields>
-        <help>Schakelt de tool Opgave van gift in. Deze voorziening vereist wat Geavanceerd toewijzen.</help>
-        <label>Opgave van gift inschakelen</label>
-        <name>Enable_Gift_Entry__c</name>
-    </fields>
-    <gender>Feminine</gender>
+  <fields>
+    <name>Default_Gift_Entry_Template__c</name>
+    <help>Dit is een voor Opgave van gift gebruikte startsjabloon voor het opgeven van enkelvoudige giften of batches van giften. Dit is de standaardsjabloon voor het opgeven van enkelvoudige giften.</help>
+    <label>Standaardsjabloon voor Opgave van gift</label>
+  </fields>
+  <fields>
+    <name>Enable_Gift_Entry__c</name>
+    <help>Schakelt de tool Opgave van gift in. Deze voorziening vereist wat Geavanceerd toewijzen.</help>
+    <label>Opgave van gift inschakelen</label>
+  </fields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Instellingen voor giftopgave</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Instellingen voor giftopgave</value>
+  </caseValues>
 </CustomObjectTranslation>

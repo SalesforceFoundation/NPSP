@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポートオブジェクトの対応付けセット</value>
-    </caseValues>
-    <layouts>
-        <layout>Data Import Object Mapping Set Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <layouts>
+    <layout>Data Import Object Mapping Set Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <caseValues>
+    <plural>false</plural>
+    <value>データインポートオブジェクトの対応付けセット</value>
+  </caseValues>
 </CustomObjectTranslation>

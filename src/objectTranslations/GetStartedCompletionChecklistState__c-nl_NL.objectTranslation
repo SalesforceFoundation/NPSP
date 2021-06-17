@@ -1,22 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Status voltooiingschecklist Aan de slag</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Statussen voltooiingschecklist Aan de slag</value>
-    </caseValues>
-    <fields>
-        <label>Item-ID</label>
-        <name>Item_Id__c</name>
-    </fields>
-    <fields>
-        <label>Gebruiker</label>
-        <name>User__c</name>
-        <relationshipLabel><!-- Get Started Completion Checklist States --></relationshipLabel>
-    </fields>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Naam status voltooiingschecklist Aan de slag</nameFieldLabel>
+  <fields>
+    <name>Item_Id__c</name>
+    <label>Item-ID</label>
+  </fields>
+  <fields>
+    <name>User__c</name>
+    <label>Gebruiker</label>
+  </fields>
+  <nameFieldLabel>Naam status voltooiingschecklist Aan de slag</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam status voltooiingschecklist Aan de slag</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Status voltooiingschecklist Aan de slag</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Statussen voltooiingschecklist Aan de slag</value>
+  </caseValues>
 </CustomObjectTranslation>

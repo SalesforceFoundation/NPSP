@@ -1,47 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Soft credit van account</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Soft credits van account</value>
-    </caseValues>
-    <fields>
-        <help>De Account die deze soft credit ontvangt.</help>
-        <label>Account</label>
-        <name>Account__c</name>
-        <relationshipLabel>Soft Credits van Account</relationshipLabel>
-    </fields>
-    <fields>
-        <help>Het bedrag dat soft credit moet worden.</help>
-        <label>Bedrag</label>
-        <name>Amount__c</name>
-    </fields>
-    <fields>
-        <help>De Opportunity waarop deze soft credit van toepassing is.</help>
-        <label>Opportunity</label>
-        <name>Opportunity__c</name>
-        <relationshipLabel>Soft Credits van Account</relationshipLabel>
-    </fields>
-    <fields>
-        <help>De rol die aan deze soft credit is gekoppeld. De rol beschrijft hoe de Account betrokken was bij de Opportunity.</help>
-        <label>Rol</label>
-        <name>Role__c</name>
-        <picklistValues>
-            <masterLabel>Donation Source</masterLabel>
-            <translation>Donatiebron</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Influencer</masterLabel>
-            <translation>Beïnvloeder</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>Match</masterLabel>
-            <translation>Overeenstemming</translation>
-        </picklistValues>
-    </fields>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Naam van Soft Credit van Account</nameFieldLabel>
+  <fields>
+    <name>Account__c</name>
+    <help>De Account die deze soft credit ontvangt.</help>
+    <relationshipLabel>Soft Credits van Account</relationshipLabel>
+    <label>Account</label>
+  </fields>
+  <fields>
+    <name>Amount__c</name>
+    <help>Het bedrag dat soft credit moet worden.</help>
+    <label>Bedrag</label>
+  </fields>
+  <fields>
+    <name>Opportunity__c</name>
+    <help>De Opportunity waarop deze soft credit van toepassing is.</help>
+    <relationshipLabel>Soft Credits van Account</relationshipLabel>
+    <label>Opportunity</label>
+  </fields>
+  <fields>
+    <name>Role__c</name>
+    <help>De rol die aan deze soft credit is gekoppeld. De rol beschrijft hoe de Account betrokken was bij de Opportunity.</help>
+    <label>Rol</label>
+    <picklistValues>
+      <masterLabel>Donation Source</masterLabel>
+      <translation>Donatiebron</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Influencer</masterLabel>
+      <translation>Beïnvloeder</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>Match</masterLabel>
+      <translation>Overeenstemming</translation>
+    </picklistValues>
+  </fields>
+  <nameFieldLabel>Naam van Soft Credit van Account</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam van Soft Credit van Account</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Soft credit van account</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Soft credits van account</value>
+  </caseValues>
 </CustomObjectTranslation>

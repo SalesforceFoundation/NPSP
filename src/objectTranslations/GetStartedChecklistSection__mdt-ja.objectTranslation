@@ -1,42 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP 使用開始チェックリストセクション</value>
-    </caseValues>
-    <fields>
-        <help>[使用開始] ページでのセクション項目の [説明] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
-        <label>説明表示ラベル名</label>
-        <name>Description_Label__c</name>
-    </fields>
-    <fields>
-        <help>このセクションが表示される [使用開始] ページの種別 (管理者またはエンドユーザ)。</help>
-        <label>ページ種別</label>
-        <name>Page_Type__c</name>
-        <picklistValues>
-            <masterLabel>Admin</masterLabel>
-            <translation>管理者</translation>
-        </picklistValues>
-        <picklistValues>
-            <masterLabel>End User</masterLabel>
-            <translation>エンドユーザ</translation>
-        </picklistValues>
-    </fields>
-    <fields>
-        <help>[使用開始] ページでのこのセクションの位置。</help>
-        <label>位置</label>
-        <name>Position__c</name>
-    </fields>
-    <fields>
-        <help>[使用開始] ページでのセクション項目の [タイトル] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
-        <label>タイトル表示ラベル名</label>
-        <name>Title_Label__c</name>
-    </fields>
-    <layouts>
-        <layout>GS Checklist Section Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
+  <fields>
+    <name>Description_Label__c</name>
+    <help>[使用開始] ページでのセクション項目の [説明] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+    <label>説明表示ラベル名</label>
+  </fields>
+  <fields>
+    <name>Page_Type__c</name>
+    <help>このセクションが表示される [使用開始] ページの種別 (管理者またはエンドユーザ)。</help>
+    <label>ページ種別</label>
+    <picklistValues>
+      <masterLabel>Admin</masterLabel>
+      <translation>管理者</translation>
+    </picklistValues>
+    <picklistValues>
+      <masterLabel>End User</masterLabel>
+      <translation>エンドユーザ</translation>
+    </picklistValues>
+  </fields>
+  <fields>
+    <name>Position__c</name>
+    <help>[使用開始] ページでのこのセクションの位置。</help>
+    <label>位置</label>
+  </fields>
+  <fields>
+    <name>Title_Label__c</name>
+    <help>[使用開始] ページでのセクション項目の [タイトル] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+    <label>タイトル表示ラベル名</label>
+  </fields>
+  <layouts>
+    <layout>GS Checklist Section Layout</layout>
+    <sections>
+      <label>カスタムリンク</label>
+      <section>Custom Links</section>
+    </sections>
+  </layouts>
+  <caseValues>
+    <plural>false</plural>
+    <value>NPSP 使用開始チェックリストセクション</value>
+  </caseValues>
 </CustomObjectTranslation>
