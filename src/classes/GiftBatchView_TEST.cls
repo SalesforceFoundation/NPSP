@@ -13,7 +13,7 @@ private class GiftBatchView_TEST {
     }
 
     @IsTest
-    static void total_count_of_rows_is_initialized() {
+    static void total_amount_correct_for_gift_batch_with_total_of_200() {
         GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
         IGiftBatch giftBatchMock =
                 (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
@@ -29,6 +29,22 @@ private class GiftBatchView_TEST {
         System.assertEquals(200, giftBatchView.total.amount());
     }
 
+    @IsTest
+    static void total_count_correct_for_gift_batch_with_total_of_200() {
+        GiftBatchWithTotalOf200 giftBatch200 = new GiftBatchWithTotalOf200();
+        IGiftBatch giftBatchMock =
+                (IGiftBatch) Test.createStub(IGiftBatch.class, giftBatch200);
+
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' +
+                JSON.serializePretty(giftBatch200));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ JSON.serializePretty(giftBatch) ^^^^^^');
+        GiftBatchView giftBatchView =
+                new GiftBatchView(new GiftBatchDTO(giftBatchMock));
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' +
+                JSON.serializePretty(giftBatchView));
+        System.debug(LoggingLevel.ERROR, '^^^^^^ giftBatchView ^^^^^^');
+        System.assertEquals(200, giftBatchView.totalCount);
+    }
     private static Gifts dummyGifts() {
         return new Gifts(
                 new List<DataImport__c>{
