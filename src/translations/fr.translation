@@ -7653,10 +7653,6 @@ Remarque : L’onglet de paramètres NPSP est visible dans l’application NPSP
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
-    </customTabs>
-    <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
     </customTabs>
