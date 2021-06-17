@@ -1,76 +1,72 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Is_Secret__c</name>
-    <label>Ist geheim</label>
-  </fields>
-  <fields>
-    <name>Key__c</name>
-    <label>Schlüssel</label>
-  </fields>
-  <fields>
-    <name>Service_Key__c</name>
-    <label>Serviceschlüssel</label>
-  </fields>
-  <fields>
-    <name>Service__c</name>
-    <label>Leistung</label>
-  </fields>
-  <fields>
-    <name>Value__c</name>
-    <label>Wert</label>
-  </fields>
-  <layouts>
-    <layout>Payment Configuration Layout</layout>
-    <sections>
-      <label>Benutzerdefinierte Links</label>
-      <section>Custom Links</section>
-    </sections>
-  </layouts>
-  <nameFieldLabel>Konfigurationsname der Zahlungsservices</nameFieldLabel>
-  <standardFields>
-    <name>Name</name>
-    <label>Konfigurationsname der Zahlungsservices</label>
-  </standardFields>
-  <gender>Feminine</gender>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Nominative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Accusative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Dative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Genitive</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Nominative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Accusative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Dative</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Genitive</caseType>
-    <value>Zahlungsservices-Konfiguration</value>
-  </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <fields>
+        <label>Ist geheim</label>
+        <name>Is_Secret__c</name>
+    </fields>
+    <fields>
+        <label>Schlüssel</label>
+        <name>Key__c</name>
+    </fields>
+    <fields>
+        <label>Serviceschlüssel</label>
+        <name>Service_Key__c</name>
+    </fields>
+    <fields>
+        <label>Leistung</label>
+        <name>Service__c</name>
+    </fields>
+    <fields>
+        <label>Wert</label>
+        <name>Value__c</name>
+    </fields>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Payment Configuration Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Konfigurationsname der Zahlungsservices</nameFieldLabel>
 </CustomObjectTranslation>

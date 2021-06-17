@@ -1,79 +1,79 @@
-<?xml version='1.0' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-  <fields>
-    <name>Description_Label__c</name>
-    <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-    <label>Name der Beschreibungsbezeichnung</label>
-  </fields>
-  <fields>
-    <name>Page_Type__c</name>
-    <help>Der Typ der Seite "Erste Schritte" (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
-    <label>Seitentyp</label>
-    <picklistValues>
-      <masterLabel>Admin</masterLabel>
-      <translation>Administrator</translation>
-    </picklistValues>
-    <picklistValues>
-      <masterLabel>End User</masterLabel>
-      <translation>Endbenutzer</translation>
-    </picklistValues>
-  </fields>
-  <fields>
-    <name>Position__c</name>
-    <help>Die Position dieses Abschnitts auf der Seite "Erste Schritte".</help>
-    <label>Position</label>
-  </fields>
-  <fields>
-    <name>Title_Label__c</name>
-    <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite "Erste Schritte". Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
-    <label>Name der Titelbezeichnung</label>
-  </fields>
-  <layouts>
-    <layout>GS Checklist Section Layout</layout>
-    <sections>
-      <label>Benutzerdefinierte Links</label>
-      <section>Custom Links</section>
-    </sections>
-  </layouts>
-  <gender>Masculine</gender>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Nominative</caseType>
-    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Accusative</caseType>
-    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Dative</caseType>
-    <value>Abschnitt der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>false</plural>
-    <caseType>Genitive</caseType>
-    <value>Abschnitts der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Nominative</caseType>
-    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Accusative</caseType>
-    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Dative</caseType>
-    <value>Abschnitten der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
-  <caseValues>
-    <plural>true</plural>
-    <caseType>Genitive</caseType>
-    <value>Abschnitte der NPSP-Checkliste "Erste Schritte"</value>
-  </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <fields>
+        <help>Der API-Name für die Beschreibungsbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+        <label>Name der Beschreibungsbezeichnung</label>
+        <name>Description_Label__c</name>
+    </fields>
+    <fields>
+        <help>Der Typ der Seite &quot;Erste Schritte&quot; (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
+        <label>Seitentyp</label>
+        <name>Page_Type__c</name>
+        <picklistValues>
+            <masterLabel>Admin</masterLabel>
+            <translation>Administrator</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>End User</masterLabel>
+            <translation>Endbenutzer</translation>
+        </picklistValues>
+    </fields>
+    <fields>
+        <help>Die Position dieses Abschnitts auf der Seite &quot;Erste Schritte&quot;.</help>
+        <label>Position</label>
+        <name>Position__c</name>
+    </fields>
+    <fields>
+        <help>Der API-Name für die Titelbezeichnung eines Abschnittselements auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+        <label>Name der Titelbezeichnung</label>
+        <name>Title_Label__c</name>
+    </fields>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>GS Checklist Section Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
 </CustomObjectTranslation>

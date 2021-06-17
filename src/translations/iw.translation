@@ -902,6 +902,10 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when the functionality is not supported for Elevate Recurring Donation. --></label>
         <name>RD2_ElevateNotSupported</name>
     </customLabels>
@@ -7543,11 +7547,11 @@
         <name>Batch_Gift_Entry</name>
     </customTabs>
     <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
+        <label>מיזוג אנשי קשר</label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label>מיזוג אנשי קשר</label>
+        <label><!-- Contact Merge (OLD) --></label>
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
