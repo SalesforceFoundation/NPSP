@@ -5,4 +5,9 @@ public interface IGiftBatch {
      */
     Money total();
 
+    /**
+     * @return Count of all Gifts in the GiftBatch.
+     */
+    Integer totalCount();
+
 }

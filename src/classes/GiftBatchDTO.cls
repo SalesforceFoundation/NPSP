@@ -9,4 +9,8 @@ public inherited sharing class GiftBatchDTO {
     public Money total() {
         return giftBatch.total();
     }
+
+    public Integer totalCount() {
+        return giftBatch.totalCount();
+    }
 }

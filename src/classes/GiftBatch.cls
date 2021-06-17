@@ -142,12 +142,22 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public Money total() {
         //todo: use giftBatch Totals (and place in Selector layer)
-        String model = BGE_DataImportBatchEntry_CTRL.getDataImportModel(batchId);
-        BGE_DataImportBatchEntry_CTRL.DataImportModel typedModel =
-                (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-                        JSON.deserialize(model,
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-        return new Money(typedModel.totalRowAmount, 'US');
+        return new Money(dataImportModel().totalRowAmount, 'US');
     }
 
+    public Integer totalCount() {
+        //todo: use giftBatch Totals (and place in Selector layer)
+        return dataImportModel().totalCountOfRows;
+    }
+
+    private BGE_DataImportBatchEntry_CTRL.DataImportModel typedModel;
+    private BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel() {
+        if (typedModel == null) {
+            String model = BGE_DataImportBatchEntry_CTRL.getDataImportModel(batchId);
+            typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
+                    JSON.deserialize(model,
+                            BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+        }
+        return typedModel;
+    }
 }

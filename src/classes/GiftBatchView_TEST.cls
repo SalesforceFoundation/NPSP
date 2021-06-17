@@ -43,8 +43,9 @@ private class GiftBatchView_TEST {
         System.debug(LoggingLevel.ERROR, '*** variable value: ' +
                 JSON.serializePretty(giftBatchView));
         System.debug(LoggingLevel.ERROR, '^^^^^^ giftBatchView ^^^^^^');
-        System.assertEquals(200, giftBatchView.totalCount);
+        System.assertEquals(2, giftBatchView.totalCount);
     }
+
     private static Gifts dummyGifts() {
         return new Gifts(
                 new List<DataImport__c>{
@@ -70,6 +71,9 @@ private class GiftBatchView_TEST {
             switch on (stubbedMethodName) {
                 when 'total' {
                     return new Money(200, 'US');
+                }
+                when 'totalCount' {
+                    return 2;
                 }
             }
             return null;

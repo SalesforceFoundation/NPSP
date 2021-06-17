@@ -5,5 +5,6 @@ public inherited sharing class GiftBatchView {
 
     public GiftBatchView(GiftBatchDTO giftBatchDTO) {
         total = giftBatchDTO.total();
+        totalCount = giftBatchDTO.totalCount();
     }
 }
