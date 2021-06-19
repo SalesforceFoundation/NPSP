@@ -204,25 +204,25 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         locator = npsp_lex_locators['record']['flexipage-list'].format(title)
         option=npsp_lex_locators['span'].format(value)
         self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         element = self.selenium.driver.find_element_by_xpath(locator)
         try:
             self.selenium.get_webelement(locator).click()
             self.wait_for_locator('flexipage-popup')
-            self.selenium.scroll_element_into_view(option)
+            self.salesforce.scroll_element_into_view(option)
             self.selenium.click_element(option)
         except Exception:
             self.builtin.sleep(1,"waiting for a second and retrying click again")
             self.selenium.driver.execute_script('arguments[0].click()', element)
             self.wait_for_locator('flexipage-popup')
-            self.selenium.scroll_element_into_view(option)
+            self.salesforce.scroll_element_into_view(option)
             self.selenium.click_element(option)
 
     def click_modal_footer_button(self,value):
         """Click the specified lightning button on modal footer"""
         if self.latest_api_version == 50.0:
             btnlocator = npsp_lex_locators["button-text"].format(value)
-            self.selenium.scroll_element_into_view(btnlocator)
+            self.salesforce.scroll_element_into_view(btnlocator)
             self.salesforce._jsclick(btnlocator)
         else:
             self.salesforce.click_modal_button(value)
@@ -283,7 +283,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         """
         if section is not None:
             section="text:"+section
-            self.selenium.scroll_element_into_view(section)
+            self.salesforce.scroll_element_into_view(section)
         list_found = False
         locators = npsp_lex_locators["confirm"].values()
         if status == "contains":
@@ -448,7 +448,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
             if self.check_if_element_exists(locator):
                 checkbox=self.selenium.get_webelement(locator)
                 if (status == 'checked' and checkbox.is_selected() == False) or (status == 'unchecked' and checkbox.is_selected() == True):
-                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                 else:
                     self.builtin.log("This checkbox is already in the expected status", "WARN")
@@ -788,7 +788,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         self.choose_frame(iframe)
         loc = self.get_npsp_locator(path, *args, **kwargs)
         self.selenium.wait_until_element_is_visible(loc, timeout=60)
-        self.selenium.scroll_element_into_view(loc)
+        self.salesforce.scroll_element_into_view(loc)
         self.selenium.click_element(loc)
 
     def get_npsp_locator(self, path, *args, **kwargs):
@@ -933,7 +933,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
 
     def page_scroll_to_locator(self, path, *args, **kwargs):
         locator = self.get_npsp_locator(path, *args, **kwargs)
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
 
     def get_bge_card_header(self,title):
         """Validates if the specific header field has specified value"""
@@ -1233,7 +1233,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.selenium.wait_until_element_is_visible(locator)
-                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
@@ -1243,13 +1243,13 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.selenium.wait_until_element_is_visible(locator)
-                    self.selenium.scroll_element_into_view(locator)
+                    self.salesforce.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
             elif dropdown not in ("Payment Method"):
                 locator = npsp_lex_locators['record']['list'].format(dropdown)
-                self.selenium.scroll_element_into_view(locator)
+                self.salesforce.scroll_element_into_view(locator)
                 self.selenium.get_webelement(locator).click()
                 self.wait_for_locator('popup')
                 self.npsp.click_link_with_text(value)
@@ -1507,7 +1507,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         scroll_loc=npsp_lex_locators["span_button"].format(field)
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
-        self.selenium.scroll_element_into_view(scroll_loc)
+        self.salesforce.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
         self.selenium.click_button(btn)
@@ -1523,7 +1523,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
         self.selenium.wait_until_element_is_visible(scroll_loc)
-        self.selenium.scroll_element_into_view(scroll_loc)
+        self.salesforce.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
         self.selenium.click_button(btn)
@@ -1540,7 +1540,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         scroll_loc=npsp_lex_locators["span_button"].format(field)
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
-        self.selenium.scroll_element_into_view(scroll_loc)
+        self.salesforce.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
         self.selenium.click_button(btn)
@@ -1562,7 +1562,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         scroll_loc=npsp_lex_locators["span_button"].format(field)
         # To make sure the field we want to edit has rendered
         # and is not obscured by the footer, scroll down a little below the element
-        self.selenium.scroll_element_into_view(scroll_loc)
+        self.salesforce.scroll_element_into_view(scroll_loc)
         self.selenium.execute_javascript("window.scrollBy(0,50)")
         btn="Edit "+field
         self.selenium.click_button(btn)
@@ -1667,7 +1667,7 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             locator=npsp_lex_locators['button-with-text'].format(title)
         element = self.selenium.driver.find_element_by_xpath(locator)
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         self.selenium.set_focus_to_element(locator)
         self.selenium.driver.execute_script('arguments[0].click()', element)
 
