@@ -20,7 +20,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         """Based on the button name (Cancel)  or (Save) on the modal footer, selects and clicks on the respective button"""
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.builtin.sleep(2,"Wait for the page to load fully")
-        self.selenium.scroll_element_into_view(btnlocator)
+        self.npsp.scroll_element_into_view(btnlocator)
         self.selenium.wait_until_page_contains_element(btnlocator,timeout=60,error="Recurring Donations Modal window did not open")
         self.selenium.wait_until_element_is_visible(btnlocator,60)
     
@@ -30,7 +30,7 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         btnlocator = npsp_lex_locators["button-with-text"].format(name)
         self.builtin.sleep(2,"Wait for the elevate message to appear on the modal")
         self.selenium.wait_until_element_is_visible(btnlocator,60)
-        self.selenium.scroll_element_into_view(btnlocator)
+        self.npsp.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
 
     @capture_screenshot_on_error
@@ -41,10 +41,10 @@ class RDListingPage(BaseNPSPPage, ListingPage):
         if self.npsp.check_if_element_exists(locator):
             self.selenium.set_focus_to_element(locator)
             self.selenium.wait_until_element_is_visible(locator)
-            self.selenium.scroll_element_into_view(locator)
+            self.npsp.scroll_element_into_view(locator)
             self.salesforce._jsclick(locator)
             self.selenium.wait_until_element_is_visible(selection_value)
-            self.selenium.scroll_element_into_view(selection_value)
+            self.npsp.scroll_element_into_view(selection_value)
             self.selenium.click_element(selection_value)
         else:
             self.builtin.log(f"dropdown element {dropdown} not present")
@@ -139,7 +139,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
         self.selenium.wait_until_element_is_visible(btnlocator,60)
         self._populate_edit_status_values(**kwargs)
-        self.selenium.scroll_element_into_view(btnlocator)
+        self.npsp.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
 
     @capture_screenshot_on_error
@@ -159,10 +159,10 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.selenium.wait_until_element_is_visible(locator)
-                    self.selenium.scroll_element_into_view(locator)
+                    self.npsp.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value,60)
-                    self.selenium.scroll_element_into_view(selection_value)
+                    self.npsp.scroll_element_into_view(selection_value)
                     self.selenium.click_element(selection_value)
                 else:
                     self.builtin.log(f"Element {key} not present")
@@ -195,7 +195,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
               if self.npsp.check_if_element_exists(locator):
                   self.selenium.set_focus_to_element(locator)
                   self.selenium.wait_until_element_is_visible(locator)
-                  self.selenium.scroll_element_into_view(locator)
+                  self.npsp.scroll_element_into_view(locator)
                   self.salesforce._jsclick(locator)
                   self.selenium.wait_until_element_is_visible(selection_value)
                   self.selenium.click_element(selection_value)
@@ -213,7 +213,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                raise Exception("Key not supported expected keys <Paused Reason> or <Date>")
            
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
-        self.selenium.scroll_element_into_view(btnlocator)
+        self.npsp.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
 
@@ -232,7 +232,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
                 if self.npsp.check_if_element_exists(locator):
                     self.selenium.set_focus_to_element(locator)
                     self.selenium.wait_until_element_is_visible(locator)
-                    self.selenium.scroll_element_into_view(locator)
+                    self.npsp.scroll_element_into_view(locator)
                     self.salesforce._jsclick(locator)
                     self.selenium.wait_until_element_is_visible(selection_value)
                     self.selenium.click_element(selection_value)
@@ -247,7 +247,7 @@ class RDDetailPage(BaseNPSPPage, DetailPage):
             if "Validate" in key:
                 self.validate_message_text(value)
         btnlocator = npsp_lex_locators["button-with-text"].format("Save")
-        self.selenium.scroll_element_into_view(btnlocator)
+        self.npsp.scroll_element_into_view(btnlocator)
         self.selenium.click_element(btnlocator)
         self.salesforce.wait_until_modal_is_closed()
 

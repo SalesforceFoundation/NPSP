@@ -24,7 +24,7 @@ class CustomSettingsPage(BaseNPSPPage, BasePage):
         self.npsp.choose_frame("Custom Settings")
         locator = npsp_lex_locators['custom_settings']['link'].format(setting_name,value)
         self.selenium.wait_until_element_is_visible(locator, timeout=60)
-        self.selenium.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         self.selenium.click_element(locator)
         self.selenium.unselect_frame()
         self.salesforce.wait_until_loading_is_complete()

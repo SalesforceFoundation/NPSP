@@ -52,7 +52,7 @@ class GiftEntryLandingPage(BaseNPSPPage, BasePage):
         """clicks on Gift Entry button identified with title"""
         locator=npsp_lex_locators["gift_entry"]["button"].format(title)
         self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         self.selenium.click_element(locator)
 
     def select_template_action(self,name,action):
@@ -192,13 +192,13 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     label=f'{section} {field}'
                     if value=='checked':
                         field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(label,"input")
-                        self.selenium.scroll_element_into_view(field_checkbox)
+                        self.npsp.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if not cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
                     elif value=='unchecked':
                         field_checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(label,"input")
-                        self.selenium.scroll_element_into_view(field_checkbox)
+                        self.npsp.scroll_element_into_view(field_checkbox)
                         cb_loc=self.selenium.get_webelement(field_checkbox)
                         if cb_loc.is_selected():
                             self.salesforce._jsclick(field_checkbox)
@@ -210,7 +210,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     else:
                         field_loc=npsp_lex_locators["gift_entry"]["field_input"].format(key,"input")
                         placeholder=self.selenium.get_webelement(field_loc).get_attribute("placeholder")
-                    self.selenium.scroll_element_into_view(field_loc)
+                    self.npsp.scroll_element_into_view(field_loc)
                     try:
                         self.selenium.click_element(field_loc)
                     except ElementClickInterceptedException:
@@ -256,7 +256,7 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                 self.selenium.execute_javascript("window.scrollBy(0,100)")
                 self.selenium.click_button("Add Section")
         checkbox=npsp_lex_locators["gift_entry"]["field_input"].format(bundle,"input")
-        self.selenium.scroll_element_into_view(checkbox)
+        self.npsp.scroll_element_into_view(checkbox)
         cb_loc=self.selenium.get_webelement(checkbox)
         if not cb_loc.is_selected():
             try:
@@ -281,7 +281,10 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     first_element=False
                     position=args.index(i)
                 else:
-                    self.selenium.click_element(locator,'COMMAND')
+                    self.selenium.driver.execute_script(
+                        "var column_list = document.evaluate('arguments[0]', document, null, XPathResult.ANY_TYPE, null); \
+                        column_list.keyDown(CTRL).click()", locator, i, args
+                    )
         if not first_element:
             self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
@@ -353,7 +356,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(locator,value)
                 value_locator=npsp_lex_locators["gift_entry"]["id"].format("Select "+value)
                 self.selenium.wait_until_page_contains_element(value_locator)
-                self.selenium.scroll_element_into_view(value_locator)
+                self.npsp.scroll_element_into_view(value_locator)
                 self.selenium.click_element(value_locator)
             elif type.startswith("autocomplete"):
                 self.salesforce._populate_field(field_locator,value)
@@ -372,7 +375,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.click_element(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["field_input"].format(key,"textarea")
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
             elif 'datetime' in type :
                 locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
@@ -400,7 +403,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                             self.selenium.execute_javascript("window.scrollBy(0,0)")
                             self.salesforce._jsclick(field_checkbox)
             else:
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
 
     def verify_error_for_field(self,**kwargs):
@@ -445,7 +448,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """
         locator=npsp_lex_locators["gift_entry"]["datatable_options_icon"].format(name)
         self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         self.selenium.click_element(locator)
         menuitem=npsp_lex_locators["gift_entry"]["datatable-menu-item"].format(action)
         self.selenium.wait_until_element_is_visible(menuitem,error= f"'{action}' is not displayed on the page")
@@ -531,7 +534,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 option=npsp_lex_locators["gift_entry"]["modal_id"].format(qa_id)
                 self.selenium.wait_until_page_contains_element(option)
                 try:
-                    self.selenium.scroll_element_into_view(option)
+                    self.npsp.scroll_element_into_view(option)
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
@@ -540,25 +543,25 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 option=npsp_lex_locators["gift_entry"]["modallookup-option"].format(value)
                 self.selenium.wait_until_page_contains_element(option)
                 try:
-                    self.selenium.scroll_element_into_view(option)
+                    self.npsp.scroll_element_into_view(option)
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["newflexi-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
                 option=npsp_lex_locators["modalspan_button"].format(value)
-                self.selenium.scroll_element_into_view(option)
+                self.npsp.scroll_element_into_view(option)
                 try:
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
             elif 'datetime' in type :
                 locator=npsp_lex_locators["bge"]["datepicker_open"].format("Date")
@@ -567,7 +570,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.selenium.input_text(field_locator,value,clear=True)
                 self.selenium.input_text(field_locator,value)
             else:
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
 
     def clear_form_fields(self,**kwargs):
@@ -582,7 +585,7 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                 self.salesforce._populate_field(locator,value)
                 value_locator=npsp_lex_locators["gift_entry"]["remove_lookup"].format(value)
                 self.selenium.wait_until_page_contains_element(value_locator)
-                self.selenium.scroll_element_into_view(value_locator)
+                self.npsp.scroll_element_into_view(value_locator)
                 try:
                     self.selenium.click_element(value_locator)
                 except ElementNotInteractableException:
@@ -597,28 +600,28 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
                     self.salesforce._jsclick(option)
             elif 'combobox' in type :
                 self.selenium.wait_until_page_contains_element(field_locator)
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.selenium.click_element(field_locator)
                 popup=npsp_lex_locators["newflexi-popup"]
                 self.selenium.wait_until_page_contains_element(popup)
                 option=npsp_lex_locators["modalspan_button"].format(value)
-                self.selenium.scroll_element_into_view(option)
+                self.npsp.scroll_element_into_view(option)
                 try:
                     self.selenium.click_element(option)
                 except ElementNotInteractableException:
                     self.salesforce._jsclick(option)
             elif 'textarea' in type :
                 field_locator=npsp_lex_locators["gift_entry"]["modal_field"].format(key,"textarea")
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.selenium.input_text(field_locator,value,clear=True)
             else:
-                self.selenium.scroll_element_into_view(field_locator)
+                self.npsp.scroll_element_into_view(field_locator)
                 self.salesforce._populate_field(field_locator,value)
 
     def clear_lookup_value(self,field):
         """clear the value in lookup field on batch gift wizard """
         locator=npsp_lex_locators["gift_entry"]["modal_lookup_button"].format(field)
-        self.selenium.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         self.selenium.click_button(locator)
 
     def return_gift_form_titles(self,page=None):
@@ -639,15 +642,15 @@ class GiftEntryFormPage(BaseNPSPPage, BasePage):
         """Verify batch progress bar and its numbers"""
         for key,value in kwargs.items():
             locator=npsp_lex_locators["gift_entry"]["progress_bar"].format(key, value)
-            self.selenium.scroll_element_into_view(locator)
+            self.npsp.scroll_element_into_view(locator)
             self.selenium.wait_until_page_contains_element(locator)
 
     def verify_batch_error(self,error,message):
         """Verify batch error alert present in the page"""
         locator=npsp_lex_locators["gift_entry"]["batch_error"].format(error,message)
         self.selenium.wait_until_page_contains_element(locator)
-        self.selenium.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         loc=npsp_lex_locators["gift_entry"]["close_error"]
         self.selenium.wait_until_page_contains_element(loc)
-        self.selenium.scroll_element_into_view(loc)
+        self.npsp.scroll_element_into_view(loc)
         self.selenium.click_element(loc)
