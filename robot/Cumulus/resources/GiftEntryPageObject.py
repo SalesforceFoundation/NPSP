@@ -281,10 +281,11 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
                     first_element=False
                     position=args.index(i)
                 else:
-                    self.selenium.driver.execute_script(
-                        "var column_list = document.evaluate('arguments[0]', document, null, XPathResult.ANY_TYPE, null); \
-                        column_list.keyDown(CTRL).click()", locator, i, args
-                    )
+                    self.selenium.set_focus_to_element(locator_window)
+                    actions = ActionChains(self.selenium.driver)
+                    actions.send_keys(Keys.ENTER).perform()
+                    self.salesforce._jsclick(locator)
+
         if not first_element:
             self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
