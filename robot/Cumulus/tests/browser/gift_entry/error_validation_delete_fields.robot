@@ -37,6 +37,7 @@ Validate Errors When Field Is Deleted
     Select Template Action              Default Gift Entry Template   Edit
     Current Page Should Be              Template                      GE_Gift_Entry
     Click Gift Entry Button             Next: Form Fields
+    Load Page Object                    Template                      GE_Gift_Entry
     Perform Action On Object Field      select                        Account 1          Field not found
     Verify Errors On Template Builder   Account 1                     Field not found
     ...                                 warning

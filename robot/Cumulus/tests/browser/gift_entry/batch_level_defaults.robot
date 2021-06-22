@@ -50,6 +50,7 @@ Batch Template Default values Setting
     [Tags]                           unstable               feature:GE          W-8279550
 
     Go To Page                       Landing                GE_Gift_Entry
+    Current Page Should Be           Landing                GE_Gift_Entry
     Click Link                       Templates
     Click Gift Entry Button          Create Template
     Current Page Should Be           Template               GE_Gift_Entry
@@ -67,6 +68,7 @@ Batch Template Default values Setting
     Click Gift Entry Button          Next: Batch Settings
     Add Batch Table Columns          Payment: Payment Method    Opportunity: custom_text         Opportunity: Record Type
     Click Gift Entry Button          Save & Close
+    Current Page Should Be           Landing                GE_Gift_Entry
     Click Link                       Templates
     Store Template Record Id         ${TEMPLATE_NAME}
     Click Gift Entry Button          New Batch
@@ -74,6 +76,8 @@ Batch Template Default values Setting
     Select Template                  ${TEMPLATE_NAME}
     Load Page Object                 Form         Gift Entry
     Enter Value In Field
+    ...                              Batch Name=${BATCH_NAME}
+    Verify Field Default Value
     ...                              Batch Name=${BATCH_NAME}
     Click Gift Entry Button          Next
     Verify Field Default Value
@@ -90,6 +94,9 @@ Batch Template Default values Setting
     ...                              Opportunity: custom_text=text
     ...                              Opportunity: Record Type=Major Gift
     Fill Gift Entry Form
+    ...                              Data Import: Donation Donor=Contact1
+    ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
+    Verify Field Default Value
     ...                              Data Import: Donation Donor=Contact1
     ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
     Click Gift Entry Button          Save & Enter New Gift
