@@ -277,15 +277,17 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
             locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
             if self.npsp.check_if_element_exists(locator):
                 if first_element:
+                    actions = ActionChains(self.selenium.driver)
+                    actions.key_down(Keys.COMMAND)
                     self.selenium.click_element(locator)
+                    actions.perform()
                     first_element=False
                     position=args.index(i)
                 else:
-                    self.selenium.set_focus_to_element(locator_window)
                     actions = ActionChains(self.selenium.driver)
-                    actions.send_keys(Keys.ENTER).perform()
-                    self.salesforce._jsclick(locator)
-
+                    actions.key_down(Keys.COMMAND)
+                    self.selenium.click_element(locator)
+                    actions.perform()
         if not first_element:
             self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
