@@ -4,5 +4,5 @@
         <members>SfdoLogUtils</members>
         <name>ApexClass</name>
     </types>
-    <version>51.0</version>
+    <version>52.0</version>
 </Package>
