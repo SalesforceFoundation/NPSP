@@ -833,9 +833,10 @@ flows:
 
 
     deploy_unmanaged:
-        description: Override to the deploy_unmanaged flow to force a mock apex class to be deployed that will prevent compilation errors when the package code starts referencing file-based apex in the core stack for instrumentation purposes.
+        description: Override to the deploy_unmanaged flow to force a mock apex class to be deployed that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes.
         steps:
             2.1:
+                when: not org_config.namespace
                 task: deploy_core_mock_class
 
     qa_org_namespaced:
