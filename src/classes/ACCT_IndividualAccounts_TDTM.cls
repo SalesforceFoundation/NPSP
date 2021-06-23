@@ -123,10 +123,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         this.dmlWrapper = new DmlWrapper();
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            handleBefore();
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            loadAccountByIdMap();
+            processAccountsBeforeInsert();
+        }
 
-        } else if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            loadAccountByIdMap();
+            processAccountsBeforeUpdate();
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             handleAfter();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -140,16 +147,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @description In the before trigger context, determines whether or not a contact requires a new account.
      */
     private void handleBefore() {
-
-        loadAccountByIdMap();
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            processAccountsBeforeInsert();
-        }
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            processAccountsBeforeUpdate();
-        }
 
     }
 
