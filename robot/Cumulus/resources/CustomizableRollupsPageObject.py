@@ -132,7 +132,7 @@ class CustomRollupSettingsPage(BaseNPSPPage, BasePage):
             )
             toast_hide = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_success slds-hide')
             toast_visible = npsp_lex_locators["crlps"]["success_toast"].format('slds-notify slds-notify_toast slds-theme_info ')
-            self.salesforce.scroll_element_into_view(locator)
+            self.npsp.scroll_element_into_view(locator)
             self.selenium.click_element(locator)
             self.selenium.wait_until_page_contains("Clone")
             self.selenium.click_link("Clone")

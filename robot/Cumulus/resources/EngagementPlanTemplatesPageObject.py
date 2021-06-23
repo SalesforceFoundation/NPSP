@@ -42,7 +42,7 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
         """Enter values into corresponding task subject fields based on last 2 digits of id"""
         locator = npsp_lex_locators['engagement_plan']['input_box'].format(id)
         self.selenium.wait_until_element_is_visible(locator,60)
-        self.salesforce.scroll_element_into_view(locator)
+        self.npsp.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).send_keys(value)
 
     def save_engagement_plan_template(self):

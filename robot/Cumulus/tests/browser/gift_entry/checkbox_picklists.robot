@@ -11,6 +11,10 @@ Suite Teardown  Run Keywords
 ...             Delete Session Records
 ...             Capture Screenshot and Delete Records and Close Browser
 
+*** Variables ***
+&{DONOR_DEFAULT} =  Default Value=Contact1
+&{C2P_DEFAULT} =  Default Value=False
+
 *** Keywords ***
 Setup Test Data
     ${NS} =  Get NPSP Namespace Prefix
@@ -20,6 +24,7 @@ Setup Test Data
     ...          FirstName=${faker.first_name()}
     ...          LastName=${faker.last_name()}
     ...          Checkbox_to_picklist__c=true
+    ...          Checkbox_to_checkbox__c=false
     Store Session Record     Contact     ${CONTACT}[Id]
     Set Suite Variable  &{CONTACT}
 
@@ -29,7 +34,7 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   [Documentation]                            This test verifies that checkbox-to-checkbox and checkbox-to-picklist Gift Entry field mappings function
                                         ...  as expected. The test maps the fields in the org setup flow, and verifies that they populate as expected
                                         ...  when modified and processed as part of a Gift Entry batch gift.
-  [Tags]                                W-8789974            feature:GE      
+  [Tags]                                unstable      W-8789974    feature:GE      
   ${template} =                         Generate Random String
   Go to Page                            Landing     GE_Gift_Entry
   Click Link                            Templates
@@ -41,6 +46,9 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   Click Gift Entry Button               Next: Form Fields
   Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Checkbox
   Perform Action on Object Field        select   Contact 1  Contact1 Checkbox To Picklist
+  Fill Template Form
+  ...                                   Data Import: Donation Donor=&{DONOR_DEFAULT}
+  ...                                   Contact 1: Contact1 Checkbox To Picklist=&{C2P_DEFAULT}
   Page Should Not Contain Locator       gift_entry.template_required_checkbox    Contact 1: Contact1 Checkbox To Checkbox
   Click Gift Entry Button               Save & Close
   Current Page Should Be                Landing                        GE_Gift_Entry
@@ -49,17 +57,16 @@ Verify Checkbox to Checkbox Field Mappings Are Successful
   Store Template Record Id              ${template}
   Create Gift Entry Batch               ${template}  ${template} Batch
   Current Page Should Be                Form       Gift Entry   title=Gift Entry Form
+  Load Page Object                      Form       Gift Entry 
   Save Current Record ID For Deletion   ${NS}DataImportBatch__c
   Fill Gift Entry Form
-  ...                                   Data Import: Donation Donor=Contact1
   ...                                   Data Import: Contact1 Imported=${CONTACT}[Name]
-  Verify Field Default Value             
-  ...                                   Contact 1: Contact1 Checkbox To Picklist=True
-  ...                                   Contact 1: Contact1 Checkbox To Checkbox=
+  Verify Field Default Value
+  ...                                   Data Import: Contact1 Imported=${CONTACT}[Name]
   Fill Gift Entry Form
-  ...                                   Contact 1: Contact1 Checkbox To Picklist=False
   ...                                   Contact 1: Contact1 Checkbox To Checkbox=check
   Click Gift Entry Button               Save & Enter New Gift
+  Wait Until Element is Not Visible     npsp.spinner
   Click Gift Entry Button               Process Batch
   Wait Until BGE Batch Processes        ${template} Batch
   Verify Expected Values                nonns             Contact    ${CONTACT}[Id]

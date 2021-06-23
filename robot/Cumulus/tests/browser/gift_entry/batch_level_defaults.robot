@@ -92,6 +92,9 @@ Batch Template Default values Setting
     Fill Gift Entry Form
     ...                              Data Import: Donation Donor=Contact1
     ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
+    Verify Field Default Value
+    ...                              Data Import: Donation Donor=Contact1
+    ...                              Data Import: Contact1 Imported=${CONTACT}[Name]
     Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        Batch Gifts
     ...                              Donor Name=${CONTACT}[Name]
@@ -118,6 +121,9 @@ Batch Template Default values Setting
     Fill Gift Entry Form
     ...                              Data Import: Donation Donor=Contact1
     ...                              Data Import: Contact1 Imported=${CONTACT2}[Name]
+    Verify Field Default Value
+    ...                              Data Import: Donation Donor=Contact1
+    ...                              Data Import: Contact1 Imported=${CONTACT2}[Name]
     Click Gift Entry Button          Save & Enter New Gift
     Verify Table Field Values        Batch Gifts
     ...                              Donor Name=${CONTACT2}[Name]
@@ -129,7 +135,7 @@ Batch Template Default values Setting
     Wait Until Modal Is Open
     Click Gift Entry Button          Next
     Clear Form Fields
-    ...                              Opportunity: Close Date=Null
+    ...                              Opportunity: Close Date=
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
     ...                              Opportunity: Record Type=NPSP Default
