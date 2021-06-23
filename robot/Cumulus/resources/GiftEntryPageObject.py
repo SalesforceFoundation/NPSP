@@ -9,6 +9,8 @@ from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -274,86 +276,29 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         else:
             self.selenium.wait_until_page_contains_element(bundle_label)
 
-    ##########################################################################################
-
-    """Updated keywords to fix the issue with Selenium.
-    
-    """
-
     def add_batch_table_columns(self,*args):
         """Adds specified batch columns to the visible section if they are not already added"""
         first_element=True
         position=0
+        actions = ActionChains(self.selenium.driver)
         for i in args:
             locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
             if self.npsp.check_if_element_exists(locator):
                 if first_element:
+                    actions.key_down(Keys.COMMAND)
                     self.selenium.click_element(locator)
+                    actions.perform()
                     first_element=False
                     position=args.index(i)
                 else:
-                    self.selenium.driver.execute_script(
-                        "var find = document.evaluate('arguments[0]', document, null, XPathResult.ANY_TYPE, null); find.singleNodeValue.click", locator
-                    )
+                    actions.key_down(Keys.COMMAND)
+                    self.selenium.click_element(locator)
+                    actions.perform()
         if not first_element:
             self.selenium.click_button("Move selection to Visible Fields")
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)
-
-    # def click_column(
-    #     self,
-    #     locator: Union[WebElement, str],
-    #     modifier: Union[bool, str] = False,
-    #     action_chain: bool = False,
-    # ):
-
-    #     if is_truthy(modifier):
-    #         self._click_with_modifier(locator, [None, None], modifier)
-    #     # elif action_chain:
-    #     #     self._click_with_action_chain(locator)
-    #     else:
-    #         self.selenium.find_element(locator).click()
-
-
-    # def _click_with_modifier(self, locator, tag, modifier):
-    #     tag=tag[0]
-    #     element = self.selenium.find_element(locator, tag, required=False)
-    #     modifier = self.selenium.parse_modifier(modifier)
-    #     action = self.selenium.set_focus_to_element(element)
-    #     for item in modifier:
-    #         action.key_down(item)
-    #     #element = self.selenium.find_element(locator, tag=tag[0], required=False)
-    #     if not element:
-    #         element = self.selenium.find_element(locator, tag=tag[1])
-    #     # _unwrap_eventfiring_element can be removed when minimum required Selenium is 4.0 or greater.
-    #     element = self.selenium._unwrap_eventfiring_element(element)
-    #     action.click(element)
-    #     for item in modifier:
-    #         action.key_up(item)
-    #         action.perform()
-
-    # def parse_modifier(self, modifier):
-    #     modifier = modifier.upper()
-    #     modifiers = modifier.split("+")
-    #     keys = []
-    #     for item in modifiers:
-    #         item = item.strip()
-    #         item = self._parse_aliases(item)
-    #         if hasattr(Keys, item):
-    #             keys.append(getattr(Keys, item))
-    #         else:
-    #             raise ValueError(f"'{item}' modifier does not match to Selenium Keys")
-    #         return keys
-
-    # def _parse_aliases(self, key):
-    #     if key == "CTRL":
-    #         return "CONTROL"
-    #     if key == "ESC":
-    #         return "ESCAPE"
-    #     return key
-
-    ######################################################################################
 
     @capture_screenshot_on_error
     def verify_errors_on_template_builder(self,object_group,field,type,message):
