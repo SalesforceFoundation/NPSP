@@ -191,7 +191,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         for (Contact contactRecord : contacts) {
             if (needsHHAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
-            } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
+            }
+        }
+
+        for (Contact contactRecord : contacts) {
+            if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
                 // Avoid creating a new contact with the 1:1 account of another contact
                 if (contactRecord.AccountId != null) {
                     contactRecord.AccountId = null;
