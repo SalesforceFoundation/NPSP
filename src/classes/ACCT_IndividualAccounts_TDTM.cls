@@ -189,7 +189,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         for (Contact contactRecord : contacts) {
-            if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
+            if (needsOneToOneAccount(contactRecord, accountFor(contactRecord))) {
                 // Avoid creating a new contact with the 1:1 account of another contact
                 if (contactRecord.AccountId != null) {
                     contactRecord.AccountId = null;
@@ -203,6 +203,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
+    }
+
+    private Account accountFor(Contact contactRecord) {
+        return accountById.get(contactRecord.AccountId);
     }
 
     private void avoidConfusion() {
