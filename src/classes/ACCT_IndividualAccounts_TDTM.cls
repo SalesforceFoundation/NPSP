@@ -143,13 +143,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
 
-    /**
-     * @description In the before trigger context, determines whether or not a contact requires a new account.
-     */
-    private void handleBefore() {
-
-    }
-
     private void loadAccountByIdMap() {
         Set<Id> accountIds = new Set<Id>();
         for (Contact contactRecord : contacts) {
