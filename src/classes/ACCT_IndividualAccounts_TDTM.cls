@@ -103,6 +103,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private Map<Id, Contact> oldContactById;
     private TDTM_Runnable.Action triggerAction;
     private DmlWrapper dmlWrapper;
+    private Map<Id, Account> accountById = null;
 
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
@@ -139,27 +140,30 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @description In the before trigger context, determines whether or not a contact requires a new account.
      */
     private void handleBefore() {
-        Map<Id, Account> accountById = null;
 
+        loadAccountByIdMap();
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+            processAccountsBeforeInsert();
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            processAccountsBeforeUpdate();
+        }
+
+    }
+
+    private void loadAccountByIdMap() {
         Set<Id> accountIds = new Set<Id>();
         for (Contact contactRecord : contacts) {
             accountIds.add(contactRecord.AccountId);
         }
 
         accountById = new Map<Id, Account>([
-            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-            FROM Account
-            WHERE Id IN :accountIds
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE Id IN :accountIds
         ]);
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            processAccountsBeforeInsert(accountById);
-        }
-
-        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            processAccountsBeforeUpdate(accountById);
-        }
-
     }
 
     /**
@@ -183,7 +187,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @description In the before insert trigger context, ensure accounts are created for the new contacts that need them.
      * @param  accountById - the existing accounts that the contacts are related to.
      */
-    private void processAccountsBeforeInsert(Map<Id, Account> accountById) {
+    private void processAccountsBeforeInsert() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
@@ -222,7 +226,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      * @param  accountById - the existing accounts that the contacts are related to.
      */
-    private void processAccountsBeforeUpdate(Map<Id, Account> accountById) {
+    private void processAccountsBeforeUpdate() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
