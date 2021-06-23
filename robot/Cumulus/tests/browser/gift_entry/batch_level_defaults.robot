@@ -72,8 +72,8 @@ Batch Template Default values Setting
     Click Gift Entry Button          New Batch
     Wait Until Modal Is Open
     Select Template                  ${TEMPLATE_NAME}
-    Load Page Object                 Form         Gift Entry
-    Enter Value In Field
+    Load Page Object                 Form   Gift Entry
+    Fill Gift Entry Form
     ...                              Batch Name=${BATCH_NAME}
     Click Gift Entry Button          Next
     Verify Field Default Value
@@ -99,7 +99,7 @@ Batch Template Default values Setting
     ...                              Payment: Payment Method=Credit Card
     ...                              Opportunity: custom_text=text
     ...                              Opportunity: Record Type=Major Gift
-    Click Gift Entry Button           Edit Batch Info
+    Click Gift Entry Button          Edit Batch Info
     Wait Until Modal Is Open
     Click Gift Entry Button           Next
     Wait Until Modal Is Open
