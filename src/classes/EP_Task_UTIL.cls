@@ -1,10 +1,10 @@
 /*
     Copyright (c) 2016, Salesforce.org
     All rights reserved.
-    
+
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-    
+
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -15,16 +15,16 @@
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT 
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN 
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
@@ -39,6 +39,9 @@
 */
 public class EP_Task_UTIL {
 
+    /** @description Additional Field Mappings found using UTIL_SimpleFieldMapper functionality. */
+    private Set<String> additionalFieldMappings;
+
     /** @description Default status for active tasks. */
     public static String defaultTaskStatus {
         get {
@@ -51,7 +54,7 @@ public class EP_Task_UTIL {
                 }
             }
             return defaultTaskStatus;
-            
+
         }
         private set;
     }
@@ -113,13 +116,16 @@ public class EP_Task_UTIL {
         initializeMaps(templateIds);
     }
 
-
     /*******************************************************************************************************
     * @description Queries and builds maps for templates and template tasks from a set of template Ids.
     * @param templateIds a set of Engagement Plan Template Ids to query and build maps for.
     * @return void This method instantiates class properties.
     ********************************************************************************************************/
     public void initializeMaps(Set<Id> templateIds) {
+        Set<String> addlEPTaskFields = this.getAdditionalFieldMappings();
+        Set<String> epTaskFields = getPrimaryEPTaskFields();
+        // Determine what additional fields need to be added to the task query, if any
+        addAdditionalEPTaskFieldsIfNotPresent(epTaskFields, addlEPTaskFields);
 
         //query our custom fields and fieldset fields for when this template is accessed from the UI
         Set<String> templateFields = new Set<String>{'Id', 'Name', 'Skip_Weekends__c', 'Reschedule_To__c', 'Automatically_Update_Child_Task_Due_Date__c', 'Default_Assignee__c', 'Description__c'};
@@ -127,21 +133,22 @@ public class EP_Task_UTIL {
 
         String templateQuery = 'SELECT ';
         templateQuery += String.join(new List<String>(templateFields), ', ');
-        templateQuery += ', (SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, ';
-        templateQuery += 'Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c ';
-        templateQuery += 'FROM Engagement_Plan_Tasks__r) ';
+        templateQuery += ', (SELECT ';
+        templateQuery += String.join(new List<String>(epTaskFields), ', ');
+        templateQuery += ' FROM Engagement_Plan_Tasks__r) ';
         templateQuery += 'FROM Engagement_Plan_Template__c WHERE Id IN :templateIds';
 
         //query for templates and their child tasks
         templateMap = new Map<Id, Engagement_Plan_Template__c>((List<Engagement_Plan_Template__c>)Database.query(templateQuery));
 
         //query for tasks and their child tasks
-        epTaskMap = new Map<Id, Engagement_Plan_Task__c>(
-            [SELECT Id, Name, Engagement_Plan_Template__c, Assigned_To__c, Comments__c, Days_After__c, Type__c, 
-            Parent_Task__c, Priority__c, Reminder__c, Reminder_Time__c, Send_Email__c, Status__c,
-                (SELECT Id FROM Engagement_Plan_Tasks__r)
-            FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds ORDER BY Days_After__c ASC NULLS FIRST]
-        );        
+        //Converted to dynamic query to support automapping
+        String tasksAndChildrenQuery = 'SELECT ';
+        tasksAndChildrenQuery += String.join(new List<String>(epTaskFields), ', ');
+        tasksAndChildrenQuery += ', (SELECT Id FROM Engagement_Plan_Tasks__r) ';
+        tasksAndChildrenQuery += ' FROM Engagement_Plan_Task__c WHERE Engagement_Plan_Template__c IN :templateIds ORDER BY Days_After__c ASC NULLS FIRST';
+
+        epTaskMap = new Map<Id, Engagement_Plan_Task__c>((List<Engagement_Plan_Task__c>)Database.query(tasksAndChildrenQuery));
     }
 
 
@@ -164,9 +171,21 @@ public class EP_Task_UTIL {
         taskEPTaskFieldMap.put('Type', 'Type__c');
         taskEPTaskFieldMap.put('Status', 'Status__c');
 
+        // Map Additional Fields, if any
+        Set<String> addlEPTaskFields = getAdditionalFieldMappings();
+
+        Set<String> primaryEPTaskFields = toLowerCase(getPrimaryEPTaskFields());
+
+        for (String addlEPTaskField : addlEPTaskFields) {
+            if (!primaryEPTaskFields.contains(addlEPTaskField)) {
+                taskEPTaskFieldMap.put(addlEPTaskField, addlEPTaskField);
+            }
+        }
+
         //copy fields
         Task taskResult = new Task();
         for (String taskField : taskEPTaskFieldMap.keySet()) {
+
             taskResult.put(taskField, epTask.get(taskEPTaskFieldMap.get(taskField)));
         }
 
@@ -187,7 +206,7 @@ public class EP_Task_UTIL {
         //Non Dependent Task defaults
         if (epTask.Parent_Task__c == null) {
             setReminder(taskResult);
-            
+
             if (String.isBlank(taskResult.Status)) {
                 taskResult.Status = defaultTaskStatus;
             }
@@ -199,7 +218,6 @@ public class EP_Task_UTIL {
 
         return taskResult;
     }
-
 
     /*******************************************************************************************************
     * @description Gets the total delay for an EP Task, including all parent delays.
@@ -218,7 +236,7 @@ public class EP_Task_UTIL {
         Integer max_counter = 0;
         while (currentTask.Parent_Task__c != null
                 && max_counter < EP_EngagementPlans_UTIL.MAX_ITERATIONS) {
-            
+
             max_counter++;
 
             currentTask = epTaskMap.get(currentTask.Parent_Task__c);
@@ -288,8 +306,8 @@ public class EP_Task_UTIL {
             //We've already calculated the the activity date for this task, including offset and skip weekend setting
             //so we'll use that date for ReminderDateTime as well
             taskNeedingReminder.ReminderDateTime = Datetime.newInstance(
-                taskNeedingReminder.ActivityDate.year(), 
-                taskNeedingReminder.ActivityDate.month(), 
+                taskNeedingReminder.ActivityDate.year(),
+                taskNeedingReminder.ActivityDate.month(),
                 taskNeedingReminder.ActivityDate.day()
             );
             taskNeedingReminder.ReminderDateTime = taskNeedingReminder.ReminderDateTime.addMinutes(reminderMinutes);
@@ -307,7 +325,7 @@ public class EP_Task_UTIL {
         if (taskToAssign == null || objectId == null) {
             return;
         }
-        if (objectId.getSobjectType() == Contact.sObjectType 
+        if (objectId.getSobjectType() == Contact.sObjectType
             || objectId.getSobjectType() == Lead.sObjectType) {
             taskToAssign.WhoId = objectId;
         } else {
@@ -338,7 +356,7 @@ public class EP_Task_UTIL {
     }
 
     /*******************************************************************************************************
-    * @description For a given date and skip day setting, moves dates that land on a weekend to either 
+    * @description For a given date and skip day setting, moves dates that land on a weekend to either
     * the previous Friday or the following Monday.
     * @param originalDate The date that may be on a weekend.
     * @param skipDay Which day to move the date to: Friday or Monday.
@@ -349,7 +367,7 @@ public class EP_Task_UTIL {
         Date result = originalDate;
         Date refDate = Date.newInstance(1900, 1, 7);  // Jan 7 1900 = Sunday
         Integer dayOfWeek = Math.mod(refDate.daysBetween(originalDate), 7); // 0 = Sunday ... 6 = Saturday
-        
+
         if (skipDay == EP_EngagementPlans_UTIL.SKIP_DAY_FRIDAY) {
             //subtract days to Friday
             if (dayOfWeek == 0) {
@@ -366,5 +384,91 @@ public class EP_Task_UTIL {
             }
         }
         return result;
+    }
+
+    /*******************************************************************************************************
+    * @description Conditionally adds to the list of fields to be retrieved from the task object, after
+    *              confirming that field is not already present in Set
+    * @param epTaskFields The Enrollment Plan Task Fields Set to be updated
+    * @param addlEPTaskFields Additional Enrollment Plan Task Fields to review/add
+    ********************************************************************************************************/
+    private void addAdditionalEPTaskFieldsIfNotPresent(Set<String> epTaskFields, Set<String> addlEPTaskFields) {
+        Set<String> epTaskFieldsLower = toLowerCase(epTaskFields);
+
+        for (String addlEpTaskField :addlEPTaskFields) {
+            if (!epTaskFieldsLower.contains(addlEpTaskField)) {
+                epTaskFields.add(addlEpTaskField);
+            }
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a Set containing the primary fields that need to be/are retrieved
+    *              as part of EP Task SOQL queries
+    * @return Set<String> Set of String API field names for the Enrollment_Plan_Task__c Object to
+    *                     be retrieved
+    ********************************************************************************************************/
+    private Set<String> getPrimaryEPTaskFields() {
+        return new Set<String> {'Id',
+                                'Name',
+                                'Engagement_Plan_Template__c',
+                                'Assigned_To__c',
+                                'Comments__c',
+                                'Days_After__c',
+                                'Type__c',
+                                'Parent_Task__c',
+                                'Priority__c',
+                                'Reminder__c',
+                                'Reminder_Time__c',
+                                'Send_Email__c',
+                                'Status__c'
+        };
+    }
+
+    /*******************************************************************************************************
+    * @description The primary Task fields to be mapped.  Will be excluded from the "Simple Field Mapping"
+    *              process
+    * @return Set<String> Set of String values consisting of the API names of the
+    *                     primary mapped Task fields
+    ********************************************************************************************************/
+    private Set<String> getPrimaryTaskFields() {
+        return new Set<String> {'Id',
+                                'Subject',
+                                'Priority',
+                                'OwnerId',
+                                'Description',
+                                'Type',
+                                'Status'
+        };
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a Set of Additional Compatible Field Mappings found using
+    *              UTIL_SimpleFieldMapper.  Note: Uses Lazy Caching Approach
+    * @return Set<String> Set of String values consisting of the API names of the
+    *                     additional compatible fields to map
+    ********************************************************************************************************/
+    @testVisible private Set<String> getAdditionalFieldMappings() {
+        if (this.additionalFieldMappings == null) {
+            this.additionalFieldMappings = UTIL_SimpleFieldMapper.getInstanceOf(Engagement_Plan_Task__c.getSObjectType(), Task.getSObjectType())
+                              .withAdditionalFieldsToExclude(getPrimaryEPTaskFields())
+                              .withAdditionalFieldsToExclude(getPrimaryTaskFields())
+                              .determineMappableFields();
+        }
+        return this.additionalFieldMappings;
+    }
+
+    /*******************************************************************************************************
+    * @description Copies String values from a Set, makes them Lowercase, and returns a new
+    *              Set with the LowerCase values
+    * @param setOfValues A Set of String of Values to convert to lowercase
+    * @return Set<String> Set of String values, converted to lowercase
+    ********************************************************************************************************/
+    @testVisible private Set<String> toLowerCase(Set<String> setOfValues) {
+        Set<String> lowerSetOfValues = new Set<String>();
+        for (String aValue: setOfValues) {
+            lowerSetOfValues.add(aValue.toLowerCase());
+        }
+        return lowerSetOfValues;
     }
 }
