@@ -187,10 +187,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
+        avoidConfusion();
         for (Contact contactRecord : contacts) {
-            // always clear this deprecated field to avoid confusing users.
-            contactRecord.npe01__SystemAccountProcessor__c = null;
-
             if (needsHHAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
             } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
@@ -207,6 +205,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
+    }
+
+    private void avoidConfusion() {
+        for (Contact contactRecord : contacts) {
+            // always clear this deprecated field to avoid confusing users.
+            contactRecord.npe01__SystemAccountProcessor__c = null;
+        }
     }
 
     /**
