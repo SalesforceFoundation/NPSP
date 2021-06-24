@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help><!-- An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten. --></help>
+        <label><!-- Last Elevate Version Played --></label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help><!-- This Recurring Donation&apos;s total expected amount for the next calendar or fiscal year (read only). --></help>
         <label><!-- Next Year Value --></label>
         <name>NextYearValue__c</name>
