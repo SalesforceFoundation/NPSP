@@ -680,7 +680,7 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <label>Die Apex-Klasse &quot;{0}&quot; ist nicht vorhanden oder implementiert die Schnittstelle &quot;Schedulable&quot; nicht.</label>
         <name>CallableApiJobScheduleInvalidClass</name>
     </customLabels>
     <customLabels>
@@ -864,6 +864,14 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error for DIs with populated RD fields when Advanced Mapping is disabled. --></label>
+        <name>RD2_DisabledAdvancedMappingError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error for DIs with populated RD fields when RD2 is disabled. --></label>
+        <name>RD2_DisabledRD2Error</name>
+    </customLabels>
+    <customLabels>
         <label>Der Abbruch der wiederkehrenden Spenden wird verarbeitet</label>
         <name>RD2_ElevateCancelInProgress</name>
     </customLabels>
@@ -892,8 +900,16 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Diese Funktionalität wird aktuell für wiederkehrende Spenden, die von Elevate-Zahlungsservices erstellt wurden, nicht unterstützt.</label>
         <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
+        <label>Gültige Zahlungsmethoden für eine aktive, Elevate zugeordnete wiederkehrende Spende sind Kreditkarte oder Clearing-Zentrale.</label>
+        <name>RD2_ElevatePaymentMethodChangeError</name>
     </customLabels>
     <customLabels>
         <label>Ausstehender Elevate-Prozess</label>
@@ -904,8 +920,24 @@
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
     <customLabels>
+        <label>Bitte geben Sie einen gültigen Betrag ein. Der Betrag kann nicht kleiner als 1 sein.</label>
+        <name>RD2_ElevateRDAmountMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie können die Kampagne für eine aktive, Elevate zugeordnete wiederkehrende Spende nicht ändern. Zum Entfernen der Kampagne schließen Sie die wiederkehrende Spende, und erstellen Sie eine neue.</label>
+        <name>RD2_ElevateRDCampaignCannotUpdateToNull</name>
+    </customLabels>
+    <customLabels>
         <label>Sie können den Status einer mit Elevate verbundenen wiederkehrenden Spende nicht bearbeiten, wenn der Status &quot;Geschlossen&quot; ist.</label>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>Sie können den Tag des Monats für eine Elevate zugeordnete wiederkehrende Spende nicht ändern.</label>
+        <name>RD2_ElevateRDDayOfMonthCannotChange</name>
+    </customLabels>
+    <customLabels>
+        <label>Bitte geben Sie ein neues Datum des Inkrafttretens ein. Das Inkrafttreten einer Elevate zugeordneten wiederkehrenden Spende kann nicht in der Zukunft liegen.</label>
+        <name>RD2_ElevateRDEffectiveDateMustBeValid</name>
     </customLabels>
     <customLabels>
         <label>Eine wiederkehrende Elevate-Zahlung konnte nicht erstellt werden. Bitten Sie Ihren Systemadministrator um Unterstützung.</label>
@@ -1030,8 +1062,8 @@
         &lt;br/&gt;Bevor Ihre Organisation mit der Nutzung von Erweiterte wiederkehrende Spenden beginnt:&lt;br/&gt;
         &lt;ul&gt;&lt;li&gt;Aktivieren Sie Workflows, Prozesse, Validierungsregeln und Trigger, die Sie vor dem Upgrade deaktiviert haben.&lt;/li&gt;
         &lt;li&gt;Weisen Sie das Erweiterte wiederkehrende Spenden-Seitenlayout allen Benutzerprofilen zu, und entfernen Sie das alte Wiederkehrende Spenden-Seitenlayout.&lt;/li&gt;
-        &lt;li&gt;Weisen Sie die NPSP Wiederkehrende Spende-Lightning-Datensatzseite als Organisationsstandard zu.&lt;/li&gt;   
-        &lt;li&gt;Weisen Sie Ihren benutzerdefinierten Profilen die RD2_VisualizeScheduleController-Apex-Klasse zu.&lt;/li&gt;    
+        &lt;li&gt;Weisen Sie die NPSP Wiederkehrende Spende-Lightning-Datensatzseite als Organisationsstandard zu.&lt;/li&gt;
+        &lt;li&gt;Weisen Sie Ihren benutzerdefinierten Profilen die RD2_VisualizeScheduleController-Apex-Klasse zu.&lt;/li&gt;
         &lt;li&gt;Passen Sie Sicherheit auf Feldebene für die Wiederkehrende Spenden-Felder entsprechend Ihren Profilen und Berechtigungssätzen an.&lt;/li&gt;
         &lt;li&gt;Passen Sie Wiederkehrende Spenden-Berichte so an, dass sie mit Erweiterte wiederkehrende Spenden funktionieren.&lt;/li&gt;
         &lt;li&gt;Schulen Sie Ihre Mitarbeiter in Erweiterte wiederkehrende Spenden.&lt;/li&gt;</label>
@@ -1170,6 +1202,10 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Informationen zur Clearing-Zentrale werden an Elevate gesendet...</label>
+        <name>RD2_EntryFormSaveACHMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Es wurde eine wiederkehrende Zahlung in Elevate erstellt. Wiederholungs-ID in Elevate: {0}.
         
         Jedoch wurde keine entsprechende wiederkehrende Spende in NPSP erstellt, aufgrund des folgenden Fehlers:
@@ -1225,6 +1261,14 @@
     <customLabels>
         <label>Aufschub</label>
         <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Zahlungsinformationen für die Clearing-Zentrale des Spenders werden am {{DATE}} an seine Bank gesendet. Zahlungen beginnen, nachdem die Bank die Informationen überprüft und verarbeitet hat.</label>
+        <name>RD2_NextACHPaymentDonationDateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Kreditkarte des Spenders wird am nächsten Spendendatum belastet : {{DATE}}</label>
+        <name>RD2_NextPaymentDonationDateInfo</name>
     </customLabels>
     <customLabels>
         <label>Die Anzahl der geplanten Raten kann nicht kleiner als die Anzahl der gezahlten Raten sein.</label>
@@ -1293,6 +1337,10 @@
     <customLabels>
         <label>Grund für Aufschub</label>
         <name>RD2_PausedReasonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Zahlungsinformationen</label>
+        <name>RD2_PaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Enddatum des Zeitplans</label>
@@ -2084,6 +2132,18 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiErrorDonationRequireNoMatch</name>
     </customLabels>
     <customLabels>
+        <label>Es bestehen Zuweisungen für die Spende, die möglicherweise mit den eingegebenen Verwendungszwecken in Konflikt stehen.</label>
+        <name>bdiErrorExistingDonationAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Es bestehen Zuweisungen für die Zahlung, die möglicherweise mit den eingegebenen Verwendungszwecken in Konflikt stehen.</label>
+        <name>bdiErrorExistingPaymentAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Die angegebenen Zuweisungen zum Verwendungszweck übersteigen 100 Prozent.</label>
+        <name>bdiErrorGAUAllocationOver100</name>
+    </customLabels>
+    <customLabels>
         <label>Ungültiger Spendenkampagnenname</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
@@ -2132,13 +2192,17 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bdiFMUIDatatableMapsTo</name>
     </customLabels>
     <customLabels>
-        <label>Verbinden Sie das Feld, das Sie für das NPSP-Datenimportobjekt erstellt haben, mit dem Feld für Ihr Zielobjekt im
-            Raster unten. Sie können Felder anhand der Feldbezeichnung oder des Namens der Feld-API suchen.</label>
+        <label>
+            Verbinden Sie das Feld, das Sie für das NPSP-Datenimportobjekt erstellt haben, mit dem Feld für Ihr Zielobjekt im
+            Raster unten. Sie können Felder anhand der Feldbezeichnung oder des Namens der Feld-API suchen.
+        </label>
         <name>bdiFMUIDescription1</name>
     </customLabels>
     <customLabels>
-        <label>Felder des NPSP-Datenimportobjekts müssen kompatiblen Feldtypen Ihres Zielobjekts zugeordnet werden.
-            Wenn Sie ein NPSP-Datenimportfeld auswählen, stehen nur die kompatiblen Zielfelder zur Verfügung.</label>
+        <label>
+            Felder des NPSP-Datenimportobjekts müssen kompatiblen Feldtypen Ihres Zielobjekts zugeordnet werden.
+            Wenn Sie ein NPSP-Datenimportfeld auswählen, stehen nur die kompatiblen Zielfelder zur Verfügung.
+        </label>
         <name>bdiFMUIDescription2</name>
     </customLabels>
     <customLabels>
@@ -2537,7 +2601,8 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeBatchOverviewWizard</name>
     </customLabels>
     <customLabels>
-        <label>Der Entwicklername einer Apex-Klasse, der die BDI_IPostProcess-Oberfläche für NPSP-Batch-Datensätze implementiert.</label>
+        <label>Der Entwicklername einer Apex-Klasse, der die BDI_IPostProcess-Oberfläche für NPSP-Batch-Datensätze implementiert.
+</label>
         <name>bgeBatchPostProcessClassHelp</name>
     </customLabels>
     <customLabels>
@@ -2713,8 +2778,34 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>bgeNewGift</name>
     </customLabels>
     <customLabels>
+        <label>
+            Ab dem 13. Juli 2021 wird der Batch-Spendeneintrag nicht mehr unterstützt; er wurde durch den Spendeneintrag ersetzt.
+            Wenn sich bei Ihnen noch Batches in Bearbeitung befinden, können Sie nach wie vor auf die betreffenden Datensätze zugreifen, sie jedoch nicht mehr mithilfe des Batch-Spendeneintrags bearbeiten.
+            Wenden Sie sich an den Support, wenn Sie Zugriff auf in Bearbeitung befindliche Batches benötigen.
+            Sie sollten sich den Spendeneintrag als Alternative zum Batch-Spendeneintrag ansehen.
+            Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt; auf dem Power of Us-Hub.
+        </label>
+        <name>bgeNotSupportedBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Der Batch-Spendeneintrag wird nicht unterstützt</label>
+        <name>bgeNotSupportedHeader</name>
+    </customLabels>
+    <customLabels>
         <label>Batch verarbeiten</label>
         <name>bgeProcessBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Batch-Verarbeitung und Zahlungen</label>
+        <name>bgeProcessBatchAndPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>Am 13. Juli 2021 wird das Legacy-Batch-Spendeneintragsmodul deaktiviert und funktioniert dann in NPSP nicht mehr. Wenn sich zu diesem Zeitpunkt bei Ihnen noch Batches in Bearbeitung befinden, können Sie auf die entsprechenden Datensätze weiterhin zugreifen, Sie können sie aber nicht mehr mithilfe der Batch-Spendeneingabe verarbeiten. Um einen reibungslosen Übergang zu gewährleisten, aktivieren und verwenden Sie vor dem 13. Juli den neueren Spendeneintrag. Weitere Informationen zum Spendeneintrag finden Sie in der &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-Dokumentation&lt;/a&gt;.</label>
+        <name>bgeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Einstellung des Batch-Spendeneintrags</label>
+        <name>bgeRetirementWarningHeader</name>
     </customLabels>
     <customLabels>
         <label>Batch-Spendeneintrag</label>
@@ -2813,6 +2904,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Letzte 4 Karte</label>
+        <name>commonCardLast4</name>
+    </customLabels>
+    <customLabels>
         <label>Kartentyp</label>
         <name>commonCardType</name>
     </customLabels>
@@ -2859,6 +2954,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Bearbeiten</label>
         <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Zahlungsinformationen bearbeiten.</label>
+        <name>commonEditPaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Beim Onboarding dieses Elevate-Kunden ist ein Fehler aufgetreten</label>
@@ -2937,6 +3036,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Fehler bei der Zahlungsverarbeitung</label>
+        <name>commonPaymentProcessingErrors</name>
+    </customLabels>
+    <customLabels>
         <label>Salesforce.org Elevate</label>
         <name>commonPaymentServices</name>
     </customLabels>
@@ -2951,6 +3054,14 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Weitere Informationen</label>
         <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Fehlerhafte Datensätze</label>
+        <name>commonRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Verarbeitete Datensätze</label>
+        <name>commonRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>Erforderlich</label>
@@ -3241,6 +3352,14 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
+        <label>Karte autorisiert.</label>
+        <name>geAuthorizedCreditCardSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Wird autorisiert...</label>
+        <name>geAuthorizingCreditCard</name>
+    </customLabels>
+    <customLabels>
         <label>Anzahl der Spenden</label>
         <name>geBatchGiftsCount</name>
     </customLabels>
@@ -3259,6 +3378,10 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
     <customLabels>
         <label>Gesamtbetrag für den Batch</label>
         <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batch processing success message --></label>
+        <name>geBatchProcessingSuccess</name>
     </customLabels>
     <customLabels>
         <label>Erweiterte Optionen für Spendeneinträge werden verfügbar, wenn Sie Felder aus den folgenden Objektgruppen auswählen.</label>
@@ -3289,13 +3412,15 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
-        <label>Wir empfehlen, die folgenden Felder aufzunehmen:
+        <label>
+Wir empfehlen, die folgenden Felder aufzunehmen:
         &lt;/br&gt;
         &lt;ul&gt;
             &lt;li&gt; Spendername: mit dem Organisations-Account oder dem Kontakt verknüpft, der die Spende gibt. &lt;/li&gt;
             &lt;li&gt; Spendenname: mit der Opportunity oder der Zahlung für die Spende verknüpft. &lt;/li&gt;
             &lt;li&gt; Status- und Fehlerinformationen: Informationen zur Batchverarbeitung. &lt;/li&gt;
-        &lt;/ul&gt;</label>
+        &lt;/ul&gt;
+        </label>
         <name>geBodyBatchTableColumnsPart2</name>
     </customLabels>
     <customLabels>
@@ -3315,7 +3440,8 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
         <name>geBodyFormFieldsLeftCol</name>
     </customLabels>
     <customLabels>
-        <label>Richten Sie ein Feld ein, indem Sie die folgenden Schritte ausführen:
+        <label>
+Richten Sie ein Feld ein, indem Sie die folgenden Schritte ausführen:
         &lt;/br&gt;
         &lt;/br&gt;
         &lt;ol&gt;
@@ -3324,7 +3450,8 @@ Zum Überprüfen Ihrer Zuweisungseinstellungen zum Verwendungszweck gehen Sie zu
             &lt;li&gt; Wenn diese Teil einer neuen Objektgruppe ist, erstellen Sie zusätzliche Felder für eine neue Objektgruppe, und erstellen Sie die neue Objektgruppe in den NPSP-Einstellungen. &lt;/li&gt;
             &lt;li&gt; Fügen Sie in den NPSP-Einstellungen &quot;Feldzuordnung&quot; hinzu, um das NPSP-Datenimportfeld mit dem Zielfeld zu verbinden. &lt;/li&gt;
         &lt;/ol&gt;
-        Weitere Detailinformationen erfahren Sie aus der NPSP-Dokumentation zur erweiterten Zuordnung.</label>
+        Weitere Detailinformationen erfahren Sie aus der NPSP-Dokumentation zur erweiterten Zuordnung.
+        </label>
         <name>geBodyFormFieldsLeftColAdditional</name>
     </customLabels>
     <customLabels>
@@ -3368,8 +3495,12 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
-        <label>Sie verarbeiten keine Kartenzahlung für diese Schenkung.</label>
+        <label>Sie geben keine Zahlungsinformationen für die Verarbeitung durch Elevate ein.</label>
         <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Kreditkarte des Spenders wird verarbeitet, wenn Sie den Batch bearbeiten.</label>
+        <name>geBodyPaymentProcessedDuringBatchProcessing</name>
     </customLabels>
     <customLabels>
         <label>Geben Sie Details zu dieser Spendeneintrags-Vorlage ein.</label>
@@ -3460,11 +3591,11 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
-        <label>Alternativ können Sie jetzt eine Karte belasten.</label>
+        <label>Geben Sie alternativ jetzt die Zahlung ein.</label>
         <name>geButtonPaymentAlternate</name>
     </customLabels>
     <customLabels>
-        <label>Karte nicht belasten</label>
+        <label>Keine Zahlungsinformationen eingeben.</label>
         <name>geButtonPaymentDoNotCharge</name>
     </customLabels>
     <customLabels>
@@ -3500,7 +3631,15 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geErrorAmountDoesNotMatch</name>
     </customLabels>
     <customLabels>
-        <label>Die Karte wurde erfolgreich belastet, die Zahlung wurde aber nicht in Salesforce erfasst. Bitte korrigieren Sie die Fehler, und reichen Sie das Formular erneut ein, um die Spende in Salesforce zu erfassen.</label>
+        <label>Die Spende kann nicht im Batch gespeichert werden. Spenden müssen in der gleichen Währung wie der Batch vorliegen. Ändern Sie Ihre Währung in {0}, um die Spende zu speichern.</label>
+        <name>geErrorBatchGiftEntryCurrencyMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Zum Aktualisieren von Spender, Datum oder Betrag geben Sie die Kartendetails noch einmal ein, um die Zahlung erneut zu autorisieren.</label>
+        <name>geErrorBatchGiftEntryReauthRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate hat die Zahlung erfolgreich verarbeitet, jedoch hat NPSP den Datensatz für die Transaktion in Salesforce nicht erstellt. Beheben Sie die Fehler, und reichen Sie das Formular erneut ein, um den Salesforce-Datensatz zu erstellen.</label>
         <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
@@ -3572,7 +3711,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
-        <label>Bei der Anforderung zum Belasten der Karte ist eine Zeitüberschreitung aufgetreten.</label>
+        <label>Zeitüberschreitung bei der Anforderung zur Zahlungsverarbeitung.</label>
         <name>geErrorRequestTimedout</name>
     </customLabels>
     <customLabels>
@@ -3580,15 +3719,15 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label>Für die Spende {0} von {1} ist ein Systemfehler aufgetreten. Ihr Administrator sollte Transaktionen in {2} überprüfen und feststellen, ob die Karte belastet wurde.</label>
+        <label>Für die Spende {0} von {1} ist ein Systemfehler aufgetreten. Ihr Administrator sollte Transaktionen in {2} überprüfen und feststellen, ob die Zahlung verarbeitet wurde.</label>
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label>Wenn die Karte nicht belastet wurde, geben Sie Schenkung und Kartenzahlung im Schenkungseintrag erneut ein.</label>
+        <label>Wenn die Zahlung nicht verarbeitet wurde, geben Sie Spende und Zahlungsinformationen erneut im Spendeneintrag ein.</label>
         <name>geErrorUncertainCardChargePart2</name>
     </customLabels>
     <customLabels>
-        <label>Wenn die Karte belastet wurde, notieren Sie die Transaktions-ID in {0}, und suchen Sie in Salesforce nach Datensätzen mit dieser ID. Aktualisieren Sie die Schenkungs- und Spenderdatensätze bei Bedarf.</label>
+        <label>Wenn die Zahlung verarbeitet wurde, notieren Sie die Transaktions-ID in {0}, und suchen Sie in Salesforce nach Datensätzen mit dieser ID. Aktualisieren Sie die Spenden- und Spenderdatensätze bei Bedarf.</label>
         <name>geErrorUncertainCardChargePart3</name>
     </customLabels>
     <customLabels>
@@ -3804,10 +3943,22 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>gePS_IntegrationTestInvalidConfigParams</name>
     </customLabels>
     <customLabels>
+        <label>Zahlungsautorisierung abgelaufen</label>
+        <name>gePaymentAuthExpiredHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Mindestens eine Kartenautorisierung ist abgelaufen. Damit sichergestellt ist, dass diese Zahlungen beim Verarbeiten des Batches belastet werden, geben Sie die Zahlungsinformationen für Spenden mit dem Zahlungsautorisierungs-Status &quot;Abgelaufen&quot; erneut ein.</label>
+        <name>gePaymentAuthExpiredWarningText</name>
+    </customLabels>
+    <customLabels>
         <label>Fehler beim Verarbeiten der Zahlung. Bitte überprüfen Sie den Fehler, und versuchen Sie es erneut. Wählen Sie
-            alternativ &quot;Karte nicht belasten aus&quot;, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
+            alternativ &quot;Keine Zahlungsinformationen eingeben&quot; aus, um eine Spende einzugeben, ohne eine Kartenzahlung zu verarbeiten. {0}-Fehler:
             /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} hat die Zahlung erfolgreich verarbeitet. Das Ändern von Spender, Datum, Betrag oder Zahlungsmethode führt zu inkonsistenten Datensätzen für die gleiche Transaktion in {0} und NPSP.</label>
+        <name>gePaymentProcessedWarning</name>
     </customLabels>
     <customLabels>
         <label>Verarbeitungsfehler bei der Transaktion.</label>
@@ -3816,6 +3967,18 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     <customLabels>
         <label>Zeitlimitüberschreitung bei der Anforderung. Versuchen Sie es noch einmal, oder wenden Sie sich an Ihren Salesforce-Administrator.</label>
         <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
+        <label>Trotzdem verarbeiten</label>
+        <name>geProcessAnyway</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status of batch being processed --></label>
+        <name>geProcessingBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Verarbeitungsfehler</label>
+        <name>geProcessingErrors</name>
     </customLabels>
     <customLabels>
         <label>Suchen...</label>
@@ -3850,7 +4013,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geTabTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Karte wird belastet...</label>
+        <label>Die Zahlung wird belastet...</label>
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
@@ -3878,7 +4041,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>geTextNavigateToOpportunity</name>
     </customLabels>
     <customLabels>
-        <label>Klicken Sie auf &quot;Speichern&quot;, um die Kartenzahlung zu verarbeiten und die Spende in Salesforce zu erfassen.</label>
+        <label>Klicken Sie auf &quot;Speichern&quot;, um die Zahlung zu verarbeiten und die Spende in Salesforce zu erfassen.</label>
         <name>geTextPaymentsSaveNotice</name>
     </customLabels>
     <customLabels>
@@ -3936,6 +4099,10 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
     <customLabels>
         <label>Es wurde eine ungültige Zeichenfolge angegeben, aber es wurde keine Ausnahme ausgelöst</label>
         <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
+        <label>Die Währung für diese Spende ist {0}. Spenden müssen in der Währung des Batches vorliegen. Ändern Sie Ihre Währung in {0}, um eine neue Spende im Batch zu speichern.</label>
+        <name>geWarningBatchGiftEntryCurrencyMismatch</name>
     </customLabels>
     <customLabels>
         <label>Warnung: Wenn Sie diesen Abschnitt löschen, entfernen Sie zugleich erforderliche Felder aus der Vorlage. Diese Felder müssen zuerst einem anderen Abschnitt hinzugefügt werden, damit Sie die Vorlage speichern können.</label>
@@ -5818,7 +5985,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
         <name>pmtWrittenOffPaymentDateRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <label>Wählen Sie zum Eingeben der Zahlung eine gültige Zahlungsmethode aus.</label>
         <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
@@ -6112,7 +6279,8 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
             ● Filter verwenden, um problemlos bestimmte Datensätze oder Daten auszuschließen&lt;br/&gt;
             ● Daten aus mehr als 2 zurückliegenden Jahren zusammenfassen&lt;br/&gt;
             &lt;br/&gt;
-            Gehen Sie zu NPSP-Einstellungen | Spenden | Anpassbare Rollups, um anpassbare Rollups zu aktivieren und zu beginnen, sie zu nutzen!</label>
+            Gehen Sie zu NPSP-Einstellungen | Spenden | Anpassbare Rollups, um anpassbare Rollups zu aktivieren und zu beginnen, sie zu nutzen!
+        </label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
     <customLabels>
@@ -6192,7 +6360,7 @@ Wenn Sie es vorziehen, können Sie &quot;Spendeneintrag&quot; deaktivieren und s
 &lt;br/&gt;
 &lt;br/&gt;
 Wenn &quot;NPSP-Standardaufträge n. automat. planen&quot; nicht ausgewählt ist, wenn Sie die NSPS-Einstellungsseite laden, prüft NPSP, ob alle NPSP-Standardaufträge geplant sind. Wenn sie nicht geplant sind, plant NPSP sie neu. NPSP plant nur fehlende NPSP-Aufträge neu; Aufträge, die aktualisiert wurden, werden nicht überschrieben.
-&lt;br/&gt;
+&lt;Br/&gt;
 &lt;br/&gt;
 Um diese Aufträge anzuzeigen, suchen Sie in Salesforce-Setup nach geplanten Aufträgen.
 &lt;br/&gt;
@@ -6245,10 +6413,12 @@ Indem Sie &quot;NPSP-Standardaufträge n. automat. planen&quot; auswählen, teil
         <name>stgHelpAdvancedMapping3</name>
     </customLabels>
     <customLabels>
-        <label>&lt;b&gt;Diese Nachricht wird nicht mehr angezeigt, wenn Sie diese Seite verlassen! Erstellen Sie einen Screenshot dieser Seite, oder kopieren Sie die Informationen in der Tabelle unten, um die Hilfetext-Zuordnungen nachzuverfolgen, die Sie korrigieren müssen. &lt;/b&gt;
+        <label>
+            &lt;b&gt;Diese Nachricht wird nicht mehr angezeigt, wenn Sie diese Seite verlassen! Erstellen Sie einen Screenshot dieser Seite, oder kopieren Sie die Informationen in der Tabelle unten, um die Hilfetext-Zuordnungen nachzuverfolgen, die Sie korrigieren müssen. &lt;/b&gt;
             &lt;br/&gt;
             &lt;br/&gt;
-            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Weitere Informationen zu allgemeinen Problemen bei der Hilfetext-Zuordnung&lt;/a&gt;. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.</label>
+            Wir konnten einige Ihrer bestehenden Hilfetext-Zuordnungen nicht konvertieren, da sie ungültig sind. &lt;a href=&quot;https://powerofus.force.com/NPSP_Troubleshoot_Help_Text&quot; target=&quot;_blank&quot;&gt;Weitere Informationen zu allgemeinen Problemen bei der Hilfetext-Zuordnung&lt;/a&gt;. Wir empfehlen, die Erweiterte Zuordnung zu deaktivieren, die ungültigen Hilfetext-Zuordnungen zu korrigieren und die Erweiterte Zuordnung anschließend wieder zu aktivieren. Alternativ können Sie diese Zuordnungen hinzufügen, wenn Sie die Erweiterte Zuordnung auf der nächsten Seite konfigurieren, diese zusätzlichen Zuordnungen werden aber auf den ursprünglichen ungültigen Hilfetext zurückgesetzt, wenn Sie die Erweiterte Zuordnung deaktivieren.
+        </label>
         <name>stgHelpAdvancedMapping4</name>
     </customLabels>
     <customLabels>
@@ -6310,7 +6480,7 @@ Wenn Sie Zahlungszuweisungen aktivieren, bleiben die vorhandenen Rollups dieselb
         <name>stgHelpBDEOppNaming</name>
     </customLabels>
     <customLabels>
-        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities mit Zuweisungen und aktualisiert die jeweiligen Datensätze zum Verwendungszweck. 
+        <label>Dieses Dienstprogramm berechnet Gesamt-Rollups für alle geschlossenen Opportunities mit Zuweisungen und aktualisiert die jeweiligen Datensätze zum Verwendungszweck.
 Dieser Vorgang kann einige Zeit dauern, aber Sie können diese Seite ruhig schließen, da der Vorgang im Hintergrund weiter ausgeführt wird.</label>
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
@@ -6402,7 +6572,9 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
-        <label>Entfernt alle neuen Rollups, Filtergruppen und Filterregeln, die Sie erstellt haben, während Sie anpassbare Rollups verwendet haben, UND setzt alle alten NPSP-Rollups auf ihr Standardverhalten zurück.</label>
+        <label>
+            Entfernt alle neuen Rollups, Filtergruppen und Filterregeln, die Sie erstellt haben, während Sie anpassbare Rollups verwendet haben, UND setzt alle alten NPSP-Rollups auf ihr Standardverhalten zurück.
+</label>
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
@@ -6539,7 +6711,7 @@ Wenn der Vorgang zu 100 % abgeschlossen ist, können Sie die Seite verlassen od
         <name>stgHelpNameOverrun</name>
     </customLabels>
     <customLabels>
-        <label>Wählen Sie zunächst das Feld für &quot;Wiederkehrende Spende&quot; aus, das Sie zuordnen möchten. Wählen Sie dann das Feld für &quot;Opportunity&quot; aus, das Sie zuordnen möchten. NPSP kopiert den Wert des ausgewählten Felds &quot;Wiederkehrende Spende“ in das von Ihnen ausgewählte Feld &quot;Opportunity&quot; bei allen untergeordneten Opportunites für die wiederkehrende Spende. 
+        <label>Wählen Sie zunächst das Feld für &quot;Wiederkehrende Spende&quot; aus, das Sie zuordnen möchten. Wählen Sie dann das Feld für &quot;Opportunity&quot; aus, das Sie zuordnen möchten. NPSP kopiert den Wert des ausgewählten Felds &quot;Wiederkehrende Spende“ in das von Ihnen ausgewählte Feld &quot;Opportunity&quot; bei allen untergeordneten Opportunites für die wiederkehrende Spende.
 WICHTIG: Die Datentypen beider Felder müssen identisch sein.</label>
         <name>stgHelpNewRDFieldMap</name>
     </customLabels>
@@ -6776,7 +6948,7 @@ Dieser Vorgang kann etwas Zeit in Anspruch nehmen, Sie können die Seite jedoch 
         <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
-        <label>Berücksichtigen Sie die Einstellungen in einer Duplikatsregel, mit denen festgelegt wird, ob doppelte Datensätze zulässig sind. 
+        <label>Berücksichtigen Sie die Einstellungen in einer Duplikatsregel, mit denen festgelegt wird, ob doppelte Datensätze zulässig sind.
 Um Ihre vorhandenen Einstellungen zu überprüfen, gehen Sie zu &quot;Setup&quot; &gt; &quot;Duplikatsregeln&quot;. Bei allen Regeln, bei denen die Felder &quot;Aktion beim Erstellen&quot; oder &quot;Aktion beim Bearbeiten&quot; auf &quot;Zulassen&quot; gesetzt sind, werden die Duplikate gespeichert.</label>
         <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
@@ -7493,10 +7665,6 @@ Hinweis: Die Registerkarte &quot;NPSP-Einstellungen&quot; ist in der Nonprofit S
     <customTabs>
         <label>Batch-Spendeneintrag</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>Kontaktzusammenführung</label>

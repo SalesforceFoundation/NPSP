@@ -680,7 +680,7 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <label>De Apex-klasse {0} bestaat niet of heeft de Planning-interface niet geïmplementeerd.</label>
         <name>CallableApiJobScheduleInvalidClass</name>
     </customLabels>
     <customLabels>
@@ -864,6 +864,14 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error for DIs with populated RD fields when Advanced Mapping is disabled. --></label>
+        <name>RD2_DisabledAdvancedMappingError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error for DIs with populated RD fields when RD2 is disabled. --></label>
+        <name>RD2_DisabledRD2Error</name>
+    </customLabels>
+    <customLabels>
         <label>Terugkerende betaling wordt geannuleerd</label>
         <name>RD2_ElevateCancelInProgress</name>
     </customLabels>
@@ -892,8 +900,16 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Deze functionaliteit wordt momenteel niet ondersteund voor terugkerende donaties afkomstig uit de Elevate-betaalservices.</label>
         <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
+        <label>Geldige betalingswijzen voor een actieve, aan Elevate gekoppelde terugkerende donatie zijn Creditcard of ACH.</label>
+        <name>RD2_ElevatePaymentMethodChangeError</name>
     </customLabels>
     <customLabels>
         <label>Elevate-proces in behandeling</label>
@@ -904,8 +920,24 @@
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
     <customLabels>
+        <label>Geef een geldig bedrag op. Het bedrag mag niet lager zijn dan 1.</label>
+        <name>RD2_ElevateRDAmountMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de campagne niet verwijderen uit een aan Elevate gekoppelde terugkerende donatie. Als u de campagne wilt verwijderen, sluit u de terugkerende donatie en maakt u een nieuwe.</label>
+        <name>RD2_ElevateRDCampaignCannotUpdateToNull</name>
+    </customLabels>
+    <customLabels>
         <label>De status voor een terugkerende donatie in Elevate kan niet worden bewerkt wanneer Status is gesloten.</label>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>U kunt de dag van de maand niet wijzigen voor een aan Elevate gekoppelde terugkerende donatie.</label>
+        <name>RD2_ElevateRDDayOfMonthCannotChange</name>
+    </customLabels>
+    <customLabels>
+        <label>Geef een nieuwe ingangsdatum op. De ingangsdatum voor een terugkerende donatie in Elevate mag niet in de toekomst liggen.</label>
+        <name>RD2_ElevateRDEffectiveDateMustBeValid</name>
     </customLabels>
     <customLabels>
         <label>Er kan geen terugkerende betaling in Elevate worden gemaakt. Vraag de systeembeheerder om hulp.</label>
@@ -1170,6 +1202,10 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>ACH-informatie versturen naar Elevate...</label>
+        <name>RD2_EntryFormSaveACHMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Er is een terugkerende betaling gemaakt in Elevate. Herhalings-ID Elevate: {0}.
         
         Er is echter geen bijbehorende terugkerende donatie gemaakt in NPSP vanwege de volgende fout:
@@ -1225,6 +1261,14 @@
     <customLabels>
         <label>Onderbroken</label>
         <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
+        <label>De ACH-betalingsgegevens van de donateur worden op {{DATE}} verzonden naar zijn of haar bank. De betalingen worden gestart als de bank de informatie heeft geverifieerd en verwerkt.</label>
+        <name>RD2_NextACHPaymentDonationDateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Het bedrag wordt op de volgende donatiedatum in rekening gebracht op de creditcard van de donateur: {{DATE}}</label>
+        <name>RD2_NextPaymentDonationDateInfo</name>
     </customLabels>
     <customLabels>
         <label>Aantal geplande termijnen mag niet kleiner zijn dan het aantal Betaalde termijnen.</label>
@@ -1293,6 +1337,10 @@
     <customLabels>
         <label>Reden voor onderbreking</label>
         <name>RD2_PausedReasonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Betalingsgegevens</label>
+        <name>RD2_PaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Einddatum planning</label>
@@ -2084,6 +2132,18 @@ Om uw instellingen voor GAU-toewijzingen te controleren, gaat u naar Donaties | 
         <name>bdiErrorDonationRequireNoMatch</name>
     </customLabels>
     <customLabels>
+        <label>De donatie bevat bestaande toewijzingen die mogelijk een conflict veroorzaken met de ingevoerde GAU-toewijzingen.</label>
+        <name>bdiErrorExistingDonationAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>De betaling bevat bestaande toewijzingen die mogelijk een conflict veroorzaken met de ingevoerde GAU-toewijzingen.</label>
+        <name>bdiErrorExistingPaymentAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>De verschafte GAU-toewijzingen zijn hoger dan 100 procent.</label>
+        <name>bdiErrorGAUAllocationOver100</name>
+    </customLabels>
+    <customLabels>
         <label>Ongeldige Naam voor Donatiecampagne</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
@@ -2718,8 +2778,33 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
         <name>bgeNewGift</name>
     </customLabels>
     <customLabels>
+        <label>
+            Met ingang van 13 juli 2021 wordt Batchinvoer van giften niet meer ondersteund. Deze functie is vervangen door Opgave van gift.
+            Als u nog actieve batches hebt, kunt u de records nog wel openen, maar niet meer verwerken met Batchinvoer van giften.
+            Neem contact op met Support als u toegang wilt tot deze batches.
+            Mogelijk is Opgave van gift een goed alternatief voor Batchinvoer van giften.
+            Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt; in de Power of Us Hub.</label>
+        <name>bgeNotSupportedBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchinvoer van giften niet ondersteund</label>
+        <name>bgeNotSupportedHeader</name>
+    </customLabels>
+    <customLabels>
         <label>Batch verwerken</label>
         <name>bgeProcessBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Batch en betalingen verwerken</label>
+        <name>bgeProcessBatchAndPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>Op 13 juli 2021 wordt de verouderde functie Batchinvoer van giften buiten gebruik gesteld; de functie is dan niet meer beschikbaar in NPSP. Als u op dat moment actieve batches hebt, kunt u de records nog wel openen, maar u kunt ze niet meer verwerken met Batchinvoer van giften. Als u voor een goede overgang wilt zorgen, schakelt u de nieuwere functie Opgave van gift op voorhand in en neemt u deze al in gebruik vóór 13 juli. Meer informatie over Opgave van gift vindt u in de &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;NPSP-documentatie&lt;/a&gt;.</label>
+        <name>bgeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Batchinvoer van giften buiten gebruik gesteld</label>
+        <name>bgeRetirementWarningHeader</name>
     </customLabels>
     <customLabels>
         <label>Batchinvoer van giften</label>
@@ -2818,6 +2903,10 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Laatste 4 kaart</label>
+        <name>commonCardLast4</name>
+    </customLabels>
+    <customLabels>
         <label>Kaarttype</label>
         <name>commonCardType</name>
     </customLabels>
@@ -2864,6 +2953,10 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
     <customLabels>
         <label>Bewerken</label>
         <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Bewerk de betalingsgegevens.</label>
+        <name>commonEditPaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Er is een fout opgetreden bij het onboarden van deze Elevate-klant</label>
@@ -2942,6 +3035,10 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Verwerkingsfouten tijdens de betaling</label>
+        <name>commonPaymentProcessingErrors</name>
+    </customLabels>
+    <customLabels>
         <label>Salesforce.org Elevate</label>
         <name>commonPaymentServices</name>
     </customLabels>
@@ -2956,6 +3053,14 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
     <customLabels>
         <label>Meer lezen</label>
         <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Records mislukt</label>
+        <name>commonRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Records verwerkt</label>
+        <name>commonRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>Verplicht</label>
@@ -3246,6 +3351,14 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
+        <label>Kaart geautoriseerd.</label>
+        <name>geAuthorizedCreditCardSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Autoriseren...</label>
+        <name>geAuthorizingCreditCard</name>
+    </customLabels>
+    <customLabels>
         <label>Aantal giften</label>
         <name>geBatchGiftsCount</name>
     </customLabels>
@@ -3264,6 +3377,10 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
     <customLabels>
         <label>Totaalbedrag van batch</label>
         <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batch processing success message --></label>
+        <name>geBatchProcessingSuccess</name>
     </customLabels>
     <customLabels>
         <label>Voor meer geavanceerde opties voor het invoeren van giften selecteert u velden uit de volgende objectgroepen.</label>
@@ -3325,8 +3442,7 @@ Velden voor het object NPSP-gegevensimport moeten zijn toegewezen aan compatibel
         <label>
         Stel een veld in door het voltooien van de volgende stappen:
         &lt;/br&gt;
-        &lt;/br&gt;
-        &lt;ol&gt;
+        &lt;/br&gt;        &lt;ol&gt;
             &lt;li&gt; Maak het veld voor het doelobject. &lt;/li&gt;
             &lt;li&gt; Maak het veld voor het object NPSP-gegevensimport. &lt;/li&gt;
             &lt;li&gt; Als dit onderdeel vormt van een nieuwe objectgroep, maakt u extra velden voor een nieuwe objectgroep en creëert u de nieuwe objectgroep in NPSP-instellingen. &lt;/li&gt;
@@ -3377,8 +3493,12 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
-        <label>U verwerkt geen kaartbetaling voor deze gift.</label>
+        <label>U voert geen betalingsgegevens in die door Elevate moeten worden verwerkt.</label>
         <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
+        <label>De creditcard van de donateur wordt verwerkt wanneer u de batch verwerkt.</label>
+        <name>geBodyPaymentProcessedDuringBatchProcessing</name>
     </customLabels>
     <customLabels>
         <label>Geef details op over deze Sjabloon Opgave van gift.</label>
@@ -3469,11 +3589,11 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
-        <label>U kunt het bedrag nu ook op een kaart in rekening laten brengen.</label>
+        <label>U kunt ook nu betalingsgegevens invoeren.</label>
         <name>geButtonPaymentAlternate</name>
     </customLabels>
     <customLabels>
-        <label>Niet in rekening brengen op kaart</label>
+        <label>Voer geen betalingsgegevens in.</label>
         <name>geButtonPaymentDoNotCharge</name>
     </customLabels>
     <customLabels>
@@ -3509,7 +3629,15 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geErrorAmountDoesNotMatch</name>
     </customLabels>
     <customLabels>
-        <label>Het bedrag is in rekening gebracht op de kaart, maar er is geen betaling geregistreerd in Salesforce. Los de fouten op en dien het formulier opnieuw in om de donatie in Salesforce te registreren.</label>
+        <label>De gift kan niet worden opgeslagen in de batch. Giften moeten dezelfde valuta hebben als de batch. Wijzig de valuta in {0} om de gift op te slaan.</label>
+        <name>geErrorBatchGiftEntryCurrencyMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Als u de donateur, de datum of het bedrag wilt bijwerken, voert u de kaartgegevens opnieuw in om de betaling opnieuw te autoriseren.</label>
+        <name>geErrorBatchGiftEntryReauthRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>De betaling is door Elevate verwerkt, maar NPSP heeft geen record voor de transactie gemaakt in Salesforce. Corrigeer de fouten en verzend het formulier opnieuw, zodat de Salesforce-record alsnog wordt gemaakt.</label>
         <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
@@ -3581,7 +3709,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
-        <label>Er is een time-out opgetreden voor de aanvraag om het bedrag in rekening te laten brengen op de kaart.</label>
+        <label>Er is een time-out opgetreden bij de aanvraag om een betaling te verwerken.</label>
         <name>geErrorRequestTimedout</name>
     </customLabels>
     <customLabels>
@@ -3589,15 +3717,15 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label>Er is een systeemfout opgetreden voor de donatie van {0} door {1}. Uw beheerder moet transacties controleren in {2} en bepalen of het bedrag in rekening is gebracht op de kaart.</label>
+        <label>Er is een systeemfout opgetreden voor de donatie van {0} door {1}. Uw beheerder moet transacties controleren in {2} en bepalen of de betaling is verwerkt.</label>
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label>Als het bedrag niet in rekening is gebracht op de kaart, voert u de gift en kaartbetaling opnieuw in in Opgave van gift.</label>
+        <label>Als de betaling niet is verwerkt, voert u de gift en de betaling opnieuw in in Opgave van gift.</label>
         <name>geErrorUncertainCardChargePart2</name>
     </customLabels>
     <customLabels>
-        <label>Als het bedrag in rekening is gebracht op de kaart, noteert u de transactie-ID in {0} en zoekt u naar records met die ID in Salesforce. Werk de gift- en donateurrecords bij als dit nodig is.</label>
+        <label>Is de betaling verwerkt, dan noteert u de betalings-ID in {0} en zoekt u in Salesforce naar records met die ID. Werk de gift- en donateurrecords zo nodig bij.</label>
         <name>geErrorUncertainCardChargePart3</name>
     </customLabels>
     <customLabels>
@@ -3813,10 +3941,22 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>gePS_IntegrationTestInvalidConfigParams</name>
     </customLabels>
     <customLabels>
-        <label>Er is een fout opgetreden bij het verwerken van de betaling. Controleer de fout en probeer het opnieuw.
-            U kunt ook Niet in rekening brengen op kaart selecteren om een donatie in te voeren zonder een kaartbetaling te verwerken. {0} fouten:
+        <label>Autorisatie van betaling verlopen</label>
+        <name>gePaymentAuthExpiredHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>De autorisatie van een of meer betaalkaarten is verlopen. Voer de betalingsgegevens voor donaties met de status Autorisatie van betaling verlopen opnieuw in, zodat deze betalingen in rekening worden gebracht tijdens het verwerken van de batch.</label>
+        <name>gePaymentAuthExpiredWarningText</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is een fout opgetreden bij het verwerken van de betaling. Bekijk de fout en probeer het opnieuw.
+            U kunt ook &apos;Geen betalingsgegevens invoeren&apos; selecteren om een donatie in te voeren zonder een betaling te verwerken. {0} fouten:
             /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} heeft de betaling verwerkt. Als u de donateur, de datum, het bedrag of de betalingswijze wijzigt, krijgt u inconsistente records voor dezelfde transactie in {0} en NPSP.</label>
+        <name>gePaymentProcessedWarning</name>
     </customLabels>
     <customLabels>
         <label>Er is een fout opgetreden bij het verwerken van de transactie.</label>
@@ -3825,6 +3965,18 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     <customLabels>
         <label>Er is een time-out opgetreden voor de aanvraag. Probeer het opnieuw of neem contact op met de Salesforce-beheerder.</label>
         <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
+        <label>Toch verwerken</label>
+        <name>geProcessAnyway</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status of batch being processed --></label>
+        <name>geProcessingBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwerkingsfouten</label>
+        <name>geProcessingErrors</name>
     </customLabels>
     <customLabels>
         <label>Zoeken...</label>
@@ -3859,7 +4011,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geTabTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Bedrag in rekening brengen op kaart...</label>
+        <label>Betaling wordt in rekening gebracht...</label>
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
@@ -3887,7 +4039,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>geTextNavigateToOpportunity</name>
     </customLabels>
     <customLabels>
-        <label>Klik op Opslaan om de kaartbetaling te verwerken en de donatie te registreren in Salesforce.</label>
+        <label>Klik op Opslaan om de betaling te verwerken en de donatie te registreren in Salesforce.</label>
         <name>geTextPaymentsSaveNotice</name>
     </customLabels>
     <customLabels>
@@ -3945,6 +4097,10 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
     <customLabels>
         <label>Er is een ongeldige tekenreeks opgegeven, maar er is geen uitzondering geregistreerd</label>
         <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
+        <label>De valuta voor deze batch is {0}. Giften moeten dezelfde valuta hebben als de batch. Wijzig de valuta in {0} om een nieuwe gift op te slaan in de batch.</label>
+        <name>geWarningBatchGiftEntryCurrencyMismatch</name>
     </customLabels>
     <customLabels>
         <label>Waarschuwing: met het verwijderen van deze sectie verwijdert u ook verplichte velden uit de sjabloon. Deze velden moeten worden toegevoegd aan een andere sectie voordat u de sjabloon kunt opslaan.</label>
@@ -5827,7 +5983,7 @@ Indien dit de voorkeur heeft, kunt u Invoer van giften uitschakelen en in plaats
         <name>pmtWrittenOffPaymentDateRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <label>Selecteer een geldige betalingsmethode om uw betaling te verrichten.</label>
         <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
@@ -7511,10 +7667,6 @@ Opmerking: Het tabblad NPSP-instellingen is zichtbaar in de toepassing Nonprofit
     <customTabs>
         <label>Batchinvoer van giften</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>Samenvoeging van Contactpersonen</label>
