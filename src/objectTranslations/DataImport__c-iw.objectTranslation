@@ -412,6 +412,11 @@
         <name>Elevate_Custom_Metadata__c</name>
     </fields>
     <fields>
+        <help><!-- The transaction status shown in Elevate. --></help>
+        <label><!-- Elevate Payment Status --></label>
+        <name>Elevate_Payment_Status__c</name>
+    </fields>
+    <fields>
         <help>תיאור הגורמים לכישלון הייבוא של רשומת יבוא הנתונים.</help>
         <label>פרטי כישלון</label>
         <name>FailureInformation__c</name>
@@ -618,6 +623,11 @@
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
+        <help><!-- The ID of a batch of payments sent to Elevate for processing. --></help>
+        <label><!-- Payment Elevate Batch ID --></label>
+        <name>Payment_Elevate_Batch_ID__c</name>
+    </fields>
+    <fields>
         <help><!-- The date and time the transaction was created. --></help>
         <label><!-- Payment Elevate Created Date --></label>
         <name>Payment_Elevate_Created_Date__c</name>
@@ -695,6 +705,87 @@
         <name>Payment_Type__c</name>
     </fields>
     <fields>
+        <help><!-- The status from attempting to insert the Recurring Donation. --></help>
+        <label><!-- Recurring Donation Import Status --></label>
+        <name>RecurringDonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <help><!-- A lookup to the Recurring Donation if it was successfully created. --></help>
+        <label><!-- Recurring Donation Imported --></label>
+        <name>RecurringDonationImported__c</name>
+        <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
+    </fields>
+    <fields>
+        <help><!-- The amount for each installment Opportunity. --></help>
+        <label><!-- Recurring Donation Amount --></label>
+        <name>Recurring_Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <help><!-- The initial inception date for this Recurring Donation. The default is the current date. --></help>
+        <label><!-- Recurring Donation Date Established --></label>
+        <name>Recurring_Donation_Date_Established__c</name>
+    </fields>
+    <fields>
+        <help><!-- Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days. --></help>
+        <label><!-- Recurring Donation Day of Month --></label>
+        <name>Recurring_Donation_Day_of_Month__c</name>
+    </fields>
+    <fields>
+        <help><!-- The date that new or updated schedule information (Amount, Day of Month, etc.) for this Recurring Donation takes effect. The default is the current date. --></help>
+        <label><!-- Recurring Donation Effective Date --></label>
+        <name>Recurring_Donation_Effective_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The external, unique ID of the related Recurring Donation in Elevate. --></help>
+        <label><!-- Recurring Donation Elevate Recurring ID --></label>
+        <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
+        <help><!-- After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed. --></help>
+        <label><!-- Recurring Donation End Date --></label>
+        <name>Recurring_Donation_End_Date__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;. --></help>
+        <label><!-- Recurring Donation Installment Frequency --></label>
+        <name>Recurring_Donation_Installment_Frequency__c</name>
+    </fields>
+    <fields>
+        <help><!-- The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;. --></help>
+        <label><!-- Recurring Donation Installment Period --></label>
+        <name>Recurring_Donation_Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help><!-- Leave blank if you have a Recurring Donation Name Format selected. Otherwise, enter your own name. --></help>
+        <label><!-- Recurring Donation Name --></label>
+        <name>Recurring_Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help><!-- The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record. --></help>
+        <label><!-- Recurring Donation Payment Method --></label>
+        <name>Recurring_Donation_Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of installments you expect to receive. Only used when Recurring Type is Fixed. --></help>
+        <label><!-- Recurring Donation Planned Installments --></label>
+        <name>Recurring_Donation_Planned_Installments__c</name>
+    </fields>
+    <fields>
+        <help><!-- Open indicates an ongoing Recurring Donation. Fixed indicates a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field. --></help>
+        <label><!-- Recurring Donation Recurring Type --></label>
+        <name>Recurring_Donation_Recurring_Type__c</name>
+    </fields>
+    <fields>
+        <help><!-- The reason this Recurring Donation has its current Status value. --></help>
+        <label><!-- Recurring Donation Status Reason --></label>
+        <name>Recurring_Donation_Status_Reason__c</name>
+    </fields>
+    <fields>
+        <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
+        <label><!-- Recurring Donation Status --></label>
+        <name>Recurring_Donation_Status__c</name>
+    </fields>
+    <fields>
         <help>המצב של יבוא רשומת יבוא הנתונים.</help>
         <label>מצב</label>
         <name>Status__c</name>
@@ -713,6 +804,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>מיובא</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Processing</masterLabel>
+            <translation><!-- Processing --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Ready to Process</masterLabel>
@@ -777,6 +872,10 @@
         <sections>
             <label><!-- Payment Information --></label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Recurring Donation Information --></label>
+            <section>Recurring Donation Information</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
