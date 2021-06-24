@@ -580,6 +580,8 @@ tasks:
                     - NPSP_Engagement_Plan_Record_Page
                     - NPSP_GAU_Allocation
                     - NPSP_General_Accounting_Unit
+                Class:
+                    - SfdoLogUtils
 
     enable_pilot_in_scratch_org:
         description: Initialize the PilotEnabled Feature Parameter override in a Scratch Org environment
@@ -1258,6 +1260,8 @@ flows:
                                 - Error__c.All
                                 - Grant_Deadline__c.All
                                 - Trigger_Handler__c.All_Triggers
+                            Class:
+                                - SfdoLogUtils
             2.7:
                 task: deploy_rd2_config
                 ## It's necessary to redeploy the RD2 config after deploying the "packaged" unmanaged code to
