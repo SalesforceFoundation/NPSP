@@ -197,11 +197,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
         System.assertNotEquals(null, accountId);
         
         //check address record got created for household
-        Address__c[] av = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
+        Address__c[] addresses = [select Id, MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c
                              from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('90210', av[0].MailingPostalCode__c);
-        System.assertEquals(false, av[0].Verified__c);
+        System.assertEquals(1, addresses.size());
+        System.assertEquals('90210', addresses[0].MailingPostalCode__c);
+        System.assertEquals(false, addresses[0].Verified__c);
         
         //run batch address verification
         TDTM_DefaultConfig.stopTestDataInit();
@@ -211,13 +211,13 @@ public with sharing class ADDR_Validator_Batch_TEST {
         Test.stopTest();
         
         //check address record was verified
-        av = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c 
+        addresses = [select MailingCity__c, MailingState__c, MailingPostalCode__c, Verified__c
                 from Address__c where Household_Account__c = :accountId];
-        System.assertEquals(1, av.size());
-        System.assertEquals('98236', av[0].MailingPostalCode__c);
-        System.assertEquals('Clinton', av[0].MailingCity__c);
-        System.assertEquals('WA', av[0].MailingState__c);
-        System.assertEquals(true, av[0].Verified__c);
+        System.assertEquals(1, addresses.size());
+        System.assertEquals('98236', addresses[0].MailingPostalCode__c);
+        System.assertEquals('Clinton', addresses[0].MailingCity__c);
+        System.assertEquals('WA', addresses[0].MailingState__c);
+        System.assertEquals(true, addresses[0].Verified__c);
     }
     
     public static testmethod void multipleValidZipcodes() {

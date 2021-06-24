@@ -282,7 +282,7 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(true, batchDataEntrySetgs.Allow_Blank_Opportunity_Names__c);
         System.assertEquals(true, batchDataEntrySetgs.Opportunity_Naming__c);
 
-        System.assertEquals('HH_NameSpec',householdNamingSettings.Implementing_Class__c);
+        System.assertEquals('HH_INamingImpl',householdNamingSettings.Implementing_Class__c);
         System.assertEquals(365,allocationsSettings.Rollup_N_Day_Value__c);
 
         System.assertEquals(50,dataImportSettings.Batch_Size__c);
@@ -504,9 +504,10 @@ public with sharing class STG_InstallScript_TEST {
                         new BDI_MigrationMappingHelperMock());
         BDI_MigrationMappingUtility util= new BDI_MigrationMappingUtility(mock_BDI_MigrationMappingHelper);
 
-        Test.testInstall(new STG_InstallScript(util), new Version(1,0), true);
-        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(),
-                'We have 2 metadata records queued for deployment.');
+        Test.testInstall(new STG_InstallScript(util), new Version(1,0), true);     
+        // we should have 2 field mappings queued for deployment   
+        System.assertEquals(2, util.queuedMetadataTypesForDeploy.size(), 
+            'We should have 2 mapping metadata records queued for deployment.');
     }
 
 

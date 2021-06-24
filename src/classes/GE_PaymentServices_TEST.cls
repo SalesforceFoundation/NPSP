@@ -79,8 +79,8 @@ public class GE_PaymentServices_TEST {
             paymentStatusValues.add(enumName);
         }
 
-        for (GE_PaymentServices.ElevateTransactionStatus value :
-                GE_PaymentServices.ElevateTransactionStatus.values()) {
+        for (ElevateTransactionStatus value :
+                ElevateTransactionStatus.values()) {
                     System.assert(paymentStatusValues.contains(value.name()), 'Every payment transaction status value' +
                         'should be included in the enum returned by the method.');
         }
@@ -118,15 +118,16 @@ public class GE_PaymentServices_TEST {
             ));
         }
         insert requiredConfigs;
-
-        System.assertEquals(true, GE_PaymentServices.isElevateCustomer,
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        System.assertEquals(true, paymentServices.isElevateCustomer(),
             'The org should be considered an Elevate customer when '
             + 'all required configuration keys are present.');
     }
 
     @IsTest
     private static void shouldNotBeAnElevateCustomer() {
-        System.assertEquals(false, GE_PaymentServices.isElevateCustomer,
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        System.assertEquals(false, paymentServices.isElevateCustomer(),
             'The org should not be considered an Elevate customer without '
             + 'all required configuration keys present.');
     }
