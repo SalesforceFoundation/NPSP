@@ -30,6 +30,11 @@
         <relationshipLabel>Contactpersonen (Huidig Adres)</relationshipLabel>
     </fields>
     <fields>
+        <help>Als Aanpasbare totaliseringen ingeschakeld is, wordt altijd de verschuivingsmodus gebruikt voor het totaliseren van hard credits en soft credits voor deze record.</help>
+        <label>Aanp. total.: verschuivingsmodus forc.</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>Geeft aan of de Contactpersoon overleden is. Wanneer aangevinkt, sluit NPSP deze Contactpersoon uit van Benoeming van Huishouden (tenzij deze Contactpersoon de enige is in het Huishouden) en van standaarde-mail- en telefoonlijsten.</help>
         <label>Overleden</label>
         <name>Deceased__c</name>
