@@ -16,6 +16,7 @@
                                 placeholder=""
                                 field-level-help={customLabels.donorTypeHelpText}
                                 class="rd2-entry-custom-field-padding"
+                                data-id="donorType"
                                 options={donorTypeOptions}
                                 onchange={handleDonorTypeChange}
                                 required
@@ -27,7 +28,8 @@
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.contact} >
                             <lightning-input-field 
                                 field-name={fields.contact.apiName} 
-                                value={contactId} 
+                                value={contactId}
+                                data-id="contactLookup"
                                 required
                                 onchange={handleContactChange}>
                             </lightning-input-field>
@@ -36,13 +38,23 @@
 
                     <template if:true={isAccountDonor}>
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.account}>
-                            <lightning-input-field field-name={fields.account.apiName} value={accountId} required>
+                            <lightning-input-field
+                                    field-name={fields.account.apiName}
+                                    value={accountId}
+                                    data-id="accountLookup"
+                                    required
+                                    onchange={handleAccountChange}
+                            >
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
 
                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.dateEstablished}>
-                        <lightning-input-field field-name={fields.dateEstablished.apiName} required>
+                        <lightning-input-field
+                                field-name={fields.dateEstablished.apiName}
+                                required
+                                data-id="dateEstablished"
+                        >
                         </lightning-input-field>
                     </lightning-layout-item>
 

@@ -1,0 +1,16 @@
+<template>
+    <template if:true={hasFirstHalf}>
+        <lightning-formatted-text class="slds-text-title_bold" value={firstHalf} >
+        </lightning-formatted-text>
+    </template>
+    <lightning-formatted-date-time class="slds-text-title_bold"
+                                   year="numeric"
+                                   month="2-digit"
+                                   day="2-digit"
+                                   value={date}>
+    </lightning-formatted-date-time>
+    <template if:true={hasSecondHalf}>
+        <lightning-formatted-text class="slds-text-title_bold" value={secondHalf} >
+        </lightning-formatted-text>
+    </template>
+</template>

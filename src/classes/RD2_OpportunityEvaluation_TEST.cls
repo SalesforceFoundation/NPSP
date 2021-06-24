@@ -141,6 +141,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
             .build();
         insert rd;
 
