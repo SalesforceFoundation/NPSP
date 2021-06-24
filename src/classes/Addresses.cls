@@ -47,6 +47,17 @@ public inherited sharing class Addresses extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
     public Addresses(List<Address__c> addresses) {
         super(addresses, Address__c.SObjectType);
     }
@@ -236,15 +247,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Account> accountsById = getAccountsByIds(mapAccIdAddr.keySet());
         Set<Id> setHHId =  mapAccIdAddr.keySet();
 
-        for (Contact con : [SELECT Id, is_Address_Override__c, Current_Address__c, AccountId,
-                MailingStreet, MailingCity, MailingState,
-                MailingPostalCode, MailingCountry, MailingLatitude, MailingLongitude,
-                npe01__Primary_Address_Type__c
-        FROM Contact
-        WHERE Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
-        AND AccountId != Null
-        AND AccountId IN :setHHId]
-        ) {
+        for (Contact con : contactSelector.getContactAddressFieldsForContactsIn(setHHId)) {
             List<Contact> listConHH = mapAccIdListCon.get(con.AccountId);
             if (listConHH == null) {
                 listConHH = new List<Contact>();
