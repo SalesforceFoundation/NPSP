@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help>Ganze Zahl, die die letzte Version eines Elevate-Ereignisses darstellt, das die Aktualisierung der wiederkehrenden Spende bewirkt hat. Nach jedem Aufruf der Elevate-API wegen Änderungen aktualisiert. Dient zur Vermeidung zirkulärer Aktualisierungen, damit sichergestellt ist, dass die neueste Version nie überschrieben wird.</help>
+        <label>Letzte wiedergegebene Elevate-Version</label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help>Der voraussichtliche Gesamtbetrag dieser wiederkehrenden Spende für das nächste Kalender- oder Geschäftsjahr (schreibgeschützt).</help>
         <label>Wert für nächstes Jahr</label>
         <name>NextYearValue__c</name>
@@ -228,7 +233,7 @@
         <name>PaymentMethod__c</name>
         <picklistValues>
             <masterLabel>ACH</masterLabel>
-            <translation>ACH</translation>
+            <translation>Clearing-Zentrale</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Check</masterLabel>

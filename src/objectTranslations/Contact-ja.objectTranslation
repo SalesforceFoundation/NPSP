@@ -30,6 +30,11 @@
         <relationshipLabel>取引先責任者 (現在の住所)</relationshipLabel>
     </fields>
     <fields>
+        <help>オンになっていると、カスタマイズ可能な積み上げ集計では常に「スキューモード」を使用してこのレコードのハードクレジットとソフトクレジットを積み上げ集計します。</help>
+        <label>カスタマイズ可能な積み上げ集計: スキューモードの強制</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>このオプションを選択すると、取引先責任者が死亡とマークされ、世帯命名、メールの送信、および電話の発信から除外されます。</help>
         <label>死亡</label>
         <name>Deceased__c</name>

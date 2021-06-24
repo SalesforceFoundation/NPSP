@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help>この継続支援が更新される最終再生 Elevate イベントバージョンを表す整数。変更について Elevate API へのコールを行うたびに自動的にインクリメントされます。循環更新を防止し、最新バージョンが上書きされないようにするために使用されます。</help>
+        <label>最終再生 Elevate バージョン</label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
         <label>来年の金額</label>
         <name>NextYearValue__c</name>

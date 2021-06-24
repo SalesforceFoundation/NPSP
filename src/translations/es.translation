@@ -537,8 +537,7 @@
         <name>CRLP_CreateRollupFiscalYearHelpText</name>
     </customLabels>
     <customLabels>
-        <label>Seleccione el objeto de destino para determinar los campos disponibles y, a continuación, seleccione el campo de destino donde debería totalizarse esta información. Asegúrese de introducir una descripción detallada que le ayude a usted (y a otros) a comprender lo que esta totalización hace exactamente.
-        </label>
+        <label>Seleccione el objeto de destino para determinar los campos disponibles y, a continuación, seleccione el campo de destino donde debería totalizarse esta información. Asegúrese de introducir una descripción detallada que le ayude a usted (y a otros) a comprender lo que esta totalización hace exactamente.</label>
         <name>CRLP_CreateRollupIntroHelpText</name>
     </customLabels>
     <customLabels>
@@ -634,9 +633,7 @@
         <name>CRLP_RecalculatingRollups</name>
     </customLabels>
     <customLabels>
-        <label>
-            ¿Está seguro de que desea restablecer las totalizaciones personalizables? Esta acción eliminará todas las totalizaciones personalizables nuevas, las reglas de filtros y los grupos de filtros que haya creado, y también se restablecerán todos los totales de NPSP a sus comportamientos predeterminados.
-        </label>
+        <label>¿Está seguro de que desea restablecer las totalizaciones personalizables? Esta acción eliminará todas las totalizaciones personalizables nuevas, las reglas de filtros y los grupos de filtros que haya creado, y también se restablecerán todos los totales de NPSP a sus comportamientos predeterminados.</label>
         <name>CRLP_ResetRollupsWarning</name>
     </customLabels>
     <customLabels>
@@ -680,7 +677,7 @@
         <name>CRLP_SoftCredit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CallableApi Job.Schedule Invalid Class --></label>
+        <label>La clase de Apex {0} no existe o no implementa la interfaz programable.</label>
         <name>CallableApiJobScheduleInvalidClass</name>
     </customLabels>
     <customLabels>
@@ -864,6 +861,14 @@
         <name>RD2_DisableCustomizableRollupWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error for DIs with populated RD fields when Advanced Mapping is disabled. --></label>
+        <name>RD2_DisabledAdvancedMappingError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error for DIs with populated RD fields when RD2 is disabled. --></label>
+        <name>RD2_DisabledRD2Error</name>
+    </customLabels>
+    <customLabels>
         <label>Cancelación de pago recurrente en progreso</label>
         <name>RD2_ElevateCancelInProgress</name>
     </customLabels>
@@ -892,8 +897,16 @@
         <name>RD2_ElevateInformationStatusSuccess</name>
     </customLabels>
     <customLabels>
+        <label><!-- Validation message for installment period on Elevate Recurring Donations --></label>
+        <name>RD2_ElevateInstallmentPeriodMustBeValid</name>
+    </customLabels>
+    <customLabels>
         <label>Esta función no se admite en estos momentos para Donaciones recurrentes generadas desde Servicios de pago de Elevate.</label>
         <name>RD2_ElevateNotSupported</name>
+    </customLabels>
+    <customLabels>
+        <label>Los métodos de pago válidos para una Donación recurrente conectada con Elevate activa son Tarjeta de crédito o ACH.</label>
+        <name>RD2_ElevatePaymentMethodChangeError</name>
     </customLabels>
     <customLabels>
         <label>Proceso de Elevate pendiente</label>
@@ -904,8 +917,24 @@
         <name>RD2_ElevatePermissionRequired</name>
     </customLabels>
     <customLabels>
+        <label>Introduzca un importe válido. El importe no puede ser inferior a 1.</label>
+        <name>RD2_ElevateRDAmountMustBeValid</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede eliminar la campaña en una Donación recurrente conectada con Elevate activa. Para eliminar la campaña, cierre la Donación recurrente y cree una nueva.</label>
+        <name>RD2_ElevateRDCampaignCannotUpdateToNull</name>
+    </customLabels>
+    <customLabels>
         <label>No puede modificar el estado de una donación recurrente de Elevate conectada cuando Estado es Cerrado.</label>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
+    </customLabels>
+    <customLabels>
+        <label>No puede cambiar Día del mes para una Donación recurrente conectada con Elevate.</label>
+        <name>RD2_ElevateRDDayOfMonthCannotChange</name>
+    </customLabels>
+    <customLabels>
+        <label>Introduzca una nueva Fecha efectiva. La Fecha efectiva para una Donación recurrente de Elevate no puede ser en el futuro.</label>
+        <name>RD2_ElevateRDEffectiveDateMustBeValid</name>
     </customLabels>
     <customLabels>
         <label>No se pudo crear un pago recurrente de Elevate. Póngase en contacto con su administrador del sistema para obtener asistencia.</label>
@@ -1170,6 +1199,10 @@
         <name>RD2_EntryFormPeriodPluralYearly</name>
     </customLabels>
     <customLabels>
+        <label>Enviando información de ACH a Elevate...</label>
+        <name>RD2_EntryFormSaveACHMessage</name>
+    </customLabels>
+    <customLabels>
         <label>Se ha creado un pago recurrente en Elevate. Id. recurrente de Elevate: {0}.
         
         No obstante, no se creó una Donación recurrente equivalente en NPSP debido al siguiente error:
@@ -1225,6 +1258,14 @@
     <customLabels>
         <label>En pausa</label>
         <name>RD2_InstallmentStatusSkipped</name>
+    </customLabels>
+    <customLabels>
+        <label>Se enviará la información de pago ACH del donante a su banco el {{DATE}}. Los pagos comienzan después de que el banco verifique y procese la información.</label>
+        <name>RD2_NextACHPaymentDonationDateInfo</name>
+    </customLabels>
+    <customLabels>
+        <label>Se realizará un cargo en la tarjeta de crédito del donante en la siguiente fecha de donación: {{DATE}}</label>
+        <name>RD2_NextPaymentDonationDateInfo</name>
     </customLabels>
     <customLabels>
         <label>Cantidad de cuotas planificadas no puede ser inferior a Cantidad de cuotas pagadas.</label>
@@ -1293,6 +1334,10 @@
     <customLabels>
         <label>Motivo de la pausa</label>
         <name>RD2_PausedReasonLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Información del pago</label>
+        <name>RD2_PaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Fecha de finalización de programación</label>
@@ -1828,8 +1873,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
             &lt;li&gt;
             Una secuencia con formato ABC-{0000} con un número inicial de 9 se muestra como ABC-0009, ABC-0010, ABC-0011, etc.
             &lt;/li&gt;
-            &lt;/ul&gt;
-        </label>
+            &lt;/ul&gt;</label>
         <name>batchNumberSettingsDescDisplayFormat</name>
     </customLabels>
     <customLabels>
@@ -2079,6 +2123,18 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>La información de donaciones coincidió con una o más oportunidades, pero la configuración requería que no hubiera coincidencias, de modo que NPSP Data Importer no la importó. El campo Posibles coincidencias de donaciones contiene los identificadores de Salesforce de las oportunidades con coincidencia.</label>
         <name>bdiErrorDonationRequireNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Hay asignaciones existentes en la donación que podrían entrar en conflicto con las asignaciones GAU introducidas.</label>
+        <name>bdiErrorExistingDonationAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Hay asignaciones existentes en el pago que podrían entrar en conflicto con las asignaciones GAU introducidas.</label>
+        <name>bdiErrorExistingPaymentAllocations</name>
+    </customLabels>
+    <customLabels>
+        <label>Las asignaciones GAU proporcionadas superan el 100 por ciento.</label>
+        <name>bdiErrorGAUAllocationOver100</name>
     </customLabels>
     <customLabels>
         <label>Nombre de Campaña de Donación inválida.</label>
@@ -2531,8 +2587,7 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>bgeBatchOverviewWizard</name>
     </customLabels>
     <customLabels>
-        <label>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IPostProcess para registros de lotes de NPSP.
-        </label>
+        <label>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IPostProcess para registros de lotes de NPSP.</label>
         <name>bgeBatchPostProcessClassHelp</name>
     </customLabels>
     <customLabels>
@@ -2708,8 +2763,33 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>bgeNewGift</name>
     </customLabels>
     <customLabels>
+        <label>
+A fecha del 13 de julio de 2021, Entrada de regalos en lote dejará de admitirse y queda sustituida por Entrada de regalos.
+Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote.
+Póngase en contacto con el servicio de asistencia si necesita acceder a lotes en curso.
+Puede explorar Entrada de regalos como una alternativa a Entrada de regalos en lote en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt; en Power of Us Hub.
+</label>
+        <name>bgeNotSupportedBody</name>
+    </customLabels>
+    <customLabels>
+        <label>No se admite Entrada de regalos en lote</label>
+        <name>bgeNotSupportedHeader</name>
+    </customLabels>
+    <customLabels>
         <label>Procesar lote</label>
         <name>bgeProcessBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Procesar lote y pagos</label>
+        <name>bgeProcessBatchAndPayments</name>
+    </customLabels>
+    <customLabels>
+        <label>El 13 de julio de 2021, Entrada de regalos en lote quedará retirada y dejará de funcionar en NPSP. Si tiene algún lote en curso en ese momento, podrá seguir accediendo a esos registros, pero no podrá procesarlos empleando Entrada de regalos en lote. Para garantizar una transición sin problemas, active y utilice Entrada de regalos antes del 13 de julio. Conozca más detalles sobre Entrada de regalos en la &lt;a href=&apos;https://powerofus.force.com/NPSP_Documentation&apos; target=&apos;_blank&apos;&gt;Documentación de NPSP&lt;/a&gt;.</label>
+        <name>bgeRetirementWarningBody</name>
+    </customLabels>
+    <customLabels>
+        <label>Retirada de Entrada de regalos en lote</label>
+        <name>bgeRetirementWarningHeader</name>
     </customLabels>
     <customLabels>
         <label>Entrada de regalo en lote</label>
@@ -2808,6 +2888,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonCancel</name>
     </customLabels>
     <customLabels>
+        <label>Últimos 4 dígitos de tarjeta</label>
+        <name>commonCardLast4</name>
+    </customLabels>
+    <customLabels>
         <label>Tipo de tarjeta</label>
         <name>commonCardType</name>
     </customLabels>
@@ -2854,6 +2938,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Modificar</label>
         <name>commonEdit</name>
+    </customLabels>
+    <customLabels>
+        <label>Modificar información del pago.</label>
+        <name>commonEditPaymentInformation</name>
     </customLabels>
     <customLabels>
         <label>Se produjo un error al incorporar este cliente de Elevate</label>
@@ -2932,6 +3020,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>commonOpen</name>
     </customLabels>
     <customLabels>
+        <label>Errores de procesamiento de pago</label>
+        <name>commonPaymentProcessingErrors</name>
+    </customLabels>
+    <customLabels>
         <label>Salesforce.org Elevate</label>
         <name>commonPaymentServices</name>
     </customLabels>
@@ -2946,6 +3038,14 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Más información</label>
         <name>commonReadMore</name>
+    </customLabels>
+    <customLabels>
+        <label>Registros con fallos</label>
+        <name>commonRecordsFailed</name>
+    </customLabels>
+    <customLabels>
+        <label>Registros procesados</label>
+        <name>commonRecordsProcessed</name>
     </customLabels>
     <customLabels>
         <label>Obligatorio</label>
@@ -3236,6 +3336,14 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geAssistiveSpinner</name>
     </customLabels>
     <customLabels>
+        <label>Tarjeta autorizada.</label>
+        <name>geAuthorizedCreditCardSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label>Autorizando...</label>
+        <name>geAuthorizingCreditCard</name>
+    </customLabels>
+    <customLabels>
         <label>Recuento de regalos</label>
         <name>geBatchGiftsCount</name>
     </customLabels>
@@ -3254,6 +3362,10 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
     <customLabels>
         <label>Importe de lote total</label>
         <name>geBatchGiftsTotal</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Batch processing success message --></label>
+        <name>geBatchProcessingSuccess</name>
     </customLabels>
     <customLabels>
         <label>Para más opciones de entrada de regalos avanzada, seleccione campos de los siguientes grupos de objetos.</label>
@@ -3284,15 +3396,13 @@ Para comprobar su configuración de asignaciones de CCG, vaya a Donaciones | Asi
         <name>geBodyBatchTableColumnsPart1</name>
     </customLabels>
     <customLabels>
-        <label>
-        Recomendamos incluir los siguientes campos:
+        <label>Recomendamos incluir los siguientes campos:
         &lt;/br&gt;
         &lt;ul&gt;
             &lt;li&gt; Nombre del donante: vincula con la Cuenta de organización o Contacto que realiza la donación. &lt;/li&gt;
             &lt;li&gt; Nombre de donación: vincula con la Oportunidad o Pago para la donación. &lt;/li&gt;
             &lt;li&gt; Información de estado y fallo: información sobre el procesamiento de lotes. &lt;/li&gt;
-        &lt;/ul&gt;
-        </label>
+        &lt;/ul&gt;</label>
         <name>geBodyBatchTableColumnsPart2</name>
     </customLabels>
     <customLabels>
@@ -3365,8 +3475,12 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geBodyMatchingUpdatingDonation</name>
     </customLabels>
     <customLabels>
-        <label>No está procesando un pago con tarjeta para este regalo.</label>
+        <label>No está introduciendo información de pago que Elevate procesará.</label>
         <name>geBodyPaymentNotProcessingTransaction</name>
+    </customLabels>
+    <customLabels>
+        <label>Se procesará la tarjeta de crédito del donante cuando procese el lote.</label>
+        <name>geBodyPaymentProcessedDuringBatchProcessing</name>
     </customLabels>
     <customLabels>
         <label>Introduzca detalles sobre esta plantilla de entrada de regalos.</label>
@@ -3457,11 +3571,11 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geButtonNewSingleGift</name>
     </customLabels>
     <customLabels>
-        <label>De manera alternativa, realice el cargo en una tarjeta ahora.</label>
+        <label>De forma alternativa, introduzca el pago ahora.</label>
         <name>geButtonPaymentAlternate</name>
     </customLabels>
     <customLabels>
-        <label>No realizar cargo en tarjeta</label>
+        <label>No introduzca información de pago.</label>
         <name>geButtonPaymentDoNotCharge</name>
     </customLabels>
     <customLabels>
@@ -3497,7 +3611,15 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorAmountDoesNotMatch</name>
     </customLabels>
     <customLabels>
-        <label>Se ha realizado el cargo correctamente en la tarjeta pero el pago no se ha registrado en Salesforce. Corrija los errores y vuelva a enviar el formulario para registrar la donación en Salesforce.</label>
+        <label>No se puede guardar el regalo en el lote. Los regalos deben estar en la misma divisa que el lote. Cambie su divisa a {0} para guardar el regalo.</label>
+        <name>geErrorBatchGiftEntryCurrencyMismatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Para actualizar el donante, la fecha o el importe, vuelva a introducir los detalles de la tarjeta para volver a autorizar el pago.</label>
+        <name>geErrorBatchGiftEntryReauthRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>Elevate procesó correctamente el pago, pero NPSP no creó el registro para la transacción en Salesforce. Corrija los errores y vuelva a enviar el formulario para crear el registro de Salesforce.</label>
         <name>geErrorCardChargedBDIFailed</name>
     </customLabels>
     <customLabels>
@@ -3569,7 +3691,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
     </customLabels>
     <customLabels>
-        <label>Se agotó el tiempo de espera para realizar el cargo en la tarjeta.</label>
+        <label>Se agotó el tiempo de espera para procesar el pago.</label>
         <name>geErrorRequestTimedout</name>
     </customLabels>
     <customLabels>
@@ -3577,15 +3699,15 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geErrorRequiredField</name>
     </customLabels>
     <customLabels>
-        <label>Se produjo un error del sistema para la donación {0} por parte de {1}. Su administrador debe revisar las transacciones en {2} y determinar si se realizó el cargo en la tarjeta.</label>
+        <label>Se produjo un error del sistema para la donación {0} por parte de {1}. Su administrador debe revisar las transacciones en {2} y determinar si se procesó el pago.</label>
         <name>geErrorUncertainCardChargePart1</name>
     </customLabels>
     <customLabels>
-        <label>Si no se realizó el cargo en la tarjeta, vuelva a introducir el regalo y el pago con tarjeta en Entrada de regalos.</label>
+        <label>Si no se procesó el pago, vuelva a introducir el regalo y la información de pago en Entrada de regalos.</label>
         <name>geErrorUncertainCardChargePart2</name>
     </customLabels>
     <customLabels>
-        <label>Si se realizó el cargo en la tarjeta, anote el Id. de Transacción en {0} y busque registros con ese Id. en Salesforce. Actualice los registros de regalo y donante según proceda.</label>
+        <label>Si se procesó el pago, anote el Id. de Pago en {0} y busque registros con ese Id. en Salesforce. Actualice los registros de regalo y donante según proceda.</label>
         <name>geErrorUncertainCardChargePart3</name>
     </customLabels>
     <customLabels>
@@ -3801,10 +3923,22 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>gePS_IntegrationTestInvalidConfigParams</name>
     </customLabels>
     <customLabels>
+        <label>Autorización de pago caducada</label>
+        <name>gePaymentAuthExpiredHeader</name>
+    </customLabels>
+    <customLabels>
+        <label>Una o más autorizaciones de tarjeta caducaron. Para garantizar que estos pagos se carguen cuando se procese el lote, vuelva a introducir la información de pago para donaciones con Estado de pago de autorización caducado.</label>
+        <name>gePaymentAuthExpiredWarningText</name>
+    </customLabels>
+    <customLabels>
         <label>Se produjo un error al procesar el pago. Revise el error e inténtelo de nuevo. De manera alternativa,
-            seleccione No realizar cargo en tarjeta para introducir una donación sin procesar un pago con tarjeta. {0} errores:
+            seleccione &quot;No introduzca información de pago.&quot; para introducir una donación sin procesar un pago. Errores de {0}:
             /0x0A/ {1}</label>
         <name>gePaymentProcessError</name>
+    </customLabels>
+    <customLabels>
+        <label>{0} procesó correctamente el pago. Al cambiar el donante, la fecha, el importe o el método de pago dará como resultado registros incoherentes para la misma transacción en {0} y NPSP.</label>
+        <name>gePaymentProcessedWarning</name>
     </customLabels>
     <customLabels>
         <label>Se ha producido un error al procesar la transacción.</label>
@@ -3813,6 +3947,18 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Se agotó el tiempo de espera de la solicitud. Inténtelo de nuevo o póngase en contacto con su administrador de Salesforce.</label>
         <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
+        <label>Procesar de todas formas</label>
+        <name>geProcessAnyway</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Status of batch being processed --></label>
+        <name>geProcessingBatch</name>
+    </customLabels>
+    <customLabels>
+        <label>Errores de procesamiento</label>
+        <name>geProcessingErrors</name>
     </customLabels>
     <customLabels>
         <label>Buscar...</label>
@@ -3847,7 +3993,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>geTabTemplateInfo</name>
     </customLabels>
     <customLabels>
-        <label>Realizando cargo en tarjeta…</label>
+        <label>Cargando pago...</label>
         <name>geTextChargingCard</name>
     </customLabels>
     <customLabels>
@@ -3933,6 +4079,10 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
     <customLabels>
         <label>Se proporcionó una cadena no válida pero no se lanzó ninguna excepción</label>
         <name>geUtilJWTTestInvalidString</name>
+    </customLabels>
+    <customLabels>
+        <label>La divisa para este lote es {0}. Los regalos deben estar en la misma divisa que el lote. Cambie su divisa a {0} para guardar un nuevo regalo en el lote.</label>
+        <name>geWarningBatchGiftEntryCurrencyMismatch</name>
     </customLabels>
     <customLabels>
         <label>Advertencia: Al eliminar esta sección también está retirando los campos obligatorios de la plantilla. Es necesario agregar estos campos a otra sección antes de que pueda guardar la plantilla.</label>
@@ -5815,7 +5965,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
         <name>pmtWrittenOffPaymentDateRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- How to activate the Elevate field bundle to enter payment information --></label>
+        <label>Para introducir el pago, seleccione un Método de pago válido.</label>
         <name>psSelectValidPaymentMethod</name>
     </customLabels>
     <customLabels>
@@ -6109,8 +6259,7 @@ Si lo prefiere, puede desactivar Entrada de regalos y utilizar la herramienta En
             ● Uso de filtros para excluir fácilmente ciertos registros o datos&lt;br/&gt;
             ● Totalización de datos con más de 2 años de antigüedad&lt;br/&gt;
             &lt;br/&gt;
-            Vaya a Configuración de NPSP | Donaciones | Totalizaciones personalizables para activarlas y empezar a utilizarlas.
-        </label>
+            Vaya a Configuración de NPSP | Donaciones | Totalizaciones personalizables para activarlas y empezar a utilizarlas.</label>
         <name>stgCRLPInfoOnUDRBody</name>
     </customLabels>
     <customLabels>
@@ -6386,23 +6535,17 @@ Una vez el proceso esté completo al 100% podrá salir o actualizar esta página
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label>
-            Podrá encontrar la documentación completa de Totalizaciones personalizables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.
-        </label>
+        <label>Podrá encontrar la documentación completa de Totalizaciones personalizables &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;aquí&lt;/a&gt;.</label>
         <name>stgHelpCustomizableRollupsEnable1</name>
     </customLabels>
     <customLabels>
-        <label>
-            Cuando activa Totalizaciones personalizables por primera vez, convertimos automáticamente sus totalizaciones existentes y las 87 totalizaciones preparadas de NPSP en Totalizaciones personalizables. Para consultar todos los detalles, vea &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;este documento&lt;/a&gt;.
+        <label>Cuando activa Totalizaciones personalizables por primera vez, convertimos automáticamente sus totalizaciones existentes y las 87 totalizaciones preparadas de NPSP en Totalizaciones personalizables. Para consultar todos los detalles, vea &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;este documento&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            Puede deshabililtar y volver a las totalizaciones heredadas, pero las nuevas totalizaciones o los cambios de filtros/totalizaciones realizados en Totalizaciones personalizables no se aplicarán a sus parámetros de totalización heredados.
-        </label>
+            Puede deshabililtar y volver a las totalizaciones heredadas, pero las nuevas totalizaciones o los cambios de filtros/totalizaciones realizados en Totalizaciones personalizables no se aplicarán a sus parámetros de totalización heredados.</label>
         <name>stgHelpCustomizableRollupsEnable2</name>
     </customLabels>
     <customLabels>
-        <label>
-            Elimina todas las nuevas totalizaciones, los grupos de filtros y las reglas de filtros que creó utilizando Totalizaciones personalizables Y restablece todas las totalizaciones heredadas de NPSP a su comportamiento predeterminado.
-        </label>
+        <label>Elimina todas las nuevas totalizaciones, los grupos de filtros y las reglas de filtros que creó utilizando Totalizaciones personalizables Y restablece todas las totalizaciones heredadas de NPSP a su comportamiento predeterminado.</label>
         <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
@@ -7493,10 +7636,6 @@ Nota: La ficha Configuración de NPSP es visible en la aplicación Nonprofit Suc
     <customTabs>
         <label>Entrada de regalo en lote</label>
         <name>Batch_Gift_Entry</name>
-    </customTabs>
-    <customTabs>
-        <label><!-- Contact Merge (OLD) --></label>
-        <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
         <label>Combinar contacto</label>
