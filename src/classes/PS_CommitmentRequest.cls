@@ -149,7 +149,7 @@ public inherited sharing class PS_CommitmentRequest {
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
     */
-    public HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
+    public static HttpRequest buildRequest(String commitmentId, String jsonRequestBody) {
         UTIL_Http.Method method = String.isBlank(commitmentId)
             ? UTIL_Http.Method.POST
             : UTIL_Http.Method.PATCH;
@@ -160,6 +160,19 @@ public inherited sharing class PS_CommitmentRequest {
             .withRecommendedTimeout()
             .withBody(jsonRequestBody)
             .build();
+    }
+
+    /**
+    * @description Builds a commitment GET request for the provided commitment Id
+    * @param commitmentId Elevate recurring commitment Id
+    * @return HttpRequest
+    */
+    public static HttpRequest buildGetCommitmentRequest(String commitmentId) {
+        return new PS_Request.Builder()
+                .withCommitmentId(commitmentId)
+                .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
+                .withMethod(UTIL_Http.Method.GET)
+                .build();
     }
 
     /***
@@ -199,7 +212,7 @@ public inherited sharing class PS_CommitmentRequest {
             .withPaymentMethodToken(token)
             .withPaymentMethodType(rd.PaymentMethod__c)
             .withCurrency(currencyCode)
-            .withProductMetadata(productMetadata);
+            .withProductMetadata(productMetadata.toUntypedMap());
 
 
         ElevateBankAccountType accountHolderType = setDonorInfo(reqBody, rd);
@@ -239,15 +252,19 @@ public inherited sharing class PS_CommitmentRequest {
             setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
         }
 
-
-
-
         if (isElevateCampaignChanged(rd, oldRd)) {
+
+            HttpRequest commitmentGetRequest = buildGetCommitmentRequest(rd.CommitmentId__c);
+            HttpResponse response = new Http().send(commitmentGetRequest);
+
+            Map<String, Object> untypedResponse = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
+            Map<String, Object> untypedCommitment = (Map<String, Object>)untypedResponse.get('commitment');
+            Map<String, Object> untypedProductMetadata = (Map<String, Object>)untypedCommitment.get('productMetadata');
+
             ProductMetadata productMetadata = new ProductMetadata()
                 .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
             
-            reqBody
-                .withProductMetadata(productMetadata);
+            reqBody.withProductMetadata(productMetadata.mergeWithExistingMetadata(untypedProductMetadata));
         }
 
         return reqBody;
@@ -436,7 +453,7 @@ public inherited sharing class PS_CommitmentRequest {
         /***
          * Optional properties
          */
-        public ProductMetadata productMetadata;
+        public Map<String, Object> productMetadata;
 
         /***
          * @description Constructor
@@ -598,7 +615,7 @@ public inherited sharing class PS_CommitmentRequest {
          * @param productMetadata Payments API product metadata
          * @return RequestBody This request body instance
          */
-        public RequestBody withProductMetadata(productMetadata productMetadata) {
+        public RequestBody withProductMetadata(Map<String, Object> productMetadata) {
             this.productMetadata = productMetadata;
             this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
             return this;
@@ -792,6 +809,39 @@ public inherited sharing class PS_CommitmentRequest {
             }
 
             return this;
+        }
+
+        private Boolean hasCampaign() {
+            return this.campaign?.id != null;
+        }
+
+        private Boolean hasOrigin() {
+            return this.origin?.type != null;
+        }
+
+        public Map<String, Object> mergeWithExistingMetadata(Map<String, Object> existingMetadata) {
+
+            Map<String, Object> updatedMetadata = this.toUntypedMap();
+
+            for(String key : updatedMetadata.keySet()) {
+                existingMetadata.put(key, updatedMetadata.get(key));
+            }
+
+            return existingMetadata;
+        }
+
+        public Map<String, Object> toUntypedMap() {
+            Map<String, Object> productMetadataMap = new Map<String, Object>();
+
+            if (hasOrigin()) {
+                productMetadataMap.put('origin', this.origin);
+            }
+
+            if (hasCampaign()) {
+                productMetadataMap.put('campaign', this.campaign);
+            }
+
+            return productMetadataMap;
         }
     }
 
