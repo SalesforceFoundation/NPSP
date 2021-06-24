@@ -400,6 +400,11 @@
         <name>Elevate_Custom_Metadata__c</name>
     </fields>
     <fields>
+        <help><!-- The transaction status shown in Elevate. --></help>
+        <label><!-- Elevate Payment Status --></label>
+        <name>Elevate_Payment_Status__c</name>
+    </fields>
+    <fields>
         <help>Beschrijving van de reden waarom de Gegevensimportrecord niet is geïmporteerd.</help>
         <label>Informatie over Mislukking</label>
         <name>FailureInformation__c</name>
@@ -606,6 +611,11 @@
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
+        <help>De ID van een batch betalingen die ter verwerking naar Elevate is verzonden.</help>
+        <label>Betalingsbatch-ID in Elevate</label>
+        <name>Payment_Elevate_Batch_ID__c</name>
+    </fields>
+    <fields>
         <help>De datum en het tijdstip waarop de transactie is gemaakt.</help>
         <label>Aanmaakdatum betaling in Elevate</label>
         <name>Payment_Elevate_Created_Date__c</name>
@@ -683,6 +693,87 @@
         <name>Payment_Type__c</name>
     </fields>
     <fields>
+        <help>De status van de poging tot invoegen van de terugkerende donatie.</help>
+        <label>Importstatus terugkerende donatie</label>
+        <name>RecurringDonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <help>Een opzoekopdracht voor de terugkerende donatie als het maken ervan is geslaagd.</help>
+        <label>Terugkerende donatie geïmporteerd</label>
+        <name>RecurringDonationImported__c</name>
+        <relationshipLabel>NPSP-gegevensimports</relationshipLabel>
+    </fields>
+    <fields>
+        <help>Het bedrag voor de opportunity van elke termijn.</help>
+        <label>Bedrag terugkerende donatie</label>
+        <name>Recurring_Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <help>De datum van initiële inceptie voor deze terugkerende donatie. Standaard is dit de huidige datum.</help>
+        <label>Insteldatum terugkerende donatie</label>
+        <name>Recurring_Donation_Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>Hiermee stelt u de dag van de maand in voor toekomstige termijnopportunities als de termijnperiode maandelijks is. Als u 29 of 30 selecteert, is de termijndatum de laatste dag van de maand bij maanden die uit relatief weinig dagen bestaan.</help>
+        <label>Dag van de maand v. terugkerende donatie</label>
+        <name>Recurring_Donation_Day_of_Month__c</name>
+    </fields>
+    <fields>
+        <help>De datum waarop nieuwe of bijgewerkte planningsgegevens (Bedrag, Dag van de maand, enz.) voor deze terugkerende donatie van kracht worden. De standaardwaarde is de huidige datum.</help>
+        <label>Ingangsdatum terugkerende donatie</label>
+        <name>Recurring_Donation_Effective_Date__c</name>
+    </fields>
+    <fields>
+        <help>De externe, unieke ID van de desbetreffende terugkerende donatie in Elevate.</help>
+        <label>ID terugkerende donatie in Elevate</label>
+        <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
+        <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
+        <label>Einddatum terugkerende donatie</label>
+        <name>Recurring_Donation_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>De frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+        <label>Termijnfreq. terugkerende donatie</label>
+        <name>Recurring_Donation_Installment_Frequency__c</name>
+    </fields>
+    <fields>
+        <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+        <label>Termijnperiode terugkerende donatie</label>
+        <name>Recurring_Donation_Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>Vul hier niets in als u een naamindeling voor de terugkerende donatie hebt geselecteerd. Vul anders uw naam in.</help>
+        <label>Naam van terugkerende donatie</label>
+        <name>Recurring_Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>De vorm van betaling voor deze terugkerende donatie. NPSP kopieert de geselecteerde waarde automatisch naar elke gerelateerde record Betaling.</help>
+        <label>Betalingswijze terugkerende donatie</label>
+        <name>Recurring_Donation_Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>Het aantal termijnen dat u verwacht te ontvangen. Wordt alleen gebruikt als Type terugkeer is ingesteld op Vast.</help>
+        <label>Geplande termijnen terugkerende donatie</label>
+        <name>Recurring_Donation_Planned_Installments__c</name>
+    </fields>
+    <fields>
+        <help>Open verwijst naar een doorlopende terugkerende donatie en Vast naar een terugkerende donatie met een specifiek aantal termijnen. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
+        <label>Type terugkeer terugkerende donatie</label>
+        <name>Recurring_Donation_Recurring_Type__c</name>
+    </fields>
+    <fields>
+        <help>De reden waarom deze terugkerende donatie de huidige statuswaarde heeft.</help>
+        <label>Reden voor status terugkerende donatie</label>
+        <name>Recurring_Donation_Status_Reason__c</name>
+    </fields>
+    <fields>
+        <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
+        <label>Status terugkerende donatie(s)</label>
+        <name>Recurring_Donation_Status__c</name>
+    </fields>
+    <fields>
         <help>De importstatus van deze record, bijvoorbeeld Geïmporteerd of Mislukt.</help>
         <label>Status</label>
         <name>Status__c</name>
@@ -701,6 +792,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>Geïmporteerd</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Processing</masterLabel>
+            <translation><!-- Processing --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Ready to Process</masterLabel>
@@ -765,6 +860,10 @@
         <sections>
             <label>Betalingsgegevens</label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Informatie terugkerende donatie</label>
+            <section>Recurring Donation Information</section>
         </sections>
     </layouts>
     <nameFieldLabel>ID van Gegevensimport</nameFieldLabel>

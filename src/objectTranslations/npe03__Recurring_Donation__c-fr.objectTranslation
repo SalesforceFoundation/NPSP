@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help>Dernière version d’événement Elevate exécutée entraînant m. à j. du don récurrent. Incrémentation auto après chaque appel à l’API Elevate pour modif. Permet d’empêcher les m. à j. circulaires et de garantir que la dernière version n’est pas écrasée.</help>
+        <label>Dernière version Elevate exécutée</label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help>Le montant attendu total de ce Don récurrent pour le calendrier ou l&apos;exercice fiscal suivant (en lecture seule).</help>
         <label>Valeur annuelle suivante</label>
         <name>NextYearValue__c</name>
