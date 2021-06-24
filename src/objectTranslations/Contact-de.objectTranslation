@@ -30,6 +30,11 @@
         <relationshipLabel>Kontakte (Aktuelle Adresse)</relationshipLabel>
     </fields>
     <fields>
+        <help>Bei aktivierter Option verwendet Anpassbare Rollups immer den &apos;verzerrten Modus&apos; für Rolllups von Hard Credits und Soft Credits für diesen Datensatz.</help>
+        <label>Anpassbare Rollups: verzerr. Modus erzw.</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>Gibt an, dass der Kontakt verstorben ist. Bei Auswahl dieser Option wird der Kontakt als verstorben gekennz. und von der Haushalt-Benennung und von den Standard-E-Mails und Telefonanrufen ausgeschl. (Wenn er nicht der einzige Kontakt i. d. Haush. ist).</help>
         <label>Verstorben</label>
         <name>Deceased__c</name>
