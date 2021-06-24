@@ -19,6 +19,11 @@
         <relationshipLabel>Cuentas</relationshipLabel>
     </fields>
     <fields>
+        <help>Cuando está marcada, Totalizaciones personalizables siempre utilizará el modo Desfase para totalizar los créditos duros y blandos para este registro.</help>
+        <label>Totalizaciones pers: Forzar modo Desfase</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>Áreas generales de programa que esta organización financia.</help>
         <label>Foco de financiación</label>
         <name>Funding_Focus__c</name>

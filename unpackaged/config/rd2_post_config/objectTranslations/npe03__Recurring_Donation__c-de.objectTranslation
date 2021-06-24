@@ -197,15 +197,15 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%RecurringType__c</name>
-    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Offen&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Festgelegt&quot; aus. Bei &quot;Festgelegt&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
+    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Unbefristet&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Befristet&quot; aus. Bei &quot;Befristet&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
     <label>Wiederholungstyp</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
-      <translation>Offen</translation>
+      <translation>Unbefristet</translation>
     </picklistValues>
     <picklistValues>
       <masterLabel>Fixed</masterLabel>
-      <translation>Festgelegt</translation>
+      <translation>Befristet</translation>
     </picklistValues>
   </fields>
   <fields>
