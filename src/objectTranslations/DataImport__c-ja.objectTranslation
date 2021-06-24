@@ -396,6 +396,11 @@
         <name>Elevate_Custom_Metadata__c</name>
     </fields>
     <fields>
+        <help><!-- The transaction status shown in Elevate. --></help>
+        <label><!-- Elevate Payment Status --></label>
+        <name>Elevate_Payment_Status__c</name>
+    </fields>
+    <fields>
         <help>データインポートレコードのインポートに失敗した理由の説明。</help>
         <label>失敗情報</label>
         <name>FailureInformation__c</name>
@@ -602,6 +607,11 @@
         <name>Payment_Donor_Cover_Amount__c</name>
     </fields>
     <fields>
+        <help>処理のために Elevate に送信された支払のバッチの ID。</help>
+        <label>支払 Elevate バッチ ID</label>
+        <name>Payment_Elevate_Batch_ID__c</name>
+    </fields>
+    <fields>
         <help>トランザクションが作成された日時。</help>
         <label>支払 Elevate 作成日</label>
         <name>Payment_Elevate_Created_Date__c</name>
@@ -679,6 +689,87 @@
         <name>Payment_Type__c</name>
     </fields>
     <fields>
+        <help>継続支援の挿入の試行に基づく状況。</help>
+        <label>継続支援のインポート状況</label>
+        <name>RecurringDonationImportStatus__c</name>
+    </fields>
+    <fields>
+        <help>正常に作成されたときの継続支援へのルックアップ。</help>
+        <label>継続支援がインポートされました</label>
+        <name>RecurringDonationImported__c</name>
+        <relationshipLabel>NPSP データインポート</relationshipLabel>
+    </fields>
+    <fields>
+        <help>割賦商談の 1 回の支払額。</help>
+        <label>継続支援の金額</label>
+        <name>Recurring_Donation_Amount__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の始期。デフォルトは現在の日付です。</help>
+        <label>継続支援の開始日</label>
+        <name>Recurring_Donation_Date_Established__c</name>
+    </fields>
+    <fields>
+        <help>[間隔] が [毎月] の場合、今後の割賦商談の特定の日付 (月の特定の日) を設定します。29 または 30 を選択した場合、その日数がない月の割賦日は月の最終日になります。</help>
+        <label>継続支援の日付</label>
+        <name>Recurring_Donation_Day_of_Month__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
+        <label>継続支援の発効日</label>
+        <name>Recurring_Donation_Effective_Date__c</name>
+    </fields>
+    <fields>
+        <help>Elevate の関連する継続支援の外部の一意の ID。</help>
+        <label>継続支援の Elevate 継続 ID</label>
+        <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
+    </fields>
+    <fields>
+        <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
+        <label>継続支援の終了日</label>
+        <name>Recurring_Donation_End_Date__c</name>
+    </fields>
+    <fields>
+        <help>[頻度] と [間隔] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label>継続支援の頻度</label>
+        <name>Recurring_Donation_Installment_Frequency__c</name>
+    </fields>
+    <fields>
+        <help>[間隔] と [頻度] により、この継続支援の割賦スケジュールが定義されます。たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+        <label>継続支援の間隔</label>
+        <name>Recurring_Donation_Installment_Period__c</name>
+    </fields>
+    <fields>
+        <help>継続支援名形式を選択している場合は空白のままにします。それ以外の場合は独自の名前を入力します。</help>
+        <label>継続支援名</label>
+        <name>Recurring_Donation_Name__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
+        <label>継続支援の支払方法</label>
+        <name>Recurring_Donation_Payment_Method__c</name>
+    </fields>
+    <fields>
+        <help>予定されている回数。[継続種別] が [固定] の場合のみ使用されます。</help>
+        <label>継続支援の予定回数</label>
+        <name>Recurring_Donation_Planned_Installments__c</name>
+    </fields>
+    <fields>
+        <help>[無期限] は継続的な継続支援を示します。[固定] は特定の回数が設定されている継続支援を示します。[固定] の場合、[予定回数] 項目も入力する必要があります。</help>
+        <label>継続支援の継続種別</label>
+        <name>Recurring_Donation_Recurring_Type__c</name>
+    </fields>
+    <fields>
+        <help>この継続支援が現在の状況値になっている理由。</help>
+        <label>継続支援の状況の理由</label>
+        <name>Recurring_Donation_Status_Reason__c</name>
+    </fields>
+    <fields>
+        <help>継続支援が有効に使用されているのか、一時的に停止しているのか、完了しているのかを示します。</help>
+        <label>継続支援の状況</label>
+        <name>Recurring_Donation_Status__c</name>
+    </fields>
+    <fields>
         <help>データインポートレコードのインポート状況。</help>
         <label>状況</label>
         <name>Status__c</name>
@@ -697,6 +788,10 @@
         <picklistValues>
             <masterLabel>Imported</masterLabel>
             <translation>インポート済み</translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Processing</masterLabel>
+            <translation><!-- Processing --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Ready to Process</masterLabel>
@@ -760,6 +855,10 @@
         <sections>
             <label>お支払い情報</label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>継続支援の情報</label>
+            <section>Recurring Donation Information</section>
         </sections>
     </layouts>
     <nameFieldLabel>データインポート ID</nameFieldLabel>
