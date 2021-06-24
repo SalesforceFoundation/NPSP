@@ -19,6 +19,11 @@
         <relationshipLabel>Accounts</relationshipLabel>
     </fields>
     <fields>
+        <help>Bei aktivierter Option verwendet Anpassbare Rollups immer den &apos;verzerrten Modus&apos; für Rolllups von Hard Credits und Soft Credits für diesen Datensatz.</help>
+        <label>Anpassbare Rollups: verzerr. Modus erzw.</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>Die allgemeinen Programmbereiche, die diese Organisation finanziert.</help>
         <label>Finanzierungsfokus</label>
         <name>Funding_Focus__c</name>

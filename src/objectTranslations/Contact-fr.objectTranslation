@@ -30,6 +30,11 @@
         <relationshipLabel>Contacts (adresse actuelle)</relationshipLabel>
     </fields>
     <fields>
+        <help>Lorsque cette option est cochée, les cumuls personnalisables utilisent toujours le mode asymétrie pour cumuler les crédits directs et les crédits indirects de cet enregistrement.</help>
+        <label>Cumuls perso. : forcer mode asymétrie</label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>Cette option marque le contact comme décédé, et l’exclut de la dénomination du foyer (à moins que ce contact soit le seul dans le foyer), des e-mails et des appels téléphoniques.</help>
         <label>Décédé</label>
         <name>Deceased__c</name>

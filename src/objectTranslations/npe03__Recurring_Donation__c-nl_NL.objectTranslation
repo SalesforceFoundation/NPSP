@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help>Getal dat verw. naar het laatst afgesp. Elevate-event dat tot een update van de donatie heeft geleid. Wordt elke wijz.aanroep van de Elevate API verhoogd. Wordt gebruikt om circ. updates te voorkomen en te zorgen dat de rec. versie nooit wordt overschr.</help>
+        <label>Laatst afgespeelde Elevate-versie</label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
         <label>Waarde voor volgend jaar</label>
         <name>NextYearValue__c</name>
