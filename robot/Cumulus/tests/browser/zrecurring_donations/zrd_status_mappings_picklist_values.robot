@@ -39,6 +39,7 @@ Verify Status Mappings For Custom Status Picklist Values
     [tags]                                       feature:RD                   unstable                 notonfeaturebranch
 
     Open NPSP Settings           Recurring Donations       Status to State Mapping
+    Sleep                        1
     Verify Status To State Mappings
     ...                                                    Active=Active
     ...                                                    Lapsed=Lapsed

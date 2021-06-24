@@ -1,7 +1,10 @@
 {
     "isElevateCustomer": true,
     "hasFieldPermissions": true,
+    "hasRDSObjectUpdatePermission": true,
+    "hasFieldUpdatePermission": true,
     "showLastFourDigits": true,
     "showExpirationDate": true,
-    "alert": null
+    "alert": null,
+    "commitmentURLPrefix": "https://example.org/recurring"
 }

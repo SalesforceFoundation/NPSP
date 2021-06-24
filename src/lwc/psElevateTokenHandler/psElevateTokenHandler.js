@@ -1,7 +1,6 @@
 
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getNamespace, isFunction, isNull, validateJSONString } from 'c/utilCommon';
-
 import PAYMENT_AUTHORIZATION_TOKEN_FIELD from
         '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import tokenRequestTimedOut from '@salesforce/label/c.gePaymentRequestTimedOut';
@@ -100,7 +99,7 @@ class psElevateTokenHandler {
     registerPostMessageListener(component) {
         const self = this;
         window.onmessage = async function (event) {
-              if (self.shouldHandleMessage(event)) {
+            if (self.shouldHandleMessage(event)) {
                 const message = JSON.parse(event.data);
                 component.handleMessage(message);
             }
@@ -186,13 +185,11 @@ class psElevateTokenHandler {
 
         });
 
-        iframe.contentWindow.postMessage(
-            {
-                action: eventAction,
-                params: tokenizeParameters,
-            },
-            this._visualforceOrigin,
-        );
+        const message = {
+            action: eventAction,
+            params: tokenizeParameters,
+        };
+        this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 
         return tokenPromise;
     }
@@ -212,13 +209,11 @@ class psElevateTokenHandler {
             };
         });
 
-        iframe.contentWindow.postMessage(
-            {
-                action: SET_PAYMENT_METHOD_EVENT_ACTION,
-                paymentMethod: paymentMethod
-            },
-            this._visualforceOrigin
-        );
+        const message = {
+            action: SET_PAYMENT_METHOD_EVENT_ACTION,
+            paymentMethod: paymentMethod
+        };
+        this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 
         return setPaymentMethodPromise;
     }
@@ -238,15 +233,21 @@ class psElevateTokenHandler {
             };
         });
 
-        iframe.contentWindow.postMessage(
-            {
-                action: MOUNT_IFRAME_EVENT_ACTION,
-                paymentMethod: paymentMethod
-            },
-            this._visualforceOrigin
-        );
+        const message = {
+            action: MOUNT_IFRAME_EVENT_ACTION,
+            paymentMethod: paymentMethod
+        };
+        this.sendIframeMessage(iframe, message, this._visualforceOrigin);
 
         return mountPromise;
+    }
+
+
+    sendIframeMessage(iframe, message, targetOrigin) {
+        iframe.contentWindow.postMessage(
+            message,
+            targetOrigin
+        );
     }
 }
 

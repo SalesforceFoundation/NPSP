@@ -12,6 +12,30 @@
             "displayValue": "Active",
             "value": "Active"
         },
+        "npe03__Contact__c": {
+            "displayValue": "Testing Contact",
+            "value": "003S000001WqpKSIAZ"
+        },
+        "npe03__Contact__r": {
+            "displayValue": "Testing Contact",
+            "value": {
+                "apiName": "Contact",
+                "childRelationships": {},
+                "id": "003S000001WqpKSIAZ",
+                "recordTypeId": "012000000000000AAA",
+                "recordTypeInfo": null,
+                "fields": {
+                    "FirstName": {
+                        "displayValue": null,
+                        "value": "John"
+                    },
+                    "LastName": {
+                        "displayValue": null,
+                        "value": "Smith"
+                    }
+                }
+            }
+        },
         "CommitmentId__c": {
             "displayValue": null,
             "value": "11a1c101-bcde-001-111f-g1dh00i0jk111"
@@ -21,8 +45,50 @@
             "value": "Credit Card"
         },
         "npe03__Next_Payment_Date__c": {
-            "dispalyvalue": null,
+            "displayValue": null,
             "value": "2021-04-01"
+        },
+        "npe03__Organization__c": {
+            "displayValue": "Smith Household",
+            "value": "001S000001NAsRFIA1"
+        },
+        "npe03__Organization__r": {
+            "displayValue": "Smith Household",
+            "value": {
+                "apiName": "Account",
+                "childRelationships": {},
+                "id": "001S000001NAsRFIA1",
+                "recordTypeId": "012S0000002uLjmIAE",
+                "recordTypeInfo": {
+                    "available": true,
+                    "defaultRecordTypeMapping": false,
+                    "master": false,
+                    "name": "Household Account",
+                    "recordTypeId": "012S0000002uLjmIAE"
+                },
+                "fields": {
+                    "Name": {
+                        "displayValue": null,
+                        "value": "TestingLastName Household"
+                    },
+                    "npe01__One2OneContact__r": {
+                        "displayValue": "Testing Contact",
+                        "value": {
+                            "apiName": "Contact",
+                            "childRelationships": {},
+                            "id": "003S000001WqpKSIAZ",
+                            "recordTypeId": "012000000000000AAA",
+                            "recordTypeInfo": null,
+                            "fields": {
+                                "LastName": {
+                                    "displayValue": null,
+                                    "value": "Contact"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

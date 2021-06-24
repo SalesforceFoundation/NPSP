@@ -76,7 +76,7 @@ public with sharing class HH_HouseholdNamingSettingValidator {
     */
     public HH_INaming validateImplementingClass(Household_Naming_Settings__c settings, Notification notification) {
         String className = settings.Implementing_Class__c;  
-        className = String.isBlank(className) ? 'HH_NameSpec' : className; 
+        className = String.isBlank(className) ? 'HH_INamingImpl' : className;
 
         Type classType = Type.forName(className);
         if (classType == null) {   

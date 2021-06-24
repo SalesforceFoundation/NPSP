@@ -112,7 +112,7 @@ Verify GAU Allocation Fails on Incorrect Data and Reprocess
     Log Many       &{data_import_upd}
     Open Data Import Record          ${data_import_upd}[Name]
     Current Page Should Be           Details          DataImport__c
-    Verify Failure Message           Failure Information    contains       GAU Allocation 1: Import Status:\n Error: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
+    Verify Failure Message           Failure Information    contains       GAU Allocation 1: Import Status:\nError: record not created, missing required fields:${ns}GAU_Allocation_1_GAU__c
 
     # Verify Contact Details
     Verify Expected Values                     nonns    Contact            ${data_import_upd}[${ns}Contact1Imported__c]

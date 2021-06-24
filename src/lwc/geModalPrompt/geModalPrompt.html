@@ -1,0 +1,20 @@
+<template>
+    <article>
+        <section class={titleSectionComputedClass}>
+            <h1 class='slds-text-heading_medium slds-text-align_center'>{title}</h1>
+        </section>
+        <section class='slds-p-horizontal_large slds-p-vertical_small'>
+            <h2 class='slds-text-body_small'>{message}</h2>
+            <div class='slds-align_absolute-center slds-m-top_large'>
+                <template for:each={buttons} for:item='button'>
+                    <lightning-button key={button.label}
+                                    class='slds-m-horizontal_xx-small'
+                                    label={button.label}
+                                    variant={button.variant}
+                                    onclick={button.action}>
+                    </lightning-button>
+                </template>
+            </div>
+        </section>
+    </article>
+</template>
