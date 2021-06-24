@@ -54,9 +54,7 @@ Process And Validate Batch
     [Arguments]                          ${status}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            ${status}
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${MSG}
     Current Page Should Be               Form                            Gift Entry
 
 
@@ -106,6 +104,7 @@ Test Batch Status Adding Removig Gifts
 
     #Scroll to the top of the page, add gift for contact associated with org account
     Scroll Page To Location           0      0
+    Click Element                    npsp:gift_entry.collapse_header
     Fill Gift Entry Form
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=${CONTACT2}[Name]

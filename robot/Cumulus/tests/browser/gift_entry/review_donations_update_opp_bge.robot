@@ -48,6 +48,15 @@ Review Donation And Update Opportunity For Batch Gift
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and update a payment link is active and update opportunity is disabled
     Go To Page                           Landing                       GE_Gift_Entry
+    Current Page Should Be               Landing                       GE_Gift_Entry
+    Click Link                           Templates
+    Select Template Action               Default Gift Entry Template   Edit
+    Current Page Should Be               Template                      GE_Gift_Entry
+    Click Gift Entry Button              Next: Form Fields
+    Click Gift Entry Button              Next: Batch Settings
+    Add Batch Table Columns              Donor Name     Donation Name       Status      Failure Information    Donation Date   Donation Amount
+    Click Gift Entry Button              Save & Close
+    Current Page Should Be               Landing                       GE_Gift_Entry
     Create Gift Entry Batch              Default Gift Entry Template   ${CONTACT}[Name]Automation Batch
     Current Page Should Be               Form                          Gift Entry
     ${batch_id} =                        Save Current Record ID For Deletion     ${NS}DataImportBatch__c
@@ -87,9 +96,7 @@ Review Donation And Update Opportunity For Batch Gift
     ...                                  Donation Date=${UI_DATE}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            Completed
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${CONTACT}[Name]Automation Batch
     #verify opportunity record is updated with new amount and date and is closed won
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=80.0

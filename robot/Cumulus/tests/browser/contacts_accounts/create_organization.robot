@@ -11,7 +11,8 @@ Suite Teardown  Capture Screenshot and Delete Records and Close Browser
 Create Organization Foundation
     [Documentation]                        This test creates an Organization account and verifies that the account shows under
     ...                                    Recently Viewed, Organization Accounts, My Accounts and does not show under Household Accounts
-    [tags]                                 W-037650    feature:Contacts and Accounts
+
+    [tags]                                 unstable                          notonfeaturebranch         W-037650        feature:Contacts and Accounts
     #Create Organization account
     ${account_name} =                      Generate Random String
     Go To Page                             Listing                               Account

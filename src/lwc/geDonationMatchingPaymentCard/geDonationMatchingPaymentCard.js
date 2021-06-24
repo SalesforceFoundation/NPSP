@@ -10,12 +10,15 @@ import PAYMENT_AMOUNT_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01_
 import PAYMENT_SCHEDULED_DATE_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Scheduled_Date__c';
 import PAYMENT_PAID_FIELD from '@salesforce/schema/npe01__OppPayment__c.npe01__Paid__c';
 import PAYMENT_NAME_FIELD from '@salesforce/schema/npe01__OppPayment__c.Name';
+import ELEVATE_PAYMENT_STATUS_FIELD
+    from '@salesforce/schema/npe01__OppPayment__c.Elevate_Payment_API_Status__c';
 
 const FIELDS = [
     PAYMENT_AMOUNT_FIELD,
     PAYMENT_SCHEDULED_DATE_FIELD,
     PAYMENT_PAID_FIELD,
     PAYMENT_NAME_FIELD,
+    ELEVATE_PAYMENT_STATUS_FIELD,
 ]
 
 export default class geDonationMatchingPaymentCard extends LightningElement {

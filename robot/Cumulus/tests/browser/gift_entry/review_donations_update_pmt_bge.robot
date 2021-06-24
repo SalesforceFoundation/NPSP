@@ -45,6 +45,15 @@ Review Donation And Update Payment For Batch Gift
     [tags]                               unstable      feature:GE                    W-042803
     #verify Review Donations link is available and update a payment
     Go To Page                           Landing                       GE_Gift_Entry
+    Current Page Should Be               Landing                       GE_Gift_Entry
+    Click Link                           Templates
+    Select Template Action               Default Gift Entry Template   Edit
+    Current Page Should Be               Template                      GE_Gift_Entry
+    Click Gift Entry Button              Next: Form Fields
+    Click Gift Entry Button              Next: Batch Settings
+    Add Batch Table Columns              Donor Name     Donation Name       Status          Donation Date   Donation Amount
+    Click Gift Entry Button              Save & Close
+    Current Page Should Be               Landing                       GE_Gift_Entry
     Create Gift Entry Batch              Default Gift Entry Template   ${ACCOUNT}[Name]Automation Batch
     Current Page Should Be               Form                          Gift Entry
     ${batch_id} =                        Save Current Record ID For Deletion     ${NS}DataImportBatch__c
@@ -68,9 +77,7 @@ Review Donation And Update Payment For Batch Gift
     ...                                  Donation Date=${UI_DATE}
     Scroll Page To Location              0      0
     Click Gift Entry Button              Process Batch
-    Click Data Import Button             NPSP Data Import                button       Begin Data Import Process
-    Wait For Batch To Process            BDI_DataImport_BATCH            Completed
-    Click Button With Value              Close
+    Wait Until BGE Batch Processes       ${ACCOUNT}[Name]Automation Batch
     #verify same payment record is updated and paid but opportunity values did not change
     Verify Expected Values               nonns                          Opportunity    ${OPPORTUNITY}[Id]
     ...                                  Amount=500.0

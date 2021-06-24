@@ -1,0 +1,36 @@
+{
+  "controllerValues": {},
+  "defaultValue": {
+    "attributes": null,
+    "label": "Monthly",
+    "validFor": [],
+    "value": "Monthly"
+  },
+  "url": "/services/data/v51.0/ui-api/object-info/npe03__Recurring_Donation__c/picklist-values/012000000000000AAA/npe03__Installment_Period__c",
+  "values": [
+    {
+      "attributes": null,
+      "label": "Monthly",
+      "validFor": [],
+      "value": "Monthly"
+    },
+    {
+      "attributes": null,
+      "label": "Yearly",
+      "validFor": [],
+      "value": "Yearly"
+    },
+    {
+      "attributes": null,
+      "label": "Weekly",
+      "validFor": [],
+      "value": "Weekly"
+    },
+    {
+      "attributes": null,
+      "label": "1st and 15th",
+      "validFor": [],
+      "value": "1st and 15th"
+    }
+  ]
+}

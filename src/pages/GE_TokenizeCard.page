@@ -90,7 +90,7 @@
             if (isValidPaymentMethod(paymentMethod)) {
                 const config = {
                     id: 'payments',
-                    clientId: '{!productId}',
+                    clientId: '{!clientId}',
                     gatewayId: '{!gatewayIds}',
                     merchantId: '{!merchantIds}',
                     designSystem: 'Lightning',

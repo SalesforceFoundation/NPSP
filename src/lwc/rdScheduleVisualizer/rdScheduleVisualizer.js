@@ -56,13 +56,6 @@ export default class RdScheduleVisualizer extends LightningElement {
     }
 
     /*******************************************************************************
-     * @description Called by the HTML to retrieve the schedule to render
-     */
-    get installments() {
-        return this.installments;
-    }
-
-    /*******************************************************************************
      * @description Get the installments
      */
     handleRecords(response) {
