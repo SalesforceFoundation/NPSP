@@ -71,7 +71,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
     **********************************************************************************************************/  
     private static testMethod void testErrorWhenClassDoesNotImplementINamingInterface() {
         Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
-        settings.Implementing_Class__c = 'HH_HouseholdNaming'; 
+        settings.Implementing_Class__c = 'HouseholdNamingService';
 
         HH_INaming hhNaming = validator.validateImplementingClass(settings, notification);
 
@@ -90,7 +90,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
         Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Implementing_Class__c = null; 
 
-        HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
+        HH_INamingImpl hhNaming = (HH_INamingImpl) validator.validateImplementingClass(settings, notification);
 
         System.assertNotEquals(null, hhNaming, 'HH_INaming should be an HH_NameSpec instance');
 

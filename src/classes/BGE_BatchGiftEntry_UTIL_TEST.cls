@@ -138,4 +138,79 @@ private with sharing class BGE_BatchGiftEntry_UTIL_TEST {
                         String.valueOf(DataImport__c.Account2_City__c).toLowerCase()));
     }
 
+    @isTest
+    static void shouldReturnElevateFieldsForElevateCustomer() {
+        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
+        mockInstance.withIsElevateCustomer(true);
+        GiftBatchMock giftBatchMock = new GiftBatchMock();
+        BGE_BatchGiftEntry_UTIL.giftBatch = stubFor(giftBatchMock);
+
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+            GE_PaymentServices.class,
+            mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+        Test.startTest();
+        Id dummyId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields(dummyId);
+        System.assert(!elevateFields.isEmpty(), 'Elevate fields should be returned for an Elevate customer.');
+        Test.stopTest();
+    }
+
+    @isTest
+    static void shouldReturnNoElevateFieldsForNonElevateCustomer() {
+        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
+        mockInstance.withIsElevateCustomer(false);
+
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+                GE_PaymentServices.class,
+                mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+        Test.startTest();
+        Id dummyId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        List<String> elevateFields = BGE_BatchGiftEntry_UTIL.getDataImportElevateFields(dummyId);
+        System.assert(elevateFields.isEmpty(), 'Elevate fields should not returned when the user is not an ' +
+            'Elevate customer.');
+        Test.stopTest();
+    }
+
+    private class ElevateConfigMock implements System.StubProvider {
+        Boolean isElevateCustomer;
+        public Object handleMethodCall(Object stubbedObject,
+                                        String stubbedMethodName,
+                                        Type returnType,
+                                        List<Type> listOfParamTypes,
+                                        List<String> listOfParamNames,
+                                        List<Object> listOfArgs) {
+            switch on stubbedMethodName {
+                when 'isElevateCustomer' {
+                    return isElevateCustomer;
+                }
+            }
+            return null;
+        }
+    }
+
+    public class GiftBatchMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'hasElevateWidget' {
+                    return true;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftBatch stubFor(GiftBatchMock giftBatchMock) {
+        return (GiftBatch) Test.createStub(GiftBatch.class, giftBatchMock);
+    }
 }

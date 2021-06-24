@@ -7,6 +7,7 @@ export default class utilExpandableSection extends LightningElement {
     @api isCollapsed = false;
     @api alternativeText;
     @api bodyClass;
+    @api shouldInformParent = false;
 
     get containerClass() {
         let classItems = ['slds-section', 'slds-is-open'];
@@ -54,6 +55,9 @@ export default class utilExpandableSection extends LightningElement {
 
     toggleSection() {
         this.isCollapsed = !this.isCollapsed;
+        if (this.shouldInformParent === true) {
+            this.informParent();
+        }
     }
 
     /*******************************************************************************
@@ -68,4 +72,12 @@ export default class utilExpandableSection extends LightningElement {
      * End getters for data-qa-locator attributes
      */
 
+    informParent () {
+        const collapseEvent = new CustomEvent('sectioncollapse', {
+            detail: {
+                isCollapsed : this.isCollapsed
+            }
+        });
+        this.dispatchEvent(collapseEvent);
+    }
 }

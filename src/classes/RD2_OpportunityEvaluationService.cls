@@ -348,7 +348,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
 
         List<npe03__Recurring_Donation__c> newOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
-        List<npe03__Recurring_Donation__c> closedRDs = new List<npe03__Recurring_Donation__c>();
+        List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
 
         for (npe03__Recurring_Donation__c rd : rds) {
@@ -369,10 +369,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .reviseNextDonationDate(scheduleService);
 
             //evaluate Opportunities
-            if (rdRecord.isClosed()) {
-                closedRDs.add(rd);
-
-            } else {
+            if (rdRecord.isClosed()
+                || rdRecord.isElevateRecord() && RD2_ElevateIntegrationService.isIntegrationEnabled()) {
+                closeOppRds.add(rd);
+            }
+            else {
                 if (isNewOpportunityCandidate(rdRecord)) {
                     newOppRDs.add(rd);
                 }
@@ -389,7 +390,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         oppService
             .createOpportunities(newOppRDs)
             .updateOpportunities(updateOppRDs, rdIdsWhereScheduleChanged)
-            .voidOpenOpportunities(closedRDs);
+            .voidOpenOpportunities(closeOppRds);
 
         handleOutdatedRecurringDonations(rdRecords);
 

@@ -393,12 +393,21 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Total_Paid_Installments__c.intValue();
     }
 
+    public String paymentMethod() {
+        return rd.PaymentMethod__c;
+    }
+
     /**
     * @description Return the state of the Recurring Donation.
     * @return String 
     */
     public String getState() {
         return state;
+    }
+
+
+    public String getInstallmentPeriod() {
+        return rd.npe03__Installment_Period__c;
     }
 
     /**
@@ -424,6 +433,10 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.InstallmentFrequency__c != null
             && rd.InstallmentFrequency__c >= 1
             && rd.InstallmentFrequency__c <= 20;
+    }
+
+    public Boolean isFirstAndFifteenthPeriod() {
+        return rd.npe03__Installment_Period__c == RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     }
 
     /**
@@ -493,4 +506,15 @@ public inherited sharing class RD2_RecurringDonation {
        return String.isNotBlank(rd.CommitmentId__c);
     }
 
+    public Boolean hasValidRecurringDonationPaymentMethod() {
+        if (isElevateRecord()) {
+            return isValidElevatePaymentMethod();
+        }
+        return true;
+    }
+
+    private Boolean isValidElevatePaymentMethod() {
+        return paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
+               paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
+    }
 }

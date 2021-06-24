@@ -58,12 +58,18 @@
                                 <span class="slds-truncate slds-p-horizontal_small">{customLabels.donorSectionHeader}</span>
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
-
-                                <c-rd2-entry-form-donor-section record-id={recordId} parent-id={parentId}
-                                    parent-s-object-type={rdSettings.parentSObjectType} data-id="donorComponent"
-                                    onerrorevent={handleChildComponentError} oncontactchange={handleContactChange} if:true={isSettingReady}>
+                                <c-rd2-entry-form-donor-section
+                                        record-id={recordId}
+                                        parent-id={parentId}
+                                        parent-s-object-type={rdSettings.parentSObjectType}
+                                        data-id="donorComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        oncontactchange={handleContactChange}
+                                        onaccountchange={handleAccountChange}
+                                        ondonortypechange={handleDonorTypeChange}
+                                        if:true={isSettingReady}
+                                >
                                 </c-rd2-entry-form-donor-section>
-
                             </div>
                         </div>
 
@@ -77,7 +83,10 @@
 
                                     <lightning-layout horizontal-align="spread" multiple-rows="true">
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.status}>
-                                            <lightning-input-field field-name={fields.status.apiName} required>
+                                            <lightning-input-field
+                                                    data-id="status"
+                                                    field-name={fields.status.apiName}
+                                                    required>
                                             </lightning-input-field>
                                         </lightning-layout-item>
 
@@ -101,7 +110,11 @@
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
                                     <lightning-layout-item padding="horizontal-small" size="6" small-device-size="6"
                                         if:true={fields.amount}>
-                                        <lightning-input-field field-name={fields.amount.apiName} required>
+                                        <lightning-input-field
+                                                field-name={fields.amount.apiName}
+                                                data-id="amountField"
+                                                required
+                                        >
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
@@ -121,8 +134,14 @@
 
                                 </lightning-layout>
 
-                                <c-rd2-entry-form-schedule-section record-id={recordId} data-id="scheduleComponent"
-                                    onerrorevent={handleChildComponentError} ontypechange={handleRecurringTypeChange} if:true={isSettingReady}>
+                                <c-rd2-entry-form-schedule-section
+                                        record-id={recordId}
+                                        data-id="scheduleComponent"
+                                        onerrorevent={handleChildComponentError}
+                                        ontypechange={handleRecurringTypeChange}
+                                        onperiodchange={handleRecurringPeriodChange}
+                                        onperiodtypechange={handleRecurringPeriodTypeChange}
+                                        if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
                                 <lightning-layout horizontal-align="spread" multiple-rows="true">
@@ -138,12 +157,19 @@
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
                                             data-qa-locator='widget Elevate'    
-                                            is-edit-mode={isEdit}
+                                            is-edit-mode={isCommitmentEdit}
+                                            rd2-record-id={recordId}
                                             card-exp-date={cardExpDate}
                                             card-last-four-label={cardLastFourLabel}
+                                            ach-last-four-label={achLastFourLabel}
                                             card-last-four={cardLastFour}
-                                            is-edit-payment={isEdit}
+                                            ach-last-four={achLastFour}
                                             next-donation-date={nextDonationDate}
+                                            payer-organization-name={organizationAccountName}
+                                            payer-first-name={contactFirstName}
+                                            payer-last-name={contactLastName}
+                                            ach-account-type={accountHolderType}
+                                            existing-payment-method={existingPaymentMethod}
                                             payment-method={paymentMethod}>
                                         </c-rd2-elevate-credit-card-form>
                                     </lightning-layout-item>
