@@ -4,8 +4,10 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
-
+import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
+
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData',
     () => {
@@ -16,7 +18,6 @@ jest.mock(
     { virtual: true }
 );
 
-import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 jest.mock(
     '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage',
     () => {
@@ -27,17 +28,21 @@ jest.mock(
     { virtual: true }
 );
 
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
-
-const getObjectInfoAdapter = registerLdsTestWireAdapter(getObjectInfo);
-const getRecordAdapter = registerLdsTestWireAdapter(getRecord);
+jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringData',
+    () => {
+        return { default: jest.fn() }
+    },
+    { virtual: true }
+);
 
 const mockGetObjectInfo = require('./data/getObjectInfo.json');
 const mockGetRecord = require('./data/getRecord.json');
+const mockGetAchRecord = require('./data/getAchRecord.json');
 const mockGetData = require('./data/getData.json');
 
 const ELEVATE_ID_FIELD_NAME = 'CommitmentId__c';
 const CC_LAST_4_FIELD_NAME = 'CardLast4__c';
+const ACH_LAST_4_FIELD_NAME = 'ACH_Last_4__c';
 const EXPIRATION_YEAR_FIELD_NAME = 'CardExpirationYear__c';
 const STATUS_REASON_FIELD_NAME = 'ClosedReason__c';
 const ICON_NAME_ERROR = 'utility:error';
@@ -57,7 +62,7 @@ describe('c-rd2-elevate-information', () => {
             is: rd2ElevateInformation,
         });
 
-        getObjectInfoAdapter.emit(mockGetObjectInfo);
+        getObjectInfo.emit(mockGetObjectInfo);
     });
 
     afterEach(() => {
@@ -81,14 +86,20 @@ describe('c-rd2-elevate-information', () => {
     * @description Verifies the widget when the Recurring Donation has no error
     * or there is no error after the latest successful payment
     */
-    describe('on data load when no errors', () => {
+    describe('on credit card payment data load when no errors', () => {
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Open"
+            });
 
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -131,9 +142,49 @@ describe('c-rd2-elevate-information', () => {
             });
         });
 
+        it('should populate donor type for edit payment information modal', async () => {
+            await flushPromises();
+            const updatePaymentButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link Update Payment Information"]');
+            expect(getData).toHaveBeenCalled();
+
+            expect(updatePaymentButton).toBeTruthy();
+        });
+
         it("should be accessible", async () => {
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
+            });
+        });
+    });
+
+    describe('on ach payment data load when no errors', () => {
+        beforeEach(() => {
+            component.recordId = mockGetRecord.id;
+
+            getData.mockResolvedValue(mockGetData);
+            getError.mockResolvedValue(null);
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Open"
+            });
+
+            getRecord.emit(mockGetAchRecord);
+
+            document.body.appendChild(component);
+        });
+
+        it('should display ACH Last 4', async () => {
+            return global.flushPromises().then(async () => {
+                assertLastFourACHIsPopulated(component, mockGetAchRecord);
+            });
+        });
+
+        it('should not display Expiration Date', async () => {
+            return global.flushPromises().then(async () => {
+                const expDate = getExpirationDate(component);
+                expect(expDate).toBeFalsy();
             });
         });
     });
@@ -151,7 +202,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(errorMessage);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -214,7 +265,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordCancelInProgress);
+            getRecord.emit(mockGetRecordCancelInProgress);
 
             document.body.appendChild(component);
         });
@@ -274,7 +325,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(errorMessage);
-            getRecordAdapter.emit(mockGetRecordFailedCommitment);
+            getRecord.emit(mockGetRecordFailedCommitment);
 
             document.body.appendChild(component);
         });
@@ -325,7 +376,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataNoPermission);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecord);
+            getRecord.emit(mockGetRecord);
 
             document.body.appendChild(component);
         });
@@ -380,7 +431,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordNoCommitment);
+            getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
         });
@@ -442,7 +493,7 @@ describe('c-rd2-elevate-information', () => {
 
             getData.mockResolvedValue(mockGetDataNoElevate);
             getError.mockResolvedValue(null);
-            getRecordAdapter.emit(mockGetRecordNoCommitment);
+            getRecord.emit(mockGetRecordNoCommitment);
 
             document.body.appendChild(component);
         });
@@ -502,6 +553,12 @@ const assertLastFourDigitsIsPopulated = (component, mockRecord) => {
     const last4Digits = getLastFourDigits(component);
     expect(last4Digits).not.toBeNull();
     expect(last4Digits.value).toBe(mockRecord.fields[CC_LAST_4_FIELD_NAME].value);
+}
+
+const assertLastFourACHIsPopulated = (component, mockRecord) => {
+    const last4Digits = getLastFourDigits(component);
+    expect(last4Digits).not.toBeNull();
+    expect(last4Digits.value).toBe(mockRecord.fields[ACH_LAST_4_FIELD_NAME].value);
 }
 
 /***
@@ -595,7 +652,7 @@ const assertViewErrorLogIsDisplayed = (component) => {
 * @description Finds and returns View Error Log button if it is displayed on the widget
 */
 const getViewErrorLogButton = (component) => {
-    const errorLogButton = component.shadowRoot.querySelector('lightning-button');
+    const errorLogButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link View Error Log"]');
 
     return errorLogButton;
 }

@@ -12,7 +12,7 @@
 
     <template if:true={isAccessible}>
         <lightning-layout multiple-rows='true'
-                          class='ge-form-container slds-p-bottom_medium'>
+                          class='ge-form-container'>
             <template if:true={isSingleGiftEntry}>
                 <lightning-layout-item size='12'>
                     <c-util-page-header pretext={CUSTOM_LABELS.geHeaderSingleGiftEntry}
@@ -101,64 +101,132 @@
                             </c-util-illustration>
                         </div>
                     </template>
-                    <template if:false={isSingleGiftEntry}>
-                        <template if:true={showMismatchedCurrencyWarning}>
-                            <div class="slds-notify slds-notify_alert payment-warn" role="alert">
-                                <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
-                                <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
-                                <lightning-icon
-                                        variant="warning"
-                                        icon-name="utility:warning"
-                                        size="small">
-                                </lightning-icon>
-                            </span>
-                                <div class="slds-text-heading_small">
-                                    {mismatchedCurrencyWarning}
-                                </div>
-                            </div>
-                        </template>
+                    <template if:true={showElevateTransactionWarning}>
+                        <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                            <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                            <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                    <lightning-icon
+                                            variant="warning"
+                                            icon-name="utility:warning"
+                                            size="small">
+                                    </lightning-icon>
+                                </span>
+                            <div class="slds-text-heading_small">{elevateTransactionWarning}</div>
+                        </div>
                     </template>
-                    <template if:false={isPermissionError}
-                              for:each={sections}
-                              for:item='section'>
-                        <c-ge-form-section key={section.id}
-                                           section={section}
-                                           onregisterpaymentwidget={handleRegisterPaymentWidget}
-                                           widget-config={widgetConfig}
-                                           onformfieldchange={handleFormFieldChange}
-                                           onformwidgetchange={handleFormWidgetChange}
-                                           form-state={formState}>
-                        </c-ge-form-section>
+                    <template if:true={isSingleGiftEntry}>
+                        <template if:false={isPermissionError}
+                                  for:each={sections}
+                                  for:item='section'>
+                            <c-ge-form-section key={section.id}
+                                               section={section}
+                                               onregisterpaymentwidget={handleRegisterPaymentWidget}
+                                               widget-config={widgetConfig}
+                                               onformfieldchange={handleFormFieldChange}
+                                               onformwidgetchange={handleFormWidgetChange}
+                                               form-state={formState}>
+                            </c-ge-form-section>
+                        </template>
+                        <lightning-layout multiple-rows='true'
+                                          horizontal-align='center'
+                                          if:false={isPermissionError}>
+                            <lightning-layout-item size='12'
+                                                   if:true={showPaymentSaveNotice}>
+                                <p class='slds-align_absolute-center slds-p-top_small'>
+                                    {CUSTOM_LABELS.geTextPaymentsSaveNotice}
+                                </p>
+                            </lightning-layout-item>
+                            <lightning-layout-item size='12'>
+                                <div class='slds-align_absolute-center slds-p-vertical_small'>
+                                    <lightning-button label={cancelButtonText}
+                                                      title={cancelButtonText}
+                                                      onclick={handleCancel}
+                                                      class='slds-m-left_x-small'
+                                                      data-qa-locator={qaLocatorCancelButton}>
+                                    </lightning-button>
+                                    <lightning-button variant='brand'
+                                                      label={saveActionLabel}
+                                                      title={saveActionLabel}
+                                                      onclick={handleSave}
+                                                      class='slds-m-left_x-small'
+                                                      disabled={isUpdateActionDisabled}
+                                                      data-qa-locator={qaLocatorSaveButton}>
+                                    </lightning-button>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                    <template if:false={isSingleGiftEntry}>
+                        <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
+                                                   id={expandableContainerId}
+                                                   is-collapsed={isFormCollapsed}
+                                                   alternative-text={altTextLabel}
+                                                   label={CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName}
+                                                   body-class='slds-m-left_medium'
+                                                   onsectioncollapse={handleCollapse}
+                                                   should-inform-parent={_shouldInformParent}>
+                            
+                            <template if:false={isPermissionError}
+                                      for:each={sections}
+                                      for:item='section'>
+                                <c-ge-form-section key={section.id}
+                                                   section={section}
+                                                   onregisterpaymentwidget={handleRegisterPaymentWidget}
+                                                   widget-config={widgetConfig}
+                                                   onformfieldchange={handleFormFieldChange}
+                                                   onformwidgetchange={handleFormWidgetChange}
+                                                   form-state={formState}>
+                                </c-ge-form-section>
+                            </template>
+
+                            <template if:true={showMismatchedCurrencyWarning}>
+                                <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                                    <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                        <lightning-icon
+                                                variant="warning"
+                                                icon-name="utility:warning"
+                                                size="small">
+                                        </lightning-icon>
+                                    </span>
+                                    <div class="slds-text-heading_small">
+                                        {mismatchedCurrencyWarning}
+                                    </div>
+                                </div>
+                            </template>
+
+                            <lightning-layout multiple-rows='true'
+                                              horizontal-align='center'
+                                              if:false={isPermissionError}>
+                                <lightning-layout-item size='12'
+                                                       if:true={showPaymentSaveNotice}>
+                                    <p class='slds-align_absolute-center slds-p-top_small'>
+                                        {CUSTOM_LABELS.geTextPaymentsSaveNotice}
+                                    </p>
+                                </lightning-layout-item>
+                                <lightning-layout-item size='12'>
+                                    <div class='slds-align_absolute-center slds-p-vertical_small'>
+                                        <lightning-button label={cancelButtonText}
+                                                          title={cancelButtonText}
+                                                          onclick={handleCancel}
+                                                          class='slds-m-left_x-small'
+                                                          data-qa-locator={qaLocatorCancelButton}>
+                                        </lightning-button>
+                                        <lightning-button variant='brand'
+                                                          label={saveActionLabel}
+                                                          title={saveActionLabel}
+                                                          onclick={handleSave}
+                                                          class='slds-m-left_x-small'
+                                                          disabled={isUpdateActionDisabled}
+                                                          data-qa-locator={qaLocatorSaveButton}>
+                                        </lightning-button>
+                                    </div>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </c-util-expandable-section>
                     </template>
 
-                    <lightning-layout multiple-rows='true'
-                                      horizontal-align='center'
-                                      if:false={isPermissionError}>
-                        <lightning-layout-item size='12'
-                                               if:true={showPaymentSaveNotice}>
-                            <p class='slds-align_absolute-center slds-p-top_small'>
-                                {CUSTOM_LABELS.geTextPaymentsSaveNotice}
-                            </p>
-                        </lightning-layout-item>
-                        <lightning-layout-item size='12'>
-                            <div class='slds-align_absolute-center slds-p-vertical_small'>
-                                <lightning-button label={cancelButtonText}
-                                                  title={cancelButtonText}
-                                                  onclick={handleCancel}
-                                                  class='slds-m-left_x-small'
-                                                  data-qa-locator={qaLocatorCancelButton}>
-                                </lightning-button>
-                                <lightning-button variant='brand'
-                                                  label={saveActionLabel}
-                                                  title={saveActionLabel}
-                                                  onclick={handleSave}
-                                                  class='slds-m-left_x-small'
-                                                  disabled={isUpdateActionDisabled}
-                                                  data-qa-locator={qaLocatorSaveButton}>
-                                </lightning-button>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>
+
                 </lightning-layout-item>
             </template>
         </lightning-layout>

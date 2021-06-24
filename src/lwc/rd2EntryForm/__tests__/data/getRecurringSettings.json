@@ -1,0 +1,16 @@
+{
+  "isAutoNamingEnabled": true,
+  "isMultiCurrencyEnabled": false,
+  "InstallmentPeriodPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "InstallmentFrequencyPermissions": {
+    "Createable": true,
+    "Updateable": true,
+    "Visible": true
+  },
+  "customFieldSets": [],
+  "isElevateCustomer": true
+}

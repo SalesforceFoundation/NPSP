@@ -115,8 +115,13 @@ global virtual with sharing class ADV_Adapter {
         }
 
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
-        ACCT_Accounts_TDTM accountsTDTM = new ACCT_Accounts_TDTM();
-        accountsTDTM.configAccountForContact(listNew, listOld, triggerAction, new List<Account>(), new List<Account>());
+
+        Accounts accounts = new Accounts(listNew, listOld);
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert
+                || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+            accounts.setAccountTypeAndIndividualFieldValues();
+            accounts.setSystemAccountTypeAndIndividualFieldValues();
+        }
     }
 
     /*******************************************************************************************************

@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace } from 'c/utilCommon';
+import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -14,6 +14,9 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
+import checkForElevateCustomer 
+    from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 /*******************************************************************************
 * @description Schema imports
@@ -29,10 +32,11 @@ import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
+import BatchTotals from './helpers/batchTotals';
+
 /*******************************************************************************
 * @description Constants
 */
-const BDI_DATA_IMPORT_PAGE = 'BDI_DataImport';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
@@ -46,14 +50,20 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
+    @track batchTotals = {}
+
+    _hasDisplayedExpiredAuthorizationWarning = false;
 
     dataImportRecord = {};
     errorCallback;
-    isFailedPurchase = false;
+    _isBatchProcessing = false;
+    isElevateCustomer = false;
 
     namespace;
     count;
     total;
+    batch = {};
+    isLoading = true;
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -63,6 +73,26 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     constructor() {
         super();
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
+    }
+
+    async connectedCallback() {
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        this.isElevateCustomer = await checkForElevateCustomer();
+    }
+
+    disconnectedCallback() {
+        unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    async retrieveBatchTotals() {
+        this.batchTotals = await BatchTotals(this.batchId);
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
+            this.displayExpiredAuthorizationWarningModalForPageLoad();
+        }
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this.isLoading = false;
+        if (!this._isBatchProcessing) return;
+        await this.startPolling();
     }
 
     /*******************************************************************************
@@ -107,7 +137,26 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         table.sections = formSections;
     }
 
-    handleBatchDryRun() {
+    async handleBatchDryRun() {
+        try {
+            await this.refreshBatchTotals();
+        } catch (error) {
+            handleError(error);
+        } finally {
+            if (this.shouldDisplayExpiredAuthorizationWarning()) {
+                this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                    () => { 
+                        this.callBatchDryRun(); 
+                        this.dispatchEvent(new CustomEvent('closemodal')); 
+                    } 
+                );
+            } else {
+                this.callBatchDryRun();
+            }
+        }
+    }
+    
+    callBatchDryRun() {
         //toggle the spinner on the form
         const form = this.template.querySelector('c-ge-form-renderer');
         const toggleSpinner = function () {
@@ -197,6 +246,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return format(geBatchGiftsHeader, [this.batchName]);
     }
 
+    shouldDisplayExpiredAuthorizationWarning() {
+        return this.isElevateCustomer
+            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && !this._hasDisplayedExpiredAuthorizationWarning;
+    }
+
     @wire(getRecord, {
         recordId: '$recordId',
         fields: [
@@ -211,45 +266,119 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             BATCH_TABLE_COLUMNS_FIELD
         ]
     })
-    batch;
-
-    handleProcessBatch() {
-        if (this.isProcessable) {
-            this.navigateToDataImportProcessingPage();
-        } else {
-            if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-                handleError(geBatchGiftsExpectedTotalsMessage);
-            } else {
-                handleError(geBatchGiftsExpectedCountOrTotalMessage);
-            }
+    wiredBatch({data, error}) {
+        if (data) {
+            this.batch.data = data;
+            this.retrieveBatchTotals();
+        } else if (error) {
+            handleError(error);
         }
     }
 
-    navigateToDataImportProcessingPage() {
-        let url = '/apex/' + this.bdiDataImportPageName +
-            '?batchId=' + this.recordId + '&retURL=' + this.recordId;
+    async handleProcessBatch() {
+        if (this.isProcessable()) {
+            try {
+                await this.refreshBatchTotals();
+            } catch (error) {
+                handleError(error);
+            } finally {
+                await this.startBatchProcessing();
+            }
+            return;
+        }
+        this.handleBatchProcessingErrors();
+    }
 
-        this[NavigationMixin.Navigate]({
-                type: 'standard__webPage',
-                attributes: {
-                    url: url
+    async startBatchProcessing() {
+        if (this.shouldDisplayExpiredAuthorizationWarning()) {
+            this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
+                this.processBatchAndCloseAuthorizationWarningModal()
+            );
+            return;
+        }
+        await this.processBatch();
+    }
+
+    processBatchAndCloseAuthorizationWarningModal() {
+        return async () => {
+            await this.processBatch();
+            this.dispatchEvent(new CustomEvent('closemodal'));
+        };
+    }
+
+    handleBatchProcessingErrors() {
+        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+            handleError(geBatchGiftsExpectedTotalsMessage);
+        } else {
+            handleError(geBatchGiftsExpectedCountOrTotalMessage);
+        }
+    }
+
+    get isBatchProcessing() {
+        return this._isBatchProcessing;
+    }
+
+    async processBatch() {
+        await processBatch({
+            batchId: this.batchId
+        }).then(() => {
+            this._isBatchProcessing = true;
+        }).catch(error => {
+            handleError(error);
+        }).finally(() => {
+            this.startPolling();
+        });
+    }
+
+    async startPolling() {
+        const poll = setInterval(() => {
+            Promise.resolve(true).then(() => {
+                this.refreshBatchTotals();
+            }).then(() => {
+                if (!this._isBatchProcessing) {
+                    this.handleProcessedBatch();
+                    clearInterval(poll);
                 }
-            },
-            true
+                if (!this.isBatchGiftEntryInFocus()) {
+                    clearInterval(poll);
+                }
+            })
+        }, 5000);
+    }
+
+    isBatchGiftEntryInFocus() {
+        return location.href.includes(this.batchId);
+    }
+
+    handleProcessedBatch() {
+        this.collapseForm();
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geBatchProcessingSuccess,
+                [this.batchName]),
+            'success',
+            'dismissible',
+            null
         );
     }
 
-    get bdiDataImportPageName() {
-        return this.namespace ?
-            `${this.namespace}__${BDI_DATA_IMPORT_PAGE}` :
-            BDI_DATA_IMPORT_PAGE;
-    };
+    collapseForm() {
+        const form = this.template.querySelector('c-ge-form-renderer');
+        form.collapse();
+    }
 
-    get requireTotalMatch() {
+    async refreshBatchTotals() {
+        this._hasDisplayedExpiredAuthorizationWarning = false;
+        this.batchTotals = await BatchTotals(this.batchId);
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+    }
+
+    requireTotalMatch() {
         return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
     }
 
-    get totalsMatch() {
+    totalsMatch() {
         if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
             return this.countMatches && this.amountMatches;
         } else if (this.expectedCountOfGifts) {
@@ -267,14 +396,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return this.total === this.expectedTotalBatchAmount;
     }
 
-    get isProcessable() {
-        if (this.totalsMatch) {
-            return true;
-        } else if (this.requireTotalMatch) {
-            return false;
-        } else {
+    isProcessable() {
+        if (this.totalsMatch()) {
             return true;
         }
+        return !this.requireTotalMatch();
     }
 
     handleDelete(event) {
@@ -309,7 +435,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
                 JSON.stringify(event.payload.values);
 
-            const recordInput = {fields};
+            const recordInput = { fields };
             const lastModifiedDate =
                 this.batch.data.lastModifiedDate;
             const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
@@ -350,6 +476,52 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             detail: modalContent
         }));
     }
+
+    displayModalPrompt(componentProperties) {
+        const detail = {
+            modalProperties: {
+                componentName: 'geModalPrompt',
+                showCloseButton: true
+            },
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));      
+    }
+
+    displayExpiredAuthorizationWarningModalForPageLoad() {
+        this.displayModalPrompt ({
+                'variant': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.commonOkay,
+                        variant: 'neutral',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                    }]
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
+    }
+
+    displayExpiredAuthorizationWarningModalForProcessAndDryRun(actionOnProceed) {
+        this.displayModalPrompt ({
+                'variant': 'warning',
+                'title': this.CUSTOM_LABELS.gePaymentAuthExpiredHeader,
+                'message': this.CUSTOM_LABELS.gePaymentAuthExpiredWarningText,
+                'buttons': 
+                    [{
+                        label: this.CUSTOM_LABELS.geProcessAnyway,
+                        variant: 'neutral',
+                        action: actionOnProceed
+                    },
+                    {
+                        label: this.CUSTOM_LABELS.commonCancel,
+                        variant: 'brand',
+                        action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                    }]
+            });
+        this._hasDisplayedExpiredAuthorizationWarning = true;
+    }    
 
     buildModalConfigSelectColumns(available, selected) {
         const modalConfig = {

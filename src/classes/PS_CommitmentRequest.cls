@@ -42,11 +42,9 @@ public inherited sharing class PS_CommitmentRequest {
         SUSTAINER
     }
 
-    /***
-     * @description Commitment payment method. Currently only credit card is supported.
-     */
-    public enum PaymentMethod {
-        CARD
+    public enum ElevateBankAccountType {
+        INDIVIDUAL,
+        BUSINESS
     }
 
     /***
@@ -54,10 +52,10 @@ public inherited sharing class PS_CommitmentRequest {
      * Commitments start in the NEW state, then transition to ACTIVE after the first payment.
      * The Status cannot be an enum since NEW is a reserved keyword.
      */
-    public static String STATUS_NEW = 'NEW';
-    public static String STATUS_ACTIVE = 'ACTIVE';
-    public static String STATUS_INACTIVE = 'INACTIVE';
-    public static String STATUS_FAILING = 'FAILING';
+    public static final String STATUS_NEW = 'NEW';
+    public static final String STATUS_ACTIVE = 'ACTIVE';
+    public static final String STATUS_INACTIVE = 'INACTIVE';
+    public static final String STATUS_FAILING = 'FAILING';
 
     /***
      * @description Commitment Status Reason
@@ -83,7 +81,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the Installment Period into the Elevate API frequency value
      */
-    private static Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
+    private static final Map<String, String> frequencyByInstallmentPeriod = new Map<String, String>{
         RD2_Constants.INSTALLMENT_PERIOD_YEARLY => Frequency.YEAR.name(),
         RD2_Constants.INSTALLMENT_PERIOD_MONTHLY => Frequency.MONTH.name(),
         RD2_Constants.INSTALLMENT_PERIOD_WEEKLY => Frequency.WEEK.name(),
@@ -94,19 +92,28 @@ public inherited sharing class PS_CommitmentRequest {
     /***
      * @description Translates the currency amount into the lowest denominator; e.g. dollars into cents
      */
-    private static Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
+    private static final Map<String, Integer> currencyMultiplierByIsoCode = new Map<String, Integer>{
         'USD' => 100
     };
 
     /***
      * @description Default currency multiplier
      */
-    private static Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
+    private static final Integer DEFAULT_CURRENCY_MULTIPLIER = 100;
 
     /***
      * @description Contains max length for a first/last name passed to the Elevate commitment request
      */
-    private static Integer MAX_NAME_LENGTH = 60;
+    private static final Integer MAX_NAME_LENGTH = 60;
+
+    private static final String ACH_BANK_TYPE_CHECKING = 'CHECKING';
+    private static final String ACH_CODE_WEB = 'WEB';
+    private static final String ACH_CONSENT_MESSAGE = 'true';
+
+    private static final Map<SObjectType, ElevateBankAccountType> BANK_ACCOUNT_TYPE_MAP = new Map<SObjectType, ElevateBankAccountType>{
+        Contact.SObjectType => ElevateBankAccountType.INDIVIDUAL,
+        Account.SObjectType => ElevateBankAccountType.BUSINESS
+    };
 
     /***
      * @description Payment Services configuration
@@ -162,12 +169,12 @@ public inherited sharing class PS_CommitmentRequest {
     * @param token Payment Method Token
     * @return RequestBody
     */
-    public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, String token) {
+    public RequestBody getRequestBody(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String token) {
         Boolean isCreateCommitment = String.isBlank(rd.CommitmentId__c);
 
         return isCreateCommitment
             ? getCreateRequestBody(rd, token)
-            : getUpdateRequestBody(rd, token);
+            : getUpdateRequestBody(rd, oldRd, token);
     }
 
     /***
@@ -182,10 +189,7 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
-        Metadata metadata = new Metadata()
-            .withCampaignCode(rd.npe03__Recurring_Donation_Campaign__c);
-
-        ProductMetaData productMetaData = new ProductMetaData()
+        ProductMetadata productMetadata = new ProductMetadata()
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withOrigin(PS_Request.OriginType.CRM.name());
     
@@ -193,11 +197,15 @@ public inherited sharing class PS_CommitmentRequest {
             .withMerchantId(configService.getMerchantIds())
             .withGatewayId(configService.getGatewayIds())
             .withPaymentMethodToken(token)
+            .withPaymentMethodType(rd.PaymentMethod__c)
             .withCurrency(currencyCode)
-            .withMetadata(metadata)
-            .withProductMetaData(productMetaData);
+            .withProductMetadata(productMetadata);
 
-        setDonorInfo(reqBody, rd);
+
+        ElevateBankAccountType accountHolderType = setDonorInfo(reqBody, rd);
+        if(reqBody.isACH()) {
+            reqBody.withACHAccountHolder(accountHolderType);
+        }
         setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
 
         return reqBody;
@@ -209,14 +217,60 @@ public inherited sharing class PS_CommitmentRequest {
     * @param token Payment Method Token
     * @return RequestBody
     */
-    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, String token) {
+    private RequestBody getUpdateRequestBody(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String token) {
         RequestBody reqBody = new RequestBody()
             .withCommitmentId(rd.CommitmentId__c)
+            .withPaymentMethodType(rd.PaymentMethod__c)
             .withPaymentMethodToken(token);
+
+        SObject donor = getDonorRecord(rd);
+        ElevateBankAccountType accountHolderType = getAccountHolderType(donor);
+
+        if(reqBody.isACH()) {
+            reqBody.withAchData(accountHolderType);
+        }
+
+        String currencyCode = UserInfo.isMultiCurrencyOrganization()
+            ? (String) rd.get('CurrencyIsoCode')
+            : UserInfo.getDefaultCurrency();
+
+        if (isElevateScheduleFieldsChanged(rd, oldRd)) {
+            reqBody.deactivateOldSchedules();
+            setSchedules(reqBody, scheduleService.buildNewSchedules(rd), currencyCode);
+        }
+
+
+
+
+        if (isElevateCampaignChanged(rd, oldRd)) {
+            ProductMetadata productMetadata = new ProductMetadata()
+                .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
+            
+            reqBody
+                .withProductMetadata(productMetadata);
+        }
 
         return reqBody;
     }
 
+    /**
+    * @description Check if Elevate schedule needs to be update
+    * @param rd new Recurring Donation
+    * @param oldRd old Recurring Donation
+    */
+    public Boolean isElevateScheduleFieldsChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        if (oldRd == null) {
+            return false;
+        }
+
+        return rd.npe03__Amount__c != oldRd.npe03__Amount__c
+            || rd.InstallmentFrequency__c != oldRd.InstallmentFrequency__c
+            || rd.npe03__Installment_Period__c != oldRd.npe03__Installment_Period__c;
+    }
+
+    public Boolean isElevateCampaignChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return rd.npe03__Recurring_Donation_Campaign__c != oldRd?.npe03__Recurring_Donation_Campaign__c;
+    }
     /**
     * @description Sets donor info on the commitment request body
     * @param reqBody RequestBody
@@ -224,24 +278,44 @@ public inherited sharing class PS_CommitmentRequest {
     * @return void
     */
     @TestVisible
-    private void setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
-        Contact contactDonor = rd.npe03__Contact__c != null
-            ? getContact(rd.npe03__Contact__c)
-            : null;
+    private ElevateBankAccountType setDonorInfo(RequestBody reqBody, npe03__Recurring_Donation__c rd) {
+        SObject donor = getDonorRecord(rd);
+        return setDonorFromSObject(reqBody, donor);
+    }
 
-        Boolean isHouseholdDonor = contactDonor != null
-            && (
-                rd.npe03__Organization__c == null
-                || rd.npe03__Organization__c == contactDonor.AccountId
-            );
+    private ElevateBankAccountType setDonorFromSObject(RequestBody reqBody, SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        if (donorSObjectType == Contact.SObjectType) {
+            reqBody.withDonor((Contact)donor);
+        } else {
+            reqBody.withDonor((Account)donor);
+        }
+        return getAccountHolderType(donor);
+    }
+
+    private SObject getDonorRecord(npe03__Recurring_Donation__c rd) {
+        Contact contactDonor = rd.npe03__Contact__c != null
+                ? getContact(rd.npe03__Contact__c)
+                : null;
+
+        Boolean isHouseholdDonor = donorIsInHousehold(contactDonor, rd.npe03__Organization__c);
 
         if (isHouseholdDonor) {
-            reqBody.withDonor(contactDonor);
-
+            return contactDonor;
         } else {
-            Account organization = getAccount(rd.npe03__Organization__c);
-            reqBody.withDonor(organization);
+            return getAccount(rd.npe03__Organization__c);
         }
+    }
+
+    private Boolean donorIsInHousehold(Contact contactDonor, Id rdAccountId) {
+        Boolean isHouseholdDonor = contactDonor != null
+                && ( rdAccountId == null || rdAccountId == contactDonor.AccountId);
+        return isHouseholdDonor;
+    }
+
+    private ElevateBankAccountType getAccountHolderType(SObject donor) {
+        Schema.SObjectType donorSObjectType = donor.getSObjectType();
+        return BANK_ACCOUNT_TYPE_MAP.get(donorSObjectType);
     }
 
     /**
@@ -257,7 +331,7 @@ public inherited sharing class PS_CommitmentRequest {
 
         List<Schedule> schedules = new List<Schedule>();
         for (RecurringDonationSchedule__c rdSchedule : rdSchedules) {
-            schedules.add(new Schedule(rdSchedule, currencyMultiplier));
+            schedules.add(new Schedule(rdSchedule, currencyMultiplier, reqBody.isCommitmentUpdate()));
         }
 
         reqBody.withSchedules(schedules);
@@ -330,6 +404,12 @@ public inherited sharing class PS_CommitmentRequest {
         return accounts.isEmpty() ? null : accounts[0];
     }
 
+    public with sharing class AchData {
+        public String achCode;
+        public String consent;
+        public String type;
+        public String bankType;
+    }
 
 
     /***
@@ -342,19 +422,21 @@ public inherited sharing class PS_CommitmentRequest {
         public String id;
         public String firstName;
         public String lastName;
+        public String accountName;
         public String merchantId;
         public String gatewayId;
         public String type;
         public String paymentMethodType;
         public String paymentMethodToken;
         public String currencyCode;
+        public Boolean deactivateAllExistingSchedules;
         public List<Schedule> schedules;
-
+        public AchData achData;
+        public String productMetadataSchemaUri;
         /***
          * Optional properties
          */
-        public Metadata metadata;
-        public ProductMetaData productMetaData;
+        public ProductMetadata productMetadata;
 
         /***
          * @description Constructor
@@ -363,7 +445,15 @@ public inherited sharing class PS_CommitmentRequest {
             //set defaults
             currencyCode = UserInfo.getDefaultCurrency();
             type = CommitmentType.SUSTAINER.name();
-            paymentMethodType = PaymentMethod.CARD.name();
+        }
+
+        /***
+        * @description Set boolean to de activate all existing schedule
+        * @return RequestBody This request body instance 
+        */
+        public RequestBody deactivateOldSchedules() {
+            this.deactivateAllExistingSchedules = true;
+            return this;
         }
 
         /**
@@ -412,8 +502,44 @@ public inherited sharing class PS_CommitmentRequest {
          * @return RequestBody This request body instance
          */
         public RequestBody withPaymentMethodToken(String token) {
-            this.paymentMethodToken = token;
+            if (String.isNotBlank(token)) {
+                this.paymentMethodToken = token;
+            }
             return this;
+        }
+
+        public RequestBody withPaymentMethodType(String paymentMethodPicklistValue) {
+            if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH) {
+                this.paymentMethodType = ElevatePaymentMethod.ACH.name();
+            } else if(paymentMethodPicklistValue == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD) {
+                this.paymentMethodType = ElevatePaymentMethod.CARD.name();
+            }
+            return this;
+        }
+
+        public RequestBody withACHAccountHolder(ElevateBankAccountType accountHolderType) {
+            withAchData(accountHolderType);
+            this.accountName = getAccountName(accountHolderType);
+            return this;
+        }
+
+        public RequestBody withAchData(ElevateBankAccountType accountHolderType) {
+            this.achData = new AchData();
+            this.achData.achCode = ACH_CODE_WEB;
+            this.achData.bankType = ACH_BANK_TYPE_CHECKING;
+            this.achData.consent = ACH_CONSENT_MESSAGE;
+            this.achData.type = accountHolderType.name();
+            return this;
+        }
+
+        private String getAccountName(ElevateBankAccountType accountHolderType) {
+            if (accountHolderType == ElevateBankAccountType.INDIVIDUAL) {
+                return String.format('{0} {1}', new List<String>{
+                        this.firstName, this.lastName
+                });
+            } else {
+                return this.lastName;
+            }
         }
 
         /**
@@ -468,22 +594,13 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         /**
-         * @description Sets metadata
-         * @param metadata Payments API metadata
-         * @return RequestBody This request body instance
-         */
-        public RequestBody withMetadata(Metadata metadata) {
-            this.metadata = metadata;
-            return this;
-        }
-
-        /**
          * @description Sets product metadata
-         * @param productMetaData Payments API product metadata
+         * @param productMetadata Payments API product metadata
          * @return RequestBody This request body instance
          */
-        public RequestBody withProductMetaData(productMetaData productMetaData) {
-            this.productMetaData = productMetaData;
+        public RequestBody withProductMetadata(productMetadata productMetadata) {
+            this.productMetadata = productMetadata;
+            this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
             return this;
         }
 
@@ -494,32 +611,57 @@ public inherited sharing class PS_CommitmentRequest {
         public String getAsJson() {
             return JSON.serialize(this);
         }
+
+        public Boolean isACH() {
+            return this.paymentMethodType == ElevatePaymentMethod.ACH.name();
+        }
+
+        /**
+         * @description Returns true if this request has a Commitment Id
+         * @return Boolean
+         */
+        public Boolean isCommitmentUpdate() {
+            return this.id != null;
+        }
     }
 
     /***
      * @description Contains Recurring Donation Schedule info to be relayed to the Elevate API
      */
     public class Schedule {
-        public Integer recurringPaymentAmount;
+        public Integer amount;
         public String frequency;
         public Integer frequencyInterval;
-        public String firstOccurrenceOn;
+        public String firstOccurrenceOnTimestamp;
+        public String operation;
 
         /**
-         * @description Schedule constructor
+         * @description Default Schedule constructor
          * @param rdSchedule Recurring Donation Schedule
          * @param currencyMultiplier Currency multiplier
          */
-        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier) {
+        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier){
+            this(rdSchedule, currencyMultiplier, false);
+        }
+
+        /**
+         * @description Schedule constructor for Update requests
+         * @param rdSchedule Recurring Donation Schedule
+         * @param currencyMultiplier Currency multiplier
+         * @param isUpdate True if this Request has a Commitment Id
+         */
+        public Schedule(RecurringDonationSchedule__c rdSchedule, Integer currencyMultiplier, Boolean isUpdate) {
             Double amount = rdSchedule.InstallmentAmount__c * currencyMultiplier;
-            this.recurringPaymentAmount = amount == null ? null : Integer.valueOf(amount);
+            this.amount = amount == null ? null : Integer.valueOf(amount);
 
             this.frequency = frequencyByInstallmentPeriod.get(rdSchedule.InstallmentPeriod__c);
             this.frequencyInterval = rdSchedule.InstallmentFrequency__c == null
                 ? null
                 : Integer.valueOf(rdSchedule.InstallmentFrequency__c);
 
-            this.firstOccurrenceOn = getNextDonationDate(rdSchedule);
+            this.firstOccurrenceOnTimestamp = getNextDonationDate(rdSchedule, isUpdate);
+
+            this.operation = 'CREATE';
         }
 
         /***
@@ -527,12 +669,22 @@ public inherited sharing class PS_CommitmentRequest {
          * @param rdSchedule Recurring Donation Schedule
          * @return String ISO8601 date-time string
          */
-        private String getNextDonationDate(RecurringDonationSchedule__c rdSchedule) {
-            Date donationDate = new RD2_ScheduleService()
-                .getNextDonationDateGreaterThan(rdSchedule, RD2_ScheduleService.currentDate);
+        private String getNextDonationDate(RecurringDonationSchedule__c rdSchedule, Boolean isUpdate) {
 
-            DateTime donationDatetime = Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
-            return donationDatetime.format('yyyy-MM-dd');
+            Date earliestDonationDate = RD2_ScheduleService.currentDate;
+            // If this is an update, don't use current Date
+            if(isUpdate){
+                earliestDonationDate = earliestDonationDate.addDays(1);
+            }
+
+            Date donationDate = new RD2_ScheduleService()
+                .getNextDonationDateGreaterThan(rdSchedule, earliestDonationDate);
+
+            Datetime donationDatetime = donationDate == Datetime.now().date()
+                ? Datetime.now()
+                : Datetime.newInstance(donationDate.year(), donationDate.month(), donationDate.day());
+            
+            return donationDatetime.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
 
@@ -613,44 +765,18 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     /***
-     * @description Metadata property on the commitment request
-     */
-    public class Metadata {
-        public String originType;
-        public String campaignCode;
-
-        /**
-         * @description Metadata constructor
-         */
-        public Metadata() {
-            //set defaults
-            this.originType = PS_Request.OriginType.CRM.name();
-        }
-
-        /**
-         * @description Sets campaign info
-         * @param campaignId campaign Id
-         * @return productMetaData This product metadata instance
-         */
-        public Metadata withCampaignCode(Id campaignId) {
-            this.campaignCode = campaignId;
-            return this;
-        }
-    }
-
-    /***
     * @description Product metadata property on the commitment request
     */
-    public class ProductMetaData {
+    public class ProductMetadata {
         public Origin origin;
         public Campaign campaign;
 
         /**
         * @description Sets origin info
         * @param type origin type
-        * @return productMetaData This product metadata instance
+        * @return productMetadata This product metadata instance
         */
-        public ProductMetaData withOrigin(String type) {
+        public ProductMetadata withOrigin(String type) {
             this.origin = new Origin(type);
             return this;
         }
@@ -658,10 +784,13 @@ public inherited sharing class PS_CommitmentRequest {
         /**
         * @description Sets campaign info
         * @param campaignId campaign Id
-        * @return productMetaData This product metadata instance
+        * @return productMetadata This product metadata instance
         */
-        public ProductMetaData withCampaign(Id campaignId) {
-            this.campaign = new Campaign(campaignId);
+        public ProductMetadata withCampaign(Id campaignId) {
+            if (campaignId != null) {
+                this.campaign = new Campaign(campaignId);
+            }
+
             return this;
         }
     }

@@ -1,0 +1,26 @@
+/**
+ * Created by voduyemi on 5/26/21.
+ */
+
+.loading-text {
+    position: absolute;
+    text-align: center;
+    z-index: 999;
+    top: 55%;
+    width: 100%;
+    animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.spinner-container {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.slds-card-body_extension {
+    min-height: var(--lwc-sizeSmall, 15rem);
+}

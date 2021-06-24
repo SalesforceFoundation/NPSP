@@ -1,0 +1,10 @@
+{
+  "achData": {
+    "accountHolderBankType": "CHECKING",
+    "accountHolderType": "INDIVIDUAL",
+    "achCode": "WEB",
+    "bankName": "string",
+    "last4": "1234"
+  },
+  "id": "fake-commitment-uuid"
+}

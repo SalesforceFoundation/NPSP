@@ -129,7 +129,7 @@ Batch Template Default values Setting
     Wait Until Modal Is Open
     Click Gift Entry Button          Next
     Clear Form Fields
-    ...                              Opportunity: Close Date=
+    ...                              Opportunity: Close Date=Null
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
     ...                              Opportunity: Record Type=NPSP Default

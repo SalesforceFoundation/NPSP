@@ -71,7 +71,7 @@ public with sharing class STG_PanelRenameHouseholds_CTRL extends STG_Panel {
         }
 
         isRunningBatch = true;
-        HH_HouseholdNaming.refreshAllHouseholdNaming(isActivation);
+        HouseholdNamingService.refreshAllHouseholdNaming(isActivation);
         return null;
     }
 
