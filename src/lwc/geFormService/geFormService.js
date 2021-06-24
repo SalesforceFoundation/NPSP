@@ -150,12 +150,13 @@ class GeFormService {
                     return element.dataImportFieldMappingDevNames.includes(mappingDevName);
                 }
             });
+            if (isNotEmpty(fieldElement)) {
+                // return custom label from the form template layout
+                return fieldElement.customLabel;
+            } 
         }
 
-        if (isNotEmpty(fieldElement)) {
-            // return custom label from the form template layout
-            return fieldElement.customLabel;
-        }
+        return OPPORTUNITY_AMOUNT.fieldApiName;        
     }
 
     getFormRenderWrapper(templateId) {
