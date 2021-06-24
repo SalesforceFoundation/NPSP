@@ -1,10 +1,9 @@
-import {LightningElement, api, track, wire} from 'lwc';
+import {LightningElement, api, track} from 'lwc';
 import {
     isNumeric,
     isNotEmpty,
     isEmpty,
-    isEmptyObject,
-    apiNameFor, debouncify
+    apiNameFor
 } from 'c/utilCommon';
 
 import GeFormService from 'c/geFormService';
@@ -52,7 +51,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     init = async () => {
-        if(!this.allocationSettings) {
+        if (!this.allocationSettings) {
             this.allocationSettings = await GeFormService.getAllocationSettings();
         }
         if (this.hasDefaultGAU) {
@@ -88,6 +87,11 @@ export default class GeFormWidgetAllocation extends LightningElement {
             })
         });
         this.addRows(rowList);
+        this.validate();
+    }
+
+    hasAllocations() {
+        return Array.isArray(this.rowList) && this.rowList.length > 0;
     }
 
     get totalAmount() {
@@ -101,7 +105,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     }
     get remainingAmount() {
-        if(isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
+        if (isNumeric(this.totalAmount) && isNumeric(this.allocatedAmount)) {
             const remainingCents = Math.round(this.totalAmount * 100) - Math.round(this.allocatedAmount * 100);
             // avoid floating point errors by subtracting whole numbers
             return (remainingCents / 100);
@@ -110,12 +114,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get hasRemainingAmount() {
-        return this.allocationSettings[ALLOC_SETTINGS_DEFAULT_ALLOCATIONS_ENABLED] &&
-            this.remainingAmount >= 0;
-    }
-
-    hasAllocations() {
-        return Array.isArray(this.rowList) && this.rowList.length > 0;
+        return this.hasDefaultGAU && this.remainingAmount >= 0;
     }
 
     get showRemainingAmount() {
@@ -135,7 +134,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         return this.rowList
             .filter(row => {
                 const defaultGAUId = this.allocationSettings[ALLOC_SETTINGS_DEFAULT];
-                if(isNotEmpty(defaultGAUId)) {
+                if (this.hasDefaultGAU && isNotEmpty(defaultGAUId)) {
                     return row.record[GENERAL_ACCOUNT_UNIT] !== defaultGAUId;
                 }
 
@@ -149,7 +148,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
                     currentAmount = (currentPercent * this.totalAmount) / 100;
                 }
 
-                if(isNumeric(currentAmount)) {
+                if (isNumeric(currentAmount)) {
                     // prefix + to ensure operand is treated as a number
                     return currentAmount + accumulator;
                 }
@@ -172,7 +171,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
         element.key = this.rowList.length;
         const record = { ...rowRecord };
         let row = {};
-        if(isDefaultGAU === true) {
+        if (isDefaultGAU === true) {
             // default GAU should be locked.
             row.isDefaultGAU = true;
             row.disabled = true;
@@ -197,7 +196,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
 
     reset() {
         this.rowList = [];
-        if(this.hasDefaultGAU) {
+        if (this.hasDefaultGAU) {
             this.addRow(true);
         }
     }
@@ -244,14 +243,14 @@ export default class GeFormWidgetAllocation extends LightningElement {
             this.CUSTOM_LABELS.geErrorAmountDoesNotMatch,
             [this.donationAmountCustomLabel]);
 
-        if(this.isUnderAllocated) {
+        if (this.isUnderAllocated) {
             // if no default GAU and under-allocated, display warning
             this.alertBanner = {
                 message,
                 level: 'warning'
             };
             return false;
-        } else if(this.isOverAllocated) {
+        } else if (this.isOverAllocated) {
             // if over-allocated, display error
             this.alertBanner = {
                 message,
@@ -275,7 +274,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get alertIcon() {
-        if(isNotEmpty(this.alertBanner.level)) {
+        if (isNotEmpty(this.alertBanner.level)) {
             const warningIcon = 'utility:warning';
             const errorIcon = 'utility:error';
             switch(this.alertBanner.level) {
@@ -290,7 +289,7 @@ export default class GeFormWidgetAllocation extends LightningElement {
     }
 
     get alertClass() {
-        if(isNotEmpty(this.alertBanner.level)) {
+        if (isNotEmpty(this.alertBanner.level)) {
             const errorClass = 'error';
             const warningClass = 'warning';
 
