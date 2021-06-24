@@ -751,13 +751,14 @@ private with sharing class RD2_ValidationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
         String errMessage = '';
         try {
             Test.startTest();
-            rd.npe03__Amount__c += 10;
+            rd.StartDate__c = rd.StartDate__c.addDays(-1);
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -788,13 +789,14 @@ private with sharing class RD2_ValidationService_TEST {
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
             .withContact(getContact().Id)
             .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
         String errMessage = '';
         try {
             Test.startTest();
-            rd.npe03__Amount__c += 10;
+            rd.InstallmentFrequency__c = 2;
             update rd;
             Test.stopTest();
         } catch (Exception e) {
@@ -804,6 +806,200 @@ private with sharing class RD2_ValidationService_TEST {
         System.assert(String.isBlank(errMessage),
             'RD update should succeed when Elevate user attempts to change a restricted field: ' + errMessage
         );
+    }
+
+    /**
+    * @description Verifies that Elevate RD cannot have Day of Month changed
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenDayOfMonthChanges() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Day_of_Month__c = '1';
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDDayOfMonthCannotChange, errorRecords[0].getFirstError(),
+            'Elevate RD should not be updated when Day of Month changes.');
+    }
+
+    /**
+    * @description Verifies that Elevate RD cannot have amount less than 1 dollar
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenAmountIsNotValid() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(0.1)
+            .build();
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDAmountMustBeValid, errorRecords[0].getFirstError(),
+            'Elevate RD should not be updated when Amount is less than 1.');
+    }
+
+    /**
+    * @description Verifies that Elevate RD update will fail when effective date is in the future
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWhenEffectiveDateIsInTheFuture() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(10)
+            .withPaymentMethod('Credit Card')
+            .withStartDate(today.addDays(1))
+            .build();
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDEffectiveDateMustBeValid, errorRecords[0].getFirstError(),
+            'Elvate RD cannot update to future Effective Date.');
+    }
+
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateWith1st15hInstallmentPeriod() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+                .withIsIntegrationEnabled(true)
+                .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+                PS_IntegrationServiceConfig.class,
+                configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+                .withContact(getContact().Id)
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+                .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+                .build();
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.npe03__Installment_Period__c = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+                new List<npe03__Recurring_Donation__c>{rd},
+                new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        String expectedLabel = String.format(System.Label.RD2_ElevateInstallmentPeriodMustBeValid, new List<String>{RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH});
+
+        System.assertEquals(expectedLabel, errorRecords[0].getFirstError());
+    }
+
+    /**
+    * @description Verifies that Elevate RD update will fail when Campaign is update to null
+    */
+    @isTest
+    private static void shouldNotAllowElevateRDUpdateCampaignToNull() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        Date today = START_DATE;
+        RD2_ScheduleService.currentDate = today;
+
+        Campaign campaign = new Campaign(
+            name = 'campaign',
+            isActive = true
+        );
+
+        insert campaign;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .withAmount(10)
+            .withStartDate(today)
+            .withCampaign(campaign.Id)
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .build();
+
+        insert rd;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{rd.clone()}
+        );
+
+        Test.startTest();
+        rd.npe03__Recurring_Donation_Campaign__c = null;
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDCampaignCannotUpdateToNull, errorRecords[0].getFirstError(),
+            'Elvate RD cannot update campaign to null.');
     }
 
     /***
@@ -1029,6 +1225,7 @@ private with sharing class RD2_ValidationService_TEST {
             .withContact(getContact().Id)
             .withRecurringTypeOpen()
             .withCommitmentId('commitmentId')
+            .withPaymentMethod('Credit Card')
             .build();
         insert rd;
 
@@ -1047,6 +1244,62 @@ private with sharing class RD2_ValidationService_TEST {
             errMessage.contains(System.Label.RD2_EndDateElevateCannotBeInFuture),
             'Elevate RD update should fail when Rd End Date is in the future: ' + errMessage
         );
+    }
+
+    @isTest
+    private static void shouldFailElevateUpdateWhenPaymentMethodInsertIsInvalid() {
+        TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>{
+                builder.withPaymentMethod('Check')
+                        .withCommitmentId('commitmentId')
+                        .build()
+        };
+        RD2_ValidationService validationService = new RD2_ValidationService(recurringDonations);
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
+                'record.');
+        System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
+                ' null');
+        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+            System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
+                    'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
+        }
+    }
+
+    @isTest
+    private static void shouldFailElevateUpdateWhenPaymentMethodUpdateIsInvalid() {
+        TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
+        List<npe03__Recurring_Donation__c> oldRecurringDonations = new List<npe03__Recurring_Donation__c>{
+                builder.withPaymentMethod('Credit Card')
+                        .withCommitmentId('commitmentId')
+                        .build()
+        };
+        List<npe03__Recurring_Donation__c> updatedRecurringDonations = new List<npe03__Recurring_Donation__c>{
+            builder.withPaymentMethod('Check')
+                   .withCommitmentId('commitmentId')
+                   .build()
+        };
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            updatedRecurringDonations,
+            oldRecurringDonations
+        );
+
+        Test.startTest();
+            List<RD2_ValidationService.ErrorRecord> validationServiceErrors = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(1, validationServiceErrors.size(), 'The validation service should only return one error ' +
+                'record.');
+        System.assertNotEquals(null, validationServiceErrors, 'The validation service error record list should not be' +
+                ' null');
+        for (RD2_ValidationService.ErrorRecord errorRecord : validationServiceErrors) {
+            System.assertEquals(System.Label.RD2_ElevatePaymentMethodChangeError, errorRecord.getFirstError(), 'The ' +
+                    'error returned on the record should be the RD2_ElevatePaymentMethodChangeError label.');
+        }
     }
 
     // Helper Methods

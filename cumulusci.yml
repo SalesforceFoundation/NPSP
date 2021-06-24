@@ -199,6 +199,10 @@ tasks:
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
 
+    github_automerge_feature:
+        options:
+            update_future_releases: True
+
     github_release_notes:
         options:
             trial_info: "`TBD`"

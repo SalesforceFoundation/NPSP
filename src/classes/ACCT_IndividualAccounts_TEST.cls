@@ -191,7 +191,7 @@ private class ACCT_IndividualAccounts_TEST {
         		Name_Connector__c = label.npo02.HouseholdNameConnector,
        			Name_Overrun__c = label.npo02.HouseholdNameOverrun,
         		Contact_Overrun_Count__c = 9,
-        		Implementing_Class__c = 'HH_NameSpec'
+        		Implementing_Class__c = 'HH_INamingImpl'
             )
         );
 
@@ -489,8 +489,7 @@ private class ACCT_IndividualAccounts_TEST {
         editContactDuringDetachProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     private static void editContactDuringDetachProcessor(string strProcessor) {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        setAccountProcessorSetting(strProcessor);
 
         String newContactMailingStreet = '123 Elm St';
 
@@ -522,7 +521,7 @@ private class ACCT_IndividualAccounts_TEST {
         Contact[] updatedContacts = [Select FirstName, LastName, AccountId,Account.Name,Account.npe01__One2OneContact__c,
                 MailingStreet,npe01__Organization_Type__c,Account.BillingStreet from Contact where id=:con.id];
 
-        //AccountId of updated contact should match the orignial Account
+        //AccountId of updated contact should match the original Account
         System.assertEquals(originalAccountId,updatedContacts[0].AccountId);
 
         //org type should be set correctly
@@ -555,6 +554,13 @@ private class ACCT_IndividualAccounts_TEST {
             System.assertEquals(updateContactMailingStreet,updatedContacts[0].MailingStreet);
             System.assertEquals(updatedContacts[0].MailingStreet,updatedContacts[0].Account.BillingStreet);
         }
+    }
+
+    private static void setAccountProcessorSetting(String strProcessor) {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests =
+                UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                        new npe01__Contacts_and_Orgs_Settings__c (
+                                npe01__Account_Processor__c = strProcessor));
     }
 
     /*********************************************************************************************************
@@ -1166,7 +1172,7 @@ private class ACCT_IndividualAccounts_TEST {
                 Name_Connector__c = label.npo02.HouseholdNameConnector,
                 Name_Overrun__c = label.npo02.HouseholdNameOverrun,
                 Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
+                Implementing_Class__c = 'HH_INamingImpl'
             )
         );
 
@@ -1258,7 +1264,7 @@ private class ACCT_IndividualAccounts_TEST {
                 Name_Connector__c = label.npo02.HouseholdNameConnector,
                 Name_Overrun__c = label.npo02.HouseholdNameOverrun,
                 Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
+                Implementing_Class__c = 'HH_INamingImpl'
             )
         );
 

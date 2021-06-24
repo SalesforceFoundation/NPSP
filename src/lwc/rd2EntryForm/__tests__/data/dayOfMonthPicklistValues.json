@@ -1,0 +1,193 @@
+{
+  "controllerValues": {},
+  "defaultValue": null,
+  "url": "/services/data/v51.0/ui-api/object-info/npe03__Recurring_Donation__c/picklist-values/012000000000000AAA/Day_of_Month__c",
+  "values": [
+    {
+      "attributes": null,
+      "label": "1",
+      "validFor": [],
+      "value": "1"
+    },
+    {
+      "attributes": null,
+      "label": "2",
+      "validFor": [],
+      "value": "2"
+    },
+    {
+      "attributes": null,
+      "label": "3",
+      "validFor": [],
+      "value": "3"
+    },
+    {
+      "attributes": null,
+      "label": "4",
+      "validFor": [],
+      "value": "4"
+    },
+    {
+      "attributes": null,
+      "label": "5",
+      "validFor": [],
+      "value": "5"
+    },
+    {
+      "attributes": null,
+      "label": "6",
+      "validFor": [],
+      "value": "6"
+    },
+    {
+      "attributes": null,
+      "label": "7",
+      "validFor": [],
+      "value": "7"
+    },
+    {
+      "attributes": null,
+      "label": "8",
+      "validFor": [],
+      "value": "8"
+    },
+    {
+      "attributes": null,
+      "label": "9",
+      "validFor": [],
+      "value": "9"
+    },
+    {
+      "attributes": null,
+      "label": "10",
+      "validFor": [],
+      "value": "10"
+    },
+    {
+      "attributes": null,
+      "label": "11",
+      "validFor": [],
+      "value": "11"
+    },
+    {
+      "attributes": null,
+      "label": "12",
+      "validFor": [],
+      "value": "12"
+    },
+    {
+      "attributes": null,
+      "label": "13",
+      "validFor": [],
+      "value": "13"
+    },
+    {
+      "attributes": null,
+      "label": "14",
+      "validFor": [],
+      "value": "14"
+    },
+    {
+      "attributes": null,
+      "label": "15",
+      "validFor": [],
+      "value": "15"
+    },
+    {
+      "attributes": null,
+      "label": "16",
+      "validFor": [],
+      "value": "16"
+    },
+    {
+      "attributes": null,
+      "label": "17",
+      "validFor": [],
+      "value": "17"
+    },
+    {
+      "attributes": null,
+      "label": "18",
+      "validFor": [],
+      "value": "18"
+    },
+    {
+      "attributes": null,
+      "label": "19",
+      "validFor": [],
+      "value": "19"
+    },
+    {
+      "attributes": null,
+      "label": "20",
+      "validFor": [],
+      "value": "20"
+    },
+    {
+      "attributes": null,
+      "label": "21",
+      "validFor": [],
+      "value": "21"
+    },
+    {
+      "attributes": null,
+      "label": "22",
+      "validFor": [],
+      "value": "22"
+    },
+    {
+      "attributes": null,
+      "label": "23",
+      "validFor": [],
+      "value": "23"
+    },
+    {
+      "attributes": null,
+      "label": "24",
+      "validFor": [],
+      "value": "24"
+    },
+    {
+      "attributes": null,
+      "label": "25",
+      "validFor": [],
+      "value": "25"
+    },
+    {
+      "attributes": null,
+      "label": "26",
+      "validFor": [],
+      "value": "26"
+    },
+    {
+      "attributes": null,
+      "label": "27",
+      "validFor": [],
+      "value": "27"
+    },
+    {
+      "attributes": null,
+      "label": "28",
+      "validFor": [],
+      "value": "28"
+    },
+    {
+      "attributes": null,
+      "label": "29",
+      "validFor": [],
+      "value": "29"
+    },
+    {
+      "attributes": null,
+      "label": "30",
+      "validFor": [],
+      "value": "30"
+    },
+    {
+      "attributes": null,
+      "label": "Last Day Of Month",
+      "validFor": [],
+      "value": "Last_Day"
+    }
+  ]
+}
