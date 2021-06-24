@@ -522,7 +522,7 @@ private with sharing class ACCT_HHAccounts_TEST {
 
         insert listCon;
 
-        // refresh our contacts to get their accounts
+         // refresh our contacts to get their accounts
         listCon = [select Name, FirstName, LastName, AccountId from Contact];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);
@@ -928,7 +928,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        ID rtIdAccountHH = Accounts.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
             Account acc = new Account(name='test', RecordTypeId = rtIdAccountHH);
             insert acc;
@@ -950,7 +950,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
+        ID rtIdAccountHH = Accounts.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
             Account acc = new Account(name='test');
             insert acc;

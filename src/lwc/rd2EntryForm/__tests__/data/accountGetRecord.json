@@ -1,0 +1,41 @@
+{
+  "apiName": "Account",
+  "childRelationships": {},
+  "id": "00163000010ystWAAQ",
+  "lastModifiedById": "00563000007oQ64AAE",
+  "lastModifiedDate": "2021-04-30T14:51:29.000Z",
+  "recordTypeId": "01263000002IHJaAAO",
+  "recordTypeInfo": {
+    "available": true,
+    "defaultRecordTypeMapping": true,
+    "master": false,
+    "name": "Organization",
+    "recordTypeId": "01263000002IHJaAAO"
+  },
+  "systemModstamp": "2021-04-30T14:51:29.000Z",
+  "fields": {
+    "Name": {
+      "displayValue": null,
+      "value": "Donor Organization"
+    },
+    "npe01__One2OneContact__r": {
+      "displayValue": "Phillip Anthropy",
+      "value": {
+        "apiName": "Contact",
+        "childRelationships": {},
+        "id": "0036300000nKwHuAAK",
+        "lastModifiedById": "00563000007oQ64AAE",
+        "lastModifiedDate": "2021-04-30T14:51:45.000Z",
+        "recordTypeId": "012000000000000AAA",
+        "recordTypeInfo": null,
+        "systemModstamp": "2021-04-30T14:51:45.000Z",
+        "fields": {
+          "LastName": {
+            "displayValue": null,
+            "value": "Anthropy"
+          }
+        }
+      }
+    }
+  }
+}

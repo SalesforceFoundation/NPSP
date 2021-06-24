@@ -86,7 +86,7 @@ class DataImportDetailPage(BaseNPSPPage, DetailPage):
             'does not contain' then the specified value should not be present in the field"""
         locator = npsp_lex_locators['data_imports']['check_status'].format(field)
         self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find {field} on the page")
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         actual_value=self.selenium.get_webelement(locator).text
         print(f"actual value is {actual_value}")
         if status == "contains":
