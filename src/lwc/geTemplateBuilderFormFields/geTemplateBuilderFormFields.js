@@ -42,6 +42,22 @@ import PAYMENT_TYPE_FIELD from '@salesforce/schema/DataImport__c.Payment_Type__c
 import PAYMENT_ACH_LAST_4 from '@salesforce/schema/DataImport__c.Payment_ACH_Last_4__c';
 import PAYMENT_ACH_CODE from '@salesforce/schema/DataImport__c.Payment_ACH_Code__c';
 import PAYMENT_DONOR_COVER_AMOUNT from '@salesforce/schema/DataImport__c.Payment_Donor_Cover_Amount__c';
+import DONATION_CAMPAIGN_SOURCE_FIELD from '@salesforce/schema/DataImport__c.DonationCampaignImported__c';
+import RECURRING_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Amount__c';
+import RECURRING_DONATION_DATE_ESTABLISHED_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Date_Established__c';
+import RECURRING_DONATION_DAY_OF_MONTH_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Day_of_Month__c';
+import RECURRING_DONATION_EFFECTIVE_DATE_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Effective_Date__c';
+import RECURRING_DONATION_ELEVATE_RECURRING_ID_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c';
+import RECURRING_DONATION_END_DATE_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_End_Date__c';
+import RECURRING_DONATION_INSTALLMENT_FREQUENCY_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Installment_Frequency__c';
+import RECURRING_DONATION_INSTALLMENT_PERIOD_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Installment_Period__c';
+import RECURRING_DONATION_NAME_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Name__c';
+import RECURRING_DONATION_PAYMENT_METHOD_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Payment_Method__c';
+import RECURRING_DONATION_PLANNED_INSTALLMENTS_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Planned_Installments__c';
+import RECURRING_DONATION_RECURRING_TYPE_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Recurring_Type__c';
+import RECURRING_DONATION_STATUS_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
+import RECURRING_DONATION_STATUS_REASON_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Status_Reason__c';
+import RECURRING_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.RecurringDonationImported__c';
 
 const FIELD = 'field';
 const BOOLEAN_TYPE = 'BOOLEAN';
@@ -94,7 +110,23 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     PAYMENT_TYPE_FIELD.fieldApiName,
     PAYMENT_ACH_LAST_4.fieldApiName,
     PAYMENT_ACH_CODE.fieldApiName,
-    PAYMENT_DONOR_COVER_AMOUNT.fieldApiName
+    PAYMENT_DONOR_COVER_AMOUNT.fieldApiName,
+    DONATION_CAMPAIGN_SOURCE_FIELD.fieldApiName,
+    RECURRING_DONATION_AMOUNT_FIELD.fieldApiName,
+    RECURRING_DONATION_DATE_ESTABLISHED_FIELD.fieldApiName,
+    RECURRING_DONATION_DAY_OF_MONTH_FIELD.fieldApiName,
+    RECURRING_DONATION_EFFECTIVE_DATE_FIELD.fieldApiName,
+    RECURRING_DONATION_ELEVATE_RECURRING_ID_FIELD.fieldApiName,
+    RECURRING_DONATION_END_DATE_FIELD.fieldApiName,
+    RECURRING_DONATION_INSTALLMENT_FREQUENCY_FIELD.fieldApiName,
+    RECURRING_DONATION_INSTALLMENT_PERIOD_FIELD.fieldApiName,
+    RECURRING_DONATION_NAME_FIELD.fieldApiName,
+    RECURRING_DONATION_PAYMENT_METHOD_FIELD.fieldApiName,
+    RECURRING_DONATION_PLANNED_INSTALLMENTS_FIELD.fieldApiName,
+    RECURRING_DONATION_RECURRING_TYPE_FIELD.fieldApiName,
+    RECURRING_DONATION_STATUS_FIELD.fieldApiName,
+    RECURRING_DONATION_STATUS_REASON_FIELD.fieldApiName,
+    RECURRING_DONATION_IMPORTED_FIELD.fieldApiName
 ];
 
 const FIELD_BUNDLE_MASTER_NAMES = [
@@ -296,6 +328,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
                         Field_Mappings: this.getObjectMappingFieldMappings(objMappingDevName)
                     };
 
+                    if (this.shouldMappingBeExcluded(objectMapping.Field_Mappings)) {
+                        continue;
+                    }
+
                     objectMappings.push(objectMapping)
                 }
             }
@@ -303,6 +339,10 @@ export default class geTemplateBuilderFormFields extends LightningElement {
 
         return objectMappings;
     };
+
+    shouldMappingBeExcluded(objectFieldMappings) {
+        return !Array.isArray(objectFieldMappings) || !objectFieldMappings.length;
+    }
 
     /*******************************************************************************
     * @description Check if the provided object mapping developer name is allowed

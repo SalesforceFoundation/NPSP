@@ -175,7 +175,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         //process status in the UI.
 
         //now run the regular process for completing the batch run                
-        HH_HouseholdNaming hn = new HH_HouseholdNaming();
+        HouseholdNamingService householdNamingService = new HouseholdNamingService();
         set<id> hhids = new set<id>();
         for (sobject s : result) {
             Contact c = (Contact)s;        
@@ -184,7 +184,7 @@ public class HH_HouseholdNaming_BATCH implements Database.Batchable<SObject> {
         list<id> hhidlist = new list<id>();
         hhidlist.addall(hhids);
         
-        hn.UpdateNames(hhidlist);
+        householdNamingService.updateHouseholdNameAndMemberCount(hhidlist);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
     }
     

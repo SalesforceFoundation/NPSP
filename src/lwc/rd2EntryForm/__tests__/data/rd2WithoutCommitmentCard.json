@@ -1,0 +1,204 @@
+{
+  "apiName": "npe03__Recurring_Donation__c",
+  "childRelationships": {},
+  "id": "a09S000000HAfRHIA1",
+  "lastModifiedById": "005S000000OasdZIAR",
+  "lastModifiedDate": "2021-05-03T21:25:51.000Z",
+  "recordTypeId": "012000000000000AAA",
+  "recordTypeInfo": null,
+  "systemModstamp": "2021-05-03T21:25:51.000Z",
+  "fields": {
+    "ACH_Last_4__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "Always_Use_Last_Day_Of_Month__c": {
+      "displayValue": null,
+      "value": false
+    },
+    "CardExpirationMonth__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "CardExpirationYear__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "CardLast4__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "CloneSourceId": {
+      "displayValue": null,
+      "value": null
+    },
+    "ClosedReason__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "CommitmentId__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "CreatedById": {
+      "displayValue": null,
+      "value": "005S000000OasdZIAR"
+    },
+    "CreatedDate": {
+      "displayValue": "5/3/2021, 2:25 PM",
+      "value": "2021-05-03T21:25:48.000Z"
+    },
+    "CurrentYearValue__c": {
+      "displayValue": "$3.60",
+      "value": 3.6
+    },
+    "Day_of_Month__c": {
+      "displayValue": "3",
+      "value": "3"
+    },
+    "DisableFirstInstallment__c": {
+      "displayValue": null,
+      "value": false
+    },
+    "EndDate__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "Id": {
+      "displayValue": null,
+      "value": "a09S000000HAfRHIA1"
+    },
+    "InstallmentFrequency__c": {
+      "displayValue": null,
+      "value": 1
+    },
+    "IsDeleted": {
+      "displayValue": null,
+      "value": false
+    },
+    "LastActivityDate": {
+      "displayValue": null,
+      "value": null
+    },
+    "LastElevateEventPlayed__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "LastElevateVersionPlayed__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "LastModifiedById": {
+      "displayValue": null,
+      "value": "005S000000OasdZIAR"
+    },
+    "LastModifiedDate": {
+      "displayValue": "5/3/2021, 2:25 PM",
+      "value": "2021-05-03T21:25:51.000Z"
+    },
+    "LastReferencedDate": {
+      "displayValue": "5/4/2021, 12:34 PM",
+      "value": "2021-05-04T19:34:37.000Z"
+    },
+    "LastViewedDate": {
+      "displayValue": "5/4/2021, 12:34 PM",
+      "value": "2021-05-04T19:34:37.000Z"
+    },
+    "Name": {
+      "displayValue": null,
+      "value": "Testing Contact $0.45 - Recurring"
+    },
+    "NextYearValue__c": {
+      "displayValue": "$5.40",
+      "value": 5.4
+    },
+    "OwnerId": {
+      "displayValue": null,
+      "value": "005S000000OasdZIAR"
+    },
+    "PaymentMethod__c": {
+      "displayValue": "Credit Card",
+      "value": "Credit Card"
+    },
+    "RecurringType__c": {
+      "displayValue": "Open",
+      "value": "Open"
+    },
+    "StartDate__c": {
+      "displayValue": "5/3/2021",
+      "value": "2021-05-03"
+    },
+    "Status__c": {
+      "displayValue": "Active",
+      "value": "Active"
+    },
+    "SystemModstamp": {
+      "displayValue": "5/3/2021, 2:25 PM",
+      "value": "2021-05-03T21:25:51.000Z"
+    },
+    "npe03__Amount__c": {
+      "displayValue": "$0.45",
+      "value": 0.45
+    },
+    "npe03__Contact__c": {
+      "displayValue": null,
+      "value": "001fakeContactId"
+    },
+    "npe03__Date_Established__c": {
+      "displayValue": "5/3/2021",
+      "value": "2021-05-03"
+    },
+    "npe03__Donor_Name__c": {
+      "displayValue": null,
+      "value": "Testing Contact"
+    },
+    "npe03__Installment_Amount__c": {
+      "displayValue": "$0.00",
+      "value": 0
+    },
+    "npe03__Installment_Period__c": {
+      "displayValue": "Monthly",
+      "value": "Monthly"
+    },
+    "npe03__Installments__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Last_Payment_Date__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Next_Payment_Date__c": {
+      "displayValue": "5/3/2021",
+      "value": "2021-05-03"
+    },
+    "npe03__Open_Ended_Status__c": {
+      "displayValue": "None",
+      "value": "None"
+    },
+    "npe03__Organization__c": {
+      "displayValue": null,
+      "value": "001S000001MrRi0IAF"
+    },
+    "npe03__Paid_Amount__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Recurring_Donation_Campaign__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Schedule_Type__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Total_Paid_Installments__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe03__Total__c": {
+      "displayValue": "$0.00",
+      "value": 0
+    }
+  }
+}

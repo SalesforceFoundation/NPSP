@@ -1,0 +1,25 @@
+{
+  "controllerValues": {},
+  "defaultValue": null,
+  "url": "/services/data/v51.0/ui-api/object-info/npe03__Recurring_Donation__c/picklist-values/012000000000000AAA/PaymentMethod__c",
+  "values": [
+    {
+      "attributes": null,
+      "label": "Credit Card",
+      "validFor": [],
+      "value": "Credit Card"
+    },
+    {
+      "attributes": null,
+      "label": "Check",
+      "validFor": [],
+      "value": "Check"
+    },
+    {
+      "attributes": null,
+      "label": "ACH",
+      "validFor": [],
+      "value": "ACH"
+    }
+  ]
+}

@@ -14,13 +14,6 @@
     },
 
     /**
-     * @description: manages event triggered from confirm button on retirement prompt
-     */
-    handleConfirmClick: function(component, event, helper) {
-        helper.handleConfirmClick(component);
-    },
-
-    /**
      * @description: handles selected row action in the datatable
      */
     handleRowAction: function (component, event, helper) {

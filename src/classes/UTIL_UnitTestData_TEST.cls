@@ -852,7 +852,7 @@ public class UTIL_UnitTestData_TEST {
                 Name_Connector__c = System.Label.npo02.HouseholdNameConnector,
                 Name_Overrun__c = System.Label.npo02.HouseholdNameOverrun,
                 Contact_Overrun_Count__c = 9,
-                Implementing_Class__c = 'HH_NameSpec'
+                Implementing_Class__c = 'HH_INamingImpl'
             )
         );
     }

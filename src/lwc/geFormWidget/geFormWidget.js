@@ -9,7 +9,8 @@ import DATA_IMPORT_CONTACT_LASTNAME from '@salesforce/schema/DataImport__c.Conta
 import DATA_IMPORT_DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 import DATA_IMPORT_ACCOUNT_NAME from '@salesforce/schema/DataImport__c.Account1_Name__c';
 import DATA_IMPORT_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
-
+import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NPSP_Data_Import_Batch__c';
+import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 
 const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
@@ -29,16 +30,22 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD)
     ];
     _elevateFields = [
+        apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP),
         apiNameFor(DATA_IMPORT_PAYMENT_METHOD),
         apiNameFor(DATA_IMPORT_CONTACT_FIRSTNAME),
         apiNameFor(DATA_IMPORT_CONTACT_LASTNAME),
         apiNameFor(DATA_IMPORT_DONATION_DONOR),
         apiNameFor(DATA_IMPORT_ACCOUNT_NAME),
-        apiNameFor(DATA_IMPORT_PAYMENT_STATUS)
+        apiNameFor(DATA_IMPORT_PAYMENT_STATUS),
+        apiNameFor(DATA_IMPORT_ID)
     ];
 
-    get sourceFieldsUsedInTemplate() {
-        return this.widgetConfig ? this.widgetConfig.sourceFieldsUsedInTemplate : [];
+    get hasPaymentMethodFieldInForm() {
+        return this.widgetConfig?.hasPaymentMethodFieldInForm;
+    }
+
+    get paymentTransactionStatusValues() {
+        return this.widgetConfig && this.isElevateTokenizeCard ? this.widgetConfig.paymentTransactionStatusValues : {};
     }
 
     @api
