@@ -33,6 +33,11 @@
         <relationshipLabel>אנשי קשר (כתובת נוכחית)</relationshipLabel>
     </fields>
     <fields>
+        <help><!-- When checked, Customizable Rollups will always use &apos;Skew Mode&apos; to rollup Hard Credit and Soft Credits for this record. --></help>
+        <label><!-- Customizable Rollups: Force Skew Mode --></label>
+        <name>CustomizableRollups_UseSkewMode__c</name>
+    </fields>
+    <fields>
         <help>כשהיא נבחרת, אפשרות זו מסמנת את איש הקשר כנפטר ומונעת את הכללתו בשמות, הודעות דואר אלקטרוני ושיחות טלפון של משק הבית.</help>
         <label>נפטר</label>
         <name>Deceased__c</name>
