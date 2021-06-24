@@ -218,6 +218,11 @@
         <name>LastElevateEventPlayed__c</name>
     </fields>
     <fields>
+        <help>Entero de la última versión de evento de Elevate realizada con actualización en donación recurrente. Se incrementa tras cada llamada de cambios a la API de Elevate. Evita actualizaciones circulares y garantiza no sobreescribir la versión más reciente.</help>
+        <label>Última versión de Elevate realizada</label>
+        <name>LastElevateVersionPlayed__c</name>
+    </fields>
+    <fields>
         <help>El importe esperado en total de esta Donación recurrente para el próximo año de calendario o fiscal (solo lectura).</help>
         <label>Valor de año próximo</label>
         <name>NextYearValue__c</name>
