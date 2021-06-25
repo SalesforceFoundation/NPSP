@@ -46,8 +46,8 @@ public inherited sharing class HouseholdName {
         this.service = service == null ? defaultHH_INamingImplementation() : service;
     }
 
-    private HH_INamingImpl defaultHH_INamingImplementation() {
-        return new HH_INamingImpl();
+    private HH_NameSpec defaultHH_INamingImplementation() {
+        return new HH_NameSpec();
     }
 
     /*******************************************************************************************************
