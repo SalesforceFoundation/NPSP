@@ -20,32 +20,36 @@
 public without sharing class SfdoLogUtils {
 
     /**
-     * @param componentName String - defines the underlying feature or component the log is for
+     * @param featureName - Feature name within the product the log is for
+     * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
-     * @param payload Map of additional content as context to include in the log
+     * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
-    public static void log(String componentName, String actionName, Map<String, Object> payload) { }
+    public static void log(String featureName, String componentName, String actionName, Map<String, Object> payload) { }
 
     /**
-     * @param componentName String - defines the underlying feature or component the log is for
+     * @param featureName - Feature name within the product the log is for
+     * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
-     * @param payload Map of additional content as context to include in the log
+     * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      * @param value Duration or other value to include in the log
      */
-    public static void log(String componentName, String actionName, Map<String, Object> payload, Integer value) { }
+    public static void log(String featureName, String componentName, String actionName, Map<String, Object> payload, Integer value) { }
 
     /**
-     * @param componentName String - defines the underlying feature or component the log is for
+     * @param featureName - Feature name within the product the log is for
+     * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
      * @param value Duration or other value to include in the log
      */
-    public static void log(String componentName, String actionName, Integer value) { }
+    public static void log(String featureName, String componentName, String actionName, Integer value) { }
 
     /**
-     * @param componentName String - defines the underlying feature or component the log is for
+     * @param featureName - Feature name within the product the log is for
+     * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
      */
-    public static void log(String componentName, String actionName) { }
+    public static void log(String featureName, String componentName, String actionName) { }
 
 
 }
