@@ -90,7 +90,7 @@ private class HH_HouseholdNamingSettingValidator_TEST {
         Household_Naming_Settings__c settings = UTIL_UnitTestData_TEST.setupHHNamingSettings();
         settings.Implementing_Class__c = null; 
 
-        HH_INamingImpl hhNaming = (HH_INamingImpl) validator.validateImplementingClass(settings, notification);
+        HH_NameSpec hhNaming = (HH_NameSpec) validator.validateImplementingClass(settings, notification);
 
         System.assertNotEquals(null, hhNaming, 'HH_INaming should be an HH_NameSpec instance');
 
