@@ -31,11 +31,11 @@
 * @author Salesforce.org
 * @date 2013
 * @group Households
-* @description Tests specific to NPSPs default household naming class, HH_INamingImpl.
+* @description Tests specific to NPSPs default household naming class, HH_NameSpec.
 */
 
 @isTest
-private with sharing class HH_INamingImpl_TEST {
+private with sharing class HH_NameSpec_TEST {
 
     /*********************************************************************************************************
     @description
@@ -53,7 +53,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         //Using the API class just to give it test coverage.
         Household_Naming_Settings__c hns = UTIL_CustomSettings_API.getHouseholdNamingSettings();
 
@@ -96,7 +96,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -142,7 +142,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -186,7 +186,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -241,7 +241,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -299,7 +299,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -352,7 +352,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -398,7 +398,7 @@ private with sharing class HH_INamingImpl_TEST {
             )
         };
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -463,7 +463,7 @@ private with sharing class HH_INamingImpl_TEST {
         );
         listCon.add(c6);
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
         hns.Contact_Overrun_Count__c = 5;
@@ -539,7 +539,7 @@ private with sharing class HH_INamingImpl_TEST {
         );
         listCon.add(c6);
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
         hns.Contact_Overrun_Count__c = 5;
@@ -851,7 +851,7 @@ private with sharing class HH_INamingImpl_TEST {
     static testMethod void OneAnonymousContact() {
         list<Contact> listCon = new list<Contact>();
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
 
         hns.Household_Name_Format__c = '{!LastName} Family';
@@ -905,7 +905,7 @@ private with sharing class HH_INamingImpl_TEST {
         );
         listCon.add(c2);
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettingsFacade.getHouseholdNamingSettings();
         hns.Name_Connector__c = '&';
 
@@ -949,7 +949,7 @@ private with sharing class HH_INamingImpl_TEST {
         listCon = [select Id, Firstname, Lastname, Account.npe01__One2OneContact__r.Primary_Affiliation__r.Name from Contact];
         system.assertEquals(1, listCon.size());
 
-        HH_INamingImpl namingImpl = new HH_INamingImpl();
+        HH_NameSpec namingImpl = new HH_NameSpec();
         Household_Naming_Settings__c hns = UTIL_CustomSettings_API.getHouseholdNamingSettings();
 
         // verify we handle multiple cross object references
