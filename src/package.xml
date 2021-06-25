@@ -371,8 +371,8 @@
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
-        <members>HH_INamingImpl</members>
-        <members>HH_INamingImpl_TEST</members>
+        <members>HH_NameSpec</members>
+        <members>HH_NameSpec_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
