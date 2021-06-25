@@ -417,21 +417,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     @TestVisible
     private String buildContactSoql() {
-        List<String> selectFields = new List<String>{
-            'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
-            'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c', 'npe01__Organization_Type__c', 'Account.Name',
-            'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c', 'npo02__Household_Naming_Order__c',
-            'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode', 'MailingCountry', 'MailingLatitude', 'MailingLongitude',
-            'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode', 'OtherCountry', 'OtherLatitude', 'OtherLongitude',
-            'Phone', 'Fax'
-        };
-
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            selectFields.add('MailingCountryCode');
-            selectFields.add('MailingStateCode');
-            selectFields.add('OtherCountryCode');
-            selectFields.add('OtherStateCode');
-        }
+        List<String> selectFields = getContactSelectionFields();
 
         selectFields.addAll(fieldsUsedForHouseholdNaming());
 
@@ -440,6 +426,29 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             .withFrom(String.valueOf(Contact.SObjectType))
             .withWhere('Id IN :contacts')
             .build();
+    }
+
+    private List<String> getContactSelectionFields() {
+        List<String> selectFields = new List<String>{
+                'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
+                'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c',
+                'npe01__Organization_Type__c', 'Account.Name',
+                'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c',
+                'npo02__Household_Naming_Order__c',
+                'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode',
+                'MailingCountry', 'MailingLatitude', 'MailingLongitude',
+                'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode',
+                'OtherCountry', 'OtherLatitude', 'OtherLongitude',
+                'Phone', 'Fax'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode');
+            selectFields.add('OtherStateCode');
+        }
+        return selectFields;
     }
 
     private Set<String> fieldsUsedForHouseholdNaming() {
