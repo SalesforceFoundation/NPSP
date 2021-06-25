@@ -34,6 +34,17 @@
 */
 public inherited sharing class ContactSelector {
 
+    @TestVisible
+    private static OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Returns Contacts for specified Accounts or Households.
     * Private Contacts or records not belonging to the specified Accounts/Households are not selected.
@@ -85,6 +96,42 @@ public inherited sharing class ContactSelector {
                     .build();
         }
         return queryForContactNamingFields;
+    }
+
+    public static List<Contact> getContactAddressFieldsForContactsIn(Set<Id> householdAccountIds) {
+        return Database.query(contactAddressFieldsSOQL(householdAccountIds));
+    }
+
+    private static String householdAccountType = CAO_Constants.HH_ACCOUNT_TYPE;
+    private static String contactAddressFieldsSOQL(Set<Id> householdAccountIds) {
+        List<String> selectFields = contactAddressFields();
+
+        return new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Contact.SObjectType))
+                .withWhere('Account.npe01__SYSTEM_AccountType__c = :householdAccountType')
+                .withWhere('AccountId != Null')
+                .withWhere('AccountId IN :householdAccountIds')
+                .build();
+    }
+
+    private static List<String> contactAddressFields() {
+        List<String> selectFields = new List<String>{
+                'Id', 'is_Address_Override__c',
+                'Current_Address__c', 'AccountId',
+                'MailingStreet', 'MailingCity', 'MailingState',
+                'MailingPostalCode', 'MailingCountry', 'MailingLatitude',
+                'MailingLongitude',
+                'npe01__Primary_Address_Type__c'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode');
+            selectFields.add('OtherStateCode');
+        }
+        return selectFields;
     }
 
 }
