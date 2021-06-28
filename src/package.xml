@@ -787,6 +787,7 @@
         <members>STG_PanelUserRollup</members>
         <members>STG_SettingsManager</members>
         <members>pkBanding</members>
+        <members>pkBandingAWS</members>
         <name>ApexPage</name>
     </types>
     <types>

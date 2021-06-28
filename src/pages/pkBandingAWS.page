@@ -1,0 +1,304 @@
+<apex:page controller="pkBanding_CTRL" showHeader="true" sidebar="false"
+           docType="html-5.0" title="PK Banding | AWS POC | CCSi Team" >
+    <head>
+        <apex:slds />
+
+        <style type="text/css">
+            .logs-panel {
+                word-wrap: break-word;
+                font-size: x-small;
+                font-family: monospace;
+                background-color:gainsboro;
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+        </style>
+
+        <script>
+            // sfdc consts
+            const __sfdcSessionId = '{!getSessionId()}';
+            const __sfHost = '{!baseUrl}';
+            const __sfPath = '/services/apexrest/pkbanding';
+            const __sfdcUrl = __sfHost + __sfPath;
+            // aws service url
+            const __serviceUrl = 'https://pje1bqjhvk.execute-api.us-east-2.amazonaws.com/default/sfdo-ccs-rhombus-v2';
+            // js consts
+            const partitionBits = 3;
+
+            // parallel execution
+            async function execute_parallel(useWorkers) {
+                // clear and start logs
+                document.getElementById('results').innerHTML = '';
+                document.getElementById('results').classList.add('logs-panel');
+                log('Preparing callout to AWS ... ');
+
+                // call aws
+                let requestData = {
+                    batchSize: 20,
+                    partitionBits: 3,
+                    chunkBits: 15,
+                    session: __sfdcSessionId,
+                    url: __sfdcUrl,
+                    host: __sfHost,
+                    path: __sfPath
+                }
+
+                // let requestSFData = {
+                //     band: null,
+                //     chunkBits: null,
+                //     partitionBits: null,
+                //     offset: null,
+                //     session: __sfdcSessionId,
+                //     url: __sfdcUrl,
+                //     isCursor: false,
+                //     recordIds: ["a095e000000BG5ZAAW", "a095e000000BG5aAAG"],
+                //     batchSize: 20
+                // };
+                // log(requestSFData);
+                // fetch ( __sfdcUrl, {
+                //     method: 'POST',
+                //     body: JSON.stringify(requestSFData),
+                //     mode: 'cors',
+                //     headers: {
+                //         'Authorization': `Bearer ${__sfdcSessionId}`,
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).then(
+                //     response => {
+                //         log('SF Response:');
+                //         log(response);
+                //         // response exists && status == 200
+                //         if (typeof response !== 'undefined' && response.ok) {
+                //             // handle somewhere else
+                //             return response.json();
+                //         }
+                //     }
+                // ).then(
+                //     jsonResponse => {
+                //         if (typeof jsonResponse !== 'undefined') {
+                //             log('JSON Response:');
+                //             log(jsonResponse);
+                //         }
+                //     }
+                // );
+
+                // create async request
+                log(requestData);
+                fetch ( __serviceUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(requestData),
+                    mode: 'cors',
+                    // referrer: __sfHost,
+                    // credentials: 'include',
+                    headers: {
+                        'x-api-key': 'TYsi37Q8fl5q5Arkp9EBn5HhpBP5Xvoy5iur44cI',
+                        'Content-Type': 'application/json'// ,
+                        // 'Cache-Control': 'no-cache',
+                        // 'Content-Length': JSON.stringify(requestData).length,
+                        // 'Host': __sfHost,
+                        // 'Accept': '*/*',
+                        // 'Connection': 'keep-alive',
+                        // 'Access-Control-Allow-Origin': __sfHost,
+                        // 'Access-Control-Allow-Credentials': true,
+                        // 'Access-Control-Allow-Headers': 'Content-Type,x-api-key',
+                        // 'Access-Control-Allow-Methods': 'POST'
+                    }
+                }).then(
+                    response => {
+                        // response exists && status == 200
+                        if (typeof response !== 'undefined' && response.ok) {
+                            // handle somewhere else
+                            return response.json();
+                        }
+                    }
+                ).then(
+                    jsonResponse => {
+                        if (typeof jsonResponse !== 'undefined') {
+                            log('JSON Response');
+                            log(jsonResponse);
+                        }
+                    }
+                ).catch(err => {
+                    log('ERROR found');
+                    log(err)
+                });
+                log('AWS Execution ended');
+
+            }
+
+            function log(content) {
+                // console.info(content);
+                let str = typeof content === 'string' ? content : JSON.stringify(content);
+                str = str.length>10000 ? `${str.substring(0,10000)}...` : str;
+                let previousHtml = document.getElementById('results').innerHTML;
+                // if we already have a lot of content, delete it to avoid page crash
+                if (previousHtml.length>50000) {
+                    previousHtml =  previousHtml.substring(0, previousHtml.substring(0, 6000).lastIndexOf("<br>"));
+                }
+                // log content
+                document.getElementById('results').innerHTML = '<br/><p>' + str + '</p>' + previousHtml;
+            }
+
+        </script>
+    </head>
+
+    <body class="slds-scope" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <apex:form id="dispatcherform">
+
+        <!-- header -->
+        <div class="slds-page-header" >
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-omni_supervisor">
+                            <svg class="slds-icon slds-icon_large slds-icon-text-default" aria-hidden="true">
+                                <use xlink:href="{!URLFOR($Asset.SLDS,
+                                    '/assets/icons/standard-sprite/svg/symbols.svg#omni_supervisor')}"></use>
+                            </svg>
+                        </span>
+                </div>
+                <div class="slds-media__body">
+                    <h1 class="slds-page-header__title slds-truncate slds-align-middle">Parallelization Engine Prototype | pk-banding | AWS | CCSi Team</h1>
+                    <p><b>Welcome to the Parallelization Engine Prototype - AWS. We don't recommend using this page unless explicitly directed to by Salesforce.</b></p>
+                    <div class="slds-float_right">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- body content -->
+        <div class="body">
+            <!-- CONTENT HERE -->
+            <div class="slds-grid">
+                <div class="slds-col slds-size_2-of-6 slds-m-around_small">
+                    <div class="slds-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Configure:</h2>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-gutters slds-p-bottom_medium">
+                            <div class="slds-col" id="inputsContainerCol">
+                                <div class="slds-form-element slds-m-left_medium" id="inputsContainer">
+
+                                    <label class="slds-form-element__label" for="bits">Choose number of parallel shards:</label>
+                                    <select name="bits" id="bits" tabindex="1" class="slds-select" disabled="true">
+                                        <option value="1">1 bit (2 shards)</option>
+                                        <option value="2">2 bits (4 shards)</option>
+                                        <option value="3" selected="true">3 bits (8 shards)</option>
+                                        <option value="4">4 bits (16 shards)</option>
+                                        <option value="5">5 bits (32 shards)</option>
+                                        <option value="6">6 bits (64 shards)</option>
+                                        <option value="7">7 bits (128 shards)</option>
+                                        <option value="8">8 bits (256 shards)</option>
+                                    </select> <br/>
+
+                                    <label class="slds-form-element__label" for="batch">Choose a batch size:</label>
+                                    <select name="batch" id="batch" tabindex="2" class="slds-select">
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="15">18</option>
+                                        <option value="20" selected="true">20</option>
+                                        <option value="20">23</option>
+                                        <option value="25">25</option>
+                                        <option value="30">30</option>
+                                        <option value="100">100</option>
+                                        <option value="200">200</option>
+                                    </select> <br/>
+
+                                    <label class="slds-form-element__label" for="offset">Choose starting offset:</label>
+                                    <input type="input" class="slds-input" id="offset" value="" placeholder="a093F000009QUOq" tabindex="3" />
+                                    <br/>
+
+                                </div>
+                            </div>
+                            <div id="actionContainer" class="slds-col">
+                                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                                    <input type="button" value="Call AWS" onclick="execute_parallel(true)" tabindex="4" class="slds-button slds-button_outline-brand" />
+                                </div>
+                                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                                    <apex:commandButton id="cleanOrgBtn" value="Clean Org"
+                                                        action="{!cleanOrg}" immediate="true"
+                                                        styleClass="slds-button slds-button_destructive" tabindex="5" />
+                                </div>
+                                <div class="slds-spinner_container" id="spinner" style="display: none;">
+                                    <div role="status" class="slds-spinner slds-spinner_medium">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END slds-card -->
+                    <!-- Results CARD -->
+                    <div class="slds-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Results:</h2>
+                            <div class="slds-col slds-m-around_small">
+                                <div class="slds-progress-bar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" role="progressbar">
+                                        <span class="slds-progress-bar__value" style="width:0%" id="results-progress">
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-m-around_small slds-text-heading_medium">
+                            <div class="slds-col" id="results-card">
+                                <div class="slds-card slds-text-heading_small slds-text-align_right">
+                                    Clock: &nbsp;<label id="results-minutes">00</label>:<label id="results-seconds">00</label>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions Processed:&nbsp;<b><div id="results-total">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions Failed:&nbsp;<b><div id="results-failed">-</div></b><p class="slds-text-body_small" id="results-failed-ratio"></p>
+                                    <div class="slds-text-align_right slds-text-color_error" id="fixed-panel" style="display: none;">
+                                        (re-try) Transactions processed:&nbsp;<b><p id="fixed-results-total"></p></b>
+                                        (re-try) Transactions failed:&nbsp;<b><p id="fixed-results-failed"></p></b><p class="slds-text-body_small" id="fixed-results-failed-ratio"></p>
+                                    </div>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per second:&nbsp;<b><div id="results-transactions-seconds">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per hour:&nbsp;<b><div id="results-perhour">-</div></b>
+                                </div>
+                                <div class="slds-card slds-p-top_x-small">
+                                    Transactions per day:&nbsp;<b><div id="results-perday">-</div></b>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END of Results slds-card -->
+                </div>
+                <div class="slds-col slds-size_3-of-6 slds-m-around_small">
+                    <div class="slds-card" id="logs-card">
+                        <!-- card title -->
+                        <div class="slds-text-heading_medium slds-text-align_center slds-p-top_x-small">
+                            <h2>Logs:</h2>
+                        </div>
+                        <!-- card content -->
+                        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-end slds-m-around_large">
+                            <input type="button" value="Clean Logs" onclick="clean_log()" tabindex="6" class="slds-button slds-button_text-destructive"/>
+                        </div>
+                        <div id="results" class="slds-text-align_left" tabindex="7">
+                            <div class="slds-illustration slds-illustration_large" aria-hidden="true" id="logs-img">
+                                <img src="/projRes/ui-home-private/emptyStates/noAssistant.svg" class="slds-illustration__svg" alt=""/>
+                                <div class="slds-text-color_weak">
+                                    <h3 class="slds-text-heading_large">Logs<br/></h3>
+                                    <p class="slds-text-heading_medium">
+                                        they will show up here to guide us through the dark
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- END slds-card -->
+                </div>
+                <div class="slds-col slds-size_1-of-6">
+                </div>
+            </div>
+        </div>
+    </apex:form>
+    </body>
+
+</apex:page>

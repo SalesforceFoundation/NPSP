@@ -614,7 +614,7 @@
                                         <option value="200">200</option>
                                     </select> <br/>
 
-                                    <label class="slds-form-element__label" for="offset">Type a offset:</label>
+                                    <label class="slds-form-element__label" for="offset">Choose starting offset:</label>
                                     <input type="input" class="slds-input" id="offset" value="" placeholder="a093F000009QUOq" tabindex="3" />
                                     <br/>
 
