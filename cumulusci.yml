@@ -245,11 +245,13 @@ tasks:
                 outputdir: robot/Cumulus/results
 
     test_insert_performance:
-        description: Runs Robot Framework performance tests for BDI Complex Objects
+        description: Runs Robot Framework performance tests for Record Insertion Tests
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
             suites: robot/Cumulus/perftests/Insert_Tests.robot
+            options:
+                outputdir: robot/Cumulus/results
 
     test_rd_batch_performance:
         description: Runs Robot Framework performance tests for Enhanced Recurring Donations Batch Job
@@ -1187,15 +1189,25 @@ flows:
             3:
                 task: ensure_record_type
 
+
     test_performance_scratch:
-        description: 'Creates a test org and runs BDI performance tests'
+        description: 'Creates a test org and runs Insert performance tests'
         steps:
             1:
                 flow: qa_org
-            3:
-                task: test_performance
+            2:
+                task: enable_crlp
+                # Enable customizable rollups before running the tests
+            2.5:
+                task: custom_settings_value_wait
+                # Wait for CRLP to be fully enabled before continuing
                 options:
-                    include: medium
+                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
+                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
+                    value: true
+            3:
+                task: test_insert_performance
+                options:
                     vars: persistent_org:False
 
     test_performance_LDV:
