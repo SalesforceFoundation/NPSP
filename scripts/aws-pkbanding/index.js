@@ -1,7 +1,7 @@
-const fetch = require('https');
+const https = require('https');
 const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 
-// constants
+// consts
 const __lock = 'UNABLE_TO_LOCK_ROW';
 
 // app vars
@@ -36,113 +36,64 @@ let rowLock = [];
 
 // MainThread 
 exports.handler = async (event,context,callback) => {
+
+    let json = JSON.parse(event.body);
+    console.info('Request body:\n' + JSON.stringify(json));
     
-    // let url = 'https://jsonplaceholder.typicode.com/todos/1';
-    log('start');
-    // const promise = new Promise(function(resolve, reject) {
-    //     fetch.get(url, (res) => {
-    //         resolve(res.statusCode)
-    //       }).on('error', (e) => {
-    //         reject(Error(e))
-    //       })
-    //     })
-    // return promise
+    // --- POST example request  
+    let requestData = {                                                
+        band: 0,
+        chunkBits: json.chunkBits,
+        batchSize: json.batchSize,
+        partitionBits: json.partitionBits,
+        session: json.session,
+        url: json.url,
+        offset: null,
+        recordIds: null,
+        isCursor: true,
+        host: json.host,
+        path: json.path
+    };
+    console.info('Salesforce request body:\n' + JSON.stringify(requestData));
+    
+    // --- POST OPTIONS example
     const options = {
-      hostname: 'jsonplaceholder.typicode.com',
-      port: 443,
-      path: 'todos/1',
-      method: 'GET'
+        hostname: json.host,
+        port: 443,
+        path: json.path,
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${json.session}`,
+            'Content-Type': 'application/json'
+        }
     }
     
-    const req = fetch.request(options, res => {
-      console.log(`statusCode: ${res.statusCode}`)
-    
-      res.on('data', d => {
-        log('data');  
-        log(d);
-        process.stdout.write(d)
-      })
-    })
-    
-    req.on('error', error => {
-      log('error');
-      console.error(error)
-    })
-    
-    req.end()
+    let r
 
+    try {
+        
+        const postBody = await httpsRequest(options,requestData)
+        // The console.log below will not run until the POST request above finishes
+        console.log('POST response body:', postBody)
+
+        requestData.band = 5
+        const postBody2 = await httpsRequest(options,requestData)
+        // The console.log below will not run until the POST request above finishes
+        console.log('POST response body:', postBody2)
+        
+        r = JSON.stringify(postBody)+JSON.stringify(postBody2);
+        console.info(r);
+        
+    } catch (err) {
+        console.error('POST request failed, error:', err);
+    }
     
-    // // // TODO implement
-    // // const response = {
-    // //     statusCode: 200,
-    // //     body: JSON.stringify('Hello from Lambda!'),
-    // // };
-    // // return response;
-    // clean_log();
-    // log('*** START');
+    const response = {
+        statusCode: 200,
+        body: r,
+    }
     
-    // var json = JSON.parse(event.body);
-    // log('EVENT request body:\n' + JSON.stringify(json));
-    
-    
-    // log('SF Request DATA:');
-    // // // start timer
-    // // timer = setInterval(setTime, 1000);
-    
-    //  let requestData = {                                                
-    //     band: 5,
-    //     chunkBits: json.chunkBits,
-    //     batchSize: json.batchSize,
-    //     partitionBits: json.partitionBits,
-    //     session: json.session,
-    //     url: json.url,
-    //     offset: null,
-    //     recordIds: null,
-    //     isCursor: true,
-    //     host: json.host,
-    //     path: json.path
-    // };
-    
-    // log(requestData);
-    
-    // // https://jsonplaceholder.typicode.com/todos/1
-    
-    // const options = {
-    //   hostname: json.host,
-    //   port: 443,
-    //   path: json.path,
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${json.session}`,
-    //     'Content-Type': 'application/json'
-    //   }
-    // }
-    
-    // log('SF Request options: ');
-    // log(options);
-    
-    // const req = fetch.request(options, res => {
-    //   log(`statusCode: ${res.statusCode}`)
-    //   res.on('data', d => {
-    //     log('--> Result');
-    //     log(d);
-    //     process.stdout.write(d)
-    //     const response = {
-    //         statusCode: 200,
-    //         body: JSON.stringify(d),
-    //     };
-    //     log('*** ALL DONE');
-    //     return response;
-    //   })
-    // })
-    
-    // req.on('error', error => {
-    //     log('Error');
-    //     console.error(error)
-    // })
-    
-    // req.write(JSON.stringify(requestData))
-    // req.end()
+    return response
     
     // // execute a web worker per band
     // for (let i = 0; i < 2**partitionBits; i++){
@@ -292,16 +243,39 @@ exports.handler = async (event,context,callback) => {
     // //         log(eData);
     // //     }
 
-    // // };
-    
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify('--- Lambda is finished ---'),
-    };
-    log('*** ALL DONE');
-    return response;
-    
+    // // };    
 };
+
+// Helper that turns https.request into a promise
+function httpsRequest(options, requestData) {
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+            if (res.statusCode < 200 || res.statusCode >= 300) {
+                return reject(new Error('statusCode=' + res.statusCode));
+            }
+            var body = [];
+            res.on('data', function(chunk) {
+                body.push(chunk);
+            });
+            res.on('end', function() {
+                try {
+                    body = JSON.parse(Buffer.concat(body).toString());
+                } catch(e) {
+                    reject(e);
+                }
+                resolve(body);
+            });
+        });
+        
+        req.on('error', (e) => {
+            reject(e.message);
+        });
+        
+        req.write(JSON.stringify(requestData))
+        
+        req.end();
+    });
+}
 
 // clean log panel and re-init app variables
 function clean_log() {
@@ -321,20 +295,15 @@ function clean_log() {
     
 }
 
-// counter
-function setTime() {
-    ++totalSeconds;
-}
-
 // log into console 
-function log(content) {
+function log (content) {
     let str = typeof content === 'string' ? content : JSON.stringify(content);
     str = str.length>10000 ? `${str.substring(0,10000)}...` : str;
     console.log(str);
 }
 
 // used to display percentages
-function pad(val) {
+function pad (val) {
     let valString = val + '';
     if (valString.length < 2) {
         return '0' + valString;
