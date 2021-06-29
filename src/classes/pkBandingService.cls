@@ -149,6 +149,50 @@ global with sharing class pkBandingService {
         response.responseBody = Blob.valueOf(JSON.serialize(dResponse));
     }
 
+    public void callAWS() {
+
+        // const
+        String sSession = UserInfo.getSessionId();
+        String sHost = System.URL.getOrgDomainUrl().toExternalForm().substringAfter('https://');
+        String sPath = '/services/apexrest/pkbanding';
+        Integer partitionBits = 3;
+        Integer chunkBits = 15;
+        Integer batchSize = 20;
+
+        // helper class
+        awsRequest c = new awsRequest();
+        c.batchSize = batchSize;
+        c.chunkBits = chunkBits;
+        c.partitionBits = partitionBits;
+        c.session = sSession;
+        c.host = sHost;
+        c.path = sPath;
+
+        String awsKey = 'YOUR_AWS_KEY_HERE';
+        String awsServiceUrl = 'YOUR_AWS_SERVICE_URL_HERE'; 
+
+        // set http request callout
+        HttpRequest request = new HttpRequest();
+        request.setTimeout(90000);
+        request.setEndpoint(awsServiceUrl);
+        request.setMethod('POST');
+        request.setHeader('Accept', 'application/json');
+        request.setHeader('Content-Type', 'application/json');
+        request.setHeader('X-API-KEY', awsKey);
+        request.setBody(JSON.serialize(c));
+
+        try {
+            // get response
+            Http http = new Http();
+            HTTPResponse response = http.send(request);
+            String responseBody = response.getBody();
+            System.assert(false, 'Worked! ' + responseBody );
+        } catch (Exception e) {
+            System.debug('Exception: ' + e.getMessage());
+        }
+
+    }
+
     public class dispatcherResponse {
         public Boolean result;
         public String error;
@@ -181,6 +225,15 @@ global with sharing class pkBandingService {
         public String session;
         public Set<Id> recordIds;
         public Boolean isCursor;
+    }
+
+    public class awsRequest {
+        public Integer batchSize;
+        public Integer partitionBits;
+        public Integer chunkBits;
+        public String session;
+        public String host;
+        public String path;
     }
 
 }
