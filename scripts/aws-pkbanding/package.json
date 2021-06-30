@@ -1,0 +1,14 @@
+{
+  "name": "rhombus-poc",
+  "version": "1.0.0",
+  "description": "SFDO - CCS Team - Rhombus POC",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CCS Team, SFDO",
+  "license": "ISC",
+  "dependencies": {
+    "jsforce": "^1.10.1"
+  }
+}
