@@ -135,7 +135,7 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     CONTACT1: 'Contact1'
 });
 
-const FORM_STATE_IMMUTABLE_FIELDS_BY_APINAME = [
+const FORM_STATE_IMMUTABLE_FIELDS_BY_API_NAME = [
     NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName
 ];
 
@@ -1713,7 +1713,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     removeFieldsNotUpdatableInFormState(fieldsToUpdate) {
-        FORM_STATE_IMMUTABLE_FIELDS_BY_APINAME.forEach(immutableField => {
+        FORM_STATE_IMMUTABLE_FIELDS_BY_API_NAME.forEach(immutableField => {
             if (this.isFormStateFieldNotUpdatable(fieldsToUpdate, immutableField)) {
                 delete fieldsToUpdate[immutableField];
             }
