@@ -153,7 +153,7 @@ global with sharing class pkBandingService {
 
         // const
         String sSession = UserInfo.getSessionId();
-        String sHost = System.URL.getOrgDomainUrl().toExternalForm().substringAfter('https://');
+        String sHost = System.URL.getOrgDomainUrl().toExternalForm();
         String sPath = '/services/apexrest/pkbanding';
         Integer partitionBits = 3;
         Integer chunkBits = 15;

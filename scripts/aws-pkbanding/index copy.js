@@ -1,5 +1,5 @@
 const https = require('https')
-//var jsforce = require('jsforce')
+const jsforce = require('jsforce')
 
 // Helper that turns https.request into a promise
 function httpsRequest(options, requestData) {
@@ -33,42 +33,76 @@ function httpsRequest(options, requestData) {
 }
 
 exports.handler = async (event, context, callback) => {
-    
+
+    // get request data
     let json = JSON.parse(event.body)
-    console.info('Request body:\n' + JSON.stringify(json))
-    
+    console.info('HTTP Request body:\n' + JSON.stringify(json))
+
     // --- POST example request  
     let requestData = {                                                
         band: 0,
         chunkBits: json.chunkBits,
         batchSize: json.batchSize,
-        partitionBits: json.partitionBits,
-        session: json.session,
-        url: json.url,
+        partitionBits: json.partitionBits,        
         offset: null,
         recordIds: null,
-        isCursor: true,
+        isCursor: true,        
         host: json.host,
-        path: json.path
+        path: json.path,
+        // url: json.host+json.path,
+        session: json.session
     }
-    console.info('Salesforce request body:\n' + JSON.stringify(requestData))
+    console.info('Outbound Salesforce request body:\n' + JSON.stringify(requestData))
     
+    // response aux variable
+    let r = ''
+
+    // connect to sf
+    var conn = new jsforce.Connection({    	
+      	sessionId : json.session,
+      	serverUrl : json.host
+    })
+
+    // call apex rest methods	
+	conn.apex.post(json.path, requestData, (err, res) => {
+	    if (err) { 
+            return console.error(err)
+        }
+	    console.log("response from jsforce: ", res)
+	    // the response object structure depends on the definition of apex class
+        r += `JSForce-Rest:${JSON.stringify(res)}`;
+	})
+
+    // create record
+    conn.sobject("Account").create({ Name : 'My AWS Account #2' }, (err, ret) => {
+        if (err || !ret.success) { 
+            console.info('Error creating Account')
+            return console.error(err, ret)
+        }
+        console.log("Created record id : " + ret.id)
+        r += `Account created: ${ret.id}`;
+    })   
+                
     // --- POST OPTIONS example
+    const agent = new https.Agent({
+        // maxSockets: 1,
+        keepAlive: true      
+    })
     const options = {
-      hostname: json.host,
-      port: 443,
-      path: json.path,
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${json.session}`,
-        'Content-Type': 'application/json'
-      }
-    }
-    
-    let r
+        agent: agent,
+        hostname: json.host.replace('https://', ''),
+        port: 443,
+        path: json.path,
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${json.session}`,
+            'Content-Type': 'application/json'
+        }
+    }        
 
     try {
         
+        requestData.band = 2
         const postBody = await httpsRequest(options,requestData)
         // The console.log below will not run until the POST request above finishes
         console.log('POST response body:', postBody)
@@ -78,7 +112,7 @@ exports.handler = async (event, context, callback) => {
         // The console.log below will not run until the POST request above finishes
         console.log('POST response body:', postBody2)
         
-        r = JSON.stringify(postBody)+JSON.stringify(postBody2);
+        r += JSON.stringify(postBody)+JSON.stringify(postBody2);
         console.info(r);
         
     } catch (err) {
