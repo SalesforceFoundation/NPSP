@@ -73,32 +73,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     private static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
 
-    /*******************************************************************************************************************
-     * @description a set of languages that require different naming conventions
-     */
-    private static final Set<String> EASTERN_ORDER_LANGUAGES = new Set<String>{
-        'ja',
-        'ko',
-        'vi',
-        'hu',
-        'ro',
-        'zh_CN',
-        'zh_TW'
-    };
-    /*******************************************************************************************************************
-     * @description the current user's Locale/Language
-     */
-    private static String userLocale {
-        get {
-            if (userLocale == null) {
-                userLocale = UserInfo.getLocale();
-            }
-
-            return userLocale;
-        }
-        set;
-    }
-
     private List<Contact> contacts;
     private Map<Id, Contact> oldContactById;
     private TDTM_Runnable.Action triggerAction;
@@ -168,7 +142,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private void processAccountsBeforeInsert() {
         avoidConfusion();
 
-        createAccounts(
+        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
                 (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
@@ -224,7 +198,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        createAccounts(contactsWithoutAccounts);
+        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
     }
 
@@ -465,111 +439,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Inserts a new 1:1 or HH Account for an Individual Contact
-    * @param contactsWithoutAccounts the list of Contacts that need updating.
-    */
-    private void createAccounts(List<Contact> contactsWithoutAccounts){
-        if (contactsWithoutAccounts.isEmpty()) {
-            return;
-        }
-
-        List<Id> contactIds = new List<Id>();
-        Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
-        List<Contact> contacts = new List<Contact>();
-
-        for (Contact contactRecord : contactsWithoutAccounts) {
-            //track which contacts are being inserted vs. updated
-            if (contactRecord.Id != null) {
-                contactIds.add(contactRecord.Id);
-            }
-        }
-        // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : [
-            SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-            FROM Account
-            WHERE npe01__One2OneContact__c IN :contactIds
-        ]) {
-            accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
-        }
-
-        List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = Accounts.rtIdForNewAccount();
-
-        for (Contact contactRecord : contactsWithoutAccounts) {
-            // if we found an Account already connected to this Contact, connect the Contact to that Account if it
-            // is the correct type for the current account processor
-            Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
-            if (accountRecord != null &&
-                ((CAO_Constants.isHHAccountModel() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
-                (CAO_Constants.isOneToOne() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
-                // if a user has blanked out the Account for a Contact, this will put it right back
-                contactRecord.AccountId = accountRecord.Id;
-            } else {
-                // construct the individul account for the Contact
-                accountRecord = new Account();
-
-                // construct the Account name
-                accountRecord.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(contactRecord) : strNameOne2OneAccountForContact(contactRecord);
-
-                // connect the Account to the Contact for 1:1 and HHAccount
-                if (contactRecord.Id != null) {
-                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
-                }
-
-                accountRecord.Phone = contactRecord.Phone;
-                accountRecord.Fax = contactRecord.Fax;
-                accountRecord.OwnerId = contactRecord.OwnerId;
-
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
-                }
-
-                // Always copy the Contact's Mailing & Others address to the new Account's
-                // Billing & Shipping address.
-                if (contactRecord.is_Address_Override__c != true) {
-                    addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
-                }
-
-                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (individualRecordTypeId != null) {
-                    accountRecord.put('RecordTypeID', individualRecordTypeId);
-                }
-                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
-                accountRecord.npe01__SYSTEMIsIndividual__c = true;
-                accountInserts.add(accountRecord);
-                contacts.add(contactRecord);
-            }
-        }
-
-        if (accountInserts.isEmpty()) {
-            return;
-        }
-
-        // with current TDTM design, we can't use dmlWrapper
-        // because we need to get the new AccountID's into the Contacts.
-
-        // identify the specific records that had the problem, and don't fail the whole batch
-        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-        for (Integer index = 0; index < insertResults.size(); index++) {
-            Database.SaveResult insertResult = insertResults[index];
-            if (!insertResult.isSuccess()) {
-                for (Database.Error err : insertResult.getErrors()) {
-                    accountInserts[index].addError(err.getMessage());
-                    Contact contactRecord = contacts[index];
-                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.FirstName, contactRecord.LastName, err.getMessage()}));
-                }
-            }
-        }
-
-        // now update each contact's accountId
-        Integer index = 0;
-        for (Contact contactRecord : contacts) {
-            contactRecord.AccountId = accountInserts[index].Id;
-            index++;
-        }
-    }
 
     /*******************************************************************************************************
     * @description Updates an Individual Account for an Individual Contact
@@ -603,7 +472,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     'Shipping');
 
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                accountRecord.Name = strNameOne2OneAccountForContact(contactRecord);
+                accountRecord.Name = HouseholdAccounts.strNameOne2OneAccountForContact(contactRecord);
             }
 
             // HH Account naming updates handled seperately to deal with asyncronous naming
@@ -808,39 +677,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             && contactRecord.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
             && contactRecord.Account.npe01__SYSTEMIsIndividual__c
             && contactRecord.Account.npe01__One2OneContact__c == null;
-    }
-
-    /*******************************************************************************************************
-    * @description returns the default name for a new HH Account. Custom household naming will update this
-    * account later if enabled, but we still need one if not enabled.
-    * @param contactRecord the Contact
-    * @return String. the Household account name
-    */
-    public static String strNameHHAccountForContact(Contact contactRecord) {
-        return contactRecord.LastName + ' ' + System.Label.npo02.DefaultHouseholdName;
-    }
-
-    /*******************************************************************************************************
-    * @description returns the default name for a new 1:1 Account
-    * @param contactRecord the Contact
-    * @return String. the 1:1 account name
-    */
-    public static String strNameOne2OneAccountForContact(Contact contactRecord) {
-        String accountName = '';
-
-        if (contactRecord.FirstName != null) {
-            accountName += contactRecord.FirstName;
-            accountName += ' ' ;
-        }
-
-        if (EASTERN_ORDER_LANGUAGES.contains(userLocale)) {
-            accountName = contactRecord.LastName + ' ' + accountName;
-
-        } else {
-            accountName += contactRecord.LastName;
-        }
-
-        return accountName;
     }
 
     /*******************************************************************************************************
