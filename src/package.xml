@@ -392,6 +392,7 @@
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>IAddress</members>
+        <members>IHouseholds</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>

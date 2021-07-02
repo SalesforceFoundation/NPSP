@@ -32,7 +32,8 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class HouseholdAccounts {
+public inherited sharing class HouseholdAccounts extends fflib_SObjects implements
+                IHouseholds {
 
     /*******************************************************************************************************
     * @description Account filter when querying Contacts
@@ -56,9 +57,19 @@ public inherited sharing class HouseholdAccounts {
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
     public HouseholdAccounts(Set<Id> accountIds) {
+        //todo: change this lazy load to up front
+        super(new List<Account>());
         queryAccountIds = accountIds == null
                 ? new Set<Id>()
                 : accountIds;
+    }
+
+    /*******************************************************************************************************
+    * @description Constructor
+    * @param accountIds Account Ids to initialize the Contact Repository with
+    */
+    public HouseholdAccounts(List<Account> accounts) {
+        super(accounts);
     }
 
     /*******************************************************************************************************
@@ -97,5 +108,33 @@ public inherited sharing class HouseholdAccounts {
         }
 
         return contactsByAccountId;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates the accounts for contacts that have been deleted if they have other hh members
+    * @param deletedContacts the list of Contacts that need to be considered
+    */
+    //Todo: HHAct-only, so:
+    //      HHAccts.handleDeleted(Contacts c);
+    //      UL: When a Contact is deleted, its Household(Account?) wil update its Primary
+    //      Contact and Name, and recalc rollups.
+    public void handleContactDeletion() {
+//        List<Id> householdIdsToUpdate = new List<Id>();
+        Set<Id> householdIdsToUpdate = new Set<Id>();
+
+        for (Account accountRecord : (List<Account>) getRecords()) {
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + accountRecord);
+            System.debug(LoggingLevel.ERROR, '^^^^^^ accountRecord ^^^^^^');
+            Boolean needsAccountUpdate =
+                    (!accountRecord.Contacts.isEmpty()
+                            || !accountRecord.Opportunities.isEmpty());
+
+            if (needsAccountUpdate) {
+                householdIdsToUpdate.add(accountRecord.Id);
+            }
+        }
+
+        new ACCT_IndividualAccounts_TDTM()
+                .updateHouseholds(new List<Id>(householdIdsToUpdate));
     }
 }
