@@ -1022,4 +1022,75 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return new Contacts(contactsWithoutBucketAccount);
     }
 
+    public Contacts contactsAndOneToOneContacts_insertContext() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (needsHHAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (needsOneToOneAccount(contactRecord, accountFor(contactRecord))) {
+                // Avoid creating a new contact with the 1:1 account of another contact
+                if (contactRecord.AccountId != null) {
+                    contactRecord.AccountId = null;
+                }
+
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+        return new Contacts(contactsWithoutAccounts);
+    }
+
+    /**
+     * @description Determines whether or not the contact requires a household account.
+     * @param  contactRecord The contact to verify.
+     */
+    public Boolean needsHHAccount(Contact contactRecord) {
+        return CAO_Constants.isHHAccountModel()
+                && contactRecord.AccountId == null
+                && contactRecord.npe01__Private__c != true;
+    }
+
+    /**
+     * @description Determines whether or not the contact needs a one to one account assigned.
+     * @param  The contact record to verify.
+     * @param  The existing account record assocatied with the contact.
+     * @return Boolean - true when the contact needs a one to one account.
+     */
+    public Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
+        return CAO_Constants.isOneToOne()
+                && contactRecord.npe01__Private__c != true
+                && (contactRecord.AccountId == null
+                || (accountRecord != null
+                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+    }
+
+    public Map<Id, Account> accountById {
+        get {
+            if (accountById == null) {
+                loadAccountByIdMap();
+            }
+            return accountById;
+        }
+        set;
+    }
+
+    private Account accountFor(Contact contactRecord) {
+        return accountById.get(contactRecord.AccountId);
+    }
+
+    private void loadAccountByIdMap() {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            accountIds.add(contactRecord.AccountId);
+        }
+
+        accountById = new Map<Id, Account>([
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE Id IN :accountIds
+        ]);
+    }
 }

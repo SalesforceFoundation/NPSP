@@ -102,8 +102,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private List<Contact> contacts;
     private Map<Id, Contact> oldContactById;
     private TDTM_Runnable.Action triggerAction;
-    private DmlWrapper dmlWrapper;
-    private Map<Id, Account> accountById = null;
+    private DmlWrapper dmlWrapper = new DmlWrapper();
     private Contacts contactsInstance;
 
     /*******************************************************************************************************************
@@ -121,16 +120,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         this.contacts = newSObjects;
         this.oldContactById = oldSObjects == null ? null : new Map<Id, Contact>((List<Contact>) oldSObjects);
         this.triggerAction = triggerAction;
-        this.dmlWrapper = new DmlWrapper();
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            loadAccountByIdMap();
+            contactsInstance = new Contacts(contacts);
             processAccountsBeforeInsert();
         }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            loadAccountByIdMap();
+            contactsInstance = new Contacts(newSObjects, oldSObjects);
             processAccountsBeforeUpdate();
         }
 
@@ -145,18 +143,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
 
-    private void loadAccountByIdMap() {
-        Set<Id> accountIds = new Set<Id>();
-        for (Contact contactRecord : contacts) {
-            accountIds.add(contactRecord.AccountId);
-        }
-
-        accountById = new Map<Id, Account>([
-                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-                FROM Account
-                WHERE Id IN :accountIds
-        ]);
-    }
 
     /**
      * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
@@ -176,39 +162,20 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /**
-     * @description In the before insert trigger context, ensure accounts are created for the new contacts that need them.
-     * @param  accountById - the existing accounts that the contacts are related to.
+     * @description In the before insert trigger context,
+     * ensure accounts are created for the new contacts that need them.
      */
     private void processAccountsBeforeInsert() {
-        contactsInstance = new Contacts(contacts);
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-
         avoidConfusion();
-        for (Contact contactRecord : contacts) {
-            if (needsHHAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
 
-        for (Contact contactRecord : contacts) {
-            if (needsOneToOneAccount(contactRecord, accountFor(contactRecord))) {
-                // Avoid creating a new contact with the 1:1 account of another contact
-                if (contactRecord.AccountId != null) {
-                    contactRecord.AccountId = null;
-                }
+        createAccounts(
+                (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
+                        .getRecords());
 
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-
-        createAccounts(contactsWithoutAccounts);
         attachToBucketAccount(
-                (List<Contact>) contactsInstance.bucketContacts_insertContext().getRecords()
+                (List<Contact>) contactsInstance.bucketContacts_insertContext()
+                        .getRecords()
         );
-    }
-
-    private Account accountFor(Contact contactRecord) {
-        return accountById.get(contactRecord.AccountId);
     }
 
     private void avoidConfusion() {
@@ -226,17 +193,20 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
+        Map<Id, Account> accountsByIds = contactsInstance.accountById;
         for (Contact contactRecord : contacts) {
             // always clear this deprecated field to avoid confusing users.
             contactRecord.npe01__SystemAccountProcessor__c = null;
 
-            if (needsHHAccount(contactRecord)) {
+            if (contactsInstance.needsHHAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
 
-            } else if (needsOneToOneAccount(contactRecord, accountById.get(contactRecord.AccountId))) {
+            } else if (contactsInstance.needsOneToOneAccount(contactRecord,
+                    accountsByIds.get(contactRecord.AccountId))) {
                 Contact oldContact = oldContactById.get(contactRecord.Id);
 
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact, accountById.get(contactRecord.AccountId))) {
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
+                        accountsByIds.get(contactRecord.AccountId))) {
                     contactRecord.AccountId = null;
                 }
 
@@ -716,15 +686,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return !isDeletedOldAccount;
 
     }
-    /**
-     * @description Determines whether or not the contact requires a household account.
-     * @param  contactRecord The contact to verify.
-     */
-    private Boolean needsHHAccount(Contact contactRecord) {
-        return CAO_Constants.isHHAccountModel()
-            && contactRecord.AccountId == null
-            && contactRecord.npe01__Private__c != true;
-    }
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
@@ -827,20 +788,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     private Boolean isHouseholdMember(Contact contactRecord) {
         return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-    }
-
-    /**
-     * @description Determines whether or not the contact needs a one to one account assigned.
-     * @param  The contact record to verify.
-     * @param  The existing account record assocatied with the contact.
-     * @return Boolean - true when the contact needs a one to one account.
-     */
-    private Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
-        return CAO_Constants.isOneToOne()
-            && contactRecord.npe01__Private__c != true
-            && (contactRecord.AccountId == null
-                || (accountRecord != null
-                    && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
     }
 
     /**
