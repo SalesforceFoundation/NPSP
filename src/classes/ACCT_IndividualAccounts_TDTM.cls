@@ -137,7 +137,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             handleAfter();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            processAccountsAfterDelete(oldSObjects);
+            Contacts contacts = new Contacts(newSObjects, oldSObjects);
+            contacts.onAfterDelete_ACCT_IndividualAccounts_TDTM();
         }
 
         return dmlWrapper;
@@ -322,36 +323,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Updates the accounts for contacts that have been deleted if they have other hh members
-    * @param deletedContacts the list of Contacts that need to be considered
-    */
-    private void processAccountsAfterDelete(List<Contact> deletedContacts) {
-        List<Id> accountIds = new List<Id>();
-        List<Id> householdIdsToUpdate = new List<Id>();
-
-        for (Contact contactRecord : deletedContacts) {
-            accountIds.add(contactRecord.AccountId);
-        }
-
-        for (Account accountRecord : [
-            SELECT Id, Type, npe01__SYSTEM_AccountType__c,
-                (SELECT Id FROM Contacts LIMIT 1),
-                (SELECT Id FROM Opportunities LIMIT 1)
-            FROM Account
-            WHERE Id IN :accountIds
-        ]) {
-            Boolean needsAccountUpdate = (!accountRecord.Contacts.isEmpty() || !accountRecord.Opportunities.isEmpty())
-                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-
-            if (needsAccountUpdate) {
-                householdIdsToUpdate.add(accountRecord.Id);
-            }
-        }
-
-        updateHouseholds(householdIdsToUpdate);
-    }
-
-    /*******************************************************************************************************
     * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
     * @param primaryContactByAccountId a map of AccountId's to ContactId's which specifies which accounts need updating.
     */
@@ -373,7 +344,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     * @description Updates an HH Account's naming, primary contact, and rollups
     * @param accountIds the list of Account (Id's) that need updating.
     */
-    private void updateHouseholds(List<Id> accountIds) {
+    public void updateHouseholds(List<Id> accountIds) {
         if (accountIds.isEmpty()) {
             return;
         }
