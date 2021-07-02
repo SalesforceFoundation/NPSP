@@ -48,6 +48,17 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
     }
 
     @TestVisible
+    private static ContactAndOrgSettings contactAndOrgSettings {
+        get {
+            if (contactAndOrgSettings == null) {
+                contactAndOrgSettings = new ContactAndOrgSettings();
+            }
+            return contactAndOrgSettings;
+        }
+        set;
+    }
+
+    @TestVisible
     private ContactService contactService {
         get {
             if (contactService == null) {
@@ -729,8 +740,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
      ********************************************************************************************************/
     @TestVisible
     private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
-
-        ContactAndOrgSettings contactAndOrgSettings = new ContactAndOrgSettings();
         if (contactAndOrgSettings.isHouseholdAccountModel()) {
             return;
         }
@@ -770,6 +779,7 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
+    //Todo: HHAcct-only method
     private Set<Contact> getAddressCreationQueue() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         if (isRecursive() || isRecursiveFromContact()) {
@@ -992,6 +1002,24 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
             accountIds.add(contactRecord.AccountId);
         }
         return accountIds;
+    }
+
+    /**
+     * @description Determines whether or not Contacts belong to the BucketAccount, when
+     * Contacts are being inserted.
+     */
+    public Contacts bucketContacts_insertContext() {
+        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+        if (!contactAndOrgSettings.isBucketModelEnabled()) {
+            return new Contacts(contactsWithoutBucketAccount);
+        }
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (contactRecord.AccountId == null
+                    && contactRecord.npe01__Private__c != true) {
+                contactsWithoutBucketAccount.add(contactRecord);
+            }
+        }
+        return new Contacts(contactsWithoutBucketAccount);
     }
 
 }
