@@ -104,6 +104,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private TDTM_Runnable.Action triggerAction;
     private DmlWrapper dmlWrapper;
     private Map<Id, Account> accountById = null;
+    private Contacts contactsInstance;
 
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
@@ -179,8 +180,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @param  accountById - the existing accounts that the contacts are related to.
      */
     private void processAccountsBeforeInsert() {
+        contactsInstance = new Contacts(contacts);
         List<Contact> contactsWithoutAccounts = new List<Contact>();
-        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
 
         avoidConfusion();
         for (Contact contactRecord : contacts) {
@@ -197,13 +198,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 }
 
                 contactsWithoutAccounts.add(contactRecord);
-            } else if (needsBucketAccount(contactRecord)) {
-                contactsWithoutBucketAccount.add(contactRecord);
             }
         }
 
         createAccounts(contactsWithoutAccounts);
-        attachToBucketAccount(contactsWithoutBucketAccount);
+        attachToBucketAccount(
+                (List<Contact>) contactsInstance.bucketContacts_insertContext().getRecords()
+        );
     }
 
     private Account accountFor(Contact contactRecord) {

@@ -49,4 +49,9 @@ public with sharing class ContactAndOrgSettings {
         return contactsAndOrgsSettings.npe01__Account_Processor__c ==
                 CAO_Constants.HH_ACCOUNT_PROCESSOR;
     }
+
+    public Boolean isBucketModelEnabled() {
+        return CAO_Constants.isBucketModel();
+    }
+
 }
