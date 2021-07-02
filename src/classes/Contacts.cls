@@ -32,10 +32,20 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public inherited sharing class Contacts extends fflib_SObjects {
+public inherited sharing class Contacts extends fflib_SObjects implements IContacts {
 
     private Map<Id, Contact> oldMap;
     private Boolean isUpdate = false;
+    private IHouseholdSelector householdAccountRepository {
+        get {
+            if (householdAccountRepository == null) {
+                householdAccountRepository = (IHouseholdSelector)
+                        new HouseholdAccountSelector();
+            }
+            return householdAccountRepository;
+        }
+        set;
+    }
 
     @TestVisible
     private ContactService contactService {
@@ -968,44 +978,20 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterDelete_ACCT_IndividualAccounts_TDTM() {
-        processAccountsAfterDelete();
+        IHouseholds households = getHouseholdsFor(oldAccountIds());
+        households.handleContactDeletion();
     }
 
-    /*******************************************************************************************************
-    * @description Updates the accounts for contacts that have been deleted if they have other hh members
-    * @param deletedContacts the list of Contacts that need to be considered
-    */
-    //Todo: HHAct-only, so:
-    //      HHAccts.handleDeleted(Contacts c);
-    //      UL: When a Contact is deleted, its Household(Account?) wil update its Primary
-    //      Contact and Name, and recalc rollups.
-    private void processAccountsAfterDelete() {
-        List<Id> accountIds = new List<Id>();
-        List<Id> householdIdsToUpdate = new List<Id>();
+    private IHouseholds getHouseholdsFor(Set<Id> ids) {
+        return householdAccountRepository.findByIdWithOneContactAndGift(ids);
+    }
 
+    public Set<Id> oldAccountIds() {
+        Set<Id> accountIds = new Set<Id>();
         for (Contact contactRecord : oldMap.values()) {
             accountIds.add(contactRecord.AccountId);
         }
-        List<Account> accounts = getAccounts(accountIds);
-        for (Account accountRecord : accounts) {
-            Boolean needsAccountUpdate = (!accountRecord.Contacts.isEmpty() || !accountRecord.Opportunities.isEmpty())
-                    && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-
-            if (needsAccountUpdate) {
-                householdIdsToUpdate.add(accountRecord.Id);
-            }
-        }
-
-        new ACCT_IndividualAccounts_TDTM().updateHouseholds(householdIdsToUpdate);
-    }
-
-    private List<Account> getAccounts(List<Id> accountIds) {
-        List<Account> accounts = [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c, (SELECT Id FROM Contacts LIMIT 1), (SELECT Id FROM Opportunities LIMIT 1)
-                FROM Account
-                WHERE Id IN :accountIds
-        ];
-        return accounts;
+        return accountIds;
     }
 
 }

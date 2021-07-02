@@ -137,8 +137,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             handleAfter();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            Contacts contacts = new Contacts(newSObjects, oldSObjects);
-            contacts.onAfterDelete_ACCT_IndividualAccounts_TDTM();
+            Contacts deletedContacts = new Contacts(new List<Contact>(), oldSObjects);
+            deletedContacts.onAfterDelete_ACCT_IndividualAccounts_TDTM();
         }
 
         return dmlWrapper;
@@ -386,7 +386,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        dmlWrapper.objectsToUpdate.addAll(accounts);
+        if (accounts != null && !accounts.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll(accounts);
+        }
     }
 
     /*******************************************************************************************************
