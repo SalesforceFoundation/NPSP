@@ -134,7 +134,6 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
             }
         }
 
-        new ACCT_IndividualAccounts_TDTM()
-                .updateHouseholds(new List<Id>(householdIdsToUpdate));
+        new ACCT_IndividualAccounts_TDTM().updateHouseholds(new List<Id>(householdIdsToUpdate));
     }
 }
