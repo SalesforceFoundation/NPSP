@@ -114,6 +114,83 @@ private with sharing class EP_EngagementPlans_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Creates a template with two EP Tasks, one of them dependent on the other. Then creates an
+    * Engagement Plan using that template. Verifies that tasks are created, that fields are copied over, and
+    * that both non-dependent and dependent tasks use the correct defaults.
+    */
+    static testMethod void testStartDate() {
+
+        Id otherUserId = getOtherUserId();
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'Template',
+            Skip_Weekends__c = false,
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Assigned_To__c = otherUserId,
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Time__c = '660',
+            Send_Email__c = true,
+            Days_After__c = 3,
+            Type__c = 'Call'
+        );
+        insert epTask;
+
+        Engagement_Plan_Task__c dependentEpTask = new Engagement_Plan_Task__c(
+            Name = 'Email',
+            Engagement_Plan_Template__c = template.id,
+            Parent_Task__c = epTask.id,
+            Comments__c = 'This comment should also be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Time__c = '780',
+            Send_Email__c = true,
+            Days_After__c = 10,
+            Type__c = 'Email',
+            Priority__c = 'Low'
+        );
+        insert dependentEpTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Contact__c = con.id,
+            Engagement_Plan_Template__c = template.id,
+            Start_Date__c = System.Today().AddDays(5)
+        );
+
+        Test.startTest();
+        insert plan;
+        Test.stopTest();
+
+        List<Task> results = [SELECT Id, OwnerId, WhoId, Type, Status, Subject, ActivityDate, Priority, Description,
+                            IsReminderSet, ReminderDateTime FROM Task WHERE WhoId = :con.id ORDER BY ActivityDate];
+        System.assertEquals(2, results.size(), 'Two tasks should be created.');
+
+        System.assertEquals(epTask.Name, results[0].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(epTask.Comments__c, results[0].Description, 'Comment field should be copied correctly.');
+        
+        System.assertEquals(System.Today().addDays(8), results[0].ActivityDate, 'Activity Date should be eight days from today.');
+        System.assert(results[0].IsReminderSet, 'Reminder should be set.');
+        System.assertEquals(System.Today().addDays(8), results[0].ReminderDateTime.Date(), 'Reminder should be set eight days from today.');
+        System.assertEquals(UTIL_Describe.getDefaultSelectOption('Task', 'Priority'), results[0].Priority, 'Priority field left blank should be set based on default picklist value.');
+        System.assertEquals(otherUserId, results[0].OwnerId, 'Task owner should be based on EP Task Assigned To field.');
+
+        System.assertEquals(dependentEpTask.Name, results[1].Subject, 'Subject field should be set based on EP Task Name.');
+        System.assertEquals(dependentEpTask.Comments__c, results[1].Description, 'Comment field should be copied correctly.');
+        System.assertEquals(System.Today().addDays(18), results[1].ActivityDate, 'Activity Date should be set eighteen days from today.');
+        System.assert(!results[1].IsReminderSet, 'Reminder should not be set for a dependent task.');
+        System.assertEquals(dependentEpTask.Priority__c, results[1].Priority, 'Priority field should be set based on EP Task Priority.');
+        System.assertEquals(UserInfo.getUserId(), results[1].OwnerId, 'Task owner left blank should be based on running user.');
+    }
+
+    /*********************************************************************************************************
     * @description Creates an EP Task with a delay of the number of days until the weekend, as part of a 
     * template set to delay until Monday. Verifies that the activity date is set on Monday.
     */
@@ -342,7 +419,7 @@ private with sharing class EP_EngagementPlans_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Updates an engagement plan to change the value of the  lookup, verifies an exception is thrown.
+    * @description Updates an engagement plan to change the value of the lookup, verifies an exception is thrown.
     */
     static testMethod void testPlanUpdate() {
 

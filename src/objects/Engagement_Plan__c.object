@@ -150,6 +150,16 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Start_Date__c</fullName>
+        <description>The start date this Engagement Plan should be based off. If blank, the Engagement Plan will be based off of today&apos;s date.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The start date this Engagement Plan should be based off. If blank, the Engagement Plan will be based off of today&apos;s date.</inlineHelpText>
+        <label>Start Date</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>Status__c</fullName>
         <externalId>false</externalId>
         <formula>IF( Completed_Tasks__c == Total_EP_Tasks__c, $Label.statusCompleted, IF (Completed_Tasks__c &gt; 0, $Label.statusInProgress, $Label.statusNotStarted))</formula>
