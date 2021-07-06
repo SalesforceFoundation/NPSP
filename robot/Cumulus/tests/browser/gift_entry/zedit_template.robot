@@ -73,6 +73,9 @@ Edit GE Template And Verify Changes
     ...                              Donor Type=Account1
     ...                              Existing Donor Organization Account=${account}[Name]
     ...                              Donation Amount=${amount}
+    Verify Field Default Value
+    ...                              Donor Type=Account1
+    ...                              Existing Donor Organization Account=${account}[Name]
     Click Gift Entry Button          Save
     Verify Error For Field
     ...                              Account 1: custom_acc_text=Complete this field.
@@ -106,6 +109,9 @@ Edit GE Template And Verify Changes
     ...                              Donor Type=Contact1
     ...                              Existing Donor Contact=${contact}[Name]
     ...                              Donation Amount=${amount}
+    Verify Field Default Value
+    ...                              Donor Type=Contact1
+    ...                              Existing Donor Contact=${contact}[Name]
     Click Gift Entry Button          Save & Enter New Gift
     Verify Error For Field
     ...                              Account 1: custom_acc_text=Complete this field.
