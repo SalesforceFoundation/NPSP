@@ -191,15 +191,21 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             } else if (needsBucketAccount(contactRecord)) {
                 contactsWithoutBucketAccount.add(contactRecord);
             }
+        }
 
+        keepPrivateContactsPrivate();
+
+        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
+        attachToBucketAccount(contactsWithoutBucketAccount);
+    }
+
+    private void keepPrivateContactsPrivate() {
+        for (Contact contactRecord : contacts) {
             // for contacts marked private after they have been created, break the relationship from their account (any model)
             if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
                 contactRecord.AccountId = null;
             }
         }
-
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
-        attachToBucketAccount(contactsWithoutBucketAccount);
     }
 
     /**
