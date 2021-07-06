@@ -201,7 +201,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // Households.onAfterUpdate.  Let HH handle connecting Con to Bucket Acct
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
         for (Contact contactRecord : contacts) {
-            if (needsBucketAccount(contactRecord)) {
+            if (isBucketModelEnabled() && needsAccount(contactRecord)) {
                 contactsWithoutBucketAccount.add(contactRecord);
             }
         }
@@ -678,12 +678,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
-    /**
-     * @description Determines whether or not the contact should be assigned to the bucket account
-     * @param  contactRecord The contact record to verify.
-     */
-    private Boolean needsBucketAccount(Contact contactRecord) {
-        return CAO_Constants.isBucketModel() && contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
+    private Boolean needsAccount(Contact contactRecord) {
+        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
+    }
+
+    private Boolean isBucketModelEnabled() {
+        return CAO_Constants.isBucketModel();
     }
 
     /**
