@@ -164,19 +164,22 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * @param  accountById - the existing accounts that the contacts are related to.
      */
     private void processAccountsBeforeUpdate() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+        avoidConfusion();
 
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
-        for (Contact contactRecord : contacts) {
-            // always clear this deprecated field to avoid confusing users.
-            contactRecord.npe01__SystemAccountProcessor__c = null;
-        }
+        //todo: move to HouseholdAccounts
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : contacts) {
             if (contactsInstance.needsHHAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
 
-            } else if (contactsInstance.needsOneToOneAccount(contactRecord,
+            }
+        }
+
+        //todo: move to Households
+        // note: isOneToOne, public contacts or Organization Contacts
+        Map<Id, Account> accountsByIds = contactsInstance.accountById;
+        for (Contact contactRecord : contacts) {
+            if (contactsInstance.needsOneToOneAccount(contactRecord,
                     accountsByIds.get(contactRecord.AccountId))) {
                 Contact oldContact = oldContactById.get(contactRecord.Id);
 
@@ -189,7 +192,16 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                     contactsWithoutAccounts.add(contactRecord);
                 }
 
-            } else if (needsBucketAccount(contactRecord)) {
+            }
+        }
+
+        //todo: move to Households
+        // Before update, for Cons with blank AcctIds, Contacts should
+        // get appropriate instance of Households somewhere, then pass to
+        // Households.onAfterUpdate.  Let HH handle connecting Con to Bucket Acct
+        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+        for (Contact contactRecord : contacts) {
+            if (needsBucketAccount(contactRecord)) {
                 contactsWithoutBucketAccount.add(contactRecord);
             }
         }
