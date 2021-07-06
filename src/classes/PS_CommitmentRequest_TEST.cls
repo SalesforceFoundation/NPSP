@@ -100,9 +100,12 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
 
         System.assertNotEquals(null, requestBody.productMetadata, 'Product Metadata should be set by default');
-        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.productMetadata.origin.type,
+
+        PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata(requestBody.productMetadata);
+
+        System.assertEquals(PS_Request.OriginType.CRM.name(), productMetadata.origin.type,
             'Product Metadata origin type should be CRM');
-        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.productMetadata.campaign.id,
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, productMetadata.campaign.id,
             'Product Metadata campaign id should be set to RD campaign');
         
         System.assertEquals(1, requestBody.schedules.size(),
@@ -393,10 +396,10 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(contact.firstName + ' ' + contact.lastName, requestBody.accountName);
         System.assertEquals(PAYMENT_TOKEN, requestBody.paymentMethodToken, 'Payment Method Token should match');
         System.assertEquals(UserInfo.getDefaultCurrency(), requestBody.currencyCode, 'Currency Code should match');
-
-        System.assertEquals(PS_Request.OriginType.CRM.name(), requestBody.productMetadata.origin.type,
+        PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata(requestBody.productMetadata);
+        System.assertEquals(PS_Request.OriginType.CRM.name(), productMetadata.origin.type,
                 'Product Metadata origin type should be CRM');
-        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, requestBody.productMetadata.campaign.id,
+        System.assertEquals(rd.npe03__Recurring_Donation_Campaign__c, productMetadata.campaign.id,
                 'Product Metadata campaign id should be set to RD campaign');
 
         System.assertEquals(1, requestBody.schedules.size(),

@@ -254,20 +254,27 @@ public inherited sharing class PS_CommitmentRequest {
 
         if (isElevateCampaignChanged(rd, oldRd)) {
 
-            HttpRequest commitmentGetRequest = buildGetCommitmentRequest(rd.CommitmentId__c);
-            HttpResponse response = new Http().send(commitmentGetRequest);
-
-            Map<String, Object> untypedResponse = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
-            Map<String, Object> untypedCommitment = (Map<String, Object>)untypedResponse.get('commitment');
-            Map<String, Object> untypedProductMetadata = (Map<String, Object>)untypedCommitment.get('productMetadata');
-
+            Map<String, Object> existingProductMetadata = getExistingProductMetadata(rd.CommitmentId__c);
             ProductMetadata productMetadata = new ProductMetadata()
                 .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
-            
-            reqBody.withProductMetadata(productMetadata.mergeWithExistingMetadata(untypedProductMetadata));
+
+            Map<String, Object> mergedMetadata = productMetadata.mergeWithExistingMetadata(existingProductMetadata);
+
+            reqBody.withProductMetadata(mergedMetadata);
         }
 
         return reqBody;
+    }
+
+    private Map<String, Object> getExistingProductMetadata(String commitmentId) {
+        HttpRequest commitmentGetRequest = buildGetCommitmentRequest(commitmentId);
+        HttpResponse response = new Http().send(commitmentGetRequest);
+
+        Map<String, Object> untypedResponse = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+        Map<String, Object> untypedCommitment = (Map<String, Object>) untypedResponse.get('commitment');
+        Map<String, Object> untypedProductMetadata = (Map<String, Object>) untypedCommitment.get('productMetadata');
+
+        return untypedProductMetadata;
     }
 
     /**
@@ -787,6 +794,22 @@ public inherited sharing class PS_CommitmentRequest {
     public class ProductMetadata {
         public Origin origin;
         public Campaign campaign;
+
+        public ProductMetadata() {}
+
+        public ProductMetadata(Map<String, Object> untypedProductMetadata) {
+            if (untypedProductMetadata.containsKey('origin')) {
+                Map<String, Object> originData = (Map<String, Object>)untypedProductMetadata.get('origin');
+                String originType = (String)originData.get('type');
+                this.origin = new Origin(originType);
+            }
+
+            if (untypedProductMetadata.containsKey('campaign')) {
+                Map<String, Object> campaignData = (Map<String, Object>)untypedProductMetadata.get('campaign');
+                String campaignId = (String)campaignData.get('id');
+                this.campaign = new Campaign(campaignId);
+            }
+        }
 
         /**
         * @description Sets origin info
