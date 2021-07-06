@@ -1105,6 +1105,20 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         set;
     }
 
+    public List<Contact> contactsWithoutAccounts() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (isMissingAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+        return contactsWithoutAccounts;
+    }
+
+    private Boolean isMissingAccount(Contact contactRecord) {
+        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
+    }
+
     private Account accountFor(Contact contactRecord) {
         return accountById.get(contactRecord.AccountId);
     }
