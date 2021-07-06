@@ -270,11 +270,11 @@ public inherited sharing class PS_CommitmentRequest {
         HttpRequest commitmentGetRequest = buildGetCommitmentRequest(commitmentId);
         HttpResponse response = new Http().send(commitmentGetRequest);
 
-        Map<String, Object> untypedResponse = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-        Map<String, Object> untypedCommitment = (Map<String, Object>) untypedResponse.get('commitment');
-        Map<String, Object> untypedProductMetadata = (Map<String, Object>) untypedCommitment.get('productMetadata');
+        Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+        Map<String, Object> commitment = (Map<String, Object>) responseBody.get('commitment');
+        Map<String, Object> productMetadata = (Map<String, Object>) commitment.get('productMetadata');
 
-        return untypedProductMetadata;
+        return productMetadata;
     }
 
     /**

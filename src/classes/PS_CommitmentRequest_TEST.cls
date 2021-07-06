@@ -445,6 +445,42 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals('CHECKING', achData.bankType, 'AchData bankType should be CHECKING');
     }
 
+    @IsTest
+    static void productMetadataPreservesOrigin() {
+        String newCampaignId = '701R00000027JNdIAA';
+        String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"}}';
+        Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
+
+        PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata()
+                .withCampaign(newCampaignId);
+        Map<String, Object> updatedUntypedMetadata = stripTypeInfo(productMetadata.mergeWithExistingMetadata(untypedMetadata));
+
+        PS_CommitmentRequest.ProductMetadata updatedMetadata = new PS_CommitmentRequest.ProductMetadata(updatedUntypedMetadata);
+        System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
+        System.assertEquals('CRM', updatedMetadata.origin.type);
+
+    }
+
+    @IsTest
+    static void productMetadataPreservesAny() {
+        String newCampaignId = '701R00000027JNdIAA';
+        String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"},"consent":{"message":"Some message","optin":true}}';
+        Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
+
+        PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata()
+                .withCampaign(newCampaignId);
+        Map<String, Object> updatedUntypedMetadata = stripTypeInfo(productMetadata.mergeWithExistingMetadata(untypedMetadata));
+
+        PS_CommitmentRequest.ProductMetadata updatedMetadata = new PS_CommitmentRequest.ProductMetadata(updatedUntypedMetadata);
+        System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
+        System.assertEquals('CRM', updatedMetadata.origin.type);
+
+
+        Map<String, Object> consentData = (Map<String, Object>)updatedUntypedMetadata.get('consent');
+        String consentMessage = (String)consentData.get('message');
+        System.assertEquals('Some message', consentMessage);
+    }
+
     // Helpers
     ///////////////
 
@@ -483,6 +519,10 @@ private with sharing class PS_CommitmentRequest_TEST {
             FROM Contact
             LIMIT 1
         ];
+    }
+
+    static Map<String, Object> stripTypeInfo(Map<String, Object> target) {
+        return (Map<String, Object>)JSON.deserializeUntyped(JSON.serialize(target));
     }
 
 }
