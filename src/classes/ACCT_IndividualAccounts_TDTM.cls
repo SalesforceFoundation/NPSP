@@ -201,23 +201,15 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         // Households.onAfterUpdate.  Let HH handle connecting Con to Bucket Acct
         List<Contact> contactsWithoutBucketAccount = new List<Contact>();
         if (isBucketModelEnabled()) {
-            contactsWithoutBucketAccount.addAll(getContactsWithoutAccounts());
+            contactsWithoutBucketAccount.addAll(
+                    contactsInstance.contactsWithoutAccounts()
+            );
         }
 
         keepPrivateContactsPrivate();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
         attachToBucketAccount(contactsWithoutBucketAccount);
-    }
-
-    private List<Contact> getContactsWithoutAccounts() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : contacts) {
-            if (!hasAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-        return contactsWithoutAccounts;
     }
 
     private void keepPrivateContactsPrivate() {
@@ -684,10 +676,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     private Boolean isHouseholdMember(Contact contactRecord) {
         return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-    }
-
-    private Boolean hasAccount(Contact contactRecord) {
-        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
     }
 
     private Boolean isBucketModelEnabled() {
