@@ -1745,14 +1745,3 @@ class NPSP(BaseNPSPPage,SalesforceRobotLibraryBase):
         else:
             self.selenium.wait_until_page_does_not_contain("This can take a while. Check back in a bit!",180)
             self.selenium.wait_until_element_is_visible(batchsuccess,180)
-
-    
-
-    # @capture_screenshot_on_error
-    # def scroll_element_into_view(self, locator):
-    #     """Scroll the element identified by 'locator' into view"""
-    #     element = self.selenium.get_webelement(locator)
-    #     self.selenium.driver.execute_script(
-    #         "arguments[0].scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'})",
-    #         element,
-    #     )
