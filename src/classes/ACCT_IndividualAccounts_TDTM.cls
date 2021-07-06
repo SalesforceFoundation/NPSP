@@ -171,7 +171,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         for (Contact contactRecord : contacts) {
             // always clear this deprecated field to avoid confusing users.
             contactRecord.npe01__SystemAccountProcessor__c = null;
-
+        }
+        for (Contact contactRecord : contacts) {
             if (contactsInstance.needsHHAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
 
