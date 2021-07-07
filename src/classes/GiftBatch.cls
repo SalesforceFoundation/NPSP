@@ -33,11 +33,12 @@
 * @description Batch entity class in NPSP.
 */
 
-public inherited sharing class GiftBatch {
+public inherited sharing class GiftBatch implements IGiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
 
+    @TestVisible
     private GE_Template.Template formTemplate {
         get {
             if (formTemplate == null) {
@@ -98,8 +99,40 @@ public inherited sharing class GiftBatch {
     }
 
     public GiftBatch(Id batchId) {
+        System.debug('In GiftBatch constructor...');
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+
+        // TODO: logic related to building the gifts query needs to be encapsulated somewhere, type or priv method?
+        // List<Id> dataImportIds = new List<Id>();
+        // for (DataImport__c dataImport : this.batch.NPSP_Data_Imports__r) {
+        //     dataImportIds.add(dataImport.Id);
+        // }
+        // List<String> giftFieldsToQuery = formTemplate.giftFieldApiNames();
+        // giftFieldsToQuery.addAll(getDataImportElevateFields());
+        // giftFieldsToQuery.add('Payment_Status__c');
+        // giftFieldsToQuery.add('Status__c');
+        // giftFieldsToQuery.add('Additional_Object_JSON__c');
+
+        // System.debug(giftFieldsToQuery);
+
+        // this.gifts = new Gifts(dataImportIds, giftFieldsToQuery);
+    }
+
+    public Id id() {
+        return this.batchId;
+    }
+
+    public Gifts gifts() {
+        return this.gifts;
+    }
+
+    public Money total() {
+        return null;
+    }
+
+    public Integer totalCount() {
+        return null;
     }
 
     public Boolean hasElevateWidget() {
