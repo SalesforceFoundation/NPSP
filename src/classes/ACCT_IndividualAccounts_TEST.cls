@@ -1456,7 +1456,7 @@ private class ACCT_IndividualAccounts_TEST {
             '{!{!SALUTATION} {!FIRSTname}} {!LASTNAME}',
             '{!{!npe01__WorkEmail__c}}'
         );
-        String soql = new ACCT_IndividualAccounts_TDTM().buildContactSoql();
+        String soql = new ContactSelector().buildContactSoql(null);
 
         System.assert(soql.contains('npe01__WorkEmail__c'));// the only field added from Household Naming fields
 
