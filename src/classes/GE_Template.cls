@@ -265,6 +265,30 @@ public with sharing class GE_Template {
             this.version = version;
             this.layout = layout;
         }
+
+        public List<String> giftFieldApiNames() {
+            List<Element> allElements = new List<Element>();
+            for (Section section : this.layout.sections) {
+                allElements.addAll(section.elements);
+            }
+
+            List<String> giftFieldApiNames = new List<String>();
+            BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
+            for (Element element : allElements) {
+
+                if (element.elementType == 'field' && element.dataImportFieldMappingDevNames.size() > 0) {
+                    String fieldMappingDeveloperName = element.dataImportFieldMappingDevNames[0];
+                    BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldMappingDeveloperName);
+
+                    if (fieldMapping.isDescribable) {
+                        String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
+                        giftFieldApiNames.add(sourceFieldDevName);
+                    }
+                }
+            }
+
+            return giftFieldApiNames;
+        }
     }
 
     /**
