@@ -34,7 +34,7 @@
 */
 public inherited sharing class Contacts extends fflib_SObjects implements IContacts {
 
-    private Map<Id, Contact> oldMap;
+    public Map<Id, Contact> oldMap;
     private Boolean isUpdate = false;
     private IHouseholdSelector householdAccountRepository {
         get {
@@ -778,7 +778,7 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return con.MasterRecordId != null;
     }
 
-    private Contact oldVersionOf(Contact con) {
+    public Contact oldVersionOf(Contact con) {
         return oldMap.get(con.Id);
     }
 
