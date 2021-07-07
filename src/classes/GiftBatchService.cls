@@ -61,7 +61,7 @@ public with sharing class GiftBatchService {
         giftBatch.updateRecords();
     }
 
-    public GiftBatchView viewModel(String giftBatchId) {
-        return new GiftBatchView();
+    public GiftBatchDTO dtoFrom(GiftBatch giftBatch) {
+        return new GiftBatchDTO(giftBatch);
     }
 }
