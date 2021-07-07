@@ -223,6 +223,57 @@ public inherited sharing class Households extends fflib_SObjects {
         }
         return contactsWithoutAccounts2;
     }
+    /*******************************************************************************************************
+    * @description contact's owner has changed.  consider updating related account owner.
+    * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
+    */
+    public static void updateOwners(Map<Id, Contact> newOwnerContactById,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        if (newOwnerContactById.isEmpty()) {
+            return;
+        }
+
+        Set<Id> accountIds = new Set<Id>();
+        Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
+
+        for (Contact contactRecord : newOwnerContactById.values()) {
+            accountIds.add(contactRecord.AccountId);
+        }
+
+        for (Account accountRecord : [
+            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts LIMIT 2)
+            FROM Account
+            WHERE Id IN :accountIds
+        ]) {
+            // only consider 1:1 and HH Accounts
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                // if there is only 1 contact associated with this account
+                if (accountRecord.Contacts.size() == 1 && accountRecord.npe01__One2OneContact__c != null) {
+                    Contact contactRecord = newOwnerContactById.get(accountRecord.npe01__One2OneContact__c);
+                    Id ownerId = (contactRecord != null ? contactRecord.OwnerId : null);
+                    if (accountRecord.OwnerId != ownerId) {
+                        accountRecord.OwnerId = ownerId;
+                        accountsToUpdate.put(accountRecord.Id, accountRecord);
+                    }
+                }
+            }
+        }
+
+        //update existing dmlWrapper objects with accounts already in the list
+        //avoids "duplicate id in list" errors updating the same account twice
+        for (SObject dmlObj : dmlWrapper.objectsToUpdate) {
+            Id objId = (Id) dmlObj.get('id');
+            if (accountsToUpdate.containsKey(objId)) {
+                dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
+                accountsToUpdate.remove(objId);
+            }
+        }
+
+        // add the rest of the accounts that weren't already in the update list
+        if (!accountsToUpdate.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
+        }
+    }
 
     /**
      * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.

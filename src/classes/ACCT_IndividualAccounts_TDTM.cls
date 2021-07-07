@@ -226,58 +226,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
         householdNamingService.renameHouseholdAccounts(
                 contactsInstance.getHouseholdIdsToRename(contactsInstance));
-        updateOwners(contactsInstance.getNewOwnerContactById());
-    }
-
-    /*******************************************************************************************************
-    * @description contact's owner has changed.  consider updating related account owner.
-    * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
-    */
-    private void updateOwners(Map<Id, Contact> newOwnerContactById) {
-        if (newOwnerContactById.isEmpty()) {
-            return;
-        }
-
-        Set<Id> accountIds = new Set<Id>();
-        Map<Id, Account> accountsToUpdate = new Map<Id, Account>();
-
-        for (Contact contactRecord : newOwnerContactById.values()) {
-            accountIds.add(contactRecord.AccountId);
-        }
-
-        for (Account accountRecord : [
-            SELECT Id, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, OwnerId, (SELECT Id FROM Contacts LIMIT 2)
-            FROM Account
-            WHERE Id IN :accountIds
-        ]) {
-            // only consider 1:1 and HH Accounts
-            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE || accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                // if there is only 1 contact associated with this account
-                if (accountRecord.Contacts.size() == 1 && accountRecord.npe01__One2OneContact__c != null) {
-                    Contact contactRecord = newOwnerContactById.get(accountRecord.npe01__One2OneContact__c);
-                    Id ownerId = (contactRecord != null ? contactRecord.OwnerId : null);
-                    if (accountRecord.OwnerId != ownerId) {
-                        accountRecord.OwnerId = ownerId;
-                        accountsToUpdate.put(accountRecord.Id, accountRecord);
-                    }
-                }
-            }
-        }
-
-        //update existing dmlWrapper objects with accounts already in the list
-        //avoids "duplicate id in list" errors updating the same account twice
-        for (SObject dmlObj : dmlWrapper.objectsToUpdate) {
-            Id objId = (Id) dmlObj.get('id');
-            if (accountsToUpdate.containsKey(objId)) {
-                dmlObj.put('OwnerId', accountsToUpdate.get(objId).OwnerId);
-                accountsToUpdate.remove(objId);
-            }
-        }
-
-        // add the rest of the accounts that weren't already in the update list
-        if (!accountsToUpdate.isEmpty()) {
-            dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
-        }
+        Households.updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
 
     private Boolean isBucketModelEnabled() {
