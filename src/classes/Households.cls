@@ -142,6 +142,39 @@ public inherited sharing class Households extends fflib_SObjects {
         return getIdFieldValues(npo02__Household__c.Id);
     }
 
+    /*******************************************************************************************************
+    * @description Updates Contacts to relate to a single Individual Account
+    * @param contacts the list of Contacts that need updating.
+    */
+    public static void attachToBucketAccount(List<Contact> contactsWithoutBucketAccount){
+        if (contactsWithoutBucketAccount.isEmpty()) {
+            return;
+        }
+
+        Id individualAccountId = CAO_Constants.getIndividualAccountId();
+
+        if (individualAccountId != null) {
+            for (Contact contactRecord : contactsWithoutBucketAccount) {
+                //connect all Contacts to the bucket Account
+                contactRecord.AccountId = individualAccountId;
+            }
+        } else {
+            //if there is no bucket Account, the bucket model won't function unless we create one
+            Account individual = new Account();
+            individual.Name = CAO_Constants.BUCKET_ACCOUNT_NAME;
+            //flag the account as an individual account
+            individual.npe01__SYSTEMIsIndividual__c = true;
+            //individual.Type = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
+            individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
+            UTIL_DMLService.insertRecord(individual);
+
+            for (Contact contactRecord : contactsWithoutBucketAccount) {
+                //connect Contact to bucket Account
+                contactRecord.AccountId = individual.Id;
+            }
+        }
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }
