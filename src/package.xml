@@ -343,10 +343,12 @@
         <members>Gift</members>
         <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchDTO</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
         <members>GiftBatchSelector</members>
         <members>GiftBatchService</members>
+        <members>GiftBatchService_TEST</members>
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
@@ -392,6 +394,7 @@
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>IAddress</members>
+        <members>IGiftBatch</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
