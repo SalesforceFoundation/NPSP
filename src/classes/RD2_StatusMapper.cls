@@ -169,6 +169,19 @@ public with sharing class RD2_StatusMapper {
         return mapping == null ? null : mapping.state;
     }
 
+    public Set<String> getClosedStates() {
+        List<Mapping> allmappings = mappingByStatus.values();
+        Set<String> closedStates = new Set<String>();
+
+        for (Mapping mapping : allmappings) {
+            if (mapping.state == RD2_Constants.STATUS_CLOSED) {
+                closedStates.add(mapping.status);
+            }
+        }
+
+        return closedStates;
+    }
+
 
     /**
      * @description Contains mapping configuration detail

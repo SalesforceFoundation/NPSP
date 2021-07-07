@@ -132,6 +132,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     displayEditModal = false;
     commitmentURLPrefix;
     defaultRecordTypeId;
+    closeStatus;
 
     get paymentMethod() {
         return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
@@ -151,7 +152,8 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
 
     get canEditPaymentInformation() {
         return this.isElevateCustomer
-            && this.permissions.hasKeyFieldsUpdateAccess;
+            && this.permissions.hasKeyFieldsUpdateAccess
+            && this.recurringDonationIsNotClosed;
     }
 
     /***
@@ -170,6 +172,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                 this.isElevateCustomer = response.isElevateCustomer;
                 this.permissions.alert = response.alert;
                 this.commitmentURLPrefix = response.commitmentURLPrefix;
+                this.closeStatus = response.closeStatus;
 
                 this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                     && response.hasFieldPermissions === true
@@ -309,6 +312,10 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         return this.isTrue(this.permissions.showExpirationDate) && this.paymentMethod === PAYMENT_METHOD_CREDIT_CARD;
     }
 
+    isRecurringDonationNotClosed() {
+        return this.isTrue(!isNull(this.closeStatus) && !this.closeStatus.includes(this.getValue(FIELD_STATUS.fieldApiName)));
+    }
+
     /***
      * @description Returns the expiration date as string in the format of MM/YYYY
      */
@@ -385,6 +392,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         this.showLastFourACH = this.shouldShowLastFourACH();
         this.showLastFourCreditCard = this.shouldShowLastFourCreditCard();
         this.showExpirationDate = this.shouldShowExpirationDate();
+        this.recurringDonationIsNotClosed = this.isRecurringDonationNotClosed();
 
         if (this.isElevateCustomer === true
             && this.isElevateRecord
