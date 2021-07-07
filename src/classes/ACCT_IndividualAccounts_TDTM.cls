@@ -166,43 +166,56 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private void processAccountsBeforeUpdate() {
         avoidConfusion();
 
-        //todo: move to HouseholdAccounts
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : contacts) {
-            if (contactsInstance.needsHHAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-
-            }
-        }
-
-        //todo: move to Households
-        // note: isOneToOne, public contacts or Organization Contacts
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
-        for (Contact contactRecord : contacts) {
-            if (contactsInstance.needsOneToOneAccount(contactRecord,
-                    accountsByIds.get(contactRecord.AccountId))) {
-                Contact oldContact = oldContactById.get(contactRecord.Id);
-
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                        accountsByIds.get(contactRecord.AccountId))) {
-                    contactRecord.AccountId = null;
-                }
-
-                if (contactRecord.AccountId == null) {
-                    contactsWithoutAccounts.add(contactRecord);
-                }
-
-            }
-        }
+        List<Contact> contactsWithoutAccounts = getContactsWithoutAccounts_beforeInsertContext();
 
         keepPrivateContactsPrivate();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
+
         if (isBucketModelEnabled()) {
             Households.attachToBucketAccount(
                     contactsInstance.contactsWithoutAccounts()
             );
         }
+    }
+
+    private List<Contact> getContactsWithoutAccounts_beforeInsertContext() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+
+        if (isHouseholdAccountModelEnabled()) {
+            contactsWithoutAccounts.addAll(contactsInstance.contactsWithoutAccounts());
+        }
+
+        //todo: move to Households
+        // note: isOneToOne, public contacts or Organization Contacts
+        if (isOneToOneEnabled()) {
+            Map<Id, Account> accountsByIds = contactsInstance.accountById;
+            for (Contact contactRecord : contacts) {
+                if (contactsInstance.needsOneToOneAccount(contactRecord,
+                        accountsByIds.get(contactRecord.AccountId))) {
+                    Contact oldContact = oldContactById.get(contactRecord.Id);
+
+                    if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
+                            accountsByIds.get(contactRecord.AccountId))) {
+                        contactRecord.AccountId = null;
+                    }
+
+                    if (contactRecord.AccountId == null) {
+                        contactsWithoutAccounts.add(contactRecord);
+                    }
+
+                }
+            }
+        }
+        return contactsWithoutAccounts;
+    }
+
+    private Boolean isOneToOneEnabled() {
+        return CAO_Constants.isOneToOne();
+    }
+
+    private Boolean isHouseholdAccountModelEnabled() {
+        return CAO_Constants.isHHAccountModel();
     }
 
     private void keepPrivateContactsPrivate() {
