@@ -60,4 +60,8 @@ public with sharing class GiftBatchService {
         giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
         giftBatch.updateRecords();
     }
+
+    public GiftBatchView viewModel(String giftBatchId) {
+        return new GiftBatchView();
+    }
 }
