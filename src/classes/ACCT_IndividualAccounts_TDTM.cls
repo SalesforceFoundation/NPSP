@@ -233,13 +233,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        List<Id> householdIdsToRename = new List<Id>();
-        for (Contact contactRecord : contacts) {
-            Contact oldContact = oldContactById.get(contactRecord.Id);
-            if (needsHHAccountRename(contactRecord, oldContact)) {
-                householdIdsToRename.add(contactRecord.AccountId);
-            }
-        }
+        List<Id> householdIdsToRename = getHouseholdIdsToRename();
 
         Households.updateOneToOneAccounts(
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
@@ -247,6 +241,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(contactsInstance.getNewOwnerContactById());
+    }
+
+    private List<Id> getHouseholdIdsToRename() {
+        List<Id> householdIdsToRename = new List<Id>();
+        for (Contact contactRecord : contacts) {
+            Contact oldContact = oldContactById.get(contactRecord.Id);
+            if (needsHHAccountRename(contactRecord, oldContact)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+        return householdIdsToRename;
     }
 
     /*******************************************************************************************************
