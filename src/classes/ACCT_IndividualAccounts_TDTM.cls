@@ -92,7 +92,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         this.contacts = newSObjects;
-        this.oldContactById = oldSObjects == null ? null : new Map<Id, Contact>((List<Contact>) oldSObjects);
+        this.oldContactById = oldSObjects == null ? new Map<Id, Contact>() : new Map<Id, Contact>(
+                (List<Contact>) oldSObjects);
         this.triggerAction = triggerAction;
         contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
@@ -149,7 +150,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        attachToBucketAccount(
+        Households.attachToBucketAccount(
                 (List<Contact>) contactsInstance.bucketContacts_insertContext()
                         .getRecords()
         );
