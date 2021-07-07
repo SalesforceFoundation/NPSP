@@ -189,6 +189,50 @@ public inherited sharing class Households extends fflib_SObjects {
                 && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
     }
 
+    public static List<Contact> contactsWithoutAccounts(Contacts contactsInstance, Map<Id, Contact> oldContactById) {
+        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
+        Map<Id, Account> accountsByIds = contactsInstance.accountById;
+        for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
+            Account account = accountsByIds.get(contactRecord.AccountId);
+            if (Households.needsOneToOneAccount(contactRecord,
+                    account)) {
+
+                Contact oldContact = oldContactById.get(contactRecord.Id);
+
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
+                        account)) {
+                    contactRecord.AccountId = null;
+                }
+
+                if (contactRecord.AccountId == null) {
+                    contactsWithoutAccounts2.add(contactRecord);
+                }
+
+            }
+        }
+        return contactsWithoutAccounts2;
+    }
+
+    /**
+     * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.
+     */
+    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact
+            oldContact, Account accountRecord) {
+        Boolean isExistingOneToOne = contactRecord.AccountId != null
+            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
+            && accountRecord.npe01__One2OneContact__c != null
+            && contactRecord.AccountId != oldContact.AccountId;
+
+        if (!isExistingOneToOne) {
+            return false;
+        }
+
+        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
+
+        return !isDeletedOldAccount;
+
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }
