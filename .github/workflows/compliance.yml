@@ -9,12 +9,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Check for References to SfdoLogging
         id: diff
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # Pull Request
-            git fetch origin $GITHUB_BASE_REF --depth=1
+            # git fetch origin $GITHUB_BASE_REF
             echo "RUN: git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw"
             export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
             echo "Diff between origin/$GITHUB_BASE_REF and $GITHUB_SHA"
