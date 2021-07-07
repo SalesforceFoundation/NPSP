@@ -1080,6 +1080,17 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return contactsWithoutAccounts;
     }
 
+    public Map<Id, Contact> getNewOwnerContactById() {
+        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldMap.get(contactRecord.Id);
+            if (contactRecord.OwnerId != oldContact.OwnerId) {
+                newOwnerContactById.put(contactRecord.Id, contactRecord);
+            }
+        }
+        return newOwnerContactById;
+    }
+
     private Boolean isMissingAccount(Contact contactRecord) {
         return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
     }

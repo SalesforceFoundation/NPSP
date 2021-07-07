@@ -124,6 +124,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     private void handleAfter() {
         contacts = Database.query(buildContactSoql());
+        contactsInstance = new Contacts(contacts, oldContactById.values());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             Households.updatePrimaryContactOnAccountsAfterInsert(
@@ -246,19 +247,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
-        updateOwners(getNewOwnerContactById());
+        updateOwners(contactsInstance.getNewOwnerContactById());
     }
 
-    private Map<Id, Contact> getNewOwnerContactById() {
-        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
-        for (Contact contactRecord : contacts) {
-            Contact oldContact = oldContactById.get(contactRecord.Id);
-            if (contactRecord.OwnerId != oldContact.OwnerId) {
-                newOwnerContactById.put(contactRecord.Id, contactRecord);
-            }
-        }
-        return newOwnerContactById;
-    }
 
     /*******************************************************************************************************
      * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
