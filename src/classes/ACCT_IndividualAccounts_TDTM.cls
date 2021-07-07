@@ -234,13 +234,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        List<Id> householdIdsToRename = getHouseholdIdsToRename();
-
         Households.updateOneToOneAccounts(
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
-        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
+        householdNamingService.renameHouseholdAccounts(getHouseholdIdsToRename());
         updateOwners(contactsInstance.getNewOwnerContactById());
     }
 
