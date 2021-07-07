@@ -409,6 +409,7 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>Money</members>
         <members>NPSP_Address</members>
         <members>NPSP_Contact</members>
         <members>NPSP_Contact_TEST</members>
