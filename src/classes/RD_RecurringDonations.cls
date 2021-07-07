@@ -401,7 +401,7 @@ public class RD_RecurringDonations {
                 Date oppCloseDate = getStartDate(r);
 
                 Integer j=0;
-                Decimal installmentAmount = r.npe03__Installment_Amount__c;
+                Decimal installmentAmount = r?.npe03__Installment_Amount__c;
 
                 Decimal paidAmount = 0;
                 if (r.npe03__Paid_Amount__c != null) {
