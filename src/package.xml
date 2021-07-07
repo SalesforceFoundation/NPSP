@@ -73,6 +73,11 @@
         <members>AN_AutoNumberService</members>
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
+        <members>Accounts</members>
+        <members>AddressService</members>
+        <members>Addresses</members>
+        <members>AggregateResultProxy</members>
+        <members>AggregateResultProxy_TEST</members>
         <members>AllocationParent</members>
         <members>AllocationParent_TEST</members>
         <members>BDE_BatchDataEntry</members>
@@ -113,6 +118,8 @@
         <members>BDI_DynamicSourceGroup</members>
         <members>BDI_FieldMapping</members>
         <members>BDI_FieldMappingSet</members>
+        <members>BDI_GAUAllocationsUtil</members>
+        <members>BDI_GAUAllocationsUtil_TEST</members>
         <members>BDI_IMatchDonations</members>
         <members>BDI_IPostProcess</members>
         <members>BDI_ManageAdvancedMappingCtrl</members>
@@ -133,6 +140,8 @@
         <members>BDI_PerfLogger</members>
         <members>BDI_PerfLogger_TEST</members>
         <members>BDI_PostProcess_TEST</members>
+        <members>BDI_RecurringDonations</members>
+        <members>BDI_RecurringDonations_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
         <members>BDI_TargetFields</members>
@@ -262,6 +271,12 @@
         <members>CallableDispatchService_ERR_TEST</members>
         <members>Callable_API</members>
         <members>Callable_API_TEST</members>
+        <members>ContactAndOrgSettings</members>
+        <members>ContactSelector</members>
+        <members>ContactService</members>
+        <members>Contacts</members>
+        <members>ContactsInLegacyHouseholds</members>
+        <members>ContactsInLegacyHouseholds_TEST</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -296,6 +311,19 @@
         <members>ERR_ParentAccountUpdater_TEST</members>
         <members>ERR_RecordError</members>
         <members>ERR_RecordError_TEST</members>
+        <members>ElevateAuthorizedGift</members>
+        <members>ElevateAuthorizedGiftResponse</members>
+        <members>ElevateAuthorizedGift_TEST</members>
+        <members>ElevateBatch</members>
+        <members>ElevateBatchCapturer</members>
+        <members>ElevateBatchCapturer_TEST</members>
+        <members>ElevateBatchResponse</members>
+        <members>ElevateBatchService</members>
+        <members>ElevateBatchServiceInvalidRequest</members>
+        <members>ElevateBatchServiceValidRequest</members>
+        <members>ElevatePaymentMethod</members>
+        <members>ElevateTokenizedGift</members>
+        <members>ElevateTransactionStatus</members>
         <members>GAU_TDTM</members>
         <members>GAU_TDTM_TEST</members>
         <members>GE_GiftEntryController</members>
@@ -303,6 +331,7 @@
         <members>GE_LookupController</members>
         <members>GE_LookupController_TEST</members>
         <members>GE_PaymentServices</members>
+        <members>GE_PaymentServicesMock</members>
         <members>GE_PaymentServices_TEST</members>
         <members>GE_Template</members>
         <members>GE_Template_TEST</members>
@@ -311,6 +340,22 @@
         <members>GS_ChecklistSetup</members>
         <members>GS_ChecklistSetup_TEST</members>
         <members>GS_NonprofitTrialOrgService</members>
+        <members>Gift</members>
+        <members>GiftBatch</members>
+        <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchGroupedTotals</members>
+        <members>GiftBatchGroupedTotals_TEST</members>
+        <members>GiftBatchSelector</members>
+        <members>GiftBatchService</members>
+        <members>GiftBatchStatusGroup</members>
+        <members>GiftBatchStatusGroup_TEST</members>
+        <members>GiftBatchTotals</members>
+        <members>GiftBatch_TEST</members>
+        <members>GiftBatches</members>
+        <members>GiftSelector</members>
+        <members>Gift_Test</members>
+        <members>Gifts</members>
+        <members>Gifts_TEST</members>
         <members>HH_AutoCompleteDataProvider_LCTRL</members>
         <members>HH_CampaignDedupeBTN_CTRL</members>
         <members>HH_CampaignDedupeBTN_TEST</members>
@@ -318,22 +363,36 @@
         <members>HH_Container_LCTRL</members>
         <members>HH_Container_TEST</members>
         <members>HH_HHObject_TDTM</members>
-        <members>HH_HouseholdNaming</members>
         <members>HH_HouseholdNamingSettingValidator</members>
         <members>HH_HouseholdNamingSettingValidator_TEST</members>
         <members>HH_HouseholdNaming_BATCH</members>
-        <members>HH_HouseholdNaming_TEST</members>
         <members>HH_Households</members>
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
+        <members>HH_NameSpec</members>
+        <members>HH_NameSpec_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
-        <members>HH_NameSpec</members>
-        <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
+        <members>HouseholdAccounts</members>
+        <members>HouseholdName</members>
+        <members>HouseholdNamingExclusionsCheckboxes</members>
+        <members>HouseholdNamingExclusionsString</members>
+        <members>HouseholdNamingService</members>
+        <members>HouseholdNamingService_TEST</members>
+        <members>HouseholdNamingUserControlledFields</members>
+        <members>HouseholdNaming_TEST</members>
+        <members>HouseholdSelector</members>
+        <members>HouseholdService</members>
+        <members>HouseholdService_TEST</members>
+        <members>HouseholdSettings</members>
+        <members>Households</members>
+        <members>IAddress</members>
+        <members>INamingExclusions</members>
+        <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -346,6 +405,11 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>NPSP_Address</members>
+        <members>NPSP_Contact</members>
+        <members>NPSP_Contact_TEST</members>
+        <members>NPSP_Household</members>
+        <members>NPSP_HouseholdAccount</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
@@ -375,6 +439,7 @@
         <members>OPP_StageMappingCMT_TEST</members>
         <members>OPP_StageMappingUtil</members>
         <members>OPP_StageMappingUtil_TEST</members>
+        <members>OrgConfig</members>
         <members>PMT_CascadeDeleteLookups_TDTM</members>
         <members>PMT_CascadeDeleteLookups_TEST</members>
         <members>PMT_PaymentCreator</members>
@@ -584,6 +649,7 @@
         <members>TDTM_TriggerHandler</members>
         <members>TDTM_TriggerScaffolds_TEST</members>
         <members>TDTM_iTableDataGateway</members>
+        <members>TEST_ContactBuilder</members>
         <members>TEST_OpportunityBuilder</members>
         <members>TEST_RecurringDonationBuilder</members>
         <members>TEST_SObjectGateway</members>
@@ -682,6 +748,10 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>UnitOfWork</members>
+        <members>fflib_Domain</members>
+        <members>fflib_Objects</members>
+        <members>fflib_SObjects</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1144,6 +1214,7 @@
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
         <members>DataImport__c.Elevate_Custom_Metadata__c</members>
+        <members>DataImport__c.Elevate_Payment_Status__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.GAU_Allocation_1_Amount__c</members>
         <members>DataImport__c.GAU_Allocation_1_GAU__c</members>
@@ -1186,6 +1257,7 @@
         <members>DataImport__c.Payment_Check_Reference_Number__c</members>
         <members>DataImport__c.Payment_Declined_Reason__c</members>
         <members>DataImport__c.Payment_Donor_Cover_Amount__c</members>
+        <members>DataImport__c.Payment_Elevate_Batch_ID__c</members>
         <members>DataImport__c.Payment_Elevate_Created_Date__c</members>
         <members>DataImport__c.Payment_Elevate_Created_UTC_Timestamp__c</members>
         <members>DataImport__c.Payment_Elevate_ID__c</members>
@@ -1200,6 +1272,22 @@
         <members>DataImport__c.Payment_Possible_Matches__c</members>
         <members>DataImport__c.Payment_Status__c</members>
         <members>DataImport__c.Payment_Type__c</members>
+        <members>DataImport__c.RecurringDonationImportStatus__c</members>
+        <members>DataImport__c.RecurringDonationImported__c</members>
+        <members>DataImport__c.Recurring_Donation_Amount__c</members>
+        <members>DataImport__c.Recurring_Donation_Date_Established__c</members>
+        <members>DataImport__c.Recurring_Donation_Day_of_Month__c</members>
+        <members>DataImport__c.Recurring_Donation_Effective_Date__c</members>
+        <members>DataImport__c.Recurring_Donation_Elevate_Recurring_ID__c</members>
+        <members>DataImport__c.Recurring_Donation_End_Date__c</members>
+        <members>DataImport__c.Recurring_Donation_Installment_Frequency__c</members>
+        <members>DataImport__c.Recurring_Donation_Installment_Period__c</members>
+        <members>DataImport__c.Recurring_Donation_Name__c</members>
+        <members>DataImport__c.Recurring_Donation_Payment_Method__c</members>
+        <members>DataImport__c.Recurring_Donation_Planned_Installments__c</members>
+        <members>DataImport__c.Recurring_Donation_Recurring_Type__c</members>
+        <members>DataImport__c.Recurring_Donation_Status_Reason__c</members>
+        <members>DataImport__c.Recurring_Donation_Status__c</members>
         <members>DataImport__c.Status__c</members>
         <members>Data_Import_Settings__c.Account_Custom_Unique_ID__c</members>
         <members>Data_Import_Settings__c.Account_Matching_Rule__c</members>
@@ -1763,6 +1851,8 @@
         <members>RD2_DayOfMonthIsRequiredForMonthlyInstallment</members>
         <members>RD2_DayOfMonthMustBeValid</members>
         <members>RD2_DisableCustomizableRollupWarning</members>
+        <members>RD2_DisabledAdvancedMappingError</members>
+        <members>RD2_DisabledRD2Error</members>
         <members>RD2_ElevateCancelInProgress</members>
         <members>RD2_ElevateDisableButtonLabel</members>
         <members>RD2_ElevateDisabledHeader</members>
@@ -1770,10 +1860,16 @@
         <members>RD2_ElevateEnableButtonLabel</members>
         <members>RD2_ElevateInformationHeader</members>
         <members>RD2_ElevateInformationStatusSuccess</members>
+        <members>RD2_ElevateInstallmentPeriodMustBeValid</members>
         <members>RD2_ElevateNotSupported</members>
+        <members>RD2_ElevatePaymentMethodChangeError</members>
         <members>RD2_ElevatePendingStatus</members>
         <members>RD2_ElevatePermissionRequired</members>
+        <members>RD2_ElevateRDAmountMustBeValid</members>
+        <members>RD2_ElevateRDCampaignCannotUpdateToNull</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDDayOfMonthCannotChange</members>
+        <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
         <members>RD2_EnablementDisabledHeader</members>
         <members>RD2_EnablementDisabledMessage</members>
@@ -1836,6 +1932,7 @@
         <members>RD2_EntryFormPeriodPluralMonthly</members>
         <members>RD2_EntryFormPeriodPluralWeekly</members>
         <members>RD2_EntryFormPeriodPluralYearly</members>
+        <members>RD2_EntryFormSaveACHMessage</members>
         <members>RD2_EntryFormSaveCommitmentFailedMessage</members>
         <members>RD2_EntryFormSaveCommitmentMessage</members>
         <members>RD2_EntryFormSaveCreditCardValidationMessage</members>
@@ -1849,6 +1946,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_NextACHPaymentDonationDateInfo</members>
         <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
         <members>RD2_NumberInstallmentsNotAllowedWhenOpen</members>
@@ -1889,7 +1987,6 @@
         <members>RD2_StatusMappingSuccessMessage</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
-        <members>RD2_UpdatePaymentInformation</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>
@@ -2059,6 +2156,9 @@
         <members>bdiErrorDonationMultiMatch</members>
         <members>bdiErrorDonationNoMatch</members>
         <members>bdiErrorDonationRequireNoMatch</members>
+        <members>bdiErrorExistingDonationAllocations</members>
+        <members>bdiErrorExistingPaymentAllocations</members>
+        <members>bdiErrorGAUAllocationOver100</members>
         <members>bdiErrorInvalidCampaignName</members>
         <members>bdiErrorInvalidDonor</members>
         <members>bdiErrorInvalidIMatchDonations</members>
@@ -2214,7 +2314,10 @@
         <members>bgeMatchingSelect</members>
         <members>bgeNewBatch</members>
         <members>bgeNewGift</members>
+        <members>bgeNotSupportedBody</members>
+        <members>bgeNotSupportedHeader</members>
         <members>bgeProcessBatch</members>
+        <members>bgeProcessBatchAndPayments</members>
         <members>bgeRetirementWarningBody</members>
         <members>bgeRetirementWarningHeader</members>
         <members>bgeTabHeader</members>
@@ -2241,6 +2344,7 @@
         <members>commonBatches</members>
         <members>commonCVV</members>
         <members>commonCancel</members>
+        <members>commonCardLast4</members>
         <members>commonCardType</members>
         <members>commonCardholderName</members>
         <members>commonClone</members>
@@ -2253,6 +2357,7 @@
         <members>commonDefaultValue</members>
         <members>commonDelete</members>
         <members>commonEdit</members>
+        <members>commonEditPaymentInformation</members>
         <members>commonElevateFailedOnboarding</members>
         <members>commonError</members>
         <members>commonErrorPrefix</members>
@@ -2272,10 +2377,13 @@
         <members>commonNoItems</members>
         <members>commonOkay</members>
         <members>commonOpen</members>
+        <members>commonPaymentProcessingErrors</members>
         <members>commonPaymentServices</members>
         <members>commonPercent</members>
         <members>commonPermissionErrorMessage</members>
         <members>commonReadMore</members>
+        <members>commonRecordsFailed</members>
+        <members>commonRecordsProcessed</members>
         <members>commonRequired</members>
         <members>commonReviewForm</members>
         <members>commonSave</members>
@@ -2348,11 +2456,14 @@
         <members>geAssistiveSectionUp</members>
         <members>geAssistiveShowMenu</members>
         <members>geAssistiveSpinner</members>
+        <members>geAuthorizedCreditCardSuccess</members>
+        <members>geAuthorizingCreditCard</members>
         <members>geBatchGiftsCount</members>
         <members>geBatchGiftsExpectedCountOrTotalMessage</members>
         <members>geBatchGiftsExpectedTotalsMessage</members>
         <members>geBatchGiftsHeader</members>
         <members>geBatchGiftsTotal</members>
+        <members>geBatchProcessingSuccess</members>
         <members>geBodyAdvancedFieldMapping</members>
         <members>geBodyBatchDefaultValues</members>
         <members>geBodyBatchFieldBundleInfo</members>
@@ -2376,6 +2487,7 @@
         <members>geBodyMatchingSelectRecord</members>
         <members>geBodyMatchingUpdatingDonation</members>
         <members>geBodyPaymentNotProcessingTransaction</members>
+        <members>geBodyPaymentProcessedDuringBatchProcessing</members>
         <members>geBodyTemplateInfoLeftCol</members>
         <members>geBodyTemplatesTabDescription</members>
         <members>geBodyWidgetFields</members>
@@ -2409,6 +2521,7 @@
         <members>geEnableGiftEntrySuccess</members>
         <members>geErrorAmountDoesNotMatch</members>
         <members>geErrorBatchGiftEntryCurrencyMismatch</members>
+        <members>geErrorBatchGiftEntryReauthRequired</members>
         <members>geErrorCardChargedBDIFailed</members>
         <members>geErrorCompleteThisField</members>
         <members>geErrorDonorTypeInvalid</members>
@@ -2485,9 +2598,15 @@
         <members>geLabelTemplateInfoNameField</members>
         <members>gePS_IntegrationTestInvalidAPIKey</members>
         <members>gePS_IntegrationTestInvalidConfigParams</members>
+        <members>gePaymentAuthExpiredHeader</members>
+        <members>gePaymentAuthExpiredWarningText</members>
         <members>gePaymentProcessError</members>
+        <members>gePaymentProcessedWarning</members>
         <members>gePaymentProcessingErrorBanner</members>
         <members>gePaymentRequestTimedOut</members>
+        <members>geProcessAnyway</members>
+        <members>geProcessingBatch</members>
+        <members>geProcessingErrors</members>
         <members>geSearchPlaceholder</members>
         <members>geSelectBatchTableColumns</members>
         <members>geSelectPlaceholder</members>
@@ -3445,11 +3564,13 @@
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_1_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_1_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Amount</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_GAU</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Opportunity</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Payment</members>
         <members>Data_Import_Field_Mapping.GAU_Allocation_2_Percent</members>
+        <members>Data_Import_Field_Mapping.GAU_Allocation_2_Recurring_Donation</members>
         <members>Data_Import_Field_Mapping.Home_City</members>
         <members>Data_Import_Field_Mapping.Home_Country</members>
         <members>Data_Import_Field_Mapping.Home_State_Province</members>
@@ -3484,6 +3605,21 @@
         <members>Data_Import_Field_Mapping.Payment_Origin_Type</members>
         <members>Data_Import_Field_Mapping.Payment_Paid</members>
         <members>Data_Import_Field_Mapping.Payment_Type</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Amount</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Campaign</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Date_Established</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Day_of_Month</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Effective_Date</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Elevate_Recurring_Id</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_End_Date</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Installment_Frequency</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Installment_Period</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Name</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Payment_Method</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Planned_Installments</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Recurring_Type</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Status</members>
+        <members>Data_Import_Field_Mapping.Recurring_Donation_Status_Reason</members>
         <members>Data_Import_Field_Mapping_Set.Default_Field_Mapping_Set</members>
         <members>Data_Import_Object_Mapping.Account1</members>
         <members>Data_Import_Object_Mapping.Account2</members>
@@ -3497,6 +3633,7 @@
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_1</members>
         <members>Data_Import_Object_Mapping.Opportunity_Contact_Role_2</members>
         <members>Data_Import_Object_Mapping.Payment</members>
+        <members>Data_Import_Object_Mapping.Recurring_Donation</members>
         <members>Data_Import_Object_Mapping_Set.Default_Object_Mapping_Set</members>
         <members>GetStartedChecklistItem.Add_User</members>
         <members>GetStartedChecklistItem.Capture_Donor_Intent</members>
@@ -3595,12 +3732,14 @@
     </types>
     <types>
         <members>Account-de</members>
+        <members>Account-en_GB</members>
         <members>Account-es</members>
         <members>Account-fr</members>
         <members>Account-iw</members>
         <members>Account-ja</members>
         <members>Account-nl_NL</members>
         <members>Account_Soft_Credit__c-de</members>
+        <members>Account_Soft_Credit__c-en_GB</members>
         <members>Account_Soft_Credit__c-en_US</members>
         <members>Account_Soft_Credit__c-es</members>
         <members>Account_Soft_Credit__c-fr</members>
@@ -3608,12 +3747,14 @@
         <members>Account_Soft_Credit__c-ja</members>
         <members>Account_Soft_Credit__c-nl_NL</members>
         <members>Activity-de</members>
+        <members>Activity-en_GB</members>
         <members>Activity-es</members>
         <members>Activity-fr</members>
         <members>Activity-iw</members>
         <members>Activity-ja</members>
         <members>Activity-nl_NL</members>
         <members>Addr_Verification_Settings__c-de</members>
+        <members>Addr_Verification_Settings__c-en_GB</members>
         <members>Addr_Verification_Settings__c-en_US</members>
         <members>Addr_Verification_Settings__c-es</members>
         <members>Addr_Verification_Settings__c-fr</members>
@@ -3621,6 +3762,7 @@
         <members>Addr_Verification_Settings__c-ja</members>
         <members>Addr_Verification_Settings__c-nl_NL</members>
         <members>Address_Verification_Settings__c-de</members>
+        <members>Address_Verification_Settings__c-en_GB</members>
         <members>Address_Verification_Settings__c-en_US</members>
         <members>Address_Verification_Settings__c-es</members>
         <members>Address_Verification_Settings__c-fr</members>
@@ -3628,6 +3770,7 @@
         <members>Address_Verification_Settings__c-ja</members>
         <members>Address_Verification_Settings__c-nl_NL</members>
         <members>Address__c-de</members>
+        <members>Address__c-en_GB</members>
         <members>Address__c-en_US</members>
         <members>Address__c-es</members>
         <members>Address__c-fr</members>
@@ -3635,6 +3778,7 @@
         <members>Address__c-ja</members>
         <members>Address__c-nl_NL</members>
         <members>Allocation__c-de</members>
+        <members>Allocation__c-en_GB</members>
         <members>Allocation__c-en_US</members>
         <members>Allocation__c-es</members>
         <members>Allocation__c-fr</members>
@@ -3642,6 +3786,7 @@
         <members>Allocation__c-ja</members>
         <members>Allocation__c-nl_NL</members>
         <members>Allocations_Settings__c-de</members>
+        <members>Allocations_Settings__c-en_GB</members>
         <members>Allocations_Settings__c-en_US</members>
         <members>Allocations_Settings__c-es</members>
         <members>Allocations_Settings__c-fr</members>
@@ -3649,6 +3794,7 @@
         <members>Allocations_Settings__c-ja</members>
         <members>Allocations_Settings__c-nl_NL</members>
         <members>AutoNumber__c-de</members>
+        <members>AutoNumber__c-en_GB</members>
         <members>AutoNumber__c-en_US</members>
         <members>AutoNumber__c-es</members>
         <members>AutoNumber__c-fr</members>
@@ -3656,6 +3802,7 @@
         <members>AutoNumber__c-ja</members>
         <members>AutoNumber__c-nl_NL</members>
         <members>Batch_Data_Entry_Settings__c-de</members>
+        <members>Batch_Data_Entry_Settings__c-en_GB</members>
         <members>Batch_Data_Entry_Settings__c-en_US</members>
         <members>Batch_Data_Entry_Settings__c-es</members>
         <members>Batch_Data_Entry_Settings__c-fr</members>
@@ -3663,6 +3810,7 @@
         <members>Batch_Data_Entry_Settings__c-ja</members>
         <members>Batch_Data_Entry_Settings__c-nl_NL</members>
         <members>Batch__c-de</members>
+        <members>Batch__c-en_GB</members>
         <members>Batch__c-en_US</members>
         <members>Batch__c-es</members>
         <members>Batch__c-fr</members>
@@ -3670,17 +3818,20 @@
         <members>Batch__c-ja</members>
         <members>Batch__c-nl_NL</members>
         <members>Campaign-de</members>
+        <members>Campaign-en_GB</members>
         <members>Campaign-es</members>
         <members>Campaign-fr</members>
         <members>Campaign-ja</members>
         <members>Campaign-nl_NL</members>
         <members>Contact-de</members>
+        <members>Contact-en_GB</members>
         <members>Contact-es</members>
         <members>Contact-fr</members>
         <members>Contact-iw</members>
         <members>Contact-ja</members>
         <members>Contact-nl_NL</members>
         <members>Custom_Column_Header__c-de</members>
+        <members>Custom_Column_Header__c-en_GB</members>
         <members>Custom_Column_Header__c-en_US</members>
         <members>Custom_Column_Header__c-es</members>
         <members>Custom_Column_Header__c-fr</members>
@@ -3688,6 +3839,7 @@
         <members>Custom_Column_Header__c-ja</members>
         <members>Custom_Column_Header__c-nl_NL</members>
         <members>Customizable_Rollup_Settings__c-de</members>
+        <members>Customizable_Rollup_Settings__c-en_GB</members>
         <members>Customizable_Rollup_Settings__c-en_US</members>
         <members>Customizable_Rollup_Settings__c-es</members>
         <members>Customizable_Rollup_Settings__c-fr</members>
@@ -3695,6 +3847,7 @@
         <members>Customizable_Rollup_Settings__c-ja</members>
         <members>Customizable_Rollup_Settings__c-nl_NL</members>
         <members>DataImportBatch__c-de</members>
+        <members>DataImportBatch__c-en_GB</members>
         <members>DataImportBatch__c-en_US</members>
         <members>DataImportBatch__c-es</members>
         <members>DataImportBatch__c-fr</members>
@@ -3702,6 +3855,7 @@
         <members>DataImportBatch__c-ja</members>
         <members>DataImportBatch__c-nl_NL</members>
         <members>DataImport__c-de</members>
+        <members>DataImport__c-en_GB</members>
         <members>DataImport__c-en_US</members>
         <members>DataImport__c-es</members>
         <members>DataImport__c-fr</members>
@@ -3709,6 +3863,7 @@
         <members>DataImport__c-ja</members>
         <members>DataImport__c-nl_NL</members>
         <members>Data_Import_Settings__c-de</members>
+        <members>Data_Import_Settings__c-en_GB</members>
         <members>Data_Import_Settings__c-en_US</members>
         <members>Data_Import_Settings__c-es</members>
         <members>Data_Import_Settings__c-fr</members>
@@ -3716,6 +3871,7 @@
         <members>Data_Import_Settings__c-ja</members>
         <members>Data_Import_Settings__c-nl_NL</members>
         <members>Engagement_Plan_Task__c-de</members>
+        <members>Engagement_Plan_Task__c-en_GB</members>
         <members>Engagement_Plan_Task__c-en_US</members>
         <members>Engagement_Plan_Task__c-es</members>
         <members>Engagement_Plan_Task__c-fr</members>
@@ -3723,6 +3879,7 @@
         <members>Engagement_Plan_Task__c-ja</members>
         <members>Engagement_Plan_Task__c-nl_NL</members>
         <members>Engagement_Plan_Template__c-de</members>
+        <members>Engagement_Plan_Template__c-en_GB</members>
         <members>Engagement_Plan_Template__c-en_US</members>
         <members>Engagement_Plan_Template__c-es</members>
         <members>Engagement_Plan_Template__c-fr</members>
@@ -3730,6 +3887,7 @@
         <members>Engagement_Plan_Template__c-ja</members>
         <members>Engagement_Plan_Template__c-nl_NL</members>
         <members>Engagement_Plan__c-de</members>
+        <members>Engagement_Plan__c-en_GB</members>
         <members>Engagement_Plan__c-en_US</members>
         <members>Engagement_Plan__c-es</members>
         <members>Engagement_Plan__c-fr</members>
@@ -3737,6 +3895,7 @@
         <members>Engagement_Plan__c-ja</members>
         <members>Engagement_Plan__c-nl_NL</members>
         <members>Error_Settings__c-de</members>
+        <members>Error_Settings__c-en_GB</members>
         <members>Error_Settings__c-en_US</members>
         <members>Error_Settings__c-es</members>
         <members>Error_Settings__c-fr</members>
@@ -3744,6 +3903,7 @@
         <members>Error_Settings__c-ja</members>
         <members>Error_Settings__c-nl_NL</members>
         <members>Error__c-de</members>
+        <members>Error__c-en_GB</members>
         <members>Error__c-en_US</members>
         <members>Error__c-es</members>
         <members>Error__c-fr</members>
@@ -3751,6 +3911,7 @@
         <members>Error__c-ja</members>
         <members>Error__c-nl_NL</members>
         <members>Form_Template__c-de</members>
+        <members>Form_Template__c-en_GB</members>
         <members>Form_Template__c-en_US</members>
         <members>Form_Template__c-es</members>
         <members>Form_Template__c-fr</members>
@@ -3758,6 +3919,7 @@
         <members>Form_Template__c-ja</members>
         <members>Form_Template__c-nl_NL</members>
         <members>Fund__c-de</members>
+        <members>Fund__c-en_GB</members>
         <members>Fund__c-en_US</members>
         <members>Fund__c-es</members>
         <members>Fund__c-fr</members>
@@ -3765,6 +3927,7 @@
         <members>Fund__c-ja</members>
         <members>Fund__c-nl_NL</members>
         <members>General_Accounting_Unit__c-de</members>
+        <members>General_Accounting_Unit__c-en_GB</members>
         <members>General_Accounting_Unit__c-en_US</members>
         <members>General_Accounting_Unit__c-es</members>
         <members>General_Accounting_Unit__c-fr</members>
@@ -3772,6 +3935,7 @@
         <members>General_Accounting_Unit__c-ja</members>
         <members>General_Accounting_Unit__c-nl_NL</members>
         <members>GetStartedCompletionChecklistState__c-de</members>
+        <members>GetStartedCompletionChecklistState__c-en_GB</members>
         <members>GetStartedCompletionChecklistState__c-en_US</members>
         <members>GetStartedCompletionChecklistState__c-es</members>
         <members>GetStartedCompletionChecklistState__c-fr</members>
@@ -3779,6 +3943,7 @@
         <members>GetStartedCompletionChecklistState__c-ja</members>
         <members>GetStartedCompletionChecklistState__c-nl_NL</members>
         <members>Gift_Entry_Settings__c-de</members>
+        <members>Gift_Entry_Settings__c-en_GB</members>
         <members>Gift_Entry_Settings__c-en_US</members>
         <members>Gift_Entry_Settings__c-es</members>
         <members>Gift_Entry_Settings__c-fr</members>
@@ -3786,6 +3951,7 @@
         <members>Gift_Entry_Settings__c-ja</members>
         <members>Gift_Entry_Settings__c-nl_NL</members>
         <members>Grant_Deadline__c-de</members>
+        <members>Grant_Deadline__c-en_GB</members>
         <members>Grant_Deadline__c-en_US</members>
         <members>Grant_Deadline__c-es</members>
         <members>Grant_Deadline__c-fr</members>
@@ -3793,6 +3959,7 @@
         <members>Grant_Deadline__c-ja</members>
         <members>Grant_Deadline__c-nl_NL</members>
         <members>Household_Naming_Settings__c-de</members>
+        <members>Household_Naming_Settings__c-en_GB</members>
         <members>Household_Naming_Settings__c-en_US</members>
         <members>Household_Naming_Settings__c-es</members>
         <members>Household_Naming_Settings__c-fr</members>
@@ -3800,12 +3967,14 @@
         <members>Household_Naming_Settings__c-ja</members>
         <members>Household_Naming_Settings__c-nl_NL</members>
         <members>Lead-de</members>
+        <members>Lead-en_GB</members>
         <members>Lead-es</members>
         <members>Lead-fr</members>
         <members>Lead-iw</members>
         <members>Lead-ja</members>
         <members>Lead-nl_NL</members>
         <members>Level__c-de</members>
+        <members>Level__c-en_GB</members>
         <members>Level__c-en_US</members>
         <members>Level__c-es</members>
         <members>Level__c-fr</members>
@@ -3813,6 +3982,7 @@
         <members>Level__c-ja</members>
         <members>Level__c-nl_NL</members>
         <members>Levels_Settings__c-de</members>
+        <members>Levels_Settings__c-en_GB</members>
         <members>Levels_Settings__c-en_US</members>
         <members>Levels_Settings__c-es</members>
         <members>Levels_Settings__c-fr</members>
@@ -3820,12 +3990,14 @@
         <members>Levels_Settings__c-ja</members>
         <members>Levels_Settings__c-nl_NL</members>
         <members>Opportunity-de</members>
+        <members>Opportunity-en_GB</members>
         <members>Opportunity-es</members>
         <members>Opportunity-fr</members>
         <members>Opportunity-iw</members>
         <members>Opportunity-ja</members>
         <members>Opportunity-nl_NL</members>
         <members>Opportunity_Naming_Settings__c-de</members>
+        <members>Opportunity_Naming_Settings__c-en_GB</members>
         <members>Opportunity_Naming_Settings__c-en_US</members>
         <members>Opportunity_Naming_Settings__c-es</members>
         <members>Opportunity_Naming_Settings__c-fr</members>
@@ -3833,6 +4005,7 @@
         <members>Opportunity_Naming_Settings__c-ja</members>
         <members>Opportunity_Naming_Settings__c-nl_NL</members>
         <members>Package_Settings__c-de</members>
+        <members>Package_Settings__c-en_GB</members>
         <members>Package_Settings__c-en_US</members>
         <members>Package_Settings__c-es</members>
         <members>Package_Settings__c-fr</members>
@@ -3840,6 +4013,7 @@
         <members>Package_Settings__c-ja</members>
         <members>Package_Settings__c-nl_NL</members>
         <members>Partial_Soft_Credit__c-de</members>
+        <members>Partial_Soft_Credit__c-en_GB</members>
         <members>Partial_Soft_Credit__c-en_US</members>
         <members>Partial_Soft_Credit__c-es</members>
         <members>Partial_Soft_Credit__c-fr</members>
@@ -3847,6 +4021,7 @@
         <members>Partial_Soft_Credit__c-ja</members>
         <members>Partial_Soft_Credit__c-nl_NL</members>
         <members>Payment_Services_Configuration__c-de</members>
+        <members>Payment_Services_Configuration__c-en_GB</members>
         <members>Payment_Services_Configuration__c-en_US</members>
         <members>Payment_Services_Configuration__c-es</members>
         <members>Payment_Services_Configuration__c-fr</members>
@@ -3854,6 +4029,7 @@
         <members>Payment_Services_Configuration__c-ja</members>
         <members>Payment_Services_Configuration__c-nl_NL</members>
         <members>RecurringDonationSchedule__c-de</members>
+        <members>RecurringDonationSchedule__c-en_GB</members>
         <members>RecurringDonationSchedule__c-en_US</members>
         <members>RecurringDonationSchedule__c-es</members>
         <members>RecurringDonationSchedule__c-fr</members>
@@ -3861,6 +4037,7 @@
         <members>RecurringDonationSchedule__c-ja</members>
         <members>RecurringDonationSchedule__c-nl_NL</members>
         <members>Relationship_Sync_Excluded_Fields__c-de</members>
+        <members>Relationship_Sync_Excluded_Fields__c-en_GB</members>
         <members>Relationship_Sync_Excluded_Fields__c-en_US</members>
         <members>Relationship_Sync_Excluded_Fields__c-es</members>
         <members>Relationship_Sync_Excluded_Fields__c-fr</members>
@@ -3868,6 +4045,7 @@
         <members>Relationship_Sync_Excluded_Fields__c-ja</members>
         <members>Relationship_Sync_Excluded_Fields__c-nl_NL</members>
         <members>Schedulable__c-de</members>
+        <members>Schedulable__c-en_GB</members>
         <members>Schedulable__c-en_US</members>
         <members>Schedulable__c-es</members>
         <members>Schedulable__c-fr</members>
@@ -3875,6 +4053,7 @@
         <members>Schedulable__c-ja</members>
         <members>Schedulable__c-nl_NL</members>
         <members>Trigger_Handler__c-de</members>
+        <members>Trigger_Handler__c-en_GB</members>
         <members>Trigger_Handler__c-en_US</members>
         <members>Trigger_Handler__c-es</members>
         <members>Trigger_Handler__c-fr</members>
@@ -3882,6 +4061,7 @@
         <members>Trigger_Handler__c-ja</members>
         <members>Trigger_Handler__c-nl_NL</members>
         <members>Data_Import_Field_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Field_Mapping_Set__mdt-en_GB</members>
         <members>Data_Import_Field_Mapping_Set__mdt-en_US</members>
         <members>Data_Import_Field_Mapping_Set__mdt-es</members>
         <members>Data_Import_Field_Mapping_Set__mdt-fr</members>
@@ -3889,6 +4069,7 @@
         <members>Data_Import_Field_Mapping_Set__mdt-ja</members>
         <members>Data_Import_Field_Mapping_Set__mdt-nl_NL</members>
         <members>Data_Import_Field_Mapping__mdt-de</members>
+        <members>Data_Import_Field_Mapping__mdt-en_GB</members>
         <members>Data_Import_Field_Mapping__mdt-en_US</members>
         <members>Data_Import_Field_Mapping__mdt-es</members>
         <members>Data_Import_Field_Mapping__mdt-fr</members>
@@ -3896,6 +4077,7 @@
         <members>Data_Import_Field_Mapping__mdt-ja</members>
         <members>Data_Import_Field_Mapping__mdt-nl_NL</members>
         <members>Data_Import_Object_Mapping_Set__mdt-de</members>
+        <members>Data_Import_Object_Mapping_Set__mdt-en_GB</members>
         <members>Data_Import_Object_Mapping_Set__mdt-en_US</members>
         <members>Data_Import_Object_Mapping_Set__mdt-es</members>
         <members>Data_Import_Object_Mapping_Set__mdt-fr</members>
@@ -3903,6 +4085,7 @@
         <members>Data_Import_Object_Mapping_Set__mdt-ja</members>
         <members>Data_Import_Object_Mapping_Set__mdt-nl_NL</members>
         <members>Data_Import_Object_Mapping__mdt-de</members>
+        <members>Data_Import_Object_Mapping__mdt-en_GB</members>
         <members>Data_Import_Object_Mapping__mdt-en_US</members>
         <members>Data_Import_Object_Mapping__mdt-es</members>
         <members>Data_Import_Object_Mapping__mdt-fr</members>
@@ -3910,6 +4093,7 @@
         <members>Data_Import_Object_Mapping__mdt-ja</members>
         <members>Data_Import_Object_Mapping__mdt-nl_NL</members>
         <members>DeploymentEvent__e-de</members>
+        <members>DeploymentEvent__e-en_GB</members>
         <members>DeploymentEvent__e-en_US</members>
         <members>DeploymentEvent__e-es</members>
         <members>DeploymentEvent__e-fr</members>
@@ -3917,6 +4101,7 @@
         <members>DeploymentEvent__e-ja</members>
         <members>DeploymentEvent__e-nl_NL</members>
         <members>Filter_Group__mdt-de</members>
+        <members>Filter_Group__mdt-en_GB</members>
         <members>Filter_Group__mdt-en_US</members>
         <members>Filter_Group__mdt-es</members>
         <members>Filter_Group__mdt-fr</members>
@@ -3924,6 +4109,7 @@
         <members>Filter_Group__mdt-ja</members>
         <members>Filter_Group__mdt-nl_NL</members>
         <members>Filter_Rule__mdt-de</members>
+        <members>Filter_Rule__mdt-en_GB</members>
         <members>Filter_Rule__mdt-en_US</members>
         <members>Filter_Rule__mdt-es</members>
         <members>Filter_Rule__mdt-fr</members>
@@ -3931,6 +4117,7 @@
         <members>Filter_Rule__mdt-ja</members>
         <members>Filter_Rule__mdt-nl_NL</members>
         <members>GetStartedChecklistItem__mdt-de</members>
+        <members>GetStartedChecklistItem__mdt-en_GB</members>
         <members>GetStartedChecklistItem__mdt-en_US</members>
         <members>GetStartedChecklistItem__mdt-es</members>
         <members>GetStartedChecklistItem__mdt-fr</members>
@@ -3938,6 +4125,7 @@
         <members>GetStartedChecklistItem__mdt-ja</members>
         <members>GetStartedChecklistItem__mdt-nl_NL</members>
         <members>GetStartedChecklistSection__mdt-de</members>
+        <members>GetStartedChecklistSection__mdt-en_GB</members>
         <members>GetStartedChecklistSection__mdt-en_US</members>
         <members>GetStartedChecklistSection__mdt-es</members>
         <members>GetStartedChecklistSection__mdt-fr</members>
@@ -3945,6 +4133,7 @@
         <members>GetStartedChecklistSection__mdt-ja</members>
         <members>GetStartedChecklistSection__mdt-nl_NL</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-de</members>
+        <members>Opportunity_Stage_To_State_Mapping__mdt-en_GB</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-en_US</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-es</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-fr</members>
@@ -3952,6 +4141,7 @@
         <members>Opportunity_Stage_To_State_Mapping__mdt-ja</members>
         <members>Opportunity_Stage_To_State_Mapping__mdt-nl_NL</members>
         <members>RecurringDonationStatusMapping__mdt-de</members>
+        <members>RecurringDonationStatusMapping__mdt-en_GB</members>
         <members>RecurringDonationStatusMapping__mdt-en_US</members>
         <members>RecurringDonationStatusMapping__mdt-es</members>
         <members>RecurringDonationStatusMapping__mdt-fr</members>
@@ -3959,6 +4149,7 @@
         <members>RecurringDonationStatusMapping__mdt-ja</members>
         <members>RecurringDonationStatusMapping__mdt-nl_NL</members>
         <members>Rollup__mdt-de</members>
+        <members>Rollup__mdt-en_GB</members>
         <members>Rollup__mdt-en_US</members>
         <members>Rollup__mdt-es</members>
         <members>Rollup__mdt-fr</members>
@@ -3966,54 +4157,63 @@
         <members>Rollup__mdt-ja</members>
         <members>Rollup__mdt-nl_NL</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-de</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c-en_GB</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-es</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-fr</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-iw</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-ja</members>
         <members>npe01__Contacts_And_Orgs_Settings__c-nl_NL</members>
         <members>npe01__OppPayment__c-de</members>
+        <members>npe01__OppPayment__c-en_GB</members>
         <members>npe01__OppPayment__c-es</members>
         <members>npe01__OppPayment__c-fr</members>
         <members>npe01__OppPayment__c-iw</members>
         <members>npe01__OppPayment__c-ja</members>
         <members>npe01__OppPayment__c-nl_NL</members>
         <members>npe03__Recurring_Donation__c-de</members>
+        <members>npe03__Recurring_Donation__c-en_GB</members>
         <members>npe03__Recurring_Donation__c-es</members>
         <members>npe03__Recurring_Donation__c-fr</members>
         <members>npe03__Recurring_Donation__c-iw</members>
         <members>npe03__Recurring_Donation__c-ja</members>
         <members>npe03__Recurring_Donation__c-nl_NL</members>
         <members>npe03__Recurring_Donations_Settings__c-de</members>
+        <members>npe03__Recurring_Donations_Settings__c-en_GB</members>
         <members>npe03__Recurring_Donations_Settings__c-es</members>
         <members>npe03__Recurring_Donations_Settings__c-fr</members>
         <members>npe03__Recurring_Donations_Settings__c-iw</members>
         <members>npe03__Recurring_Donations_Settings__c-ja</members>
         <members>npe03__Recurring_Donations_Settings__c-nl_NL</members>
         <members>npe4__Relationship_Settings__c-de</members>
+        <members>npe4__Relationship_Settings__c-en_GB</members>
         <members>npe4__Relationship_Settings__c-es</members>
         <members>npe4__Relationship_Settings__c-fr</members>
         <members>npe4__Relationship_Settings__c-iw</members>
         <members>npe4__Relationship_Settings__c-ja</members>
         <members>npe4__Relationship_Settings__c-nl_NL</members>
         <members>npe4__Relationship__c-de</members>
+        <members>npe4__Relationship__c-en_GB</members>
         <members>npe4__Relationship__c-es</members>
         <members>npe4__Relationship__c-fr</members>
         <members>npe4__Relationship__c-iw</members>
         <members>npe4__Relationship__c-ja</members>
         <members>npe4__Relationship__c-nl_NL</members>
         <members>npe5__Affiliation__c-de</members>
+        <members>npe5__Affiliation__c-en_GB</members>
         <members>npe5__Affiliation__c-es</members>
         <members>npe5__Affiliation__c-fr</members>
         <members>npe5__Affiliation__c-iw</members>
         <members>npe5__Affiliation__c-ja</members>
         <members>npe5__Affiliation__c-nl_NL</members>
         <members>npo02__Household__c-de</members>
+        <members>npo02__Household__c-en_GB</members>
         <members>npo02__Household__c-es</members>
         <members>npo02__Household__c-fr</members>
         <members>npo02__Household__c-iw</members>
         <members>npo02__Household__c-ja</members>
         <members>npo02__Household__c-nl_NL</members>
         <members>npo02__Households_Settings__c-de</members>
+        <members>npo02__Households_Settings__c-en_GB</members>
         <members>npo02__Households_Settings__c-es</members>
         <members>npo02__Households_Settings__c-fr</members>
         <members>npo02__Households_Settings__c-iw</members>
@@ -4121,6 +4321,7 @@
     </types>
     <types>
         <members>Payment_ACH_Code-de</members>
+        <members>Payment_ACH_Code-en_GB</members>
         <members>Payment_ACH_Code-es</members>
         <members>Payment_ACH_Code-fr</members>
         <members>Payment_ACH_Code-iw</members>
@@ -4190,6 +4391,7 @@
         <members>customDatatable</members>
         <members>customPicklistType</members>
         <members>errRecordLog</members>
+        <members>formattedTextWithDate</members>
         <members>geBatchGiftEntryHeader</members>
         <members>geBatchGiftEntryTable</members>
         <members>geBatchWizard</members>
@@ -4209,8 +4411,8 @@
         <members>geHome</members>
         <members>geLabelService</members>
         <members>geListView</members>
+        <members>geModalPrompt</members>
         <members>gePaymentGatewayManagement</members>
-        <members>gePurchaseCallModalError</members>
         <members>geReviewDonations</members>
         <members>geTemplateBuilder</members>
         <members>geTemplateBuilderBatchHeader</members>
@@ -4248,6 +4450,7 @@
         <members>rd2EntryFormDonorSection</members>
         <members>rd2EntryFormScheduleSection</members>
         <members>rd2PauseForm</members>
+        <members>rd2Service</members>
         <members>rd2StatusMappingSettings</members>
         <members>rdActiveSchedule</members>
         <members>rdScheduleVisualizer</members>
@@ -4262,6 +4465,8 @@
         <members>utilInput</members>
         <members>utilNumberFormatter</members>
         <members>utilPageHeader</members>
+        <members>utilPageHeaderDetailBlock</members>
+        <members>utilPageHeaderDetailRow</members>
         <members>utilPageLevelMessage</members>
         <members>utilPlatformEventListener</members>
         <members>utilProgressBar</members>
@@ -4354,6 +4559,7 @@
     </types>
     <types>
         <members>de</members>
+        <members>en_GB</members>
         <members>es</members>
         <members>fr</members>
         <members>iw</members>

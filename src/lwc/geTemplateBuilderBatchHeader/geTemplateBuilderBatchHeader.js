@@ -4,7 +4,7 @@ import {
     handleError,
     findMissingRequiredBatchFields
 } from 'c/utilTemplateBuilder';
-import { findIndexByProperty, mutable, isFunction, isEmpty } from 'c/utilCommon';
+import { findIndexByProperty, mutable, isEmpty } from 'c/utilCommon';
 import GeLabelService from 'c/geLabelService';
 import DI_BATCH_INFO from '@salesforce/schema/DataImportBatch__c';
 

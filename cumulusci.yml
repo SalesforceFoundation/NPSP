@@ -199,6 +199,10 @@ tasks:
             record_type_developer_name: NPSP_Default
             sobject: Opportunity
 
+    github_automerge_feature:
+        options:
+            update_future_releases: True
+
     github_release_notes:
         options:
             trial_info: "`TBD`"
@@ -645,6 +649,9 @@ tasks:
                   xpath: //ns:reportTypes[ns:name='screen_flows_prebuilt_crt']
                 - path: src/translations/**.translation
                   xpath: //ns:reportTypes[ns:name='Households_and_Donations']|//ns:scontrols
+                # Strip Prompt translations that should not be in the package
+                - path: src/translations/**.translation
+                  xpath: //ns:prompts
                 # Strip field translations that should not be included in the package
                 - path: src/objectTranslations/Schedulable__c-**.objectTranslation
                   xpath: //ns:picklistValues[ns:masterLabel='Daily']|//ns:picklistValues[ns:masterLabel='Hourly']|//ns:picklistValues[ns:masterLabel='Monthly']|//ns:picklistValues[ns:masterLabel='Quarterly']|//ns:picklistValues[ns:masterLabel='Weekly']

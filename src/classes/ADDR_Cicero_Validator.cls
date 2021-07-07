@@ -91,10 +91,11 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
         this.strAuthToken = settings.Auth_Token__c;
         this.dblTimeout = settings.Timeout__c;
 
-        if (settings.Address_Verification_Endpoint__c != null)
+        if (settings.Address_Verification_Endpoint__c != null) {
             this.strEndPoint = settings.Address_Verification_Endpoint__c;
-        else
+        } else {
             this.strEndPoint = getDefaultURL();
+        }
 
         for (Address__c addr : listAddr)    {
             listAddrChecked.add(verifyAddress(addr, settings));
@@ -116,16 +117,21 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
         //replacing formula with actual fields, as formula was null for tests
         String mailingAddress = '';
-        if (addr.MailingStreet__c!=null)
+        if (addr.MailingStreet__c != null) {
             mailingAddress += addr.MailingStreet__c.trim();
-        if (addr.MailingStreet2__c!=null)
+        }
+        if (addr.MailingStreet2__c != null) {
             mailingAddress += ' ' + addr.MailingStreet2__c.trim();
-        if (mailingAddress!='')
-            strRequest += 'search_address=' + EncodingUtil.urlEncode(mailingAddress,'UTF-8') + '&';
-        if (addr.MailingCity__c != null)
-            strRequest += 'search_city=' + EncodingUtil.urlEncode(addr.MailingCity__c,'UTF-8') + '&';
-        if (addr.MailingState__c != null)
-            strRequest += 'search_state=' + EncodingUtil.urlEncode(addr.MailingState__c,'UTF-8') + '&';
+        }
+        if (mailingAddress != '') {
+            strRequest += 'search_address=' + EncodingUtil.urlEncode(mailingAddress, 'UTF-8') + '&';
+        }
+        if (addr.MailingCity__c != null) {
+            strRequest += 'search_city=' + EncodingUtil.urlEncode(addr.MailingCity__c, 'UTF-8') + '&';
+        }
+        if (addr.MailingState__c != null) {
+            strRequest += 'search_state=' + EncodingUtil.urlEncode(addr.MailingState__c, 'UTF-8') + '&';
+        }
         if (addr.MailingPostalCode__c != null) {
             if (addr.MailingPostalCode__c.contains('-')) {
                 List<String> splitPostal = addr.MailingPostalCode__c.split('-');
@@ -135,14 +141,16 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 strRequest += 'search_postal=' + EncodingUtil.urlEncode(addr.MailingPostalCode__c,'UTF-8') + '&';
             }
         }
-        if (addr.MailingCountry__c != null)
-            strRequest += 'search_country=' + EncodingUtil.urlEncode(addr.MailingCountry__c,'UTF-8') + '&';
+        if (addr.MailingCountry__c != null) {
+            strRequest += 'search_country=' + EncodingUtil.urlEncode(addr.MailingCountry__c, 'UTF-8') + '&';
+        }
 
         try {
             if (strAuthToken != null && strEndPoint != null) {
                 //copy address before verification takes place, in case any information is lost
-                if (!String.isBlank(addr.Formula_MailingAddress__c))
-                    addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c.replace('<br>','\r\n');
+                if (!String.isBlank(addr.Formula_MailingAddress__c)) {
+                    addr.Pre_Verification_Address__c = addr.Formula_MailingAddress__c.replace('<br>', '\r\n');
+                }
 
                 // prepare the request
                 Http h = new Http();
@@ -155,14 +163,15 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
 
                 // execute the request
                 HttpResponse response = new HttpResponse();
-                if (Test.isRunningTest())
-                    response = ADDR_Cicero_Test.respond(req);
-                else
+                if (Test.isRunningTest()) {
+                    response = ADDR_Cicero_TEST.respond(req);
+                } else {
                     response = h.send(req);
+                }
                 UTIL_Debug.debug('****CICERO RESPONDS WITH Status: ' + response.getStatus() + ' StatusCode: ' + response.getStatusCode());
                 UTIL_Debug.debug('****CICERO response.body: ' + response.getBody());
                 if (response.getStatusCode() != ADDR_Validator_UTIL.RESPONSE_CODE_SUCCESS) {
-                    string strError = response.getStatusCode() + ': ' + response.getStatus() + '\r\n' + response.getBody();
+                    String strError = response.getStatusCode() + ': ' + response.getStatus() + '\r\n' + response.getBody();
                     throw(new CiceroException(strError));
                 }
                 CiceroResponse cresp = (CiceroResponse)JSON.deserialize(response.getBody(), CiceroResponse.class);
@@ -171,7 +180,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                 addr.API_Response__c = responseBody;
 
                 if (cresp != null && cresp.response != null && cresp.response.results != null && cresp.response.results.candidates != null) {
-                    list<Candidates> listCandidates = cresp.response.results.candidates;
+                    List<Candidates> listCandidates = cresp.response.results.candidates;
 
                     // more than one candidate means should mark as ambiguous
                     if (listCandidates.size() > 1) {
@@ -206,11 +215,11 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
                         }
                         addr.County_Name__c  = candidate.match_subregion;
 
-                        ADDR_Addresses_TDTM.handleMultilineStreet(addr);
+                        Addresses.handleMultilineStreet(addr);
 
                         // save location
-                        addr.Geolocation__Latitude__s = decimal.valueOf(candidate.y);
-                        addr.Geolocation__Longitude__s = decimal.valueOf(candidate.x);
+                        addr.Geolocation__Latitude__s = Decimal.valueOf(candidate.y);
+                        addr.Geolocation__Longitude__s = Decimal.valueOf(candidate.x);
                     }
                 }
                 addr.Verified__c = true;
@@ -253,7 +262,7 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     * @description a class to contain a list of Cicero Candidates
     */
     public class Results {
-        public list<Candidates> candidates;
+        public List<Candidates> candidates;
     }
 
     /*******************************************************************************************************
@@ -261,44 +270,44 @@ public with sharing class ADDR_Cicero_Validator implements ADDR_IValidator {
     */
     public class Candidates {
         /** @description the full normalized address that looks like street, city, state, zip */
-        public string match_addr;
+        public String match_addr;
 
         /** @description house # and street of the matched address */
-        public string match_streetaddr;
+        public String match_streetaddr;
 
         /** @description postal/zip code of the matched address */
-        public string match_postal;
+        public String match_postal;
 
         /** @description city of the matched address */
-        public string match_city;
+        public String match_city;
 
         /** @description county of the matched address -- the upstream geocoder is very spotty with populating this and it is not reliable; may be used more for addresses outside the U.S. */
-        public string match_subregion;
+        public String match_subregion;
 
         /** @description state of the matched address */
-        public string match_region;
+        public String match_region;
 
         /** @description country of the matched address. seems to be UN 3 character code, so I left getting country 2 digit ISO code from district. */
-        public string match_country;
+        public String match_country;
 
-        public string wkid;
-        public list<Districts> districts;
-        public string x;
-        public string y;
-        public string geoservice;
+        public String wkid;
+        public List<Districts> districts;
+        public String x;
+        public String y;
+        public String geoservice;
     }
 
     /*******************************************************************************************************
     * @description a class to contain a Cicero District
     */
     public class Districts {
-        public string district_type;
-        public string district_id;
-        public string country;
-        public string label;
-        public string subtype;
-        public string state;
-        public string id;
+        public String district_type;
+        public String district_id;
+        public String country;
+        public String label;
+        public String subtype;
+        public String state;
+        public String id;
     }
 
 }

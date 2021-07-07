@@ -150,5 +150,27 @@ private with sharing class TDTM_Runnable_TEST {
 
         insert dmlWrapper.objectsToInsert;
     }
-    
+
+    @IsTest
+    static void groupByTypeHandlesNull() {
+        //Given
+        Boolean dmlWrapperThrewException = false;
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
+        dmlWrapper.objectsToInsert = null;
+        dmlWrapper.objectsToUpdate = null;
+        dmlWrapper.objectsToDelete = null;
+        dmlWrapper.objectsToUndelete = null;
+
+        //When
+        try {
+            dmlWrapper.groupByType();
+        } catch (Exception e) {
+            dmlWrapperThrewException = true;
+        }
+
+        //Then
+        System.assertEquals(false, dmlWrapperThrewException,
+                'The DmlWrapper should handle its variables being set to null.');
+    }
+
 }
