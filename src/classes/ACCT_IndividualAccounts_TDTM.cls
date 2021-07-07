@@ -237,23 +237,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        Households.updateOneToOneAccounts(getOneToOneContactsToUpdate(), dmlWrapper);
+        Households.updateOneToOneAccounts(
+                contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
         HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(contactsInstance.getNewOwnerContactById());
-    }
-
-    private List<Contact> getOneToOneContactsToUpdate() {
-        List<Contact> oneToOneContactsToUpdate = new List<Contact>();
-        for (Contact contactRecord : contacts) {
-            Contact oldContact = oldContactById.get(contactRecord.Id);
-
-            if (needsOne2OneAccountUpdate(contactRecord, oldContact)) {
-                oneToOneContactsToUpdate.add(contactRecord);
-            }
-        }
-        return oneToOneContactsToUpdate;
     }
 
     /*******************************************************************************************************
@@ -362,43 +351,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (!accountsToUpdate.isEmpty()) {
             dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
         }
-    }
-
-    /*******************************************************************************************************
-    * @description returns whether changes in the contact require an update to the 1:1 account
-    * @param contactRecord the new version of the Contact
-    * @param oldContact the old version of the Contact
-    * @return Boolean
-    */
-    private Boolean needsOne2OneAccountUpdate(Contact contactRecord, Contact oldContact) {
-        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-            return false;
-        }
-
-        if(contactRecord != null && oldContact == null) {
-            return true;
-        }
-
-        String newFirst = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
-        String oldFirst = oldContact.FirstName == null ? '' : oldContact.FirstName;
-        String newLast = contactRecord.LastName == null ? '' : contactRecord.LastName;
-        String oldLast = oldContact.LastName == null ? '' : oldContact.LastName;
-
-        return (contactRecord.AccountId != oldContact.AccountId ||
-                !newFirst.equals(oldFirst) ||
-                !newLast.equals(oldLast) ||
-                contactRecord.MailingStreet != oldContact.MailingStreet ||
-                contactRecord.MailingCity != oldContact.MailingCity ||
-                contactRecord.MailingState != oldContact.MailingState ||
-                contactRecord.MailingPostalCode != oldContact.MailingPostalCode ||
-                contactRecord.MailingCountry != oldContact.MailingCountry ||
-                contactRecord.OtherStreet != oldContact.OtherStreet ||
-                contactRecord.OtherCity != oldContact.OtherCity ||
-                contactRecord.OtherState != oldContact.OtherState ||
-                contactRecord.OtherPostalCode != oldContact.OtherPostalCode ||
-                contactRecord.OtherCountry != oldContact.OtherCountry ||
-                contactRecord.Phone != oldContact.Phone ||
-                contactRecord.Fax != oldContact.Fax);
     }
 
     /*******************************************************************************************************
