@@ -225,7 +225,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         List<Contact> oneToOneContactsToUpdate = new List<Contact>();
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
-        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
 
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
@@ -234,16 +233,20 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 oneToOneContactsToUpdate.add(contactRecord);
             }
 
-            if (contactRecord.OwnerId != oldContact.OwnerId) {
-                newOwnerContactById.put(contactRecord.Id, contactRecord);
-            }
-
             if (contactRecord.AccountId != oldContact.AccountId) {
                 addHouseholdIds(householdIdsToUpdate, newHouseholdIdByContactId, contactRecord);
                 addHouseholdIds(householdIdsToUpdate, oldHouseholdIdByContactId, oldContact);
 
             } else if (needsHHAccountRename(contactRecord, oldContact)) {
                 householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+
+        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
+        for (Contact contactRecord : contacts) {
+            Contact oldContact = oldContactById.get(contactRecord.Id);
+            if (contactRecord.OwnerId != oldContact.OwnerId) {
+                newOwnerContactById.put(contactRecord.Id, contactRecord);
             }
         }
 
