@@ -68,4 +68,8 @@ public with sharing class GiftBatchService {
     public GiftBatchView viewModelFrom(GiftBatchDTO giftBatchDto) {
         return new GiftBatchView(giftBatchDto);
     }
+
+    public GiftBatchView viewFor(Id giftBatchId) {
+        return new GiftBatchView();
+    }
 }
