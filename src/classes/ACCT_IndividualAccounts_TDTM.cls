@@ -242,6 +242,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
+        Households.updateOneToOneAccounts(oneToOneContactsToUpdate, dmlWrapper);
+        moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
+        HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
+        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
+        updateOwners(getNewOwnerContactById());
+    }
+
+    private Map<Id, Contact> getNewOwnerContactById() {
         Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
@@ -249,12 +257,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 newOwnerContactById.put(contactRecord.Id, contactRecord);
             }
         }
-
-        Households.updateOneToOneAccounts(oneToOneContactsToUpdate, dmlWrapper);
-        moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
-        HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
-        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
-        updateOwners(newOwnerContactById);
+        return newOwnerContactById;
     }
 
     /*******************************************************************************************************
