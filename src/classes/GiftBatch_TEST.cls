@@ -30,9 +30,34 @@
 
 @IsTest
 private class GiftBatch_TEST {
+
+    @isTest static void shouldReturnCorrectCountOfGifts() {
+        final Integer numberOfGifts = 5;
+        Gifts gifts = new Gifts(buildGifts(numberOfGifts, null));
+        GiftBatch giftBatch = new GiftBatch(gifts);
+
+        System.assertEquals(5, giftBatch.gifts().size());
+    }
+
+    @isTest static void shouldReturnCorrectMoneyTotal() {
+        Gifts gifts = new Gifts(buildGifts(1, null));
+        GiftBatch giftBatch = new GiftBatch(gifts);
+        giftBatch.total = new Money(100, 'US');
+
+        System.assertEquals(100, giftBatch.total().amount());
+    }
+
+    @isTest static void shouldReturnCorrectTotalCount() {
+        Gifts gifts = new Gifts(buildGifts(1, null));
+        GiftBatch giftBatch = new GiftBatch(gifts);
+        giftBatch.totalCount = 10;
+
+        System.assertEquals(10, giftBatch.totalCount());
+    }
+
     @isTest static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
@@ -50,7 +75,7 @@ private class GiftBatch_TEST {
 
     @isTest static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
@@ -93,7 +118,7 @@ private class GiftBatch_TEST {
         );
     }
 
-    private static List<DataImport__c> buildAuthorizedGifts(Integer numberOfGifts) {
+    private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
@@ -103,9 +128,13 @@ private class GiftBatch_TEST {
                 Donation_Amount__c = 1,
                 Donation_Date__c = Date.today(),
                 Donation_Donor__c = 'Account1',
-                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
-                Payment_Elevate_Batch_ID__c = 'DUMMY_ELEVATE_BATCH_ID_' + i
+                Payment_Status__c = paymentStatus
             );
+
+            if (paymentStatus != null) {
+                dummyGift.Payment_Elevate_Batch_ID__c = 'DUMMY_ELEVATE_BATCH_ID_' + i;
+            }
+
             dummyAuthorizedGifts.add(dummyGift);
         }
         return dummyAuthorizedGifts;

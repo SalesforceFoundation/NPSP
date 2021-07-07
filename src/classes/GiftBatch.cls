@@ -36,7 +36,9 @@
 public inherited sharing class GiftBatch implements IGiftBatch {
 
     private Id batchId;
-    private DataImportBatch__c batch;
+    @TestVisible private DataImportBatch__c batch;
+    @TestVisible private Money total;
+    @TestVisible private Integer totalCount;
 
     @TestVisible
     private GE_Template.Template formTemplate {
@@ -128,11 +130,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public Money total() {
-        return null;
+        return this.total;
     }
 
     public Integer totalCount() {
-        return null;
+        return this.totalCount;
     }
 
     public Boolean hasElevateWidget() {

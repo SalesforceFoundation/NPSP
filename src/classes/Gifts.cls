@@ -65,6 +65,10 @@ public with sharing class Gifts {
         updateRecords();
     }
 
+    public Integer size() {
+        return dataImports.size();
+    }
+
     private Boolean isProcessableGift(DataImport__c gift) {
         return gift.Status__c == BDI_DataImport_API.bdiDryRunValidated;
     }
