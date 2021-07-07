@@ -186,38 +186,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             contactsWithoutAccounts.addAll(contactsInstance.contactsWithoutAccounts());
         }
 
-        //todo: move to Households
-        // note: isOneToOne, public contacts or Organization Contacts
         if (isOneToOneEnabled()) {
-            List<Contact> contactsWithoutAccounts2 = getContactsWithoutAccounts2();
-            contactsWithoutAccounts.addAll(contactsWithoutAccounts2);
+            contactsWithoutAccounts.addAll(
+                    Households.contactsWithoutAccounts(contactsInstance, oldContactById));
         }
         return contactsWithoutAccounts;
     }
 
-    private List<Contact> getContactsWithoutAccounts2() {
-        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
-        for (Contact contactRecord : contacts) {
-            Account account = accountsByIds.get(contactRecord.AccountId);
-            if (Households.needsOneToOneAccount(contactRecord,
-                    account)) {
-
-                Contact oldContact = oldContactById.get(contactRecord.Id);
-
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                        account)) {
-                    contactRecord.AccountId = null;
-                }
-
-                if (contactRecord.AccountId == null) {
-                    contactsWithoutAccounts2.add(contactRecord);
-                }
-
-            }
-        }
-        return contactsWithoutAccounts2;
-    }
 
     private Boolean isOneToOneEnabled() {
         return CAO_Constants.isOneToOne();
@@ -537,24 +512,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
     }
 
-    /**
-     * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.
-     */
-    private Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact oldContact, Account accountRecord) {
-        Boolean isExistingOneToOne = contactRecord.AccountId != null
-            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
-            && accountRecord.npe01__One2OneContact__c != null
-            && contactRecord.AccountId != oldContact.AccountId;
-
-        if (!isExistingOneToOne) {
-            return false;
-        }
-
-        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
-
-        return !isDeletedOldAccount;
-
-    }
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
