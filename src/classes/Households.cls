@@ -56,6 +56,17 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private static AddressService addressService {
+        get {
+            if (addressService == null) {
+                addressService = new AddressService();
+            }
+            return addressService;
+        }
+        set;
+    }
+
     public Households(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
@@ -249,6 +260,53 @@ public inherited sharing class Households extends fflib_SObjects {
 
         dmlWrapper.objectsToUpdate.addAll(accountsWithOneToOneFieldUpdated);
         return dmlWrapper;
+    }
+
+    /*******************************************************************************************************
+    * @description Updates an Individual Account for an Individual Contact
+    * @param oneToOneContactsToUpdate the list of Contacts that need updating.
+    */
+    public static void updateOneToOneAccounts(List<Contact> oneToOneContactsToUpdate,
+            TDTM_Runnable.DmlWrapper dmlWrapper){
+        if (oneToOneContactsToUpdate.isEmpty()) {
+            return;
+        }
+
+        Map<Id, Contact> contactByAccountId = new Map<Id, Contact>();
+        for (Contact contactRecord : oneToOneContactsToUpdate) {
+            contactByAccountId.put(contactRecord.AccountId, contactRecord);
+        }
+        //get the corresponding Accounts
+        // DJH: note that we explicitly do NOT get the account name.  This is to avoid the changes to the account from
+        // this routine which get added to dmlWrapper, don't end up overwriting the name changes that are done syncronously
+        // for HH accounts (which don't use dmlWrapper).
+        List<Account> accounts = new List<Account>();
+
+        for (Account accountRecord : [
+            SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
+                ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
+            FROM Account
+            WHERE Id IN :contactByAccountId.keySet()
+        ]) {
+            Contact contactRecord = contactByAccountId.get(accountRecord.Id);
+            addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord,
+                    'Billing');
+            addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord,
+                    'Shipping');
+
+            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
+                accountRecord.Name = HouseholdAccounts.strNameOne2OneAccountForContact(contactRecord);
+            }
+
+            // HH Account naming updates handled seperately to deal with asyncronous naming
+            accounts.add(accountRecord);
+        }
+
+        if (accounts.isEmpty()) {
+            return;
+        }
+
+        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     private static Map<Id, Id> getPrimaryContactByAccountId(List<Contact> contacts) {
