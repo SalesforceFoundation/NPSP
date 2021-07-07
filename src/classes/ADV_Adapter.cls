@@ -61,7 +61,7 @@ global virtual with sharing class ADV_Adapter {
             throw new AdapterException(Label.adapterException);
         }
 
-        ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccountId);
+        HouseholdAccounts.rollupAccounts(listAccountId);
     }
 
     /*******************************************************************************************************

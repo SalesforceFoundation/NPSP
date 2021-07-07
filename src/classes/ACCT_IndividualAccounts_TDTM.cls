@@ -247,63 +247,11 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
 
-        updateOneToOneAccounts(oneToOneContactsToUpdate);
+        Households.updateOneToOneAccounts(oneToOneContactsToUpdate, dmlWrapper);
         moveOppsToContactAccount(newHouseholdIdByContactId, oldHouseholdIdByContactId);
-        updateHouseholds(householdIdsToUpdate);
+        HouseholdAccounts.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(newOwnerContactById);
-    }
-
-
-    /*******************************************************************************************************
-    * @description Updates an HH Account's naming, primary contact, and rollups
-    * @param accountIds the list of Account (Id's) that need updating.
-    */
-    public void updateHouseholds(List<Id> accountIds) {
-        if (accountIds.isEmpty()) {
-            return;
-        }
-
-        resetPrimaryContactForAccount(accountIds);
-        householdNamingService.renameHouseholdAccounts(accountIds);
-        rollupAccounts(accountIds);
-    }
-
-    /*******************************************************************************************************
-    * @description sets the Primary Account for each Account in the list of Accounts
-    * @param accountIds the list of Account (Id's) that need updating.
-    */
-    private void resetPrimaryContactForAccount(List<Id> accountIds) {
-
-        // for each account, we need a set of their contacts.
-        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
-
-        for (Contact contactRecord : [
-            SELECT Id, AccountId, Account.npe01__One2OneContact__c
-            FROM Contact
-            WHERE AccountId IN :accountIds
-        ]) {
-            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
-            if (contactIds == null) {
-                contactIds = new Set<Id>();
-                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
-            }
-            contactIds.add(contactRecord.Id);
-        }
-
-        // now go thru each account and update their primary contact if the current one isn't valid
-        List<Account> accounts = new List<Account>();
-        for (Account accountRecord : [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :accountIds]) {
-            Set<Id> contactIds = contactIdsByAccountId.get(accountRecord.Id);
-            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
-                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
-                accounts.add(accountRecord);
-            }
-        }
-
-        if (accounts != null && !accounts.isEmpty()) {
-            dmlWrapper.objectsToUpdate.addAll(accounts);
-        }
     }
 
     /*******************************************************************************************************
@@ -350,19 +298,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
        return householdNamingService.getHouseholdNamingContactFields();
     }
 
-    /*******************************************************************************************************
-    * @description returns the first Id from the specified set
-    * @param ids a set of Id's
-    * @return Id.  null if the set is empty.
-    */
-    private Id extractFirstId(Set<Id> ids) {
-        for (Id recordId : ids) {
-            return recordId;
-        }
-
-        return null;
-    }
-
     /**
      * addHouseholdIds Adds the account ids from all of the contacts belonging to a household
      * @param  householdIds           The collection of householdIds to add the account ids to
@@ -374,52 +309,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             householdIds.add(contactRecord.AccountId);
             householdIdByContactId.put(contactRecord.Id, contactRecord.AccountId);
         }
-    }
-
-    /*******************************************************************************************************
-    * @description Updates an Individual Account for an Individual Contact
-    * @param oneToOneContactsToUpdate the list of Contacts that need updating.
-    */
-    private void updateOneToOneAccounts(List<Contact> oneToOneContactsToUpdate){
-        if (oneToOneContactsToUpdate.isEmpty()) {
-            return;
-        }
-
-        Map<Id, Contact> contactByAccountId = new Map<Id, Contact>();
-        for (Contact contactRecord : oneToOneContactsToUpdate) {
-            contactByAccountId.put(contactRecord.AccountId, contactRecord);
-        }
-        //get the corresponding Accounts
-        // DJH: note that we explicitly do NOT get the account name.  This is to avoid the changes to the account from
-        // this routine which get added to dmlWrapper, don't end up overwriting the name changes that are done syncronously
-        // for HH accounts (which don't use dmlWrapper).
-        List<Account> accounts = new List<Account>();
-
-        for (Account accountRecord : [
-            SELECT npe01__SYSTEM_AccountType__c, ShippingStreet, ShippingState, ShippingPostalCode, ShippingCountry,
-                ShippingCity, BillingStreet, BillingState, BillingPostalCode, BillingCountry, BillingCity
-            FROM Account
-            WHERE Id IN :contactByAccountId.keySet()
-        ]) {
-            Contact contactRecord = contactByAccountId.get(accountRecord.Id);
-            addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord,
-                    'Billing');
-            addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord,
-                    'Shipping');
-
-            if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                accountRecord.Name = HouseholdAccounts.strNameOne2OneAccountForContact(contactRecord);
-            }
-
-            // HH Account naming updates handled seperately to deal with asyncronous naming
-            accounts.add(accountRecord);
-        }
-
-        if (accounts.isEmpty()) {
-            return;
-        }
-
-        dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
     /*******************************************************************************************************
@@ -472,7 +361,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
         }
     }
-
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
@@ -607,14 +495,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             UTIL_DMLService.updateRecords(opportunities);
         }
 
-    }
-
-    /*******************************************************************************************************
-    * @description for the list of AccountId's, recalc their rollups
-    * @param accountIds the list of Account (Id's) that need updating.
-    */
-    public static void rollupAccounts(List<Id> accountIds) {
-        new RLLP_OppRollup().rollupAccounts(new Set<Id>(accountIds));
     }
 
 }

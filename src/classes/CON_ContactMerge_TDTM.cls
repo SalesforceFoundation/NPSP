@@ -294,7 +294,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 oldIndividualAcctIdByMasterId
             );
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
-            ACCT_IndividualAccounts_TDTM.rollupAccounts(accountIds);
+            HouseholdAccounts.rollupAccounts(accountIds);
         }
 
         /*******************************************************************************************************
