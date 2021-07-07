@@ -821,6 +821,15 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return householdIdsToRename;
     }
 
+    public void keepPrivateContactsPrivate() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            // for contacts marked private after they have been created, break the relationship from their account (any model)
+            if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
+                contactRecord.AccountId = null;
+            }
+        }
+    }
+
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param contactRecord the new version of the Contact

@@ -172,7 +172,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         List<Contact> contactsWithoutAccounts = getContactsWithoutAccounts_beforeInsertContext();
 
-        keepPrivateContactsPrivate();
+        contactsInstance.keepPrivateContactsPrivate();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
 
@@ -203,15 +203,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     private Boolean isHouseholdAccountModelEnabled() {
         return CAO_Constants.isHHAccountModel();
-    }
-
-    private void keepPrivateContactsPrivate() {
-        for (Contact contactRecord : contacts) {
-            // for contacts marked private after they have been created, break the relationship from their account (any model)
-            if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
-                contactRecord.AccountId = null;
-            }
-        }
     }
 
     /**
