@@ -1,8 +1,10 @@
 /**
+* WARNING: DO NOT INCLUDE THIS CLASS IN THE MANAGED PACKAGE
+* WARNING: DO NOT CALL THIS CLASS DIRECTLY TO LOG. USE THE PROVIDED SFDOINSTRUMENTATIONSERVICE IMPLEMENTATION INSTEAD.
+*
 * Support Instrumentation for Salesforce.org Managed Packages
 * @author Salesforce.org
 * @date 2021-06-21
-* @since 232
 *
 * @description: Mock class is ONLY necessary when unmanaged code is deployed into an org without a namespace.
 * - The method signatures in this class MUST match the core implementation of the "SfdoLogUtils" file-based apex class. 
@@ -10,8 +12,6 @@
 *   managed code with the product namespace. 
 * - By deploying this unmanaged class to the org BEFORE the rest of the product code is deployed, it will allow any package code that references
 *   the SfdoLogUtils.log() methods to compile property by redirecting it to "this" mock class (which does nothing)
-*
-* WARNING: DO NOT INCLUDE THIS CLASS IN THE MANAGED PACKAGE
 *
 * Core Work Item: W-9167918
 * Core Module: "sfdo"
@@ -50,6 +50,5 @@ public without sharing class SfdoLogUtils {
      * @param actionName String - define the action of the feature or component
      */
     public static void log(String featureName, String componentName, String actionName) { }
-
 
 }
