@@ -810,6 +810,74 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return oldMap.get(con.Id);
     }
 
+    public List<Id> getHouseholdIdsToRename(Contacts contacts) {
+        List<Id> householdIdsToRename = new List<Id>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = contacts.oldVersionOf(contactRecord);
+            if (needsHHAccountRename(contactRecord, oldContact)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+        return householdIdsToRename;
+    }
+
+    /*******************************************************************************************************
+    * @description returns whether changes in the contact require a rename of a HH Account
+    * @param contactRecord the new version of the Contact
+    * @param oldContact the old version of the Contact
+    * @return Boolean
+    */
+    private Boolean needsHHAccountRename(Contact contactRecord, Contact oldContact) {
+        if (contactRecord.npe01__Organization_Type__c != CAO_Constants.HH_ACCOUNT_TYPE) {
+            return false;
+        }
+
+        if (contactRecord != null && oldContact == null) {
+            return true;
+        }
+
+        contactRecord.FirstName = contactRecord.FirstName == null ? '' : contactRecord.FirstName;
+        contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
+
+        // check all household naming fields for changes
+        for(String fieldName : new HouseholdNamingService().getHouseholdNamingContactFields()) {
+            String currentName;
+            String oldName;
+
+            //separate cross object references, i.e. account.name
+            List<String> splitFields = (fieldName.split('\\.',0));
+            if (splitFields.size() > 1) {
+                SObject sObj = contactRecord.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    currentName = sObj.Id;
+                }
+                sObj = oldContact.getSObject(splitFields[0]);
+                if (sObj != null) {
+                    oldName = sObj.Id;
+                }
+            } else {
+                currentName = String.valueOf(contactRecord.get(fieldName));
+                oldName = String.valueOf(oldContact.get(fieldName));
+            }
+
+            // make sure to use case sensitive comparison
+            if (currentName == null) {
+                currentName = '';
+            }
+            if (oldName == null) {
+                oldName = '';
+            }
+            if (!currentName.equals(oldName)) {
+                return true;
+            }
+        }
+        if (contactRecord.npo02__Household_Naming_Order__c != oldContact.npo02__Household_Naming_Order__c ||
+            contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
+            return true;
+        }
+        return false;
+    }
+
     /*******************************************************************************************************
      * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
      * the Household Account model
