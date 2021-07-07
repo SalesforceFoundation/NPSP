@@ -189,26 +189,34 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         //todo: move to Households
         // note: isOneToOne, public contacts or Organization Contacts
         if (isOneToOneEnabled()) {
-            Map<Id, Account> accountsByIds = contactsInstance.accountById;
-            for (Contact contactRecord : contacts) {
-                if (Households.needsOneToOneAccount(contactRecord,
-                        accountsByIds.get(contactRecord.AccountId))) {
-
-                    Contact oldContact = oldContactById.get(contactRecord.Id);
-
-                    if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                            accountsByIds.get(contactRecord.AccountId))) {
-                        contactRecord.AccountId = null;
-                    }
-
-                    if (contactRecord.AccountId == null) {
-                        contactsWithoutAccounts.add(contactRecord);
-                    }
-
-                }
-            }
+            List<Contact> contactsWithoutAccounts2 = getContactsWithoutAccounts2();
+            contactsWithoutAccounts.addAll(contactsWithoutAccounts2);
         }
         return contactsWithoutAccounts;
+    }
+
+    private List<Contact> getContactsWithoutAccounts2() {
+        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
+        Map<Id, Account> accountsByIds = contactsInstance.accountById;
+        for (Contact contactRecord : contacts) {
+            Account account = accountsByIds.get(contactRecord.AccountId);
+            if (Households.needsOneToOneAccount(contactRecord,
+                    account)) {
+
+                Contact oldContact = oldContactById.get(contactRecord.Id);
+
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
+                        account)) {
+                    contactRecord.AccountId = null;
+                }
+
+                if (contactRecord.AccountId == null) {
+                    contactsWithoutAccounts2.add(contactRecord);
+                }
+
+            }
+        }
+        return contactsWithoutAccounts2;
     }
 
     private Boolean isOneToOneEnabled() {
