@@ -220,10 +220,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      */
     private void processAccountsAfterUpdate() {
         List<Id> householdIdsToUpdate = new List<Id>();
-        List<Id> householdIdsToRename = new List<Id>();
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
-
 
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
@@ -232,7 +230,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 addHouseholdIds(householdIdsToUpdate, newHouseholdIdByContactId, contactRecord);
                 addHouseholdIds(householdIdsToUpdate, oldHouseholdIdByContactId, oldContact);
 
-            } else if (needsHHAccountRename(contactRecord, oldContact)) {
+            }
+        }
+
+        List<Id> householdIdsToRename = new List<Id>();
+        for (Contact contactRecord : contacts) {
+            Contact oldContact = oldContactById.get(contactRecord.Id);
+            if (needsHHAccountRename(contactRecord, oldContact)) {
                 householdIdsToRename.add(contactRecord.AccountId);
             }
         }
