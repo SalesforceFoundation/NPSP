@@ -61,15 +61,17 @@ public with sharing class GiftBatchService {
         giftBatch.updateRecords();
     }
 
-    public GiftBatchDTO dtoFrom(GiftBatch giftBatch) {
-        return new GiftBatchDTO(giftBatch);
+    public GiftBatch getGiftBatchBy(Id giftBatchId) {
+        return new GiftBatch(giftBatchId);
     }
 
-    public GiftBatchView viewModelFrom(GiftBatchDTO giftBatchDto) {
+    public GiftBatchView viewFor(GiftBatch giftBatch) {
+        GiftBatchDTO giftBatchDto = dtoFrom(giftBatch);
         return new GiftBatchView(giftBatchDto);
     }
 
-    public GiftBatchView viewFor(Id giftBatchId) {
-        return new GiftBatchView();
+    @TestVisible
+    private GiftBatchDTO dtoFrom(GiftBatch giftBatch) {
+        return new GiftBatchDTO(giftBatch);
     }
 }

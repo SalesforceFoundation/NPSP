@@ -1,5 +1,16 @@
 @IsTest
 private class GiftBatchService_TEST {
+
+    @IsTest static void shouldReturnGiftBatch() {
+        DataImportBatch__c batch = new DataImportBatch__c();
+        insert batch;
+
+        GiftBatchService service = new GiftBatchService();
+        GiftBatch giftBatch = service.getGiftBatchBy(batch.Id);
+
+        System.assertNotEquals(null, giftBatch);
+    }
+
     @IsTest static void shouldReturnGiftBatchDTO() {
         GiftBatchMock giftBatchMock = new GiftBatchMock();
         GiftBatch giftBatch = stubFor(giftBatchMock);
@@ -15,13 +26,12 @@ private class GiftBatchService_TEST {
         GiftBatch giftBatch = stubFor(giftBatchMock);
 
         GiftBatchService service = new GiftBatchService();
-        GiftBatchDTO giftBatchDTO = service.dtoFrom(giftBatch);
-        GiftBatchView view = service.viewModelFrom(giftBatchDTO);
+        GiftBatchView view = service.viewFor(giftBatch);
 
         System.assertNotEquals(null, view);
     }
 
-    public class GiftBatchMock implements StubProvider {
+    private class GiftBatchMock implements StubProvider {
         public Object handleMethodCall(Object stubbedObject,
             String stubbedMethodName,
             Type returnType,
