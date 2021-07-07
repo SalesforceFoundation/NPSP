@@ -1,10 +1,11 @@
-name: CoreLoggingReview
+name: Compliance_Checking
 on:
   pull_request:
     paths:    
       - '**.cls'
+      - '!unpackaged/**.cls'
 jobs:
-  CoreLoggingReview:
+  CoreLoggingCompliance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -14,12 +15,12 @@ jobs:
           if [ $GITHUB_BASE_REF ]; then
             # Pull Request
             git fetch origin $GITHUB_BASE_REF --depth=1
-            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'sfdoLogUtils.log' )
+            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
             echo "Diff between origin/$GITHUB_BASE_REF and $GITHUB_SHA"
           else
             # Push
             git fetch origin ${{ github.event.before }} --depth=1
-            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'sfdoLogUtils.log' )
+            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
             echo "Diff between ${{ github.event.before }} and $GITHUB_SHA"
           fi
           echo "$DIFF"
