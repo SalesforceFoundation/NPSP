@@ -117,7 +117,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return dmlWrapper;
     }
 
-
     /**
      * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
      * household updates.
@@ -197,7 +196,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return contactsWithoutAccounts;
     }
 
-
     private Boolean isOneToOneEnabled() {
         return CAO_Constants.isOneToOne();
     }
@@ -223,16 +221,20 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private void processAccountsAfterUpdate() {
         List<Id> householdIdsToUpdate = new List<Id>();
         List<Id> householdIdsToRename = new List<Id>();
-        List<Contact> oneToOneContactsToUpdate = new List<Contact>();
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
 
+        List<Contact> oneToOneContactsToUpdate = new List<Contact>();
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
 
             if (needsOne2OneAccountUpdate(contactRecord, oldContact)) {
                 oneToOneContactsToUpdate.add(contactRecord);
             }
+        }
+
+        for (Contact contactRecord : contacts) {
+            Contact oldContact = oldContactById.get(contactRecord.Id);
 
             if (contactRecord.AccountId != oldContact.AccountId) {
                 addHouseholdIds(householdIdsToUpdate, newHouseholdIdByContactId, contactRecord);
@@ -249,7 +251,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         householdNamingService.renameHouseholdAccounts(householdIdsToRename);
         updateOwners(contactsInstance.getNewOwnerContactById());
     }
-
 
     /*******************************************************************************************************
      * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
