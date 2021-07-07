@@ -289,7 +289,7 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
             }
 
             HouseholdNamingService.renameHHAccounts(householdIds);
-            ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(
+            HouseholdAccounts.moveOppsToContactAccount(
                 newIndividualAcctIdByMasterId,
                 oldIndividualAcctIdByMasterId
             );
