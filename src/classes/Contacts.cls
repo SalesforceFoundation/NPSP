@@ -1058,14 +1058,17 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
             }
         }
 
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (needsOneToOneAccount(contactRecord, accountFor(contactRecord))) {
-                // Avoid creating a new contact with the 1:1 account of another contact
-                if (contactRecord.AccountId != null) {
-                    contactRecord.AccountId = null;
-                }
+        if (isOneToOneEnabled()) {
+            for (Contact contactRecord : (List<Contact>) getRecords()) {
+                if (Households.needsOneToOneAccount(contactRecord, accountFor
+                        (contactRecord))) {
+                    // Avoid creating a new contact with the 1:1 account of another contact
+                    if (contactRecord.AccountId != null) {
+                        contactRecord.AccountId = null;
+                    }
 
-                contactsWithoutAccounts.add(contactRecord);
+                    contactsWithoutAccounts.add(contactRecord);
+                }
             }
         }
         return new Contacts(contactsWithoutAccounts);
@@ -1081,19 +1084,8 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
                 && contactRecord.npe01__Private__c != true;
     }
 
-    /**
-     * @description Determines whether or not the contact needs a one to one account assigned.
-     * @param  The contact record to verify.
-     * @param  The existing account record assocatied with the contact.
-     * @return Boolean - true when the contact needs a one to one account.
-     */
-    //todo: fix
-    public Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
-        return CAO_Constants.isOneToOne()
-                && contactRecord.npe01__Private__c != true
-                && (contactRecord.AccountId == null
-                || (accountRecord != null
-                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+    private Boolean isOneToOneEnabled() {
+        return CAO_Constants.isOneToOne();
     }
 
     public Map<Id, Account> accountById {
