@@ -144,7 +144,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * ensure accounts are created for the new contacts that need them.
      */
     private void processAccountsBeforeInsert() {
-        avoidConfusion();
+        contactsInstance.resetDeprecatedFields();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
                 (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
@@ -156,19 +156,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         );
     }
 
-    private void avoidConfusion() {
-        for (Contact contactRecord : contacts) {
-            // always clear this deprecated field to avoid confusing users.
-            contactRecord.npe01__SystemAccountProcessor__c = null;
-        }
-    }
 
     /**
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      * @param  accountById - the existing accounts that the contacts are related to.
      */
     private void processAccountsBeforeUpdate() {
-        avoidConfusion();
+        contactsInstance.resetDeprecatedFields();
 
         List<Contact> contactsWithoutAccounts = getContactsWithoutAccounts_beforeInsertContext();
 
