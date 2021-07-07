@@ -175,6 +175,20 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
+    /**
+     * @description Determines whether or not the contact needs a one to one account assigned.
+     * @param  The contact record to verify.
+     * @param  The existing account record assocatied with the contact.
+     * @return Boolean - true when the contact needs a one to one account.
+     */
+    //todo: fix
+    public static Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
+        return contactRecord.npe01__Private__c != true
+                && (contactRecord.AccountId == null
+                || (accountRecord != null
+                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }

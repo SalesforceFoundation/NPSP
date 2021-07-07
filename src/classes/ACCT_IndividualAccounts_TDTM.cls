@@ -191,8 +191,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         if (isOneToOneEnabled()) {
             Map<Id, Account> accountsByIds = contactsInstance.accountById;
             for (Contact contactRecord : contacts) {
-                if (contactsInstance.needsOneToOneAccount(contactRecord,
+                if (Households.needsOneToOneAccount(contactRecord,
                         accountsByIds.get(contactRecord.AccountId))) {
+
                     Contact oldContact = oldContactById.get(contactRecord.Id);
 
                     if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
