@@ -37,6 +37,7 @@
 
 public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
+    static final String FIELD_ELEMENT_TYPE = 'field';
 
     /**
      * @description This method determines if there is a default template, 
@@ -276,7 +277,7 @@ public with sharing class GE_Template {
             BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
             for (Element element : allElements) {
 
-                if (element.elementType == 'field' && element.dataImportFieldMappingDevNames.size() > 0) {
+                if (element.elementType == FIELD_ELEMENT_TYPE && element.dataImportFieldMappingDevNames.size() > 0) {
                     String fieldMappingDeveloperName = element.dataImportFieldMappingDevNames[0];
                     BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldMappingDeveloperName);
 
@@ -422,7 +423,6 @@ public with sharing class GE_Template {
     */
     public class PermissionValidator {
 
-        public final String FIELD_ELEMENT_TYPE = 'field';
         Template template;
         Set<AccessLevel> accessLevels;
         UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();

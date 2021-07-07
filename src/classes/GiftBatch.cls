@@ -149,11 +149,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return hasWidget;
     }
 
-    private Boolean isElevateWidget(GE_Template.Element element) {
-        return element.componentName != null
-            && element.componentName == 'geFormWidgetTokenizeCard';
-    }
-
     public void captureAuthorizedGifts() {
         elevateBatchService.enqueuePaymentCaptureJobFor(
             batchId, gifts?.elevateBatchIds());
@@ -172,5 +167,20 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public void updateRecords() {
         gifts.updateRecords();
+    }
+
+    private Boolean isElevateWidget(GE_Template.Element element) {
+        return element.componentName != null
+            && element.componentName == 'geFormWidgetTokenizeCard';
+    }
+
+    private List<String> giftFieldsToQuery() {
+        List<String> giftFieldsToQuery = formTemplate.giftFieldApiNames();
+        giftFieldsToQuery.addAll(formTemplate?.giftFieldApiNames());
+        giftFieldsToQuery.add(String.valueOf(DataImport__c.fields.Payment_Status__c));
+        giftFieldsToQuery.add(String.valueOf(DataImport__c.fields.Status__c));
+        giftFieldsToQuery.add(String.valueOf(DataImport__c.fields.Additional_Object_JSON__c));
+
+        return giftFieldsToQuery;
     }
 }
