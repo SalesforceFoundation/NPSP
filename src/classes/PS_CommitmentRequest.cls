@@ -142,6 +142,19 @@ public inherited sharing class PS_CommitmentRequest {
         set;
     }
 
+    /**
+    * @description Sends requests and constructs the response
+    */
+    private UTIL_Http.RequestService requestService {
+        get {
+            if (requestService == null) {
+                requestService = new UTIL_Http.RequestService();
+            }
+            return requestService;
+        }
+        set;
+    }
+
     /***
     * @description Creates an HttpRequest for a new commitment creation or
     * existing commitment update depending on the prodived commitment Id
@@ -267,14 +280,20 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     private Map<String, Object> getExistingProductMetadata(String commitmentId) {
-        HttpRequest commitmentGetRequest = buildGetCommitmentRequest(commitmentId);
-        HttpResponse response = new Http().send(commitmentGetRequest);
+        Map<String, Object> responseBody = getElevateCommitment(commitmentId);
 
-        Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
         Map<String, Object> commitment = (Map<String, Object>) responseBody.get('commitment');
         Map<String, Object> productMetadata = (Map<String, Object>) commitment.get('productMetadata');
 
         return productMetadata;
+    }
+
+    private Map<String, Object> getElevateCommitment(String commitmentId) {
+        HttpRequest commitmentGetRequest = buildGetCommitmentRequest(commitmentId);
+        UTIL_Http.Response response = requestService.sendRequest(commitmentGetRequest);
+
+        Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.body);
+        return responseBody;
     }
 
     /**
@@ -372,25 +391,6 @@ public inherited sharing class PS_CommitmentRequest {
         return currencyMultiplier == null
             ? DEFAULT_CURRENCY_MULTIPLIER
             : currencyMultiplier;
-    }
-
-
-    /**
-     * @description Parses the response and returns the commitment data contained in the response body
-     * @param response Create commitment request response
-     * @return ResponseBody
-     */
-    public ResponseBody getCommitment(UTIL_Http.Response response) {
-        ResponseBody commitment = new ResponseBody();
-
-        if (response != null
-            && response.statusCode == UTIL_Http.STATUS_CODE_CREATED
-            && String.isNotBlank(response.body)
-        ) {
-            commitment = (ResponseBody) JSON.deserialize(response.body, ResponseBody.class);
-        }
-
-        return commitment;
     }
 
     /***
@@ -799,16 +799,26 @@ public inherited sharing class PS_CommitmentRequest {
 
         public ProductMetadata(Map<String, Object> untypedProductMetadata) {
             if (untypedProductMetadata.containsKey('origin')) {
-                Map<String, Object> originData = (Map<String, Object>)untypedProductMetadata.get('origin');
-                String originType = (String)originData.get('type');
+                String originType = getOriginType(untypedProductMetadata);
                 this.origin = new Origin(originType);
             }
 
             if (untypedProductMetadata.containsKey('campaign')) {
-                Map<String, Object> campaignData = (Map<String, Object>)untypedProductMetadata.get('campaign');
-                String campaignId = (String)campaignData.get('id');
+                String campaignId = getCampaignId(untypedProductMetadata);
                 this.campaign = new Campaign(campaignId);
             }
+        }
+
+        private String getCampaignId(Map<String, Object> untypedProductMetadata) {
+            Map<String, Object> campaignData = (Map<String, Object>) untypedProductMetadata.get('campaign');
+            String campaignId = (String) campaignData.get('id');
+            return campaignId;
+        }
+
+        private String getOriginType(Map<String, Object> untypedProductMetadata) {
+            Map<String, Object> originData = (Map<String, Object>) untypedProductMetadata.get('origin');
+            String originType = (String) originData.get('type');
+            return originType;
         }
 
         /**
@@ -843,7 +853,6 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         public Map<String, Object> mergeWithExistingMetadata(Map<String, Object> existingMetadata) {
-
             Map<String, Object> updatedMetadata = this.toUntypedMap();
 
             for(String key : updatedMetadata.keySet()) {

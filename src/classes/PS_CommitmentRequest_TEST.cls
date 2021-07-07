@@ -458,7 +458,6 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_CommitmentRequest.ProductMetadata updatedMetadata = new PS_CommitmentRequest.ProductMetadata(updatedUntypedMetadata);
         System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
         System.assertEquals('CRM', updatedMetadata.origin.type);
-
     }
 
     @IsTest
@@ -475,10 +474,13 @@ private with sharing class PS_CommitmentRequest_TEST {
         System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
         System.assertEquals('CRM', updatedMetadata.origin.type);
 
+        Map<String, Object> consentData = (Map<String, Object>) updatedUntypedMetadata.get('consent');
 
-        Map<String, Object> consentData = (Map<String, Object>)updatedUntypedMetadata.get('consent');
-        String consentMessage = (String)consentData.get('message');
+        String consentMessage = (String) consentData.get('message');
+        Boolean optin = (Boolean) consentData.get('optin');
+
         System.assertEquals('Some message', consentMessage);
+        System.assertEquals(true, optin);
     }
 
     // Helpers
@@ -521,6 +523,11 @@ private with sharing class PS_CommitmentRequest_TEST {
         ];
     }
 
+    /**
+     * @param target Clears class type information from an object so its values can be cast to primitives.
+     *
+     * @return The target Map<String, Object> without class type info
+     */
     static Map<String, Object> stripTypeInfo(Map<String, Object> target) {
         return (Map<String, Object>)JSON.deserializeUntyped(JSON.serialize(target));
     }
