@@ -18,7 +18,7 @@ jobs:
             # Pull Request
             # git fetch origin $GITHUB_BASE_REF
             echo "RUN: git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw"
-            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
             echo "Diff between origin/$GITHUB_BASE_REF and $GITHUB_SHA"
           fi
           echo "$DIFF"
