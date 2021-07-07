@@ -233,6 +233,61 @@ public inherited sharing class Households extends fflib_SObjects {
 
     }
 
+    /**
+     * @description Sets the primary contact on the account when needed and renames the household.
+     */
+    public static TDTM_Runnable.DmlWrapper updatePrimaryContactOnAccountsAfterInsert
+            (TDTM_Runnable.DmlWrapper dmlWrapper, List<Contact> contacts) {
+        Map<Id, Id> primaryContactByAccountId = getPrimaryContactByAccountId(contacts);
+
+        if (primaryContactByAccountId.isEmpty()) {
+            return dmlWrapper;
+        }
+
+        List<Account> accountsWithOneToOneFieldUpdated =
+                setOneToOneFieldValue(primaryContactByAccountId);
+
+        dmlWrapper.objectsToUpdate.addAll(accountsWithOneToOneFieldUpdated);
+        return dmlWrapper;
+    }
+
+    private static Map<Id, Id> getPrimaryContactByAccountId(List<Contact> contacts) {
+        Map<Id, Id> primaryContactByAccountId = new Map<Id, Id>();
+
+        for (Contact contactRecord : contacts) {
+            if (contactRecord.AccountId == null) {
+                continue;
+            }
+
+            if (needsPrimaryContact(contactRecord)) {
+                primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
+            }
+        }
+        return primaryContactByAccountId;
+    }
+
+    private static List<Account> setOneToOneFieldValue(Map<Id, Id>
+            primaryContactByAccountId) {
+        List<Account> accounts = new List<Account>();
+        for (Id accountId : primaryContactByAccountId.keySet()) {
+            Account accountRecord = new Account(Id = accountId, npe01__One2OneContact__c = primaryContactByAccountId.get(accountId));
+            accounts.add(accountRecord);
+        }
+        return accounts;
+    }
+
+    /**
+     * needsPrimaryContact Determines whether or not the account is in need of a primary contact.
+     * @param  contactRecord The contact record to traverse to the account data.
+     * @return Boolean - true when the account needs the primary contact set.
+     */
+    private static Boolean needsPrimaryContact(Contact contactRecord) {
+        return contactRecord.npe01__Private__c != true
+                && contactRecord.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
+                && contactRecord.Account.npe01__SYSTEMIsIndividual__c
+                && contactRecord.Account.npe01__One2OneContact__c == null;
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingServiceInst.setNameAndGreetingsToReplacementText(getRecords());
     }

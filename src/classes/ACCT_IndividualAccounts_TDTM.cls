@@ -126,7 +126,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         contacts = Database.query(buildContactSoql());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            processAccountsAfterInsert();
+            Households.updatePrimaryContactOnAccountsAfterInsert(
+                    dmlWrapper, contacts);
+
+            HouseholdAccounts.renameHouseholdAccountsAfterInsert(contacts);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -212,31 +215,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /**
-     * @description Sets the primary contact on the account when needed and renames the household.
-     */
-    private void processAccountsAfterInsert() {
-        Map<Id, Id> primaryContactByAccountId = new Map<Id, Id>();
-        List<Id> householdIdsToRename = new List<Id>();
-
-        for (Contact contactRecord : contacts) {
-            if (contactRecord.AccountId == null) {
-                continue;
-            }
-
-            if (needsPrimaryContact(contactRecord)) {
-                primaryContactByAccountId.put(contactRecord.AccountId, contactRecord.Id);
-            }
-
-            if (isHouseholdMember(contactRecord)) {
-                householdIdsToRename.add(contactRecord.AccountId);
-            }
-        }
-
-        updatePrimaryContactOnAccount(primaryContactByAccountId);
-        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
-    }
-
-    /**
      * @description Depending on the contacts household type, this method will update the one to one account,
      * move opportunities related to contacts changing accounts, update household accounts, rename household accounts
      * update account owners based on the change in contact owner
@@ -276,23 +254,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         updateOwners(newOwnerContactById);
     }
 
-    /*******************************************************************************************************
-    * @description Updates Accounts with the primary Individual Contact Id. Used for 1:1 and HH Accounts.
-    * @param primaryContactByAccountId a map of AccountId's to ContactId's which specifies which accounts need updating.
-    */
-    private void updatePrimaryContactOnAccount(Map<Id, Id> primaryContactByAccountId) {
-        if (primaryContactByAccountId.isEmpty()) {
-            return;
-        }
-
-        List<Account> accounts = new List<Account>();
-        for (Id accountId : primaryContactByAccountId.keySet()) {
-            Account accountRecord = new Account(Id = accountId, npe01__One2OneContact__c = primaryContactByAccountId.get(accountId));
-            accounts.add(accountRecord);
-        }
-
-        dmlWrapper.objectsToUpdate.addAll(accounts);
-    }
 
     /*******************************************************************************************************
     * @description Updates an HH Account's naming, primary contact, and rollups
@@ -607,29 +568,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         return false;
     }
 
-    /**
-     * isHouseholdMember Determines whether or not the contact belongs to a household account.
-     * @param  contactRecord The contact record to verify.
-     * @return Boolean - true when the contact belongs to a household account.
-     */
-    private Boolean isHouseholdMember(Contact contactRecord) {
-        return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
-    }
-
     private Boolean isBucketModelEnabled() {
         return CAO_Constants.isBucketModel();
-    }
-
-    /**
-     * needsPrimaryContact Determines whether or not the account is in need of a primary contact.
-     * @param  contactRecord The contact record to traverse to the account data.
-     * @return Boolean - true when the account needs the primary contact set.
-     */
-    private Boolean needsPrimaryContact(Contact contactRecord) {
-        return contactRecord.npe01__Private__c != true
-            && contactRecord.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.BUCKET_ORGANIZATION_TYPE
-            && contactRecord.Account.npe01__SYSTEMIsIndividual__c
-            && contactRecord.Account.npe01__One2OneContact__c == null;
     }
 
     /*******************************************************************************************************
