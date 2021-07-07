@@ -1,7 +1,6 @@
 @IsTest
 private class GiftBatchService_TEST {
-    @IsTest
-    static void shouldReturnGiftBatchDTO() {
+    @IsTest static void shouldReturnGiftBatchDTO() {
         GiftBatchMock giftBatchMock = new GiftBatchMock();
         GiftBatch giftBatch = stubFor(giftBatchMock);
 
@@ -9,6 +8,17 @@ private class GiftBatchService_TEST {
         GiftBatchDTO giftBatchDTO = service.dtoFrom(giftBatch);
 
         System.assertNotEquals(null, giftBatchDTO);
+    }
+
+    @IsTest static void shouldReturnGiftBatchView() {
+        GiftBatchMock giftBatchMock = new GiftBatchMock();
+        GiftBatch giftBatch = stubFor(giftBatchMock);
+
+        GiftBatchService service = new GiftBatchService();
+        GiftBatchDTO giftBatchDTO = service.dtoFrom(giftBatch);
+        GiftBatchView view = service.viewModelFrom(giftBatchDTO);
+
+        System.assertNotEquals(null, view);
     }
 
     public class GiftBatchMock implements StubProvider {
