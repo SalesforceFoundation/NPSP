@@ -51,6 +51,17 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
         set;
     }
 
+    @TestVisible
+    private static HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description a set of languages that require different naming conventions
      */
@@ -314,6 +325,32 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
         }
 
         return accountName;
+    }
+
+    public static void renameHouseholdAccountsAfterInsert(List<Contact> contacts) {
+
+        List<Id> householdIdsToRename = new List<Id>();
+
+        for (Contact contactRecord : contacts) {
+            if (contactRecord.AccountId == null) {
+                continue;
+            }
+
+            if (isHouseholdMember(contactRecord)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+
+        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
+    }
+
+    /**
+     * isHouseholdMember Determines whether or not the contact belongs to a household account.
+     * @param  contactRecord The contact record to verify.
+     * @return Boolean - true when the contact belongs to a household account.
+     */
+    private static Boolean isHouseholdMember(Contact contactRecord) {
+        return contactRecord.Account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
 }
