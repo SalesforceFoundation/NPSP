@@ -821,6 +821,13 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return householdIdsToRename;
     }
 
+    public void resetDeprecatedFields() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            // always clear this deprecated field to avoid confusing users.
+            contactRecord.npe01__SystemAccountProcessor__c = null;
+        }
+    }
+
     public void keepPrivateContactsPrivate() {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             // for contacts marked private after they have been created, break the relationship from their account (any model)
