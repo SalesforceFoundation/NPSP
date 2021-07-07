@@ -220,10 +220,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * update account owners based on the change in contact owner
      */
     private void processAccountsAfterUpdate() {
-        List<Id> householdIdsToUpdate = new List<Id>();
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();
 
+        List<Id> householdIdsToUpdate = new List<Id>();
         for (Contact contactRecord : contacts) {
             Contact oldContact = oldContactById.get(contactRecord.Id);
 
