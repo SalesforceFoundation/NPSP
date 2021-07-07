@@ -123,7 +123,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
      * household updates.
      */
     private void handleAfter() {
-        contacts = Database.query(buildContactSoql());
+        contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
         contactsInstance = new Contacts(contacts, oldContactById.values());
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
@@ -240,50 +240,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-     * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
-     * @return String SOQL
-     */
-    @TestVisible
-    private String buildContactSoql() {
-        List<String> selectFields = getContactSelectionFields();
-
-        selectFields.addAll(fieldsUsedForHouseholdNaming());
-
-        return new UTIL_Query()
-            .withSelectFields(selectFields)
-            .withFrom(String.valueOf(Contact.SObjectType))
-            .withWhere('Id IN :contacts')
-            .build();
-    }
-
-    private List<String> getContactSelectionFields() {
-        List<String> selectFields = new List<String>{
-                'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
-                'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c',
-                'npe01__Organization_Type__c', 'Account.Name',
-                'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c',
-                'npo02__Household_Naming_Order__c',
-                'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode',
-                'MailingCountry', 'MailingLatitude', 'MailingLongitude',
-                'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode',
-                'OtherCountry', 'OtherLatitude', 'OtherLongitude',
-                'Phone', 'Fax'
-        };
-
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            selectFields.add('MailingCountryCode');
-            selectFields.add('MailingStateCode');
-            selectFields.add('OtherCountryCode');
-            selectFields.add('OtherStateCode');
-        }
-        return selectFields;
-    }
-
-    private Set<String> fieldsUsedForHouseholdNaming() {
-       return householdNamingService.getHouseholdNamingContactFields();
-    }
-
-    /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
     * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
     */
@@ -353,7 +309,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
 
         // check all household naming fields for changes
-        for(String fieldName : fieldsUsedForHouseholdNaming()) {
+        for(String fieldName : new HouseholdNamingService().getHouseholdNamingContactFields()) {
             String currentName;
             String oldName;
 
