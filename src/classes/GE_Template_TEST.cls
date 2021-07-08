@@ -198,6 +198,15 @@ public with sharing class GE_Template_TEST {
         */
     }
 
+    @isTest
+    static void shouldReturnListOfFieldApiNamesOnTheTemplate() {
+        UTIL_UnitTestData_TEST.createSampleFieldMappings();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+
+        System.assertEquals(template.giftFieldApiNames().size(), 1);
+        System.assertEquals(template.giftFieldApiNames()[0], 'Account1_Name__c');
+    }
+
     private class UTIL_PermissionsMock implements StubProvider {
 
         Boolean hasPermission;
