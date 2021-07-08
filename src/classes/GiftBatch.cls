@@ -37,7 +37,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
-    private Gifts gifts;
+    @TestVisible private Gifts gifts;
 
     @TestVisible
     private GE_Template.Template formTemplate {
@@ -72,11 +72,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             return elevateBatchService;
         }
         set;
-    }
-
-    @TestVisible
-    private GiftBatch(Gifts gifts) {
-        this.gifts = gifts;
     }
 
     @TestVisible

@@ -71,7 +71,8 @@ private class GiftBatch_TEST {
     static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
-        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
@@ -90,7 +91,8 @@ private class GiftBatch_TEST {
     static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
-        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
