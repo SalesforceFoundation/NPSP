@@ -139,64 +139,16 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
     }
 
-    /**
-     * @description In the before insert trigger context,
-     * ensure accounts are created for the new contacts that need them.
-     */
     private void processAccountsBeforeInsert() {
-        contactsInstance.resetDeprecatedFields();
-
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
-                (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
-                        .getRecords());
-
-        Households.attachToBucketAccount(
-                (List<Contact>) contactsInstance.bucketContacts_insertContext()
-                        .getRecords()
-        );
+        Households.handleContactsBeforeInsert(contactsInstance);
     }
-
 
     /**
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      * @param  accountById - the existing accounts that the contacts are related to.
      */
     private void processAccountsBeforeUpdate() {
-        contactsInstance.resetDeprecatedFields();
-
-        List<Contact> contactsWithoutAccounts = getContactsWithoutAccounts_beforeInsertContext();
-
-        contactsInstance.keepPrivateContactsPrivate();
-
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(contactsWithoutAccounts);
-
-        if (isBucketModelEnabled()) {
-            Households.attachToBucketAccount(
-                    contactsInstance.contactsWithoutAccounts()
-            );
-        }
-    }
-
-    private List<Contact> getContactsWithoutAccounts_beforeInsertContext() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-
-        if (isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contactsInstance.contactsWithoutAccounts());
-        }
-
-        if (isOneToOneEnabled()) {
-            contactsWithoutAccounts.addAll(
-                    Households.contactsWithoutAccounts(contactsInstance, oldContactById));
-        }
-        return contactsWithoutAccounts;
-    }
-
-    private Boolean isOneToOneEnabled() {
-        return CAO_Constants.isOneToOne();
-    }
-
-    private Boolean isHouseholdAccountModelEnabled() {
-        return CAO_Constants.isHHAccountModel();
+        Households.handleContactsBeforeUpdate(contactsInstance);
     }
 
     /**
@@ -212,10 +164,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         householdNamingService.renameHouseholdAccounts(
                 contactsInstance.getHouseholdIdsToRename(contactsInstance));
         Households.updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
-    }
-
-    private Boolean isBucketModelEnabled() {
-        return CAO_Constants.isBucketModel();
     }
 
 }

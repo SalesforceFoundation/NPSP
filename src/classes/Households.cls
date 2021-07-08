@@ -442,4 +442,50 @@ public inherited sharing class Households extends fflib_SObjects {
         return System.isFuture() || System.isBatch() || householdIds.size() <= 2;
     }
 
+    /**
+     * @description In the before insert trigger context,
+     * ensure accounts are created for the new contacts that need them.
+     */
+    public static void handleContactsBeforeInsert(Contacts contactsInstance) {
+        contactsInstance.resetDeprecatedFields();
+
+        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+                (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
+                        .getRecords());
+
+        Households.attachToBucketAccount(
+                (List<Contact>) contactsInstance.bucketContacts_insertContext()
+                        .getRecords()
+        );
+    }
+
+    public static void handleContactsBeforeUpdate(Contacts contacts) {
+        contacts.resetDeprecatedFields();
+        contacts.keepPrivateContactsPrivate();
+        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+                contactsWithoutAccounts(contacts));
+
+        if (CAO_Constants.isBucketModel()) {
+            Households.attachToBucketAccount(
+                    contacts.contactsWithoutAccounts()
+            );
+        }
+    }
+
+    private static List<Contact> contactsWithoutAccounts(
+            Contacts contactsInstance) {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+
+        if (CAO_Constants.isHHAccountModel()) {
+            contactsWithoutAccounts.addAll(contactsInstance.contactsWithoutAccounts());
+        }
+
+        if (CAO_Constants.isOneToOne()) {
+            contactsWithoutAccounts.addAll(
+                    Households.contactsWithoutAccounts(
+                            contactsInstance, contactsInstance.oldMap));
+        }
+        return contactsWithoutAccounts;
+    }
+
 }
