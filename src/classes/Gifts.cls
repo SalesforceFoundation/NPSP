@@ -67,6 +67,14 @@ public with sharing class Gifts {
         setElevateBatchIds(dataImports);
     }
 
+    public List<Gift> all() {
+        List<Gift> gifts = new List<Gift>();
+        for (DataImport__c dataImport : dataImports) {
+            gifts.add(new Gift(dataImport));
+        }
+        return gifts;
+    }
+
     public Integer size() {
         return this.dataImports.size();
     }
@@ -141,7 +149,7 @@ public with sharing class Gifts {
     private void setElevateBatchIds(List<DataImport__c> dataImports) {
         elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImports) {
-            if (dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+            if (dataImport?.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
                 elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }

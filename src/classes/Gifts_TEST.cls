@@ -78,19 +78,18 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldReturn2Gifts() {
-        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), null);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), new List<String>());
 
         System.assertEquals(2, gifts.size());
+        System.assertEquals(2, gifts.all().size());
     }
 
     @isTest
     static void shouldReturnGiftsWithExpectedFields() {
-        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
         List<String> fieldsToQuery = new List<String> { String.valueOf(DataImport__c.Contact1_Firstname__c) };
-        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), fieldsToQuery);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), fieldsToQuery);
 
         System.assertEquals('Dummy First Name', gifts.dataImports[0].Contact1_Firstname__c);
         System.assertEquals('Dummy First Name', gifts.dataImports[1].Contact1_Firstname__c);
@@ -98,10 +97,8 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldNotReturnGiftsWithUnexpectedFields() {
-        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        List<String> fieldsToQuery = new List<String> {};
-        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), fieldsToQuery);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), new List<String>());
 
         System.assertEquals(null, gifts.dataImports[0].Contact1_Firstname__c);
         System.assertEquals(null, gifts.dataImports[1].Contact1_Firstname__c);
@@ -153,29 +150,9 @@ private class Gifts_TEST {
                         if (paramName == 'fieldsToQuery') {
                             List<String> fieldsApiNames = (List<String>) listOfArgs.get(i);
                             if (fieldsApiNames.contains(String.valueOf(DataImport__c.Contact1_Firstname__c))) {
-                                return new List<DataImport__c>{
-                                    new DataImport__c(
-                                            Contact1_Firstname__c = 'Dummy First Name',
-                                            Donation_Amount__c = 100,
-                                            Donation_Date__c = Date.today()
-                                    ),
-                                    new DataImport__c(
-                                            Contact1_Firstname__c = 'Dummy First Name',
-                                            Donation_Amount__c = 200,
-                                            Donation_Date__c = Date.today()
-                                    )
-                                };
+                                return dummyDataImportsWithContactFirstName;
                             } else {
-                                return new List<DataImport__c>{
-                                    new DataImport__c(
-                                            Donation_Amount__c = 100,
-                                            Donation_Date__c = Date.today()
-                                    ),
-                                    new DataImport__c(
-                                            Donation_Amount__c = 200,
-                                            Donation_Date__c = Date.today()
-                                    )
-                                };
+                                return dummyDataImports;
                             }
                         }
                     }
@@ -185,6 +162,34 @@ private class Gifts_TEST {
             return null;
         }
     }
+
+    private final static Id DUMMY_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+
+    private static List<DataImport__c> dummyDataImportsWithContactFirstName =
+        new List<DataImport__c>{
+            new DataImport__c(
+                    Contact1_Firstname__c = 'Dummy First Name',
+                    Donation_Amount__c = 100,
+                    Donation_Date__c = Date.today()
+            ),
+            new DataImport__c(
+                    Contact1_Firstname__c = 'Dummy First Name',
+                    Donation_Amount__c = 200,
+                    Donation_Date__c = Date.today()
+            )
+        };
+
+    private static List<DataImport__c> dummyDataImports =
+        new List<DataImport__c>{
+            new DataImport__c(
+                    Donation_Amount__c = 100,
+                    Donation_Date__c = Date.today()
+            ),
+            new DataImport__c(
+                    Donation_Amount__c = 200,
+                    Donation_Date__c = Date.today()
+            )
+        };
 
     private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
         return (GiftSelector) Test.createStub(
