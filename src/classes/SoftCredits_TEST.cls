@@ -6,6 +6,7 @@ private class SoftCredits_TEST {
         SoftCredits softCredits = new SoftCredits(null, DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS);
 
         System.assertEquals(2, softCredits.all().size());
+        System.assertEquals(2, softCredits.size());
     }
 
     @isTest
@@ -13,6 +14,7 @@ private class SoftCredits_TEST {
         SoftCredits softCredits = new SoftCredits(null, DUMMY_ADDITIONAL_OBJECT_JSON_WITH_ALLOCATIONS);
 
         System.assertEquals(0, softCredits.all().size());
+        System.assertEquals(0, softCredits.size());
     }
 
     static final String DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS = '{"name":"Additional_Object_JSON__c","dynamicSourceByObjMappingDevName":{"Opportunity_Contact_Role_1temp2":{"sourceObj":{"attributes":{"type":"DataImport__c"},"Opportunity_Contact_Role_1_Role__c":"Household Member","Contact1Imported__c":"0035600000VNllNAAT"},"objectMappingTemplateDevName":"Opportunity_Contact_Role_1","objectMappingDevName":"Opportunity_Contact_Role_1temp2","importedRecordStatus":null,"importedRecordId":null,"fieldMappingSetDevName":"Migrated_Custom_Field_Mapping_Set"},"Opportunity_Contact_Role_1temp1":{"sourceObj":{"attributes":{"type":"DataImport__c"},"Opportunity_Contact_Role_1_Role__c":"Matched Donor","Contact1Imported__c":"0035600000VNllSAAT"},"objectMappingTemplateDevName":"Opportunity_Contact_Role_1","objectMappingDevName":"Opportunity_Contact_Role_1temp1","importedRecordStatus":null,"importedRecordId":null,"fieldMappingSetDevName":"Migrated_Custom_Field_Mapping_Set"}}}';

@@ -23,6 +23,10 @@ public with sharing class SoftCredits {
         return opportunityContactRoles;
     }
 
+    public Integer size() {
+        return opportunityContactRoles.size();
+    }
+
     private List<OpportunityContactRole> instantiateOpportunityContactRolesFrom(String additionalObjectJson) {
         List<OpportunityContactRole> contactRoles = new List<OpportunityContactRole>();
         List<BDI_DynamicSource> dynamicSources = new List<BDI_DynamicSource>();

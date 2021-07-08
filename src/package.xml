@@ -358,6 +358,7 @@
         <members>GiftDTO</members>
         <members>GiftSelector</members>
         <members>GiftView</members>
+        <members>GiftView_TEST</members>
         <members>Gift_Test</members>
         <members>Gifts</members>
         <members>Gifts_TEST</members>
@@ -640,6 +641,8 @@
         <members>STG_SettingsService</members>
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
+        <members>SoftCredits</members>
+        <members>SoftCredits_TEST</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
         <members>TDTM_DMLgt200_TEST</members>
