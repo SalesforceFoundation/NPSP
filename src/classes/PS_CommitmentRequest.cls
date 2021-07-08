@@ -266,17 +266,20 @@ public inherited sharing class PS_CommitmentRequest {
         }
 
         if (isElevateCampaignChanged(rd, oldRd)) {
-
-            Map<String, Object> existingProductMetadata = getExistingProductMetadata(rd.CommitmentId__c);
-            ProductMetadata productMetadata = new ProductMetadata()
-                .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
-
-            Map<String, Object> mergedMetadata = productMetadata.mergeWithExistingMetadata(existingProductMetadata);
-
-            reqBody.withProductMetadata(mergedMetadata);
+            Map<String, Object> updatedMetadata = buildUpdatedProductMetadata(rd);
+            reqBody.withProductMetadata(updatedMetadata);
         }
 
         return reqBody;
+    }
+
+    private Map<String, Object> buildUpdatedProductMetadata(npe03__Recurring_Donation__c rd) {
+        Map<String, Object> existingProductMetadata = getExistingProductMetadata(rd.CommitmentId__c);
+        ProductMetadata productMetadata = new ProductMetadata()
+                .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
+
+        Map<String, Object> mergedMetadata = productMetadata.mergeWithExistingMetadata(existingProductMetadata);
+        return mergedMetadata;
     }
 
     private Map<String, Object> getExistingProductMetadata(String commitmentId) {
