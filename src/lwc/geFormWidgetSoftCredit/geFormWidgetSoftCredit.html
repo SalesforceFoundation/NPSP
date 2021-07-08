@@ -1,0 +1,20 @@
+<template>
+    <c-util-alert-banner if:true={hasAlert}
+            theme={alertClass}
+            assist-text="Soft Credit Error"
+            icon= {alertIcon}
+            variant="inverse"
+            size="x-small"
+            message={alertBanner.message}>
+    </c-util-alert-banner>
+    <template for:each={rowList} for:item='row' for:index='index'>
+        <p key={row.element.key}>
+           Here is a row!
+        </p>
+    </template>
+    <lightning-layout class={footerClass}>
+        <lightning-layout-item size='3'>
+            <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} data-qa-locator={qaLocatorAddNewSoftCredit} onclick={handleAddRow}></lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
