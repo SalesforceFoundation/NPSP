@@ -52,6 +52,46 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static List<OpportunityContactRole> getDummySoftCredits() {
+        Integer numRecords = 3;
+        List<String> roles = new List<String> {
+            'Influencer',
+            'Household Member',
+            'Decision Maker'
+        };
+
+        List<OpportunityContactRole> dummySoftCredits = new List<OpportunityContactRole>();
+        
+        try {
+            List<Contact> contacts = [
+                SELECT Id
+                FROM Contact 
+                ORDER BY CreatedDate DESC 
+                LIMIT :numRecords];
+
+            if(contacts.isEmpty()) {
+                Contact aContact = new Contact(FirstName='Test', LastName='Testerson');
+                insert aContact;
+                contacts.add(aContact);
+            }
+
+            for (Integer i = 0; i < numRecords; i++) {
+                OpportunityContactRole ocr = new OpportunityContactRole(
+                    Role = roles[Math.mod(i,roles.size())],
+                    ContactId = contacts[Math.mod(i,contacts.size())].Id
+                );
+                dummySoftCredits.add(ocr);
+            }
+
+            return dummySoftCredits;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+
+
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);

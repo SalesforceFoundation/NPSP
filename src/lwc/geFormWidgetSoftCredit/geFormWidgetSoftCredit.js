@@ -10,6 +10,9 @@ import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
 import CONTACT_FIELD from '@salesforce/schema/OpportunityContactRole.ContactId';
 import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.OpportunityId';
 
+import getDummySoftCreditsApex from '@salesforce/apex/GE_GiftEntryController.getDummySoftCredits';
+import { handleError } from 'c/utilTemplateBuilder';
+
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -19,8 +22,42 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     @track rowList = [];
     @track fieldList = [];
 
+    connectedCallback() {
+        this.init();
+    }
+
+    init = async () => {
+        let dummyRecords = await this.getDummySoftCredits();
+        
+        dummyRecords.forEach(rowRecord => {
+            this.addRow(rowRecord);
+        });
+    };
+
+    getDummySoftCredits() {
+        return new Promise((resolve, reject) => {
+            getDummySoftCreditsApex()
+                .then(resolve)
+                .catch(handleError)
+        });
+    }
+
     handleAddRow() {
         // handle add row
+    }
+
+    addRow(rowRecord) {
+        let element = {};
+        element.key = this.rowList.length;
+        const record = { ...rowRecord };
+        let row = {};
+
+        row = {
+            ...row,
+            record,
+            element
+        };
+        this.rowList.push(row);
     }
 
     handleRemove(event) {

@@ -5901,6 +5901,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Select an Option</value>
     </labels>
     <labels>
+        <fullName>commonSoftCredits</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Soft Credits</shortDescription>
+        <value>Soft Credits</value>
+    </labels>    
+    <labels>
         <fullName>commonTemplate</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
