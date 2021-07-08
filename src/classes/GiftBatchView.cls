@@ -1,4 +1,5 @@
-public with sharing class GiftBatchView {
+public inherited sharing class GiftBatchView {
+
     public GiftBatchView(GiftBatchDTO giftBatchDTO) {
 
     }
