@@ -70,7 +70,7 @@ private class GiftBatch_TEST {
     @isTest
     static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
@@ -90,7 +90,7 @@ private class GiftBatch_TEST {
     @isTest
     static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
@@ -141,6 +141,15 @@ private class GiftBatch_TEST {
         giftBatch.formTemplate = createDummyTemplate(false);
 
         System.assertEquals(false, giftBatch.hasElevateWidget());
+    }
+
+    @isTest
+    static void shouldReturn3Gifts() {
+        Gifts gifts = new Gifts(buildGifts(3, null));
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = gifts;
+
+        System.assertEquals(3, giftBatch.gifts().size());
     }
 
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
@@ -196,7 +205,7 @@ private class GiftBatch_TEST {
         );
     }
 
-    private static List<DataImport__c> buildAuthorizedGifts(Integer numberOfGifts) {
+    private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
@@ -206,7 +215,7 @@ private class GiftBatch_TEST {
                 Donation_Amount__c = 1,
                 Donation_Date__c = Date.today(),
                 Donation_Donor__c = 'Account1',
-                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                Payment_Status__c = paymentStatus,
                 Payment_Elevate_Batch_ID__c = 'DUMMY_ELEVATE_BATCH_ID_' + i
             );
             dummyAuthorizedGifts.add(dummyGift);

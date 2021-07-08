@@ -124,6 +124,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.batchId;
     }
 
+    public Gifts gifts() {
+        return this.gifts;
+    }
+
     public Money total() {
         //todo: use giftBatch Totals (and place in Selector layer)
         return new Money(dataImportModel().totalRowAmount, 'US');
