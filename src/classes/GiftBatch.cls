@@ -125,6 +125,9 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public Gifts gifts() {
+        if (this.gifts == null) {
+            return new Gifts(new List<DataImport__c>());
+        }
         return this.gifts;
     }
 

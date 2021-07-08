@@ -1,5 +1,5 @@
 public with sharing class GiftView {
-    public GiftView() {
+    public GiftView(GiftDTO giftDTO) {
 
     }
 }
