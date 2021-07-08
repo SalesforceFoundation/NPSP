@@ -8,13 +8,21 @@
             message={alertBanner.message}>
     </c-util-alert-banner>
     <template for:each={rowList} for:item='row' for:index='index'>
-        <p key={row.element.key}>
-           Here is a row!
-        </p>
+        <c-ge-form-widget-soft-credit-row
+                field-list={fieldList}
+                key={row.element.key}
+                row-index={index}
+                row={row}
+                disabled={row.disabled}
+                onremove={handleRemove}>
+        </c-ge-form-widget-soft-credit-row>
     </template>
     <lightning-layout class={footerClass}>
         <lightning-layout-item size='3'>
-            <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} data-qa-locator={qaLocatorAddNewSoftCredit} onclick={handleAddRow}></lightning-button>
+            <lightning-button label={CUSTOM_LABELS.geAddNewAllocation} 
+                    data-qa-locator={qaLocatorAddNewSoftCredit} 
+                    onclick={handleAddRow}>
+            </lightning-button>
         </lightning-layout-item>
     </lightning-layout>
 </template>

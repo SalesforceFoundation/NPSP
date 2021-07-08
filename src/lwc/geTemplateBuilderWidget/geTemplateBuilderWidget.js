@@ -17,6 +17,10 @@ export default class geTemplateBuilderWidget extends LightningElement {
         return this.developerName === 'geFormWidgetAllocation';
     }
 
+    get isSoftCredit() {
+        return this.developerName === 'geFormWidgetSoftCredit';
+    }
+
     get isTokenizeCard() {
         return this.developerName === 'geFormWidgetTokenizeCard';
     }

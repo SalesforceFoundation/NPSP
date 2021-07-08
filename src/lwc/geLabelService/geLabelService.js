@@ -44,6 +44,7 @@ import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
+import commonSoftCredits from '@salesforce/label/c.commonSoftCredits';
 import commonTemplate from '@salesforce/label/c.commonTemplate';
 import commonTemplates from '@salesforce/label/c.commonTemplates';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
@@ -290,6 +291,7 @@ class GeLabelService {
         commonReviewForm,
         commonSave,
         commonSaveAndClose,
+        commonSoftCredits,
         commonTemplate,
         commonTemplates,
         commonUnknownError,
