@@ -10,18 +10,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-            ref: ${{ github.event.pull_request.head.ref }}
+            ref: ${{ github.event.pull_request.head.sha }}
       - name: Check for References to SfdoLogging
         id: diff
-        env:
-          BASE_BRANCH: ${{ github.base_ref }}
-          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # Pull Request
           git fetch origin $GITHUB_BASE_REF:$GITHUB_BASE_REF --depth=1
-            echo "RUN: git diff-tree $GITHUB_BASE_REF..$PR_BRANCH --patch-with-raw"
-            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$PR_BRANCH --patch-with-raw | grep 'SfdoLogUtils.log' )
+          git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF --depth=1
+            echo "RUN: git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw"
+            export DIFF=$( git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
             echo "Diff between origin/$GITHUB_BASE_REF and $GITHUB_SHA"
           fi
           echo "$DIFF"
