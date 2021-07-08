@@ -52,4 +52,16 @@ private class Gift_Test {
         System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
         System.assert(needsReauthorization);
     }
+
+    @isTest
+    static void shouldReturnDataImportRecord() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(10, gift.dataImportRecord().Donation_Amount__c);
+    }
 }

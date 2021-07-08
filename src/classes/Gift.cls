@@ -61,6 +61,10 @@ public with sharing class Gift {
         return this.hasPaymentFieldsChanged();
     }
 
+    public DataImport__c dataImportRecord() {
+        return this.dataImport;
+    }
+
     private void populateAvailableFields() {
         Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
         List<String> fields = new List<String>();

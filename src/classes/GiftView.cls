@@ -1,5 +1,8 @@
 public with sharing class GiftView {
-    public GiftView(GiftDTO giftDTO) {
 
+    @AuraEnabled public DataImport__c dataImport;
+
+    public GiftView(GiftDTO giftDTO) {
+        this.dataImport = giftDTO.dataImport;
     }
 }

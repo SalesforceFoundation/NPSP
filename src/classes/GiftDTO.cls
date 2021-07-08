@@ -1,5 +1,8 @@
 public with sharing class GiftDTO {
-    public GiftDTO(Gift gift) {
 
+    public DataImport__c dataImport;
+
+    public GiftDTO(Gift gift) {
+        this.dataImport = gift.dataImportRecord();
     }
 }
