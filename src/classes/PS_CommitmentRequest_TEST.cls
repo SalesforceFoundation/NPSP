@@ -76,8 +76,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
-        insert rdCampaign;
+        Campaign rdCampaign = getDummyCampaign();
 
         Contact contact = getContact();
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
@@ -421,8 +420,7 @@ private with sharing class PS_CommitmentRequest_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        Campaign rdCampaign = new Campaign(name = 'Annual Campaign');
-        insert rdCampaign;
+        Campaign rdCampaign = getDummyCampaign();
 
         Contact contact = getContact();
         Account account = getOrganizationAccount(contact.Id);
@@ -456,9 +454,9 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata()
                 .withCampaign(newCampaignId);
-        Map<String, Object> updatedUntypedMetadata = stripTypeInfo(productMetadata.mergeWithExistingMetadata(untypedMetadata));
+        Map<String, Object> updatedUntypedMetadata = productMetadata.mergeWithExistingMetadata(untypedMetadata);
 
-        PS_CommitmentRequest.ProductMetadata updatedMetadata = new PS_CommitmentRequest.ProductMetadata(updatedUntypedMetadata);
+        PS_CommitmentRequest.ProductMetadata updatedMetadata = parseUntypedMetadata(updatedUntypedMetadata);
         System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
         System.assertEquals('CRM', updatedMetadata.origin.type);
     }
@@ -471,9 +469,9 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata()
                 .withCampaign(newCampaignId);
-        Map<String, Object> updatedUntypedMetadata = stripTypeInfo(productMetadata.mergeWithExistingMetadata(untypedMetadata));
+        Map<String, Object> updatedUntypedMetadata = productMetadata.mergeWithExistingMetadata(untypedMetadata);
 
-        PS_CommitmentRequest.ProductMetadata updatedMetadata = new PS_CommitmentRequest.ProductMetadata(updatedUntypedMetadata);
+        PS_CommitmentRequest.ProductMetadata updatedMetadata = parseUntypedMetadata(updatedUntypedMetadata);
         System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
         System.assertEquals('CRM', updatedMetadata.origin.type);
 
@@ -488,7 +486,36 @@ private with sharing class PS_CommitmentRequest_TEST {
 
     @IsTest
     static void campaignUpdateCallsOutForProductMetadata() {
+        String MOCK_GET_RESPONSE_BODY = '{"commitment":{"productMetadata":{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"}}}}';
 
+        RD2_ScheduleService.currentDate = CURRENT_DATE;
+        PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        Contact contact = getContact();
+        Campaign rdCampaign = getDummyCampaign();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder()
+                .withContact(contact.Id)
+                .withInstallmentFrequency(INSTALLMENT_FREQUENCY)
+                .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+                .withCommitmentId(COMMITMENT_ID)
+                .build();
+
+        PS_CommitmentRequest request = new PS_CommitmentRequest();
+
+        npe03__Recurring_Donation__c updatedRd = rd.clone();
+        updatedRd.npe03__Recurring_Donation_Campaign__c = rdCampaign.Id;
+
+        Test.startTest();
+        UTIL_Http_TEST.mockSuccessCalloutResponse(MOCK_GET_RESPONSE_BODY);
+        PS_CommitmentRequest.RequestBody requestBody = request.getRequestBody(updatedRd, rd, PAYMENT_TOKEN);
+        Test.stopTest();
+
+        PS_CommitmentRequest.ProductMetadata productMetadata = parseUntypedMetadata(requestBody.productMetadata);
+
+        System.assertEquals('CRM', productMetadata.origin.type);
+        System.assertEquals(rdCampaign.Id, productMetadata.campaign.id);
     }
 
     // Helpers
@@ -507,6 +534,13 @@ private with sharing class PS_CommitmentRequest_TEST {
             .withDateEstablished(START_DATE)
             .withStartDate(START_DATE)
             .withDayOfMonth(String.valueOf(DAY_OF_MONTH));
+    }
+
+
+    private static Campaign getDummyCampaign() {
+        Campaign rdCampaign = new Campaign(Name = 'Annual Campaign');
+        insert rdCampaign;
+        return rdCampaign;
     }
 
     private static Account getOrganizationAccount(Id contactId) {
@@ -532,12 +566,34 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
     /**
-     * @param target Clears class type information from an object so its values can be cast to primitives.
+     * @param untypedProductMetadata Parse origin and campaign out of productMetadata Map<String, Object>
      *
-     * @return The target Map<String, Object> without class type info
+     *  @return A ProductMetadata class with any origin/campaign data from what was passed in
      */
-    static Map<String, Object> stripTypeInfo(Map<String, Object> target) {
-        return (Map<String, Object>)JSON.deserializeUntyped(JSON.serialize(target));
-    }
+    static PS_CommitmentRequest.ProductMetadata parseUntypedMetadata(Map<String, Object> untypedProductMetadata) {
+        PS_CommitmentRequest.ProductMetadata productMetadata = new PS_CommitmentRequest.ProductMetadata();
 
+        if (untypedProductMetadata.containsKey('origin')) {
+            Object origin = untypedProductMetadata.get('origin');
+            if (origin instanceof PS_CommitmentRequest.Origin) {
+                productMetadata.origin = (PS_CommitmentRequest.Origin)origin;
+            }
+            Map<String, Object> untypedOrigin = (Map<String, Object>)origin;
+            String originType = (String) untypedOrigin.get('type');
+            productMetadata.origin = new PS_CommitmentRequest.Origin(originType);
+        }
+
+        if (untypedProductMetadata.containsKey('campaign')) {
+            Object campaign = untypedProductMetadata.get('campaign');
+            if (campaign instanceof PS_CommitmentRequest.Campaign) {
+                productMetadata.campaign = (PS_CommitmentRequest.Campaign)campaign;
+            } else {
+                Map<String, Object> untypedCampaign = (Map<String, Object>)campaign;
+                String campaignId = (String) untypedCampaign.get('id');
+                productMetadata.campaign = new PS_CommitmentRequest.Campaign(campaignId);
+            }
+        }
+
+        return productMetadata;
+    }
 }

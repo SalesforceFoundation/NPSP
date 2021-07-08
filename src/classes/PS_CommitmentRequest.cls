@@ -157,7 +157,7 @@ public inherited sharing class PS_CommitmentRequest {
 
     /***
     * @description Creates an HttpRequest for a new commitment creation or
-    * existing commitment update depending on the prodived commitment Id
+    * existing commitment update depending on the provided commitment Id
     * @param commitmentId Elevate recurring commitment Id
     * @param jsonRequestBody JSON containing parameters for the purchase call request body
     * @return HttpRequest
@@ -180,7 +180,7 @@ public inherited sharing class PS_CommitmentRequest {
     * @param commitmentId Elevate recurring commitment Id
     * @return HttpRequest
     */
-    public static HttpRequest buildGetCommitmentRequest(String commitmentId) {
+    public static HttpRequest buildGetRequest(String commitmentId) {
         return new PS_Request.Builder()
                 .withCommitmentId(commitmentId)
                 .withEndpoint(PS_Request.ElevateEndpoint.COMMITMENT)
@@ -292,7 +292,7 @@ public inherited sharing class PS_CommitmentRequest {
     }
 
     private Map<String, Object> getElevateCommitment(String commitmentId) {
-        HttpRequest commitmentGetRequest = buildGetCommitmentRequest(commitmentId);
+        HttpRequest commitmentGetRequest = buildGetRequest(commitmentId);
         UTIL_Http.Response response = requestService.sendRequest(commitmentGetRequest);
 
         Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.body);
@@ -797,32 +797,6 @@ public inherited sharing class PS_CommitmentRequest {
     public class ProductMetadata {
         public Origin origin;
         public Campaign campaign;
-
-        public ProductMetadata() {}
-
-        public ProductMetadata(Map<String, Object> untypedProductMetadata) {
-            if (untypedProductMetadata.containsKey('origin')) {
-                String originType = getOriginType(untypedProductMetadata);
-                this.origin = new Origin(originType);
-            }
-
-            if (untypedProductMetadata.containsKey('campaign')) {
-                String campaignId = getCampaignId(untypedProductMetadata);
-                this.campaign = new Campaign(campaignId);
-            }
-        }
-
-        private String getCampaignId(Map<String, Object> untypedProductMetadata) {
-            Map<String, Object> campaignData = (Map<String, Object>) untypedProductMetadata.get('campaign');
-            String campaignId = (String) campaignData.get('id');
-            return campaignId;
-        }
-
-        private String getOriginType(Map<String, Object> untypedProductMetadata) {
-            Map<String, Object> originData = (Map<String, Object>) untypedProductMetadata.get('origin');
-            String originType = (String) originData.get('type');
-            return originType;
-        }
 
         /**
         * @description Sets origin info

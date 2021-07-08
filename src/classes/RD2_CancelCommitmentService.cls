@@ -129,7 +129,7 @@ public without sharing class RD2_CancelCommitmentService {
                 request = buildCancelRequest(closedRecord.rd.CommitmentId__c);
             }
             else if (getRequestType(closedRecord) == PS_Request.ElevateEndpoint.COMMITMENT) {
-                request = PS_CommitmentRequest.buildGetCommitmentRequest(closedRecord.rd.CommitmentId__c);
+                request = PS_CommitmentRequest.buildGetRequest(closedRecord.rd.CommitmentId__c);
             }
             response = requestService.sendRequest(request);
 
