@@ -43,6 +43,18 @@ public with sharing class GiftSelector {
         ];
     }
 
+    public List<DataImport__c> getGiftsFor(Id batchId, List<String> fieldsToQuery) {
+        String dataImportBatchLookup = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fieldsToQuery)
+            .withWhere(dataImportBatchLookup + ' =: batchId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
+    }
+
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
