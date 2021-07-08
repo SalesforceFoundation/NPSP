@@ -209,8 +209,8 @@
         <inlineHelpText>The new Campaign for the related Recurring Donation.</inlineHelpText>
         <label>New Campaign</label>
         <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>Recurring Donation Change Histories</relationshipLabel>
-        <relationshipName>Recurring_Donation_Change_Histories</relationshipName>
+        <relationshipLabel>Recurring Donation Change History (New Campaign)</relationshipLabel>
+        <relationshipName>RD_Change_History_New_Campaign</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -295,8 +295,8 @@
         <inlineHelpText>The previous Campaign for the related Recurring Donation.</inlineHelpText>
         <label>Previous Campaign</label>
         <referenceTo>Campaign</referenceTo>
-        <relationshipLabel>Recurring Donation Change Histories (Previous Campaign)</relationshipLabel>
-        <relationshipName>Recurring_Donation_Change_Histories1</relationshipName>
+        <relationshipLabel>Recurring Donation Change History (Previous Campaign)</relationshipLabel>
+        <relationshipName>RD_Change_History_Previous_Campaign</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
@@ -368,8 +368,8 @@
         <inlineHelpText>The Recurring Donation related to this Change History record.</inlineHelpText>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
-        <relationshipLabel>Recurring Donation Change Histories</relationshipLabel>
-        <relationshipName>Recurring_Donation_Change_Histories</relationshipName>
+        <relationshipLabel>Recurring Donation Change History</relationshipLabel>
+        <relationshipName>RD_Change_History</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -379,10 +379,10 @@
     <label>Recurring Donation Change History</label>
     <nameField>
         <displayFormat>RDCH-{0000000}</displayFormat>
-        <label>Recurring Donation Change History Number</label>
+        <label>Recurring Donation Change History ID</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Donation Change Histories</pluralLabel>
+    <pluralLabel>Recurring Donation Change History</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
