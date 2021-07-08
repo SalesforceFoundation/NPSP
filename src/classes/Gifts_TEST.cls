@@ -80,9 +80,31 @@ private class Gifts_TEST {
     static void shouldReturn2Gifts() {
         Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock));
+        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), null);
 
         System.assertEquals(2, gifts.size());
+    }
+
+    @isTest
+    static void shouldReturnGiftsWithExpectedFields() {
+        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
+        List<String> fieldsToQuery = new List<String> { String.valueOf(DataImport__c.Contact1_Firstname__c) };
+        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), fieldsToQuery);
+
+        System.assertEquals('Dummy First Name', gifts.dataImports[0].Contact1_Firstname__c);
+        System.assertEquals('Dummy First Name', gifts.dataImports[1].Contact1_Firstname__c);
+    }
+
+    @isTest
+    static void shouldNotReturnGiftsWithUnexpectedFields() {
+        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
+        List<String> fieldsToQuery = new List<String> {};
+        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock), fieldsToQuery);
+
+        System.assertEquals(null, gifts.dataImports[0].Contact1_Firstname__c);
+        System.assertEquals(null, gifts.dataImports[1].Contact1_Firstname__c);
     }
 
     private static List<DataImport__c> buildGifts(
@@ -125,16 +147,38 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getGiftsFor' {
-                    return new List<DataImport__c>{
-                        new DataImport__c(
-                                Donation_Amount__c = 100,
-                                Donation_Date__c = Date.today()
-                        ),
-                        new DataImport__c(
-                                Donation_Amount__c = 200,
-                                Donation_Date__c = Date.today()
-                        )
-                    };
+                    for (integer i = 0; i < listOfParamNames.size(); i++) {
+                        String paramName = listOfParamNames.get(i);
+
+                        if (paramName == 'fieldsToQuery') {
+                            List<String> fieldsApiNames = (List<String>) listOfArgs.get(i);
+                            if (fieldsApiNames.contains(String.valueOf(DataImport__c.Contact1_Firstname__c))) {
+                                return new List<DataImport__c>{
+                                    new DataImport__c(
+                                            Contact1_Firstname__c = 'Dummy First Name',
+                                            Donation_Amount__c = 100,
+                                            Donation_Date__c = Date.today()
+                                    ),
+                                    new DataImport__c(
+                                            Contact1_Firstname__c = 'Dummy First Name',
+                                            Donation_Amount__c = 200,
+                                            Donation_Date__c = Date.today()
+                                    )
+                                };
+                            } else {
+                                return new List<DataImport__c>{
+                                    new DataImport__c(
+                                            Donation_Amount__c = 100,
+                                            Donation_Date__c = Date.today()
+                                    ),
+                                    new DataImport__c(
+                                            Donation_Amount__c = 200,
+                                            Donation_Date__c = Date.today()
+                                    )
+                                };
+                            }
+                        }
+                    }
                 }
             }
 

@@ -85,7 +85,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
-        this.gifts = new Gifts(this.batchId, null);
+        this.gifts = new Gifts(this.batchId, giftFieldsToQuery());
     }
 
     public Boolean hasElevateWidget() {
