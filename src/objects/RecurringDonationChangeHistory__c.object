@@ -229,9 +229,9 @@
     </fields>
     <fields>
         <fullName>New_Schedule__c</fullName>
-        <description>The new Schedule for the related Recurring Donation.</description>
+        <description>The new payment schedule for the related Recurring Donation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The new Schedule for the related Recurring Donation.</inlineHelpText>
+        <inlineHelpText>The new payment schedule for the related Recurring Donation.</inlineHelpText>
         <label>New Schedule</label>
         <length>255</length>
         <required>false</required>
@@ -315,9 +315,9 @@
     </fields>
     <fields>
         <fullName>Previous_Schedule__c</fullName>
-        <description>The previous Schedule for the related Recurring Donation.</description>
+        <description>The previous payment schedule for the related Recurring Donation.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The previous Schedule for the related Recurring Donation.</inlineHelpText>
+        <inlineHelpText>The previous payment schedule for the related Recurring Donation.</inlineHelpText>
         <label>Previous Schedule</label>
         <length>255</length>
         <required>false</required>
