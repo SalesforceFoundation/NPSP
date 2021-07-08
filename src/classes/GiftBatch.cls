@@ -157,6 +157,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return dataImportModel().totalCountOfRows;
     }
 
+    @TestVisible
     private BGE_DataImportBatchEntry_CTRL.DataImportModel typedModel;
     private BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel() {
         if (typedModel == null) {
