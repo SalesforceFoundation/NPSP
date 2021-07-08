@@ -30,7 +30,45 @@
 
 @IsTest
 private class GiftBatch_TEST {
-    @isTest static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
+
+    @isTest
+    static void shouldReturnGiftFieldsToQueryWhenElevateActive() {
+        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
+        mockInstance.withIsElevateCustomer(true);
+
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+            GE_PaymentServices.class,
+            mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.formTemplate = createDummyTemplate(true);
+        List<String> fieldsToQuery = giftBatch.giftFieldsToQuery();
+
+        System.assertEquals(7, fieldsToQuery.size());
+    }
+
+    @isTest
+    static void shouldReturnGiftFieldsToQuery() {
+        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
+        mockInstance.withIsElevateCustomer(false);
+
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+            GE_PaymentServices.class,
+            mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
+
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.formTemplate = createDummyTemplate(false);
+        List<String> fieldsToQuery = giftBatch.giftFieldsToQuery();
+
+        System.assertEquals(4, fieldsToQuery.size());
+    }
+
+    @isTest
+    static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
@@ -48,7 +86,8 @@ private class GiftBatch_TEST {
         }
     }
 
-    @isTest static void shouldUpdateGiftRecordsWithFailReason() {
+    @isTest
+    static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
@@ -66,7 +105,8 @@ private class GiftBatch_TEST {
         }
     }
 
-    @isTest static void shouldReturnTotalRowAmount() {
+    @isTest
+    static void shouldReturnTotalRowAmount() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
             JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
@@ -75,7 +115,8 @@ private class GiftBatch_TEST {
         System.assertEquals(300, giftBatch.total().amount());
     }
 
-    @isTest static void shouldReturnTotalRowCount() {
+    @isTest
+    static void shouldReturnTotalRowCount() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
             JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
@@ -84,14 +125,16 @@ private class GiftBatch_TEST {
         System.assertEquals(2, giftBatch.totalCount());
     }
 
-    @isTest static void shouldReturnTrueWhenElevateWidgetOnTemplate() {
+    @isTest
+    static void shouldReturnTrueWhenElevateWidgetOnTemplate() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.formTemplate = createDummyTemplate(true);
 
         System.assertEquals(true, giftBatch.hasElevateWidget());
     }
 
-    @isTest static void shouldReturnFalseWhenElevateWidgetNotOnTemplate() {
+    @isTest
+    static void shouldReturnFalseWhenElevateWidgetNotOnTemplate() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.formTemplate = createDummyTemplate(false);
 
@@ -124,7 +167,7 @@ private class GiftBatch_TEST {
         return template;
     }
 
-    public class ElevateBatchServiceMock implements StubProvider {
+    private class ElevateBatchServiceMock implements StubProvider {
         public Boolean enqueuePaymentCaptureJobForCalled = false;
 
         public Object handleMethodCall(Object stubbedObject,
