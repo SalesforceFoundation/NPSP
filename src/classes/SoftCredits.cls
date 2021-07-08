@@ -9,11 +9,10 @@ public with sharing class SoftCredits {
         opportunityContactRoles = new List<OpportunityContactRole>();
 
         if (existingOpportunityContactRoles != null) {
-            // todo: add to ocr collection
+            opportunityContactRoles.addAll(existingOpportunityContactRoles);
         }
 
         if (additionalObjectJson != null) {
-            // todo: parse and add to ocr collection
             unprocessedSoftCredits = instantiateOpportunityContactRolesFrom(additionalObjectJson);
             opportunityContactRoles.addAll(unprocessedSoftCredits);
         }
