@@ -679,7 +679,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 setExclusionsStringFor(con, householdNamingExclusionsString.value());
             } else if (!householdNamingExclusionsString.equals
                     (oldHouseholdNamingExclusionsString)) {
-                exclusionsAsCheckboxes.synchronizeFrom(householdNamingExclusionsString);
+                exclusionsAsCheckboxes.updateFrom(householdNamingExclusionsString);
                 setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
             }
         }

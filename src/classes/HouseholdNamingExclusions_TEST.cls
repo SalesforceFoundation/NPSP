@@ -126,17 +126,56 @@ private class HouseholdNamingExclusions_TEST {
     }
 
     @IsTest
-    static void stringShouldSyncToCheckboxesBeforeUpdate() {
+    static void checkboxChangesOverwriteStringBeforeUpdate() {
         Id id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         Contact c = new Contact(
+                Id = id,
+                LastName = 'test',
+                Exclude_from_Household_Formal_Greeting__c = true
+        );
+
+        Contact oldContact = new Contact(
                 Id = id,
                 LastName = 'test',
                 npo02__Naming_Exclusions__c = 'Household__c.Name'
         );
 
+        Contacts contacts = new Contacts(new List<Contact>{
+                c
+        }, new List<Contact>{
+                oldContact
+        });
+        contacts.onBeforeUpdate();
+
+        HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
+                new HouseholdNamingExclusionsCheckboxes(c);
+        System.assertEquals(true, exclusionsCheckboxes.isExcludedFromFormalGreeting());
+        System.assertEquals(false, exclusionsCheckboxes.isExcludedFromName());
+
+        HouseholdNamingExclusionsString exclusionsString =
+                new HouseholdNamingExclusionsString(c);
+        System.assertEquals(true, exclusionsString.isExcludedFromFormalGreeting(),
+                'The Household Naming Exclusions string should be updated to match the' +
+                        'Naming Exclusions checkboxes when they change on Contact update.');
+        System.assertEquals(false, exclusionsString.isExcludedFromName(),
+                'The Household Naming Exclusions string should be updated to match the' +
+                        'Naming Exclusions checkboxes when they change on Contact update.');
+    }
+
+    @IsTest
+    static void stringChangesOverwriteCheckboxesBeforeUpdate() {
+        Id id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Contact c = new Contact(
+                Id = id,
+                LastName = 'test',
+                npo02__Naming_Exclusions__c = 'Household__c.Name',
+                Exclude_from_Household_Formal_Greeting__c = true
+        );
+
         Contact oldContact = new Contact(
                 Id = id,
-                LastName = 'test'
+                LastName = 'test',
+                Exclude_from_Household_Formal_Greeting__c = true
         );
         Contacts contacts = new Contacts(new List<Contact>{
                 c
@@ -148,8 +187,11 @@ private class HouseholdNamingExclusions_TEST {
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
         System.assertEquals(true, exclusionsCheckboxes.isExcludedFromName(),
-                'The Household Naming Exclusions checkboxes should be synced with the' +
-                        'Naming Exclusions string on Contact update.');
+                'The Household Naming Exclusions checkboxes should be updated to match the' +
+                        'Naming Exclusions string when it changes on Contact update.');
+        System.assertEquals(false, exclusionsCheckboxes.isExcludedFromFormalGreeting(),
+                'The Household Naming Exclusions checkboxes should be updated to match the' +
+                        'Naming Exclusions string when it changes on Contact update.');
     }
 
     @IsTest
