@@ -6,7 +6,7 @@ public inherited sharing class GiftBatchView {
 
     public GiftBatchView(GiftBatchDTO giftBatchDTO) {
         this.giftBatchId = giftBatchDTO.giftBatchId;
-       this.totalCount = giftBatchDTO.totalCount;
-       this.total = giftBatchDTO.total;
+        this.totalCount = giftBatchDTO.totalCount;
+        this.total = giftBatchDTO.total;
     }
 }
