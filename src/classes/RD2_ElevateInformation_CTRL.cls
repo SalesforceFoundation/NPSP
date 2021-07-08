@@ -101,7 +101,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 data.put('commitmentURLPrefix', service.getViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT));
             }
 
-            data.put('closeStatus', RD2_StatusMapper.getInstance().getClosedStates());
+            data.put('closeStatus', RD2_StatusMapper.getInstance().getAllClosedStatus());
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());
