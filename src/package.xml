@@ -370,11 +370,11 @@
         <members>HH_Households_TDTM</members>
         <members>HH_Households_TEST</members>
         <members>HH_INaming</members>
-        <members>HH_NameSpec</members>
-        <members>HH_NameSpec_TEST</members>
         <members>HH_ManageHH_CTRL</members>
         <members>HH_ManageHH_TEST</members>
         <members>HH_ManageHousehold_EXT</members>
+        <members>HH_NameSpec</members>
+        <members>HH_NameSpec_TEST</members>
         <members>HH_OppContactRoles_TDTM</members>
         <members>HH_OppContactRoles_TEST</members>
         <members>HouseholdAccounts</members>
@@ -1870,6 +1870,7 @@
         <members>RD2_ElevateRDCampaignCannotUpdateToNull</members>
         <members>RD2_ElevateRDCannotBePaused</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
+        <members>RD2_ElevateRDClosedStatusCannotBeEdit</members>
         <members>RD2_ElevateRDDayOfMonthCannotChange</members>
         <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
         <members>RD2_ElevateRecordCreateFailed</members>
