@@ -29,7 +29,8 @@
 */
 @IsTest
 private class Gifts_TEST {
-    @isTest static void shouldReturnCorrectNumberOfGiftCounts() {
+    @isTest
+    static void shouldReturnCorrectNumberOfGiftCounts() {
         List<DataImport__c> dummyGifts = buildGifts(20, null, null);
         List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
             10, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
@@ -43,7 +44,8 @@ private class Gifts_TEST {
         System.assertEquals(2, gifts.elevateBatchIds()?.size());
     }
 
-    @isTest static void shouldReturnCorrectNumberOfAuthorizedToPaymentProcessingGifts() {
+    @isTest
+    static void shouldReturnCorrectNumberOfAuthorizedToPaymentProcessingGifts() {
         List<DataImport__c> dummyAuthorizedGifts = buildGifts(
             10, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
 
@@ -56,7 +58,8 @@ private class Gifts_TEST {
         }
     }
 
-    @isTest static void shouldReturnCorrectNumberOfGiftsWithFailReason() {
+    @isTest
+    static void shouldReturnCorrectNumberOfGiftsWithFailReason() {
         final Integer numberOfFailedGifts = 15;
         final String elevateBatchId = 'DUMMY_ELEVATE_ID_1';
 
@@ -71,6 +74,15 @@ private class Gifts_TEST {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }
+    }
+
+    @isTest
+    static void shouldReturn2Gifts() {
+        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
+        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock));
+
+        System.assertEquals(2, gifts.size());
     }
 
     private static List<DataImport__c> buildGifts(
@@ -101,5 +113,39 @@ private class Gifts_TEST {
             failReasonByElevateBatchId.put(elevateBatchId, 'DUMMY FAIL REASON');
         }
         return failReasonByElevateBatchId;
+    }
+
+    private class GiftSelectorMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getGiftsFor' {
+                    return new List<DataImport__c>{
+                        new DataImport__c(
+                                Donation_Amount__c = 100,
+                                Donation_Date__c = Date.today()
+                        ),
+                        new DataImport__c(
+                                Donation_Amount__c = 200,
+                                Donation_Date__c = Date.today()
+                        )
+                    };
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
+        return (GiftSelector) Test.createStub(
+            GiftSelector.class,
+            giftSelectorMock
+        );
     }
 }

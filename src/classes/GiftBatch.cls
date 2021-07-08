@@ -37,6 +37,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
+    private Gifts gifts;
 
     @TestVisible
     private GE_Template.Template formTemplate {
@@ -52,32 +53,12 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         set;
     }
 
-    private Gifts gifts {
-        get {
-            if (gifts == null) {
-                gifts = new Gifts(giftSelector.getGiftsFor(this.batchId));
-            }
-            return gifts;
-        }
-        set;
-    }
-
     private GiftBatchSelector giftBatchSelector {
         get {
             if (giftBatchSelector == null) {
                 giftBatchSelector = new GiftBatchSelector();
             }
             return giftBatchSelector;
-        }
-        set;
-    }
-
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
         }
         set;
     }
@@ -104,6 +85,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+        this.gifts = new Gifts(this.batchId, null);
     }
 
     public Boolean hasElevateWidget() {

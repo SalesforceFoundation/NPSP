@@ -39,9 +39,30 @@ public with sharing class Gifts {
     @TestVisible private List<DataImport__c> dataImports;
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
+    @TestVisible
+    private GiftSelector giftSelector {
+        get {
+            if (giftSelector == null) {
+                giftSelector = new GiftSelector();
+            }
+            return giftSelector;
+        }
+        set;
+    }
+
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setElevateBatchIds(dataImports);
+    }
+
+    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        this.dataImports = giftSelector.getGiftsFor(giftBatchId);
+        setElevateBatchIds(dataImports);
+    }
+
+    public Integer size() {
+        return this.dataImports.size();
     }
 
     public List<DataImport__c> authorizedGifts() {
