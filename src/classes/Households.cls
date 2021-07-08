@@ -459,6 +459,9 @@ public inherited sharing class Households extends fflib_SObjects {
         );
     }
 
+    /**
+     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
+     */
     public static void handleContactsBeforeUpdate(Contacts contacts) {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();

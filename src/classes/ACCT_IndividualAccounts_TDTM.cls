@@ -99,12 +99,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             contactsInstance = new Contacts(contacts);
-            processAccountsBeforeInsert();
+            Households.handleContactsBeforeInsert(contactsInstance);
         }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             contactsInstance = new Contacts(newSObjects, oldSObjects);
-            processAccountsBeforeUpdate();
+            Households.handleContactsBeforeUpdate(contactsInstance);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
@@ -137,18 +137,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             processAccountsAfterUpdate();
         }
 
-    }
-
-    private void processAccountsBeforeInsert() {
-        Households.handleContactsBeforeInsert(contactsInstance);
-    }
-
-    /**
-     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
-     * @param  accountById - the existing accounts that the contacts are related to.
-     */
-    private void processAccountsBeforeUpdate() {
-        Households.handleContactsBeforeUpdate(contactsInstance);
     }
 
     /**
