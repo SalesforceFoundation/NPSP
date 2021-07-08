@@ -38,6 +38,7 @@ public with sharing class Gift {
     @TestVisible
     private DataImport__c dataImport;
     private List<String> availableFields;
+    private SoftCredits softCredits;
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
@@ -47,10 +48,16 @@ public with sharing class Gift {
         }
         set;
     }
-    
+
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
         this.populateAvailableFields();
+
+        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
+        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
+        // related to the Gift in question
+        List<OpportunityContactRole> existingSoftCredits = new List<OpportunityContactRole>();
+        softCredits = new SoftCredits(existingSoftCredits, this.dataImport.Additional_Object_JSON__c);
     }
 
     public Boolean requiresReauthorizationBeforeChange() {
@@ -63,6 +70,10 @@ public with sharing class Gift {
 
     public DataImport__c dataImportRecord() {
         return this.dataImport;
+    }
+
+    public SoftCredits softCredits() {
+        return this.softCredits;
     }
 
     private void populateAvailableFields() {
