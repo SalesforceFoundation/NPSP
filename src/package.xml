@@ -343,6 +343,7 @@
         <members>Gift</members>
         <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchDTO</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
         <members>GiftBatchSelector</members>
@@ -350,6 +351,7 @@
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
+        <members>GiftBatchView</members>
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftSelector</members>
