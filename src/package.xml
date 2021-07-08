@@ -352,9 +352,12 @@
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
         <members>GiftBatchView</members>
+        <members>GiftBatchView_TEST</members>
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
+        <members>GiftDTO</members>
         <members>GiftSelector</members>
+        <members>GiftView</members>
         <members>Gift_Test</members>
         <members>Gifts</members>
         <members>Gifts_TEST</members>
