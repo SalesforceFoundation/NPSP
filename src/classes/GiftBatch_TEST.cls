@@ -66,6 +66,26 @@ private class GiftBatch_TEST {
         }
     }
 
+    @isTest static void shouldReturnTotalRowAmount() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
+            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
+                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+
+        System.assertEquals(300, giftBatch.total().amount());
+    }
+
+    @isTest static void shouldReturnTotalRowCount() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
+            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
+                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+
+        System.assertEquals(2, giftBatch.totalCount());
+    }
+
+    static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
+
     public class ElevateBatchServiceMock implements StubProvider {
         public Boolean enqueuePaymentCaptureJobForCalled = false;
 

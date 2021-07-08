@@ -98,6 +98,9 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.gifts = gifts;
     }
 
+    @TestVisible
+    private GiftBatch() {}
+
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
@@ -138,6 +141,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public void updateRecords() {
         gifts.updateRecords();
+    }
+
+    public Id id() {
+        return this.batchId;
     }
 
     public Money total() {
