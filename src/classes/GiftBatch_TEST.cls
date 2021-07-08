@@ -84,7 +84,45 @@ private class GiftBatch_TEST {
         System.assertEquals(2, giftBatch.totalCount());
     }
 
+    @isTest static void shouldReturnTrueWhenElevateWidgetOnTemplate() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.formTemplate = createDummyTemplate(true);
+
+        System.assertEquals(true, giftBatch.hasElevateWidget());
+    }
+
+    @isTest static void shouldReturnFalseWhenElevateWidgetNotOnTemplate() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.formTemplate = createDummyTemplate(false);
+
+        System.assertEquals(false, giftBatch.hasElevateWidget());
+    }
+
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
+
+    private static GE_Template.Template createDummyTemplate(Boolean withElevateWidget) {
+        GE_Template.Element field =
+            new GE_Template.Element('field', 'True', null, 'CustomLabel', new List<String>{'Account_1_Name'});
+
+        GE_Template.Element[] elements = new GE_Template.Element[] { field };
+
+        if (withElevateWidget == true) {
+            GE_Template.Element widget =
+                new GE_Template.Element('widget', 'DisplayRule', 'geFormWidgetTokenizeCard', new List<String>{});
+            elements.add(widget);
+        }
+
+        GE_Template.Section section =
+            new GE_Template.Section('SectionLabel', 'Accordion', 'Expanded', 'True', elements);
+
+        GE_Template.Layout layout =
+            new GE_Template.Layout('DefaultMappingSet', new GE_Template.Section[]{section});
+
+        GE_Template.Template template =
+            new GE_Template.Template('Sample Template', 'This is the description.', '1.0', layout);
+
+        return template;
+    }
 
     public class ElevateBatchServiceMock implements StubProvider {
         public Boolean enqueuePaymentCaptureJobForCalled = false;
