@@ -1,8 +1,8 @@
 public inherited sharing class GiftBatchDTO {
 
-    private IGiftBatch giftBatch;
+    public Id giftBatchId;
 
-    public GiftBatchDTO(IGiftBatch giftBatch) {
-       this.giftBatch = giftBatch;
+    public GiftBatchDTO(GiftBatch giftBatch) {
+       this.giftBatchId = giftBatch.id();
     }
 }
