@@ -1,4 +1,7 @@
 <template>
+    <h2 class="slds-text-body_regular slds-p-horizontal_x-small slds-p-top_small slds-p-bottom_xxx-small" style="font-weight: bold;">
+        {CUSTOM_LABELS.commonSoftCredits}
+    </h2>
     <c-util-alert-banner if:true={hasAlert}
             theme={alertClass}
             assist-text="Soft Credit Error"
@@ -17,7 +20,7 @@
                 onremove={handleRemove}>
         </c-ge-form-widget-soft-credit-row>
     </template>
-    <lightning-layout class={footerClass}>
+    <lightning-layout class="slds-p-around--small slds-m-top--x-small">
         <lightning-layout-item size='3'>
             <lightning-button label={CUSTOM_LABELS.geAddSoftCredit} 
                     data-qa-locator={qaLocatorAddNewSoftCredit} 

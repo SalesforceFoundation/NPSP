@@ -43,7 +43,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     }
 
     handleAddRow() {
-        // handle add row
+        this.addRow();
     }
 
     addRow(rowRecord) {
@@ -61,7 +61,9 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     }
 
     handleRemove(event) {
-        // handle row remove
+        this.rowList.splice(event.detail.rowIndex, 1);
+
+        // TODO fire event
     }
 
     reset() {
@@ -105,11 +107,6 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
                     return errorClass;
             }
         }
-    }
-
-    get footerClass() {
-        return this.rowList.length > 0 ? 'slds-p-top--medium slds-m-top--medium slds-border--top'
-            : 'slds-p-top--medium slds-m-top--medium';
     }
 
     get qaLocatorAddNewSoftCredit() {
