@@ -80,7 +80,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
-        this.gifts = new Gifts(this.batchId, giftFieldsToQuery());
+        this.gifts = new Gifts(this.batchId, formTemplate.giftFieldApiNames());
     }
 
     public Boolean hasElevateWidget() {
@@ -151,42 +151,5 @@ public inherited sharing class GiftBatch implements IGiftBatch {
                             BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
         }
         return typedModel;
-    }
-
-    private List<String> getElevateRelatedFieldApiNames() {
-        List<String> elevateFieldApiNames = new List<String>();
-        if (GE_PaymentServices.getInstance().isElevateCustomer()
-            && hasElevateWidget()) {
-
-            elevateFieldApiNames = new List<String>{
-                String.valueOf(DataImport__c.Payment_Declined_Reason__c),
-                String.valueOf(DataImport__c.Elevate_Payment_Status__c),
-                String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c)
-            };
-        }
-
-        return elevateFieldApiNames;
-    }
-
-    private List<String> getGiftEntryFieldApiNames() {
-        List<String> giftEntryFieldApiNames = new List<String>();
-        giftEntryFieldApiNames.add(String.valueOf(DataImport__c.Payment_Status__c));
-        giftEntryFieldApiNames.add(String.valueOf(DataImport__c.Status__c));
-        giftEntryFieldApiNames.add(String.valueOf(DataImport__c.Additional_Object_JSON__c));
-
-        return giftEntryFieldApiNames;
-    }
-
-    @TestVisible
-    private List<String> giftFieldsToQuery() {
-        Set<String> fieldSet = new Set<String>();
-        fieldSet.addAll(formTemplate.giftFieldApiNames());
-        fieldSet.addAll(getGiftEntryFieldApiNames());
-        fieldSet.addAll(getElevateRelatedFieldApiNames());
-
-        List<String> fieldsToQuery = new List<String>();
-        fieldsToQuery.addAll(fieldSet);
-
-        return fieldsToQuery;
     }
 }

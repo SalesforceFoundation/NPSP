@@ -47,7 +47,7 @@ public with sharing class GiftSelector {
         String dataImportBatchLookup = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
+            .withSelectFields(queryFields(fieldsToQuery))
             .withWhere(dataImportBatchLookup + ' =: batchId')
             .withSecurityEnforced()
             .build();
@@ -58,12 +58,69 @@ public with sharing class GiftSelector {
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
+            .withSelectFields(queryFields(fieldsToQuery))
             .withWhere('Id =: giftId')
             .withSecurityEnforced()
             .build();
 
         return Database.query(queryString);
     }
-    
+
+    private List<String> elevateRelatedFieldApiNames() {
+        List<String> elevateFieldApiNames = new List<String>{
+            String.valueOf(DataImport__c.Elevate_Payment_Status__c),
+            String.valueOf(DataImport__c.Payment_Declined_Reason__c),
+            String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c)
+        };
+
+        return elevateFieldApiNames;
+    }
+
+    private List<String> coreFields() {
+        List<String> giftEntryFieldApiNames = new List<String> {
+            String.valueOf(DataImport__c.Account1Imported__c),
+            String.valueOf(DataImport__c.Additional_Object_JSON__c),
+            String.valueOf(DataImport__c.Contact1Imported__c),
+            String.valueOf(DataImport__c.DonationImportStatus__c),
+            String.valueOf(DataImport__c.DonationImported__c),
+            String.valueOf(DataImport__c.Donation_Donor__c),
+            String.valueOf(DataImport__c.FailureInformation__c),
+            String.valueOf(DataImport__c.Id),
+            String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c),
+            String.valueOf(DataImport__c.PaymentImportStatus__c),
+            String.valueOf(DataImport__c.PaymentImported__c),
+            String.valueOf(DataImport__c.Payment_Status__c),
+            String.valueOf(DataImport__c.Status__c)
+        };
+
+        return giftEntryFieldApiNames;
+    }
+
+    private List<String> queryFields(List<String> fieldsToQuery) {
+        Set<String> queryFieldAsSet = new Set<String>();
+        queryFieldAsSet.addAll(fieldsToQuery);
+        queryFieldAsSet.addAll(coreFields());
+        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
+            queryFieldAsSet.addAll(elevateRelatedFieldApiNames());
+        }
+
+        List<String> queryFields = new List<String>();
+        queryFields.addAll(filterByReadAccess(queryFieldAsSet));
+
+        return queryFields;
+    }
+
+    private List<String> filterByReadAccess(Set<String> fieldsToValidate) {
+        List<String> hasReadAccessTo = new List<String>();
+        for (String fieldApiName : fieldsToValidate) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            If (fieldDescribe.isAccessible()) {
+                hasReadAccessTo.add(fieldApiName);
+            }
+        }
+
+        return hasReadAccessTo;
+    }
 }
