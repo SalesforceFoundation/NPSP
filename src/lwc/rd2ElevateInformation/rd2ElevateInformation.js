@@ -132,7 +132,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     displayEditModal = false;
     commitmentURLPrefix;
     defaultRecordTypeId;
-    closeStatus;
+    closedStatus;
 
     get paymentMethod() {
         return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
@@ -172,7 +172,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
                 this.isElevateCustomer = response.isElevateCustomer;
                 this.permissions.alert = response.alert;
                 this.commitmentURLPrefix = response.commitmentURLPrefix;
-                this.closeStatus = response.closeStatus;
+                this.closedStatus = response.closedStatus;
 
                 this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                     && response.hasFieldPermissions === true
@@ -313,7 +313,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     isRecurringDonationNotClosed() {
-        return this.isTrue(!isNull(this.closeStatus) && !this.closeStatus.includes(this.getValue(FIELD_STATUS.fieldApiName)));
+        return this.isTrue(!isNull(this.closedStatus) && !this.closedStatus.includes(this.getValue(FIELD_STATUS.fieldApiName)));
     }
 
     /***
