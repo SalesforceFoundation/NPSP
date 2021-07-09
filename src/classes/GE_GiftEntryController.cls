@@ -72,18 +72,14 @@ public with sharing class GE_GiftEntryController {
                 ORDER BY CreatedDate DESC 
                 LIMIT :numRecords];
 
-            if(contacts.isEmpty()) {
-                Contact aContact = new Contact(FirstName='Test', LastName='Testerson');
-                insert aContact;
-                contacts.add(aContact);
-            }
-
-            for (Integer i = 0; i < numRecords; i++) {
-                OpportunityContactRole ocr = new OpportunityContactRole(
-                    Role = roles[Math.mod(i,roles.size())],
-                    ContactId = contacts[Math.mod(i,contacts.size())].Id
-                );
-                dummySoftCredits.add(ocr);
+            if(!contacts.isEmpty()) {
+                for (Integer i = 0; i < numRecords; i++) {
+                    OpportunityContactRole ocr = new OpportunityContactRole(
+                        Role = roles[Math.mod(i,roles.size())],
+                        ContactId = contacts[Math.mod(i,contacts.size())].Id
+                    );
+                    dummySoftCredits.add(ocr);
+                }
             }
 
             return dummySoftCredits;
@@ -91,8 +87,6 @@ public with sharing class GE_GiftEntryController {
             throw new AuraHandledException(ex.getMessage());
         }
     }
-
-
 
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
