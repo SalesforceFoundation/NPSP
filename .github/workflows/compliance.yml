@@ -28,4 +28,5 @@ jobs:
             labels:
               - "invalid"
               - "Do Not Merge"
+          fi
       
