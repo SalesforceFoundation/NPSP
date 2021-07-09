@@ -143,7 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>When Enable Change History in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+    <description>When Enable Recurring Donation Change History in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -155,7 +155,7 @@
     <enableStreamingApi>true</enableStreamingApi>
     <externalSharingModel>ControlledByParent</externalSharingModel>
     <fields>
-        <fullName>Change_Type__c</fullName>
+        <fullName>ChangeType__c</fullName>
         <description>The type of change (Upgrade, Downgrade, etc.) this Change History record represents.</description>
         <externalId>false</externalId>
         <inlineHelpText>The type of change (Upgrade, Downgrade, etc.) this Change History record represents.</inlineHelpText>
@@ -180,7 +180,7 @@
         </valueSet>
     </fields>
     <fields>
-        <fullName>Effective_Date__c</fullName>
+        <fullName>EffectiveDate__c</fullName>
         <description>The Effective Date of the Recurring Donation when this change occurred.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Effective Date of the Recurring Donation when this change occurred.</inlineHelpText>
@@ -190,7 +190,7 @@
         <type>Date</type>
     </fields>
     <fields>
-        <fullName>New_Amount__c</fullName>
+        <fullName>NewAmount__c</fullName>
         <description>The new Amount for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The new Amount for the related Recurring Donation.</inlineHelpText>
@@ -202,7 +202,7 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>New_Campaign__c</fullName>
+        <fullName>NewCampaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The new Campaign for the related Recurring Donation.</description>
         <externalId>false</externalId>
@@ -210,13 +210,37 @@
         <label>New Campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>Recurring Donation Change History (New Campaign)</relationshipLabel>
-        <relationshipName>RD_Change_History_New_Campaign</relationshipName>
+        <relationshipName>RDChangeHistoryNewCampaign</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>New_Payment_Method__c</fullName>
+        <fullName>NewInstallmentFrequency__c</fullName>
+        <description>The new Installment Frequency for the related Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The new Installment Frequency for the related Recurring Donation.</inlineHelpText>
+        <label>New Installment Frequency</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NewInstallmentPeriod__c</fullName>
+        <description>The new Installment Period for the related Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The new Installment Period for the related Recurring Donation.</inlineHelpText>
+        <label>New Installment Period</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>NewPaymentMethod__c</fullName>
         <description>The new Payment Method for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The new Payment Method for the related Recurring Donation.</inlineHelpText>
@@ -228,19 +252,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>New_Schedule__c</fullName>
-        <description>The new payment schedule for the related Recurring Donation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The new payment schedule for the related Recurring Donation.</inlineHelpText>
-        <label>New Schedule</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>New_Status_Reason__c</fullName>
+        <fullName>NewStatusReason__c</fullName>
         <description>The new Status Reason for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The new Status Reason for the related Recurring Donation.</inlineHelpText>
@@ -252,7 +264,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>New_Status__c</fullName>
+        <fullName>NewStatus__c</fullName>
         <description>The new Status for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The new Status for the related Recurring Donation.</inlineHelpText>
@@ -264,7 +276,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>New_Yearly_Value__c</fullName>
+        <fullName>NewYearlyValue__c</fullName>
         <description>The new yearly value for this Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The new yearly value for this Recurring Donation.</inlineHelpText>
@@ -276,7 +288,7 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Previous_Amount__c</fullName>
+        <fullName>PreviousAmount__c</fullName>
         <description>The previous Amount for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The previous Amount for the related Recurring Donation.</inlineHelpText>
@@ -288,7 +300,7 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Previous_Campaign__c</fullName>
+        <fullName>PreviousCampaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
         <description>The previous Campaign for the related Recurring Donation.</description>
         <externalId>false</externalId>
@@ -296,13 +308,37 @@
         <label>Previous Campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>Recurring Donation Change History (Previous Campaign)</relationshipLabel>
-        <relationshipName>RD_Change_History_Previous_Campaign</relationshipName>
+        <relationshipName>RDChangeHistoryPreviousCampaign</relationshipName>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
     </fields>
     <fields>
-        <fullName>Previous_Payment_Method__c</fullName>
+        <fullName>PreviousInstallmentFrequency__c</fullName>
+        <description>The previous Installment Frequency for the related Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The previous Installment Frequency for the related Recurring Donation.</inlineHelpText>
+        <label>Previous Installment Frequency</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PreviousInstallmentPeriod__c</fullName>
+        <description>The previous Installment Period for the related Recurring Donation.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The previous Installment Period for the related Recurring Donation.</inlineHelpText>
+        <label>Previous Installment Period</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>PreviousPaymentMethod__c</fullName>
         <description>The previous Payment Method for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The previous Payment Method for the related Recurring Donation.</inlineHelpText>
@@ -314,19 +350,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Previous_Schedule__c</fullName>
-        <description>The previous payment schedule for the related Recurring Donation.</description>
-        <externalId>false</externalId>
-        <inlineHelpText>The previous payment schedule for the related Recurring Donation.</inlineHelpText>
-        <label>Previous Schedule</label>
-        <length>255</length>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Text</type>
-        <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Previous_Status_Reason__c</fullName>
+        <fullName>PreviousStatusReason__c</fullName>
         <description>The previous Status Reason for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The previous Status Reason for the related Recurring Donation.</inlineHelpText>
@@ -338,7 +362,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Previous_Status__c</fullName>
+        <fullName>PreviousStatus__c</fullName>
         <description>The previous Status for the related Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The previous Status for the related Recurring Donation.</inlineHelpText>
@@ -350,7 +374,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Previous_Yearly_Value__c</fullName>
+        <fullName>PreviousYearlyValue__c</fullName>
         <description>The previous yearly value for this Recurring Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The previous yearly value for this Recurring Donation.</inlineHelpText>
@@ -362,14 +386,14 @@
         <type>Currency</type>
     </fields>
     <fields>
-        <fullName>Recurring_Donation__c</fullName>
+        <fullName>RecurringDonation__c</fullName>
         <description>The Recurring Donation related to this Change History record.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Recurring Donation related to this Change History record.</inlineHelpText>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
         <relationshipLabel>Recurring Donation Change History</relationshipLabel>
-        <relationshipName>RD_Change_History</relationshipName>
+        <relationshipName>RDChangeHistory</relationshipName>
         <relationshipOrder>0</relationshipOrder>
         <reparentableMasterDetail>false</reparentableMasterDetail>
         <trackTrending>false</trackTrending>
@@ -379,7 +403,7 @@
     <label>Recurring Donation Change History</label>
     <nameField>
         <displayFormat>RDCH-{0000000}</displayFormat>
-        <label>Recurring Donation Change History ID</label>
+        <label>Recurring Donation Change History Num</label>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Recurring Donation Change History</pluralLabel>

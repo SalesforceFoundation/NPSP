@@ -1465,23 +1465,25 @@
         <members>Payment_Services_Configuration__c.Service_Key__c</members>
         <members>Payment_Services_Configuration__c.Service__c</members>
         <members>Payment_Services_Configuration__c.Value__c</members>
-        <members>RecurringDonationChangeHistory__c.Change_Type__c</members>
-        <members>RecurringDonationChangeHistory__c.Effective_Date__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Amount__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Campaign__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Payment_Method__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Schedule__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Status_Reason__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Status__c</members>
-        <members>RecurringDonationChangeHistory__c.New_Yearly_Value__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Amount__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Campaign__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Payment_Method__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Schedule__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Status_Reason__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Status__c</members>
-        <members>RecurringDonationChangeHistory__c.Previous_Yearly_Value__c</members>
-        <members>RecurringDonationChangeHistory__c.Recurring_Donation__c</members>
+        <members>RecurringDonationChangeHistory__c.ChangeType__c</members>
+        <members>RecurringDonationChangeHistory__c.EffectiveDate__c</members>
+        <members>RecurringDonationChangeHistory__c.NewAmount__c</members>
+        <members>RecurringDonationChangeHistory__c.NewCampaign__c</members>
+        <members>RecurringDonationChangeHistory__c.NewInstallmentFrequency__c</members>
+        <members>RecurringDonationChangeHistory__c.NewInstallmentPeriod__c</members>
+        <members>RecurringDonationChangeHistory__c.NewPaymentMethod__c</members>
+        <members>RecurringDonationChangeHistory__c.NewStatusReason__c</members>
+        <members>RecurringDonationChangeHistory__c.NewStatus__c</members>
+        <members>RecurringDonationChangeHistory__c.NewYearlyValue__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousAmount__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousCampaign__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousPaymentMethod__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousStatusReason__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousStatus__c</members>
+        <members>RecurringDonationChangeHistory__c.PreviousYearlyValue__c</members>
+        <members>RecurringDonationChangeHistory__c.RecurringDonation__c</members>
         <members>RecurringDonationSchedule__c.Active__c</members>
         <members>RecurringDonationSchedule__c.Campaign__c</members>
         <members>RecurringDonationSchedule__c.DayOfMonth__c</members>

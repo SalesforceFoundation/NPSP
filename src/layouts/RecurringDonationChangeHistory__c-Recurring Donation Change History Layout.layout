@@ -13,73 +13,81 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Recurring_Donation__c</field>
+                <field>RecurringDonation__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Amount__c</field>
+                <field>PreviousAmount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Campaign__c</field>
+                <field>PreviousCampaign__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Payment_Method__c</field>
+                <field>PreviousPaymentMethod__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Schedule__c</field>
+                <field>PreviousInstallmentFrequency__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Status__c</field>
+                <field>PreviousInstallmentPeriod__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Status_Reason__c</field>
+                <field>PreviousStatus__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Previous_Yearly_Value__c</field>
+                <field>PreviousStatusReason__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>PreviousYearlyValue__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Change_Type__c</field>
+                <field>ChangeType__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Effective_Date__c</field>
+                <field>EffectiveDate__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Amount__c</field>
+                <field>NewAmount__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Campaign__c</field>
+                <field>NewCampaign__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Payment_Method__c</field>
+                <field>NewPaymentMethod__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Schedule__c</field>
+                <field>NewInstallmentFrequency__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Status__c</field>
+                <field>NewInstallmentPeriod__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Status_Reason__c</field>
+                <field>NewStatus__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>New_Yearly_Value__c</field>
+                <field>NewStatusReason__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>NewYearlyValue__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
