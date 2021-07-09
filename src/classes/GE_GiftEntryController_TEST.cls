@@ -62,8 +62,9 @@ private with sharing class GE_GiftEntryController_TEST {
         GiftService service = new GiftService();
         GiftView viewModel = service.viewModelFrom(dataImport.id);
 
-        System.assertEquals('Dummy First Name', viewModel.dataImport.Account1_Name__c);
-        System.assertEquals(2, viewModel.softCredits.size());
+        String account1NameField = String.valueOf(DataImport__c.Account1_Name__c);
+        System.assertEquals('Dummy First Name', viewModel.fields.get(account1NameField));
+        System.assertEquals(2, viewModel.softCredits.all.size());
         test.stopTest();
     }
 

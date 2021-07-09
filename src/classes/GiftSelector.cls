@@ -55,6 +55,20 @@ public with sharing class GiftSelector {
         return Database.query(queryString);
     }
 
+    public DataImport__c getGiftById(Id giftId, GiftEntryFormTemplate formTemplate) {
+        List<String> giftFieldsInFormTemplate = formTemplate.giftFieldApiNames();
+        List<String> fieldsToQuery = queryFields(giftFieldsInFormTemplate);
+
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fieldsToQuery)
+            .withWhere('Id =: giftId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
+    }
+
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)

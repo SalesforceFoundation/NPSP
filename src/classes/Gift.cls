@@ -50,7 +50,7 @@ public with sharing class Gift {
     }
 
     public Gift(Id giftId) {
-        this.dataImport = giftSelector.getGiftById(giftId, fieldsToQuery());
+        this.dataImport = giftSelector.getGiftById(giftId, new GiftEntryFormTemplate());
         this.populateSoftCredits();
     }
 
@@ -74,11 +74,6 @@ public with sharing class Gift {
 
     public Map<String, Object> fieldsWithValues() {
         return this.dataImport.getPopulatedFieldsAsMap();
-    }
-
-    private List<String> fieldsToQuery() {
-        GiftEntryFormTemplate formTemplate = new GiftEntryFormTemplate();
-        return formTemplate.giftFieldApiNames();
     }
 
     private void populateAvailableFields() {
