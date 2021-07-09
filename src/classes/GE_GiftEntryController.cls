@@ -40,6 +40,7 @@ public with sharing class GE_GiftEntryController {
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
     private static GiftBatchService giftBatchService = new GiftBatchService();
+    private static GiftService giftService = new GiftService();
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -64,7 +65,6 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static GiftView getGiftView(Id giftId){
         try {
-            GiftService giftService = new GiftService();
             return giftService.viewModelFrom(giftId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
