@@ -37,6 +37,36 @@
 @isTest
 private with sharing class GE_GiftEntryController_TEST {
 
+    @isTest
+    static void shouldReturnAGiftView() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        Form_Template__c defaultTemplate = new Form_Template__c( Format_Version__c = '1.0' );
+
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        defaultTemplate.Template_JSON__c = templateJSON;
+        insert defaultTemplate;
+
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = defaultTemplate.Id;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+        Date donationDate = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Account1_Name__c = 'Dummy First Name',
+            Donation_Date__c = donationDate,
+            Additional_Object_JSON__c = DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS
+        );
+        insert dataImport;
+
+        test.startTest();
+        GiftService service = new GiftService();
+        GiftView viewModel = service.viewModelFrom(dataImport.id);
+
+        System.assertEquals('Dummy First Name', viewModel.dataImport.Account1_Name__c);
+        System.assertEquals(2, viewModel.softCredits.size());
+        test.stopTest();
+    }
+
     @isTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
         String errorMessage = new ElevateBatchServiceInvalidRequest().createElevateBatchErrorMessage()
@@ -787,4 +817,5 @@ private with sharing class GE_GiftEntryController_TEST {
         }
     }
 
+    static final String DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS = '{"name":"Additional_Object_JSON__c","dynamicSourceByObjMappingDevName":{"Opportunity_Contact_Role_1temp2":{"sourceObj":{"attributes":{"type":"DataImport__c"},"Opportunity_Contact_Role_1_Role__c":"Household Member","Contact1Imported__c":"0035600000VNllNAAT"},"objectMappingTemplateDevName":"Opportunity_Contact_Role_1","objectMappingDevName":"Opportunity_Contact_Role_1temp2","importedRecordStatus":null,"importedRecordId":null,"fieldMappingSetDevName":"Migrated_Custom_Field_Mapping_Set"},"Opportunity_Contact_Role_1temp1":{"sourceObj":{"attributes":{"type":"DataImport__c"},"Opportunity_Contact_Role_1_Role__c":"Matched Donor","Contact1Imported__c":"0035600000VNllSAAT"},"objectMappingTemplateDevName":"Opportunity_Contact_Role_1","objectMappingDevName":"Opportunity_Contact_Role_1temp1","importedRecordStatus":null,"importedRecordId":null,"fieldMappingSetDevName":"Migrated_Custom_Field_Mapping_Set"}}}';
 }
