@@ -80,7 +80,7 @@ public with sharing class GiftSelector {
         return Database.query(queryString);
     }
 
-    private List<String> elevateRelatedFieldApiNames() {
+    private List<String> elevateFields() {
         List<String> elevateFieldApiNames = new List<String>{
             String.valueOf(DataImport__c.Elevate_Payment_Status__c),
             String.valueOf(DataImport__c.Payment_Declined_Reason__c),
@@ -115,7 +115,7 @@ public with sharing class GiftSelector {
         queryFieldAsSet.addAll(fieldsToQuery);
         queryFieldAsSet.addAll(coreFields());
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
-            queryFieldAsSet.addAll(elevateRelatedFieldApiNames());
+            queryFieldAsSet.addAll(elevateFields());
         }
 
         List<String> queryFields = new List<String>();

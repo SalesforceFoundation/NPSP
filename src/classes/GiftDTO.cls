@@ -4,7 +4,7 @@ public with sharing class GiftDTO {
     public SoftCreditsDTO softCreditsDTO;
 
     public GiftDTO(Gift gift) {
-        this.fields = gift.fieldsWithValues();
+        this.fields = gift.fields();
         this.softCreditsDTO = new SoftCreditsDTO(gift.softCredits());
     }
 }

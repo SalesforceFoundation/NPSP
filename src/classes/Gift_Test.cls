@@ -63,7 +63,7 @@ private class Gift_Test {
         Gift gift = new Gift(dataImport);
 
         String donationAmountField = String.valueOf(DataImport__c.Donation_Amount__c);
-        System.assertEquals(10, gift.fieldsWithValues().get(donationAmountField));
+        System.assertEquals(10, gift.fields().get(donationAmountField));
     }
 
     @isTest

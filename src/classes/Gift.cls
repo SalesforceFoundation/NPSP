@@ -72,7 +72,7 @@ public with sharing class Gift {
         return this.softCredits;
     }
 
-    public Map<String, Object> fieldsWithValues() {
+    public Map<String, Object> fields() {
         return this.dataImport.getPopulatedFieldsAsMap();
     }
 
