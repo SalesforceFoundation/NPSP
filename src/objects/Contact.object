@@ -1804,7 +1804,7 @@
         <defaultValue>false</defaultValue>
         <description>Indicates the address is undeliverable.</description>
         <externalId>false</externalId>
-        <label>Undeliverable Address</label>
+        <label>Undeliverable Mailing Address</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
     </fields>

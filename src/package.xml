@@ -976,6 +976,7 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Account.Undeliverable_Address__c</members>
         <members>Account_Soft_Credit__c.Account__c</members>
         <members>Account_Soft_Credit__c.Amount__c</members>
         <members>Account_Soft_Credit__c.Opportunity__c</members>
