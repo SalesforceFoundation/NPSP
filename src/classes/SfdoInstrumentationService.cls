@@ -40,8 +40,8 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
-    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload) { 
-        SfdoLogUtils.log(featureName.name(), componentName.name(), actionName.name(), payload);
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload) { 
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), payload);
     }
 
     /**
@@ -51,8 +51,8 @@ public inherited sharing class SfdoInstrumentationService {
      * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      * @param value Duration or other value to include in the log
      */
-    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload, Integer value) { 
-        SfdoLogUtils.log(featureName.name(), componentName.name(), actionName.name(), payload, value);
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload, Integer value) { 
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), payload, value);
     }
 
     /**
@@ -61,8 +61,8 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param value Duration or other value to include in the log
      */
-    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
-        SfdoLogUtils.log(featureName.name(), componentName.name(), actionName.name(), value);
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), value);
     }
 
     /**
@@ -70,8 +70,39 @@ public inherited sharing class SfdoInstrumentationService {
      * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
      */
-    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
-        SfdoLogUtils.log(featureName.name(), componentName.name(), actionName.name());
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
+    }
+
+    /**
+     * @description Retrieve the Action Enum for a specific TriggerHandler Event Type
+     * @param  thisAction thisAction
+     * @return Action enum
+     */
+    public static SfdoInstrumentationEnum.Action getActionFromTriggerEvent(TDTM_Runnable.Action thisAction) {
+        String val = thisAction.name();
+
+        for (SfdoInstrumentationEnum.Action a : SfdoInstrumentationEnum.Action.values()) {
+            if (a.name() == val) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+        /**
+     * @description Retrieve the Component Enum for a specific String value, such as an object name
+     * @param  String value to find in the Enum list
+     * @return Component Enum
+     */
+    public static SfdoInstrumentationEnum.Component getComponentFromString(String val) {
+
+        for (SfdoInstrumentationEnum.Component c : SfdoInstrumentationEnum.Component.values()) {
+            if (c.name() == val) {
+                return c;
+            }
+        }
+        return null;
     }
 
 }

@@ -35,7 +35,8 @@ public with sharing class SfdoInstrumentationEnum {
 
     public enum Feature {
         TDTM,
-        RecurringDonations,
+        EnhancedRecurringDonations,
+        LegacyRecurringDonations,
         GiftEntry,
         DataImportEngine,
         EngagementPlans,
@@ -48,6 +49,7 @@ public with sharing class SfdoInstrumentationEnum {
         Affiliations,
         SoftCreditAutomation,
         CustomizableRollups,
+        LegacyRollups,
         PaymentServices,
         LeadConversion,
         RecordMerge,
@@ -56,6 +58,7 @@ public with sharing class SfdoInstrumentationEnum {
         MatchingGifts,
         PartialSoftCredits,
         GetStarted,
+        AccountModelConversion,
         Settings
     }
 
@@ -88,6 +91,15 @@ public with sharing class SfdoInstrumentationEnum {
         DML_Count,
         Query_Count,
         Batch_Count,
-        Processed_Count
+        Processed_Count,
+        Validation,
+        Verification,
+        BeforeInsert, 
+        BeforeUpdate, 
+        BeforeDelete, 
+        AfterInsert, 
+        AfterUpdate, 
+        AfterDelete,
+        AfterUndelete
     }
 }
