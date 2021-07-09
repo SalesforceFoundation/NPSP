@@ -32,42 +32,6 @@
 private class GiftBatch_TEST {
 
     @isTest
-    static void shouldReturnGiftFieldsToQueryWhenElevateActive() {
-        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
-        mockInstance.withIsElevateCustomer(true);
-
-        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
-            GE_PaymentServices.class,
-            mockInstance
-        );
-        GE_PaymentServices.setInstance(paymentServicesMock);
-
-        GiftBatch giftBatch = new GiftBatch();
-        giftBatch.formTemplate = createDummyTemplate(true);
-        List<String> fieldsToQuery = giftBatch.giftFieldsToQuery();
-
-        System.assertEquals(7, fieldsToQuery.size());
-    }
-
-    @isTest
-    static void shouldReturnGiftFieldsToQuery() {
-        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
-        mockInstance.withIsElevateCustomer(false);
-
-        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
-            GE_PaymentServices.class,
-            mockInstance
-        );
-        GE_PaymentServices.setInstance(paymentServicesMock);
-
-        GiftBatch giftBatch = new GiftBatch();
-        giftBatch.formTemplate = createDummyTemplate(false);
-        List<String> fieldsToQuery = giftBatch.giftFieldsToQuery();
-
-        System.assertEquals(4, fieldsToQuery.size());
-    }
-
-    @isTest
     static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
         Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
