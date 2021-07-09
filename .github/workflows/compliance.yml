@@ -11,17 +11,21 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Check for References to SfdoLogging
+      - name: Check for References to the SfdoLogging class (not permitted for direct use)
         id: diff
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # Pull Request
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
-            echo "RUN: git diff-tree $GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw"
             export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
-            echo "Diff between origin/$GITHUB_BASE_REF and $GITHUB_SHA"
           fi
           echo "$DIFF"
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
-      - run: echo "${{ steps.diff.outputs.diff }}"
+          if [ $DIFF ]; then
+            echo "::error::Invalid direct use of the `SfdoLogUtils` core class. Splunk Instrumentation MUST use the `sfdoInstrumentationService` clas."
+            # Use custom labels on pull requests for Docker version updates
+            labels:
+              - "invalid"
+              - "Do Not Merge"
+      
