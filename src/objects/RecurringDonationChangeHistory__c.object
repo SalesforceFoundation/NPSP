@@ -143,7 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>When Enable Change History in Recurring Donation Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+    <description>When Enable Change History in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -382,7 +382,7 @@
         <label>Recurring Donation Change History ID</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Donation Change History</pluralLabel>
+    <pluralLabel>Recurring Donation Change Histories</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>

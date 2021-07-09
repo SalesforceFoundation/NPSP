@@ -37,9 +37,9 @@
     <fields>
         <fullName>EnableChangeHistory__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When Enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+        <description>When enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When Enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</inlineHelpText>
+        <inlineHelpText>When enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</inlineHelpText>
         <label>Enable Recurring Donation Change History</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
