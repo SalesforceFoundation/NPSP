@@ -49,15 +49,15 @@ public with sharing class Gift {
         set;
     }
 
+    public Gift(Id giftId) {
+        this.dataImport = giftSelector.getGiftById(giftId, new List<String>{'Id', 'Additional_Object_JSON__c'});
+        this.populateSoftCredits();
+    }
+
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
         this.populateAvailableFields();
-
-        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
-        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
-        // related to the Gift in question
-        List<OpportunityContactRole> existingSoftCredits = new List<OpportunityContactRole>();
-        softCredits = new SoftCredits(existingSoftCredits, this.dataImport.Additional_Object_JSON__c);
+        this.populateSoftCredits();
     }
 
     public Boolean requiresReauthorizationBeforeChange() {
@@ -87,6 +87,14 @@ public with sharing class Gift {
         }
 
         this.availableFields = fields;
+    }
+
+    private void populateSoftCredits() {
+        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
+        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
+        // related to the Gift in question
+        List<OpportunityContactRole> existingSoftCredits = new List<OpportunityContactRole>();
+        this.softCredits = new SoftCredits(existingSoftCredits, this.dataImport.Additional_Object_JSON__c);
     }
 
     private Boolean hasPaymentFieldsChanged() {
