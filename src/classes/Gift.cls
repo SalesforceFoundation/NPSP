@@ -93,8 +93,8 @@ public with sharing class Gift {
         // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
         // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
         // related to the Gift in question
-        List<OpportunityContactRole> existingSoftCredits = new List<OpportunityContactRole>();
-        this.softCredits = new SoftCredits(existingSoftCredits, this.dataImport.Additional_Object_JSON__c);
+        String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
+        this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
     }
 
     private Boolean hasPaymentFieldsChanged() {

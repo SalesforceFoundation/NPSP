@@ -74,6 +74,8 @@
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
         <members>Accounts</members>
+        <members>AdditionalObjectJSON</members>
+        <members>AdditionalObjectJSON_TEST</members>
         <members>AddressService</members>
         <members>Addresses</members>
         <members>AggregateResultProxy</members>
@@ -645,6 +647,9 @@
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
         <members>SoftCredits</members>
+        <members>SoftCreditsDTO</members>
+        <members>SoftCreditsView</members>
+        <members>SoftCreditsView_TEST</members>
         <members>SoftCredits_TEST</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>

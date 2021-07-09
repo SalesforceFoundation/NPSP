@@ -1,21 +1,9 @@
 public with sharing class SoftCredits {
+
     private List<OpportunityContactRole> opportunityContactRoles;
-    private List<OpportunityContactRole> unprocessedSoftCredits;
 
-    public SoftCredits(
-        List<OpportunityContactRole> existingOpportunityContactRoles,
-        String additionalObjectJson) {
-        
-        opportunityContactRoles = new List<OpportunityContactRole>();
-
-        if (existingOpportunityContactRoles != null) {
-            opportunityContactRoles.addAll(existingOpportunityContactRoles);
-        }
-
-        if (additionalObjectJson != null) {
-            unprocessedSoftCredits = instantiateOpportunityContactRolesFrom(additionalObjectJson);
-            opportunityContactRoles.addAll(unprocessedSoftCredits);
-        }
+    public SoftCredits(List<OpportunityContactRole> opportunityContactRoles) {
+        this.opportunityContactRoles = opportunityContactRoles;
     }
 
     public List<OpportunityContactRole> all() {
@@ -26,49 +14,21 @@ public with sharing class SoftCredits {
         return opportunityContactRoles.size();
     }
 
-    private List<OpportunityContactRole> instantiateOpportunityContactRolesFrom(String additionalObjectJson) {
-        List<OpportunityContactRole> contactRoles = new List<OpportunityContactRole>();
-        List<BDI_DynamicSource> dynamicSources = new List<BDI_DynamicSource>();
+    public void add(OpportunityContactRole opportunityContactRole) {
+        this.opportunityContactRoles.add(opportunityContactRole);
+    }
 
-        if (additionalObjectJson != null && additionalObjectJson.length() > 0) {
+    public void addAll(List<OpportunityContactRole> moreOpportunityContacRoles) {
+        this.opportunityContactRoles.addAll(moreOpportunityContacRoles);
+    }
 
-            BDI_DynamicSourceGroup dynamicSourceGroup = (BDI_DynamicSourceGroup)
-                JSON.deserialize(additionalObjectJson, BDI_DynamicSourceGroup.class);
-
-            List<String> opportunityContactRoleObjectMappingDeveloperNames = getSoftCreditsObjectMappingNames();
-
-            for (BDI_DynamicSource dynamicSource : dynamicSourceGroup.dynamicSourceByObjMappingDevName.values()) {
-                System.debug('dynamicSource: ' + dynamicSource);
-                if (opportunityContactRoleObjectMappingDeveloperNames.contains(dynamicSource.objectMappingTemplateDevName)) {
-                    dynamicSources.add(dynamicSource);
-                    contactRoles.add(convertDynamicSourceToOpportunityContactRole(dynamicSource));
-                }
+    public List<OpportunityContactRole> unprocessed() {
+        List<OpportunityContactRole> unprocessed = new List<OpportunityContactRole>();
+        for (OpportunityContactRole ocr : this.opportunityContactRoles) {
+            if (ocr.id == null) {
+                unprocessed.add(ocr);
             }
         }
-
-        return contactRoles;
-    }
-
-    private OpportunityContactRole convertDynamicSourceToOpportunityContactRole(BDI_DynamicSource dynamicSource) {
-        OpportunityContactRole ocr = new OpportunityContactRole();
-        ocr.Role = (String) dynamicSource.sourceObj.get('Opportunity_Contact_Role_1_Role__c');
-        ocr.ContactId = (Id) dynamicSource.sourceObj.get('Contact1Imported__c');
-        return ocr;
-    }
-
-    private List<String> getSoftCreditsObjectMappingNames() {
-        List<Data_import_Object_Mapping__mdt> objectMappings = [
-            SELECT DeveloperName
-            FROM Data_Import_Object_Mapping__mdt
-            WHERE Object_API_Name__c = :SObjectType.OpportunityContactRole.getName()
-                AND Is_Deleted__c = false
-        ];
-
-        List<String> softCreditsObjectMappingNames = new List<String>();
-        for (Data_Import_Object_Mapping__mdt objectMapping : objectMappings) {
-            softCreditsObjectMappingNames.add(objectMapping.DeveloperName);
-        }
-
-        return softCreditsObjectMappingNames;
+        return unprocessed;
     }
 }
