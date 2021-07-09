@@ -1,4 +1,4 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api, wire} from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
@@ -9,6 +9,7 @@ import {
 import OPP_CONTACT_ROLE_OBJECT from '@salesforce/schema/OpportunityContactRole';
 import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
 import CONTACT_FIELD from '@salesforce/schema/OpportunityContactRole.ContactId';
+import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.OpportunityId';
 
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;

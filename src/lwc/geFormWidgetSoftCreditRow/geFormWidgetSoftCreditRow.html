@@ -10,30 +10,28 @@
                                                    onchange={handleFieldValueChange}
                                                    value={contactValue}
                                                    class="help-text-hidden slds-m-bottom_none"
-                                                   data-qa-locator="replaceMe"
-                                                   disabled=false>
+                                                   data-qa-locator="replaceMe">
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">                       
+                            <lightning-input-field field-name={roleFieldApiName}
+                                                    data-fieldname={roleFieldApiName}
+                                                    required
+                                                    onchange={handleFieldValueChange}
+                                                    value={roleValue}
+                                                    class="help-text-hidden slds-m-bottom_none"
+                                                    data-qa-locator="replaceMe">
                             </lightning-input-field>
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">
-                            <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">
-                                <lightning-input-field field-name={roleFieldApiName}
-                                                       data-fieldname={roleFieldApiName}
-                                                       required
-                                                       onchange={handleFieldValueChange}
-                                                       value={roleValue}
-                                                       class="help-text-hidden slds-m-bottom_none"
-                                                       data-qa-locator="replaceMe"
-                                                       disabled=false>
-                                </lightning-input-field>
-                            </div>
-                        </div>
-                        <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">
                             <template if:true={isRemovable}>
-                                <lightning-button variant='destructive'
-                                                  onclick={remove}
-                                                  label={CUSTOM_LABELS.commonDelete}
-                                                  data-qa-locator="replaceMe">
-                                </lightning-button>
+                                <lightning-button-icon class="slds-m-right_xxx-small "
+                                                    icon-name="utility:delete"
+                                                    alternative-text={labelGeAssistiveFormFieldRemove}
+                                                    size="medium    "
+                                                    onclick={remove}
+                                                    data-qa-locator="replaceMe">
+                                </lightning-button-icon>                                
                             </template>
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">
@@ -41,9 +39,6 @@
                         </div>                      
                     </div>
                 </lightning-record-edit-form>
-        </lightning-layout-item>
-        <lightning-layout-item size="3" class="slds-p-vertical_large slds-p-left_xx-small">
-            <p>Buttons!</p>
         </lightning-layout-item>
     </lightning-layout>
 </template>

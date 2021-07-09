@@ -2440,6 +2440,7 @@
         <members>flsReadAccessError</members>
         <members>gauAllocationErrorGeneral</members>
         <members>geAddNewAllocation</members>
+        <members>geAddSoftCredit</members>
         <members>geAssistiveActiveSection</members>
         <members>geAssistiveBatchHeaderRemoveField</members>
         <members>geAssistiveDescriptionFieldOptional</members>
@@ -4309,6 +4310,12 @@
         <members>npe01__OppPayment__c.Payment_WizardFS</members>
         <members>npe03__Recurring_Donation__c.RD2_Entry_Form_Custom_Fields</members>
         <name>FieldSet</name>
+    </types>
+    <types>
+        <members>Data_Import_Batch_Record_Home</members>
+        <members>GetStarted</members>
+        <members>GetStartedEndUser</members>
+        <name>FlexiPage</name>
     </types>
     <types>
         <members>Payment_ACH_Code</members>
