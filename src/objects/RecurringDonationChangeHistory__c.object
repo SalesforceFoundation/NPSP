@@ -382,7 +382,7 @@
         <label>Recurring Donation Change History ID</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Donation Change Histories</pluralLabel>
+    <pluralLabel>Recurring Donation Change History</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
