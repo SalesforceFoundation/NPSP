@@ -1,10 +1,10 @@
 public with sharing class GiftDTO {
 
-    public DataImport__c dataImport;
+    public Map<String, Object> fields;
     public List<OpportunityContactRole> softCredits;
 
     public GiftDTO(Gift gift) {
-        this.dataImport = gift.dataImportRecord();
+        this.fields = gift.fieldsWithValues();
         this.softCredits = gift.softCredits().all();
     }
 }

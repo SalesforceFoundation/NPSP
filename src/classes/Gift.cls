@@ -68,12 +68,12 @@ public with sharing class Gift {
         return this.hasPaymentFieldsChanged();
     }
 
-    public DataImport__c dataImportRecord() {
-        return this.dataImport;
-    }
-
     public SoftCredits softCredits() {
         return this.softCredits;
+    }
+
+    public Map<String, Object> fieldsWithValues() {
+        return this.dataImport.getPopulatedFieldsAsMap();
     }
 
     private List<String> fieldsToQuery() {

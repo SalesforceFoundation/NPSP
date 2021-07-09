@@ -1,10 +1,10 @@
 public with sharing class GiftView {
 
-    @AuraEnabled public DataImport__c dataImport;
+    @AuraEnabled public Map<String, Object> fields;
     @AuraEnabled public List<OpportunityContactRole> softCredits;
 
     public GiftView(GiftDTO giftDTO) {
-        this.dataImport = giftDTO.dataImport;
+        this.fields = giftDTO.fields;
         this.softCredits = giftDTO.softCredits;
     }
 }
