@@ -52,6 +52,8 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    // TODO: Remove this method! Exists only to provide representative soft credit data
+    //       For work in progress
     @AuraEnabled(cacheable=true)
     public static List<OpportunityContactRole> getDummySoftCredits() {
         Integer numRecords = 3;
