@@ -11,7 +11,8 @@ private class GiftView_TEST {
         GiftDTO giftDTO = new GiftDTO(gift);
         GiftView giftView = new GiftView(giftDTO);
 
-        System.assertEquals(dataImport, giftView.dataImport);
+        String donationAmountField = String.valueOf(DataImport__c.Donation_Amount__c);
+        System.assertEquals(10, giftView.fields.get(donationAmountField));
     }
 
     @isTest
@@ -25,6 +26,6 @@ private class GiftView_TEST {
         GiftDTO giftDTO = new GiftDTO(gift);
         GiftView giftView = new GiftView(giftDTO);
 
-        System.assertEquals(2, giftView.softCredits.size());
+        System.assertEquals(2, giftView.softCredits.all.size());
     }
 }
