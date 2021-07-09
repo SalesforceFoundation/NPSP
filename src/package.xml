@@ -356,7 +356,9 @@
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftDTO</members>
+        <members>GiftEntryFormTemplate</members>
         <members>GiftSelector</members>
+        <members>GiftService</members>
         <members>GiftView</members>
         <members>GiftView_TEST</members>
         <members>Gift_Test</members>
