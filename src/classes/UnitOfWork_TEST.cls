@@ -30,50 +30,30 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Unit of Work in NPSP.
+* @description Tests for the Unit of Work.
 */
-public inherited sharing class UnitOfWork {
+@IsTest
+private class UnitOfWork_TEST {
 
-    @TestVisible
-    private List<SObject> objectsToInsert = new List<SObject>();
-    @TestVisible
-    private List<SObject> objectsToUpdate = new List<SObject>();
+    @IsTest
+    static void fieldsShouldBeUpdatedWhenNotPreviouslyPresentOnObjects() {
+        UnitOfWork uow = new UnitOfWork();
+        Contact c = new Contact(
+                Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType),
+                LastName = 'test');
+        uow.registerDirty(new List<Contact>{
+                c
+        });
 
-    public Database.SaveResult[] save() {
-        List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-        if (!objectsToInsert.isEmpty()) {
-            saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
-        }
-        if (!objectsToUpdate.isEmpty()) {
-            saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
-        }
-        return saveResults;
+        Contact c2 = new Contact(
+                Id = c.Id,
+                Title = 'Test Title'); //Field is not present on SObject in the UoW instance
+        uow.registerDirty(new List<Contact>{
+                c2
+        });
+
+        System.assert(uow.objectsToUpdate.size() == 1);
+        Contact c3 = (Contact) uow.objectsToUpdate.get(0);
+        System.assert(c3.Title == 'Test Title');
     }
-
-    public void registerNew(List<SObject> sObjects) {
-        objectsToInsert.addAll(sObjects);
-    }
-
-    public void registerDirty(List<SObject> sObjects) {
-        Map<Id, SObject> sObjectMap = new Map<Id, SObject>(objectsToUpdate);
-        for (SObject sobj : sObjects) {
-            SObject inMap = sObjectMap.get(sobj.Id);
-            if (inMap != null) {
-                updateFields(sobj, inMap);
-            } else {
-                objectsToUpdate.add(sobj);
-            }
-        }
-    }
-
-    private void updateFields(SObject sobj, SObject inMap) {
-        for (String field : sobj.getPopulatedFieldsAsMap().keySet()) {
-            Object newVal = sobj.get(field);
-            Object val = inMap.get(field);
-            if (val == null || !val.equals(newVal)) {
-                inMap.put(field, newVal);
-            }
-        }
-    }
-
 }
