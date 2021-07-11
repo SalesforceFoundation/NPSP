@@ -1,5 +1,5 @@
 public interface IHouseholds {
 
-    void handleContactDeletion();
+    void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper);
 
 }

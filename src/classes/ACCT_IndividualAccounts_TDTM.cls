@@ -134,7 +134,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             contactsInstance = new Contacts(oldSObjects);
-            contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM();
+            contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
 
         return dmlWrapper;
