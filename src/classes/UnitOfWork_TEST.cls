@@ -47,7 +47,7 @@ private class UnitOfWork_TEST {
 
         Contact c2 = new Contact(
                 Id = c.Id,
-                Title = 'Test Title'); //Field is not present on SObject in the UoW instance
+                Title = 'Test Title'); // Field is not present on SObject in the UoW instance
         uow.registerDirty(new List<Contact>{
                 c2
         });
@@ -55,5 +55,29 @@ private class UnitOfWork_TEST {
         System.assert(uow.objectsToUpdate.size() == 1);
         Contact c3 = (Contact) uow.objectsToUpdate.get(0);
         System.assert(c3.Title == 'Test Title');
+    }
+
+    @IsTest
+    static void registerDirtyShouldBeCaseSensitive() {
+        UnitOfWork uow = new UnitOfWork();
+        Contact c = new Contact(
+                Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType),
+                LastName = 'test');
+        uow.registerDirty(new List<Contact>{
+                c
+        });
+
+        Contact c2 = new Contact(
+                Id = c.Id,
+                LastName = 'TEST'); // Field has same value but different casing on SObject
+        // in the UoW instance
+        uow.registerDirty(new List<Contact>{
+                c2
+        });
+
+        System.assert(uow.objectsToUpdate.size() == 1);
+        Contact c3 = (Contact) uow.objectsToUpdate.get(0);
+        System.assert(c3.LastName == 'TEST');
+        System.assert(c3.LastName.equals('TEST'));
     }
 }
