@@ -1149,7 +1149,7 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
     }
 
     public void onAfterDelete_ACCT_IndividualAccounts_TDTM() {
-        IHouseholds households = getHouseholdsFor(oldAccountIds());
+        IHouseholds households = getHouseholdsFor(accountIds());
         households.handleContactDeletion();
     }
 
