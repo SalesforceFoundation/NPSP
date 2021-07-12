@@ -67,6 +67,17 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private static HouseholdNamingService householdNamingService {
+        get {
+            if (householdNamingService == null) {
+                householdNamingService = new HouseholdNamingService();
+            }
+            return householdNamingService;
+        }
+        set;
+    }
+
     public Households(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
@@ -141,11 +152,10 @@ public inherited sharing class Households extends fflib_SObjects {
 
     public void updateHouseholdNameAndMemberCount() {
         if (isFutureEligible()) {
-            HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+            householdNamingServiceInst.updateHouseholdNameAndMemberCountAsync(
                     new List<Id>(ids()));
         } else {
-            HouseholdNamingService householdNamingService = new HouseholdNamingService();
-            householdNamingService.updateHouseholdNameAndMemberCount(new List<Id>(ids()));
+            householdNamingServiceInst.updateHouseholdNameAndMemberCount(new List<Id>(ids()));
         }
     }
 
@@ -427,7 +437,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
-        householdNamingServiceInst.renameHouseholdAccounts(getHouseholdsNeedingNameUpdates());
+        HouseholdAccounts.renameHHAccounts(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {

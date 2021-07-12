@@ -196,8 +196,29 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
         }
 
         resetPrimaryContactForAccount(accountIds, dmlWrapper);
-        householdNamingService.renameHouseholdAccounts(accountIds);
+        renameHHAccounts(accountIds);
         rollupAccounts(accountIds);
+    }
+
+    /*******************************************************************************************************
+    * @description for the list of Household or Account Ids, update their Household Names
+    * @param accountIds the list of Household or Account Ids that need updating.
+    * @return void
+    */
+    public static void renameHHAccounts(List<Id> accountIds) {
+        if (accountIds.isEmpty()) {
+            return;
+        }
+
+        if (shouldProcessSynchronously(accountIds)) {
+            householdNamingService.updateHouseholdNameAndMemberCount(accountIds);
+        } else {
+            householdNamingService.updateHouseholdNameAndMemberCountAsync(accountIds);
+        }
+    }
+
+    private static Boolean shouldProcessSynchronously(List<Id> accountIds) {
+        return accountIds.size() == 1 || System.isFuture() || System.isBatch() || System.isQueueable();
     }
 
     /*******************************************************************************************************
@@ -414,7 +435,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
             }
         }
 
-        householdNamingService.renameHouseholdAccounts(householdIdsToRename);
+        renameHHAccounts(householdIdsToRename);
     }
 
     /**
