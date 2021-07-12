@@ -211,6 +211,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
         }
 
         if (shouldProcessSynchronously(accountIds)) {
+            HouseholdNamingService householdNamingService = new HouseholdNamingService();
             householdNamingService.updateHouseholdNameAndMemberCount(accountIds);
         } else {
             householdNamingService.updateHouseholdNameAndMemberCountAsync(accountIds);

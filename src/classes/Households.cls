@@ -297,7 +297,7 @@ public inherited sharing class Households extends fflib_SObjects {
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
 
         HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
-        HouseholdNamingService.renameHHAccounts(
+        HouseholdAccounts.renameHHAccounts(
                 contactsInstance.getHouseholdIdsToRename());
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
