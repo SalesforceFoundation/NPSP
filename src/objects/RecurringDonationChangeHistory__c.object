@@ -143,7 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>When Enable Recurring Donation Change History in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+    <description>When &quot;Enable Recurring Donation Change History&quot; in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -221,10 +221,11 @@
         <externalId>false</externalId>
         <inlineHelpText>The new Installment Frequency for the related Recurring Donation.</inlineHelpText>
         <label>New Installment Frequency</label>
-        <length>255</length>
+        <precision>3</precision>
         <required>false</required>
+        <scale>0</scale>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>
@@ -319,10 +320,11 @@
         <externalId>false</externalId>
         <inlineHelpText>The previous Installment Frequency for the related Recurring Donation.</inlineHelpText>
         <label>Previous Installment Frequency</label>
-        <length>255</length>
+        <precision>3</precision>
         <required>false</required>
+        <scale>0</scale>
         <trackTrending>false</trackTrending>
-        <type>Text</type>
+        <type>Number</type>
         <unique>false</unique>
     </fields>
     <fields>
