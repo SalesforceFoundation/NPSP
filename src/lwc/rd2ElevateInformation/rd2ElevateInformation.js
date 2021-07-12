@@ -46,7 +46,7 @@ import viewErrorLogLabel from '@salesforce/label/c.commonViewErrorLog';
 import updatePaymentInformation from '@salesforce/label/c.commonEditPaymentInformation';
 import commonExpirationDate from '@salesforce/label/c.commonMMYY';
 
-import getPermissionData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getAppConfigurationData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
@@ -132,7 +132,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     displayEditModal = false;
     commitmentURLPrefix;
     defaultRecordTypeId;
-    closedStatus;
+    closedStatuses;
 
     get paymentMethod() {
         return this.getValue(FIELD_PAYMENT_METHOD.fieldApiName);
@@ -161,18 +161,18 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
      */
     connectedCallback() {
         if (this.recordId) {
-            this.populatePermissionData();
+            this.populateAppConfigurationData();
             this.populateRecurringData();
         }
     }
 
-    populatePermissionData() {
-        getPermissionData({recordId: this.recordId})
+    populateAppConfigurationData() {
+        getAppConfigurationData({recordId: this.recordId})
             .then(response => {
                 this.isElevateCustomer = response.isElevateCustomer;
                 this.permissions.alert = response.alert;
                 this.commitmentURLPrefix = response.commitmentURLPrefix;
-                this.closedStatus = response.closedStatus;
+                this.closedStatuses = response.closedStatuses;
 
                 this.permissions.hasKeyFieldsAccess = this.isElevateCustomer === true
                     && response.hasFieldPermissions === true
@@ -313,7 +313,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     }
 
     isRecurringDonationNotClosed() {
-        return this.isTrue(!isNull(this.closedStatus) && !this.closedStatus.includes(this.getValue(FIELD_STATUS.fieldApiName)));
+        return this.isTrue(!isNull(this.closedStatuses) && !this.closedStatuses.includes(this.getValue(FIELD_STATUS.fieldApiName)));
     }
 
     /***

@@ -5,11 +5,11 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
 jest.mock(
-    '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData',
+    '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData',
     () => {
         return {
             default: jest.fn(),
@@ -306,7 +306,7 @@ describe('c-rd2-elevate-information', () => {
         it('should not render Update Payment Information Link', async () => {
             return global.flushPromises().then(async () => {
                 const updatePaymentLink = getUpdatePaymentInformationLink(component);
-                assert(updatePaymentLink).toBeNull();
+                expect(updatePaymentLink).toBeNull();
             });
         });
 
