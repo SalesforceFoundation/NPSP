@@ -66,16 +66,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            /**
-             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
-             * household updates.
-             */
-            newSObjects = new ContactSelector().getContactsWithAccountAndAddressFields(newSObjects);
             contactsInstance = new Contacts(newSObjects, oldSObjects);
-            Households.updatePrimaryContactOnAccountsAfterInsert(
-                    dmlWrapper, newSObjects);
-
-            HouseholdAccounts.renameHouseholdAccountsAfterInsert(newSObjects);
+            contactsInstance.onAfterUndelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
