@@ -35,38 +35,6 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    @TestVisible
-    private OrgConfig orgConfig {
-        get {
-            if (orgConfig == null) {
-                orgConfig = new OrgConfig();
-            }
-            return orgConfig;
-        }
-        set;
-    }
-
-    @TestVisible
-    private AddressService addressService {
-        get {
-            if (addressService == null) {
-                addressService = new AddressService();
-            }
-            return addressService;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************************
-     * @description the current Contact Settings object
-     */
-    private static npe01__Contacts_And_Orgs_Settings__c contactsSettings;
-
-    private List<Contact> contacts;
-    private Map<Id, Contact> oldContactById;
-    private TDTM_Runnable.Action triggerAction;
-    private DmlWrapper dmlWrapper = new DmlWrapper();
-
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
      * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
@@ -80,14 +48,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         Contacts contactsInstance;
-        this.contacts = newSObjects;
-        this.oldContactById = oldSObjects == null ? new Map<Id, Contact>() : new Map<Id, Contact>(
-                (List<Contact>) oldSObjects);
-        this.triggerAction = triggerAction;
-        contactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        DmlWrapper dmlWrapper = new DmlWrapper();
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            contactsInstance = new Contacts(contacts);
+            contactsInstance = new Contacts(newSObjects);
             contactsInstance.onBeforeInsert_ACCT_IndividualAccounts_TDTM();
         }
 
@@ -106,12 +70,12 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
              * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
              * household updates.
              */
-            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
-            contactsInstance = new Contacts(contacts, oldContactById.values());
+            newSObjects = new ContactSelector().getContactsWithAccountAndAddressFields(newSObjects);
+            contactsInstance = new Contacts(newSObjects, oldSObjects);
             Households.updatePrimaryContactOnAccountsAfterInsert(
-                    dmlWrapper, contacts);
+                    dmlWrapper, newSObjects);
 
-            HouseholdAccounts.renameHouseholdAccountsAfterInsert(contacts);
+            HouseholdAccounts.renameHouseholdAccountsAfterInsert(newSObjects);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
@@ -119,8 +83,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
              * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
              * household updates.
              */
-            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
-            contactsInstance = new Contacts(contacts, oldContactById.values());
+            newSObjects = new ContactSelector().getContactsWithAccountAndAddressFields(newSObjects);
+            contactsInstance = new Contacts(newSObjects, oldSObjects);
             Households.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
         }
 
