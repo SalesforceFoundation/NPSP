@@ -1333,8 +1333,11 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
          * related to the contact are queried for processing
          * household updates.
          */
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
         Households.handleContactsAfterUpdate(
-                new Contacts(getContactsWithAccountAndAddressFields()), dmlWrapper);
+                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
+                dmlWrapper);
     }
 
     private List<Contact> getContactsWithAccountAndAddressFields() {
