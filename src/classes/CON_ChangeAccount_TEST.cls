@@ -382,7 +382,7 @@ public with sharing class CON_ChangeAccount_TEST {
         integer cCon = 2;
             
         // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH, cCon);
+        ADDR_Addresses_TEST.createTestData(cHH, cCon);
         
         Contact con = ADDR_Addresses_TEST.contacts[0];
         

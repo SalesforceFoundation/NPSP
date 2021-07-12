@@ -59,7 +59,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
     @isTest
     private static void mergeContactsDifferentHHAccountManyRel() {
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(3, 2);
+        ADDR_Addresses_TEST.createTestData(3, 2);
         
         Contact conWinner = ADDR_Addresses_TEST.contacts[1];
         Contact conLoser1 = ADDR_Addresses_TEST.contacts[3];

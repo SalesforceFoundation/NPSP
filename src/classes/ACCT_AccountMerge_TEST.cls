@@ -155,7 +155,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         setAccountModelForTest(CAO_Constants.HH_ACCOUNT_PROCESSOR);
 
         // this creates 3 Household Accounts, each with 2 Contacts, and a default Address for each HH
-        ADDR_Addresses_TEST.createHHTestData(cHH = 3, cCon = 2);
+        ADDR_Addresses_TEST.createTestData(cHH = 3, cCon = 2);
         
         // create an address override in each household
         for (integer i = 0; i < cHH; i++) {

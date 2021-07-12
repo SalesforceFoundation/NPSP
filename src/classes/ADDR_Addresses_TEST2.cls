@@ -74,7 +74,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     * @param cConT the number of Contacts to create per Household
     **********************************************************************************************************/
     private static void createHHTestData(Integer cHHT, Integer cConT) {
-        ADDR_Addresses_TEST.createHHTestData(cHHT, cConT);
+        ADDR_Addresses_TEST.createTestData(cHHT, cConT);
         listConT = ADDR_Addresses_TEST.contacts;
         listAccT = ADDR_Addresses_TEST.accounts;
         listAddrT = ADDR_Addresses_TEST.addresses;
@@ -85,7 +85,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     * @param cAddr the number of Address objects to create
     **********************************************************************************************************/
     private static void initTestAddr(Integer cAddr) {
-        ADDR_Addresses_TEST.initTestAddr(cAddr);
+        ADDR_Addresses_TEST.buildTestAddress(cAddr);
         listAddrT = ADDR_Addresses_TEST.addresses;
     }
     
