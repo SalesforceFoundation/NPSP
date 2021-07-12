@@ -37,8 +37,6 @@ public with sharing class GiftSelector {
 
     private List<String> additionalGiftsFieldsToQuery;
 
-    public GiftSelector() {}
-
     public GiftSelector(GiftTemplate giftTemplate) {
         this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
     }
