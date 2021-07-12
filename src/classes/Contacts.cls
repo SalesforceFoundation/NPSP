@@ -36,10 +36,10 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
 
     public Map<Id, Contact> oldMap;
     private Boolean isUpdate = false;
-    private IHouseholdSelector householdAccountRepository {
+    private HouseholdAccountSelector householdAccountRepository {
         get {
             if (householdAccountRepository == null) {
-                householdAccountRepository = (IHouseholdSelector)
+                householdAccountRepository =
                         new HouseholdAccountSelector();
             }
             return householdAccountRepository;
@@ -1160,11 +1160,11 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
     }
 
     public void onAfterDelete_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        IHouseholds households = getHouseholdsFor(accountIds());
-        households.handleContactDeletion(dmlWrapper);
+        HouseholdAccounts householdAccounts = getHouseholdsFor(accountIds());
+        householdAccounts.handleContactDeletion(dmlWrapper);
     }
 
-    private IHouseholds getHouseholdsFor(Set<Id> ids) {
+    private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 

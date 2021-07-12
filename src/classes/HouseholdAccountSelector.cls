@@ -1,4 +1,4 @@
-public inherited sharing class HouseholdAccountSelector implements IHouseholdSelector {
+public inherited sharing class HouseholdAccountSelector {
 
     private List<Account> getAccounts(List<Id> accountIds) {
         List<Account> accounts = [
@@ -11,8 +11,8 @@ public inherited sharing class HouseholdAccountSelector implements IHouseholdSel
         return accounts;
     }
 
-
-    public IHouseholds findByIdWithOneContactAndGift(Set<Id> ids){
+    public HouseholdAccounts findByIdWithOneContactAndGift(Set<Id> ids){
         return new HouseholdAccounts(getAccounts(new List<Id>(ids)));
     }
+
 }

@@ -161,19 +161,11 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
 
     /*******************************************************************************************************
     * @description Updates the accounts for contacts that have been deleted if they have other hh members
-    * @param deletedContacts the list of Contacts that need to be considered
     */
-    //Todo: HHAct-only, so:
-    //      HHAccts.handleDeleted(Contacts c);
-    //      UL: When a Contact is deleted, its Household(Account?) wil update its Primary
-    //      Contact and Name, and recalc rollups.
     public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
-//        List<Id> householdIdsToUpdate = new List<Id>();
         Set<Id> householdIdsToUpdate = new Set<Id>();
 
         for (Account accountRecord : (List<Account>) getRecords()) {
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + accountRecord);
-            System.debug(LoggingLevel.ERROR, '^^^^^^ accountRecord ^^^^^^');
             Boolean needsAccountUpdate =
                     (!accountRecord.Contacts.isEmpty()
                             || !accountRecord.Opportunities.isEmpty());
