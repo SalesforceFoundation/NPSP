@@ -1272,4 +1272,25 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
                 WHERE Id IN :accountIds
         ]);
     }
+
+    public void onBeforeInsert_ACCT_IndividualAccounts_TDTM() {
+        Households.handleContactsBeforeInsert(this);
+    }
+
+    public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
+        Households.handleContactsBeforeUpdate(this);
+    }
+
+    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(contactsWithAccountAndAddressFields);
+    }
 }

@@ -66,7 +66,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     private Map<Id, Contact> oldContactById;
     private TDTM_Runnable.Action triggerAction;
     private DmlWrapper dmlWrapper = new DmlWrapper();
-    private Contacts contactsInstance;
 
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
@@ -80,6 +79,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        Contacts contactsInstance;
         this.contacts = newSObjects;
         this.oldContactById = oldSObjects == null ? new Map<Id, Contact>() : new Map<Id, Contact>(
                 (List<Contact>) oldSObjects);
@@ -88,25 +88,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             contactsInstance = new Contacts(contacts);
-            Households.handleContactsBeforeInsert(contactsInstance);
+            contactsInstance.onBeforeInsert_ACCT_IndividualAccounts_TDTM();
         }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             contactsInstance = new Contacts(newSObjects, oldSObjects);
-            Households.handleContactsBeforeUpdate(contactsInstance);
+            contactsInstance.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            /**
-             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
-             * household updates.
-             */
-            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
-            contactsInstance = new Contacts(contacts, oldContactById.values());
-            Households.updatePrimaryContactOnAccountsAfterInsert(
-                    dmlWrapper, contacts);
-
-            HouseholdAccounts.renameHouseholdAccountsAfterInsert(contacts);
+            contactsInstance = new Contacts(newSObjects, oldSObjects);
+            contactsInstance.onAfterInsert_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
