@@ -1281,9 +1281,11 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         Households.handleContactsBeforeUpdate(this);
     }
 
-    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
         /**
-         * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
          * household updates.
          */
         List<Contact> contactsWithAccountAndAddressFields =
@@ -1291,12 +1293,14 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         Households.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(contactsWithAccountAndAddressFields);
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
     }
 
     public void onAfterUndelete_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
         /**
-         * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
          * household updates.
          */
         List<Contact> contactsWithAccountAndAddressFields =
@@ -1304,7 +1308,22 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         Households.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(contactsWithAccountAndAddressFields);
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
+    }
+
+    public void onAfterUpdate_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
+        Households.handleContactsAfterUpdate(
+                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
+                dmlWrapper);
     }
 
 }
