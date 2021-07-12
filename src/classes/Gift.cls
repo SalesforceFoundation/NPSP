@@ -35,10 +35,11 @@
 
 public with sharing class Gift {
     
-    @TestVisible
-    private DataImport__c dataImport;
+    @TestVisible private DataImport__c dataImport;
     private List<String> availableFields;
     private SoftCredits softCredits;
+
+    @TestVisible
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
