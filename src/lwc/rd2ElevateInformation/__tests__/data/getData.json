@@ -7,5 +7,5 @@
     "showExpirationDate": true,
     "alert": null,
     "commitmentURLPrefix": "https://example.org/recurring",
-    "closedStatus": ["Closed"]
+    "closedStatuses": ["Closed"]
 }
