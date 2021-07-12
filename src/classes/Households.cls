@@ -204,7 +204,7 @@ public inherited sharing class Households extends fflib_SObjects {
         Map<Id, Account> accountsByIds = contactsInstance.accountById;
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
             Account account = accountsByIds.get(contactRecord.AccountId);
-            if (Households.needsOneToOneAccount(contactRecord,
+            if (needsOneToOneAccount(contactRecord,
                     account)) {
 
                 Contact oldContact = oldContactById.get(contactRecord.Id);
@@ -469,7 +469,7 @@ public inherited sharing class Households extends fflib_SObjects {
                 (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        Households.attachToBucketAccount(
+        attachToBucketAccount(
                 (List<Contact>) contactsInstance.bucketContacts_insertContext()
                         .getRecords()
         );
@@ -485,7 +485,7 @@ public inherited sharing class Households extends fflib_SObjects {
                 contactsWithoutAccounts(contacts));
 
         if (CAO_Constants.isBucketModel()) {
-            Households.attachToBucketAccount(
+            attachToBucketAccount(
                     contacts.contactsWithoutAccounts()
             );
         }
@@ -501,7 +501,7 @@ public inherited sharing class Households extends fflib_SObjects {
 
         if (CAO_Constants.isOneToOne()) {
             contactsWithoutAccounts.addAll(
-                    Households.contactsWithoutAccounts(
+                    contactsWithoutAccounts(
                             contactsInstance, contactsInstance.oldMap));
         }
         return contactsWithoutAccounts;
