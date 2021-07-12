@@ -50,29 +50,31 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         Contacts contactsInstance;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            contactsInstance = new Contacts(newSObjects);
-            contactsInstance.onBeforeInsert_ACCT_IndividualAccounts_TDTM();
-        }
-        if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            contactsInstance = new Contacts(newSObjects, oldSObjects);
-            contactsInstance.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
-        }
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            contactsInstance = new Contacts(newSObjects, oldSObjects);
-            contactsInstance.onAfterInsert_ACCT_IndividualAccounts_TDTM(dmlWrapper);
-        }
-        if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            contactsInstance = new Contacts(newSObjects, oldSObjects);
-            contactsInstance.onAfterUndelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
-        }
-        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            contactsInstance = new Contacts(newSObjects, oldSObjects);
-            contactsInstance.onAfterUpdate_ACCT_IndividualAccounts_TDTM(dmlWrapper);
-        }
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            contactsInstance = new Contacts(oldSObjects);
-            contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+        switch on triggerAction {
+            when BeforeInsert {
+                contactsInstance = new Contacts(newSObjects);
+                contactsInstance.onBeforeInsert_ACCT_IndividualAccounts_TDTM();
+            }
+            when AfterInsert {
+                contactsInstance = new Contacts(newSObjects, oldSObjects);
+                contactsInstance.onAfterInsert_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+            }
+            when BeforeUpdate {
+                contactsInstance = new Contacts(newSObjects, oldSObjects);
+                contactsInstance.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+            }
+            when AfterUpdate {
+                contactsInstance = new Contacts(newSObjects, oldSObjects);
+                contactsInstance.onAfterUpdate_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+            }
+            when AfterDelete {
+                contactsInstance = new Contacts(oldSObjects);
+                contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+            }
+            when AfterUndelete {
+                contactsInstance = new Contacts(newSObjects, oldSObjects);
+                contactsInstance.onAfterUndelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+            }
         }
         return dmlWrapper;
     }
