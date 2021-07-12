@@ -67,17 +67,6 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
-    @TestVisible
-    private static HouseholdNamingService householdNamingService {
-        get {
-            if (householdNamingService == null) {
-                householdNamingService = new HouseholdNamingService();
-            }
-            return householdNamingService;
-        }
-        set;
-    }
-
     public Households(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
