@@ -304,11 +304,12 @@ describe('c-rd2-elevate-information', () => {
         });
 
         it('should not render Update Payment Information Link', async () => {
-            return global.flushPromises().thsn(async () => {
+            return global.flushPromises().then(async () => {
                 const updatePaymentLink = getUpdatePaymentInformationLink(component);
                 assert(updatePaymentLink).toBeNull();
             });
         });
+
         it("should be accessible", async () => {
             return global.flushPromises().then(async () => {
                 await expect(component).toBeAccessible();
