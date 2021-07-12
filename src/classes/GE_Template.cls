@@ -281,7 +281,7 @@ public with sharing class GE_Template {
                     String fieldMappingDeveloperName = element.dataImportFieldMappingDevNames[0];
                     BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldMappingDeveloperName);
 
-                    if (fieldMapping.isDescribable) {
+                    if (fieldMapping != null && fieldMapping.isDescribable) {
                         String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
                         giftFieldApiNames.add(sourceFieldDevName);
                     }

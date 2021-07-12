@@ -94,7 +94,7 @@ private class GiftBatch_TEST {
     @isTest
     static void shouldReturnTrueWhenElevateWidgetOnTemplate() {
         GiftBatch giftBatch = new GiftBatch();
-        giftBatch.formTemplate = createDummyTemplate(true);
+        giftBatch.giftTemplate = createDummyGiftTemplate(true);
 
         System.assertEquals(true, giftBatch.hasElevateWidget());
     }
@@ -102,7 +102,7 @@ private class GiftBatch_TEST {
     @isTest
     static void shouldReturnFalseWhenElevateWidgetNotOnTemplate() {
         GiftBatch giftBatch = new GiftBatch();
-        giftBatch.formTemplate = createDummyTemplate(false);
+        giftBatch.giftTemplate = createDummyGiftTemplate(false);
 
         System.assertEquals(false, giftBatch.hasElevateWidget());
     }
@@ -118,7 +118,7 @@ private class GiftBatch_TEST {
 
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
 
-    private static GE_Template.Template createDummyTemplate(Boolean withElevateWidget) {
+    private static GiftTemplate createDummyGiftTemplate(Boolean withElevateWidget) {
         GE_Template.Element field =
             new GE_Template.Element('field', 'True', null, 'CustomLabel', new List<String>{'Account_1_Name'});
 
@@ -139,7 +139,7 @@ private class GiftBatch_TEST {
         GE_Template.Template template =
             new GE_Template.Template('Sample Template', 'This is the description.', '1.0', layout);
 
-        return template;
+        return new GiftTemplate(JSON.serialize(template));
     }
 
     private class ElevateBatchServiceMock implements StubProvider {

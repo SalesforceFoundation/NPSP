@@ -78,8 +78,8 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldReturn2Gifts() {
-        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), new List<String>());
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock(false);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
 
         System.assertEquals(2, gifts.size());
         System.assertEquals(2, gifts.all().size());
@@ -87,9 +87,8 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldReturnGiftsWithExpectedFields() {
-        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        List<String> fieldsToQuery = new List<String> { String.valueOf(DataImport__c.Contact1_Firstname__c) };
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), fieldsToQuery);
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock(true);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
 
         System.assertEquals('Dummy First Name', gifts.dataImports[0].Contact1_Firstname__c);
         System.assertEquals('Dummy First Name', gifts.dataImports[1].Contact1_Firstname__c);
@@ -97,8 +96,8 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldNotReturnGiftsWithUnexpectedFields() {
-        GiftSelectorMock giftSelectorMock = new GiftSelectorMock();
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock), new List<String>());
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock(false);
+        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
 
         System.assertEquals(null, gifts.dataImports[0].Contact1_Firstname__c);
         System.assertEquals(null, gifts.dataImports[1].Contact1_Firstname__c);
@@ -135,6 +134,13 @@ private class Gifts_TEST {
     }
 
     private class GiftSelectorMock implements StubProvider {
+
+        private Boolean returnWithAdditionalFields = false;
+
+        public GiftSelectorMock(Boolean returnWithAdditionalFields) {
+            this.returnWithAdditionalFields = returnWithAdditionalFields;
+        }
+
         public Object handleMethodCall(Object stubbedObject,
             String stubbedMethodName,
             Type returnType,
@@ -144,17 +150,10 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getGiftsFor' {
-                    for (integer i = 0; i < listOfParamNames.size(); i++) {
-                        String paramName = listOfParamNames.get(i);
-
-                        if (paramName == 'fieldsToQuery') {
-                            List<String> fieldsApiNames = (List<String>) listOfArgs.get(i);
-                            if (fieldsApiNames.contains(String.valueOf(DataImport__c.Contact1_Firstname__c))) {
-                                return dummyDataImportsWithContactFirstName;
-                            } else {
-                                return dummyDataImports;
-                            }
-                        }
+                    if (this.returnWithAdditionalFields) {
+                        return dummyDataImportsWithContactFirstName;
+                    } else {
+                        return dummyDataImports;
                     }
                 }
             }

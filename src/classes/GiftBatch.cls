@@ -40,18 +40,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible private Gifts gifts;
 
     @TestVisible
-    private GE_Template.Template formTemplate {
-        get {
-            if (formTemplate == null) {
-                formTemplate =
-                    (GE_Template.Template) JSON.deserialize(
-                        batch.Form_Template__r.Template_JSON__c,
-                        GE_Template.Template.class);
-            }
-            return formTemplate;
-        }
-        set;
-    }
+    private GiftTemplate giftTemplate;
 
     private GiftBatchSelector giftBatchSelector {
         get {
@@ -80,24 +69,12 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public GiftBatch(Id batchId) {
         this.batchId = batchId;
         this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
-        this.gifts = new Gifts(this.batchId, formTemplate.giftFieldApiNames());
+        this.giftTemplate = new GiftTemplate(this.batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(this.batchId, new GiftSelector(giftTemplate));
     }
 
     public Boolean hasElevateWidget() {
-        Boolean hasWidget = false;
-        for (GE_Template.Section section : formTemplate.layout.sections) {
-            for (GE_Template.Element element : section.elements) {
-                if (isElevateWidget(element)) {
-                    hasWidget = true;
-                }
-            }
-        }
-        return hasWidget;
-    }
-
-    private Boolean isElevateWidget(GE_Template.Element element) {
-        return element.componentName != null
-            && element.componentName == 'geFormWidgetTokenizeCard';
+        return this.giftTemplate.hasElevateWidget();
     }
 
     public void captureAuthorizedGifts() {
@@ -125,9 +102,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public Gifts gifts() {
-        if (this.gifts == null) {
-            return new Gifts(new List<DataImport__c>());
-        }
         return this.gifts;
     }
 

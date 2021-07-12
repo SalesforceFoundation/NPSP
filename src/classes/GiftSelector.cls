@@ -35,19 +35,19 @@
 
 public with sharing class GiftSelector {
 
-    public List<DataImport__c> getGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c, Status__c
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-        ];
+    private List<String> additionalGiftsFieldsToQuery;
+
+    public GiftSelector() {}
+
+    public GiftSelector(GiftTemplate giftTemplate) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
     }
 
-    public List<DataImport__c> getGiftsFor(Id batchId, List<String> fieldsToQuery) {
+    public List<DataImport__c> getGiftsFor(Id batchId) {
         String dataImportBatchLookup = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(queryFields(fieldsToQuery))
+            .withSelectFields(fields())
             .withWhere(dataImportBatchLookup + ' =: batchId')
             .withSecurityEnforced()
             .build();
@@ -56,12 +56,10 @@ public with sharing class GiftSelector {
     }
 
     public DataImport__c getGiftById(Id giftId, GiftTemplate formTemplate) {
-        List<String> giftFieldsInFormTemplate = formTemplate.giftFieldApiNames();
-        List<String> fieldsToQuery = queryFields(giftFieldsInFormTemplate);
-
+        this.additionalGiftsFieldsToQuery = formTemplate.giftFieldApiNames();
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(fieldsToQuery)
+            .withSelectFields(fields())
             .withWhere('Id =: giftId')
             .withSecurityEnforced()
             .build();
@@ -72,7 +70,7 @@ public with sharing class GiftSelector {
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
-            .withSelectFields(queryFields(fieldsToQuery))
+            .withSelectFields(fieldsToQuery)
             .withWhere('Id =: giftId')
             .withSecurityEnforced()
             .build();
@@ -110,18 +108,20 @@ public with sharing class GiftSelector {
         return giftEntryFieldApiNames;
     }
 
-    private List<String> queryFields(List<String> fieldsToQuery) {
+    private List<String> fields() {
         Set<String> queryFieldAsSet = new Set<String>();
-        queryFieldAsSet.addAll(fieldsToQuery);
         queryFieldAsSet.addAll(coreFields());
+        if (this.additionalGiftsFieldsToQuery != null) {
+            queryFieldAsSet.addAll(this.additionalGiftsFieldsToQuery);
+        }
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             queryFieldAsSet.addAll(elevateFields());
         }
 
-        List<String> queryFields = new List<String>();
-        queryFields.addAll(filterByReadAccess(queryFieldAsSet));
+        List<String> fields = new List<String>();
+        fields.addAll(filterByReadAccess(queryFieldAsSet));
 
-        return queryFields;
+        return fields;
     }
 
     private List<String> filterByReadAccess(Set<String> fieldsToValidate) {

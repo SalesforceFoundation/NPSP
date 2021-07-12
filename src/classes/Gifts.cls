@@ -50,20 +50,14 @@ public with sharing class Gifts {
         set;
     }
 
-    @TestVisible
-    private Gifts(Id giftBatchId, GiftSelector giftSelector, List<String> fieldsToQuery) {
-        this.giftSelector = giftSelector;
-        this.dataImports = giftSelector.getGiftsFor(giftBatchId, fieldsToQuery);
-        setElevateBatchIds(dataImports);
-    }
-
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setElevateBatchIds(dataImports);
     }
 
-    public Gifts(Id giftBatchId, List<String> fieldsToQuery) {
-        this.dataImports = giftSelector.getGiftsFor(giftBatchId, fieldsToQuery);
+    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        this.dataImports = this.giftSelector.getGiftsFor(giftBatchId);
         setElevateBatchIds(dataImports);
     }
 
