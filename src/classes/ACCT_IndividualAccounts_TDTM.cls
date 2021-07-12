@@ -73,7 +73,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             when AfterUndelete {
                 contactsInstance = new Contacts(newSObjects, oldSObjects);
-                contactsInstance.onAfterUndelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+                contactsInstance.onAfterUndelete(dmlWrapper);
             }
         }
         return dmlWrapper;

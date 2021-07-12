@@ -138,6 +138,10 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         }
     }
 
+    public void onBeforeInsert_ACCT_IndividualAccounts_TDTM() {
+        Households.handleContactsBeforeInsert(this);
+    }
+
     public void onBeforeUpdate() {
         syncNamingExclusionsBeforeUpdate();
     }
@@ -188,13 +192,48 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
     }
 
+    public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
+        Households.handleContactsBeforeUpdate(this);
+    }
+
     public void onAfterUpdate() {
         isUpdate = true;
         createAddressesForContacts();
     }
 
+    public void onAfterUpdate_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
+        Households.handleContactsAfterUpdate(
+                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
+                dmlWrapper);
+    }
+
     public void onAfterInsert() {
         createAddressesForContacts();
+    }
+
+    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields();
+
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
     }
 
     public void onAfterDelete() {
@@ -204,6 +243,69 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
                     new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
             contactsInLegacyHouseholds.onAfterDelete();
         }
+    }
+
+    public void onAfterDelete_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        HouseholdAccounts householdAccounts = getHouseholdsFor(accountIds());
+        householdAccounts.handleContactDeletion(dmlWrapper);
+    }
+
+    public void onAfterUndelete(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account
+         * related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields();
+
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
+    }
+    /**
+     * @description Determines whether or not Contacts belong to the BucketAccount, when
+     * Contacts are being inserted.
+     */
+    public Contacts bucketContacts_insertContext() {
+        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
+        if (!contactAndOrgSettings.isBucketModelEnabled()) {
+            return new Contacts(contactsWithoutBucketAccount);
+        }
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (contactRecord.AccountId == null
+                    && contactRecord.npe01__Private__c != true) {
+                contactsWithoutBucketAccount.add(contactRecord);
+            }
+        }
+        return new Contacts(contactsWithoutBucketAccount);
+    }
+
+    public Contacts contactsAndOneToOneContacts_insertContext() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (needsHHAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+
+        if (isOneToOneEnabled()) {
+            for (Contact contactRecord : (List<Contact>) getRecords()) {
+                if (Households.needsOneToOneAccount(contactRecord, accountFor
+                        (contactRecord))) {
+                    // Avoid creating a new contact with the 1:1 account of another contact
+                    if (contactRecord.AccountId != null) {
+                        contactRecord.AccountId = null;
+                    }
+
+                    contactsWithoutAccounts.add(contactRecord);
+                }
+            }
+        }
+        return new Contacts(contactsWithoutAccounts);
     }
 
     public List<Contact> forHouseholdName() {
@@ -535,6 +637,86 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return oneToOneContactsToUpdate;
     }
 
+    public Contact oldVersionOf(Contact con) {
+        return oldMap.get(con.Id);
+    }
+
+    public List<Id> getHouseholdIdsToRename() {
+        List<Id> householdIdsToRename = new List<Id>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldVersionOf(contactRecord);
+            if (needsHHAccountRename(contactRecord, oldContact)) {
+                householdIdsToRename.add(contactRecord.AccountId);
+            }
+        }
+        return householdIdsToRename;
+    }
+
+    public void resetDeprecatedFields() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            // always clear this deprecated field to avoid confusing users.
+            contactRecord.npe01__SystemAccountProcessor__c = null;
+        }
+    }
+
+    public void keepPrivateContactsPrivate() {
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            // for contacts marked private after they have been created, break the relationship from their account (any model)
+            if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
+                contactRecord.AccountId = null;
+            }
+        }
+    }
+
+    public Set<Id> oldAccountIds() {
+        Set<Id> accountIds = new Set<Id>();
+        for (Contact contactRecord : oldMap.values()) {
+            accountIds.add(contactRecord.AccountId);
+        }
+        return accountIds;
+    }
+
+    public Map<Id, Account> accountById {
+        get {
+            if (accountById == null) {
+                loadAccountByIdMap();
+            }
+            return accountById;
+        }
+        set;
+    }
+
+    public List<Contact> contactsWithoutAccounts() {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (isMissingAccount(contactRecord)) {
+                contactsWithoutAccounts.add(contactRecord);
+            }
+        }
+        return contactsWithoutAccounts;
+    }
+
+    public Map<Id, Contact> getNewOwnerContactById() {
+        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldMap.get(contactRecord.Id);
+            if (contactRecord.OwnerId != oldContact.OwnerId) {
+                newOwnerContactById.put(contactRecord.Id, contactRecord);
+            }
+        }
+        return newOwnerContactById;
+    }
+
+    /**
+     * @description Determines whether or not the contact requires a household account.
+     * @param  contactRecord The contact to verify.
+     */
+    public Boolean needsHHAccount(Contact contactRecord) {
+        return CAO_Constants.isHHAccountModel()
+                && contactRecord.AccountId == null
+                && contactRecord.npe01__Private__c != true;
+    }
+
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
     * @param contactRecord the new version of the Contact
@@ -817,37 +999,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return con.MasterRecordId != null;
     }
 
-    public Contact oldVersionOf(Contact con) {
-        return oldMap.get(con.Id);
-    }
-
-    public List<Id> getHouseholdIdsToRename() {
-        List<Id> householdIdsToRename = new List<Id>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            Contact oldContact = oldVersionOf(contactRecord);
-            if (needsHHAccountRename(contactRecord, oldContact)) {
-                householdIdsToRename.add(contactRecord.AccountId);
-            }
-        }
-        return householdIdsToRename;
-    }
-
-    public void resetDeprecatedFields() {
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            // always clear this deprecated field to avoid confusing users.
-            contactRecord.npe01__SystemAccountProcessor__c = null;
-        }
-    }
-
-    public void keepPrivateContactsPrivate() {
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            // for contacts marked private after they have been created, break the relationship from their account (any model)
-            if (contactRecord.AccountId != null && contactRecord.npe01__Private__c == true) {
-                contactRecord.AccountId = null;
-            }
-        }
-    }
-
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param contactRecord the new version of the Contact
@@ -943,7 +1094,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return accountsByIds().get(npspContact.accountId());
     }
 
-
     private Boolean isAnAccountOfTypeHousehold(Account a) {
         if (a == null) {
             return false;
@@ -951,7 +1101,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
-    //Todo: HHAcct-only method
     private Set<Contact> getAddressCreationQueue() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
         if (isRecursive() || isRecursiveFromContact()) {
@@ -1159,108 +1308,12 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
     }
 
-    public void onAfterDelete_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        HouseholdAccounts householdAccounts = getHouseholdsFor(accountIds());
-        householdAccounts.handleContactDeletion(dmlWrapper);
-    }
-
     private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 
-    public Set<Id> oldAccountIds() {
-        Set<Id> accountIds = new Set<Id>();
-        for (Contact contactRecord : oldMap.values()) {
-            accountIds.add(contactRecord.AccountId);
-        }
-        return accountIds;
-    }
-
-    /**
-     * @description Determines whether or not Contacts belong to the BucketAccount, when
-     * Contacts are being inserted.
-     */
-    public Contacts bucketContacts_insertContext() {
-        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
-        if (!contactAndOrgSettings.isBucketModelEnabled()) {
-            return new Contacts(contactsWithoutBucketAccount);
-        }
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (contactRecord.AccountId == null
-                    && contactRecord.npe01__Private__c != true) {
-                contactsWithoutBucketAccount.add(contactRecord);
-            }
-        }
-        return new Contacts(contactsWithoutBucketAccount);
-    }
-
-    public Contacts contactsAndOneToOneContacts_insertContext() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (needsHHAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-
-        if (isOneToOneEnabled()) {
-            for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (Households.needsOneToOneAccount(contactRecord, accountFor
-                        (contactRecord))) {
-                    // Avoid creating a new contact with the 1:1 account of another contact
-                    if (contactRecord.AccountId != null) {
-                        contactRecord.AccountId = null;
-                    }
-
-                    contactsWithoutAccounts.add(contactRecord);
-                }
-            }
-        }
-        return new Contacts(contactsWithoutAccounts);
-    }
-
-    /**
-     * @description Determines whether or not the contact requires a household account.
-     * @param  contactRecord The contact to verify.
-     */
-    public Boolean needsHHAccount(Contact contactRecord) {
-        return CAO_Constants.isHHAccountModel()
-                && contactRecord.AccountId == null
-                && contactRecord.npe01__Private__c != true;
-    }
-
     private Boolean isOneToOneEnabled() {
         return CAO_Constants.isOneToOne();
-    }
-
-    public Map<Id, Account> accountById {
-        get {
-            if (accountById == null) {
-                loadAccountByIdMap();
-            }
-            return accountById;
-        }
-        set;
-    }
-
-    public List<Contact> contactsWithoutAccounts() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (isMissingAccount(contactRecord)) {
-                contactsWithoutAccounts.add(contactRecord);
-            }
-        }
-        return contactsWithoutAccounts;
-    }
-
-    public Map<Id, Contact> getNewOwnerContactById() {
-        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            Contact oldContact = oldMap.get(contactRecord.Id);
-            if (contactRecord.OwnerId != oldContact.OwnerId) {
-                newOwnerContactById.put(contactRecord.Id, contactRecord);
-            }
-        }
-        return newOwnerContactById;
     }
 
     private Boolean isMissingAccount(Contact contactRecord) {
@@ -1282,62 +1335,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
                 FROM Account
                 WHERE Id IN :accountIds
         ]);
-    }
-
-    public void onBeforeInsert_ACCT_IndividualAccounts_TDTM() {
-        Households.handleContactsBeforeInsert(this);
-    }
-
-    public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
-        Households.handleContactsBeforeUpdate(this);
-    }
-
-    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields();
-
-        Households.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
-    }
-
-    public void onAfterUndelete_ACCT_IndividualAccounts_TDTM(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields();
-
-        Households.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
-    }
-
-    public void onAfterUpdate_ACCT_IndividualAccounts_TDTM(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
-        Households.handleContactsAfterUpdate(
-                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
-                dmlWrapper);
     }
 
     private List<Contact> getContactsWithAccountAndAddressFields() {
