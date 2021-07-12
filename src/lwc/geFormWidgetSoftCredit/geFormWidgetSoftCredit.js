@@ -30,7 +30,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
         let dummyRecords = await this.getDummySoftCredits();
         
         dummyRecords.forEach(rowRecord => {
-            this.addRow(rowRecord);
+            this.addRow(rowRecord, true);
         });
     };
 
@@ -46,7 +46,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
         this.addRow();
     }
 
-    addRow(rowRecord) {
+    addRow(rowRecord, disabled=false) {
         let element = {};
         element.key = this.rowList.length;
         const record = { ...rowRecord };
@@ -57,6 +57,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
             record,
             element
         };
+        row.disabled = disabled;
         this.rowList.push(row);
     }
 
