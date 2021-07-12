@@ -37,7 +37,9 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
-    @TestVisible private Gifts gifts;
+
+    @TestVisible
+    private Gifts gifts = new Gifts();
 
     @TestVisible
     private GiftTemplate giftTemplate;
