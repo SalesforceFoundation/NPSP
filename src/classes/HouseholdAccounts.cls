@@ -167,7 +167,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
     //      HHAccts.handleDeleted(Contacts c);
     //      UL: When a Contact is deleted, its Household(Account?) wil update its Primary
     //      Contact and Name, and recalc rollups.
-    public void handleContactDeletion() {
+    public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
 //        List<Id> householdIdsToUpdate = new List<Id>();
         Set<Id> householdIdsToUpdate = new Set<Id>();
 
@@ -183,7 +183,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
             }
         }
 
-        updateHouseholds(new List<Id>(householdIdsToUpdate), new TDTM_Runnable.DmlWrapper());
+        updateHouseholds(new List<Id>(householdIdsToUpdate), dmlWrapper);
     }
 
     /*******************************************************************************************************
