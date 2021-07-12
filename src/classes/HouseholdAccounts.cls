@@ -106,7 +106,6 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects implemen
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
     public HouseholdAccounts(Set<Id> accountIds) {
-        //todo: change this lazy load to up front
         super(new List<Account>());
         queryAccountIds = accountIds == null
                 ? new Set<Id>()
