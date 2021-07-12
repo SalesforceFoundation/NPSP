@@ -38,17 +38,7 @@ public with sharing class Gifts {
     private Set<String> elevateBatchIds;
     @TestVisible private List<DataImport__c> dataImports;
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
-
-    @TestVisible
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
-        }
-        set;
-    }
+    @TestVisible private GiftSelector giftSelector;
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;

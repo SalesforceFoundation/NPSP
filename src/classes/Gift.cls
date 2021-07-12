@@ -42,7 +42,8 @@ public with sharing class Gift {
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
-                giftSelector = new GiftSelector();
+                GiftTemplate defaultGiftTemplate = new GiftTemplate();
+                giftSelector = new GiftSelector(defaultGiftTemplate);
             }
             return giftSelector;
         }
