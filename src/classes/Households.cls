@@ -223,6 +223,7 @@ public inherited sharing class Households extends fflib_SObjects {
         }
         return contactsWithoutAccounts2;
     }
+
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
     * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider
@@ -273,6 +274,22 @@ public inherited sharing class Households extends fflib_SObjects {
         if (!accountsToUpdate.isEmpty()) {
             dmlWrapper.objectsToUpdate.addAll(accountsToUpdate.values());
         }
+    }
+
+    /**
+     * @description Depending on the contacts household type, this method will update the one to one account,
+     * move opportunities related to contacts changing accounts, update household accounts, rename household accounts
+     * update account owners based on the change in contact owner
+     */
+    public static void handleContactsAfterUpdate(Contacts contactsInstance,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        updateOneToOneAccounts(
+                contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
+
+        HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
+        HouseholdNamingService.renameHHAccounts(
+                contactsInstance.getHouseholdIdsToRename());
+       updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
 
     /**

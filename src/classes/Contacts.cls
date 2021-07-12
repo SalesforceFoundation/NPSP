@@ -810,10 +810,10 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         return oldMap.get(con.Id);
     }
 
-    public List<Id> getHouseholdIdsToRename(Contacts contacts) {
+    public List<Id> getHouseholdIdsToRename() {
         List<Id> householdIdsToRename = new List<Id>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            Contact oldContact = contacts.oldVersionOf(contactRecord);
+            Contact oldContact = oldVersionOf(contactRecord);
             if (needsHHAccountRename(contactRecord, oldContact)) {
                 householdIdsToRename.add(contactRecord.AccountId);
             }

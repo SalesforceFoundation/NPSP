@@ -67,6 +67,8 @@ public inherited sharing class ContactSelector {
         //return them in the order of household and then household naming order
         //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
         String strSoql = getQueryForContactNamingFields();
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + strSoql);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ strSoql ^^^^^^');
         String strHHId = UTIL_Namespace.StrTokenNSPrefix('HHId__c');
         strSoql += ' WHERE AccountId IN :queryHHIds OR npo02__Household__c IN :queryHHIds ' +
                 ' ORDER BY ' + strHHId + ', npo02__Household_Naming_Order__c ASC NULLS LAST, Primary_Contact__c DESC, CreatedDate ';

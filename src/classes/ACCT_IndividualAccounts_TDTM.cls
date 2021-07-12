@@ -47,17 +47,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     }
 
     @TestVisible
-    private HouseholdNamingService householdNamingService {
-        get {
-            if (householdNamingService == null) {
-                householdNamingService = new HouseholdNamingService();
-            }
-            return householdNamingService;
-        }
-        set;
-    }
-
-    @TestVisible
     private AddressService addressService {
         get {
             if (addressService == null) {
@@ -107,26 +96,26 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             Households.handleContactsBeforeUpdate(contactsInstance);
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUpdate || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            handleAfter();
+        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
+            /**
+             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+             * household updates.
+             */
+            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
+            contactsInstance = new Contacts(contacts, oldContactById.values());
+            Households.updatePrimaryContactOnAccountsAfterInsert(
+                    dmlWrapper, contacts);
 
-        } else if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            Contacts deletedContacts = new Contacts(new List<Contact>(), oldSObjects);
-            deletedContacts.onAfterDelete_ACCT_IndividualAccounts_TDTM();
+            HouseholdAccounts.renameHouseholdAccountsAfterInsert(contacts);
         }
 
-        return dmlWrapper;
-    }
-
-    /**
-     * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
-     * household updates.
-     */
-    private void handleAfter() {
-        contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
-        contactsInstance = new Contacts(contacts, oldContactById.values());
-
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+        if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            /**
+             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+             * household updates.
+             */
+            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
+            contactsInstance = new Contacts(contacts, oldContactById.values());
             Households.updatePrimaryContactOnAccountsAfterInsert(
                     dmlWrapper, contacts);
 
@@ -134,24 +123,21 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            processAccountsAfterUpdate();
+            /**
+             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+             * household updates.
+             */
+            contacts = new ContactSelector().getContactsWithAccountAndAddressFields(contacts);
+            contactsInstance = new Contacts(contacts, oldContactById.values());
+            Households.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
         }
 
-    }
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
+            contactsInstance = new Contacts(new List<Contact>(), oldSObjects);
+            contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM();
+        }
 
-    /**
-     * @description Depending on the contacts household type, this method will update the one to one account,
-     * move opportunities related to contacts changing accounts, update household accounts, rename household accounts
-     * update account owners based on the change in contact owner
-     */
-    private void processAccountsAfterUpdate() {
-        Households.updateOneToOneAccounts(
-                contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
-
-        HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
-        householdNamingService.renameHouseholdAccounts(
-                contactsInstance.getHouseholdIdsToRename(contactsInstance));
-        Households.updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
+        return dmlWrapper;
     }
 
 }
