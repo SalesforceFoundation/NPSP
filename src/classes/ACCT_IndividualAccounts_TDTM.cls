@@ -54,45 +54,26 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             contactsInstance = new Contacts(newSObjects);
             contactsInstance.onBeforeInsert_ACCT_IndividualAccounts_TDTM();
         }
-
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             contactsInstance = new Contacts(newSObjects, oldSObjects);
             contactsInstance.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
         }
-
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             contactsInstance = new Contacts(newSObjects, oldSObjects);
             contactsInstance.onAfterInsert_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
-
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            /**
-             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
-             * household updates.
-             */
-            newSObjects = new ContactSelector().getContactsWithAccountAndAddressFields(newSObjects);
             contactsInstance = new Contacts(newSObjects, oldSObjects);
-            Households.updatePrimaryContactOnAccountsAfterInsert(
-                    dmlWrapper, newSObjects);
-
-            HouseholdAccounts.renameHouseholdAccountsAfterInsert(newSObjects);
+            contactsInstance.onAfterUndelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
-
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            /**
-             * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
-             * household updates.
-             */
-            newSObjects = new ContactSelector().getContactsWithAccountAndAddressFields(newSObjects);
             contactsInstance = new Contacts(newSObjects, oldSObjects);
-            Households.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
+            contactsInstance.onAfterUpdate_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
-
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
             contactsInstance = new Contacts(oldSObjects);
             contactsInstance.onAfterDelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
         }
-
         return dmlWrapper;
     }
 

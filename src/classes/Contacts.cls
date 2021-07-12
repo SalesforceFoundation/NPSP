@@ -69,6 +69,17 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         set;
     }
 
+    @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
     public Contacts(List<Contact> records) {
         this(records, null);
     }
@@ -1287,10 +1298,36 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
          * household updates.
          */
         List<Contact> contactsWithAccountAndAddressFields =
-                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
+                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
         Households.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
         HouseholdAccounts.renameHouseholdAccountsAfterInsert(contactsWithAccountAndAddressFields);
+    }
+
+    public void onAfterUndelete_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(contactsWithAccountAndAddressFields);
+    }
+
+    public void onAfterUpdate_ACCT_IndividualAccounts_TDTM(
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        /**
+         * @description In the after trigger context, additional fields from the account related to the contact are queried for processing
+         * household updates.
+         */
+        List<Contact> contactsWithAccountAndAddressFields =
+                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
+        Households.handleContactsAfterUpdate(
+                new Contacts(contactsWithAccountAndAddressFields), dmlWrapper);
     }
 }
