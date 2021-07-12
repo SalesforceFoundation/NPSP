@@ -1,8 +1,8 @@
-public with sharing class GiftEntryFormTemplate {
+public with sharing class GiftTemplate {
 
     private GE_Template.Template template;
 
-    public GiftEntryFormTemplate() {
+    public GiftTemplate() {
         this.template = defaultFormTemplate();
     }
 

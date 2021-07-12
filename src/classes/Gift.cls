@@ -50,7 +50,7 @@ public with sharing class Gift {
     }
 
     public Gift(Id giftId) {
-        this.dataImport = giftSelector.getGiftById(giftId, new GiftEntryFormTemplate());
+        this.dataImport = giftSelector.getGiftById(giftId, new GiftTemplate());
         this.populateSoftCredits();
     }
 

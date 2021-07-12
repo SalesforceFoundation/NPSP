@@ -55,7 +55,7 @@ public with sharing class GiftSelector {
         return Database.query(queryString);
     }
 
-    public DataImport__c getGiftById(Id giftId, GiftEntryFormTemplate formTemplate) {
+    public DataImport__c getGiftById(Id giftId, GiftTemplate formTemplate) {
         List<String> giftFieldsInFormTemplate = formTemplate.giftFieldApiNames();
         List<String> fieldsToQuery = queryFields(giftFieldsInFormTemplate);
 
