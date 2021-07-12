@@ -97,7 +97,8 @@ describe('c-rd2-elevate-information', () => {
                 "DonorType": "Contact",
                 "Period": "Monthly",
                 "Frequency": 1,
-                "RecurringType": "Open"
+                "RecurringType": "Open",
+                "Status__c": "Active"
             });
 
             getRecord.emit(mockGetRecord);
@@ -168,7 +169,8 @@ describe('c-rd2-elevate-information', () => {
                 "DonorType": "Contact",
                 "Period": "Monthly",
                 "Frequency": 1,
-                "RecurringType": "Open"
+                "RecurringType": "Open",
+                "Status__c": "Active"
             });
 
             getRecord.emit(mockGetAchRecord);
