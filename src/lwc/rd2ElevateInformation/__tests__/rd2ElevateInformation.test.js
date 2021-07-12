@@ -145,7 +145,7 @@ describe('c-rd2-elevate-information', () => {
 
         it('should populate donor type for edit payment information modal', async () => {
             await flushPromises();
-            const updatePaymentButton = getUpdatePaymentInformationLink();
+            const updatePaymentButton = getUpdatePaymentInformationLink(component);
             expect(getData).toHaveBeenCalled();
 
             expect(updatePaymentButton).toBeTruthy();
@@ -305,7 +305,7 @@ describe('c-rd2-elevate-information', () => {
 
         it('should not render Update Payment Information Link', async () => {
             return global.flushPromises().thsn(async () => {
-                const updatePaymentLink = getUpdatePaymentInformationLink();
+                const updatePaymentLink = getUpdatePaymentInformationLink(component);
                 assert(updatePaymentLink).toBeNull();
             });
         });
