@@ -76,9 +76,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        if (defaultAndSeasonalAddressesByHouseholdAccountId().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalAddressesByHouseholdAccountId(), dmlWrapperLocal, false);
-        }
+        refreshCurrentHHAddress(addressesByAccountId(), dmlWrapperLocal, false);
 
         // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
         // errors
@@ -87,7 +85,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
                 (dmlWrapperLocal, false);
         if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalAddressesByHouseholdAccountId(), new Map<Id, Address__c>());
+            putErrorsOnAddresses(errors, addressesByAccountId(), new Map<Id, Address__c>());
         }
 
         // hack to detect empty addresses and delete them after we've propagated the change to all contacts and account
@@ -121,8 +119,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterDelete() {
-        if (!addressesByHouseholdAccountId().isEmpty()) {
-            refreshCurrentHHAddress(addressesByHouseholdAccountId(), dmlWrapperLocal,
+        Map<Id, Address__c> addressesByAccountId = addressesByAccountId();
+        if (!addressesByAccountId.isEmpty()) {
+            clearAddressesForEachAccount(addressesByAccountId);
+            refreshCurrentHHAddress(addressesByAccountId, dmlWrapperLocal,
                     false);
         }
 
@@ -132,7 +132,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapperLocal,
                 false);
         if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addressesByHouseholdAccountId(), new Map<Id, Address__c>());
+            putErrorsOnAddresses(errors, addressesByAccountId(), new Map<Id, Address__c>());
+        }
+    }
+
+    private void clearAddressesForEachAccount(Map<Id, Address__c> addressesByAccountId) {
+        for (Id accountId : addressesByAccountId.keySet()) {
+            addressesByAccountId.put(accountId, null);
         }
     }
 
@@ -154,15 +160,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         } private set;
     }
 
-    public Map<Id, Address__c> addressesByHouseholdAccountId() {
-        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
-        for (Address__c address : (List<Address__c>) getRecords()) {
-            if (hasHouseholdAccount(address)) {
-                mapAddressesByAcctId.put(householdAccountIdFor(address), null);
-            }
-        }
-        return mapAddressesByAcctId;
-    }
 
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
@@ -273,10 +270,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
 
             // update HH Account's Billing address fields
-            Account acc = new Account(Id = accId);
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount
                     (accountsById.get(accId));
             NPSP_Address npspAddress = new NPSP_Address(addr);
+
+            npspHouseholdAccount.isBillingAddressUndeliverable(npspAddress.isUndeliverable());
+
             if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
                 npspHouseholdAccount.billingAddress(npspAddress);
                 listAccUpdate.add(npspHouseholdAccount.getRecord());
@@ -350,7 +349,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c,
                         MailingPostalCode__c, MailingCountry__c,
                         Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c,
-                        Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s
+                        Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Undeliverable__c
                 FROM Address__c
                 WHERE Household_Account__c IN :acctIds
                 ORDER BY Default_Address__c DESC, LastModifiedDate ASC
@@ -517,6 +516,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
             i++;
         }
         return nonDefaultsWithChanges;
+    }
+
+    public Map<Id, Address__c> addressesByAccountId() {
+        Map<Id, Address__c> mapAddressesByAcctId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
+        for (Address__c address : (List<Address__c>) getRecords()) {
+            if (hasHouseholdAccount(address)) {
+                mapAddressesByAcctId.put(householdAccountIdFor(address), address);
+            }
+        }
+        return mapAddressesByAcctId;
     }
 
     public Map<Id, Address__c> defaultAndSeasonalAddressesByHouseholdAccountId() {

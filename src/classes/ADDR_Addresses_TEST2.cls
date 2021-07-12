@@ -75,9 +75,9 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     private static void createHHTestData(Integer cHHT, Integer cConT) {
         ADDR_Addresses_TEST.createHHTestData(cHHT, cConT);
-        listConT = ADDR_Addresses_TEST.listConT;
-        listAccT = ADDR_Addresses_TEST.listAccT;
-        listAddrT = ADDR_Addresses_TEST.listAddrT;
+        listConT = ADDR_Addresses_TEST.contacts;
+        listAccT = ADDR_Addresses_TEST.accounts;
+        listAddrT = ADDR_Addresses_TEST.addresses;
     }
 
     /*********************************************************************************************************
@@ -86,7 +86,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     private static void initTestAddr(Integer cAddr) {
         ADDR_Addresses_TEST.initTestAddr(cAddr);
-        listAddrT = ADDR_Addresses_TEST.listAddrT;
+        listAddrT = ADDR_Addresses_TEST.addresses;
     }
     
     /*********************************************************************************************************
