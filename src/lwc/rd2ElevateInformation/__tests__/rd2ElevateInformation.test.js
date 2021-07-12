@@ -260,7 +260,7 @@ describe('c-rd2-elevate-information', () => {
     describe('on data load when Elevate Recurring Donation is closed and cancel is in progress', () => {
         let mockGetRecordClosedElevateRDInProgress = JSON.parse(JSON.stringify(mockGetRecord));
         mockGetRecordClosedElevateRDInProgress.fields[STATUS_REASON_FIELD_NAME].value = 'c.RD2_ElevatePendingStatus';
-        mockGetRecordClosedElevateRDInProgress.field[STATUS_FIELD_NAME].value = 'Closed';
+        mockGetRecordClosedElevateRDInProgress.fields[STATUS_FIELD_NAME].value = 'Closed';
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
