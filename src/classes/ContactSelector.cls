@@ -123,7 +123,8 @@ public inherited sharing class ContactSelector {
                 'MailingPostalCode', 'MailingCountry', 'MailingLatitude',
                 'MailingLongitude',
                 'npe01__Primary_Address_Type__c',
-                'Undeliverable_Address__c'
+                'Undeliverable_Address__c',
+                'LastName'
         };
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {

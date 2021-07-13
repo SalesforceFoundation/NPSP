@@ -277,8 +277,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
             if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
                 npspHouseholdAccount.billingAddress(npspAddress);
-                listAccUpdate.add(npspHouseholdAccount.getRecord());
             }
+            listAccUpdate.add(npspHouseholdAccount.getRecord());
 
             // check other addresses on this household that are no longer the default
             if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
@@ -300,6 +300,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     NPSP_Contact npspContact = new NPSP_Contact(con);
                     // detect that the contact's current address was deleted.
                     // and if so clear any override flag so it will get the default address.
+                    if (npspContact.hasAddressOverride() == false) {
+                        npspContact.getRecord().Undeliverable_Address__c =
+                                npspHouseholdAccount.getRecord().Undeliverable_Address__c;
+                    }
                     if (npspContact.currentAddress() == null) {
                         npspContact.getRecord().is_Address_Override__c = false;
                     }
@@ -307,16 +311,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
                             npspContact.currentAddress() == addr.Id) {
                         if (npspContact.mailingAddressIsDifferentFrom(npspAddress)) {
                             npspContact.currentAddress(npspAddress);
-                            listConUpdate.add(con);
                         }
                     }
+                    listConUpdate.add(con);
                 }
             }
         }
 
         if (listAccUpdate.size() > 0) {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
-            System.debug(dmlWrapper);
         }
         if (listAddrUpdate.size() > 0) {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
@@ -487,9 +490,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
             // an address that is marked default needs to propagate to the household
-            if ((isNewDefault(addr, addrOld)) ||
-                isSeasonalChanged(addr, addrOld)) {
-
+            if (isNewDefault(addr, addrOld) ||
+                isSeasonalChanged(addr, addrOld) ||
+                isUndeliverableStatusChanged(addr, addrOld)) {
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
             } else if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
@@ -512,10 +515,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addr);
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
-            if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
-                if (!isDefault(addr)) {
-                    nonDefaultsWithChanges.put(idOf(addr), addr);
-                }
+            if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE) ||
+                isUndeliverableStatusChanged(addr, addrOld)) {
+
+                nonDefaultsWithChanges.put(idOf(addr), addr);
             }
             i++;
         }
@@ -994,11 +997,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
     */
     private void updateAddrOverrides(Map<Id, Address__c> mapAddrIdAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
+        System.debug(mapAddrIdAddr);
         List<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keySet()];
+        System.debug(listCon);
         for (Contact con : listCon) {
             NPSP_Contact npspContact = new NPSP_Contact(con);
             NPSP_Address npspAddress = new NPSP_Address(mapAddrIdAddr.get(npspContact.currentAddress()));
+
             npspContact.mailingAddress(npspAddress);
+            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
+
             dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
     }

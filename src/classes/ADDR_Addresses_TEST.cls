@@ -573,7 +573,7 @@ public with sharing class ADDR_Addresses_TEST {
 
         Set<Id> accountIds = (new Map<Id,Account>(accounts)).keySet();
         Map<Id, Account> updatedAccountsById = new Map<Id, Account>(
-        [SELECT Undeliverable_Address__c FROM Account WHERE Id IN :accountIds]);
+            [SELECT Undeliverable_Address__c FROM Account WHERE Id IN :accountIds]);
 
         for (Address__c address: addresses) {
             System.assertEquals(address.Undeliverable__c,
@@ -594,7 +594,6 @@ public with sharing class ADDR_Addresses_TEST {
             addresses[i].Household_Account__c = accounts[i].Id;
             addresses[i].Undeliverable__c = true;
         }
-
 
         Test.startTest();
             insert addresses;
@@ -624,7 +623,6 @@ public with sharing class ADDR_Addresses_TEST {
         }
         insert addresses;
 
-
         Test.startTest();
             for (Address__c address : addresses) {
                 address.Undeliverable__c = true;
@@ -642,6 +640,97 @@ public with sharing class ADDR_Addresses_TEST {
                             ' undeliverable status should not match the address undeliverable status when the address' +
                             ' is not marked as the default address.');
         }
+    }
+
+    @isTest
+    private static void newUndeliverableAddressShouldSyncToAccountAndContacts() {
+
+        Test.startTest();
+            createTestData(2, 2, true);
+        Test.stopTest();
+
+        Set<Id> accountIds = (new Map<Id,Account>(accounts)).keySet();
+        Map<Id, Account> updatedAccountsById = new Map<Id, Account>(
+            [SELECT Undeliverable_Address__c, (SELECT is_Address_Override__c, Undeliverable_Address__c FROM Contacts)
+             FROM Account
+             WHERE Id IN :accountIds]);
+
+        for (Address__c address: addresses) {
+            Account updatedAccount = updatedAccountsById.get(address.Household_Account__c);
+            System.assertEquals(address.Undeliverable__c,
+                    updatedAccount.Undeliverable_Address__c, 'account address' +
+                            ' undeliverable status should not match the address undeliverable status when the address' +
+                            ' is not marked as the default address.');
+            for (Contact contact : updatedAccount.Contacts) {
+                System.assert(contact.is_Address_Override__c == false, 'The contact should not be marked with an ' +
+                        'address override since that will cause inaccuracies in this test scenario.');
+                System.assertEquals(address.Undeliverable__c, contact.Undeliverable_Address__c, 'The contact ' +
+                        'undeliverable address status should match the default address undeliverable status when the ' +
+                        'contact address override value is false.');
+            }
+        }
+    }
+
+    @isTest
+    private static void updatedUndeliverableAddressShouldSyncToAccountAndContacts() {
+        createTestData(3, 3);
+
+        Test.startTest();
+            for (Address__c address : addresses) {
+                address.Undeliverable__c = true;
+            }
+            update addresses;
+        Test.stopTest();
+
+        Set<Id> accountIds = (new Map<Id,Account>(accounts)).keySet();
+        Map<Id, Account> updatedAccountsById = new Map<Id, Account>(
+        [SELECT Undeliverable_Address__c, (SELECT is_Address_Override__c, Undeliverable_Address__c FROM Contacts)
+            FROM Account
+            WHERE Id IN :accountIds]);
+
+        for (Address__c address: addresses) {
+            Account updatedAccount = updatedAccountsById.get(address.Household_Account__c);
+            System.assertEquals(address.Undeliverable__c,
+                    updatedAccount.Undeliverable_Address__c, 'account address' +
+                            ' undeliverable status should not match the address undeliverable status when the address' +
+                            ' is not marked as the default address.');
+            for (Contact contact : updatedAccount.Contacts) {
+                System.assert(contact.is_Address_Override__c == false, 'The contact should not be marked with an ' +
+                        'address override since that will cause inaccuracies in this test scenario.');
+                System.assertEquals(address.Undeliverable__c, contact.Undeliverable_Address__c, 'The contact ' +
+                        'undeliverable address status should match the default address undeliverable status when the ' +
+                        'contact address override value is false.');
+            }
+        }
+    }
+
+    @isTest
+    private static void updatedUndeliverableAddressShouldSyncToAccountAndContactsAndOverrides() {
+        createTestData(2, 2);
+        System.debug(addresses.size());
+
+        Contact contact = new Contact(
+            FirstName = 'Test Contact',
+            LastName = 'Override',
+            is_Address_Override__c = true,
+            AccountId = accounts[0].Id,
+            Current_Address__c = addresses[1].Id
+        );
+        insert contact;
+        System.debug(contact);
+
+        Test.startTest();
+            addresses[1].Undeliverable__c = true;
+            update addresses[1];
+        Test.stopTest();
+
+        Contact updatedContact = [SELECT Account.BillingAddress, MailingAddress,Undeliverable_Address__c,
+                is_Address_Override__c
+                                  FROM Contact
+                                  WHERE Id = :contact.Id];
+        System.debug(updatedContact);
+//        System.assert(updatedContact.is_Address_Override__c == true);
+//        System.assertEquals(addresses[1].Undeliverable__c, updatedContact.Undeliverable_Address__c);
     }
 
     /*********************************************************************************************************
@@ -1447,10 +1536,10 @@ public with sharing class ADDR_Addresses_TEST {
             assertEquals(addr, addresses[0]);
         }
 
-        Contact[] contacts = getContacts();
-        System.assertEquals(contacts.size() + 1, contacts.size());
+        Contact[] allContacts = getContacts();
+        System.assertEquals(contacts.size() + 1, allContacts.size());
 
-        for (Contact c : contacts) {
+        for (Contact c : allContacts) {
             System.assertEquals(accounts[0].Id, c.AccountId);
 
             Address__c[] addresses = addressesByHh.get(c.AccountId);
@@ -1504,10 +1593,10 @@ public with sharing class ADDR_Addresses_TEST {
             assertEquals(addr, addresses[0]);
         }
 
-        Contact[] contacts = getContacts();
-        System.assertEquals(contacts.size() + 1, contacts.size());
+        Contact[] allContacts = getContacts();
+        System.assertEquals(contacts.size() + 1, allContacts.size());
 
-        for (Contact c : contacts) {
+        for (Contact c : allContacts) {
             Address__c[] addresses = addressesByHh.get(c.AccountId);
             System.assert(addresses != null && addresses.size() == 1, addresses);
 
@@ -2040,8 +2129,37 @@ public with sharing class ADDR_Addresses_TEST {
         // we are creating a bunch of test data that relies on no async behavior.
         TDTM_DefaultConfig.startTestDataInit();
 
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
+        createAccountAndContactData(cHHT, cConT);
+        createAddressData(cHHT, false);
 
+        // restore async behavior as appropriate
+        TDTM_DefaultConfig.stopTestDataInit();
+    }
+
+    public static void createTestData(Integer cHHT, Integer cConT, Boolean isUndeliverableAddress) {
+
+        // we are creating a bunch of test data that relies on no async behavior.
+        TDTM_DefaultConfig.startTestDataInit();
+
+        createAccountAndContactData(cHHT, cConT);
+        createAddressData(cHHT, isUndeliverableAddress);
+
+        // restore async behavior as appropriate
+        TDTM_DefaultConfig.stopTestDataInit();
+    }
+
+
+    private static void createAddressData(Integer cHHT, Boolean isUndeliverableAddress) {
+        buildTestAddress(cHHT);
+        for (Integer i = 0; i < cHHT; i++) {
+            addresses[i].Household_Account__c = accounts[i].Id;
+            addresses[i].Default_Address__c = true;
+            addresses[i].Undeliverable__c = isUndeliverableAddress;
+        }
+        insert addresses;
+    }
+
+    private static void createAccountAndContactData(Integer cHHT, Integer cConT) {
         accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(cHHT, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
@@ -2049,21 +2167,11 @@ public with sharing class ADDR_Addresses_TEST {
         for (Integer i = 0; i < cHHT; i++) {
             for (Integer j = 0; j < cConT; j++) {
                 contacts[(i * cConT) + j].AccountId = accounts[i].Id;
-                contacts[(i * cConT) + j].LastName =  contacts[(i * cConT) + j].LastName + j;
+                contacts[(i * cConT) + j].LastName = contacts[(i * cConT) + j].LastName + j;
                 contacts[(i * cConT) + j].OtherCity = null;
             }
         }
         insert contacts;
-
-        buildTestAddress(cHHT);
-        for (Integer i = 0; i < cHHT; i++) {
-            addresses[i].Household_Account__c = accounts[i].Id;
-            addresses[i].Default_Address__c = true;
-        }
-        insert addresses;
-
-        // restore async behavior as appropriate
-        TDTM_DefaultConfig.stopTestDataInit();
     }
 
     /*********************************************************************************************************
@@ -2073,17 +2181,31 @@ public with sharing class ADDR_Addresses_TEST {
     public static void buildTestAddress(Integer totalAddressesToBuild) {
         addresses = new List<Address__c>();
         for (Integer i = 0; i < totalAddressesToBuild; i++) {
-            Address__c addr = new Address__c();
-            addr.Address_Type__c = 'Home';
-            addr.MailingStreet__c = 'Street' + i;
-            addr.MailingCity__c = 'City' + i;
-            addr.MailingState__c = 'Washington';
-            addr.MailingPostalCode__c = 'Zip' + i;
-            addr.MailingCountry__c = 'United States';
-            addr.Geolocation__Latitude__s = Math.min(47.6097 + i, 90);
-            addr.Geolocation__Longitude__s = Math.min(-122.3331 + i, 90);
+            Address__c addr = addressDefaults(i);
             addresses.add(addr);
         }
+    }
+
+    public static void buildTestAddressUndeliverable(Integer totalAddressesToBuild) {
+        addresses = new List<Address__c>();
+        for (Integer i = 0; i < totalAddressesToBuild; i++) {
+            Address__c addr = addressDefaults(i);
+            addr.Undeliverable__c = true;
+            addresses.add(addr);
+        }
+    }
+
+    private static Address__c addressDefaults(Integer i) {
+        Address__c addr = new Address__c();
+        addr.Address_Type__c = 'Home';
+        addr.MailingStreet__c = 'Street' + i;
+        addr.MailingCity__c = 'City' + i;
+        addr.MailingState__c = 'Washington';
+        addr.MailingPostalCode__c = 'Zip' + i;
+        addr.MailingCountry__c = 'United States';
+        addr.Geolocation__Latitude__s = Math.min(47.6097 + i, 90);
+        addr.Geolocation__Longitude__s = Math.min(-122.3331 + i, 90);
+        return addr;
     }
 
 
