@@ -6,11 +6,13 @@ private class DonationSelector_TEST {
         DonationSelector selector = new DonationSelector();
 
         String expectedQueryStringForOrganizationDonor = expectedQueryString(Account.getSObjectType());
-        String actualQueryStringForOrganizationDonor = selector.openDonationsQueryString(SObjectType.Opportunity.fields.AccountId.Name, 'DUMMY_ID');
+        String actualQueryStringForOrganizationDonor = selector.openDonationsQueryString(
+            SObjectType.Opportunity.fields.AccountId.Name, 'DUMMY_ID');
         System.assertEquals(expectedQueryStringForOrganizationDonor, actualQueryStringForOrganizationDonor);
 
         String expectedQueryStringForContactDonor = expectedQueryString(Contact.getSObjectType());
-        String actualQueryStringForContactDonor = selector.openDonationsQueryString(SObjectType.Opportunity.fields.Primary_Contact__c.Name, 'DUMMY_ID');
+        String actualQueryStringForContactDonor = selector.openDonationsQueryString(
+            SObjectType.Opportunity.fields.Primary_Contact__c.Name, 'DUMMY_ID');
         System.assertEquals(expectedQueryStringForContactDonor, actualQueryStringForContactDonor);
     }
 
@@ -31,7 +33,7 @@ private class DonationSelector_TEST {
                     'npe01__Payment_Date__c, ' +
                     'npe01__Paid__c, ' +
                     'npe01__Written_Off__c, ' +
-                    'Elevate_Payment_API_Status__c ' +
+                    String.valueOf(npe01__OppPayment__c.Elevate_Payment_API_Status__c) + ' ' +
                 'FROM npe01__OppPayment__r ' +
                 'WHERE npe01__Written_Off__c = false ' +
                 'AND npe01__Paid__c = false), ' +
