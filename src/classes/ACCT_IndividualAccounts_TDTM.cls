@@ -47,33 +47,34 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        HouseholdsApp householdsApp = new HouseholdsApp();
         Contacts contacts;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
         switch on triggerAction {
             when BeforeInsert {
                 contacts = new Contacts(newSObjects);
-                new HouseholdsApp().onBeforeInsertOf(contacts);
+                householdsApp.onBeforeInsertOf(contacts);
             }
             when AfterInsert {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                contacts.onAfterInsert_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+                householdsApp.onAfterInsertOf(contacts, dmlWrapper);
             }
             when BeforeUpdate {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                new HouseholdsApp().onBeforeUpdateOf(contacts);
+                householdsApp.onBeforeUpdateOf(contacts);
             }
             when AfterUpdate {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                contacts.onAfterUpdate_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+                householdsApp.onAfterUpdateOf(contacts, dmlWrapper);
             }
             when AfterDelete {
                 contacts = new Contacts(oldSObjects);
-                contacts.onAfterDelete_ACCT_IndividualAccounts_TDTM(dmlWrapper);
+                householdsApp.onAfterDeleteOf(contacts, dmlWrapper);
             }
             when AfterUndelete {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                new HouseholdsApp().onAfterUndeleteOf(contacts, dmlWrapper);
+                householdsApp.onAfterUndeleteOf(contacts, dmlWrapper);
             }
         }
         return dmlWrapper;

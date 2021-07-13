@@ -36,16 +36,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
 
     public Map<Id, Contact> oldMap;
     private Boolean isUpdate = false;
-    private HouseholdAccountSelector householdAccountRepository {
-        get {
-            if (householdAccountRepository == null) {
-                householdAccountRepository =
-                        new HouseholdAccountSelector();
-            }
-            return householdAccountRepository;
-        }
-        set;
-    }
 
     @TestVisible
     private static ContactAndOrgSettings contactAndOrgSettings {
@@ -193,39 +183,8 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         createAddressesForContacts();
     }
 
-    public void onAfterUpdate_ACCT_IndividualAccounts_TDTM(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
-        Households.handleContactsAfterUpdate(
-                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
-                dmlWrapper);
-    }
-
     public void onAfterInsert() {
         createAddressesForContacts();
-    }
-
-    public void onAfterInsert_ACCT_IndividualAccounts_TDTM(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields();
-
-        Households.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
     }
 
     public void onAfterDelete() {
@@ -236,12 +195,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
             contactsInLegacyHouseholds.onAfterDelete();
         }
     }
-
-    public void onAfterDelete_ACCT_IndividualAccounts_TDTM(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        HouseholdAccounts householdAccounts = getHouseholdsFor(accountIds());
-        householdAccounts.handleContactDeletion(dmlWrapper);
-    }
-
 
     /**
      * @description Determines whether or not Contacts belong to the BucketAccount, when
@@ -1273,10 +1226,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
-    }
-
-    private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
-        return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 
     private Boolean isOneToOneEnabled() {

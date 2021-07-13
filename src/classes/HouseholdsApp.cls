@@ -22,6 +22,18 @@ public inherited sharing class HouseholdsApp {
         set;
     }
 
+    @TestVisible
+    private HouseholdAccountSelector householdAccountRepository {
+        get {
+            if (householdAccountRepository == null) {
+                householdAccountRepository =
+                        new HouseholdAccountSelector();
+            }
+            return householdAccountRepository;
+        }
+        set;
+    }
+
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
@@ -36,11 +48,31 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
+    public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields(contacts);
+
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
+    }
+
     /**
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      */
     public void onBeforeUpdateOf(Contacts contacts) {
         Households.handleContactsBeforeUpdate(contacts);
+    }
+
+    public void onAfterUpdateOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(
+                        contacts.getRecords());
+        Households.handleContactsAfterUpdate(
+                new Contacts(contactsWithAccountAndAddressFields, contacts.oldMap.values()),
+                dmlWrapper);
     }
 
     /**
@@ -103,6 +135,15 @@ public inherited sharing class HouseholdsApp {
         List<Contact> contactsWithAccountAndAddressFields =
                 contactSelector.getContactsWithAccountAndAddressFields(contacts.getRecords());
         return contactsWithAccountAndAddressFields;
+    }
+
+    public void onAfterDeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        HouseholdAccounts householdAccounts = getHouseholdsFor(contacts.accountIds());
+        householdAccounts.handleContactDeletion(dmlWrapper);
+    }
+
+    private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
+        return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 
     public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
