@@ -1,10 +1,6 @@
-import {LightningElement, api, wire} from 'lwc';
+import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import {
-    apiNameFor,
-    isEmpty,
-    isNumeric
-} from 'c/utilCommon';
+import { apiNameFor } from 'c/utilCommon';
 
 import OPP_CONTACT_ROLE_OBJECT from '@salesforce/schema/OpportunityContactRole';
 import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
@@ -14,8 +10,6 @@ import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.Opportu
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
     @api row;
-    @api fieldList;
-    @api disabled;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -28,8 +22,12 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         this.dispatchEvent(new CustomEvent('remove', { detail: { rowIndex, row } }));
     }
 
+    get disabled() {
+        return this.row.disabled;
+    }
+
     get isRemovable() {
-        return this.disabled !== true;
+        return this.row.disabled !== true;
     }
 
     get softCreditObjectApiName() {

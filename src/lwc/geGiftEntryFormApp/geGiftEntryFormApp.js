@@ -33,6 +33,7 @@ import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Bat
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
 import BatchTotals from './helpers/batchTotals';
+import Gift from './helpers/gift';
 
 /*******************************************************************************
 * @description Constants
@@ -51,6 +52,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
     @track batchTotals = {}
+    @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
 
@@ -71,12 +73,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     constructor() {
-        super();
+        super();  
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
     }
 
     async connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        await this.gift.init(); 
         this.isElevateCustomer = await checkForElevateCustomer();
     }
 

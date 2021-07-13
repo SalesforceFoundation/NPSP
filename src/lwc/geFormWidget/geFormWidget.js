@@ -20,6 +20,7 @@ const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, SOFT_CREDIT_WI
 
 export default class GeFormWidget extends LightningElement {
     @api element;
+    @api gift;
     @api widgetConfig;
 
     @track widgetDataFromState = {};

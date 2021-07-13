@@ -12,11 +12,9 @@
     </c-util-alert-banner>
     <template for:each={rowList} for:item='row' for:index='index'>
         <c-ge-form-widget-soft-credit-row
-                field-list={fieldList}
-                key={row.element.key}
-                row-index={index}
+                key={row.key}
                 row={row}
-                disabled={row.disabled}
+                row-index={index}
                 onremove={handleRemove}>
         </c-ge-form-widget-soft-credit-row>
     </template>

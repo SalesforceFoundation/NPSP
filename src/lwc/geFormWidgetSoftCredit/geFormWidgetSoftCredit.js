@@ -1,69 +1,46 @@
 import { LightningElement, api, track } from 'lwc';
 import { isNotEmpty } from 'c/utilCommon';
 
-import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
-
-import OPP_CONTACT_ROLE_OBJECT from '@salesforce/schema/OpportunityContactRole';
-import DATA_IMPORT_ADDITIONAL_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c'
-import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
-import CONTACT_FIELD from '@salesforce/schema/OpportunityContactRole.ContactId';
-import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.OpportunityId';
-
-import getDummySoftCreditsApex from '@salesforce/apex/GE_GiftEntryController.getDummySoftCredits';
-import { handleError } from 'c/utilTemplateBuilder';
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @api element;
+    @api gift;
     @track alertBanner = {};
+
     @track rowList = [];
-    @track fieldList = [];
 
     connectedCallback() {
         this.init();
     }
 
-    init = async () => {
-        let dummyRecords = await this.getDummySoftCredits();
-        
-        dummyRecords.forEach(rowRecord => {
-            this.addRow(rowRecord, true);
-        });
+    init() {
+        this.gift.softCredits.forEach(softCredit => {
+            this.addRow(softCredit, softCredit.isReadOnly);
+        });        
     };
 
-    getDummySoftCredits() {
-        return new Promise((resolve, reject) => {
-            getDummySoftCreditsApex()
-                .then(resolve)
-                .catch(handleError)
-        });
+    addRow(softCredit, disabled=false) {
+        const record = { ...softCredit };
+        let row = {};
+        row.disabled = disabled;
+        row.key = this.rowList.length;
+
+        row = {
+            ...row,
+            record
+        };
+        this.rowList.push(row);
     }
 
     handleAddRow() {
         this.addRow();
     }
 
-    addRow(rowRecord, disabled=false) {
-        let element = {};
-        element.key = this.rowList.length;
-        const record = { ...rowRecord };
-        let row = {};
-
-        row = {
-            ...row,
-            record,
-            element
-        };
-        row.disabled = disabled;
-        this.rowList.push(row);
-    }
-
     handleRemove(event) {
         this.rowList.splice(event.detail.rowIndex, 1);
-
         // TODO fire event
     }
 
