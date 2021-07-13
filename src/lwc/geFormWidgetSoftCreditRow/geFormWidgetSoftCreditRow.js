@@ -10,6 +10,7 @@ import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.Opportu
 export default class GeFormWidgetRowAllocation extends LightningElement {
     @api rowIndex;
     @api row;
+    @api disabled;
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
@@ -22,12 +23,8 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
         this.dispatchEvent(new CustomEvent('remove', { detail: { rowIndex, row } }));
     }
 
-    get disabled() {
-        return this.row.disabled;
-    }
-
     get isRemovable() {
-        return this.row.disabled !== true;
+        return this.disabled !== true;
     }
 
     get softCreditObjectApiName() {
