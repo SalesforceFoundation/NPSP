@@ -2,6 +2,7 @@ public inherited sharing class Donation {
     private List<npe01__OppPayment__c> unpaidPayments;
     private Boolean hasNonWrittenOffPayments;
     private Opportunity opportunity;
+    private SoftCredits softCredits;
 
     public Donation(Opportunity opportunity) {
         this.opportunity = opportunity;
@@ -16,7 +17,13 @@ public inherited sharing class Donation {
         return this.unpaidPayments;
     }
 
+    public SoftCredits softCredits() {
+        return this.softCredits;
+    }
+
     private void initialize() {
+        softCredits = new SoftCredits(opportunity.OpportunityContactRoles);
+
         if (unpaidPayments == null) {
             unpaidPayments = new List<npe01__OppPayment__c>();
         }
