@@ -35,7 +35,51 @@
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
 @isTest
-private with sharing class GE_GiftEntryController_TEST {
+public with sharing class GE_GiftEntryController_TEST {
+
+    // TODO: can remove integration test later, here to verify existing behavior is not changed
+    @isTest
+    static void shouldReturn2OpenDonationsForTheGivenDonor() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
+
+        Account dummyOrg = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert dummyOrg;
+
+        List<Opportunity> opps = new List<Opportunity> {
+            new Opportunity(Name='Dummy Opp 0', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=1, CloseDate=Date.today(), AccountId=dummyOrg.Id),
+            new Opportunity(Name='Dummy Opp 1', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=2, CloseDate=Date.today(), AccountId=dummyOrg.Id)
+        };
+        insert opps;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            )
+        };
+        insert payments;
+
+        String openDonationsForDummyOrgString = GE_GiftEntryController.getOpenDonations(dummyOrg.Id, 'Account');
+        List<GE_GiftEntryController.OpportunityWrapper> openDonationsForDummyOrg =
+           (List<GE_GiftEntryController.OpportunityWrapper>)
+           JSON.deserialize(openDonationsForDummyOrgString, List<GE_GiftEntryController.OpportunityWrapper>.class);
+
+        System.assertEquals(2, openDonationsForDummyOrg.size());
+        System.assertEquals('Dummy Opp 0', openDonationsForDummyOrg[0].opportunity.Name);
+        System.assertEquals(3, openDonationsForDummyOrg[0].opportunity.npe01__OppPayment__r.size());
+    }
 
     @isTest
     static void shouldReturnAGiftView() {
