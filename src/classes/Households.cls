@@ -506,11 +506,11 @@ public inherited sharing class Households extends fflib_SObjects {
             Contacts contacts) {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
-        if (CAO_Constants.isHHAccountModel()) {
+        if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
             contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
         }
 
-        if (CAO_Constants.isOneToOne()) {
+        if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
             contactsWithoutAccounts.addAll(
                     contactsWithoutAccounts(
                             contacts, contacts.oldMap));
