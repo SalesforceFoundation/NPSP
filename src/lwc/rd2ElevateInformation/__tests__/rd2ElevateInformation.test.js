@@ -5,11 +5,11 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
 import { registerSa11yMatcher } from '@sa11y/jest';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
-import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData';
+import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
 
 jest.mock(
-    '@salesforce/apex/RD2_ElevateInformation_CTRL.getPermissionData',
+    '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData',
     () => {
         return {
             default: jest.fn(),
@@ -45,6 +45,7 @@ const CC_LAST_4_FIELD_NAME = 'CardLast4__c';
 const ACH_LAST_4_FIELD_NAME = 'ACH_Last_4__c';
 const EXPIRATION_YEAR_FIELD_NAME = 'CardExpirationYear__c';
 const STATUS_REASON_FIELD_NAME = 'ClosedReason__c';
+const STATUS_FIELD_NAME = 'Status__c';
 const ICON_NAME_ERROR = 'utility:error';
 const ICON_NAME_SUCCESS = 'utility:success';
 
@@ -96,7 +97,8 @@ describe('c-rd2-elevate-information', () => {
                 "DonorType": "Contact",
                 "Period": "Monthly",
                 "Frequency": 1,
-                "RecurringType": "Open"
+                "RecurringType": "Open",
+                "Status__c": "Active"
             });
 
             getRecord.emit(mockGetRecord);
@@ -144,7 +146,7 @@ describe('c-rd2-elevate-information', () => {
 
         it('should populate donor type for edit payment information modal', async () => {
             await flushPromises();
-            const updatePaymentButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link Update Payment Information"]');
+            const updatePaymentButton = getUpdatePaymentInformationLink(component);
             expect(getData).toHaveBeenCalled();
 
             expect(updatePaymentButton).toBeTruthy();
@@ -167,7 +169,8 @@ describe('c-rd2-elevate-information', () => {
                 "DonorType": "Contact",
                 "Period": "Monthly",
                 "Frequency": 1,
-                "RecurringType": "Open"
+                "RecurringType": "Open",
+                "Status__c": "Active"
             });
 
             getRecord.emit(mockGetAchRecord);
@@ -256,16 +259,17 @@ describe('c-rd2-elevate-information', () => {
     * @description Verifies the widget when the user closed Recurring Donation
     * and the cancel commitment process is in progress
     */
-    describe('on data load when Elevate cancel is in progress', () => {
-        let mockGetRecordCancelInProgress = JSON.parse(JSON.stringify(mockGetRecord));
-        mockGetRecordCancelInProgress.fields[STATUS_REASON_FIELD_NAME].value = 'c.RD2_ElevatePendingStatus';
+    describe('on data load when Elevate Recurring Donation is closed and cancel is in progress', () => {
+        let mockGetRecordClosedElevateRDInProgress = JSON.parse(JSON.stringify(mockGetRecord));
+        mockGetRecordClosedElevateRDInProgress.fields[STATUS_REASON_FIELD_NAME].value = 'c.RD2_ElevatePendingStatus';
+        mockGetRecordClosedElevateRDInProgress.fields[STATUS_FIELD_NAME].value = 'Closed';
 
         beforeEach(() => {
             component.recordId = mockGetRecord.id;
 
             getData.mockResolvedValue(mockGetData);
             getError.mockResolvedValue(null);
-            getRecord.emit(mockGetRecordCancelInProgress);
+            getRecord.emit(mockGetRecordClosedElevateRDInProgress);
 
             document.body.appendChild(component);
         });
@@ -298,6 +302,13 @@ describe('c-rd2-elevate-information', () => {
         it('should not display any illustration', async () => {
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
+            });
+        });
+
+        it('should not render Update Payment Information Link', async () => {
+            return global.flushPromises().then(async () => {
+                const updatePaymentLink = getUpdatePaymentInformationLink(component);
+                expect(updatePaymentLink).toBeNull();
             });
         });
 
@@ -610,6 +621,13 @@ const getElevateRecurringId = (component) => {
     return elevateId;
 }
 
+/***
+* @description Finds and returns Update Payment Information Link
+*/
+const getUpdatePaymentInformationLink = (component) => {
+    const updatePaymentButton = component.shadowRoot.querySelector('lightning-button[data-qa-locator="link Update Payment Information"]');
+    return updatePaymentButton;
+}
 /***
 * @description Verifies the status icon name and the message displayed on the widget
 */
