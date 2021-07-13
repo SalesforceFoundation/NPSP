@@ -82,11 +82,11 @@ public with sharing class GE_GiftEntryController_TEST {
 
         // TODO: assert new DonationService method matches behavior of existing controller method
         DonationService donationService = new DonationService();
-        List<Donation> openDonations = donationService.getOpenDonationsFor(dummyOrg.Id);
+        DonationsView donationsView = donationService.getDonationsView(dummyOrg.Id);
 
-        System.assertEquals(2, openDonations.size());
-        System.assertEquals('Dummy Opp 0', openDonations[0].opportunity().Name);
-        System.assertEquals(3, openDonations[0].unpaidPayments().size());
+        System.assertEquals(2, donationsView.donations.size());
+        System.assertEquals('Dummy Opp 0', donationsView.donations[0].opportunity.get('Name'));
+        System.assertEquals(3, donationsView.donations[0].unpaidPayments.size());
     }
 
     @isTest
@@ -101,12 +101,17 @@ public with sharing class GE_GiftEntryController_TEST {
 
         giftEntryCustomSetting.Default_Gift_Entry_Template__c = defaultTemplate.Id;
         UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
         Date donationDate = Date.today();
         DataImport__c dataImport = new DataImport__c(
             Donation_Amount__c = 10,
             Account1_Name__c = 'Dummy First Name',
             Donation_Date__c = donationDate,
-            Additional_Object_JSON__c = UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
         );
         insert dataImport;
 

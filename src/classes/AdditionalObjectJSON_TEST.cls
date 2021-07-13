@@ -2,8 +2,12 @@
 private class AdditionalObjectJSON_TEST {
     @isTest
     static void shouldHaveSoftCreditsWithSize2() {
-        AdditionalObjectJSON additionalObjectJSON =
-            new AdditionalObjectJSON(UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS);
+        String additionalObjectString =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON(additionalObjectString);
         SoftCredits softCredits = additionalObjectJSON.asSoftCredits();
 
         System.assertEquals(2, softCredits.size());
@@ -11,8 +15,12 @@ private class AdditionalObjectJSON_TEST {
 
     @isTest
     static void shouldHaveSoftCreditsWithSize0() {
-        AdditionalObjectJSON additionalObjectJSON =
-            new AdditionalObjectJSON(UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_ALLOCATIONS);
+        String additionalObjectString =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(0)
+            .build();
+
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON(additionalObjectString);
         SoftCredits softCredits = additionalObjectJSON.asSoftCredits();
 
         System.assertEquals(0, softCredits.size());

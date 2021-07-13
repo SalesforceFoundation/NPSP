@@ -17,10 +17,15 @@ private class GiftView_TEST {
 
     @isTest
     static void shouldReturnGiftViewWith2SoftCredits() {
+        String additionalObjectString =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
         DataImport__c dataImport = new DataImport__c(
             Donation_Amount__c = 10,
             Donation_Date__c = Date.today(),
-            Additional_Object_JSON__c = UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS
+            Additional_Object_JSON__c = additionalObjectString
         );
         Gift gift = new Gift(dataImport);
         GiftDTO giftDTO = new GiftDTO(gift);

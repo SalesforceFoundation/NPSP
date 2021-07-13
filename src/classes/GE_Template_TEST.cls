@@ -204,7 +204,7 @@ public with sharing class GE_Template_TEST {
         GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
 
         System.assertEquals(template.giftFieldApiNames().size(), 1);
-        System.assertEquals(template.giftFieldApiNames()[0], 'Account1_Name__c');
+        System.assertEquals(template.giftFieldApiNames()[0], String.valueOf(DataImport__c.Account1_Name__c));
     }
 
     private class UTIL_PermissionsMock implements StubProvider {

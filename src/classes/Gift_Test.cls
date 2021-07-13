@@ -62,10 +62,15 @@ private class Gift_Test {
 
     @isTest
     static void shouldHave2SoftCreditsFromAdditionalObjectJSON() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
         DataImport__c dataImport = new DataImport__c(
             Donation_Amount__c = 10,
             Donation_Date__c = Date.today(),
-            Additional_Object_JSON__c = UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
         );
         Gift gift = new Gift(dataImport);
 
@@ -74,10 +79,15 @@ private class Gift_Test {
 
     @isTest
     static void shouldHave0SoftCreditsFromAdditionalObjectJSON() {
+        String additionalObjectStringWithGeneralAccountUnits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withGeneralAccountingUnits(5)
+            .build();
+
         DataImport__c dataImport = new DataImport__c(
             Donation_Amount__c = 10,
             Donation_Date__c = Date.today(),
-            Additional_Object_JSON__c = UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_ALLOCATIONS
+            Additional_Object_JSON__c = additionalObjectStringWithGeneralAccountUnits
         );
         Gift gift = new Gift(dataImport);
 

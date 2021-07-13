@@ -2,8 +2,13 @@
 private class SoftCreditsView_TEST {
     @isTest
     static void shouldReturn2OpportunityContactRolesFromAdditionalObjectJSON() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
         SoftCredits softCredits =
-            new AdditionalObjectJSON(UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_SOFT_CREDITS)
+            new AdditionalObjectJSON(additionalObjectStringWithSoftCredits)
             .asSoftCredits();
         SoftCreditsDTO softCreditsDTO = new SoftCreditsDTO(softCredits);
         SoftCreditsView softCreditsView = new SoftCreditsView(softCreditsDTO);
@@ -13,8 +18,13 @@ private class SoftCreditsView_TEST {
 
     @isTest
     static void shouldReturn0OpportunityContactRoles() {
+        String additionalObjectStringWithGeneralAccountUnits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withGeneralAccountingUnits(3)
+            .build();
+
         SoftCredits softCredits =
-            new AdditionalObjectJSON(UTIL_UnitTestData_TEST.DUMMY_ADDITIONAL_OBJECT_JSON_WITH_ALLOCATIONS)
+            new AdditionalObjectJSON(additionalObjectStringWithGeneralAccountUnits)
             .asSoftCredits();
         SoftCreditsDTO softCreditsDTO = new SoftCreditsDTO(softCredits);
         SoftCreditsView softCreditsView = new SoftCreditsView(softCreditsDTO);
