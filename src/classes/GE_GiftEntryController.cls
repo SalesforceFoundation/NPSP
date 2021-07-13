@@ -79,8 +79,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static GiftBatchView getGiftBatchView(Id giftBatchId){
+    public static GiftBatchView getGiftBatchView(Id dataImportBatchId){
         try {
+            GiftBatchId giftBatchId = new GiftBatchId(giftBatchId);
             return giftBatchService.viewModelFrom(giftBatchId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());

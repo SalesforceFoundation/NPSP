@@ -41,12 +41,12 @@ public with sharing class GiftSelector {
         this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
     }
 
-    public List<DataImport__c> getGiftsFor(Id batchId) {
+    public List<DataImport__c> getGiftsFor(GiftBatchId giftBatchId) {
         String dataImportBatchLookup = String.valueOf(DataImport__c.fields.NPSP_Data_Import_Batch__c);
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
             .withSelectFields(fields())
-            .withWhere(dataImportBatchLookup + ' =: batchId')
+            .withWhere(dataImportBatchLookup + ' =: ' + giftBatchId.value())
             .withSecurityEnforced()
             .build();
 

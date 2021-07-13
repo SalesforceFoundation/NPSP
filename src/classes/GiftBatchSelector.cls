@@ -34,12 +34,12 @@
 */
 public inherited sharing class GiftBatchSelector {
 
-    public DataImportBatch__c selectGiftBatchById(Id id) {
+    public DataImportBatch__c selectGiftBatchBy(GiftBatchId giftBatchId) {
         return [
             SELECT Id,
                 Form_Template__r.Template_JSON__c
             FROM DataImportBatch__c
-            WHERE Id = :id
+            WHERE Id = :giftBatchId.value()
             WITH SECURITY_ENFORCED
         ];
     }

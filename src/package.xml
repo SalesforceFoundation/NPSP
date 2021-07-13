@@ -359,6 +359,7 @@
         <members>GiftBatchDTO</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
+        <members>GiftBatchId</members>
         <members>GiftBatchSelector</members>
         <members>GiftBatchService</members>
         <members>GiftBatchStatusGroup</members>

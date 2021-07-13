@@ -35,7 +35,7 @@
 
 public inherited sharing class GiftBatch implements IGiftBatch {
 
-    private Id batchId;
+    @TestVisible private GiftBatchId giftBatchId;
     private DataImportBatch__c batch;
 
     @TestVisible
@@ -68,11 +68,18 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftBatch() {}
 
-    public GiftBatch(Id batchId) {
-        this.batchId = batchId;
-        this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+    public GiftBatch(GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(this.giftBatchId);
         this.giftTemplate = new GiftTemplate(this.batch.Form_Template__r.Template_JSON__c);
-        this.gifts = new Gifts(this.batchId, new GiftSelector(giftTemplate));
+        this.gifts = new Gifts(this.giftBatchId.value(), new GiftSelector(giftTemplate));
+    }
+
+    public GiftBatch(Id batchId) {
+        this.giftBatchId = new GiftBatchId(batchId);
+        this.batch = giftBatchSelector.selectGiftBatchBy(this.giftBatchId);
+        this.giftTemplate = new GiftTemplate(this.batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(this.giftBatchId, new GiftSelector(giftTemplate));
     }
 
     public Boolean hasElevateWidget() {
@@ -81,7 +88,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public void captureAuthorizedGifts() {
         elevateBatchService.enqueuePaymentCaptureJobFor(
-            batchId, gifts?.elevateBatchIds());
+            this.giftBatchId.value(), gifts?.elevateBatchIds());
         gifts.authorizedToPaymentProcessingStatus();
     }
 
@@ -92,7 +99,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public void processGifts() {
         gifts.giftsToProcessingStatus();
         captureAuthorizedGifts();
-        BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{ this.giftBatchId.value() });
     }
 
     public void updateRecords() {
@@ -100,7 +107,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public Id id() {
-        return this.batchId;
+        return this.giftBatchId.value();
     }
 
     public Gifts gifts() {
@@ -121,7 +128,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     private BGE_DataImportBatchEntry_CTRL.DataImportModel typedModel;
     private BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel() {
         if (typedModel == null) {
-            String model = BGE_DataImportBatchEntry_CTRL.getDataImportModel(batchId);
+            String model = BGE_DataImportBatchEntry_CTRL.getDataImportModel(this.giftBatchId.value());
             typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
                     JSON.deserialize(model,
                             BGE_DataImportBatchEntry_CTRL.DataImportModel.class);

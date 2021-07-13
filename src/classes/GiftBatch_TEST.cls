@@ -42,6 +42,7 @@ private class GiftBatch_TEST {
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
 
         giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.captureAuthorizedGifts();
 
         System.assert(elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
@@ -194,4 +195,7 @@ private class GiftBatch_TEST {
         }
         return failReasonByElevateBatchId;
     }
+
+    private static final GiftBatchId DUMMY_GIFT_BATCH_ID =
+        new GiftBatchId(UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()));
 }

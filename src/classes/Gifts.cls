@@ -47,9 +47,15 @@ public with sharing class Gifts {
         setElevateBatchIds(dataImports);
     }
 
-    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+    public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector) {
         this.giftSelector = giftSelector;
         this.dataImports = this.giftSelector.getGiftsFor(giftBatchId);
+        setElevateBatchIds(dataImports);
+    }
+
+    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        this.dataImports = this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId));
         setElevateBatchIds(dataImports);
     }
 
