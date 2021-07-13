@@ -139,7 +139,7 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
     }
 
     public void onBeforeInsert_ACCT_IndividualAccounts_TDTM() {
-        Households.handleContactsBeforeInsert(this);
+        new HouseholdsApp().handleContactsBeforeInsert(this);
     }
 
     public void onBeforeUpdate() {

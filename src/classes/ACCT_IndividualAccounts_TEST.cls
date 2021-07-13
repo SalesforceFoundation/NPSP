@@ -781,6 +781,7 @@ private class ACCT_IndividualAccounts_TEST {
     /*********************************************************************************************************
     * @description Update a contact to an existing 1:1 or Household Account
     */
+
     private static testMethod void contactUpdatedToExistingOneToOne() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
