@@ -8,11 +8,11 @@ private class DonationService_TEST {
         donationService.donationSelector = stubFor(mockedSelector);
         Id DUMMY_ORG_ID = UTIL_UnitTestData_TEST.mockId(Account.getSObjectType());
 
-        List<Donation> openDonations = donationService.getOpenDonationsFor(DUMMY_ORG_ID);
+        DonationsView donationView = donationService.getDonationsView(DUMMY_ORG_ID);
 
-        System.assertEquals(2, openDonations.size());
-        System.assertEquals(3, openDonations[0].unpaidPayments().size());
-        System.assertEquals(0, openDonations[1].unpaidPayments().size());
+        System.assertEquals(2, donationView.donations.size());
+        System.assertEquals(3, donationView.donations[0].unpaidPayments.size());
+        System.assertEquals(0, donationView.donations[1].unpaidPayments.size());
     }
 
     private class DonationSelectorMock implements StubProvider {
