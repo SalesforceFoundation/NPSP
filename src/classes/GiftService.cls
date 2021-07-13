@@ -1,6 +1,6 @@
 public with sharing class GiftService {
 
-    public GiftView viewModelFrom(Id giftId) {
+    public GiftView viewModelFrom(GiftId giftId) {
         GiftTemplate defaultGiftTemplate = new GiftTemplate();
         GiftSelector selector = new GiftSelector(defaultGiftTemplate);
 

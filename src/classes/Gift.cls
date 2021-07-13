@@ -51,8 +51,8 @@ public with sharing class Gift {
         set;
     }
 
-    public Gift(Id giftId) {
-        this.dataImport = giftSelector.getGiftById(giftId, new GiftTemplate());
+    public Gift(GiftId giftId) {
+        this.dataImport = giftSelector.getGiftById(giftId.asId(), new GiftTemplate());
         this.populateSoftCredits();
     }
 

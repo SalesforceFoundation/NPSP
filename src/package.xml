@@ -369,6 +369,7 @@
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
         <members>GiftDTO</members>
+        <members>GiftId</members>
         <members>GiftSelector</members>
         <members>GiftService</members>
         <members>GiftTemplate</members>

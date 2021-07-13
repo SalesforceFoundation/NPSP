@@ -88,8 +88,9 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static GiftView getGiftView(Id giftId){
+    public static GiftView getGiftView(Id dataImportId){
         try {
+            GiftId giftId = new GiftId(dataImportId);
             return giftService.viewModelFrom(giftId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());

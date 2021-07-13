@@ -117,7 +117,7 @@ public with sharing class GE_GiftEntryController_TEST {
 
         test.startTest();
         GiftService service = new GiftService();
-        GiftView viewModel = service.viewModelFrom(dataImport.id);
+        GiftView viewModel = service.viewModelFrom(new GiftId(dataImport.id));
 
         String account1NameField = String.valueOf(DataImport__c.Account1_Name__c);
         System.assertEquals('Dummy First Name', viewModel.fields.get(account1NameField));
