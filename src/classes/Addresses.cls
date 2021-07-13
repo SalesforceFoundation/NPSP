@@ -99,8 +99,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (defaultAndSeasonalWithChanges().size() > 0) {
-            refreshCurrentHHAddress(defaultAndSeasonalWithChanges(), dmlWrapperLocal, false);
+        if (addressChangesToSync().size() > 0) {
+            refreshCurrentHHAddress(addressChangesToSync(), dmlWrapperLocal, false);
         }
 
         if (nonDefaultsWithChanges().size() > 0) {
@@ -114,7 +114,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 TDTM_TriggerHandler.processDMLAllOrNothing(
                         dmlWrapperLocal, false);
         if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, defaultAndSeasonalWithChanges(), nonDefaultsWithChanges());
+            putErrorsOnAddresses(errors, addressChangesToSync(), nonDefaultsWithChanges());
         }
     }
 
@@ -277,8 +277,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
             if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
                 npspHouseholdAccount.billingAddress(npspAddress);
+                listAccUpdate.add(npspHouseholdAccount.getRecord());
             }
-            listAccUpdate.add(npspHouseholdAccount.getRecord());
 
             // check other addresses on this household that are no longer the default
             if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
@@ -479,7 +479,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return listAddrS;
     }
 
-    public Map<Id, Address__c> defaultAndSeasonalWithChanges() {
+    public Map<Id, Address__c> addressChangesToSync() {
         Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
         Integer i = 0;
         for (Address__c addr : (List<Address__c>) getRecords()) {
@@ -487,9 +487,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
             // an address that is marked default needs to propagate to the household
-            if ((isNewDefault(addr, addrOld))
-                    // any seasonal address also need to be considered
-                    || isSeasonalChanged(addr, addrOld)) {
+            if ((isNewDefault(addr, addrOld)) ||
+                isSeasonalChanged(addr, addrOld)) {
+
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
             } else if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
@@ -499,6 +499,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
             i++;
         }
         return defaultAndSeasonalWithChanges;
+    }
+
+    private Boolean isUndeliverableStatusChanged(Address__c addr, Address__c addrOld) {
+        return addr.Undeliverable__c != addrOld.Undeliverable__c;
     }
 
     public Map<Id, Address__c> nonDefaultsWithChanges() {
