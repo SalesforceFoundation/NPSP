@@ -266,22 +266,13 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         HouseholdAccounts.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
+
     /**
      * @description Determines whether or not Contacts belong to the BucketAccount, when
      * Contacts are being inserted.
      */
     public Contacts bucketContacts_insertContext() {
-        List<Contact> contactsWithoutBucketAccount = new List<Contact>();
-        if (!contactAndOrgSettings.isBucketModelEnabled()) {
-            return new Contacts(contactsWithoutBucketAccount);
-        }
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (contactRecord.AccountId == null
-                    && contactRecord.npe01__Private__c != true) {
-                contactsWithoutBucketAccount.add(contactRecord);
-            }
-        }
-        return new Contacts(contactsWithoutBucketAccount);
+        return new Contacts(contactsWithoutAccounts());
     }
 
     public Contacts contactsAndOneToOneContacts_insertContext() {

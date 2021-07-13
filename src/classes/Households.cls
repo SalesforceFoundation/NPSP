@@ -34,6 +34,17 @@
 */
 public inherited sharing class Households extends fflib_SObjects {
 
+    @TestVisible
+    private static ContactAndOrgSettings contactAndOrgSettingsInst {
+        get {
+            if (contactAndOrgSettingsInst == null) {
+                contactAndOrgSettingsInst = new ContactAndOrgSettings();
+            }
+            return contactAndOrgSettingsInst;
+        }
+        set;
+    }
+
     private Map<Id, npo02__Household__c> oldMap;
     @TestVisible
     private HouseholdNamingService householdNamingServiceInst {
@@ -469,10 +480,12 @@ public inherited sharing class Households extends fflib_SObjects {
                 (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        attachToBucketAccount(
-                (List<Contact>) contactsInstance.bucketContacts_insertContext()
-                        .getRecords()
-        );
+        if (contactAndOrgSettingsInst.isBucketModelEnabled()) {
+            attachToBucketAccount(
+                    (List<Contact>) contactsInstance.bucketContacts_insertContext()
+                            .getRecords()
+            );
+        }
     }
 
     /**
