@@ -279,6 +279,12 @@
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
         <members>ContactsInLegacyHouseholds_TEST</members>
+        <members>Donation</members>
+        <members>DonationSelector</members>
+        <members>DonationService</members>
+        <members>DonationService_TEST</members>
+        <members>Donation_TEST</members>
+        <members>Donations</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>

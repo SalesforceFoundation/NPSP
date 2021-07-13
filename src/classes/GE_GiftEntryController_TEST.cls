@@ -79,6 +79,14 @@ public with sharing class GE_GiftEntryController_TEST {
         System.assertEquals(2, openDonationsForDummyOrg.size());
         System.assertEquals('Dummy Opp 0', openDonationsForDummyOrg[0].opportunity.Name);
         System.assertEquals(3, openDonationsForDummyOrg[0].opportunity.npe01__OppPayment__r.size());
+
+        // TODO: assert new DonationService method matches behavior of existing controller method
+        DonationService donationService = new DonationService();
+        List<Donation> openDonations = donationService.getOpenDonationsFor(dummyOrg.Id);
+
+        System.assertEquals(2, openDonations.size());
+        System.assertEquals('Dummy Opp 0', openDonations[0].opportunity().Name);
+        System.assertEquals(3, openDonations[0].unpaidPayments().size());
     }
 
     @isTest
