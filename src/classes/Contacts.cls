@@ -242,22 +242,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         householdAccounts.handleContactDeletion(dmlWrapper);
     }
 
-    public void onAfterUndelete(
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        /**
-         * @description In the after trigger context, additional fields from the account
-         * related to the contact are queried for processing
-         * household updates.
-         */
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields();
-
-        Households.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
-    }
 
     /**
      * @description Determines whether or not Contacts belong to the BucketAccount, when

@@ -11,6 +11,17 @@ public inherited sharing class HouseholdsApp {
         set;
     }
 
+    @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
@@ -86,5 +97,22 @@ public inherited sharing class HouseholdsApp {
                 contactRecord.AccountId = individual.Id;
             }
         }
+    }
+
+    private List<Contact> getContactsWithAccountAndAddressFields(Contacts contacts) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                contactSelector.getContactsWithAccountAndAddressFields(contacts.getRecords());
+        return contactsWithAccountAndAddressFields;
+    }
+
+    public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields(contacts);
+
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
     }
 }

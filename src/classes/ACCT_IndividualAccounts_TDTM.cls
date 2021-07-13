@@ -73,7 +73,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             when AfterUndelete {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                contacts.onAfterUndelete(dmlWrapper);
+                new HouseholdsApp().onAfterUndeleteOf(contacts, dmlWrapper);
             }
         }
         return dmlWrapper;
