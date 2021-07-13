@@ -473,16 +473,16 @@ public inherited sharing class Households extends fflib_SObjects {
      * @description In the before insert trigger context,
      * ensure accounts are created for the new contacts that need them.
      */
-    public static void handleContactsBeforeInsert(Contacts contactsInstance) {
-        contactsInstance.resetDeprecatedFields();
+    public static void handleContactsBeforeInsert(Contacts contacts) {
+        contacts.resetDeprecatedFields();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
-                (List<Contact>) contactsInstance.contactsAndOneToOneContacts_insertContext()
+                (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        if (contactAndOrgSettingsInst.isBucketModelEnabled()) {
+        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             attachToBucketAccount(
-                    contactsInstance.contactsWithoutAccounts());
+                    contacts.contactsWithoutAccounts());
         }
     }
 
@@ -495,7 +495,7 @@ public inherited sharing class Households extends fflib_SObjects {
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
                 contactsWithoutAccounts(contacts));
 
-        if (CAO_Constants.isBucketModel()) {
+        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             attachToBucketAccount(
                     contacts.contactsWithoutAccounts()
             );
@@ -503,17 +503,17 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private static List<Contact> contactsWithoutAccounts(
-            Contacts contactsInstance) {
+            Contacts contacts) {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
         if (CAO_Constants.isHHAccountModel()) {
-            contactsWithoutAccounts.addAll(contactsInstance.contactsWithoutAccounts());
+            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
         }
 
         if (CAO_Constants.isOneToOne()) {
             contactsWithoutAccounts.addAll(
                     contactsWithoutAccounts(
-                            contactsInstance, contactsInstance.oldMap));
+                            contacts, contacts.oldMap));
         }
         return contactsWithoutAccounts;
     }

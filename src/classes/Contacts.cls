@@ -1054,7 +1054,7 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
      ********************************************************************************************************/
     @TestVisible
     private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
-        if (contactAndOrgSettings.isHouseholdAccountModel()) {
+        if (contactAndOrgSettings.isHouseholdAccountModelEnabled()) {
             return;
         }
 

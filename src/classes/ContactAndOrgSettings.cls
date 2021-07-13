@@ -45,13 +45,16 @@ public with sharing class ContactAndOrgSettings {
         this.contactsAndOrgsSettings = settings;
     }
 
-    public Boolean isHouseholdAccountModel() {
+    public Boolean isHouseholdAccountModelEnabled() {
         return contactsAndOrgsSettings.npe01__Account_Processor__c ==
                 CAO_Constants.HH_ACCOUNT_PROCESSOR;
     }
 
-    public Boolean isBucketModelEnabled() {
+    public Boolean isBucketAccountEnabled() {
         return CAO_Constants.isBucketModel();
     }
 
+    public Boolean isOneToOneAccountsEnabled() {
+        return CAO_Constants.isOneToOne();
+    }
 }
