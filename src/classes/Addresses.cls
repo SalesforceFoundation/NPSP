@@ -270,16 +270,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
             }
 
             // update HH Account's Billing address fields
-            NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount
-                    (accountsById.get(accId));
             NPSP_Address npspAddress = new NPSP_Address(addr);
 
+            NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accId));
             npspHouseholdAccount.isBillingAddressUndeliverable(npspAddress.isUndeliverable());
 
             if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
                 npspHouseholdAccount.billingAddress(npspAddress);
-                listAccUpdate.add(npspHouseholdAccount.getRecord());
             }
+            listAccUpdate.add(npspHouseholdAccount.getRecord());
 
             // check other addresses on this household that are no longer the default
             if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
@@ -317,6 +316,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         if (listAccUpdate.size() > 0) {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
+            System.debug(dmlWrapper);
         }
         if (listAddrUpdate.size() > 0) {
             dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
@@ -911,7 +911,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     private static Map<Id, Account> getAccountsByIds(Set<Id> acctIds) {
         return new Map<Id, Account>([
                 SELECT Id, BillingStreet, BillingCity, BillingState,
-                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude
+                        BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
                 FROM Account
                 WHERE Id IN :acctIds
         ]);

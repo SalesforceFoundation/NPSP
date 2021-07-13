@@ -523,19 +523,30 @@ public with sharing class ADDR_Addresses_TEST {
     @isTest
     private static void newUndeliverableAddressShouldSyncToAccount() {
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
+        insert accounts;
 
         buildTestAddress(5);
 
-        for (Integer i=0; i < addresses.size(); i++) {
-            addresses[i].Household_Account__c = accounts[i].Id;
-        }
+            for (Integer i=0; i < addresses.size(); i++) {
+                addresses[i].Household_Account__c = accounts[i].Id;
+                addresses[i].Undeliverable__c = true;
+            }
+
 
         Test.startTest();
             insert addresses;
         Test.stopTest();
 
-        System.assertEquals(true, accounts[0].Undeliverable_Address__c, 'account address undeliverable status' +
-                'should match the address undeliverable status.');
+        Set<Id> accountIds = (new Map<Id,Account>(accounts)).keySet();
+        Map<Id, Account> updatedAccountsById = new Map<Id, Account>(
+            [SELECT Undeliverable_Address__c FROM Account WHERE Id IN :accountIds]);
+
+        for (Address__c address: addresses) {
+            System.assertEquals(address.Undeliverable__c,
+                    updatedAccountsById.get(address.Household_Account__c).Undeliverable_Address__c, 'account address' +
+                    ' undeliverable status should match the address undeliverable status regardless if the address is' +
+                    ' a default address or not.');
+        }
     }
 
     /*********************************************************************************************************
