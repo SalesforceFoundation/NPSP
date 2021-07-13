@@ -16,11 +16,9 @@ public with sharing class Donations {
         for (Opportunity opportunity : selector.getOpenDonations(relationshipField, donorId)) {
             donations.add(new Donation(opportunity));
         }
-
-        System.debug(donations);
     }
 
-    public List<Donation> areOpen() {
-        return donations;
+    public List<Donation> all() {
+        return this.donations;
     }
 }

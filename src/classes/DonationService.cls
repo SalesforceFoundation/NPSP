@@ -11,8 +11,9 @@ public with sharing class DonationService {
         set;
     }
 
-    public List<Donation> getOpenDonationsFor(Id donorId) {
+    public DonationsView getDonationsView(Id donorId) {
         Donations donations = new Donations(donorId, this.donationSelector);
-        return donations.areOpen();
+        DonationsDTO donationsDTO = new DonationsDTO(donations);
+        return new DonationsView(donationsDTO);
     }
 }

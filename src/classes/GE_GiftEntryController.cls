@@ -57,6 +57,15 @@ public with sharing class GE_GiftEntryController {
         }
         set;
     }
+    private static DonationService donationService {
+        get {
+            if (donationService == null) {
+                donationService = new DonationService();
+            }
+            return donationService;
+        }
+        set;
+    }
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -380,6 +389,15 @@ public with sharing class GE_GiftEntryController {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled
+    public static DonationsView getOpenDonationsView(Id donorId) {
+        try {
+            return donationService.getDonationsView(donorId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 
