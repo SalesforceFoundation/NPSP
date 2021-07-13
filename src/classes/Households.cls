@@ -482,9 +482,7 @@ public inherited sharing class Households extends fflib_SObjects {
 
         if (contactAndOrgSettingsInst.isBucketModelEnabled()) {
             attachToBucketAccount(
-                    (List<Contact>) contactsInstance.bucketContacts_insertContext()
-                            .getRecords()
-            );
+                    contactsInstance.contactsWithoutAccounts());
         }
     }
 
