@@ -73,7 +73,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     constructor() {
-        super();  
+        super();
         this.namespace = getNamespace(DATA_IMPORT_BATCH_OBJECT.objectApiName);
     }
 

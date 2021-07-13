@@ -10,7 +10,7 @@
                                                    onchange={handleFieldValueChange}
                                                    value={contactValue}
                                                    class="help-text-hidden slds-m-bottom_none"
-                                                   data-qa-locator="replaceMe"
+                                                   data-qa-locator={qaLocatorSoftCreditContact}
                                                    disabled={disabled}>
                             </lightning-input-field>
                         </div>
@@ -21,7 +21,7 @@
                                                     onchange={handleFieldValueChange}
                                                     value={roleValue}
                                                     class="help-text-hidden slds-m-bottom_none"
-                                                    data-qa-locator="replaceMe"
+                                                    data-qa-locator={qaLocatorSoftCreditRole}
                                                     disabled={disabled}>
                             </lightning-input-field>
                         </div>
@@ -32,7 +32,7 @@
                                                     alternative-text={labelGeAssistiveFormFieldRemove}
                                                     size="medium"
                                                     onclick={remove}
-                                                    data-qa-locator="replaceMe"
+                                                    data-qa-locator={qaLocatorDeleteRow}
                                                     disabled={disabled}>
                                 </lightning-button-icon>                                
                             </template>

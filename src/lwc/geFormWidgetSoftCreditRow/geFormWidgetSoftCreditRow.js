@@ -45,5 +45,16 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     get contactValue() {
         return this.row.record[apiNameFor(CONTACT_FIELD)];
     }
-    
+
+    get qaLocatorDeleteRow() {
+        return `button ${this.CUSTOM_LABELS.commonDelete} ${this.rowIndex}`;
+    }
+
+    get qaLocatorSoftCreditContact() {
+        return `autocomplete contact for Soft Credit ${this.rowIndex}`;
+    }
+
+    get qaLocatorSoftCreditRole() {
+        return `input role for Soft Credit ${this.rowIndex}`;
+    }
 }
