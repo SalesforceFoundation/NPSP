@@ -39,6 +39,7 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
+    @TestVisible
     private static GiftBatchService giftBatchService {
         get {
             if (giftBatchService == null) {
@@ -48,6 +49,7 @@ public with sharing class GE_GiftEntryController {
         }
         set;
     }
+    @TestVisible
     private static GiftService giftService {
         get {
             if (giftService == null) {
