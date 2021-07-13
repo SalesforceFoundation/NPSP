@@ -11,7 +11,7 @@ public inherited sharing class HouseholdsApp {
         set;
     }
 
-    public void handleContactsBeforeInsert(Contacts contacts) {
+    public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
         HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
@@ -28,55 +28,8 @@ public inherited sharing class HouseholdsApp {
     /**
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      */
-    public void handleContactsBeforeUpdate(Contacts contacts) {
-        contacts.resetDeprecatedFields();
-        contacts.keepPrivateContactsPrivate();
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
-                contactsWithoutAccounts(contacts));
-
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
-            );
-        }
-    }
-
-    private List<Contact> contactsWithoutAccounts(
-            Contacts contacts) {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-
-        if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
-        }
-
-        if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
-            contactsWithoutAccounts.addAll(
-                    contactsWithoutAccounts(
-                            contacts, contacts.oldMap));
-        }
-        return contactsWithoutAccounts;
-    }
-
-    public static List<Contact> contactsWithoutAccounts(Contacts contactsInstance, Map<Id, Contact> oldContactById) {
-        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
-        for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
-            Account account = accountsByIds.get(contactRecord.AccountId);
-            if (isMissingAccount(contactRecord)) {
-                Contact oldContact = oldContactById.get(contactRecord.Id);
-
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                        account)) {
-                    contactRecord.AccountId = null;
-                }
-
-                if (contactRecord.AccountId == null) {
-                    contactsWithoutAccounts2.add(contactRecord);
-                }
-
-            }
-        }
-        return contactsWithoutAccounts2;
+    public void onBeforeUpdateOf(Contacts contacts) {
+        Households.handleContactsBeforeUpdate(contacts);
     }
 
     /**
@@ -102,25 +55,6 @@ public inherited sharing class HouseholdsApp {
                 && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
-    /**
-     * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.
-     */
-    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact
-            oldContact, Account accountRecord) {
-        Boolean isExistingOneToOne = contactRecord.AccountId != null
-                && accountRecord.npe01__One2OneContact__c != contactRecord.Id
-                && accountRecord.npe01__One2OneContact__c != null
-                && contactRecord.AccountId != oldContact.AccountId;
-
-        if (!isExistingOneToOne) {
-            return false;
-        }
-
-        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
-
-        return !isDeletedOldAccount;
-
-    }
     /*******************************************************************************************************
     * @description Updates Contacts to relate to a single Individual Account
     * @param contacts the list of Contacts that need updating.

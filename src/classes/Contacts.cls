@@ -138,10 +138,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         }
     }
 
-    public void onBeforeInsert_ACCT_IndividualAccounts_TDTM() {
-        new HouseholdsApp().handleContactsBeforeInsert(this);
-    }
-
     public void onBeforeUpdate() {
         syncNamingExclusionsBeforeUpdate();
     }
@@ -190,10 +186,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
-    }
-
-    public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
-        Households.handleContactsBeforeUpdate(this);
     }
 
     public void onAfterUpdate() {
