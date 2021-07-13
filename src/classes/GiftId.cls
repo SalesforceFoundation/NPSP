@@ -17,7 +17,7 @@ public inherited sharing class GiftId {
         return false;
     }
 
-    public Id asId() {
+    public Id value() {
         return this.dataImportId;
     }
 
