@@ -282,6 +282,7 @@
         <members>Donation</members>
         <members>DonationDTO</members>
         <members>DonationSelector</members>
+        <members>DonationSelector_TEST</members>
         <members>DonationService</members>
         <members>DonationService_TEST</members>
         <members>DonationView</members>
@@ -690,6 +691,7 @@
         <members>UTIL_AbstractChunkingLDV_BATCH_TEST</members>
         <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
+        <members>UTIL_AdditionalObjectData_TEST</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
         <members>UTIL_AuraEnabledCommon</members>
