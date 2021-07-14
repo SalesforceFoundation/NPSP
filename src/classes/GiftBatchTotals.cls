@@ -46,22 +46,30 @@ public inherited sharing class GiftBatchTotals {
 
     public GiftBatchTotals(List<AggregateResultProxy> results) {
         for (AggregateResultProxy result : results) {
+            System.debug('or here...?');
             populateTotalsWith(result);
         }
     }
 
     public GiftBatchTotals(GiftBatchId giftBatchId, GiftBatchSelector giftBatchSelector) {
-        AggregateResultProxy totalsProxy =
+        List<AggregateResultProxy> totalsResults =
             giftBatchSelector.selectGiftBatchGroupedByStatusBy(giftBatchId);
-        AggregateResultProxy totalAmountProxy =
+        List<AggregateResultProxy> totalAmountResults =
             giftBatchSelector.getDataImportBatchTotalAmount(giftBatchId);
 
-        populateTotalsWith(totalsProxy, totalAmountProxy);
+        if (!totalsResults.isEmpty()) {
+            populateTotalsWith(totalsResults[0]);
+        }
+
+        if (!totalAmountResults.isEmpty()) {
+            populateTotalAmountWith(totalAmountResults[0]);
+        }
     }
 
     @TestVisible
     private GiftBatchTotals(AggregateResultProxy result, AggregateResultProxy totalAmount) {
-        populateTotalsWith(result, totalAmount);
+        populateTotalsWith(result);
+        populateTotalAmountWith(totalAmount);
     }
 
     public Map<String, Integer> toMap() {
@@ -84,9 +92,8 @@ public inherited sharing class GiftBatchTotals {
         return this.totalAmount;
     }
 
-    private void populateTotalsWith(AggregateResultProxy result, AggregateResultProxy totalAmount) {
-        populateTotalsWith(result);
-        if (totalAmount != null) {
+    private void populateTotalAmountWith(AggregateResultProxy totalAmount) {
+        if (totalAmount.getValuesByAlias().get('totalAmount') != null) {
             this.totalAmount = (Decimal) totalAmount.getValuesByAlias().get('totalAmount');
         }
     }
