@@ -19,6 +19,7 @@ private class GiftBatchView_TEST {
     static void shouldHave2GiftViews() {
         Gifts gifts = new Gifts(DUMMY_DATA_IMPORTS_WITH_CONTACT_FIRST_NAME);
         GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
         giftBatch.gifts = gifts;
         giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
             JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
@@ -33,6 +34,7 @@ private class GiftBatchView_TEST {
     @isTest
     static void shouldHave0GiftViews() {
         GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
         giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
             JSON.deserialize('{"totalRowAmount":0,"totalCountOfRows":0}',
                 BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
@@ -46,6 +48,7 @@ private class GiftBatchView_TEST {
     private static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":200.0,"totalCountOfRows":2}';
     private static GiftBatchView createDummyGiftBatchViewFromLegacyDataImportModel() {
         GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
         giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
             JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
                 BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
@@ -66,4 +69,6 @@ private class GiftBatchView_TEST {
                     Donation_Date__c = Date.today()
             )
         };
+
+    private static Id DUMMY_DATA_IMPORT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
 }
