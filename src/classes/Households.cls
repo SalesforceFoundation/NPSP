@@ -508,8 +508,7 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
-    private static List<Contact> contactsWithoutAccounts(
-            Contacts contacts) {
+    private static List<Contact> contactsWithoutAccounts(Contacts contacts) {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
         if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
