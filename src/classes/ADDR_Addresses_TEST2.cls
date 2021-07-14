@@ -75,9 +75,9 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     private static void createHHTestData(Integer cHHT, Integer cConT) {
         ADDR_Addresses_TEST.createTestData(cHHT, cConT);
-        listConT = ADDR_Addresses_TEST.contacts;
-        listAccT = ADDR_Addresses_TEST.accounts;
-        listAddrT = ADDR_Addresses_TEST.addresses;
+        listConT = ADDR_Addresses_TEST.testContacts;
+        listAccT = ADDR_Addresses_TEST.testAccounts;
+        listAddrT = ADDR_Addresses_TEST.testAddresses;
     }
 
     /*********************************************************************************************************
@@ -86,7 +86,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/
     private static void initTestAddr(Integer cAddr) {
         ADDR_Addresses_TEST.buildTestAddress(cAddr);
-        listAddrT = ADDR_Addresses_TEST.addresses;
+        listAddrT = ADDR_Addresses_TEST.testAddresses;
     }
     
     /*********************************************************************************************************
@@ -1079,7 +1079,7 @@ public with sharing class ADDR_Addresses_TEST2 {
             con.MailingCity = 'new city';
         }
         Test.startTest();
-        insert listConT; 
+        insert listConT;
         Test.stopTest();       
         
         // verify the Address objects split street.
@@ -1461,7 +1461,7 @@ public with sharing class ADDR_Addresses_TEST2 {
             con.MailingCity = 'new city';
         }
         Test.startTest();
-        insert listConT; 
+        insert listConT;
         Test.stopTest();       
 
         // verify that the HH and Contacts share the same address
@@ -1643,7 +1643,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         }
 
         Test.startTest();
-        update listConT;         
+        update listConT;
         Test.stopTest();
         
         // verify that the new HH and Contacts share the same address
