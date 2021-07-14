@@ -11,7 +11,7 @@
                                                    value={contactValue}
                                                    class="help-text-hidden slds-m-bottom_none"
                                                    data-qa-locator={qaLocatorSoftCreditContact}
-                                                   disabled={disabled}>
+                                                   disabled={isReadOnly}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">                       
@@ -22,7 +22,7 @@
                                                    value={roleValue}
                                                    class="help-text-hidden slds-m-bottom_none"
                                                    data-qa-locator={qaLocatorSoftCreditRole}
-                                                   disabled={disabled}>
+                                                   disabled={isReadOnly}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_6-of-12">
@@ -33,7 +33,7 @@
                                                        size="medium"
                                                        onclick={remove}
                                                        data-qa-locator={qaLocatorDeleteRow}
-                                                       disabled={disabled}>
+                                                       disabled={isReadOnly}>
                                 </lightning-button-icon>                                
                             </template>
                         </div>                   

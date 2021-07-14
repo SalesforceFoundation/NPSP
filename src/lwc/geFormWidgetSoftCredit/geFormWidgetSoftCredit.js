@@ -19,14 +19,13 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
 
     init() {
         this.gift.softCredits.forEach(softCredit => {
-            this.addRow(softCredit, softCredit.isReadOnly);
+            this.addRow(softCredit);
         });        
     };
 
-    addRow(softCredit, disabled=false) {
+    addRow(softCredit) {
         const record = { ...softCredit };
         let row = {};
-        row.disabled = disabled;
         row.key = this.rowList.length;
 
         row = {

@@ -6,12 +6,11 @@ class Gift {
     async init() {
         const softCreditOppContactRoles = await getDummySoftCredits();
         
-        softCreditOppContactRoles.forEach( oppContactRole => {
+        softCreditOppContactRoles.forEach( (oppContactRole, index) => {
             let softCredit = { ...oppContactRole };
-            
-            softCredit.isReadOnly = true;
+            softCredit.Id = index;
             this.softCredits.push( softCredit );
-        });        
+        });       
     }
 }
 
