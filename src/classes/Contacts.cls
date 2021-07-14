@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public inherited sharing class Contacts extends fflib_SObjects implements IContacts {
+public inherited sharing class Contacts extends fflib_SObjects {
 
     public Map<Id, Contact> oldMap;
     private Boolean isUpdate = false;
