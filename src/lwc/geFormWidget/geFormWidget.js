@@ -13,10 +13,9 @@ import DATA_IMPORT_PARENT_BATCH_LOOKUP from '@salesforce/schema/DataImport__c.NP
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 
 const ALLOCATION_WIDGET = 'geFormWidgetAllocation';
-const PAYMENT_SCHEDULER_WIDGET = 'geFormWidgetPaymentScheduler';
 const SOFT_CREDIT_WIDGET = 'geFormWidgetSoftCredit';
 const TOKENIZE_CARD_WIDGET = 'geFormWidgetTokenizeCard';
-const WIDGET_LIST = [PAYMENT_SCHEDULER_WIDGET, ALLOCATION_WIDGET, SOFT_CREDIT_WIDGET, TOKENIZE_CARD_WIDGET];
+const WIDGET_LIST = [ALLOCATION_WIDGET, SOFT_CREDIT_WIDGET, TOKENIZE_CARD_WIDGET];
 
 export default class GeFormWidget extends LightningElement {
     @api element;
@@ -31,9 +30,9 @@ export default class GeFormWidget extends LightningElement {
         apiNameFor(DATA_IMPORT_DONATION_AMOUNT_FIELD),
         apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD)
     ];
-    _softCreditFields = [
-        apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD)
-    ];    
+
+    _softCreditFields = [];
+
     _elevateFields = [
         apiNameFor(DATA_IMPORT_PARENT_BATCH_LOOKUP),
         apiNameFor(DATA_IMPORT_PAYMENT_METHOD),
@@ -119,10 +118,6 @@ export default class GeFormWidget extends LightningElement {
 
     get widgetComponent() {
         return this.template.querySelector('[data-id="widgetComponent"]');
-    }
-
-    get isPaymentScheduler() {
-        return this.element.componentName === PAYMENT_SCHEDULER_WIDGET;
     }
 
     get isSoftCredit() {

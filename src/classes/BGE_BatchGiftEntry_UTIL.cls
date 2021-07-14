@@ -258,7 +258,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
     public static List<String> getActiveFieldNamesFromBatch(Id batchId) {
         DataImportBatch__c batch = [SELECT Active_Fields__c FROM DataImportBatch__c WHERE Id = :batchId];
         String activeFieldsJSON = batch.Active_Fields__c;
-        List<String> activeFieldNames = new List<String>();
+        Set<String> activeFieldNames = new Set<String>();
 
         if (activeFieldsJSON != null) {
             List<BGE_ConfigurationWizard_CTRL.BGEField> activeFields =
@@ -279,7 +279,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
             }
         }
 
-        return activeFieldNames;
+        return new List<String>( activeFieldNames );
     }
 
     /*******************************************************************************************************
