@@ -3,55 +3,41 @@ private class GiftBatchView_TEST {
 
     @isTest
     static void shouldReturn200TotalAmount() {
-        GiftBatchView giftBatchView = createDummyGiftBatchViewFromLegacyDataImportModel();
-
+        GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
         System.assertEquals(200, giftBatchView.total);
     }
 
     @isTest
     static void shouldReturn2TotalCount() {
-        GiftBatchView giftBatchView = createDummyGiftBatchViewFromLegacyDataImportModel();
-
+        GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
         System.assertEquals(2, giftBatchView.totalCount);
     }
 
     @isTest
     static void shouldHave2GiftViews() {
         Gifts gifts = new Gifts(DUMMY_DATA_IMPORTS_WITH_CONTACT_FIRST_NAME);
-        GiftBatch giftBatch = new GiftBatch();
-        giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
-        giftBatch.gifts = gifts;
-        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        GiftBatchView giftBatchView = new GiftBatchView(giftBatchDTO);
-
+        GiftBatchView giftBatchView = createDummyGiftBatchViewWith(gifts);
         System.assertEquals(2, giftBatchView.gifts.size());
     }
 
     @isTest
     static void shouldHave0GiftViews() {
-        GiftBatch giftBatch = new GiftBatch();
-        giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
-        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-            JSON.deserialize('{"totalRowAmount":0,"totalCountOfRows":0}',
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        GiftBatchView giftBatchView = new GiftBatchView(giftBatchDTO);
-
+        GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
         System.assertEquals(0, giftBatchView.gifts.size());
     }
 
-    // TODO: remove after GiftBatch is decoupled from legacy data import model
-    private static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":200.0,"totalCountOfRows":2}';
-    private static GiftBatchView createDummyGiftBatchViewFromLegacyDataImportModel() {
+    private static GiftBatchView createDummyGiftBatchViewWith(Gifts gifts) {
+        AggregateResultProxy mockTotalsResult = new AggregateResultProxy()
+            .withAliasAndValue('recordCount', 2);
+        AggregateResultProxy mockedTotalAmountResult = new AggregateResultProxy()
+            .withAliasAndValue('totalAmount', 200);
+        GiftBatchTotals totals = new GiftBatchTotals(mockTotalsResult, mockedTotalAmountResult);
+
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
-        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+        giftBatch.totals = totals;
+        giftBatch.gifts = gifts;
+
         GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
         return new GiftBatchView(giftBatchDTO);
     }
