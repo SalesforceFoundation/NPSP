@@ -1,17 +1,6 @@
 public inherited sharing class HouseholdsApp {
 
     @TestVisible
-    private static ContactAndOrgSettings contactAndOrgSettingsInst {
-        get {
-            if (contactAndOrgSettingsInst == null) {
-                contactAndOrgSettingsInst = new ContactAndOrgSettings();
-            }
-            return contactAndOrgSettingsInst;
-        }
-        set;
-    }
-
-    @TestVisible
     private ContactSelector contactSelector {
         get {
             if (contactSelector == null) {
@@ -42,10 +31,7 @@ public inherited sharing class HouseholdsApp {
                 (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            attachToBucketAccount(
-                    contacts.contactsWithoutAccounts());
-        }
+        Households.addToBucketAccount(contacts);
     }
 
     public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
