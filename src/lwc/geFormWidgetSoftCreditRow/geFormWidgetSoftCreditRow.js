@@ -42,6 +42,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     get contactFieldApiName() {
         return apiNameFor(CONTACT_FIELD);
     }
+
     get contactValue() {
         return this.row.record[apiNameFor(CONTACT_FIELD)];
     }
