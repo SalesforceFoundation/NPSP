@@ -51,12 +51,12 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
+        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
         giftBatch.processGifts();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
+        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
         giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
         giftBatch.updateRecords();
     }
