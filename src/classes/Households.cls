@@ -476,23 +476,6 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /**
-     * @description In the before insert trigger context,
-     * ensure accounts are created for the new contacts that need them.
-     */
-    public static void handleContactsBeforeInsert(Contacts contacts) {
-        contacts.resetDeprecatedFields();
-
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
-                (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
-                        .getRecords());
-
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            attachToBucketAccount(
-                    contacts.contactsWithoutAccounts());
-        }
-    }
-
-    /**
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      */
     public static void handleContactsBeforeUpdate(Contacts contacts) {
