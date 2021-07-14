@@ -492,7 +492,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
             // an address that is marked default needs to propagate to the household
             if (isNewDefault(addr, addrOld) ||
                 isSeasonalChanged(addr, addrOld) ||
-                isUndeliverableStatusChanged(addr, addrOld)) {
+                (isUndeliverableStatusChanged(addr, addrOld)) && isDefault(addr)) {
+
                 defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
             } else if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
                 if (isDefault(addr)) {
@@ -515,8 +516,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addr);
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
-            if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE) ||
-                isUndeliverableStatusChanged(addr, addrOld)) {
+            if ((!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE) ||
+                isUndeliverableStatusChanged(addr, addrOld)) && !isDefault(addr)) {
 
                 nonDefaultsWithChanges.put(idOf(addr), addr);
             }

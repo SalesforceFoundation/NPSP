@@ -707,37 +707,46 @@ public with sharing class ADDR_Addresses_TEST {
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccountAndContactsAndOverrides() {
         createTestData(2, 2);
-        System.debug(testAddresses.size());
+        TDTM_DefaultConfig.startTestDataInit();
+        Address__c overrideAddressToCreate = new Address__c();
+            overrideAddressToCreate.Address_Type__c = 'Home';
+            overrideAddressToCreate.MailingStreet__c = 'Street Override';
+            overrideAddressToCreate.MailingCity__c = 'City Override';
+            overrideAddressToCreate.MailingState__c = 'Washington';
+            overrideAddressToCreate.MailingPostalCode__c = 'Zip Override';
+            overrideAddressToCreate.MailingCountry__c = 'United States';
+            overrideAddressToCreate.Household_Account__c = testAccounts[0].Id;
+        insert overrideAddressToCreate;
+        TDTM_DefaultConfig.stopTestDataInit();
+
         Contact contact = new Contact(
             FirstName = 'Test Contact',
             LastName = 'Override',
             is_Address_Override__c = true,
             AccountId = testAccounts[0].Id,
             MailingState = 'Washington',
-            MailingCity = 'City1',
-            MailingStreet = 'Street1',
-            MailingPostalCode = 'Zip1',
+            MailingCity = 'City Override',
+            MailingStreet = 'Street Override',
+            MailingPostalCode = 'Zip Override',
             MailingCountry = 'United States',
             npe01__Primary_Address_Type__c = 'Home'
         );
         insert contact;
-        System.debug(testAddresses);
+
+        Address__c overrideAddress = [SELECT Undeliverable__c
+                                      FROM Address__c
+                                      WHERE MailingPostalCode__c = 'Zip Override'];
+
         Test.startTest();
-            testAddresses[1].Undeliverable__c = true;
-            update testAddresses[1];
+            overrideAddress.Undeliverable__c = true;
+            update overrideAddress;
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Current_Address__r.MailingStreet__c, Current_Address__r.MailingCity__c,
-                                         is_Address_Override__c,
-                                         Undeliverable_Address__c,
-                                         Current_Address__c
+        Contact updatedContact = [SELECT Undeliverable_Address__c, is_Address_Override__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
-        System.debug(updatedContact.Current_Address__r.MailingStreet__c);
-        System.debug(updatedContact);
-        System.debug([select MailingStreet__c from address__c].size());
         System.assert(updatedContact.is_Address_Override__c == true);
-        System.assertEquals(testAddresses[1].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c);
     }
 
     /*********************************************************************************************************
@@ -2014,7 +2023,7 @@ public with sharing class ADDR_Addresses_TEST {
         });
 
         Contact[] contacts = householdAccounts.membersOf(account.Id);
-        System.assertEquals(0, testContacts.size());
+        System.assertEquals(0, contacts.size());
     }
 
     /*********************************************************************************************************
@@ -2210,8 +2219,8 @@ public with sharing class ADDR_Addresses_TEST {
         addr.MailingState__c = 'Washington';
         addr.MailingPostalCode__c = 'Zip' + i;
         addr.MailingCountry__c = 'United States';
-//        addr.Geolocation__Latitude__s = Math.min(47.6097 + i, 90);
-//        addr.Geolocation__Longitude__s = Math.min(-122.3331 + i, 90);
+        addr.Geolocation__Latitude__s = Math.min(47.6097 + i, 90);
+        addr.Geolocation__Longitude__s = Math.min(-122.3331 + i, 90);
         return addr;
     }
 
