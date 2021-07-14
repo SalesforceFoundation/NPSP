@@ -218,7 +218,7 @@ public inherited sharing class Households extends fflib_SObjects {
             if (needsOneToOneAccount(contactRecord,
                     account)) {
 
-                Contact oldContact = oldContactById.get(contactRecord.Id);
+                Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
 
                 if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
                         account)) {
