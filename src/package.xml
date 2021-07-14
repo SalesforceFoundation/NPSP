@@ -392,10 +392,8 @@
         <members>HouseholdService_TEST</members>
         <members>HouseholdSettings</members>
         <members>Households</members>
+        <members>HouseholdsApp</members>
         <members>IAddress</members>
-        <members>IContacts</members>
-        <members>IHouseholdSelector</members>
-        <members>IHouseholds</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
@@ -754,6 +752,7 @@
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
         <members>UnitOfWork</members>
+        <members>UnitOfWork_TEST</members>
         <members>fflib_Domain</members>
         <members>fflib_Objects</members>
         <members>fflib_SObjects</members>
