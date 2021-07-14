@@ -210,7 +210,7 @@ public inherited sharing class Households extends fflib_SObjects {
                 && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
     }
 
-    public static List<Contact> contactsWithoutAccounts(Contacts contactsInstance, Map<Id, Contact> oldContactById) {
+    public static List<Contact> contactsWithoutAccounts(Contacts contactsInstance) {
         List<Contact> contactsWithoutAccounts2 = new List<Contact>();
         Map<Id, Account> accountsByIds = contactsInstance.accountById;
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
