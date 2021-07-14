@@ -95,6 +95,22 @@ public inherited sharing class HouseholdsApp {
                 dmlWrapper);
     }
 
+    public void onAfterDeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        HouseholdAccounts householdAccounts = getHouseholdsFor(contacts.accountIds());
+        householdAccounts.handleContactDeletion(dmlWrapper);
+    }
+
+    public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields(contacts);
+
+        Households.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
+    }
+
     /**
      * @description Determines whether or not the contact needs a one to one account assigned.
      * @param  The contact record to verify.
@@ -124,23 +140,8 @@ public inherited sharing class HouseholdsApp {
         return contactsWithAccountAndAddressFields;
     }
 
-    public void onAfterDeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        HouseholdAccounts householdAccounts = getHouseholdsFor(contacts.accountIds());
-        householdAccounts.handleContactDeletion(dmlWrapper);
-    }
-
     private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 
-    public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields(contacts);
-
-        Households.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
-    }
 }
