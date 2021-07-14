@@ -77,9 +77,14 @@ class GeWidgetService {
             objectMappingDeveloperNameStub,
             true);
 
+        console.log(' *** Found obj mapping '+objectMappingDeveloperName+' for object stub '+objectMappingDeveloperNameStub);    
+
         const fieldMappingDeveloperNames = fieldMappingNameStubs.map(stub => {
             return getLikeMatchByKey(this.fieldMappingByDevName, stub, true);
         });
+
+        console.log(' *** Found field mappings '+fieldMappingDeveloperNames+' for field stubs '+fieldMappingNameStubs);    
+
 
         return {
             objectMappingDeveloperName,

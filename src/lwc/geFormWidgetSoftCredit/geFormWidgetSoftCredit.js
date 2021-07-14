@@ -8,6 +8,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api gift;
+    @api element;
     @track alertBanner = {};
 
     @track rowList = [];
