@@ -214,8 +214,8 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
 
         if (isOneToOneEnabled()) {
             for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (Households.needsOneToOneAccount(contactRecord, accountFor
-                        (contactRecord))) {
+                if (Households.isWithoutAccount(contactRecord)
+                        || Households.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
                     // Avoid creating a new contact with the 1:1 account of another contact
                     if (contactRecord.AccountId != null) {
                         contactRecord.AccountId = null;

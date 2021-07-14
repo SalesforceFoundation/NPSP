@@ -196,27 +196,26 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
-    /**
-     * @description Determines whether or not the contact needs a one to one account assigned.
-     * @param  The contact record to verify.
-     * @param  The existing account record assocatied with the contact.
-     * @return Boolean - true when the contact needs a one to one account.
-     */
-    //todo: fix
-    public static Boolean needsOneToOneAccount(Contact contactRecord, Account accountRecord) {
+    public static Boolean isWithoutAccount(Contact contactRecord) {
         return contactRecord.npe01__Private__c != true
-                && (contactRecord.AccountId == null
-                || (accountRecord != null
-                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE));
+                && contactRecord.AccountId == null;
     }
 
-    private static List<Contact> contactsWithoutAccounts2(Contacts contactsInstance) {
+    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
+        return contactRecord.npe01__Private__c != true
+                &&
+                (accountRecord != null
+                        && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                );
+    }
+
+    private static List<Contact> contactsWithoutAccountsAndOrganizationContacts(Contacts contactsInstance) {
         List<Contact> contactsWithoutAccounts2 = new List<Contact>();
         Map<Id, Account> accountsByIds = contactsInstance.accountById;
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
             Account account = accountsByIds.get(contactRecord.AccountId);
-            if (needsOneToOneAccount(contactRecord,
-                    account)) {
+            if (isWithoutAccount(contactRecord)
+                    || isOrganizationContact(contactRecord, account)) {
 
                 Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
 
@@ -518,7 +517,8 @@ public inherited sharing class Households extends fflib_SObjects {
         }
 
         if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
-            contactsWithoutAccounts.addAll(contactsWithoutAccounts2(contacts));
+            contactsWithoutAccounts.addAll(
+                    contactsWithoutAccountsAndOrganizationContacts(contacts));
         }
         return contactsWithoutAccounts;
     }
