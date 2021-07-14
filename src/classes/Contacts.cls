@@ -59,17 +59,6 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         set;
     }
 
-    @TestVisible
-    private ContactSelector contactSelector {
-        get {
-            if (contactSelector == null) {
-                contactSelector = new ContactSelector();
-            }
-            return contactSelector;
-        }
-        set;
-    }
-
     public Contacts(List<Contact> records) {
         this(records, null);
     }
@@ -1253,9 +1242,4 @@ public inherited sharing class Contacts extends fflib_SObjects implements IConta
         ]);
     }
 
-    private List<Contact> getContactsWithAccountAndAddressFields() {
-        List<Contact> contactsWithAccountAndAddressFields =
-                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
-        return contactsWithAccountAndAddressFields;
-    }
 }
