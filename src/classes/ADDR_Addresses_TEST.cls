@@ -717,7 +717,8 @@ public with sharing class ADDR_Addresses_TEST {
             MailingCity = 'City1',
             MailingStreet = 'Street1',
             MailingPostalCode = 'Zip1',
-            MailingCountry = 'United States'
+            MailingCountry = 'United States',
+            npe01__Primary_Address_Type__c = 'Home'
         );
         insert contact;
         System.debug(testAddresses);
@@ -728,12 +729,13 @@ public with sharing class ADDR_Addresses_TEST {
 
         Contact updatedContact = [SELECT Current_Address__r.MailingStreet__c, Current_Address__r.MailingCity__c,
                                          is_Address_Override__c,
+                                         Undeliverable_Address__c,
                                          Current_Address__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
         System.debug(updatedContact.Current_Address__r.MailingStreet__c);
         System.debug(updatedContact);
-        System.debug([select MailingStreet__c from address__c where id = :updatedContact.Current_Address__c]);
+        System.debug([select MailingStreet__c from address__c].size());
         System.assert(updatedContact.is_Address_Override__c == true);
         System.assertEquals(testAddresses[1].Undeliverable__c, updatedContact.Undeliverable_Address__c);
     }
