@@ -73,23 +73,19 @@ private class GiftBatch_TEST {
     }
 
     @isTest
-    static void shouldReturnTotalRowAmount() {
+    static void shouldReturnTotalCountOf10AndTotalAmountOf35050() {
+        AggregateResultProxy mockTotalsResult = new AggregateResultProxy()
+            .withAliasAndValue('recordCount', 10);
+        AggregateResultProxy mockedTotalAmountResult = new AggregateResultProxy()
+            .withAliasAndValue('totalAmount', 350.50);
+
+        GiftBatchTotals totals = new GiftBatchTotals(mockTotalsResult, mockedTotalAmountResult);
+
         GiftBatch giftBatch = new GiftBatch();
-        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
+        giftBatch.totals = totals;
 
-        System.assertEquals(300, giftBatch.total().amount());
-    }
-
-    @isTest
-    static void shouldReturnTotalRowCount() {
-        GiftBatch giftBatch = new GiftBatch();
-        giftBatch.typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-            JSON.deserialize(DUMMY_DATA_IMPORT_MODEL,
-                BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-
-        System.assertEquals(2, giftBatch.totalCount());
+        System.assertEquals(10, giftBatch.totalCount());
+        System.assertEquals(350.50, giftBatch.total().amount());
     }
 
     @isTest

@@ -40,19 +40,28 @@ public inherited sharing class GiftBatchTotals {
     private Integer expiredPayments = 0;
     private Integer authorizedPayments = 0;
     private Integer processingGifts = 0;
+    private Decimal totalAmount = 0;
 
     public GiftBatchTotals() {}
 
     public GiftBatchTotals(List<AggregateResultProxy> results) {
         for (AggregateResultProxy result : results) {
-            GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
-            addToTotalGiftsCountFor(statusGroup);
-            countProcessedGiftsFor(statusGroup);
-            addToFailedGiftsCountFor(statusGroup);
-            addToExpiredPaymentGiftsCountFor(statusGroup);
-            addToAuthorizedPaymentGiftsCountFor(statusGroup);
-            addToProcessingGiftsCountFor(statusGroup);
+            populateTotalsWith(result);
         }
+    }
+
+    public GiftBatchTotals(GiftBatchId giftBatchId, GiftBatchSelector giftBatchSelector) {
+        AggregateResultProxy totalsProxy =
+            giftBatchSelector.selectGiftBatchGroupedByStatusBy(giftBatchId);
+        AggregateResultProxy totalAmountProxy =
+            giftBatchSelector.getDataImportBatchTotalAmount(giftBatchId);
+
+        populateTotalsWith(totalsProxy, totalAmountProxy);
+    }
+
+    @TestVisible
+    private GiftBatchTotals(AggregateResultProxy result, AggregateResultProxy totalAmount) {
+        populateTotalsWith(result, totalAmount);
     }
 
     public Map<String, Integer> toMap() {
@@ -65,6 +74,31 @@ public inherited sharing class GiftBatchTotals {
             GiftBatchAggregateGroupName.AUTHORIZED_PAYMENT.name() => this.authorizedPayments,
             GiftBatchAggregateGroupName.PROCESSING.name() => this.processingGifts
         };
+    }
+
+    public Integer totalGifts() {
+        return this.totalGifts;
+    }
+
+    public Decimal totalAmount() {
+        return this.totalAmount;
+    }
+
+    private void populateTotalsWith(AggregateResultProxy result, AggregateResultProxy totalAmount) {
+        populateTotalsWith(result);
+        if (totalAmount != null) {
+            this.totalAmount = (Decimal) totalAmount.getValuesByAlias().get('totalAmount');
+        }
+    }
+
+    private void populateTotalsWith(AggregateResultProxy result) {
+        GiftBatchStatusGroup statusGroup = new GiftBatchStatusGroup(result);
+        addToTotalGiftsCountFor(statusGroup);
+        countProcessedGiftsFor(statusGroup);
+        addToFailedGiftsCountFor(statusGroup);
+        addToExpiredPaymentGiftsCountFor(statusGroup);
+        addToAuthorizedPaymentGiftsCountFor(statusGroup);
+        addToProcessingGiftsCountFor(statusGroup);
     }
 
     private void addToFailedGiftsCountFor(GiftBatchStatusGroup statusGroup) {

@@ -69,4 +69,28 @@ public inherited sharing class GiftBatchSelector {
         }
         return results;
     }
+
+    public AggregateResultProxy selectGiftBatchGroupedByStatusBy(GiftBatchId giftBatchId) {
+        AggregateResult result =
+            [SELECT COUNT(Id)recordCount,
+                Status__c,
+                Payment_Status__c,
+                NPSP_Data_Import_Batch__c
+            FROM DataImport__c
+            WHERE NPSP_Data_Import_Batch__c = :giftBatchId.value()
+            GROUP BY
+                Status__c,
+                Payment_Status__c,
+                NPSP_Data_Import_Batch__c];
+        return new AggregateResultProxy().withAggregateResult(result);
+    }
+
+    public AggregateResultProxy getDataImportBatchTotalAmount(GiftBatchId giftBatchId) {
+        AggregateResult result = [
+            SELECT SUM(Donation_Amount__c)totalAmount
+            FROM DataImport__c
+            WHERE NPSP_Data_Import_Batch__c = :giftBatchId.value()
+        ];
+        return new AggregateResultProxy().withAggregateResult(result);
+    }
 }

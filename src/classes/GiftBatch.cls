@@ -36,7 +36,10 @@
 public inherited sharing class GiftBatch implements IGiftBatch {
 
     @TestVisible private GiftBatchId giftBatchId;
-    private DataImportBatch__c batch;
+    @TestVisible private DataImportBatch__c batch;
+    @TestVisible private Money total;
+    @TestVisible private Integer totalCount;
+    @TestVisible private GiftBatchTotals totals;
 
     @TestVisible
     private Gifts gifts = new Gifts();
@@ -81,8 +84,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void captureAuthorizedGifts() {
-        elevateBatchService.enqueuePaymentCaptureJobFor(
-            this.giftBatchId.value(), gifts?.elevateBatchIds());
+        elevateBatchService.enqueuePaymentCaptureJobFor(id(), gifts?.elevateBatchIds());
         gifts.authorizedToPaymentProcessingStatus();
     }
 
@@ -93,7 +95,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public void processGifts() {
         gifts.giftsToProcessingStatus();
         captureAuthorizedGifts();
-        BDI_DataImport_API.processDataImportBatches(new List<Id>{ this.giftBatchId.value() });
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{ id() });
     }
 
     public void updateRecords() {
@@ -109,24 +111,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public Money total() {
-        //todo: use giftBatch Totals (and place in Selector layer)
-        return new Money(dataImportModel().totalRowAmount, 'US');
+        return new Money(this.totals.totalAmount(), 'US');
     }
 
     public Integer totalCount() {
-        //todo: use giftBatch Totals (and place in Selector layer)
-        return dataImportModel().totalCountOfRows;
-    }
-
-    @TestVisible
-    private BGE_DataImportBatchEntry_CTRL.DataImportModel typedModel;
-    private BGE_DataImportBatchEntry_CTRL.DataImportModel dataImportModel() {
-        if (typedModel == null) {
-            String model = BGE_DataImportBatchEntry_CTRL.getDataImportModel(this.giftBatchId.value());
-            typedModel = (BGE_DataImportBatchEntry_CTRL.DataImportModel)
-                    JSON.deserialize(model,
-                            BGE_DataImportBatchEntry_CTRL.DataImportModel.class);
-        }
-        return typedModel;
+        return this.totals.totalGifts();
     }
 }
