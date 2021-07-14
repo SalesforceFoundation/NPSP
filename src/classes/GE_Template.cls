@@ -274,7 +274,7 @@ public with sharing class GE_Template {
             }
 
             List<String> giftFieldApiNames = new List<String>();
-            BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(true).fieldMappingSet;
+            BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(false).fieldMappingSet;
             for (Element element : allElements) {
 
                 if (element.elementType == FIELD_ELEMENT_TYPE && element.dataImportFieldMappingDevNames.size() > 0) {
