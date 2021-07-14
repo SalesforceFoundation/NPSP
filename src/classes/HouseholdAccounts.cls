@@ -32,8 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class HouseholdAccounts extends fflib_SObjects implements
-                IHouseholds {
+public inherited sharing class HouseholdAccounts extends fflib_SObjects {
 
     /*******************************************************************************************************
     * @description Account filter when querying Contacts

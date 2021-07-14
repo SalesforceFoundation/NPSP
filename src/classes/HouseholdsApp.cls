@@ -111,29 +111,6 @@ public inherited sharing class HouseholdsApp {
                 contactsWithAccountAndAddressFields);
     }
 
-    /**
-     * @description Determines whether or not the contact needs a one to one account assigned.
-     * @param  The contact record to verify.
-     * @param  The existing account record assocatied with the contact.
-     * @return Boolean - true when the contact needs a one to one account.
-     */
-    public static Boolean isMissingAccount(Contact contactRecord) {
-        return contactRecord.npe01__Private__c != true
-                && contactRecord.AccountId == null;
-    }
-
-    /**
-     * @description Determines whether or not the contact needs a one to one account assigned.
-     * @param  The contact record to verify.
-     * @param  The existing account record assocatied with the contact.
-     * @return Boolean - true when the contact needs a one to one account.
-     */
-    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
-        return contactRecord.npe01__Private__c != true
-                && (accountRecord != null
-                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
-    }
-
     private List<Contact> getContactsWithAccountAndAddressFields(Contacts contacts) {
         List<Contact> contactsWithAccountAndAddressFields =
                 contactSelector.getContactsWithAccountAndAddressFields(contacts.getRecords());
