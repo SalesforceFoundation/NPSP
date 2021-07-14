@@ -16,24 +16,24 @@
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_3-of-12">                       
                             <lightning-input-field field-name={roleFieldApiName}
-                                                    data-fieldname={roleFieldApiName}
-                                                    required
-                                                    onchange={handleFieldValueChange}
-                                                    value={roleValue}
-                                                    class="help-text-hidden slds-m-bottom_none"
-                                                    data-qa-locator={qaLocatorSoftCreditRole}
-                                                    disabled={disabled}>
+                                                   data-fieldname={roleFieldApiName}
+                                                   required
+                                                   onchange={handleFieldValueChange}
+                                                   value={roleValue}
+                                                   class="help-text-hidden slds-m-bottom_none"
+                                                   data-qa-locator={qaLocatorSoftCreditRole}
+                                                   disabled={disabled}>
                             </lightning-input-field>
                         </div>
                         <div class="slds-p-horizontal_x-small slds-p-vertical_xx-small slds-col slds-size_6-of-12">
                             <template if:true={isRemovable}>
                                 <lightning-button-icon class="slds-m-right_xxx-small "
-                                                    icon-name="utility:delete"
-                                                    alternative-text={labelGeAssistiveFormFieldRemove}
-                                                    size="medium"
-                                                    onclick={remove}
-                                                    data-qa-locator={qaLocatorDeleteRow}
-                                                    disabled={disabled}>
+                                                       icon-name="utility:delete"
+                                                       alternative-text={labelGeAssistiveFormFieldRemove}
+                                                       size="medium"
+                                                       onclick={remove}
+                                                       data-qa-locator={qaLocatorDeleteRow}
+                                                       disabled={disabled}>
                                 </lightning-button-icon>                                
                             </template>
                         </div>                   
