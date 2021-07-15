@@ -273,7 +273,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addr);
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accId));
-            npspHouseholdAccount.isBillingAddressUndeliverable(npspAddress.isUndeliverable());
+            npspHouseholdAccount.setBillingAddressUndeliverableStatus(npspAddress.isUndeliverable());
 
             if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
                 npspHouseholdAccount.billingAddress(npspAddress);

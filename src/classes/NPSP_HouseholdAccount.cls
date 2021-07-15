@@ -82,7 +82,7 @@ public inherited sharing class NPSP_HouseholdAccount {
                 null);
     }
 
-    public void isBillingAddressUndeliverable(Boolean isUndeliverable) {
+    public void setBillingAddressUndeliverableStatus(Boolean isUndeliverable) {
         householdAccount.Undeliverable_Address__c = isUndeliverable;
     }
 
