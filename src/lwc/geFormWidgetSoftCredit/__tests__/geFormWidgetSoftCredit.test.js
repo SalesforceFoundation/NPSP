@@ -1,7 +1,7 @@
 import { createElement } from 'lwc';
-import GeFormWidgetSoftCreditRow from 'c/geFormWidgetSoftCreditRow';
+import GeFormWidgetSoftCredit from 'c/geFormWidgetSoftCredit';
 
-describe('c-form-widget-soft-credit-row', () => {
+describe('c-form-widget-soft-credit', () => {
     afterEach(() => {
         clearDOM();
     });
@@ -11,23 +11,26 @@ describe('c-form-widget-soft-credit-row', () => {
     }
 
     const setup = () => {
-        const element = createElement('c-form-widget-soft-credit-row', {
-            is: GeFormWidgetSoftCreditRow
+        const element = createElement('c-form-widget-soft-credit', {
+            is: GeFormWidgetSoftCredit
         });
-        element.disabled = false;
+        let aGift = {
+            softCredits: []
+        };
+        element.gift = aGift;
         document.body.appendChild(element);
         return element;
     }
 
     describe('component render', () => {
-        it('renders the modal title', async () => {
+        it('renders the title', async () => {
             const element = setup();
 
             await flushPromises();
 
-            const headerElement = element.shadowRoot.querySelector('h1');
+            const headerElement = element.shadowRoot.querySelector('h2');
             const text = headerElement.innerHTML;
-            expect(text).toBe('This is a title');
+            expect(text).toBe('c.commonSoftCredits');
         });      
     });
 });
