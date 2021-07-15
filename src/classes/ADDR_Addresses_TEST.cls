@@ -705,9 +705,8 @@ public with sharing class ADDR_Addresses_TEST {
     }
 
     @isTest
-    private static void updatedUndeliverableAddressShouldSyncToAccountAndContactsAndOverrides() {
+    private static void updatedUndeliverableAddressShouldSyncToAccountAndHouseholdContactOverrides() {
         createTestData(2, 2);
-        TDTM_DefaultConfig.startTestDataInit();
         Address__c overrideAddressToCreate = new Address__c();
             overrideAddressToCreate.Address_Type__c = 'Home';
             overrideAddressToCreate.MailingStreet__c = 'Street Override';
@@ -717,7 +716,6 @@ public with sharing class ADDR_Addresses_TEST {
             overrideAddressToCreate.MailingCountry__c = 'United States';
             overrideAddressToCreate.Household_Account__c = testAccounts[0].Id;
         insert overrideAddressToCreate;
-        TDTM_DefaultConfig.stopTestDataInit();
 
         Contact contact = new Contact(
             FirstName = 'Test Contact',
@@ -747,6 +745,77 @@ public with sharing class ADDR_Addresses_TEST {
                                   WHERE Id = :contact.Id];
         System.assert(updatedContact.is_Address_Override__c == true);
         System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c);
+    }
+
+    @isTest
+    private static void updatedUndeliverableDefaultAddressShouldSyncToContactOverrideNonHousehold() {
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
+                npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
+
+        List<Account> organizationAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert organizationAccounts;
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+
+        buildTestAddress(3);
+        for (Integer i = 0; i < testAddresses.size(); i++) {
+            Address__c address = testAddresses[i];
+            address.Household_Account__c = organizationAccounts[0].Id;
+            address.Default_Address__c = true;
+        }
+        insert testAddresses;
+
+        for (Contact contact : testContacts) {
+            populateContactAddress(contact, testAddresses[0]);
+            contact.is_Address_Override__c = true;
+            contact.Current_Address__c = testAddresses[0].Id;
+        }
+        insert testContacts;
+
+        Test.startTest();
+            testAddresses[0].Undeliverable__c = true;
+            update testAddresses;
+        Test.stopTest();
+
+        Contact updatedContact = [SELECT Undeliverable_Address__c
+                                  FROM Contact
+                                  WHERE Id = :testContacts[0].Id];
+        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+    }
+
+    @isTest
+    private static void updatedUndeliverableNonDefaultAddressShouldSyncToContactOverrideNonHousehold() {
+        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
+                npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
+
+        List<Account> organizationAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        insert organizationAccounts;
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+
+        buildTestAddress(3);
+        for (Integer i = 0; i < testAddresses.size(); i++) {
+            Address__c address = testAddresses[i];
+            address.Household_Account__c = organizationAccounts[0].Id;
+        }
+        insert testAddresses;
+
+        for (Contact contact : testContacts) {
+            populateContactAddress(contact, testAddresses[0]);
+            contact.is_Address_Override__c = true;
+            contact.Current_Address__c = testAddresses[0].Id;
+        }
+        insert testContacts;
+
+        Test.startTest();
+        testAddresses[0].Undeliverable__c = true;
+        update testAddresses;
+        Test.stopTest();
+
+        Contact updatedContact = [SELECT Undeliverable_Address__c
+        FROM Contact
+        WHERE Id = :testContacts[0].Id];
+        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
     }
 
     /*********************************************************************************************************

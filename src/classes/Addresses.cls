@@ -517,7 +517,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Address__c addrOld = oldVersionOf(addr);
             NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
             if ((!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE) ||
-                isUndeliverableStatusChanged(addr, addrOld)) && !isDefault(addr)) {
+                isUndeliverableStatusChanged(addr, addrOld))) {
 
                 nonDefaultsWithChanges.put(idOf(addr), addr);
             }
@@ -999,7 +999,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     private void updateAddrOverrides(Map<Id, Address__c> mapAddrIdAddr,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> listCon = [select Id, is_Address_Override__c, Current_Address__c from Contact where is_Address_Override__c = true and Current_Address__c in :mapAddrIdAddr.keySet()];
-        List<Contact> listConAll = [SELECT Id, is_Address_Override__c, Current_Address__c FROM Contact];
         for (Contact con : listCon) {
             NPSP_Contact npspContact = new NPSP_Contact(con);
             NPSP_Address npspAddress = new NPSP_Address(mapAddrIdAddr.get(npspContact.currentAddress()));
