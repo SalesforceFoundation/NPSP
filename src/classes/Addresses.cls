@@ -300,12 +300,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     NPSP_Contact npspContact = new NPSP_Contact(con);
                     // detect that the contact's current address was deleted.
                     // and if so clear any override flag so it will get the default address.
+                    if (npspContact.currentAddress() == null) {
+                        npspContact.getRecord().is_Address_Override__c = false;
+                    }
                     if (npspContact.hasAddressOverride() == false) {
                         npspContact.getRecord().Undeliverable_Address__c =
                                 npspHouseholdAccount.getRecord().Undeliverable_Address__c;
-                    }
-                    if (npspContact.currentAddress() == null) {
-                        npspContact.getRecord().is_Address_Override__c = false;
                     }
                     if (npspContact.hasAddressOverride() == false ||
                             npspContact.currentAddress() == addr.Id) {
