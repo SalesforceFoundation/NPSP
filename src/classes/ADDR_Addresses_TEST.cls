@@ -563,7 +563,6 @@ public with sharing class ADDR_Addresses_TEST {
         }
         insert testAddresses;
 
-
         Test.startTest();
             for (Address__c address : testAddresses) {
                 address.Undeliverable__c = true;

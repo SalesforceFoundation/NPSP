@@ -273,12 +273,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addr);
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accId));
-            npspHouseholdAccount.setBillingAddressUndeliverableStatus(npspAddress.isUndeliverable());
 
-            if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress)) {
+            if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress) ||
+                npspHouseholdAccount.undeliverableAddressStatus() != npspAddress.isUndeliverable()) {
+
                 npspHouseholdAccount.billingAddress(npspAddress);
+                npspHouseholdAccount.setBillingAddressUndeliverableStatus(npspAddress.isUndeliverable());
+
+                listAccUpdate.add(npspHouseholdAccount.getRecord());
             }
-            listAccUpdate.add(npspHouseholdAccount.getRecord());
 
             // check other addresses on this household that are no longer the default
             if (mapAccIdListAddrHH != null && mapAccIdListAddrHH.size() > 0 && mapAccIdListAddrHH.get(accId) != null) {
