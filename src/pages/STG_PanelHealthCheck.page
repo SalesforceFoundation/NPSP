@@ -53,7 +53,7 @@
         <apex:outputPanel rendered="{!isAllTestsPassed}" id="allTestsPassed" >
             <div class="slds-media">
                 <div class="slds-media__figure">
-                    <c:UTIL_SLDS_Icon icon="approval" iconCategory="action" assistiveText="{!$Label.healthLabelAllTestsPassed}" size="small" />
+                    <c:UTIL_SLDS_Icon icon="check" iconCategory="utility" assistiveText="{!$Label.healthLabelAllTestsPassed}" size="x-small" fillColor="green"/>
                     {!$Label.healthLabelAllTestsPassed}
                 </div>
             </div>
