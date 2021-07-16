@@ -36,12 +36,39 @@
 public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
-    @TestVisible private List<DataImport__c> dataImports;
+    @TestVisible private List<DataImport__c> dataImports = new List<DataImport__c>();
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private GiftSelector giftSelector;
+
+    public Gifts() {}
 
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setElevateBatchIds(dataImports);
+    }
+
+    public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        this.dataImports = this.giftSelector.getGiftsFor(giftBatchId);
+        setElevateBatchIds(dataImports);
+    }
+
+    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        this.dataImports = this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId));
+        setElevateBatchIds(dataImports);
+    }
+
+    public List<Gift> all() {
+        List<Gift> gifts = new List<Gift>();
+        for (DataImport__c dataImport : dataImports) {
+            gifts.add(new Gift(dataImport));
+        }
+        return gifts;
+    }
+
+    public Integer size() {
+        return this.dataImports.size();
     }
 
     public List<DataImport__c> authorizedGifts() {
@@ -114,7 +141,7 @@ public with sharing class Gifts {
     private void setElevateBatchIds(List<DataImport__c> dataImports) {
         elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImports) {
-            if (dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+            if (dataImport?.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
                 elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }
