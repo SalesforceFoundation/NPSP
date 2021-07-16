@@ -98,11 +98,18 @@ global with sharing class Callable_API implements System.Callable {
             } when 'rd2.executedatamigration' {
                 return RD2_EnablementDelegate_CTRL.callableApiRunMigration();
 
+            } when 'rd2.pause' {
+                Map<Id, RD2_ApiService.PauseObject> pauseObjectsById = paramService
+                    .withRequiredParamCheck()
+                    .getPauseObjectsById(CallableApiParameters.PARAM_PAUSE_DATA);
+
+                return new RD2_ApiService().pause(pauseObjectsById);
+
             } when 'rd2.queryschedules' {
                 Set<Id> rdIds = paramService
                     .withRequiredParamCheck()
                     .getSetId(CallableApiParameters.PARAM_RECORD_IDS);
-                    
+
                 return new RD2_ApiService().querySchedules(rdIds);
 
             } when 'rd2.queryinstallments' {
