@@ -77,6 +77,10 @@ Validate Errors When Field Is Renamed
     # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
+    #more verification for timing issues
+    Verify Field Default Value
+    ...                                 Data Import: Donation Donor=Account1
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -109,6 +113,10 @@ Validate Errors When Field Is Renamed
     ...                                 Opportunity: Amount=10
     # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
+    #more verification for timing issues
+    Verify Field Default Value
+    ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
