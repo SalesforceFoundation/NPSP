@@ -42,6 +42,7 @@ private with sharing class Callable_API_TEST {
     private static final String RD2_EXECUTE_MIGRATION_ACTION = 'RD2.ExecuteDataMigration';
     private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
     private static final String JOB_SCHEDULE_ACTION = 'Apex.ScheduleJob';
+    private static final String RD2_PAUSE_ACTION = 'rd2.pause';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -152,5 +153,40 @@ private with sharing class Callable_API_TEST {
         AsyncApexJob job = new TEST_SObjectGateway.AsyncApexJobGateway()
             .getRecord('RD2_DataMigration_BATCH');
         System.assertNotEquals(null, job, 'The batch should be executed');
+    }
+
+    @isTest
+    private static void shouldProcessPauseRequestWhenCallingPauseAPI() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        
+
+        Map<String, Object> pauseData = new Map<String, Object> {
+            'startDate' => Date.Parse('04/02/2019'),
+            'endDate' => Date.Parse('7/02/2019'),
+            'unPause' => false,
+            'statusReason' => 'Vacation'
+        };
+        Map<Id,Object> rdPauseData = new Map<Id,Object>{
+            UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => pauseData
+        };
+        
+        Map<String, Object> params = new Map<String, Object> { CallableApiParameters.PARAM_PAUSE_DATA => rdPauseData };
+        Callable callable = (System.Callable)Type.forName('', 'Callable_Api').newInstance();
+        
+        Test.startTest();
+        String response = (String) callable.call(RD2_PAUSE_ACTION, params);
+        Test.stopTest();
+    
+        Map<String, RD2_ApiService.PauseObject> result =
+            (Map<String, RD2_ApiService.PauseObject>)JSON.deserialize(response, Map<String, RD2_ApiService.PauseObject>.class);
+
+        RD2_ApiService.PauseObject returnPause = result.get(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID);
+
+        System.assertNotEquals(null, returnPause.isSuccess, 'Expect a PauseObject payload is returned');
+        System.assertEquals(false, returnPause.isSuccess, 'Expect the operation fail because of the invalid Id');
+
+        String expectedErrorMessage = String.format(System.Label.RD2_InvalidRecurringDonationId,
+            new List<String> { UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID });
+        System.assertEquals(expectedErrorMessage, returnPause.error, 'An error with unexpected Id should be return');
     }
 }
