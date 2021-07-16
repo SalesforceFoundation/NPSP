@@ -206,7 +206,7 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
 
     private static Boolean hasElevateWidgetOnTemplate(Id batchId) {
         if (giftBatch == null) {
-            giftBatch = new GiftBatch(batchId);
+            giftBatch = new GiftBatch(new GiftBatchId(batchId));
         }
         return giftBatch.hasElevateWidget();
     }

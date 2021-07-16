@@ -30,40 +30,39 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description Aggregate class for soft credits.
 */
-public with sharing class GiftBatchService {
+public with sharing class SoftCredits {
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
+    private List<OpportunityContactRole> opportunityContactRoles;
 
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
+    public SoftCredits(List<OpportunityContactRole> opportunityContactRoles) {
+        this.opportunityContactRoles = opportunityContactRoles;
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.processGifts();
+    public List<OpportunityContactRole> all() {
+        return opportunityContactRoles;
     }
 
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
-        giftBatch.updateRecords();
+    public Integer size() {
+        return opportunityContactRoles.size();
     }
 
-    public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
-        GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        return new GiftBatchView(giftBatchDTO);
+    public void add(OpportunityContactRole opportunityContactRole) {
+        this.opportunityContactRoles.add(opportunityContactRole);
+    }
+
+    public void addAll(List<OpportunityContactRole> moreOpportunityContacRoles) {
+        this.opportunityContactRoles.addAll(moreOpportunityContacRoles);
+    }
+
+    public List<OpportunityContactRole> unprocessed() {
+        List<OpportunityContactRole> unprocessed = new List<OpportunityContactRole>();
+        for (OpportunityContactRole ocr : this.opportunityContactRoles) {
+            if (ocr.id == null) {
+                unprocessed.add(ocr);
+            }
+        }
+        return unprocessed;
     }
 }

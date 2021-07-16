@@ -35,7 +35,95 @@
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
 @isTest
-private with sharing class GE_GiftEntryController_TEST {
+public with sharing class GE_GiftEntryController_TEST {
+
+    // TODO: can remove integration test later, here to verify existing behavior is not changed
+    @isTest
+    static void shouldReturn2OpenDonationsForTheGivenDonor() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
+
+        Account dummyOrg = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert dummyOrg;
+
+        List<Opportunity> opps = new List<Opportunity> {
+            new Opportunity(Name='Dummy Opp 0', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=1, CloseDate=Date.today(), AccountId=dummyOrg.Id),
+            new Opportunity(Name='Dummy Opp 1', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=2, CloseDate=Date.today(), AccountId=dummyOrg.Id)
+        };
+        insert opps;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            )
+        };
+        insert payments;
+
+        String openDonationsForDummyOrgString = GE_GiftEntryController.getOpenDonations(dummyOrg.Id, 'Account');
+        List<GE_GiftEntryController.OpportunityWrapper> openDonationsForDummyOrg =
+           (List<GE_GiftEntryController.OpportunityWrapper>)
+           JSON.deserialize(openDonationsForDummyOrgString, List<GE_GiftEntryController.OpportunityWrapper>.class);
+
+        System.assertEquals(2, openDonationsForDummyOrg.size());
+        System.assertEquals('Dummy Opp 0', openDonationsForDummyOrg[0].opportunity.Name);
+        System.assertEquals(3, openDonationsForDummyOrg[0].opportunity.npe01__OppPayment__r.size());
+
+        // TODO: assert new DonationService method matches behavior of existing controller method
+        DonationService donationService = new DonationService();
+        DonationsView donationsView = donationService.getDonationsView(dummyOrg.Id);
+
+        System.assertEquals(2, donationsView.donations.size());
+        System.assertEquals('Dummy Opp 0', donationsView.donations[0].opportunity.get('Name'));
+        System.assertEquals(3, donationsView.donations[0].unpaidPayments.size());
+    }
+
+    @isTest
+    static void shouldReturnAGiftView() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        Form_Template__c defaultTemplate = new Form_Template__c( Format_Version__c = '1.0' );
+
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        defaultTemplate.Template_JSON__c = templateJSON;
+        insert defaultTemplate;
+
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = defaultTemplate.Id;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+        Date donationDate = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Account1_Name__c = 'Dummy First Name',
+            Donation_Date__c = donationDate,
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        insert dataImport;
+
+        test.startTest();
+        GiftService service = new GiftService();
+        GiftView viewModel = service.viewModelFrom(new GiftId(dataImport.id));
+
+        String account1NameField = String.valueOf(DataImport__c.Account1_Name__c);
+        System.assertEquals('Dummy First Name', viewModel.fields.get(account1NameField));
+        System.assertEquals(2, viewModel.softCredits.all.size());
+        test.stopTest();
+    }
 
     @isTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
@@ -786,5 +874,4 @@ private with sharing class GE_GiftEntryController_TEST {
             return null;
         }
     }
-
 }
