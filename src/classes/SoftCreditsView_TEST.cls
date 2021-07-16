@@ -30,40 +30,40 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description SoftCreditsView tests.
 */
-public with sharing class GiftBatchService {
+@isTest
+private class SoftCreditsView_TEST {
+    @isTest
+    static void shouldReturn2OpportunityContactRolesFromAdditionalObjectJSON() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
+        SoftCredits softCredits =
+            new AdditionalObjectJSON(additionalObjectStringWithSoftCredits)
+            .asSoftCredits();
+        SoftCreditsDTO softCreditsDTO = new SoftCreditsDTO(softCredits);
+        SoftCreditsView softCreditsView = new SoftCreditsView(softCreditsDTO);
 
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
+        System.assertEquals(2, softCreditsView.all.size());
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.processGifts();
-    }
+    @isTest
+    static void shouldReturn0OpportunityContactRoles() {
+        String additionalObjectStringWithGeneralAccountUnits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withGeneralAccountingUnits(3)
+            .build();
 
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
-        giftBatch.updateRecords();
-    }
+        SoftCredits softCredits =
+            new AdditionalObjectJSON(additionalObjectStringWithGeneralAccountUnits)
+            .asSoftCredits();
+        SoftCreditsDTO softCreditsDTO = new SoftCreditsDTO(softCredits);
+        SoftCreditsView softCreditsView = new SoftCreditsView(softCreditsDTO);
 
-    public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
-        GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        return new GiftBatchView(giftBatchDTO);
+        System.assertEquals(0, softCreditsView.all.size());
     }
 }
+

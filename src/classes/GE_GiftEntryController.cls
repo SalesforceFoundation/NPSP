@@ -39,7 +39,35 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
-    private static GiftBatchService giftBatchService = new GiftBatchService();
+    @TestVisible
+    private static GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    @TestVisible
+    private static GiftService giftService {
+        get {
+            if (giftService == null) {
+                giftService = new GiftService();
+            }
+            return giftService;
+        }
+        set;
+    }
+    private static DonationService donationService {
+        get {
+            if (donationService == null) {
+                donationService = new DonationService();
+            }
+            return donationService;
+        }
+        set;
+    }
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -85,6 +113,26 @@ public with sharing class GE_GiftEntryController {
             return dummySoftCredits;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView getGiftBatchView(Id dataImportBatchId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+            return giftBatchService.viewModelFrom(giftBatchId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftView getGiftView(Id dataImportId){
+        try {
+            GiftId giftId = new GiftId(dataImportId);
+            return giftService.viewModelFrom(giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 
@@ -381,6 +429,15 @@ public with sharing class GE_GiftEntryController {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled
+    public static DonationsView getOpenDonationsView(Id donorId) {
+        try {
+            return donationService.getDonationsView(donorId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 
