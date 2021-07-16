@@ -215,15 +215,12 @@ public with sharing class RD2_PauseForm_CTRL {
      * @return RecurringDonationSchedule__c
      */
     private static RecurringDonationSchedule__c buildPauseSchedule(PauseData pause) {
-        RecurringDonationSchedule__c schedule = new RecurringDonationSchedule__c(
-            RecurringDonation__c = pause.rdId,
-            IsPause__c = true,
-            StatusReason__c = pause.pausedReason == null ? null : pause.pausedReason.value,
-            StartDate__c = pause.startDate,
-            EndDate__c = pause.resumeAfterDate
+        return pauseHandler.createPauseSchedule(
+                pause.pausedReason?.value,
+                pause.startDate,
+                pause.resumeAfterDate,
+                pause.rdId
         );
-
-        return schedule;
     }
 
     /***
