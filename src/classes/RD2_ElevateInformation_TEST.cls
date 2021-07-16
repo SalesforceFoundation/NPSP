@@ -48,7 +48,7 @@ private with sharing class RD2_ElevateInformation_TEST {
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
 
-        Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+        Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
         System.assertEquals(true, ((Boolean) data.get('isElevateCustomer')),
             'The org should be Elevate customer');
@@ -80,7 +80,7 @@ private with sharing class RD2_ElevateInformation_TEST {
         System.runAs(standardUser) {
             Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
 
-            Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+            Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
             System.assertEquals(false, (Boolean) data.get('hasFieldUpdatePermission'),
                 'The user should not have RD fields update permission');
@@ -106,7 +106,7 @@ private with sharing class RD2_ElevateInformation_TEST {
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
 
-        Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+        Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
         System.assertEquals(false, ((Boolean) data.get('isElevateCustomer')),
             'The org should not be connected to Elevate');
@@ -122,7 +122,7 @@ private with sharing class RD2_ElevateInformation_TEST {
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(npe03__Recurring_Donation__c.getSObjectType());
 
-        Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+        Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
         System.assertNotEquals(null, ((String) data.get('alert')),
             'An alert should be returned when Enhanced Recurring Donations are not enabled');
@@ -139,7 +139,7 @@ private with sharing class RD2_ElevateInformation_TEST {
 
         Id recordId = UTIL_UnitTestData_TEST.mockId(Account.getSObjectType());
 
-        Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+        Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
         System.assertNotEquals(null, ((String) data.get('alert')),
             'An alert should be returned when the widget is added to a non-RD record page');
@@ -186,7 +186,7 @@ private with sharing class RD2_ElevateInformation_TEST {
 
         System.runAs(standardUser) {
 
-            Map<String, Object> data = RD2_ElevateInformation_CTRL.getPermissionData(recordId);
+            Map<String, Object> data = RD2_ElevateInformation_CTRL.getAppConfigurationData(recordId);
 
             System.assertEquals(true, ((Boolean) data.get('isElevateCustomer')),
                 'The org should be Elevate customer');
