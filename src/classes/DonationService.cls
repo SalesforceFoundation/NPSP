@@ -30,40 +30,24 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description Service class for Donations in NPSP.
 */
-public with sharing class GiftBatchService {
+public with sharing class DonationService {
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
-
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
+    @TestVisible
+    public DonationSelector donationSelector {
+        get {
+            if (donationSelector == null) {
+                donationSelector = new DonationSelector();
+            }
+            return donationSelector;
+        }
+        set;
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.processGifts();
-    }
-
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
-        giftBatch.updateRecords();
-    }
-
-    public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
-        GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        return new GiftBatchView(giftBatchDTO);
+    public DonationsView getDonationsView(Id donorId) {
+        Donations donations = new Donations(donorId, this.donationSelector);
+        DonationsDTO donationsDTO = new DonationsDTO(donations);
+        return new DonationsView(donationsDTO);
     }
 }

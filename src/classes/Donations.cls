@@ -30,40 +30,29 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gift Batches in NPSP.
+* @description Aggregate class for Donations in NPSP.
 */
-public with sharing class GiftBatchService {
+public with sharing class Donations {
 
-    public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
-        String.valueOf(DataImport__c.Donation_Amount__c), 
-        String.valueOf(DataImport__c.Donation_Date__c), 
-        String.valueOf(DataImport__c.Contact1Imported__c),
-        String.valueOf(DataImport__c.Contact1_Firstname__c), 
-        String.valueOf(DataImport__c.Contact1_Lastname__c), 
-        String.valueOf(DataImport__c.Account1Imported__c),
-        String.valueOf(DataImport__c.Account1_Name__c)
-    };
+    private List<Donation> donations = new List<Donation>();
+    private String donorType;
 
-    public Map<String, Integer> getGiftBatchTotalsMapFor(Id batchId) {
-        GiftBatches batches = new GiftBatches(new Set<Id> {batchId}, new GiftBatchSelector());
-        GiftBatchGroupedTotals groupedTotals = batches.getGroupedTotals();
-        return groupedTotals.totalsFor(batchId);
+    public Donations(Id donorId, DonationSelector selector) {
+        this.donorType = donorId.getSObjectType().getDescribe().getName();
+
+        String relationshipField;
+        if (donorType == SObjectType.Account.Name) {
+            relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
+        } else if (donorType == SObjectType.Contact.Name) {
+            relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
+        }
+
+        for (Opportunity opportunity : selector.getOpenDonations(relationshipField, donorId)) {
+            donations.add(new Donation(opportunity));
+        }
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.processGifts();
-    }
-
-    public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
-        giftBatch.updateRecords();
-    }
-
-    public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
-        GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
-        return new GiftBatchView(giftBatchDTO);
+    public List<Donation> all() {
+        return this.donations;
     }
 }
