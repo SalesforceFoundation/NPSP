@@ -35,6 +35,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>EnableChangeHistory__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When enabled, NPSP creates a Recurring Donation Change History record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</inlineHelpText>
+        <label>Enable Recurring Donation Change History</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>InstallmentOppFirstCreateMode__c</fullName>
         <description>Specifies the asynchronous processing behavior NPSP will use to create the first installment Opportunity for Recurring Donations. The default is Synchronous. Other options are Asynchronous and Asynchronous_When_Bulk.</description>
         <externalId>false</externalId>
