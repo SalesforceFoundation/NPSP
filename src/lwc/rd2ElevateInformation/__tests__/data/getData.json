@@ -6,5 +6,6 @@
     "showLastFourDigits": true,
     "showExpirationDate": true,
     "alert": null,
-    "commitmentURLPrefix": "https://example.org/recurring"
+    "commitmentURLPrefix": "https://example.org/recurring",
+    "closedStatuses": ["Closed"]
 }
