@@ -98,8 +98,7 @@ public inherited sharing class HouseholdService {
      */
     private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
-                && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
+        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
             if (isFutureEligible()) {
                 HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                         contactsInLegacyHouseholds
