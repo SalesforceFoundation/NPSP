@@ -405,7 +405,7 @@
     <label>Recurring Donation Change History</label>
     <nameField>
         <displayFormat>RDCH-{0000000}</displayFormat>
-        <label>Recurring Donation Change History Num</label>
+        <label>Recurring Donation Change History Number</label>
         <type>AutoNumber</type>
     </nameField>
     <pluralLabel>Recurring Donation Change History</pluralLabel>
