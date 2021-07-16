@@ -56,7 +56,7 @@ public with sharing class RD2_ElevateInformation_CTRL {
     * @return Map<String, Object> Data value by key
     */
     @AuraEnabled(cacheable=true)
-    public static Map<String, Object> getPermissionData(Id recordId) {
+    public static Map<String, Object> getAppConfigurationData(Id recordId) {
         Map<String, Object> data = new Map<String, Object>();
 
 
@@ -100,6 +100,8 @@ public with sharing class RD2_ElevateInformation_CTRL {
                 PS_IntegrationServiceConfig.Service service = new PS_IntegrationServiceConfig.Service();
                 data.put('commitmentURLPrefix', service.getViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE.COMMITMENT));
             }
+
+            data.put('closedStatuses', RD2_StatusMapper.getInstance().getClosedStatusValues());
 
         } catch (Exception e) {
             UTIL_AuraEnabledCommon.throwAuraHandledException(e.getMessage());

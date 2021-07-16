@@ -76,7 +76,7 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-    * @description Contains all included Opportunities and/or projected installments 
+    * @description Contains all included Opportunities and/or projected installments
     * mapped and sorted by their Close Date
     */
     private Map<Date, Record> recordByCloseDate = new Map<Date, Record>();
@@ -167,7 +167,7 @@ public inherited sharing class RD2_OpportunityMatcher {
 
     /***
     * @description Includes all Opportunites regardless of their status
-    * @param opps Recurring Donation Opportunities 
+    * @param opps Recurring Donation Opportunities
     * @return RD2_OpportunityMatcher This Opportunity matcher instance
     */
     public RD2_OpportunityMatcher include(List<Opportunity> opps) {
@@ -216,10 +216,11 @@ public inherited sharing class RD2_OpportunityMatcher {
             matched.attachInstallment(installment);
             return;
         }
-        
+
         //if the Installment period is not monthly, do not attempt to match by +/- match days range
         //and add the installment without matching Opp
-        if (installment.installmentPeriod != RD2_Constants.INSTALLMENT_PERIOD_MONTHLY) {
+        if (!shouldMatchByOpportunityCloseDateRange(installment)) {
+
             recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
             return;
         }
@@ -229,14 +230,14 @@ public inherited sharing class RD2_OpportunityMatcher {
         Date endDate = installment.nextDonationDate.addDays(nextDonationDateMatchDays);
 
         //check if there is any match with an Opp with Close Date < current date
-        matched = getFuzzyMatch(boundaryRecordByCloseDate, startDate, endDate);
+        matched = matchOpportunityByInstallmentDateRange(boundaryRecordByCloseDate, startDate, endDate);
         if (matched != null) {
             addMatchedBoundaryOpp(matched.getOpportunity(), installment);
             return;
         }
 
         //check if there is any match with an Opp with Close Date >= current date
-        matched = getFuzzyMatch(recordByCloseDate, startDate, endDate);
+        matched = matchOpportunityByInstallmentDateRange(recordByCloseDate, startDate, endDate);
         if (matched != null) {
             matched.attachInstallment(installment);
             return;
@@ -246,25 +247,30 @@ public inherited sharing class RD2_OpportunityMatcher {
         recordByCloseDate.put(installment.nextDonationDate, new Record(installment));
     }
 
+    private Boolean shouldMatchByOpportunityCloseDateRange(RD2_ScheduleService.Installment installment) {
+        return installment.installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_MONTHLY ||
+                installment.installmentPeriod == RD2_Constants.INSTALLMENT_PERIOD_YEARLY;
+    }
+
     /***
      * @description Determines if an Opportunity matches a projected installment.
-     * Matching is done by the exact Close Date match or when 
+     * Matching is done by the exact Close Date match or when
      * the Close Date is within the installment Next Donation Date +/- match days range.
      * @param recordByCloseDate Record by Close Date map
-     * @param startDate Installment range start date 
-     * @param endDate Installment range end date 
+     * @param startDate Installment range start date
+     * @param endDate Installment range end date
      * @return record Matched record
      */
-    private Record getFuzzyMatch(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
+    private Record matchOpportunityByInstallmentDateRange(Map<Date, Record> recordByCloseDate, Date startDate, Date endDate) {
 
-        for (Record record : recordByCloseDate.values()) {  
+        for (Record record : recordByCloseDate.values()) {
             if (record.isNew() //the record does not contain an Opp to match the installment with
                 || record.getInstallment() != null //the record has a matching installment already
             ) {
                 continue;
-            }   
+            }
 
-            Date closeDate = record.getCloseDate();            
+            Date closeDate = record.getCloseDate();
             if (closeDate >= startDate && closeDate <= endDate) {
                 return record;
             }
@@ -274,11 +280,11 @@ public inherited sharing class RD2_OpportunityMatcher {
     }
 
     /***
-     * @description Matches a future projected installment a past Opportunity 
+     * @description Matches a future projected installment a past Opportunity
      * having Close Date < currentDate but >= cutoffDate.
      * The record is added to the matched but it is sorted by the Opp Close Date so
      * returned records are ordered by the Close Date when matched or Next Donation Date when unmatched
-     * 
+     *
      * @param opp Opportunity
      * @param installment Installment
      * @return void
@@ -317,7 +323,7 @@ public inherited sharing class RD2_OpportunityMatcher {
             return recordByCloseDate.values();
         }
 
-        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());	
+        List<Date> closeDates = new List<Date>(recordByCloseDate.keySet());
         closeDates.sort();
 
         List<Record> records = new List<Record>();
@@ -345,7 +351,7 @@ public inherited sharing class RD2_OpportunityMatcher {
      * @description Wrapper for the extracted Opportunity based on the inclusion criteria
      * and/or matching installment. The record can have both Opportunity and installment
      * specified if they are matching, otherwise Opportunity only is specified for records
-     * with Close Date < current date and installment only is usually specified for 
+     * with Close Date < current date and installment only is usually specified for
      * records with Close Date >= current date unless there is a matching future Opportunity.
      * @return List<Record>
      */
@@ -378,7 +384,7 @@ public inherited sharing class RD2_OpportunityMatcher {
         }
 
         /***
-        * @description Returns Amount either from the Opportunity if it exists 
+        * @description Returns Amount either from the Opportunity if it exists
         * or from the projected installment.
         * If the future Opportunity is open and amount differs from the matching installment,
         * the future Open Opp Amount has precedence over the installment Amount.
