@@ -55,6 +55,7 @@ public class CallableApiParameters {
     public static final String PARAM_RECORD_IDS = 'RecordIds';
     public static final String PARAM_START_DATE = 'StartDate';
     public static final String PARAM_END_DATE = 'EndDate';
+    public static final String PARAM_PAUSE_DATA = 'PauseData';
 
     private Map<String, Object> params;
 
@@ -298,7 +299,7 @@ public class CallableApiParameters {
      * @return List<CRLP_Rollup>
      */
     public List<CRLP_Rollup> getRollupDefinitions(String paramName) {
-        validateRequiredParameter('List<CRLP_Rollup', paramName);
+        validateRequiredParameter('List<CRLP_Rollup>', paramName);
         try {
             String rollupDefsJson = getString(paramName);
             return (List<CRLP_Rollup>)JSON.deserialize(rollupDefsJson, List<CRLP_Rollup>.class);
@@ -324,6 +325,36 @@ public class CallableApiParameters {
             throwParameterException(paramType, paramName);
         }
         return null;
+    }
+
+    public Map<Id, RD2_ApiService.PauseObject> getPauseObjectsById(String paramName) {
+        String paramType = 'Map<Id, RD2_ApiService.PauseObject>';
+        validateRequiredParameter(paramType, paramName);
+        try {
+            return convertObjectIntoPauseObject((Map<Id, Object>) params.get(paramName));
+        } catch (Exception ex) {
+            throwParameterException('Map<Id, RD2_ApiService.PauseObject>', paramName);
+        }
+
+        return null;
+    }
+
+    private Map<Id, RD2_ApiService.PauseObject> convertObjectIntoPauseObject(Map<Id, Object> pauseParams) {
+        Map<Id, RD2_ApiService.PauseObject> pauseData = new Map<Id, RD2_ApiService.PauseObject>();
+
+        for (Id key : pauseParams.keySet()) {
+            Object pauseObject = pauseParams.get(key);
+
+            if (!(pauseObject instanceof String)) {
+                pauseObject = JSON.serialize(pauseObject);
+            }
+            RD2_ApiService.PauseObject convertedPauseStructure = 
+                (RD2_ApiService.PauseObject) JSON.deserialize((String) pauseObject, RD2_ApiService.PauseObject.class);
+
+            pauseData.put(key, convertedPauseStructure);
+        }
+
+        return pauseData;
     }
 
     /**

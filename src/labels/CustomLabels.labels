@@ -1730,6 +1730,14 @@
         <value>Please enter a valid Amount. The Amount cannot be less than 1.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotBePaused</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate RD cannot be paused</shortDescription>
+        <value>You can&apos;t pause Elevate connected Recurring Donations.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDClosedStatusCannotBeChanged</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2136,6 +2144,14 @@
         <value>End Date can&apos;t be in the future when Recurring Type is Fixed.</value>
     </labels>
     <labels>
+        <fullName>RD2_EnhancedRecurringDonationsNotEnabled</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enhanced Recurring Donations Not Enabled</shortDescription>
+        <value>Enhanced Recurring Donations is not enabled.</value>
+    </labels>
+    <labels>
         <fullName>RD2_EndDateElevateCannotBeInFuture</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
@@ -2397,6 +2413,14 @@
         <value>Paused</value>
     </labels>
     <labels>
+        <fullName>RD2_InvalidRecurringDonationId</fullName>
+        <categories>Recurring-Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when the Recurring Donation Id provided is invalid.</shortDescription>
+        <value>The Recurring Donation Id {0} is invalid.</value>
+    </labels>
+    <labels>
         <fullName>RD2_NextPaymentDonationDateInfo</fullName>
         <categories>Recurring-Donations, Elevate</categories>
         <language>en_US</language>
@@ -2501,6 +2525,22 @@
         <value>Paused Reason</value>
     </labels>
     <labels>
+        <fullName>RD2_PauseEndDateCannotBeMoreThanTwelveMonths</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause end date must be 1 year or less from start date</shortDescription>
+        <value>You can&apos;t pause Recurring Donations for more than a year. The pause End Date must be less than one year after the Start Date.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseEndDateMustBeGreaterThanStartDate</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause end date must be greater than start date</shortDescription>
+        <value>The pause End Date must be greater than the Start Date.</value>
+    </labels>
+    <labels>
         <fullName>RD2_PauseFirstDonationDateDynamicText</fullName>
         <categories>Recurring-Donations, Pause</categories>
         <language>en_US</language>
@@ -2539,6 +2579,22 @@
         <protected>true</protected>
         <shortDescription>Contains message indicating one installment has been selected to skip</shortDescription>
         <value>You&apos;ve selected 1 installment.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseStartDateMustBeTodayOrLater</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause start date must be today or later</shortDescription>
+        <value>You can&apos;t set a pause Start Date in the past. The pause Start Date must be today or later.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_PauseRequestMustIncludeBothStartDateAndEndDate</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD2 Pause start date and end date must be populated</shortDescription>
+        <value>A pause request must include both Start Date and End Date.</value>
     </labels>
     <labels>
         <fullName>RD2_PauseStatusMustExist</fullName>
@@ -2726,6 +2782,22 @@
         <protected>true</protected>
         <shortDescription>Validation and health check solution when status is not mapped to a state.</shortDescription>
         <value>Go to NPSP Settings | Recurring Donations | Status to State Mappings, or contact your administrator for help.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusMustBeActiveOrPause</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Pause request requires Active or Paused status</shortDescription>
+        <value>A pause request requires that the Recurring Donation Status is Active or Paused.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_UnPauseRequestCannotIncludeDates</fullName>
+        <categories>Recurring-Donations, Pause</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>UnPause requests cannot include dates</shortDescription>
+        <value>UnPause requests cannot include Start Date or End Date.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
@@ -5329,6 +5401,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>CallableApi Job.Schedule Invalid Class</shortDescription>
         <value>The Apex class {0} doesn&apos;&apos;t exist or doesn&apos;&apos;t implement the Schedulable interface.</value>
+    </labels>
+    <labels>
+        <fullName>CallableApiMaximumRecordsExceeded</fullName>
+        <categories>API</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>CallableApi Method Maximum Records Exceeded</shortDescription>
+        <value>{0} is the maximum number of records this CallableApi method can process in one API request. Use a batch or queueable job.</value>
     </labels>
     <labels>
         <fullName>CallableApiMethodNotImplemented</fullName>

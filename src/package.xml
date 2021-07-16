@@ -1807,6 +1807,7 @@
         <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
         <members>CallableApiJobScheduleInvalidClass</members>
+        <members>CallableApiMaximumRecordsExceeded</members>
         <members>CallableApiMethodNotImplemented</members>
         <members>CallableApiParameterError</members>
         <members>CallableApiProcessingError</members>
@@ -1868,6 +1869,7 @@
         <members>RD2_ElevatePermissionRequired</members>
         <members>RD2_ElevateRDAmountMustBeValid</members>
         <members>RD2_ElevateRDCampaignCannotUpdateToNull</members>
+        <members>RD2_ElevateRDCannotBePaused</members>
         <members>RD2_ElevateRDClosedStatusCannotBeChanged</members>
         <members>RD2_ElevateRDDayOfMonthCannotChange</members>
         <members>RD2_ElevateRDEffectiveDateMustBeValid</members>
@@ -1917,6 +1919,7 @@
         <members>RD2_EndDateElevateCannotBeInFuture</members>
         <members>RD2_EndDateMustBeLaterThanCloseWonOpp</members>
         <members>RD2_EndDateMustBeValidForFixedLength</members>
+        <members>RD2_EnhancedRecurringDonationsNotEnabled</members>
         <members>RD2_EntryFormCustomFieldsSectionHeader</members>
         <members>RD2_EntryFormDonationSectionHeader</members>
         <members>RD2_EntryFormDonorSectionHeader</members>
@@ -1947,6 +1950,7 @@
         <members>RD2_InstallmentFrequencyMustBeValid</members>
         <members>RD2_InstallmentPeriodMustBeValid</members>
         <members>RD2_InstallmentStatusSkipped</members>
+        <members>RD2_InvalidRecurringDonationId</members>
         <members>RD2_NextACHPaymentDonationDateInfo</members>
         <members>RD2_NextPaymentDonationDateInfo</members>
         <members>RD2_NumberInstallmentsCannotBeLessThanPaid</members>
@@ -1958,12 +1962,16 @@
         <members>RD2_PauseClosedRDErrorMessage</members>
         <members>RD2_PauseDeactivationSuccessMessage</members>
         <members>RD2_PauseDescription</members>
+        <members>RD2_PauseEndDateCannotBeMoreThanTwelveMonths</members>
+        <members>RD2_PauseEndDateMustBeGreaterThanStartDate</members>
         <members>RD2_PauseFirstDonationDateDynamicText</members>
         <members>RD2_PauseHeader</members>
         <members>RD2_PausePermissionRequired</members>
+        <members>RD2_PauseRequestMustIncludeBothStartDateAndEndDate</members>
         <members>RD2_PauseSaveSuccessMessage</members>
         <members>RD2_PauseSelectedInstallmentTextPlural</members>
         <members>RD2_PauseSelectedInstallmentTextSingular</members>
+        <members>RD2_PauseStartDateMustBeTodayOrLater</members>
         <members>RD2_PauseStatusMustExist</members>
         <members>RD2_PausedReasonLabel</members>
         <members>RD2_PaymentInformation</members>
@@ -1986,8 +1994,10 @@
         <members>RD2_StatusMappingIntro</members>
         <members>RD2_StatusMappingStateUnmapped</members>
         <members>RD2_StatusMappingSuccessMessage</members>
+        <members>RD2_StatusMustBeActiveOrPause</members>
         <members>RD2_StatusMustBeMapped</members>
         <members>RD2_StatusMustBeMappedSolution</members>
+        <members>RD2_UnPauseRequestCannotIncludeDates</members>
         <members>RD_ContactMustBelongToAccount</members>
         <members>RD_DonorIsRequired</members>
         <members>RD_ErrorAddDonationHeaderText</members>

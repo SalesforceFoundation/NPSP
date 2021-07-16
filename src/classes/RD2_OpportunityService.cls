@@ -141,7 +141,6 @@ public with sharing class RD2_OpportunityService {
         List<Opportunity> oppsToCreate = new List<Opportunity>();
         Map<Id, List<RD2_ScheduleService.Installment>> installmentsByRDId = new Map<Id, List<RD2_ScheduleService.Installment>>();
 
-        Integer numberOfInstallments = 1;
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(
                 new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r

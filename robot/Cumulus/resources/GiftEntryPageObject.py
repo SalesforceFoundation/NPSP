@@ -5,6 +5,8 @@ from cumulusci.robotframework.pageobjects import BasePage
 from cumulusci.robotframework.pageobjects import pageobject
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.common.exceptions import ElementNotInteractableException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
 from BaseObjects import BaseNPSPPage
 from NPSP import npsp_lex_locators
 from logging import exception
@@ -274,17 +276,23 @@ class GiftEntryTemplatePage(BaseNPSPPage, BasePage):
         """Adds specified batch columns to the visible section if they are not already added"""
         first_element=True
         position=0
+        actions = ActionChains(self.selenium.driver)
         for i in args:
             locator=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",i)
             if self.npsp.check_if_element_exists(locator):
                 if first_element:
+                    actions.key_down(Keys.COMMAND)
                     self.selenium.click_element(locator)
+                    actions.perform()
                     first_element=False
                     position=args.index(i)
                 else:
-                    self.selenium.click_element(locator,'COMMAND')
+                    actions.key_down(Keys.COMMAND)
+                    self.selenium.click_element(locator)
+                    actions.perform()
         if not first_element:
             self.selenium.click_button("Move selection to Visible Fields")
+            actions.key_up(Keys.COMMAND).perform()            
         verify_field=npsp_lex_locators["gift_entry"]["duellist"].format("Available Fields",args[position])
         print (f'verify locator is {verify_field}')
         self.selenium.wait_until_page_does_not_contain_element(verify_field)

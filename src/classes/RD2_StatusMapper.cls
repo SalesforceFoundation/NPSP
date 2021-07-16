@@ -169,6 +169,22 @@ public with sharing class RD2_StatusMapper {
         return mapping == null ? null : mapping.state;
     }
 
+    /**
+     * @description Returns all Recurring Donation Status that are mapped to Closed State
+     * @return Set<String> Set of status
+     */
+    public Set<String> getClosedStatusValues() {
+        List<Mapping> allmappings = mappingByStatus.values();
+        Set<String> closedStates = new Set<String>();
+
+        for (Mapping mapping : allmappings) {
+            if (mapping.state == RD2_Constants.STATUS_CLOSED) {
+                closedStates.add(mapping.status);
+            }
+        }
+
+        return closedStates;
+    }
 
     /**
      * @description Contains mapping configuration detail

@@ -71,7 +71,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @param rd Recurring Donation record
     */
     public RD2_RecurringDonation(npe03__Recurring_Donation__c rd) {
-        this(rd, rd.npe03__Donations__r);
+        this(rd, rd?.npe03__Donations__r);
     }
 
     /**
@@ -391,6 +391,20 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    public RecurringDonationSchedule__c getPauseSchedule() {
+        if (!hasSchedule()) {
+            return null;
+        }
+
+        for (RecurringDonationSchedule__c rdSchedule : rd.RecurringDonationSchedules__r) {
+            if (rdSchedule.IsPause__c && rdSchedule.StartDate__c <= rdSchedule.EndDate__c) {
+                return rdSchedule;
+            }
+        }
+
+        return null;
     }
 
     public String paymentMethod() {

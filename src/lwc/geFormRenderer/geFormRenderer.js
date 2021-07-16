@@ -135,6 +135,10 @@ const DONATION_DONOR_TYPE_ENUM = Object.freeze({
     CONTACT1: 'Contact1'
 });
 
+const FORM_STATE_IMMUTABLE_FIELDS_API_NAMES = [
+    NPSP_DATA_IMPORT_BATCH_FIELD.fieldApiName
+];
+
 const ACH_CONSENT_MESSAGE = 'true';
 const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
 
@@ -1693,6 +1697,8 @@ export default class GeFormRenderer extends LightningElement{
      * @param fields An object with key-value pairs.
      */
     updateFormState(fields) {
+        fields = this.removeFieldsNotUpdatableInFormState(fields);
+
         Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
             this.updateFormStateForDonationRecordType(fields);
@@ -1704,6 +1710,20 @@ export default class GeFormRenderer extends LightningElement{
 
         // Shallow-copy to a new object to prompt reactivity
         this.formState = Object.assign({}, this.formState);
+    }
+
+    removeFieldsNotUpdatableInFormState(fieldsToUpdate) {
+        FORM_STATE_IMMUTABLE_FIELDS_API_NAMES.forEach(immutableField => {
+            if (this.isFormStateFieldNotUpdatable(fieldsToUpdate, immutableField)) {
+                delete fieldsToUpdate[immutableField];
+            }
+        });
+
+        return fieldsToUpdate;
+    }
+
+    isFormStateFieldNotUpdatable(fields, field) {
+        return fields.hasOwnProperty(field) && this.formState[field];
     }
 
     updateFormStateFromMap(fieldReferenceToValueMap) {

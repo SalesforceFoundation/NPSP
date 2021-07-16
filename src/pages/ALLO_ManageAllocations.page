@@ -230,7 +230,9 @@
                                             </td>
                                             <td>
                                                 <div class="slds-form-element">
-                                                    <label for="{!$Component.alloInputAmount}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}</label>
+                                                    <label for="{!$Component.alloInputAmount}" class="slds-form-element__label slds-assistive-text">
+                                                        {!$ObjectType.Allocation__c.Fields.Amount__c.Label} {!cnt}
+                                                    </label>
                                                     <div class="slds-form-element__control slds-input-has-fixed-addon">
                                                         <span class="slds-form-element__addon">{!currencySymbol}</span>
                                                         <apex:inputField id="alloInputAmount" styleClass="slds-input alloAmount amount{!cnt}" onkeyup="window.initOrReload()"  value="{!Allo.Amount__c}"/>
@@ -239,10 +241,9 @@
                                             </td>
                                             <td>
                                                 <div class="slds-form-element">
-                                                    <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-assistive-text">{!$ObjectType.Allocation__c.Fields.Percent__c.Label} {!cnt}</label>
                                                     <div class="slds-form-element__control slds-input-has-fixed-addon">
                                                         <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size_2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
-                                                        <span class="slds-form-element__addon">%</span>
+                                                        <label for="{!$Component.alloInputPercent}" class="slds-form-element__label slds-form-element__addon">%</label>
                                                     </div>
                                                 </div>
                                             </td>
