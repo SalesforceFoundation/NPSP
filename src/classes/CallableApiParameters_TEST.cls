@@ -205,7 +205,8 @@ private class CallableApiParameters_TEST {
             'List<String>' => new Set<SObject>{ new Opportunity() },
             'Set<String>' => 23,
             'List<SObject>' => new Map<String, String>{ 'X' => 'Y' },
-            'RollupData' => new Account()
+            'RollupData' => new Account(),
+            'PauseData' => new Map<Id, Object> { UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => 'Test' }
         };
 
         CallableApiParameters service = new CallableApiParameters(badParams);
@@ -231,6 +232,9 @@ private class CallableApiParameters_TEST {
                     when 'RollupData' {
                         service.getRollupDataMap(dataType);
                     }
+                    when 'PauseData' {
+                        service.getPauseObjectsById(dataType);
+                    }
                 }
                 System.assert(false, 'An exception should have been thrown for an invalid data type');
             } catch (Exception ex) {
@@ -252,7 +256,11 @@ private class CallableApiParameters_TEST {
             'Map<Id, String>' => new Map<Id,String>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => 'Test' },
             'List<String>' => new List<String>{ 'Test' },
             'Set<String>' => new Set<String>{ 'Test' },
-            'Set<Id>' => new Set<Id>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID }
+            'Set<Id>' => new Set<Id>{ UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID },
+            'Map<Id, RD2_ApiService.PauseObject>' =>
+                new Map<Id, RD2_ApiService.PauseObject>{
+                    UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID => new RD2_ApiService.PauseObject()
+                }
         };
 
         CallableApiParameters service = new CallableApiParameters(params)
@@ -282,6 +290,9 @@ private class CallableApiParameters_TEST {
                     }
                     when 'Set<Id>' {
                         service.getSetId(dummyParamName);
+                    }
+                    when 'Map<Id, RD2_ApiService.PauseObject>' {
+                        service.getPauseObjectsById(dummyParamName);
                     }
                 }
                 System.assert(false, 'An exception should have been thrown for a missing data type');
