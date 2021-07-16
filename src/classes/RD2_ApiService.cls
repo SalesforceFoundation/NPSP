@@ -36,6 +36,9 @@
 */
 public inherited sharing class RD2_ApiService {
 
+    @TestVisible
+    private static Integer MAXIMUM_RECORDS_TO_PROCESS = 200;
+
     /**
      * @description Retrieve a map of RecurringDonationSchedule__c records by Rd.id using an inner wrapper
      * class representation of the RdSchedule object because it's protected and customers will not be able to
@@ -70,7 +73,9 @@ public inherited sharing class RD2_ApiService {
     private String getRecurringDonationQuery() {
         Set<String> queryFields = new Set<String>{
             'Id',
-            'EndDate__c'
+            'CommitmentId__c',
+            'EndDate__c',
+            'Status__c'
         };
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add('CurrencyIsoCode');
@@ -251,6 +256,277 @@ public inherited sharing class RD2_ApiService {
             installmentAmount = installment.installmentAmount;
             paymentMethod = installment.paymentMethod;
             currencyCode = currencyCode = RD2_ApiService.getCurrencyCode(rd);
+        }
+    }
+
+    public String pause(Map<Id, PauseObject> pauseData) {
+        validateEnvironment(pauseData.size());
+
+        return JSON.serialize(handlePauseRequests(pauseData));
+    }
+
+    private void validateEnvironment(Integer recordsCount) {
+        String errorMessage;
+
+        if (!RD2_EnablementService.isRecurringDonations2Enabled) {
+            errorMessage = System.Label.RD2_EnhancedRecurringDonationsNotEnabled;
+
+        } else if (recordsCount > MAXIMUM_RECORDS_TO_PROCESS) {
+           errorMessage = String.format(System.Label.CallableApiMaximumRecordsExceeded,
+            new List<String> { String.valueOf(MAXIMUM_RECORDS_TO_PROCESS) });
+        }
+
+        if (String.isNotBlank(errorMessage)) {
+            throwRecurringDonationApiException('rd2.pause', errorMessage);
+        }
+    }
+
+    private void throwRecurringDonationApiException(String jobType, String errorString) {
+        throw new RecurringDonationApiException(String.format( System.Label.CallableApiProcessingError,
+                new List<String>{ jobType, errorString} ));
+    }
+
+    private class RecurringDonationApiException extends Exception {}
+
+    private Map<Id, PauseObject> handlePauseRequests(Map<Id, PauseObject> pauseData) {
+        List<RecurringDonationSchedule__c> schedulesToInsert = new List<RecurringDonationSchedule__c>();
+        List<RecurringDonationSchedule__c> schedulesToUpdate = new List<RecurringDonationSchedule__c>();
+
+        Map<Id, npe03__Recurring_Donation__c> recurringDonationsById = new Map<Id, npe03__Recurring_Donation__c>(
+            getRecurringDonationsById(pauseData.keySet())
+        );
+
+        for (Id rdId : pauseData.keySet()) {
+            RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(recurringDonationsById.get(rdId));
+            PauseObject pauseInfo = pauseData.get(rdId);
+
+            pauseInfo.populateDefaultValues();
+
+            if (!isValidPauseData(rdId, pauseInfo, rdRecord)) {
+                continue;
+            }
+
+            RecurringDonationSchedule__c updateSchedule = deactivatePauseSchedule(rdRecord);
+            if (updateSchedule != null) {
+                schedulesToUpdate.add(updateSchedule);
+            }
+
+            if (!pauseInfo.unPause) {
+                schedulesToInsert.add(createPauseSchedule(pauseInfo, rdId));
+            }
+        }
+
+        return commitScheduleUpdates(pauseData, schedulesToInsert, schedulesToUpdate);
+    }
+
+    @TestVisible
+    private Boolean isValidPauseData(Id rdId, PauseObject pause, RD2_RecurringDonation recurringDonation) {
+        PauseValidator validator = new PauseValidator(pause);
+        validator.validatePauseData(rdId, recurringDonation);
+
+        return pause.isSuccess;
+    }
+
+    private Map<Id, PauseObject> commitScheduleUpdates(Map<Id, PauseObject> pauseData,
+        List<RecurringDonationSchedule__c> schedulesToInsert,
+        List<RecurringDonationSchedule__c> schedulesToUpdate)
+    {
+        Set<Id> recurringDonationIds = new Set<Id>();
+
+        Set<Id> insertIds = insertPauseSchedules(pauseData, schedulesToInsert);
+        if (insertIds != null) {
+            recurringDonationIds.addAll(insertIds);
+        }
+
+        Set<Id> updateIds = updatePauseSchedules(pauseData, schedulesToUpdate);
+        if (updateIds != null) {
+            recurringDonationIds.addAll(updateIds);
+        }
+        if (!recurringDonationIds.isEmpty()) {
+            RD2_QueueableService.enqueueOppEvalService(recurringDonationIds, recurringDonationIds);
+        }
+
+        return pauseData;
+    }
+
+    private List<npe03__Recurring_Donation__c> getRecurringDonationsById(Set<Id> rdIds) {
+        String soql = getRecurringDonationQuery();
+        return Database.query(soql);
+    }
+
+    private RecurringDonationSchedule__c createPauseSchedule(PauseObject pause, Id rdId) {
+        return new RD2_ScheduleService.PauseScheduleHandler().createPauseSchedule(
+            pause.statusReason,
+            pause.startDate,
+            pause.endDate,
+            rdId
+        );
+    }
+
+    private RecurringDonationSchedule__c deactivatePauseSchedule(RD2_RecurringDonation recurringDonation) {
+        RecurringDonationSchedule__c schedule = recurringDonation.getPauseSchedule();
+
+        if (schedule == null) {
+            return null;
+        }
+
+        new RD2_ScheduleService.PauseScheduleHandler().deactivatePauseSchedule(schedule);
+
+        return schedule;
+    }
+
+    private Set<Id> insertPauseSchedules(Map<Id, PauseObject> pauseData, List<RecurringDonationSchedule__c> schedules) {
+        List<Database.SaveResult> results = Database.insert(schedules, false);
+
+        return handleResultsAndReturnSuccessRD(results, pauseData, schedules);
+    }
+
+    private Set<Id> updatePauseSchedules(Map<Id, PauseObject> pauseData, List<RecurringDonationSchedule__c> schedules) {
+        List<Database.SaveResult> results = Database.update(schedules, false);
+
+        return handleResultsAndReturnSuccessRD(results, pauseData, schedules);
+    }
+
+    private Set<Id> handleResultsAndReturnSuccessRD(List<Database.SaveResult> results, Map<Id, PauseObject> pauseData, List<RecurringDonationSchedule__c> schedules) {
+        Set<Id> successfulProcessIds = new Set<Id>();
+
+        for (Integer i = 0; i < results.size(); i++) {
+            Id recurringDonationId = schedules[i].RecurringDonation__c;
+
+            if (results[i].isSuccess()) {
+                successfulProcessIds.add(recurringDonationId);
+            } else {
+                PauseObject pauseInfo = pauseData.get(recurringDonationId);
+                pauseInfo.addError(results[i].getErrors()[0].getMessage());
+            }
+        }
+
+        return successfulProcessIds;
+    }
+
+    public class PauseObject {
+
+        public Date startDate;
+        public Date endDate;
+        public String statusReason;
+        public Boolean unPause;
+        public Boolean isSuccess;
+        public String error;
+
+        public PauseObject addError(String errorString) {
+            this.isSuccess = false;
+            this.error = errorString;
+
+            return this;
+        }
+
+        public PauseObject populateDefaultValues() {
+            this.isSuccess = true;
+            this.unPause = (this.unPause == null)
+                ? false
+                : this.unPause;
+
+            return this;
+        }
+    }
+
+    public class PauseValidator {
+        PauseObject pause;
+
+        PauseValidator(PauseObject pause) {
+            this.pause = pause;
+        }
+
+        public void validatePauseData(Id rdId, RD2_RecurringDonation recurringDonation) {
+            validateRecurringDonationId(rdId);
+            validateStateShouldBeActive(recurringDonation);
+            validateRecurringDonationNotLinkedToElevate(recurringDonation);
+
+            if (this.pause.unPause) {
+                validateUnPause();
+            } else {
+                validateDatesArePopulated();
+                validateEndDateGreaterThanOrEqualToStartDate();
+                validateStartDateGreaterThanOrEqualToToday();
+                validateEndDateNoGreaterThanTwelveMonthsFromStartDate();
+            }
+        }
+
+        private void validateRecurringDonationId(Id recordId) {
+            if (UTIL_Describe.isObjectIdThisType(recordId, 'npe03__Recurring_Donation__c') == false) {
+                pause.addError(String.format(System.Label.RD2_InvalidRecurringDonationId,
+                        new List<String> { recordId }));
+            }
+        }
+
+        private void validateStateShouldBeActive(RD2_RecurringDonation recurringDonation) {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (!recurringDonation.isActive()) {
+                pause.addError(System.Label.RD2_StatusMustBeActiveOrPause);
+            }
+        }
+
+        private void validateRecurringDonationNotLinkedToElevate(RD2_RecurringDonation recurringDonation) {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (recurringDonation.isElevateRecord()) {
+                pause.addError(System.Label.RD2_ElevateRDCannotBePaused);
+            }
+        }
+
+        private void validateUnPause() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate != null || pause.endDate != null) {
+                pause.addError(System.Label.RD2_UnPauseRequestCannotIncludeDates);
+            }
+        }
+
+        private void validateEndDateGreaterThanOrEqualToStartDate() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate > pause.endDate) {
+                pause.addError(System.Label.RD2_PauseEndDateMustBeGreaterThanStartDate);
+            }
+        }
+
+        private void validateDatesArePopulated() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate == null || pause.endDate == null) {
+                pause.addError(System.Label.RD2_PauseRequestMustIncludeBothStartDateAndEndDate);
+            }
+        }
+
+        private void validateEndDateNoGreaterThanTwelveMonthsFromStartDate() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.endDate > pause.startDate.addYears(1).addDays(1)) {
+                pause.addError(System.Label.RD2_PauseEndDateCannotBeMoreThanTwelveMonths);
+            }
+        }
+
+        private void validateStartDateGreaterThanOrEqualToToday() {
+            if (!pause.isSuccess) {
+                return;
+            }
+
+            if (pause.startDate < RD2_ScheduleService.currentDate) {
+                pause.addError(System.Label.RD2_PauseStartDateMustBeTodayOrLater);
+            }
         }
     }
 }
