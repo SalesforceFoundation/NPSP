@@ -1031,6 +1031,16 @@ public without sharing class RD2_ScheduleService {
     */
     public class PauseScheduleHandler {
 
+        public RecurringDonationSchedule__c createPauseSchedule(String statusReason, Date startDate, Date endDate, Id rdId) {
+            return new RecurringDonationSchedule__c(
+                RecurringDonation__c = rdId,
+                IsPause__c = true,
+                StatusReason__c = statusReason,
+                StartDate__c = startDate,
+                EndDate__c = endDate
+            );
+    
+        }
         /***
         * @description Indicates if the Recurring Donation has an active pause schedule
         * at some point in the future (not necessarily in a current pause state).
@@ -1128,8 +1138,13 @@ public without sharing class RD2_ScheduleService {
                 return;
             }
 
-            schedule.EndDate__c = currentDate.addDays(-1);
+            deactivatePauseSchedule(schedule);
             update schedule;
+        }
+
+        public RecurringDonationSchedule__c deactivatePauseSchedule(RecurringDonationSchedule__c schedule) {
+            schedule.EndDate__c = currentDate.addDays(-1);
+            return schedule;
         }
 
         /***
