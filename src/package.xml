@@ -74,6 +74,8 @@
         <members>AN_AutoNumberService_TEST</members>
         <members>AN_AutoNumber_TDTM</members>
         <members>Accounts</members>
+        <members>AdditionalObjectJSON</members>
+        <members>AdditionalObjectJSON_TEST</members>
         <members>AddressService</members>
         <members>Addresses</members>
         <members>AggregateResultProxy</members>
@@ -277,6 +279,17 @@
         <members>Contacts</members>
         <members>ContactsInLegacyHouseholds</members>
         <members>ContactsInLegacyHouseholds_TEST</members>
+        <members>Donation</members>
+        <members>DonationDTO</members>
+        <members>DonationSelector</members>
+        <members>DonationSelector_TEST</members>
+        <members>DonationService</members>
+        <members>DonationService_TEST</members>
+        <members>DonationView</members>
+        <members>Donation_TEST</members>
+        <members>Donations</members>
+        <members>DonationsDTO</members>
+        <members>DonationsView</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
         <members>EP_EngagementPlans_TDTM</members>
@@ -343,16 +356,26 @@
         <members>Gift</members>
         <members>GiftBatch</members>
         <members>GiftBatchAggregateGroupName</members>
+        <members>GiftBatchDTO</members>
         <members>GiftBatchGroupedTotals</members>
         <members>GiftBatchGroupedTotals_TEST</members>
+        <members>GiftBatchId</members>
         <members>GiftBatchSelector</members>
         <members>GiftBatchService</members>
         <members>GiftBatchStatusGroup</members>
         <members>GiftBatchStatusGroup_TEST</members>
         <members>GiftBatchTotals</members>
+        <members>GiftBatchView</members>
+        <members>GiftBatchView_TEST</members>
         <members>GiftBatch_TEST</members>
         <members>GiftBatches</members>
+        <members>GiftDTO</members>
+        <members>GiftId</members>
         <members>GiftSelector</members>
+        <members>GiftService</members>
+        <members>GiftTemplate</members>
+        <members>GiftView</members>
+        <members>GiftView_TEST</members>
         <members>Gift_Test</members>
         <members>Gifts</members>
         <members>Gifts_TEST</members>
@@ -392,6 +415,7 @@
         <members>HouseholdSettings</members>
         <members>Households</members>
         <members>IAddress</members>
+        <members>IGiftBatch</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
         <members>LD_LeadConvertOverride_CTRL</members>
@@ -406,6 +430,7 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>Money</members>
         <members>NPSP_Address</members>
         <members>NPSP_Contact</members>
         <members>NPSP_Contact_TEST</members>
@@ -634,6 +659,11 @@
         <members>STG_SettingsService</members>
         <members>STG_UninstallScript</members>
         <members>STG_UninstallScript_TEST</members>
+        <members>SoftCredits</members>
+        <members>SoftCreditsDTO</members>
+        <members>SoftCreditsView</members>
+        <members>SoftCreditsView_TEST</members>
+        <members>SoftCredits_TEST</members>
         <members>TDTM_Config_API</members>
         <members>TDTM_Config_API_Test</members>
         <members>TDTM_DMLgt200_TEST</members>
@@ -663,6 +693,7 @@
         <members>UTIL_AbstractChunkingLDV_BATCH_TEST</members>
         <members>UTIL_AbstractChunkingLDV_MOCK</members>
         <members>UTIL_AbstractRollup_BATCH</members>
+        <members>UTIL_AdditionalObjectData_TEST</members>
         <members>UTIL_Address</members>
         <members>UTIL_Address_TEST</members>
         <members>UTIL_AuraEnabledCommon</members>

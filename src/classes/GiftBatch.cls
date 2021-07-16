@@ -33,33 +33,19 @@
 * @description Batch entity class in NPSP.
 */
 
-public inherited sharing class GiftBatch {
+public inherited sharing class GiftBatch implements IGiftBatch {
 
-    private Id batchId;
-    private DataImportBatch__c batch;
+    @TestVisible private GiftBatchId giftBatchId;
+    @TestVisible private DataImportBatch__c batch;
+    @TestVisible private Money total;
+    @TestVisible private Integer totalCount;
+    @TestVisible private GiftBatchTotals totals;
 
-    private GE_Template.Template formTemplate {
-        get {
-            if (formTemplate == null) {
-                formTemplate =
-                    (GE_Template.Template) JSON.deserialize(
-                        batch.Form_Template__r.Template_JSON__c,
-                        GE_Template.Template.class);
-            }
-            return formTemplate;
-        }
-        set;
-    }
+    @TestVisible
+    private Gifts gifts = new Gifts();
 
-    private Gifts gifts {
-        get {
-            if (gifts == null) {
-                gifts = new Gifts(giftSelector.getGiftsFor(this.batchId));
-            }
-            return gifts;
-        }
-        set;
-    }
+    @TestVisible
+    private GiftTemplate giftTemplate;
 
     private GiftBatchSelector giftBatchSelector {
         get {
@@ -67,16 +53,6 @@ public inherited sharing class GiftBatch {
                 giftBatchSelector = new GiftBatchSelector();
             }
             return giftBatchSelector;
-        }
-        set;
-    }
-
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
         }
         set;
     }
@@ -93,35 +69,22 @@ public inherited sharing class GiftBatch {
     }
 
     @TestVisible
-    private GiftBatch(Gifts gifts) {
-        this.gifts = gifts;
-    }
+    private GiftBatch() {}
 
-    public GiftBatch(Id batchId) {
-        this.batchId = batchId;
-        this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+    public GiftBatch(GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
+        this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
+        this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
     }
 
     public Boolean hasElevateWidget() {
-        Boolean hasWidget = false;
-        for (GE_Template.Section section : formTemplate.layout.sections) {
-            for (GE_Template.Element element : section.elements) {
-                if (isElevateWidget(element)) {
-                    hasWidget = true;
-                }
-            }
-        }
-        return hasWidget;
-    }
-
-    private Boolean isElevateWidget(GE_Template.Element element) {
-        return element.componentName != null
-            && element.componentName == 'geFormWidgetTokenizeCard';
+        return this.giftTemplate.hasElevateWidget();
     }
 
     public void captureAuthorizedGifts() {
-        elevateBatchService.enqueuePaymentCaptureJobFor(
-            batchId, gifts?.elevateBatchIds());
+        elevateBatchService.enqueuePaymentCaptureJobFor(id(), gifts?.elevateBatchIds());
         gifts.authorizedToPaymentProcessingStatus();
     }
 
@@ -132,10 +95,26 @@ public inherited sharing class GiftBatch {
     public void processGifts() {
         gifts.giftsToProcessingStatus();
         captureAuthorizedGifts();
-        BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{ id() });
     }
 
     public void updateRecords() {
         gifts.updateRecords();
+    }
+
+    public Id id() {
+        return this.giftBatchId.value();
+    }
+
+    public Gifts gifts() {
+        return this.gifts;
+    }
+
+    public Money total() {
+        return new Money(this.totals.totalAmount(), 'US');
+    }
+
+    public Integer totalCount() {
+        return this.totals.totalGifts();
     }
 }
