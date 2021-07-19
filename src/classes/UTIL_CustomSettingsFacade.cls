@@ -159,6 +159,10 @@ public without sharing class UTIL_CustomSettingsFacade {
                 }
             }
         }
+
+        // System.debug('From getRecurringDonationsSettings'); 
+        // System.debug(recurringDonationsSettings.EnableChangeHistory__c); 
+
         return recurringDonationsSettings;
     }
 
@@ -884,6 +888,9 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return npe03__Recurring_Donations_Settings__c The configured settings.
     **/
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c settings) {
+        
+        System.debug(settings); 
+        
         if (recurringDonationsSettings == null) {
             recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
         }

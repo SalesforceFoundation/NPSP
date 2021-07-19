@@ -69,6 +69,19 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /***
+    * @description Recurring Donation change history service instance
+    */
+    private RD2_ChangeHistoryService changeHistoryService {
+        get {
+            if (changeHistoryService == null) {
+                changeHistoryService = new RD2_ChangeHistoryService();
+            }
+            return changeHistoryService;
+        }
+        set;
+    }
+
     /**
      * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
      * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
@@ -110,6 +123,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         adjustDataAndValidate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
+        createChangeHistoryOnUpdate(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
@@ -356,6 +370,57 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         } else {
             RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged);
         }
+    }
+
+    /***
+    * @description Determine if Recurring Donation Change History records need to be created.
+    *
+    * @param rds Trigger.new records
+    * @param oldRds Trigger.old records
+    * @param triggerAction BeforeInsert, AfterInsert, etc.
+    * @return void
+    */
+    public void createChangeHistoryOnUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+
+        Boolean chEnabled = 
+            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableChangeHistory__c;
+
+        System.debug(' *** isChangeHistoryEnabled: '); 
+        System.debug(chEnabled); 
+
+        RD2_Settings settings = new RD2_Settings();
+        System.debug(' From RD2 Setting: '); 
+        System.debug(settings.isChangeHistoryEnabled());
+
+        if (triggerAction != TDTM_Runnable.Action.AfterUpdate || !chEnabled) {
+            return;
+        }
+
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+
+        for (npe03__Recurring_Donation__c rd : rds) {
+            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
+            changeHistoryService.handleHistoryFieldChanged(rd, oldRd);
+        }
+        
+        createChangeHistoryRecords(changeHistoryService.getChangeHistoryRecords());
+    }
+
+    /***
+    * @description Handles Change History creation after update of recurring donation
+    * @param changeHistoryList Recurring Donation Change History records
+    */
+    private void createChangeHistoryRecords(List<RecurringDonationChangeHistory__c> changeHistoryList) {
+
+        // for (npe03__Recurring_Donation__c rd : rds) {
+        //     dmlActions.objectsToInsert.addAll(scheduleService.buildNewSchedules(rd));
+        // }
+
+        if(changeHistoryList.size() > 0){
+            // insert changeHistoryList;
+            dmlActions.objectsToInsert.addAll(changeHistoryList);
+        }
+
     }
 
     /***
