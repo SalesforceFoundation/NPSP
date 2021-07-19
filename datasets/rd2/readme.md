@@ -26,4 +26,4 @@
    - Note: Allocation records are always inserted using the Bulk Serial api as defined in the related load.yml file.
 
 ##### To generate 500000 Contacts with sample RD2 and Opp data:
-`cci flow run test_data_rd2_managed -o generate_and_load_from_yaml__num_records 500000 --org {orgname}`
+`cci flow run ldv_test_data_rd2 -o generate_and_load_from_yaml__num_records 500000 --org {orgname}`

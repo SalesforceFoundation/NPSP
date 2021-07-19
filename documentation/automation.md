@@ -188,17 +188,17 @@ For managed orgs, the mapping must be manually set to `datasets/mapping-managed.
 
 ### LDV Flexible Data Set
 
-This uses Snowfakery to generate a data set up to millions of records. The default is 1000 Contacts and related Opportunities, Recurring Donations, etc.
+This uses Snowfakery to generate a data set up to millions of records. The default is 1000 Contacts and related Opportunities with Relationships and Allocations.
+The `ldv_test_data_rd2` flow generates these using [Enhanced] Recurring Donation records, while the `ldv_test_data` flow generates data without related Recurring Donation records. 
 
-95% of all Contacts created will have a single Recurring Donation. Each RD will have one historical Opportunity. Contacts may also have Relationship and Affiliations. A load of 1000 Contacts will create 950 RD records, approximately 4000 Opportunities/Payments/Allocations, and other related records.  
-
-Special Notes:
-- Requires Enhanced Recurring Donations be enabled first. Use the `enable_rd2` flow to do this.
+Special Notes for the `ldv_test_data_rd2` flow:
+- Requires Enhanced Recurring Donations to be enabled first. Use the `enable_rd2` flow to do this.
 - Future RD Installment Opportunities are not created automatically during the data load. This can be done separately by executing the RD batch job through NPSP Settings.
 
 | Deploy Flow    | Options | Delete Task        |
 | -------------- | ------------ | ------------------ |
-| `ldv_test_data` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_test_data` |
+| `ldv_test_data_rd2` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_data_delete` |
+| `ldv_test_data` | `-o generate_and_load_from_yaml__num_records {NumberOfContacts}` | `ldv_data_delete` |
 
 For managed orgs, the mapping must be manually set to `datasets/mapping-managed.yml`.
 
