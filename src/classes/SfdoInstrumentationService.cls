@@ -29,6 +29,7 @@
 * @date 2021
 * @group Product Instrumentation
 * @description Primary class to enable product instrumentation for adoption and usage aggregation
+* See DOC_LINK for more information properly using Instrumentation Services
 *
 */
 public inherited sharing class SfdoInstrumentationService {
@@ -141,20 +142,4 @@ public inherited sharing class SfdoInstrumentationService {
         }
         return null;
     }
-
-        /**
-     * @description Retrieve the Component Enum for a specific String value, such as an object name
-     * @param  String value to find in the Enum list
-     * @return Component Enum
-     */
-    public static SfdoInstrumentationEnum.Component getComponentFromString(String val) {
-
-        for (SfdoInstrumentationEnum.Component c : SfdoInstrumentationEnum.Component.values()) {
-            if (c.name() == val) {
-                return c;
-            }
-        }
-        return null;
-    }
-
 }

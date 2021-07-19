@@ -75,7 +75,14 @@ public with sharing class SfdoInstrumentationEnum {
         Queueable,
         Schedule,
         Future,
-        TriggerAction
+        TriggerAction,
+        Contact_HardCredit,
+        Account_HardCredit,
+        Contact_SoftCredit,
+        Account_SoftCredit,
+        AccountContact_SoftCredit,
+        GAU_HardCredit,
+        RD_HardCredit
     }
 
     /**
