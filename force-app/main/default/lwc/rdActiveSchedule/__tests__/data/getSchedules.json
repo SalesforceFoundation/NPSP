@@ -1,0 +1,36 @@
+{
+    "dataTable":{
+        "columns":[
+            {"fieldName":"isCurrent", "type":"checkbox"},
+            {"fieldName":"amount", "label":"Amount","type":"currency","typeAttributes":{"currencyCode":"USD"}},{"fieldName":"paymentMethod", "label":"Payment Method","type":"text"},
+            {"fieldName":"campaign", "label":"Campaign","type":"text"},
+            {"fieldName":"startDate", "label":"Effective Date","type":"date-local","typeAttributes":{"year":"numeric","month":"numeric","day":"numeric"}},
+            {"fieldName":"endDate", "label":"Schedule End Date","type":"date-local","typeAttributes":{"year":"numeric","month":"numeric","day":"numeric"}},{"fieldName":"period", "label":"Installment Period","type":"text"},
+            {"fieldName":"frequency", "label":"Installment Frequency","type":"number"},
+            {"fieldName":"dayOfMonth", "label":"Day of Month","type":"text"}],
+        
+        "records":[
+            {
+                "amount":100,
+                "dayOfMonth":"22",
+                "endDate":"2021-04-07",
+                "frequency":1,
+                "isCurrent":true,
+                "paymentMethod":"ACH",
+                "period":"Monthly",
+                "scheduleNumber":1,
+                "startDate":"2021-03-22"
+            },
+            {
+                "amount":250,
+                "dayOfMonth":"22",
+                "frequency":1,
+                "isCurrent":false,
+                "paymentMethod":"ACH",
+                "period":"Monthly",
+                "scheduleNumber":2,
+                "startDate":"2021-04-08"
+            }
+        ]
+    }
+}

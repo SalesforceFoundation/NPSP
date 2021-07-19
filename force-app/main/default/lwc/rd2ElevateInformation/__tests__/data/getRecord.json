@@ -1,0 +1,44 @@
+{
+    "apiName": "npe03__Recurring_Donation__c",
+    "childRelationships": {},
+    "id": "a0900000008MR9bQAG",
+    "recordTypeInfo": null,
+    "fields": {
+        "Name": {
+            "displayValue": null,
+            "value": "John Smith $100 - Recurring"
+        },
+        "Status__c": {
+            "displayValue": "Active",
+            "value": "Active"
+        },
+        "ClosedReason__c": {
+            "displayValue": null,
+            "value": null
+        },
+        "CommitmentId__c": {
+            "displayValue": null,
+            "value": "11a1c101-bcde-001-111f-g1dh00i0jk111"
+        },
+        "PaymentMethod__c": {
+            "displayValue": null,
+            "value": "Credit Card"
+        },
+        "CardLast4__c": {
+            "displayValue": null,
+            "value": "1234"
+        },
+        "ACH_Last_4__c": {
+            "displayValue": null,
+            "value": "5678"
+        },
+        "CardExpirationMonth__c": {
+            "displayValue": null,
+            "value": "12"
+        },
+        "CardExpirationYear__c": {
+            "displayValue": null,
+            "value": "2027"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "apiName": "Error__c",
+    "label": "Error",
+    "labelPlural": "Errors",
+    "fields": {
+        "Name": {
+            "apiName": "Name",
+            "label": "Error Number",
+            "type": "String",
+            "nameField": true
+        },
+        "Datetime__c": {
+            "apiName": "Datetime__c",
+            "label": "Datetime",
+            "type": "Date/Time"
+        },
+        "Error_Type__c": {
+            "apiName": "Error_Type__c",
+            "label": "Error Type",
+            "type": "String",
+            "length": 255
+        },
+        "Full_Message__c": {
+            "apiName": "Full_Message__c",
+            "label": "Full Message",
+            "type": "String",
+            "length": 32768
+        }
+    }
+}

@@ -1,0 +1,49 @@
+{
+  "defaultDisplayMode": "expanded",
+  "displayRule": "displayRule",
+  "displayType": "accordion",
+  "elements": [
+    {
+      "customLabel": "Donor Type",
+      "dataImportFieldMappingDevNames": ["Donation_Donor__c"],
+      "dataType": "PICKLIST",
+      "elementType": "field",
+      "fieldApiName": "Donation_Donor__c",
+      "id": "4ae99114-697e-a1c3-77ce-b6c52c9499d5",
+      "label": "Data Import: Donation Donor",
+      "objectApiName": "DataImport__c",
+      "required": true,
+      "sectionId": "06050356-7463-fba6-27f5-7423ebf2b6c5",
+      "defaultValue": "Account1",
+      "isRenderable": true
+    },
+    {
+      "customLabel": "Existing Donor Organization Account",
+      "dataImportFieldMappingDevNames": ["Account1Imported__c"],
+      "dataType": "REFERENCE",
+      "elementType": "field",
+      "fieldApiName": "Account1Imported__c",
+      "id": "1a332c05-4b62-4ea3-6874-3d0146eabbbf",
+      "label": "Data Import: Account1 Imported",
+      "objectApiName": "DataImport__c",
+      "required": false,
+      "sectionId": "06050356-7463-fba6-27f5-7423ebf2b6c5",
+      "isRenderable": true
+    },
+    {
+      "customLabel": "Existing Donor Contact",
+      "dataImportFieldMappingDevNames": ["Contact1Imported__c"],
+      "dataType": "REFERENCE",
+      "elementType": "field",
+      "fieldApiName": "Contact1Imported__c",
+      "id": "56b1a358-b688-2d6b-b6d3-65d7d14f1bfe",
+      "label": "Data Import: Contact1 Imported",
+      "objectApiName": "DataImport__c",
+      "required": false,
+      "sectionId": "06050356-7463-fba6-27f5-7423ebf2b6c5",
+      "isRenderable": true
+    }
+  ],
+  "id": "06050356-7463-fba6-27f5-7423ebf2b6c5",
+  "label": "Donor Information"
+}

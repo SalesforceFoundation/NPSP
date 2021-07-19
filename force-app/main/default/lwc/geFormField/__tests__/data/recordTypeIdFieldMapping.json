@@ -1,0 +1,23 @@
+{
+    "Data_Import_Field_Mapping_Set": "Migrated_Custom_Field_Mapping_Set",
+    "DeveloperName": "Donation_Stage_47eed4419",
+    "Element_Type": "field",
+    "Is_Deleted": false,
+    "Is_Required": false,
+    "isDescribable": true,
+    "MasterLabel": "Donation Record Type Id",
+    "Required": "No",
+    "Source_Field_API_Name": "Donation_Record_Type__c",
+    "Source_Field_Data_Type": "STRING",
+    "Source_Field_Display_Type_Label": "Text",
+    "Source_Field_Label": "Donation Stage",
+    "Source_Field_Required": false,
+    "Target_Field_API_Name": "RecordTypeId",
+    "Target_Field_Data_Type": "REFERENCE",
+    "Target_Field_Display_Type_Label": "Reference",
+    "Target_Field_Label": "Record Type Id",
+    "Target_Field_Required": true,
+    "Target_Object_API_Name": "Opportunity",
+    "Target_Object_Mapping_Dev_Name": "Opportunity_4989bd959"
+  }
+  

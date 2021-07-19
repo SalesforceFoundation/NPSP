@@ -1,0 +1,14 @@
+{
+  "customLabel": "Opportunity: Stage",
+  "dataImportFieldMappingDevNames": [
+    "Donation_Stage_47eed4419"
+  ],
+  "dataType": "PICKLIST",
+  "elementType": "field",
+  "fieldApiName": "StageName",
+  "id": "6c2da11a-8b5c-a885-c355-85dea3d52d6a",
+  "label": "Opportunity: Stage",
+  "objectApiName": "Opportunity",
+  "required": false,
+  "sectionId": "349da17f-20fc-de89-ad04-3bcfea525573"
+}
