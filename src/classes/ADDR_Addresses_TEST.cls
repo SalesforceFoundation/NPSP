@@ -691,14 +691,12 @@ public with sharing class ADDR_Addresses_TEST {
             Account updatedAccount = updatedAccountsById.get(address.Household_Account__c);
             System.assertEquals(address.Undeliverable__c,
                     updatedAccount.Undeliverable_Address__c, 'account address' +
-                            ' undeliverable status should not match the address undeliverable status when the address' +
-                            ' is not marked as the default address.');
+                            ' undeliverable status should not match the address undeliverable status.');
             for (Contact contact : updatedAccount.Contacts) {
                 System.assert(contact.is_Address_Override__c == false, 'The contact should not be marked with an ' +
-                        'address override since that will cause inaccuracies in this test scenario.');
+                        'address override.');
                 System.assertEquals(address.Undeliverable__c, contact.Undeliverable_Address__c, 'The contact ' +
-                        'undeliverable address status should match the default address undeliverable status when the ' +
-                        'contact address override value is false.');
+                        'undeliverable address status should match the default address undeliverable status.');
             }
         }
     }
@@ -742,12 +740,13 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT Undeliverable_Address__c, is_Address_Override__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
-        System.assert(updatedContact.is_Address_Override__c == true);
-        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
+        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
+                'undeliverable address status should match the override address undeliverable status.');
     }
 
     @isTest
-    private static void updatedUndeliverableDefaultAddressShouldSyncToContactOverrideNonHousehold() {
+    private static void updatedUndeliverableDefaultAddressShouldSyncToOrganizationContact() {
         npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
                 npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
 
@@ -779,11 +778,13 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The default ' +
+                'organization address undeliverable status should match the organization contact undeliverable status' +
+                ' using that address as an override.');
     }
 
     @isTest
-    private static void updatedUndeliverableNonDefaultAddressShouldSyncToContactOverrideNonHousehold() {
+    private static void updatedUndeliverableNonDefaultAddressShouldSyncToOrganizationContact() {
         npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
                 npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
 
@@ -814,7 +815,9 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT Undeliverable_Address__c
         FROM Contact
         WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The ' +
+                'non-default organization address undeliverable status should match the organization contact ' +
+                'undeliverable status using that address as an override.');
     }
 
     /*********************************************************************************************************
