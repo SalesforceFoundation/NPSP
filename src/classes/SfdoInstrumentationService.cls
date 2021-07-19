@@ -110,7 +110,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param value Duration or other value to include in the log
      */
     public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
-        SfdoLogUtils.log(featureName?.name(), cString.valueOf(objType), actionName?.name(), value);
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
     }
 
     /**
