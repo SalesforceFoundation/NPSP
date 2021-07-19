@@ -1444,6 +1444,7 @@ flows:
                         - ACCT_CascadeDeleteLookups_TDTM
                     active: true
                     restore: false
+
     test_customizable_rollups:
         description: CRLP Full Regression Test -- Installs unpackaged metadata from crlp_testing, configures an org with CRLP enabled, and then executes the legacy and CRLP rollup regression test suite by creating data, running rollups, and validating the resulting rollup math.
         group: NPSP
