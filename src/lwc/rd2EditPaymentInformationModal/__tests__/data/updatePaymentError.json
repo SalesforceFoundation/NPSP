@@ -1,7 +1,0 @@
-{
-    "statusCode" : 404,
-    "body" : {
-        "errors" :
-        [{"message" : "Unauthorized"}]
-    }
-}

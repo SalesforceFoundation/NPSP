@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このバッチの支援エントリフォームで使用するテンプレート。</help>
+    <label>フォームテンプレート</label>
+    <name>Form_Template__c</name>
+    <relationshipLabel>NPSP データインポートバッチ</relationshipLabel>
+</CustomFieldTranslation>

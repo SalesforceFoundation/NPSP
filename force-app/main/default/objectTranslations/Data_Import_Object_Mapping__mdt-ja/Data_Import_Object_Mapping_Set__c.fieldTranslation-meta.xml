@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このレコードが含まれるデータインポートオブジェクトグループ。</help>
+    <label>データインポートオブジェクトの対応付けセット</label>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <relationshipLabel>データインポートオブジェクトの対応付け</relationshipLabel>
+</CustomFieldTranslation>

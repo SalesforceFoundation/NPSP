@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indique si ce Don récurrent est activement utilisé, temporairement suspendu ou fermé.</help>
+    <label>Statut</label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Actif</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation>Fermé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Écoulé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Paused</masterLabel>
+        <translation>Interrompu</translation>
+    </picklistValues>
+</CustomFieldTranslation>

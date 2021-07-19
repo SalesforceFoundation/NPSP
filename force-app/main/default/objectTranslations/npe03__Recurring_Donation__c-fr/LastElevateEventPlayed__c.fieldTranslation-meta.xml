@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le dernier événement Elevate exécuté suite à la mise à jour de ce don récurrent.</help>
+    <label>Dernier événement Elevate exécuté</label>
+    <name>LastElevateEventPlayed__c</name>
+</CustomFieldTranslation>

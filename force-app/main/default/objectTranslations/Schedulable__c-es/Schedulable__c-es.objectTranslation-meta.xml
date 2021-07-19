@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>DESUSADO-Programable</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>DESUSADO-Programables</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Schedulable Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nombre del trabajo</nameFieldLabel>
+</CustomObjectTranslation>

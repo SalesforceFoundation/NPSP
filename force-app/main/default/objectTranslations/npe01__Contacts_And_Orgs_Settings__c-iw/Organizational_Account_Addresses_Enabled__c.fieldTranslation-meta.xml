@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סמן אפשרות זו כדי לאפשר ניהול כתובות עבור חשבונות ארגוניים.</help>
+    <label>כתובות של חשבונות ארגוניים מופעלות</label>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de cuota de la donación recurrente de esta oportunidad.</help>
+    <label>Número de cuota de donación recurrente</label>
+    <name>Recurring_Donation_Installment_Number__c</name>
+</CustomFieldTranslation>

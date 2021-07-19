@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Batch_Table_Columns__c</fullName>
+    <description>List of API names for fields included in the batch gift table. Stored as JSON.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>List of API names for fields included in the batch gift table. Stored as JSON.</inlineHelpText>
+    <label>Batch Table Columns</label>
+    <length>55000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

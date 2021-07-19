@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Contient l’ID de l’unité comptable générale par défaut pour la création d’allocations par défaut ou pour l’allocation de montants non alloués.</help>
+    <label>Unité comptable générale par défaut</label>
+    <name>Default__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Format_Version__c</fullName>
+    <description>The version of Gift Entry used to create the template. Used for troubleshooting issues if changes are made to the template structure or code.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The version of Gift Entry used to create this template.</inlineHelpText>
+    <label>Format Version</label>
+    <length>40</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La fecha y hora exactas (hasta el milisegundo) procedente de la pasarela de pago en las que se autorizó correctamente esta transacción.</help>
+    <label>Marca de tiempo UTC de pago autorizado</label>
+    <name>Payment_Authorized_UTC_Timestamp__c</name>
+</CustomFieldTranslation>

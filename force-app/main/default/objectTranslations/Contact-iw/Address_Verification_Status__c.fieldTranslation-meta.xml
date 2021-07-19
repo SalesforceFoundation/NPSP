@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם כתובת זו מחייבת אימות, לחץ על &apos;אמת כתובת&apos; בראש דף הכתובת. עיין במסמכי העזרה ב-Power of Us Hub לקבלת מידע נוסף.</help>
+    <label>מצב אימות כתובת</label>
+    <name>Address_Verification_Status__c</name>
+</CustomFieldTranslation>

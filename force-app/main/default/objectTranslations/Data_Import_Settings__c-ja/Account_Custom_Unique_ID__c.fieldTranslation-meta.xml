@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>団体取引先のマッチングに使用する任意の一意の ID 項目</help>
+    <label>一意の取引先カスタム ID</label>
+    <name>Account_Custom_Unique_ID__c</name>
+</CustomFieldTranslation>

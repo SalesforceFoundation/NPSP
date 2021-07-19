@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Enthält die Kennung des Haushalt-Datensatzes (entweder Haushalt-Account oder Haushalt-Objekt), mit dem dieser Kontakt aktuell verbunden ist (schreibgeschützt).</help>
+    <label>HH-Kennung</label>
+    <name>HHId__c</name>
+</CustomFieldTranslation>

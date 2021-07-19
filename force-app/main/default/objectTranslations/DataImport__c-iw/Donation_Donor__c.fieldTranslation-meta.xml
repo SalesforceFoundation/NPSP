@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין אם התרומה היא תרומה אישית מ-Contact1 או תרומה ארגונית מ-Account1.</help>
+    <label>תורם תרומה</label>
+    <name>Donation_Donor__c</name>
+    <picklistValues>
+        <masterLabel>Account1</masterLabel>
+        <translation><!-- Account1 --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Contact1</masterLabel>
+        <translation><!-- Contact1 --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

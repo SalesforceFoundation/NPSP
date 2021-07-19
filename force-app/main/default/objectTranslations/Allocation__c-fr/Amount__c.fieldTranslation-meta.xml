@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Montant de l’opportunité alloué à cette unité comptable générale. Laissez vide pour des allocations par pourcentages.</help>
+    <label>Montant</label>
+    <name>Amount__c</name>
+</CustomFieldTranslation>
