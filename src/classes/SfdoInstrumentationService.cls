@@ -34,25 +34,29 @@
 public inherited sharing class SfdoInstrumentationService {
     public SfdoInstrumentationService() { }
 
+    // =============================================================================================================================
+    // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
+    // =============================================================================================================================
+
     /**
      * @param featureName - Feature name within the product the log is for
      * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
-     * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
+     * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload) { 
-        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), payload);
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
     }
 
     /**
      * @param featureName - Feature name within the product the log is for
      * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
-     * @param payload Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
+     * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      * @param value Duration or other value to include in the log
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> payload, Integer value) { 
-        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), payload, value);
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+        SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
     /**
@@ -73,6 +77,54 @@ public inherited sharing class SfdoInstrumentationService {
     public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
     }
+
+    // =============================================================================================================================
+    // Alternative Signatures that support passing an SobjectType as the Component
+    // =============================================================================================================================
+
+    /**
+     * @param featureName - Feature name within the product the log is for
+     * @param objType SObjectType - define the SObject as the Component for this log entry
+     * @param actionName String - define the action of the feature or component
+     * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
+     */
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
+    }
+
+    /**
+     * @param featureName - Feature name within the product the log is for
+     * @param objType SObjectType - define the SObject as the Component for this log entry
+     * @param actionName String - define the action of the feature or component
+     * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
+     * @param value Duration or other value to include in the log
+     */
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
+    }
+
+    /**
+     * @param featureName - Feature name within the product the log is for
+     * @param objType SObjectType - define the SObject as the Component for this log entry
+     * @param actionName String - define the action of the feature or component
+     * @param value Duration or other value to include in the log
+     */
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
+        SfdoLogUtils.log(featureName?.name(), cString.valueOf(objType), actionName?.name(), value);
+    }
+
+    /**
+     * @param featureName - Feature name within the product the log is for
+     * @param objType SObjectType - define the SObject as the Component for this log entry
+     * @param actionName String - define the action of the feature or component
+     */
+    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName) {
+        SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name());
+    }
+
+    // =============================================================================================================================
+    // Helper Methods
+    // =============================================================================================================================
 
     /**
      * @description Retrieve the Action Enum for a specific TriggerHandler Event Type

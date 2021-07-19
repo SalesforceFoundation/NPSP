@@ -28,11 +28,15 @@
 * @author Salesforce.org
 * @date 2021
 * @group Product Instrumentation
-* @description Enums of Features, Components and Actions to use with product instrumentation
+* @description Enums of Features, Components and Actions to use with product instrumentation. These ensure consistency
+* of values in the Splunk logs.
 *
 */
 public with sharing class SfdoInstrumentationEnum {
 
+    /**
+     * High Level product feature for the log entry
+     */
     public enum Feature {
         TDTM,
         EnhancedRecurringDonations,
@@ -62,21 +66,21 @@ public with sharing class SfdoInstrumentationEnum {
         Settings
     }
 
+    /**
+     * Component within the feature. 
+     */
     public enum Component {
-        Account,
-        Contact,
-        Opportunity,
-        Lead,
-        Campaign,
-        Payment,
-        ContactRole,
-        GAU,
         Page,
         Batch,
         Queueable,
+        Schedule,
+        Future,
         TriggerAction
     }
 
+    /**
+     * The action being taken within the Feature and Component. 
+     */
     public enum Action {
         Open,
         Save,
