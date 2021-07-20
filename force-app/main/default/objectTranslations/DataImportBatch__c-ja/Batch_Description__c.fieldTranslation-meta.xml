@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このバッチの説明 (省略可能)。</help>
+    <label>バッチ説明</label>
+    <name>Batch_Description__c</name>
+</CustomFieldTranslation>

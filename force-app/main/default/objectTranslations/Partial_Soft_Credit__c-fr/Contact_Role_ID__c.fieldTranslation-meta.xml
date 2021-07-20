@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le rôle de contact d’opportunité auquel ce crédit indirect s’applique.</help>
+    <label>ID du rôle de contact</label>
+    <name>Contact_Role_ID__c</name>
+</CustomFieldTranslation>

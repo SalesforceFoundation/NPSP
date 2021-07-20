@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Time_Bound_Operation_Type__c</fullName>
+    <description>Related to the Integer__c field. The value in that field represents the number of Years to sum or the number of days back to sum amounts for.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Time Frame</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>All_Time</fullName>
+                <default>true</default>
+                <label>All Time</label>
+            </value>
+            <value>
+                <fullName>Years_Ago</fullName>
+                <default>false</default>
+                <label>Years Ago</label>
+            </value>
+            <value>
+                <fullName>Days_Back</fullName>
+                <default>false</default>
+                <label>Days Back</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

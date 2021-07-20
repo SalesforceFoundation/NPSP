@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_End_Date__c</fullName>
+    <description>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.</inlineHelpText>
+    <label>Recurring Donation End Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

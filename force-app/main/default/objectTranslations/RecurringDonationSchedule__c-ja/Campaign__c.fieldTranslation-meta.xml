@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このスケジュールレコードの作成時に継続支援に関連付けられたキャンペーン。</help>
+    <label>関連キャンペーン</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>継続支援スケジュール</relationshipLabel>
+</CustomFieldTranslation>

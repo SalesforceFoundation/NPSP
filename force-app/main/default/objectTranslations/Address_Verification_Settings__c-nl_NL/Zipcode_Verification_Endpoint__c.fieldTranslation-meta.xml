@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>URL die wordt gebruikt voor postcodeverificatie.</help>
+    <label>Eindpunt Postcodeverificatie-VEROUDERD</label>
+    <name>Zipcode_Verification_Endpoint__c</name>
+</CustomFieldTranslation>

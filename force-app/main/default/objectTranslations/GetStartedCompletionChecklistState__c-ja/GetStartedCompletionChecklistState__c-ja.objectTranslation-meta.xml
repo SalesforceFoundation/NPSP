@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>使用開始の完了チェックリスト状態</value>
+    </caseValues>
+    <nameFieldLabel>使用開始の完了チェックリスト状態名</nameFieldLabel>
+</CustomObjectTranslation>

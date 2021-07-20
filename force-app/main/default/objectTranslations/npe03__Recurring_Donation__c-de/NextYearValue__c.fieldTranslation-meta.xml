@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der voraussichtliche Gesamtbetrag dieser wiederkehrenden Spende für das nächste Kalender- oder Geschäftsjahr (schreibgeschützt).</help>
+    <label>Wert für nächstes Jahr</label>
+    <name>NextYearValue__c</name>
+</CustomFieldTranslation>

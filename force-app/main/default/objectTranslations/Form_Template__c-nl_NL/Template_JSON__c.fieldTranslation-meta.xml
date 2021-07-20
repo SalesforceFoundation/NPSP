@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De secties en velden in deze sjabloon, samen met hun volgorde, vereisten en standaardwaarden. Opgeslagen als JSON. Niet rechtstreeks bewerken.</help>
+    <label>Sjabloon-JSON</label>
+    <name>Template_JSON__c</name>
+</CustomFieldTranslation>

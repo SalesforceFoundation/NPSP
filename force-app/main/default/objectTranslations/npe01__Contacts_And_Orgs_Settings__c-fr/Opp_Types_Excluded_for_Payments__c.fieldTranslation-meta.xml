@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>NPSP crée autom. des enreg.de paiement pour les opp. avec les valeurs de la liste Type. Sélectionnez les types pour lesquels vous ne souhaitez pas de création autom. d’enreg. de paiements. Pour sélect. plusieurs types, cliquez sur Ctrl ou Commande.</help>
+    <label>Types d’opportunités exclus</label>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+</CustomFieldTranslation>

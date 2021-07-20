@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Speichert die Adresse, die vor der Überprüfung durch einen Remote-Service eingegeben wurde, für den Fall, dass Informationen im Überprüfungsprozess verloren gehen sollten.</help>
+    <label>Adresse vor Überprüfung</label>
+    <name>Pre_Verification_Address__c</name>
+</CustomFieldTranslation>

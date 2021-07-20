@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Possible_Matches__c</fullName>
+    <description>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</inlineHelpText>
+    <label>Donation Possible Matches</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

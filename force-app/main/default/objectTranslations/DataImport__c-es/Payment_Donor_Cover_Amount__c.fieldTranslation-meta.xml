@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El importe que pagó el donante además del importe de su donación para ayudar a cubrir comisiones por transacción o incorporar una propina a su donación.</help>
+    <label>Importe para cubrir de donante de pago</label>
+    <name>Payment_Donor_Cover_Amount__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>ENKEL VOOR LDV-ORGANISATIES MET BEGELEIDING VAN SFDO. Om een Query-Time-out in de batchtaak totalisering in organisaties met miljoenen Accounts te vermijden, geeft dit het maximale aantal Accounts op die per batch worden verwerkt.</help>
+    <label>LDV: Chunkgrootte Account Hard Credits</label>
+    <name>ChunkSize_Account_HardCredit__c</name>
+</CustomFieldTranslation>

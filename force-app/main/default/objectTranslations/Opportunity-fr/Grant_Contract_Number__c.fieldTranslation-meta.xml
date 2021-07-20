@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Enregistre les numéros uniques qui peuvent être attribués par les organisations octroyant des subventions.</help>
+    <label>Numéro de contrat de subvention</label>
+    <name>Grant_Contract_Number__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Opérateur</label>
+    <name>Operator__c</name>
+    <picklistValues>
+        <masterLabel>Contains</masterLabel>
+        <translation>Contient</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Does Not Contain</masterLabel>
+        <translation>Ne contient pas</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Equals</masterLabel>
+        <translation>Est égal à</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater Than</masterLabel>
+        <translation>Supérieur à</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater or Equal</masterLabel>
+        <translation>Supérieur ou égal</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>In List</masterLabel>
+        <translation>Dans la liste</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Included</masterLabel>
+        <translation>Est inclus(e)</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Not Included</masterLabel>
+        <translation>N&apos;est pas inclus(e)</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less Than</masterLabel>
+        <translation>Inférieur à</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less or Equal</masterLabel>
+        <translation>Inférieur ou égal</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Equals</masterLabel>
+        <translation>N’est pas égal à</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not In List</masterLabel>
+        <translation>Absence dans liste</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Starts With</masterLabel>
+        <translation>Commence par</translation>
+    </picklistValues>
+</CustomFieldTranslation>

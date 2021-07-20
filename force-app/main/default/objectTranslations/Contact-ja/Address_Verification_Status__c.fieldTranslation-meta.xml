@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この住所を検証する必要がある場合は、住所ページの上部にある [住所を検証] ボタンをクリックします。詳細は、Power of Us Hub のヘルプドキュメントを参照してください。</help>
+    <label>住所検証状況</label>
+    <name>Address_Verification_Status__c</name>
+</CustomFieldTranslation>

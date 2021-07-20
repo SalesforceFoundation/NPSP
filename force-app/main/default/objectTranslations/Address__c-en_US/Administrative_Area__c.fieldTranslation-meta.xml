@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Use this to record the township, municipality, or other civic region associated with this Address. --></help>
+    <label><!-- Administrative Area --></label>
+    <name>Administrative_Area__c</name>
+</CustomFieldTranslation>
