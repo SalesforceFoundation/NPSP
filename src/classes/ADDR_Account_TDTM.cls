@@ -74,7 +74,10 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // BEFORE INSERT
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
-            if (isAddressManagementEnabled(newRecord)) {
+            if ((isAddressManagementEnabled() &&
+                    isHouseholdAccount(newRecord)) ||
+                    (!isIndividualAccount(newRecord) &&
+                    isOrgAccountAddressesEnabled())) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
@@ -87,7 +90,10 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
             NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
-            if (isAddressManagementEnabled(newRecord)) {
+            if ((isAddressManagementEnabled() &&
+                    isHouseholdAccount(newRecord)) ||
+                    (!isIndividualAccount(newRecord) &&
+                            isOrgAccountAddressesEnabled())) {
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate
                         && npspHousehold.isAccountAddressChanged()) {
                     UTIL_Address.normalizeLineBreak(newRecord);
@@ -98,7 +104,10 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // AFTER INSERT
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
-            if (isAddressManagementEnabled(newRecord)) {
+            if ((isAddressManagementEnabled() &&
+                    isHouseholdAccount(newRecord)) ||
+                    (!isIndividualAccount(newRecord) &&
+                            isOrgAccountAddressesEnabled())) {
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                     if (isAccountAddressSpecified(newRecord)) {
                         listAccCreateAddr.add(newRecord);
@@ -113,7 +122,10 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
             NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
-            if (isAddressManagementEnabled(newRecord)) {
+            if ((isAddressManagementEnabled() &&
+                    isHouseholdAccount(newRecord)) ||
+                    (!isIndividualAccount(newRecord) &&
+                            isOrgAccountAddressesEnabled())) {
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     // if the address changed, remember the account we want to add a new address for
                     if (npspHousehold.isAccountAddressChanged()) {
@@ -131,23 +143,43 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    /*******************************************************************************************************
-    * @description utility to see if an address management is enabled
-    * @param newRecord an Account
-    * @return Boolean.  true if address management is enabled
-    ********************************************************************************************************/
-    private Boolean isAddressManagementEnabled(Account newRecord) {
-        if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE
-                && !UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-            return true;
-        }
-        if (!newRecord.npe01__SYSTEMIsIndividual__c
-                && UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+    private Boolean isHouseholdAccount(Account newRecord) {
+        if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
             return true;
         }
         return false;
     }
 
+    /*******************************************************************************************************
+    * @description utility to see if an address management is enabled
+    * @param newRecord an Account
+    * @return Boolean.  true if address management is enabled
+    ********************************************************************************************************/
+    private Boolean isAddressManagementEnabled() {
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return true;
+        }
+        return false;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if an address management is enabled
+    * @param newRecord an Account
+    * @return Boolean.  true if address management is enabled
+    ********************************************************************************************************/
+    private Boolean isIndividualAccount(Account newRecord) {
+        if (newRecord.npe01__SYSTEMIsIndividual__c) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean isOrgAccountAddressesEnabled() {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+            return true;
+        }
+        return false;
+    }
     /*******************************************************************************************************
     * @description utility to see if an address is specified
     * @param acc1 an Account
