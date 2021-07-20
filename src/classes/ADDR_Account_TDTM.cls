@@ -70,32 +70,50 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
 
         List<Account> listAccCreateAddr = new List<Account>();
-       
+
+        // BEFORE INSERT
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            if (isAddressManagementEnabled(newRecord)) {
+                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+            }
+        }
+
+        // BEFORE UPDATE
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
             NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
             if (isAddressManagementEnabled(newRecord)) {
-                // BEFORE INSERT
-                if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-                    UTIL_Address.normalizeLineBreak(newRecord);
-                }
-
-                // BEFORE UPDATE
                 if (triggerAction == TDTM_Runnable.Action.BeforeUpdate
                         && npspHousehold.isAccountAddressChanged()) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
+            }
+        }
 
-                // AFTER INSERT
+        // AFTER INSERT
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            if (isAddressManagementEnabled(newRecord)) {
                 if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
                     if (isAccountAddressSpecified(newRecord)) {
                         listAccCreateAddr.add(newRecord);
                     }
                 }
+            }
+        }
 
-                // AFTER UPDATE
+        // AFTER UPDATE
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
+
+            if (isAddressManagementEnabled(newRecord)) {
                 if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
                     // if the address changed, remember the account we want to add a new address for
                     if (npspHousehold.isAccountAddressChanged()) {
