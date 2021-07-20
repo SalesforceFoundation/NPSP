@@ -30,20 +30,34 @@ describe('c-ge-gift-entry-form-app', () => {
        jest.clearAllMocks();
     });
 
-    it('should render processing batch spinner if batch is still processing', async  () => {
-        getGiftBatchTotalsBy.mockResolvedValue(batchTotalsProcessingGifts);
-        const formApp = createGeGiftEntryFormApp();
-        formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    describe('rendering', () => {
+        it('should render processing batch spinner if batch is still processing', async  () => {
+            getGiftBatchTotalsBy.mockResolvedValue(batchTotalsProcessingGifts);
+            const formApp = createGeGiftEntryFormApp();
+            formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
 
-        document.body.appendChild(formApp);
-        getRecord.emit(mockGetRecord);
+            document.body.appendChild(formApp);
+            getRecord.emit(mockGetRecord);
 
-        expect(spinner(formApp)).toBeTruthy();
+            expect(spinner(formApp)).toBeTruthy();
 
-        await flushPromises();
+            await flushPromises();
 
-        expect(spinner(formApp)).toBeTruthy();
-        expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
+        });
+
+        it('should render Gift Batch name', async () =>{
+
+        });
+
+        it('should render batch table in Batch mode', async () =>{
+
+        });
+
+        it('should not render batch table in Single mode', async () =>{
+
+        });
     });
 });
 
