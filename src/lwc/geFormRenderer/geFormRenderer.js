@@ -249,7 +249,7 @@ export default class GeFormRenderer extends LightningElement{
     // _formState = {}
 
     _gift = {};
-    _giftState = {};
+    _giftView = {};
     _softCredits = [];
 
     get gift() {
@@ -260,7 +260,7 @@ export default class GeFormRenderer extends LightningElement{
     set gift(gift) {
         if (gift && gift.fields) {
             this._gift = gift;
-            this._giftState = deepClone(gift.fields);
+            this._giftView = gift.view();
 
             if (gift.softCredits) {
                 this._softCredits = deepClone(gift.softCredits);
@@ -270,7 +270,7 @@ export default class GeFormRenderer extends LightningElement{
 
     get formState() {
         // return this._formState;
-        return this._giftState;
+        return this._giftView;
     }
 
     set formState(formState) {

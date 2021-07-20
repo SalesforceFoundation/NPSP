@@ -6,6 +6,12 @@ class Gift {
         this.softCredits = giftView.softCredits;
         this.fields = giftView.fields;
     }
+
+    view() {
+        return {
+            ...this.fields
+        }
+    }
 }
 
 export default Gift;
