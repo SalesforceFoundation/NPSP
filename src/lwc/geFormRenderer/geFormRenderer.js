@@ -154,7 +154,6 @@ export default class GeFormRenderer extends LightningElement{
     @api sections = [];
     @api showSpinner = false;
     @api batchId;
-    @api gift;
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
@@ -246,8 +245,40 @@ export default class GeFormRenderer extends LightningElement{
     /*******************************************************************************
      * @description Object used to hold current values for all fields on the form.
      */
-    @track
-    _formState = {}
+    // @track
+    // _formState = {}
+
+    _gift = {};
+    _giftState = {};
+    _softCredits = [];
+
+    get gift() {
+        return this._gift;
+    }
+
+    @api
+    set gift(gift) {
+        if (gift && gift.fields) {
+            this._gift = gift;
+            this._giftState = deepClone(gift.fields);
+
+            if (gift.softCredits) {
+                this._softCredits = deepClone(gift.softCredits);
+            }
+        }
+    }
+
+    get formState() {
+        // return this._formState;
+        return this._giftState;
+    }
+
+    set formState(formState) {
+        // this._formState = formState;
+        this._giftState = formState;
+        this.dispatchEvent(new CustomEvent('currentgiftchange', { detail: formState }));
+    }
+
 
     /** Determines when we show payment related text above the cancel and save buttons */
     get showPaymentSaveNotice() {
@@ -1674,14 +1705,6 @@ export default class GeFormRenderer extends LightningElement{
 
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
-    }
-
-    get formState() {
-        return this._formState;
-    }
-
-    set formState(formState) {
-        this._formState = formState;
     }
 
     lookupFieldApiNameFor(recordId) {

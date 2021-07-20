@@ -56,6 +56,8 @@ public with sharing class GiftSelector {
 
     public DataImport__c getGiftById(Id giftId, GiftTemplate formTemplate) {
         this.additionalGiftsFieldsToQuery = formTemplate.giftFieldApiNames();
+
+
         String queryString = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
             .withSelectFields(fields())
@@ -119,6 +121,7 @@ public with sharing class GiftSelector {
 
         List<String> fields = new List<String>();
         fields.addAll(filterByReadAccess(queryFieldAsSet));
+        fields.addAll(enrichWithLightningDatatablePropertiesForRelationshipFields(fields));
 
         return fields;
     }
@@ -135,5 +138,25 @@ public with sharing class GiftSelector {
         }
 
         return hasReadAccessTo;
+    }
+
+    private List<String> enrichWithLightningDatatablePropertiesForRelationshipFields(List<String> fields) {
+        List<String> relationshipFieldsToAdd = new List<String>();
+
+        for (String fieldApiName : fields) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            if (fieldDescribe.type == Schema.DisplayType.REFERENCE) {
+                String referencedObjectName = fieldDescribe.getReferenceTo()[0].getDescribe().name;
+                String relationshipField =
+                    fieldDescribe.getName().substringBefore('__c') + '__r.'
+                    + UTIL_Describe.getNameField(referencedObjectName);
+
+                relationshipFieldsToAdd.add(relationshipField);
+            }
+        }
+
+        return relationshipFieldsToAdd;
     }
 }

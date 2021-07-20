@@ -51,7 +51,8 @@
             <template if:false={isBatchProcessing}>
                 <c-ge-form-renderer
                         batch-id={recordId}
-                        gift={gift}
+                        gift={currentGift}
+                        oncurrentgiftchange={handleCurrentGiftChange}
                         onsubmit={handleSubmit}
                         onsectionsretrieved={handleSectionsRetrieved}
                         onpermissionerror={handlePermissionErrors}
@@ -63,6 +64,7 @@
 
                 <template if:false={isPermissionError}>
                     <c-ge-batch-gift-entry-table
+                        gift-batch-view={giftBatchView}
                         title={giftsTableTitle}
                         count={count}
                         expected-count={expectedCountOfGifts}

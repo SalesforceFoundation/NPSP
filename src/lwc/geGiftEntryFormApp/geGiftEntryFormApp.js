@@ -6,7 +6,7 @@ import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
+import { validateJSONString, format, getNamespace, showToast, deepClone } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
@@ -33,13 +33,14 @@ import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Bat
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
 import BatchTotals from './helpers/batchTotals';
-import Gift from './helpers/gift';
 
 /*******************************************************************************
 * @description Constants
 */
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
+
+import GiftBatch from 'c/geGiftBatch';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -52,7 +53,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
     @track batchTotals = {}
-    @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
 
@@ -66,6 +66,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     total;
     batch = {};
     isLoading = true;
+    giftBatch = new GiftBatch();
+    giftBatchView = {};
+    _currentGift = {};
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -79,8 +82,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        await this.gift.init(); 
         this.isElevateCustomer = await checkForElevateCustomer();
+
+        await this.giftBatch.init(this.recordId);
+        this.refreshGiftBatchView();
+    }
+
+    refreshGiftBatchView() {
+        this.giftBatchView = this.giftBatch.view();
     }
 
     disconnectedCallback() {
@@ -172,8 +181,22 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleLoadData(event) {
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.loadDataImportRecord(event.detail);
+        // const form = this.template.querySelector('c-ge-form-renderer');
+        // form.loadDataImportRecord(event.detail);
+        const giftId = event.detail;
+        console.log('Gift Id from event:', giftId);
+        const gift = this.giftBatch.giftBy(giftId);
+        console.log('Set Current Gift to Member Gift:', deepClone(gift));
+        this._currentGift = gift;
+    }
+
+    get currentGift() {
+        return this._currentGift;
+    }
+
+    handleCurrentGiftChange(event) {
+        console.log('handleCurrentGiftChange... ', deepClone(event.detail));
+        this._currentGift.fields = event.detail;
     }
 
     handlePermissionErrors() {

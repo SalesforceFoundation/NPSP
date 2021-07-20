@@ -8,7 +8,7 @@ import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.ge
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty, deepClone} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
@@ -77,7 +77,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api isElevateCustomer = false;
 
     get ready() {
-        return this._columnsLoaded && this._dataImportModel;
+        return this._columnsLoaded && this._batchLoaded;
     }
 
     _columnsLoaded = false;
@@ -93,6 +93,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api userDefinedBatchTableColumnNames;
     @api batchCurrencyIsoCode;
     isLoaded = true;
+    giftsFromView = [];
 
 
     constructor() {
@@ -103,29 +104,48 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     connectedCallback() {
-        this.loadBatch();
         registerListener('refreshtable', this.refreshTable, this);
     }
 
-    refreshTable() {
-        let refreshedRows = [];
-        getDataImportRows({ batchId: this.batchId, offset: 0 })
-            .then(rows => {
-                rows.forEach(row => {
-                    refreshedRows.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = [ ...refreshedRows ];
-            })
-            .catch(error => {
-                handleError(error);
+    get giftBatchView() {
+        return this._giftBatchView;
+    }
+
+    @api
+    set giftBatchView(giftBatchView) {
+        this._giftBatchView = giftBatchView;
+        if (giftBatchView.gifts) {
+            console.log('this._dataImportObjectInfo', deepClone(this._dataImportObjectInfo));
+            this._giftBatchView.gifts.forEach(giftView => {
+                this.giftsFromView.push( Object.assign(giftView.fields,
+                    this.appendUrlColumnProperties.call(giftView.fields,
+                        this._dataImportObjectInfo)));
             });
+            this._count = this._giftBatchView.totalGiftsCount;
+            this._total = this._giftBatchView.total;
+            this._batchLoaded = true;
+        }
+    }
+
+    refreshTable() {
+        // let refreshedRows = [];
+        // getDataImportRows({ batchId: this.batchId, offset: 0 })
+        //     .then(rows => {
+        //         rows.forEach(row => {
+        //             refreshedRows.push(
+        //                 Object.assign(row,
+        //                     this.appendUrlColumnProperties.call(row.record,
+        //                         this._dataImportObjectInfo)));
+        //         });
+        //         this.data = [ ...refreshedRows ];
+        //     })
+        //     .catch(error => {
+        //         handleError(error);
+        //     });
     }
 
     get hasData() {
-        return this.data.length > 0;
+        return this.giftsFromView.length > 0;
     }
 
     _data = [];
@@ -188,21 +208,22 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this._sections;
     }
 
-    _dataImportModel;
-    loadBatch() {
-        getDataImportModel({batchId: this.batchId})
-            .then(
-                response => {
-                    this._dataImportModel = JSON.parse(response);
-                    this.setTableProperties();
-                    this._batchLoaded = true;
-                }
-            )
-            .catch(error => handleError(error));
-    }
+    // _dataImportModel;
+    // loadBatch() {
+    //     getDataImportModel({batchId: this.batchId})
+    //         .then(
+    //             response => {
+    //                 this._dataImportModel = JSON.parse(response);
+    //                 this.setTableProperties();
+    //                 this._batchLoaded = true;
+    //                 console.log('table data: ', deepClone(this._data));
+    //             }
+    //         )
+    //         .catch(error => handleError(error));
+    // }
 
 
-    _propertiesSet = false;
+    // _propertiesSet = false;
     setTableProperties() {
         if (this._propertiesSet) {
             return;
@@ -213,14 +234,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         if (!this._dataImportModel) {
             return;
         }
-        this._count = this._dataImportModel.totalCountOfRows;
-        this._total = this._dataImportModel.batchTotalRowAmount;
-        this._dataImportModel.dataImportRows.forEach(row => {
-            this.data.push(Object.assign(row,
-                this.appendUrlColumnProperties.call(row.record,
-                    this._dataImportObjectInfo)));
-        });
-        this.data = this.data.slice(0);
+        // this._count = this._dataImportModel.totalCountOfRows;
+        // this._total = this._dataImportModel.batchTotalRowAmount;
+        // this._dataImportModel.dataImportRows.forEach(row => {
+        //     this.data.push(Object.assign(row,
+        //         this.appendUrlColumnProperties.call(row.record,
+        //             this._dataImportObjectInfo)));
+        // });
+        // this.data = this.data.slice(0);
         this._propertiesSet = true;
     }
 
@@ -333,32 +354,32 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     loadMoreData(event) {
-        event.target.isLoading = true;
-        const disableInfiniteLoading = function () {
-            this.enableInfiniteLoading = false;
-        }.bind(event.target);
+        // event.target.isLoading = true;
+        // const disableInfiniteLoading = function () {
+        //     this.enableInfiniteLoading = false;
+        // }.bind(event.target);
 
-        const disableIsLoading = function () {
-            this.isLoading = false;
-        }.bind(event.target);
+        // const disableIsLoading = function () {
+        //     this.isLoading = false;
+        // }.bind(event.target);
 
-        getDataImportRows({ batchId: this.batchId, offset: this.data.length })
-            .then(rows => {
-                rows.forEach(row => {
-                    this.data.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = this.data.splice(0);
-                if (this.data.length >= this.count) {
-                    disableInfiniteLoading();
-                }
-                disableIsLoading();
-            })
-            .catch(error => {
-                handleError(error);
-            });
+        // getDataImportRows({ batchId: this.batchId, offset: this.data.length })
+        //     .then(rows => {
+        //         rows.forEach(row => {
+        //             this.data.push(
+        //                 Object.assign(row,
+        //                     this.appendUrlColumnProperties.call(row.record,
+        //                         this._dataImportObjectInfo)));
+        //         });
+        //         this.data = this.data.splice(0);
+        //         if (this.data.length >= this.count) {
+        //             disableInfiniteLoading();
+        //         }
+        //         disableIsLoading();
+        //     })
+        //     .catch(error => {
+        //         handleError(error);
+        //     });
     }
 
     @api
@@ -395,8 +416,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     loadRow(row) {
+        console.log('Load row: ', deepClone(row));
         this.dispatchEvent(new CustomEvent('loaddata', {
-            detail: row
+            detail: row.Id
         }));
     }
 
