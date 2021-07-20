@@ -275,7 +275,6 @@ export default class GeFormRenderer extends LightningElement{
 
     set formState(formState) {
         // this._formState = formState;
-        this._giftState = formState;
         this.dispatchEvent(new CustomEvent('currentgiftchange', { detail: formState }));
     }
 
