@@ -78,9 +78,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async connectedCallback() {
+        this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
         await this.gift.init(); 
-        this.isElevateCustomer = await checkForElevateCustomer();
     }
 
     disconnectedCallback() {
@@ -108,7 +108,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleSubmit(event) {
         // Callback received from geFormRenderer. Provides functions that
         // toggle the form save button, toggle the lightning spinner, and displays aura exceptions.
-        this.errorCallback = event.detail.errorCallback;
+        this.errorCallback = event.detail.error;
 
         try {
             if (this.isBatchMode) {
@@ -367,6 +367,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     collapseForm() {
+        // TODO: formRenderer should be able to
+        // figure out when it's collapse based on
+        // props that are received from formApp.
+        // Look into removing this function entirely
         const form = this.template.querySelector('c-ge-form-renderer');
         form.collapse();
     }
