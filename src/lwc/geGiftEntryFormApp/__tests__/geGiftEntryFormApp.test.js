@@ -220,15 +220,6 @@ describe('c-ge-gift-entry-form-app', () => {
             const spiedSubmitEventDetails = submitEventSpy.mock.calls[0][0].detail;
             expect(spiedSubmitEventDetails.dataImportRecord.Id).toEqual('DUMMY_ID');
             expect(spiedSubmitEventDetails.success).toHaveBeenCalled();
-
-            saveAndDryRunDataImport.mockResolvedValue("DUMMY_BAD_RESPONSE");
-            formApp = setupForBatchMode();
-            geFormRenderer.dispatchEvent(submitEvent);
-            await flushPromises();
-
-            expect(submitEventSpy).toHaveBeenCalled();
-            expect(spiedSubmitEventDetails.dataImportRecord.Id).toEqual('DUMMY_ID');
-            expect(spiedSubmitEventDetails.success).toHaveBeenCalled();
         });
 
         it('should call expected methods on the table component when a gift save fails in batch mode', async () => {
