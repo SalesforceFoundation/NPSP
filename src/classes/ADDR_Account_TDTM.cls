@@ -83,16 +83,18 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // BEFORE UPDATE
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             if (isAddressManagementEnabled()) {
+                List<Account> accountsWithAddressChanges = new List<Account>();
                 for (Integer i = 0; i < listNew.size(); i++) {
                     Account newRecord = (Account) listNew[i];
                     Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
                     NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
                     if (isHouseholdAccount(newRecord)) {
                         if (npspHousehold.isAccountAddressChanged()) {
-                            UTIL_Address.normalizeLineBreak(newRecord);
+                            accountsWithAddressChanges.add(newRecord);
                         }
                     }
                 }
+                normalizeLineBreaksFor(accountsWithAddressChanges);
             }
             if (isOrgAccountAddressesEnabled()) {
                 for (Integer i = 0; i < listNew.size(); i++) {
