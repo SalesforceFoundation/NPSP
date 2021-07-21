@@ -82,12 +82,14 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 }
             }
             if (isOrgAccountAddressesEnabled()) {
+                List<Account> orgAccounts = new List<Account>();
                 for (Integer i = 0; i < listNew.size(); i++) {
                     Account newRecord = (Account) listNew[i];
                     if (!isIndividualAccount(newRecord)) {
-                        UTIL_Address.normalizeLineBreak(newRecord);
+                        orgAccounts.add(newRecord);
                     }
                 }
+                normalizeLineBreaksFor(listNew);
             }
         }
 
@@ -149,6 +151,13 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
                     
         return dmlWrapper;    
+    }
+
+    private void normalizeLineBreaksFor(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
     private Boolean isHouseholdAccount(Account newRecord) {
