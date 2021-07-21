@@ -8,6 +8,7 @@ import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryContro
 import getAllocationsSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
+import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 const mockGetRecord = require('./data/getRecord.json');
@@ -29,8 +30,9 @@ const createGeGiftEntryFormApp = () => {
 const setupForBatchMode = () => {
     retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
     getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
-
     getGiftBatchTotalsBy.mockResolvedValue(batchTotalsCompletedGifts);
+    getDataImportModel.mockResolvedValue('{"dummyKey":"dummyValue"}');
+
     const formApp = createGeGiftEntryFormApp();
     formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
 

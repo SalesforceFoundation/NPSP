@@ -1,0 +1,13 @@
+{
+  "Data_Import_Object_Mapping_Set": "m021F000000dLTNQA2",
+  "Data_Import_Object_Mapping_Set_Dev_Name": "Migrated_Custom_Object_Mapping_Set",
+  "DeveloperName": "Opportunity_4989bd959",
+  "Field_Mappings": [],
+  "Id": "m031F000000KLdhQAG",
+  "Imported_Record_Field_Name": "DonationImported__c",
+  "Imported_Record_Status_Field_Name": "DonationImportStatus__c",
+  "Is_Deleted": false,
+  "MasterLabel": "Opportunity",
+  "Object_API_Name": "Opportunity",
+  "Relationship_To_Predecessor": "No Predecessor"
+}

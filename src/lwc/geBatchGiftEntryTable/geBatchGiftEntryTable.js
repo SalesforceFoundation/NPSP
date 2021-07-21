@@ -511,7 +511,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             event.detail.success(); //Re-enable the Save button
             this.notifyGiftBatchHeaderOfTableChange();
         }).catch(error => {
-            console.log('ERROR: ', error);
             event.detail.error(error);
         });
     }
