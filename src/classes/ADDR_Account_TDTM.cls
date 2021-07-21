@@ -83,17 +83,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // BEFORE UPDATE
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             if (isAddressManagementEnabled()) {
-                List<Account> accountsWithAddressChanges = new List<Account>();
-                for (Integer i = 0; i < listNew.size(); i++) {
-                    Account newRecord = (Account) listNew[i];
-                    Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
-                    NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
-                    if (isHouseholdAccount(newRecord)) {
-                        if (npspHousehold.isAccountAddressChanged()) {
-                            accountsWithAddressChanges.add(newRecord);
-                        }
-                    }
-                }
+                accounts = new Accounts(listNew, listOld);
+                List<Account> accountsWithAddressChanges =
+                        getAccountsWithBillingAddressChanges(listNew, listOld);
                 normalizeLineBreaksFor(accountsWithAddressChanges);
             }
             if (isOrgAccountAddressesEnabled()) {
@@ -103,7 +95,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                     NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
                     if (!isIndividualAccount(newRecord)) {
-                        if (npspHousehold.isAccountAddressChanged()) {
+                        if (npspHousehold.isBillingAddressChanged()) {
                             UTIL_Address.normalizeLineBreak(newRecord);
                         }
                     }
@@ -138,7 +130,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                         (!isIndividualAccount(newRecord) &&
                                 isOrgAccountAddressesEnabled())) {
                     // if the address changed, remember the account we want to add a new address for
-                    if (npspHousehold.isAccountAddressChanged()) {
+                    if (npspHousehold.isBillingAddressChanged()) {
                         listAccCreateAddr.add(newRecord);
                     }
                 }
@@ -151,6 +143,19 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
                     
         return dmlWrapper;    
+    }
+
+    private List<Account> getAccountsWithBillingAddressChanges(List<SObject> listNew, List<SObject> listOld) {
+        List<Account> accountsWithAddressChanges = new List<Account>();
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
+            if (npspHousehold.isBillingAddressChanged()) {
+                accountsWithAddressChanges.add(newRecord);
+            }
+        }
+        return accountsWithAddressChanges;
     }
 
     public static void normalizeLineBreaksFor(List<SObject> listNew) {
