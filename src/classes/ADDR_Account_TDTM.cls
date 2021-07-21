@@ -138,17 +138,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    private List<Account> householdAccounts(List<SObject> listNew) {
-        List<Account> householdAccounts = new List<Account>();
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            if (isHouseholdAccount(newRecord)) {
-                householdAccounts.add(newRecord);
-            }
-        }
-        return householdAccounts;
-    }
-
     public static void normalizeLineBreaksFor(List<SObject> listNew) {
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
