@@ -44,6 +44,19 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(buttons.length).toBe(3);
         });
 
+        it('should render process batch and payments button', async () => {
+            const batchHeader = setup();
+            batchHeader.batchTotals = {
+                authorizedPaymentsCount: true
+            };
+
+            await flushPromises();
+
+            const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
+            const processBatchButton = buttons[1];
+            expect(processBatchButton.label).toBe('c.bgeProcessBatchAndPayments');
+        });
+
         it('renders detail row', async () => {
             const element = setup();
 
@@ -106,6 +119,58 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             const failedGifts = detailBlocks[1].querySelectorAll('p')[1].innerHTML;
             expect(failedGifts).toBe('5');
+        });
+    });
+
+    describe('event handling and dispatching', () => {
+        it('should dispatch expected custom event when dry run button is clicked', async () => {
+            const batchHeader = setup();
+            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+
+            const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
+            const dryRunButton = buttons[0];
+            expect(dryRunButton.getAttribute('data-action')).toBe('DRY_RUN_BATCH');
+            dryRunButton.click();
+
+            await flushPromises();
+
+            const dryRunCustomEvent = new CustomEvent('batchdryrun');
+            expect(dispatchEventSpy).toHaveBeenCalledWith(dryRunCustomEvent);
+            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('batchdryrun');
+        });
+
+        it('should dispatch expected custom event when process batch button is clicked', async () => {
+            const batchHeader = setup();
+            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+
+            const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
+            const processBatchButton = buttons[1];
+            expect(processBatchButton.getAttribute('data-action')).toBe('PROCESS_BATCH');
+            processBatchButton.click();
+
+            await flushPromises();
+
+            const processBatchCustomEvent = new CustomEvent('processbatch');
+            expect(dispatchEventSpy).toHaveBeenCalledWith(processBatchCustomEvent);
+            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('processbatch');
+        });
+
+        it('should dispatch expected custom event when edit button is clicked', async () => {
+            const batchHeader = setup();
+            batchHeader.batchId = 'DUMMY_ID';
+            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+
+            const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
+            const editBatchButton = buttons[2];
+            expect(editBatchButton.getAttribute('data-action')).toBe('EDIT_BATCH');
+            editBatchButton.click();
+
+            await flushPromises();
+
+            const editBatchCustomEvent = new CustomEvent('edit');
+            expect(dispatchEventSpy).toHaveBeenCalledWith(editBatchCustomEvent);
+            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('edit');
+            expect(dispatchEventSpy.mock.calls[0][0].detail).toBe('DUMMY_ID');
         });
     });
 });
