@@ -247,7 +247,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     * @param newRecord an Account
     * @return Boolean.  true if address management is enabled
     ********************************************************************************************************/
-    public Boolean isIndividualAccount(Account newRecord) {
+    private Boolean isIndividualAccount(Account newRecord) {
         if (newRecord.npe01__SYSTEMIsIndividual__c) {
             return true;
         }
