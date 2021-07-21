@@ -382,17 +382,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     */
     public void createChangeHistoryOnUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
 
-        Boolean chEnabled = 
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettings().EnableChangeHistory__c;
-
-        System.debug(' *** isChangeHistoryEnabled: '); 
-        System.debug(chEnabled); 
-
-        RD2_Settings settings = new RD2_Settings();
-        System.debug(' From RD2 Setting: '); 
-        System.debug(settings.isChangeHistoryEnabled());
-
-        if (triggerAction != TDTM_Runnable.Action.AfterUpdate || !chEnabled) {
+        if (triggerAction != TDTM_Runnable.Action.AfterUpdate || !changeHistoryService.isChangeHistoryEnabled) {
             return;
         }
 
@@ -400,7 +390,10 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
-            changeHistoryService.handleHistoryFieldChanged(rd, oldRd);
+            RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rd);
+            RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
+
+            changeHistoryService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
         }
         
         createChangeHistoryRecords(changeHistoryService.getChangeHistoryRecords());
@@ -411,16 +404,9 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     * @param changeHistoryList Recurring Donation Change History records
     */
     private void createChangeHistoryRecords(List<RecurringDonationChangeHistory__c> changeHistoryList) {
-
-        // for (npe03__Recurring_Donation__c rd : rds) {
-        //     dmlActions.objectsToInsert.addAll(scheduleService.buildNewSchedules(rd));
-        // }
-
         if(changeHistoryList.size() > 0){
-            // insert changeHistoryList;
             dmlActions.objectsToInsert.addAll(changeHistoryList);
         }
-
     }
 
     /***

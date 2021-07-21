@@ -470,6 +470,8 @@
         <members>RD2_CancelCommitmentService</members>
         <members>RD2_CancelCommitmentService_TEST</members>
         <members>RD2_Constants</members>
+        <members>RD2_ChangeHistoryService</members>
+        <members>RD2_ChangeHistoryService_TEST</members>
         <members>RD2_CustomFieldMapper</members>
         <members>RD2_CustomFieldMapper_TEST</members>
         <members>RD2_DataMigrationBase_BATCH</members>
