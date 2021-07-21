@@ -75,10 +75,15 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             for (Integer i = 0; i < listNew.size(); i++) {
                 Account newRecord = (Account) listNew[i];
-                if ((isAddressManagementEnabled() &&
-                        isHouseholdAccount(newRecord)) ||
-                        (!isIndividualAccount(newRecord) &&
-                                isOrgAccountAddressesEnabled())) {
+                if (isAddressManagementEnabled() &&
+                        isHouseholdAccount(newRecord)) {
+                    UTIL_Address.normalizeLineBreak(newRecord);
+                }
+            }
+            for (Integer i = 0; i < listNew.size(); i++) {
+                Account newRecord = (Account) listNew[i];
+                if (!isIndividualAccount(newRecord) &&
+                                isOrgAccountAddressesEnabled()) {
                     UTIL_Address.normalizeLineBreak(newRecord);
                 }
             }
