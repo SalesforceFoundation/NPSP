@@ -82,17 +82,28 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         // BEFORE UPDATE
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            for (Integer i = 0; i < listNew.size(); i++) {
-                Account newRecord = (Account) listNew[i];
-                Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
+            if (isAddressManagementEnabled()) {
+                for (Integer i = 0; i < listNew.size(); i++) {
+                    Account newRecord = (Account) listNew[i];
+                    Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+                    NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
+                    if (isHouseholdAccount(newRecord)) {
+                        if (npspHousehold.isAccountAddressChanged()) {
+                            UTIL_Address.normalizeLineBreak(newRecord);
+                        }
+                    }
+                }
+            }
+            if (isOrgAccountAddressesEnabled()) {
+                for (Integer i = 0; i < listNew.size(); i++) {
+                    Account newRecord = (Account) listNew[i];
+                    Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
+                    NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
 
-                if ((isAddressManagementEnabled() &&
-                        isHouseholdAccount(newRecord)) ||
-                        (!isIndividualAccount(newRecord) &&
-                                isOrgAccountAddressesEnabled())) {
-                    if (npspHousehold.isAccountAddressChanged()) {
-                        UTIL_Address.normalizeLineBreak(newRecord);
+                    if (!isIndividualAccount(newRecord)) {
+                        if (npspHousehold.isAccountAddressChanged()) {
+                            UTIL_Address.normalizeLineBreak(newRecord);
+                        }
                     }
                 }
             }
