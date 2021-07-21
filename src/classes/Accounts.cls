@@ -133,6 +133,19 @@ public inherited sharing class Accounts extends fflib_SObjects {
         return null;
     }
 
+    public Accounts withBillingAddressChanges() {
+        List<Account> accountsWithAddressChanges = new List<Account>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Account newRecord = (Account) getRecords()[i];
+            Account oldRecord = (oldMap.values() != null ? (Account) oldMap.values()[i] : null);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
+            if (npspHousehold.isBillingAddressChanged()) {
+                accountsWithAddressChanges.add(newRecord);
+            }
+        }
+        return new Accounts(accountsWithAddressChanges, oldMap.values());
+    }
+
     private void setNameAndGreetingsToReplacementText() {
         householdNamingService.setNameAndGreetingsToReplacementText(householdAccounts());
     }
