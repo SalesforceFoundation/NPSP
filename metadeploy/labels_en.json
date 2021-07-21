@@ -204,5 +204,19 @@
             "message": "The NPSP Reports & Dashboards come with new Trials and installations of NPSP starting at version 3.90 (February 2017). If you started a Trial or installed NPSP before this version, use this installer to add the Reports and Dashboards. For complete information on the NPSP Reports & Dashboards, see the [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nThis installer requires the 5 Opportunity record types included in the standard Nonprofit Starter Pack trial template, and will create them if they don't exist in your org. The installer searches for the record types by Developer Name (not label), so if you changed the Developer Names of the original record types, the installer will add them again. The record type Developer Names are as follows:\n\n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership\n",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "Product Upgrade",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "This installer upgrades this package and any required dependencies to the latest version in your org. This installer isn't supported and has risks. Please don't run this installer unless you're aware of its specific use cases and considerations.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Installation complete and package is on the latest version.",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }
