@@ -36,17 +36,6 @@
 */
 public class ADDR_Account_TDTM extends TDTM_Runnable {
 
-    @TestVisible
-    private OrgConfig orgConfig {
-        get {
-            if (orgConfig == null) {
-                orgConfig = new OrgConfig();
-            }
-            return orgConfig;
-        }
-        set;
-    }
-
     /*******************************************************************************************************
     * @description Trigger Handler on Account that handles Address management.
     * @param listNew the list of Accounts from trigger new. 
@@ -86,13 +75,12 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         // AFTER INSERT
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            accounts = new Accounts(listNew);
-            Accounts withAddresses = withAddresses(listNew);
+            Accounts accountsWithAddresses = new Accounts(listNew).withAddresses();
             if (isAddressManagementEnabled()) {
-                listAccCreateAddr.addAll(withAddresses.householdAccounts());
+                listAccCreateAddr.addAll(accountsWithAddresses.householdAccounts());
             }
             if (isOrgAccountAddressesEnabled()) {
-                listAccCreateAddr.addAll(withAddresses.orgAccounts());
+                listAccCreateAddr.addAll(accountsWithAddresses.orgAccounts());
             }
         }
 
@@ -121,22 +109,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
                     
         return dmlWrapper;    
-    }
-
-    private Accounts withAddresses(List<SObject> listNew) {
-        List<Account> withAddresses = new List<Account>();
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            if ((isAddressManagementEnabled() &&
-                    isHouseholdAccount(newRecord)) ||
-                    (!isIndividualAccount(newRecord) &&
-                            isOrgAccountAddressesEnabled())) {
-                if (isAccountAddressSpecified(newRecord)) {
-                    withAddresses.add(newRecord);
-                }
-            }
-        }
-        return new Accounts(withAddresses);
     }
 
     private Boolean isHouseholdAccount(Account newRecord) {
@@ -175,28 +147,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             return true;
         }
         return false;
-    }
-    /*******************************************************************************************************
-    * @description utility to see if an address is specified
-    * @param acc1 an Account
-    * @return boolean.  true if an address is specified in any of the Account Billing fields
-    ********************************************************************************************************/
-    private Boolean isAccountAddressSpecified(Account acc1) {
-        if (acc1 == null) {
-            return false;
-        }
-        
-        Boolean isSpecified =
-           acc1.BillingStreet != null ||
-           acc1.BillingCity != null ||
-           acc1.BillingState != null ||
-           acc1.BillingPostalCode != null ||
-            // note that we decided to ignore country so that a default value won't create unnecessary address objects
-           (acc1.BillingCountry != null && !orgConfig.isStateCountryPicklistsEnabled()) ||
-           // only test StateCode if picklists enabled.
-           (orgConfig.isStateCountryPicklistsEnabled() && acc1.get('BillingStateCode') != null);
-
-        return isSpecified;   
     }
 
     /*******************************************************************************************************

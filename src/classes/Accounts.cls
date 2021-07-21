@@ -35,6 +35,7 @@
 public inherited sharing class Accounts extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
+
     @TestVisible
     private HouseholdNamingService householdNamingService {
         get {
@@ -45,6 +46,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         }
         set;
     }
+
     @TestVisible
     private HouseholdSettings settings {
         get {
@@ -52,6 +54,17 @@ public inherited sharing class Accounts extends fflib_SObjects {
                 settings = new HouseholdSettings();
             }
             return settings;
+        }
+        set;
+    }
+
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
         }
         set;
     }
@@ -265,6 +278,40 @@ public inherited sharing class Accounts extends fflib_SObjects {
             return true;
         }
         return false;
+    }
+
+    public Accounts withAddresses() {
+        List<Account> withAddresses = new List<Account>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Account newRecord = (Account) getRecords()[i];
+            if (isAccountAddressSpecified(newRecord)) {
+                withAddresses.add(newRecord);
+            }
+        }
+        return new Accounts(withAddresses);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if an address is specified
+    * @param acc1 an Account
+    * @return boolean.  true if an address is specified in any of the Account Billing fields
+    ********************************************************************************************************/
+    private Boolean isAccountAddressSpecified(Account acc1) {
+        if (acc1 == null) {
+            return false;
+        }
+
+        Boolean isSpecified =
+                acc1.BillingStreet != null ||
+                        acc1.BillingCity != null ||
+                        acc1.BillingState != null ||
+                        acc1.BillingPostalCode != null ||
+                        // note that we decided to ignore country so that a default value won't create unnecessary address objects
+                        (acc1.BillingCountry != null && !orgConfig.isStateCountryPicklistsEnabled()) ||
+                        // only test StateCode if picklists enabled.
+                        (orgConfig.isStateCountryPicklistsEnabled() && acc1.get('BillingStateCode') != null);
+
+        return isSpecified;
     }
 
 }
