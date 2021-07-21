@@ -73,14 +73,9 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         // BEFORE INSERT
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            if (isAddressManagementEnabled()) {
-                List<Account> householdAccounts = householdAccounts(listNew);
-                normalizeLineBreaksFor(householdAccounts);
-            }
-            if (isOrgAccountAddressesEnabled()) {
-                List<Account> orgAccounts = orgAccounts(listNew);
-                normalizeLineBreaksFor(orgAccounts);
-            }
+            Accounts accounts = new Accounts(listNew);
+            HouseholdsApp householdsApp = new HouseholdsApp();
+            householdsApp.onBeforeInsertOf(accounts);
         }
 
         // BEFORE UPDATE
@@ -154,18 +149,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         return householdAccounts;
     }
 
-    private List<Account> orgAccounts(List<SObject> listNew) {
-        List<Account> orgAccounts = new List<Account>();
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            if (!isIndividualAccount(newRecord)) {
-                orgAccounts.add(newRecord);
-            }
-        }
-        return orgAccounts;
-    }
-
-    private void normalizeLineBreaksFor(List<SObject> listNew) {
+    public static void normalizeLineBreaksFor(List<SObject> listNew) {
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
             UTIL_Address.normalizeLineBreak(newRecord);

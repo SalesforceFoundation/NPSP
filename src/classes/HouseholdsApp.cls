@@ -57,6 +57,15 @@ public inherited sharing class HouseholdsApp {
         set;
     }
 
+    public void onBeforeInsertOf(Accounts accounts) {
+        if (isAddressManagementEnabled()) {
+            ADDR_Account_TDTM.normalizeLineBreaksFor(accounts.householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            ADDR_Account_TDTM.normalizeLineBreaksFor(accounts.orgAccounts());
+        }
+    }
+
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
@@ -119,6 +128,20 @@ public inherited sharing class HouseholdsApp {
 
     private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
+    }
+
+    private Boolean isAddressManagementEnabled() {
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean isOrgAccountAddressesEnabled() {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -202,7 +202,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         return acc.npe01__SYSTEM_AccountType__c == null;
     }
 
-    private List<Account> householdAccounts() {
+    public List<Account> householdAccounts() {
         return (List<Account>) selectByFieldValue(
                 Account.npe01__SYSTEM_AccountType__c,
                 CAO_Constants.HH_ACCOUNT_TYPE)
@@ -229,6 +229,29 @@ public inherited sharing class Accounts extends fflib_SObjects {
 
     private Boolean isHouseholdTriggerContext() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH);
+    }
+
+    public List<Account> orgAccounts() {
+        List<Account> orgAccounts = new List<Account>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Account newRecord = (Account) getRecords()[i];
+            if (!isIndividualAccount(newRecord)) {
+                orgAccounts.add(newRecord);
+            }
+        }
+        return orgAccounts;
+    }
+
+    /*******************************************************************************************************
+    * @description utility to see if an address management is enabled
+    * @param newRecord an Account
+    * @return Boolean.  true if address management is enabled
+    ********************************************************************************************************/
+    public Boolean isIndividualAccount(Account newRecord) {
+        if (newRecord.npe01__SYSTEMIsIndividual__c) {
+            return true;
+        }
+        return false;
     }
 
 }
