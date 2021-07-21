@@ -1,6 +1,3 @@
-/*******************************************************************************
-* @description Server / Platform  Imports
-*/
 import { LightningElement, api, track, wire } from 'lwc';
 import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
@@ -18,9 +15,6 @@ import checkForElevateCustomer
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
-/*******************************************************************************
-* @description Schema imports
-*/
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_NAME
     from '@salesforce/schema/DataImportBatch__c.Name';
@@ -35,9 +29,6 @@ import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTo
 import BatchTotals from './helpers/batchTotals';
 import Gift from './helpers/gift';
 
-/*******************************************************************************
-* @description Constants
-*/
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
