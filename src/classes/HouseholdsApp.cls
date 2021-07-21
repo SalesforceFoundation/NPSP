@@ -66,6 +66,40 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
+    public void onAfterInsertOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        createNewAddressesAndAddToDmlWrapperForProcessing(accounts, dmlWrapper);
+    }
+
+    private void createNewAddressesAndAddToDmlWrapperForProcessing(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Account> listAccCreateAddr = new List<Account>();
+        if (isAddressManagementEnabled()) {
+            listAccCreateAddr.addAll(accounts.withAddresses().householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            listAccCreateAddr.addAll(accounts.withAddresses().orgAccounts());
+        }
+        // create any new Address objects
+        if (listAccCreateAddr.size() > 0) {
+            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for each Account, create a new default address and add it to dmlWrapper
+    * @param listAcc a list of Accounts
+    * @param dmlWrapper to hold the Addresses that need creating
+    ********************************************************************************************************/
+    private void createAddrFromAcc(List<Account> listAcc,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Address__c> listAddr = new List<Address__c>();
+        for (Account acc : listAcc) {
+            NPSP_Address npspAddress = new NPSP_Address(acc);
+            listAddr.add(npspAddress.getRecord());
+        }
+        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
+        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
+    }
+
     public void onBeforeUpdateOf(Accounts accounts) {
         Accounts accountsWithBillingAddressChanges = accounts.withBillingAddressChanges();
         if (isAddressManagementEnabled()) {

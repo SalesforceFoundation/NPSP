@@ -73,18 +73,8 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         // AFTER INSERT
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            Accounts accountsWithAddresses = new Accounts(listNew).withAddresses();
-            List<Account> listAccCreateAddr = new List<Account>();
-            if (isAddressManagementEnabled()) {
-                listAccCreateAddr.addAll(accountsWithAddresses.householdAccounts());
-            }
-            if (isOrgAccountAddressesEnabled()) {
-                listAccCreateAddr.addAll(accountsWithAddresses.orgAccounts());
-            }
-            // create any new Address objects
-            if (listAccCreateAddr.size() > 0) {
-                createAddrFromAcc(listAccCreateAddr, dmlWrapper);
-            }
+            accounts = new Accounts(listNew);
+            householdsApp.onAfterInsertOf(accounts, dmlWrapper);
         }
 
         // AFTER UPDATE
