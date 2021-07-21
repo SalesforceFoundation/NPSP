@@ -126,19 +126,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    private List<Account> getAccountsWithBillingAddressChanges(List<SObject> listNew, List<SObject> listOld) {
-        List<Account> accountsWithAddressChanges = new List<Account>();
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
-            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
-            if (npspHousehold.isBillingAddressChanged()) {
-                accountsWithAddressChanges.add(newRecord);
-            }
-        }
-        return accountsWithAddressChanges;
-    }
-
     public static void normalizeLineBreaksFor(List<SObject> listNew) {
         for (Integer i = 0; i < listNew.size(); i++) {
             Account newRecord = (Account) listNew[i];
