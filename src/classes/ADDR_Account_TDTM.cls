@@ -86,16 +86,13 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         // AFTER INSERT
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            for (Integer i = 0; i < listNew.size(); i++) {
-                Account newRecord = (Account) listNew[i];
-                if ((isAddressManagementEnabled() &&
-                        isHouseholdAccount(newRecord)) ||
-                        (!isIndividualAccount(newRecord) &&
-                                isOrgAccountAddressesEnabled())) {
-                    if (isAccountAddressSpecified(newRecord)) {
-                        listAccCreateAddr.add(newRecord);
-                    }
-                }
+            accounts = new Accounts(listNew);
+            Accounts withAddresses = withAddresses(listNew);
+            if (isAddressManagementEnabled()) {
+                listAccCreateAddr.addAll(withAddresses.householdAccounts());
+            }
+            if (isOrgAccountAddressesEnabled()) {
+                listAccCreateAddr.addAll(withAddresses.orgAccounts());
             }
         }
 
@@ -124,6 +121,22 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
                     
         return dmlWrapper;    
+    }
+
+    private Accounts withAddresses(List<SObject> listNew) {
+        List<Account> withAddresses = new List<Account>();
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            if ((isAddressManagementEnabled() &&
+                    isHouseholdAccount(newRecord)) ||
+                    (!isIndividualAccount(newRecord) &&
+                            isOrgAccountAddressesEnabled())) {
+                if (isAccountAddressSpecified(newRecord)) {
+                    withAddresses.add(newRecord);
+                }
+            }
+        }
+        return new Accounts(withAddresses);
     }
 
     private Boolean isHouseholdAccount(Account newRecord) {
