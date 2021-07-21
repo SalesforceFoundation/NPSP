@@ -83,18 +83,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // BEFORE UPDATE
         if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             accounts = new Accounts(listNew, listOld);
-            Accounts accountsWithBillingAddressChanges =
-                    accounts.withBillingAddressChanges();
-            if (isAddressManagementEnabled()) {
-                normalizeLineBreaksFor(
-                        accountsWithBillingAddressChanges.householdAccounts()
-                );
-            }
-            if (isOrgAccountAddressesEnabled()) {
-                normalizeLineBreaksFor(
-                        accountsWithBillingAddressChanges.orgAccounts()
-                );
-            }
+            householdsApp.onBeforeUpdateOf(accounts);
         }
 
         // AFTER INSERT

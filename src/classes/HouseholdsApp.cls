@@ -66,6 +66,20 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
+    public void onBeforeUpdateOf(Accounts accounts) {
+        Accounts accountsWithBillingAddressChanges = accounts.withBillingAddressChanges();
+        if (isAddressManagementEnabled()) {
+            ADDR_Account_TDTM.normalizeLineBreaksFor(
+                    accountsWithBillingAddressChanges.householdAccounts()
+            );
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            ADDR_Account_TDTM.normalizeLineBreaksFor(
+                    accountsWithBillingAddressChanges.orgAccounts()
+            );
+        }
+    }
+
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
