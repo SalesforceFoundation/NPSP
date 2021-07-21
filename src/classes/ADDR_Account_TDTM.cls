@@ -58,8 +58,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             return dmlWrapper;
         }
 
-        List<Account> listAccCreateAddr = new List<Account>();
-
         Accounts accounts;
         HouseholdsApp householdsApp = new HouseholdsApp();
         switch on triggerAction {
@@ -76,16 +74,22 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // AFTER INSERT
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             Accounts accountsWithAddresses = new Accounts(listNew).withAddresses();
+            List<Account> listAccCreateAddr = new List<Account>();
             if (isAddressManagementEnabled()) {
                 listAccCreateAddr.addAll(accountsWithAddresses.householdAccounts());
             }
             if (isOrgAccountAddressesEnabled()) {
                 listAccCreateAddr.addAll(accountsWithAddresses.orgAccounts());
             }
+            // create any new Address objects
+            if (listAccCreateAddr.size() > 0) {
+                createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+            }
         }
 
         // AFTER UPDATE
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            List<Account> listAccCreateAddr = new List<Account>();
             for (Integer i = 0; i < listNew.size(); i++) {
                 Account newRecord = (Account) listNew[i];
                 Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
@@ -101,13 +105,12 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                     }
                 }
             }
+            // create any new Address objects
+            if (listAccCreateAddr.size() > 0) {
+                createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+            }
         }
 
-        // create any new Address objects
-        if (listAccCreateAddr.size() > 0) {
-            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
-        }
-                    
         return dmlWrapper;    
     }
 
