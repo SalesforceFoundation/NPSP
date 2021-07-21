@@ -126,13 +126,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         return dmlWrapper;    
     }
 
-    public static void normalizeLineBreaksFor(List<SObject> listNew) {
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            UTIL_Address.normalizeLineBreak(newRecord);
-        }
-    }
-
     private Boolean isHouseholdAccount(Account newRecord) {
         if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
             return true;

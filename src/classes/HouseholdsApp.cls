@@ -59,22 +59,22 @@ public inherited sharing class HouseholdsApp {
 
     public void onBeforeInsertOf(Accounts accounts) {
         if (isAddressManagementEnabled()) {
-            ADDR_Account_TDTM.normalizeLineBreaksFor(accounts.householdAccounts());
+            normalizeLineBreaksFor(accounts.householdAccounts());
         }
         if (isOrgAccountAddressesEnabled()) {
-            ADDR_Account_TDTM.normalizeLineBreaksFor(accounts.orgAccounts());
+            normalizeLineBreaksFor(accounts.orgAccounts());
         }
     }
 
     public void onBeforeUpdateOf(Accounts accounts) {
         Accounts accountsWithBillingAddressChanges = accounts.withBillingAddressChanges();
         if (isAddressManagementEnabled()) {
-            ADDR_Account_TDTM.normalizeLineBreaksFor(
+            normalizeLineBreaksFor(
                     accountsWithBillingAddressChanges.householdAccounts()
             );
         }
         if (isOrgAccountAddressesEnabled()) {
-            ADDR_Account_TDTM.normalizeLineBreaksFor(
+            normalizeLineBreaksFor(
                     accountsWithBillingAddressChanges.orgAccounts()
             );
         }
@@ -156,6 +156,13 @@ public inherited sharing class HouseholdsApp {
             return true;
         }
         return false;
+    }
+
+    private void normalizeLineBreaksFor(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
 }
