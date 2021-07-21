@@ -74,12 +74,8 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         // BEFORE INSERT
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             if (isAddressManagementEnabled()) {
-                for (Integer i = 0; i < listNew.size(); i++) {
-                    Account newRecord = (Account) listNew[i];
-                    if (isHouseholdAccount(newRecord)) {
-                        UTIL_Address.normalizeLineBreak(newRecord);
-                    }
-                }
+                List<Account> householdAccounts = householdAccounts(listNew);
+                normalizeLineBreaksFor(householdAccounts);
             }
             if (isOrgAccountAddressesEnabled()) {
                 List<Account> orgAccounts = orgAccounts(listNew);
@@ -145,6 +141,17 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         }
                     
         return dmlWrapper;    
+    }
+
+    private List<Account> householdAccounts(List<SObject> listNew) {
+        List<Account> householdAccounts = new List<Account>();
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            if (isHouseholdAccount(newRecord)) {
+                householdAccounts.add(newRecord);
+            }
+        }
+        return householdAccounts;
     }
 
     private List<Account> orgAccounts(List<SObject> listNew) {
