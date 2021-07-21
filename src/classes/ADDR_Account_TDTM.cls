@@ -71,11 +71,13 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
 
         List<Account> listAccCreateAddr = new List<Account>();
 
-        // BEFORE INSERT
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
-            Accounts accounts = new Accounts(listNew);
-            HouseholdsApp householdsApp = new HouseholdsApp();
-            householdsApp.onBeforeInsertOf(accounts);
+        Accounts accounts;
+        HouseholdsApp householdsApp = new HouseholdsApp();
+        switch on triggerAction {
+            when BeforeInsert {
+                accounts = new Accounts(listNew);
+                householdsApp.onBeforeInsertOf(accounts);
+            }
         }
 
         // BEFORE UPDATE
