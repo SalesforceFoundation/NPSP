@@ -46,7 +46,6 @@ public inherited sharing class GiftBatchTotals {
 
     public GiftBatchTotals(List<AggregateResultProxy> results) {
         for (AggregateResultProxy result : results) {
-            System.debug('or here...?');
             populateTotalsWith(result);
         }
     }
@@ -57,8 +56,8 @@ public inherited sharing class GiftBatchTotals {
         List<AggregateResultProxy> totalAmountResults =
             giftBatchSelector.getDataImportBatchTotalAmount(giftBatchId);
 
-        if (!totalsResults.isEmpty()) {
-            populateTotalsWith(totalsResults[0]);
+        for (AggregateResultProxy result : totalsResults) {
+            populateTotalsWith(result);
         }
 
         if (!totalAmountResults.isEmpty()) {
