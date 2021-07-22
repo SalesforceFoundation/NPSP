@@ -121,4 +121,30 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public Money totalDonations() {
         return new Money(this.totals.totalAmount(), 'US');
     }
+
+    public Boolean requireTotalMatch() {
+        return this.batch.RequireTotalMatch__c;
+    }
+
+    public Decimal expectedCountOfGifts() {
+        return this.batch.Expected_Count_of_Gifts__c;
+    }
+
+    public Decimal expectedTotalBatchAmount() {
+        return this.batch.Expected_Total_Batch_Amount__c;
+    }
+
+    public String batchTableColumns() {
+        return this.batch.Batch_Table_Columns__c;
+    }
+
+    public String batchCurrencyIsoCode() {
+        String giftBatchCurrencyIsoCode = '';
+        try {
+            giftBatchCurrencyIsoCode = (String) this.batch.get('CurrencyIsoCode');
+        } catch(SObjectException ex) {
+            giftBatchCurrencyIsoCode = UserInfo.getDefaultCurrency();
+        }
+        return giftBatchCurrencyIsoCode;
+    }
 }

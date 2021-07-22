@@ -4,6 +4,11 @@ class GiftBatch {
     _id;
     _name;
     _totalDonationsAmount = 0;
+    _requireTotalMatch;
+    _expectedCountOfGifts
+    _expectedTotalBatchAmount
+    _batchTableColumns
+    _batchCurrencyIsoCode
     _gifts = [];
     _totals = {
         processedGiftsCount: 0,
@@ -24,6 +29,11 @@ class GiftBatch {
             this._id = viewModel.giftBatchId;
             this._name = viewModel.name;
             this._totalDonationsAmount = viewModel.totalDonationsAmount;
+            this._requireTotalMatch = viewModel.requireTotalMatch;
+            this._expectedCountOfGifts = viewModel.expectedCountOfGifts
+            this._expectedTotalBatchAmount = viewModel.expectedTotalBatchAmount
+            this._batchTableColumns = viewModel.batchTableColumns
+            this._batchCurrencyIsoCode = viewModel.batchCurrencyIsoCode
             this._totals = viewModel.totals;
             // viewModel.gifts.forEach(giftView => {
             //     console.log('Gift View: ', giftView);
@@ -89,6 +99,11 @@ class GiftBatch {
             name: this._name,
             totalDonationsAmount: this._totalDonationsAmount,
             gifts: this._gifts,
+            requireTotalMatch: this._requireTotalMatch,
+            expectedCountOfGifts: this._expectedCountOfGifts,
+            expectedTotalBatchAmount: this._expectedTotalBatchAmount,
+            batchTableColumns: this._batchTableColumns,
+            batchCurrencyIsoCode: this._batchCurrencyIsoCode,
             processedGiftsCount: this.processedGiftsCount(),
             failedGiftsCount: this.failedGiftsCount(),
             failedPaymentsCount: this.failedPaymentsCount(),

@@ -37,6 +37,11 @@ public inherited sharing class GiftBatchDTO {
     public Id giftBatchId;
     public String name;
     public Decimal totalDonationsAmount;
+    public Boolean requireTotalMatch;
+    public Decimal expectedCountOfGifts;
+    public Decimal expectedTotalBatchAmount;
+    public String batchTableColumns;
+    public String batchCurrencyIsoCode;
     public Map<String, Integer> totals;
     public List<GiftDTO> giftDTOs;
 
@@ -44,6 +49,11 @@ public inherited sharing class GiftBatchDTO {
         this.giftBatchId = giftBatch.id();
         this.name = giftBatch.name();
         this.totalDonationsAmount = giftBatch.totalDonations().amount();
+        this.requireTotalMatch = giftBatch.requireTotalMatch();
+        this.expectedCountOfGifts = giftBatch.expectedCountOfGifts();
+        this.expectedTotalBatchAmount = giftBatch.expectedTotalBatchAmount();
+        this.batchTableColumns = giftBatch.batchTableColumns();
+        this.batchCurrencyIsoCode = giftBatch.batchCurrencyIsoCode();
         this.totals = giftBatch.totals();
 
         giftDTOs = new List<GiftDTO>();

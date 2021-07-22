@@ -69,6 +69,11 @@ private class GiftBatchView_TEST {
 
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
+        giftBatch.batch = new DataImportBatch__c();
+        giftBatch.batch.RequireTotalMatch__c = false;
+        giftBatch.batch.Expected_Count_of_Gifts__c = 2.0;
+        giftBatch.batch.Expected_Total_Batch_Amount__c = 200.00;
+        giftBatch.batch.Batch_Table_Columns__c = 'DUMMY BATCH COLUMNS';
         giftBatch.totals = totals;
         giftBatch.gifts = gifts;
 
