@@ -33,7 +33,7 @@ class GiftBatch {
             this._expectedCountOfGifts = viewModel.expectedCountOfGifts
             this._expectedTotalBatchAmount = viewModel.expectedTotalBatchAmount
             this._batchTableColumns = viewModel.batchTableColumns
-            this._currencyIsoCode = viewModel.batchCurrencyIsoCode
+            this._currencyIsoCode = viewModel.currencyIsoCode
             this._totals = viewModel.totals;
             // viewModel.gifts.forEach(giftView => {
             //     console.log('Gift View: ', giftView);
