@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_To_Predecessor__c</fullName>
+    <description>This indicates if this object is a parent or child of the predecessor.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>This indicates if this object is a parent or child of the predecessor.</inlineHelpText>
+    <label>Relationship To Predecessor</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Parent</fullName>
+                <default>true</default>
+                <label>Parent</label>
+            </value>
+            <value>
+                <fullName>Child</fullName>
+                <default>false</default>
+                <label>Child</label>
+            </value>
+            <value>
+                <fullName>No Predecessor</fullName>
+                <default>false</default>
+                <label>No Predecessor</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est sélectionnée, la gestion des adresses est désactivée pour les comptes de foyer.</help>
+    <label>Adresses de compte de foyer désactivées</label>
+    <name>Household_Account_Addresses_Disabled__c</name>
+</CustomFieldTranslation>

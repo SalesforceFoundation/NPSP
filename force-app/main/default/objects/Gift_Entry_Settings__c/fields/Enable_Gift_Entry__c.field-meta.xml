@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Gift_Entry__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Enables the Gift Entry tool. This feature requires Advanced Mapping.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enables the Gift Entry tool. This feature requires Advanced Mapping.</inlineHelpText>
+    <label>Enable Gift Entry</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

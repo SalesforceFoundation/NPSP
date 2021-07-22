@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סימון תיבה זו יגרום לסכומים הכוללים של סיכומי הקצאות להתבסס על שנת הכספים, במקום על הגדרות השנה הקלנדרית. כדי להגדיר פרטי שנת כספים, עבור אל &apos;הגדרה-&gt;פרופיל חברה-&gt;שנת כספים&apos;. הערה: הגדרות שנת כספים מותאמת אישית אינן נתמכות.</help>
+    <label>השתמש בשנת כספים עבור סיכומים</label>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+</CustomFieldTranslation>

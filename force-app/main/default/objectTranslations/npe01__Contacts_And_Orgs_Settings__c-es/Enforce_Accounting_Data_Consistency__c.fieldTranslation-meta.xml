@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Activa múltiples reglas y automatizaciones en pagos y oportunidades para garantizar que los datos contables están completos y son coherentes.</help>
+    <label>Aplicar coherencia de datos contables</label>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+</CustomFieldTranslation>

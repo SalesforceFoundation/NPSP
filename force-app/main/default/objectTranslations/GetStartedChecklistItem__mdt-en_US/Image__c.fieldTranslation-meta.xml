@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The filename of the image in the CumulusResources Static Resource (in the gsAssets/step folder) to render. --></help>
+    <label><!-- Image --></label>
+    <name>Image__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>オンにすると、管理パッケージコードのデバッグステートメントが有効になります。</help>
+    <label>デバッグの有効化</label>
+    <name>Enable_Debug__c</name>
+</CustomFieldTranslation>

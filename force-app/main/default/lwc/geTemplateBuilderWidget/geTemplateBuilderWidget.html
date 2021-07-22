@@ -1,0 +1,30 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="12" class="slds-p-left_small">
+            <lightning-layout>
+                <template if:true={isAllocations}>
+                    <lightning-layout-item size="12">
+                        <label class="slds-text-body_regular widget-label slds-p-bottom_xx-small">{uiTitle}</label>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonGeneralAccountUnit}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonAmount}</p>
+                        <p class="slds-text-body_regular widget-text">{CUSTOM_LABELS.commonPercent}</p>
+                    </lightning-layout-item>
+                </template>
+                <template if:true={isSoftCredit}>
+                    <lightning-layout-item size="12">
+                        <label class="slds-text-body_regular widget-label slds-p-bottom_xx-small">{uiTitle}</label>
+                        <p class="slds-text-body_regular widget-text">{ocrContactFieldApiName}</p>
+                        <p class="slds-text-body_regular widget-text">{ocrRoleFieldApiName}</p>
+                    </lightning-layout-item>
+                </template>                
+                <template if:true={isTokenizeCard}>
+                    <lightning-layout-item size="12">
+                        <p class="slds-text-body_regular slds-text-title_bold widget-text">
+                            {CUSTOM_LABELS.geTextFieldBundlePaymentMethod }
+                        </p>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

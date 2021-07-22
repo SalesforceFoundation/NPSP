@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La donación recurrente a la que se atribuye esta asignación. NPSP asigna automáticamente todas las nuevas oportunidades asociadas con la donación recurrente de la misma manera.</help>
+    <label>Donación recurrente</label>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+</CustomFieldTranslation>

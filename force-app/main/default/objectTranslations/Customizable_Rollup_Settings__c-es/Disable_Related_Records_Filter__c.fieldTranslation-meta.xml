@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Marque esta casilla para evitar totalizaciones de créditos duros y blancos en cuentas y contactos para que solo procesen registros de cuentas y contactos que tengan registros Oportunidad o Función de contacto de oportunidad relacionados.</help>
+    <label>Desactivar filtro registros relacionados</label>
+    <name>Disable_Related_Records_Filter__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Notas sobre el motivo por el que la petición de la donación no fue satisfactoria.</help>
+    <label>Motivo de cerrada perdida</label>
+    <name>Closed_Lost_Reason__c</name>
+</CustomFieldTranslation>

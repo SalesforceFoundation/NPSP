@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Define el modo con que los campos del registro Importación de datos de NPSP se asignan a otros objetos en Salesforce. Las opciones son Texto de ayuda o Asignación de campos de importación de datos.</help>
+    <label>Método de asignación de campos</label>
+    <name>Field_Mapping_Method__c</name>
+</CustomFieldTranslation>

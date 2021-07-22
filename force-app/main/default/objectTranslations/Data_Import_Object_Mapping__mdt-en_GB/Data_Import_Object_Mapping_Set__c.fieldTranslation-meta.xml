@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The Data Import Object Group containing this record.</help>
+    <label>Data Import Object Mapping Set</label>
+    <name>Data_Import_Object_Mapping_Set__c</name>
+    <relationshipLabel>Data Import Object Mappings</relationshipLabel>
+</CustomFieldTranslation>

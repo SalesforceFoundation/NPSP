@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Bevat het ID van de Huishoudenrecord (Huishoudenaccount of Huishoudenobject) die momenteel gekoppeld is aan deze Contactpersoon (enkel lezen).</help>
+    <label>HHId</label>
+    <name>HHId__c</name>
+</CustomFieldTranslation>

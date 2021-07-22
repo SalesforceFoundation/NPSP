@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</help>
+    <label>Current Address</label>
+    <name>Current_Address__c</name>
+    <relationshipLabel>Contacts (Current Address)</relationshipLabel>
+</CustomFieldTranslation>

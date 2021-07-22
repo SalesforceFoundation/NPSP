@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Simple_Address_Change_Treated_as_Update__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If checked, changes to a single Contact or Account address field update the existing Address, rather than creating a new Address.</inlineHelpText>
+    <label>Simple Address Change Treated as Update</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

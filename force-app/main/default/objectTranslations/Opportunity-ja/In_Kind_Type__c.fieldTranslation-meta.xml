@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>現物支援の種別。</help>
+    <label>現物種別</label>
+    <name>In_Kind_Type__c</name>
+    <picklistValues>
+        <masterLabel>Goods</masterLabel>
+        <translation>商品</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Services</masterLabel>
+        <translation>サービス</translation>
+    </picklistValues>
+</CustomFieldTranslation>
