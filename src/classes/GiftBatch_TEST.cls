@@ -84,8 +84,8 @@ private class GiftBatch_TEST {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.totals = totals;
 
-        System.assertEquals(10, giftBatch.totalCount());
-        System.assertEquals(350.50, giftBatch.total().amount());
+        System.assertEquals(10, giftBatch.totals().get('TOTAL'));
+        System.assertEquals(350.50, giftBatch.totalDonations().amount());
     }
 
     @isTest
