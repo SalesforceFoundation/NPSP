@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De developernaam van een Apex-klasse die de BDI_IMatching-interface voor Donaties implementeert. Laat dit leeg om overeenkomst over te laten aan NPSP.</help>
+    <label>Implementatieklasse Overeenkomst Donatie</label>
+    <name>Donation_Matching_Implementing_Class__c</name>
+</CustomFieldTranslation>

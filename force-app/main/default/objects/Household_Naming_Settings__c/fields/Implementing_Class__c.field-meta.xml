@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Implementing_Class__c</fullName>
+    <description>The name of a Class that implements the HH_INaming interface to use for Household Naming.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The name of a Class that implements the HH_INaming interface to use for Household Naming.</inlineHelpText>
+    <label>Implementing Class</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

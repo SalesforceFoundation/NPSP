@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>שדה אופציונלי של מזהה ייחודי, המשמש התאמת חשבונות</help>
+    <label>מזהה חשבון ייחודי ומותאם אישית</label>
+    <name>Account_Custom_Unique_ID__c</name>
+</CustomFieldTranslation>

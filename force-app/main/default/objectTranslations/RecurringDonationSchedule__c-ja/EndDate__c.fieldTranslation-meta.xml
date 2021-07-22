@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このスケジュールレコードの終了日 (必要な場合)。</help>
+    <label>終了日のスケジュール</label>
+    <name>EndDate__c</name>
+</CustomFieldTranslation>

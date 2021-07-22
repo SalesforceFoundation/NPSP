@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Number_of_Allocations_Two_Years_Ago__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+    <label>Number of Allocations Two Years Ago</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

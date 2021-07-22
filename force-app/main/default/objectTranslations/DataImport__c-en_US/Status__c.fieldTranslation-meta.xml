@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The status of the import for this record, for example, Imported or Failed. --></help>
+    <label><!-- Status --></label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Dry Run - Error</masterLabel>
+        <translation><!-- Dry Run - Error --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Dry Run - Validated</masterLabel>
+        <translation><!-- Dry Run - Validated --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Failed</masterLabel>
+        <translation><!-- Failed --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Imported</masterLabel>
+        <translation><!-- Imported --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Processing</masterLabel>
+        <translation><!-- Processing --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Ready to Process</masterLabel>
+        <translation><!-- Ready to Process --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

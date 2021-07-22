@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enforce_Accounting_Data_Consistency__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Enables rules and automation that enforce consistency in accounting data.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enables multiple rules and automations on payments and opportunities to ensure that accounting data is complete and consistent.</inlineHelpText>
+    <label>Enforce Accounting Data Consistency</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

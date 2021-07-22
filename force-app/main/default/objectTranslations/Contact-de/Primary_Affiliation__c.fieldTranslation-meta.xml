@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der in der Liste der Organisationszugehörigkeiten dieses Kontakts als &quot;Primär&quot; gekennzeichnete Account.</help>
+    <label>Primäre Zugehörigkeit</label>
+    <name>Primary_Affiliation__c</name>
+    <relationshipLabel>Nicht verwenden. Verwenden Sie &quot;Organisationszugehörigkeiten&quot;.</relationshipLabel>
+</CustomFieldTranslation>

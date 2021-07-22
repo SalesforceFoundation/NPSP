@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>If this Address requires verification, click the Show more actions dropdown arrow in the upper right and then click Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</help>
+    <label>Verification Status</label>
+    <name>Verification_Status__c</name>
+</CustomFieldTranslation>

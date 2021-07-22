@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מחוז המדינה התחתון (מחוז בחירה בארה&quot;ב, כגון מחוז מועצת המדינה) שאליו שייכת כתובת זו.</help>
+    <label>מחוז מדינה תחתון</label>
+    <name>State_Lower_District__c</name>
+</CustomFieldTranslation>

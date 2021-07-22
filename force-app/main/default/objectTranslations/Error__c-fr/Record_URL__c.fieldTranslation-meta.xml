@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lien vers l’enregistrement ayant provoqué l’erreur, si disponible.</help>
+    <label>URL d’enregistrement</label>
+    <name>Record_URL__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The number of records to process at a time in each batch.</help>
+    <label>Batch Process Size</label>
+    <name>Batch_Process_Size__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Das Objekt, auf das diese Ebene angewendet wird.</help>
+    <label>Ziel</label>
+    <name>Target__c</name>
+    <picklistValues>
+        <masterLabel>Account</masterLabel>
+        <translation>Account</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Contact</masterLabel>
+        <translation>Kontakt</translation>
+    </picklistValues>
+</CustomFieldTranslation>

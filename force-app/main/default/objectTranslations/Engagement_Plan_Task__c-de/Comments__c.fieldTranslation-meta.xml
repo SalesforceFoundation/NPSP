@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Zum Eingeben weitere Informationen zu der Aufgabe.</help>
+    <label>Kommentare</label>
+    <name>Comments__c</name>
+</CustomFieldTranslation>

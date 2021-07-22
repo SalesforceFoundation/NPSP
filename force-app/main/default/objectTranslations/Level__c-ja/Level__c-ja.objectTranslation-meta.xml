@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>レベル</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>ロングテキストセクション</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>レベル名</nameFieldLabel>
+    <validationRules>
+        <errorMessage>[対象] はレベルの必須項目です。このレベルの対象オブジェクトを指定してください。</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

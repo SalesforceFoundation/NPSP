@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>האובייקט שרמה זו חלה עליו.</help>
+    <label>יעד</label>
+    <name>Target__c</name>
+    <picklistValues>
+        <masterLabel>Account</masterLabel>
+        <translation>חשבון</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Contact</masterLabel>
+        <translation>איש קשר</translation>
+    </picklistValues>
+</CustomFieldTranslation>

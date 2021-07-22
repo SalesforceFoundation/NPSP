@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Marque esta opción si se quiere que los errores se guarden en la base de datos.</help>
+    <label>Guardar errores</label>
+    <name>Store_Errors_On__c</name>
+</CustomFieldTranslation>
