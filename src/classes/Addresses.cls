@@ -99,12 +99,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        if (addressChangesToSync().size() > 0) {
-            refreshCurrentHHAddress(addressChangesToSync(), dmlWrapperLocal, false);
+
+        if (addressChangesToSyncToHouseholdAccountsAndContacts().size() > 0) {
+            refreshCurrentHHAddress(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
         }
 
-        if (nonDefaultsWithChanges().size() > 0) {
-            syncAddressChangesToContactOverrides(nonDefaultsWithChanges(), dmlWrapperLocal);
+        if (addressChangesToSyncToContactOverrides().size() > 0) {
+            syncAddressChangesToContactOverrides(addressChangesToSyncToContactOverrides(), dmlWrapperLocal);
         }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
@@ -114,7 +115,29 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 TDTM_TriggerHandler.processDMLAllOrNothing(
                         dmlWrapperLocal, false);
         if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addressChangesToSync(), nonDefaultsWithChanges());
+            putErrorsOnAddresses(errors, addressChangesToSyncToHouseholdAccountsAndContacts(), addressChangesToSyncToContactOverrides());
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
+    * @param addressesById a map of Address Id's to Addresses
+    * @param dmlWrapper to hold the Contacts to update
+    */
+    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+
+        List<Contact> contactsWithAddressOverrides = [SELECT Current_Address__c FROM Contact WHERE Current_Address__c
+                IN :addressesById.keySet() AND is_Address_Override__c = true];
+
+        for (Contact contact : contactsWithAddressOverrides) {
+            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
+
+            npspContact.mailingAddress(npspAddress);
+            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
+
+            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
     }
 
@@ -485,49 +508,51 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return listAddrS;
     }
 
-    public Map<Id, Address__c> addressChangesToSync() {
-        Map<Id, Address__c> defaultAndSeasonalWithChanges = new Map<Id, Address__c>();
-        Integer i = 0;
-        for (Address__c addr : (List<Address__c>) getRecords()) {
-            NPSP_Address npspAddress = new NPSP_Address(addr);
-            Address__c addrOld = oldVersionOf(addr);
-            NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
-            // an address that is marked default needs to propagate to the household
-            if (isNewDefault(addr, addrOld) ||
-                isSeasonalChanged(addr, addrOld) ||
-                (isUndeliverableStatusChanged(addr, addrOld)) && isDefault(addr)) {
+    public Map<Id, Address__c> addressChangesToSyncToHouseholdAccountsAndContacts() {
+        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
 
-                defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
-            } else if (!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE)) {
-                if (isDefault(addr)) {
-                    defaultAndSeasonalWithChanges.put(householdAccountIdFor(addr), addr);
-                }
+        for (Address__c address : (List<Address__c>) getRecords()) {
+            Address__c addressOld = oldVersionOf(address);
+
+            if (shouldSyncAddressToHouseholdAccountAndContacts(address, addressOld)) {
+                addressesByAccountId.put(householdAccountIdFor(address), address);
             }
-            i++;
         }
-        return defaultAndSeasonalWithChanges;
+        return addressesByAccountId;
     }
 
-    private Boolean isUndeliverableStatusChanged(Address__c addr, Address__c addrOld) {
-        return addr.Undeliverable__c != addrOld.Undeliverable__c;
-    }
+    public Map<Id, Address__c> addressChangesToSyncToContactOverrides() {
+        Map<Id, Address__c> addressesById = new Map<Id, Address__c>();
+        for (Address__c address : (List<Address__c>) getRecords()) {
+            NPSP_Address npspAddress = new NPSP_Address(address, oldVersionOf(address));
 
-    public Map<Id, Address__c> nonDefaultsWithChanges() {
-        Map<Id, Address__c> nonDefaultsWithChanges = new Map<Id, Address__c>();
-        Integer i = 0;
-        for (Address__c addr : (List<Address__c>) getRecords()) {
-            NPSP_Address npspAddress = new NPSP_Address(addr);
-            Address__c addrOld = oldVersionOf(addr);
-            NPSP_Address npspAddressOld = new NPSP_Address(addrOld);
-            if ((!npspAddress.isEqualToIncludingAddressType(npspAddressOld, TRUE) ||
-                isUndeliverableStatusChanged(addr, addrOld))) {
-
-                nonDefaultsWithChanges.put(idOf(addr), addr);
+            if (shouldSyncAddressChangesToContactOverrides(npspAddress)) {
+                addressesById.put(npspAddress.getId(), npspAddress.getRecord());
             }
-            i++;
         }
-        return nonDefaultsWithChanges;
+        return addressesById;
     }
+
+    private Boolean shouldSyncAddressToHouseholdAccountAndContacts(Address__c address, Address__c oldAddress) {
+        NPSP_Address npspAddress = new NPSP_Address(address, oldAddress);
+
+        if (isDefaultChanged(address, oldAddress) ||
+                isSeasonalChanged(address, oldAddress) ||
+                (npspAddress.isUndeliverableStatusChanged() && isDefault(address))) {
+            return true;
+        } else if (!npspAddress.isEqualToIncludingAddressType(npspAddress.oldVersion(), TRUE)) {
+            if (isDefault(address)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Boolean shouldSyncAddressChangesToContactOverrides(NPSP_Address npspAddress) {
+        return !npspAddress.isEqualToIncludingAddressType(npspAddress.oldVersion(), TRUE) ||
+            npspAddress.isUndeliverableStatusChanged();
+    }
+
 
     public Map<Id, Address__c> addressesByAccountId() {
         Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
@@ -834,7 +859,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return address.Household_Account__c;
     }
 
-    private Boolean isNewDefault(Address__c addr, Address__c addrOld) {
+    private Boolean isDefaultChanged(Address__c addr, Address__c addrOld) {
         return addr.Default_Address__c && (addr.Default_Address__c != addrOld.Default_Address__c);
     }
 
@@ -994,30 +1019,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-    /*******************************************************************************************************
-    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
-    * @param addressesById a map of Address Id's to Addresses
-    * @param dmlWrapper to hold the Contacts to update
-    */
-    private void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
 
-        Contacts contacts = new ContactSelector();
-
-        for (Contact con : [SELECT Id, is_Address_Override__c, Current_Address__c
-                            FROM Contact
-                            WHERE is_Address_Override__c = true
-                            AND Current_Address__c IN :addressesById.keySet()]) {
-
-            NPSP_Contact npspContact = new NPSP_Contact(con);
-            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
-
-            npspContact.mailingAddress(npspAddress);
-            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
-
-            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
-        }
-    }
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
         for (Error__c error : errors.errorRecords) {

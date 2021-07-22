@@ -49,6 +49,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
+    @TestVisible
     private ContactService contactService {
         get {
             if (contactService == null) {

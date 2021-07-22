@@ -737,9 +737,12 @@ public with sharing class ADDR_Addresses_TEST {
             update overrideAddress;
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Undeliverable_Address__c, is_Address_Override__c
+        Contact updatedContact = [SELECT is_Address_Override__c, Current_Address__c, Current_Address__r.MailingStreet__c, Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
+        System.assert(updatedContact.Current_Address__c == overrideAddress.Id, 'Contact should have the override ' +
+                'address as its current address.');
+
         System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
         System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
                 'undeliverable address status should match the override address undeliverable status.');
