@@ -1042,9 +1042,11 @@ public with sharing class CON_ContactMerge_CTRL {
             step = 1;
             listDuplicateRecordSets = getDuplicateRecordSets();
             driFieldNames.add('DuplicateRecordSetId');
+            driFieldNames.add('Record.Type');
             List<DuplicateRecordSet> duplicateRecordSets = new List<DuplicateRecordSet>(
                 (List<DuplicateRecordSet>)Database.query(constructDRSSOQL()));
             driFieldNames.remove(driFieldNames.indexOf('DuplicateRecordSetId'));
+            driFieldNames.remove(driFieldNames.indexOf('Record.Type'));
             //Fetch the ids of all Duplicate Record Items
             Set<Id> allDRIIds = new Set<Id>();
             List<DuplicateRecordItem> allDRIs = new List<DuplicateRecordItem>();
@@ -1054,7 +1056,22 @@ public with sharing class CON_ContactMerge_CTRL {
                 allDRIs.addAll(new Map<Id, DuplicateRecordItem>(
                     dupRecSet.DuplicateRecordItems).values());
             }
-            //Fetch the remaining query row limit to ensure that the page will not 
+
+            List<AggregateResult> leadTotals = [
+                SELECT DuplicateRecordSetId, COUNT(Id) LeadTotal
+                FROM DuplicateRecordItem
+                WHERE Record.Type = 'Lead'
+                AND DuplicateRecordSetId IN :duplicateRecordSets
+                GROUP BY DuplicateRecordSetId];
+
+            Map<Id, DuplicateRecordSet> duplicateRecordSetsByIds = new Map<Id, DuplicateRecordSet>(duplicateRecordSets);
+            for (AggregateResult leadTotal : leadTotals) {
+//                if (duplicateRecordSetsByIds.get(leadTotal.get('DuplicateRecordSetId')).leadTotal.get('LeadTotal')) {
+//
+//                }
+            }
+
+            //Fetch the remaining query row limit to ensure that the page will not
             //break due to too many query rows error.
             if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
                 ApexPages.addMessage(new ApexPages.Message
@@ -1068,13 +1085,13 @@ public with sharing class CON_ContactMerge_CTRL {
             contactField.add('Id');
             contactField.add('Name');
             contactField.add('createdDate');
-             
+
             String whereString = new UTIL_Query()
                 .withFrom('DuplicateRecordItem')
                 .withSelectFields(driFieldNames)
                 .withWhere('Id IN :allDRIIds')
                 .build();
-            whereString = 'Id IN (' + whereString + ')'; 
+            whereString = 'Id IN (' + whereString + ')';
             String contactQueryStr =  new UTIL_Query()
                 .withFrom('Contact')
                 .withSelectFields(contactField)
@@ -1083,11 +1100,14 @@ public with sharing class CON_ContactMerge_CTRL {
             Map<Id,Contact> contacts = new Map<Id,Contact>(
                 (List<Contact>)Database.query(contactQueryStr));
             for (DuplicateRecordItem dri : allDRIs) {
+                if (dri.Record.Type != 'Contact') {
+                    continue;
+                }
                 Contact con = contacts.get(dri.RecordId);
                 if (!(firstContactOfDRS.containsKey(dri.DuplicateRecordSetId))) {
                     firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
                 } else {
-                    if (con.createdDate < 
+                    if (con.createdDate <
                         firstContactOfDRS.get(dri.DuplicateRecordSetId).createdDate) {
                         firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
                     }
