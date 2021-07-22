@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le nbre max. d’opp. associées sur un compte ou un contact autorisé dans les traitements par lots de cumuls en mode non-asymétrie. Un compte ou un contact avec un nbre plus élevé que ce nbre d’opp. associées sera toujours cumulé à l’aide du mode asymétrie.</help>
+    <label>Seuil mode asymétrie</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

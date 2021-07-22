@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si se selecciona, las direcciones cambiadas se actualizan automáticamente con la respuesta del servicio (cuando hay un resultado verificado).</help>
+    <label>Actualizar direcciones autom.-DESUSADO</label>
+    <name>Auto_Update_Addresses__c</name>
+</CustomFieldTranslation>

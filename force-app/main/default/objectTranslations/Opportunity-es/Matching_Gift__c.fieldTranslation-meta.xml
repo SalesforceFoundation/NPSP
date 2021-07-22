@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Búsqueda del registro de oportunidad para el regalo que iguala para esta donación.</help>
+    <label>Regalo que iguala</label>
+    <name>Matching_Gift__c</name>
+    <relationshipLabel>Regalos igualados</relationshipLabel>
+</CustomFieldTranslation>

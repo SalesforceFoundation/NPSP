@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この命名方式が適用される商談レコードタイプを指定します。</help>
+    <label>商談レコードタイプ</label>
+    <name>Opportunity_Record_Types__c</name>
+</CustomFieldTranslation>

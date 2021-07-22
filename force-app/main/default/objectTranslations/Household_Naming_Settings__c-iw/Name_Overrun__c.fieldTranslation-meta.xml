@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>המחרוזת שתשמש להחלפת רשימות ארוכות של שמות.</help>
+    <label>גלישת שמות</label>
+    <name>Name_Overrun__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>No actualizar. Solo para pruebas del piloto de Salesforce.org. Permite la sustitución de acceso limitado del parámetro de PilotEnabled en organizaciones borrador para la cobertura de prueba en organizaciones donde no hay licencia de producto en el LMO.</help>
+    <label>Sustituc org borrador: Piloto habilitado</label>
+    <name>OverrideFeature_PilotEnabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nombre de la clase que implementa la interfaz de HH_Inaming para usar para la asignación de nombres de hogares</help>
+    <label>Clase de implementación</label>
+    <name>Implementing_Class__c</name>
+</CustomFieldTranslation>

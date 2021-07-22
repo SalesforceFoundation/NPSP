@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Entwicklername einer Apex-Klasse, die die BDI_IMatching-Schnittstelle für Spenden implementiert. Ohne Angabe nimmt NPSP die Verdopplung vor.</help>
+    <label>Spendenverdoppl.-Implementierungsklasse</label>
+    <name>Donation_Matching_Implementing_Class__c</name>
+</CustomFieldTranslation>

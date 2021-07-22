@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Zahlungsform für diese wiederkehrende Spende. NPSP kopiert den ausgewählten Wert automatisch in jeden ausgewählten Zahlungsdatensatz.</help>
+    <label>Zahlungsmethode für wiederkehr. Spenden</label>
+    <name>Recurring_Donation_Payment_Method__c</name>
+</CustomFieldTranslation>

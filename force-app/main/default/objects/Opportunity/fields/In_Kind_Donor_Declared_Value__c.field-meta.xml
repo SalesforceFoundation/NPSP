@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>In_Kind_Donor_Declared_Value__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the donor provided the Fair Market Value for this In-Kind Gift.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates whether the donor provided the Fair Market Value for this In-Kind Gift.</inlineHelpText>
+    <label>In-Kind Donor Declared Value</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
