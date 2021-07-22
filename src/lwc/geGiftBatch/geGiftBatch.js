@@ -13,8 +13,7 @@ class GiftBatch {
         if (viewModel) {
             this._id = viewModel.giftBatchId;
             this._name = viewModel.name;
-            this._total = viewModel.total;
-            this._totalCount = viewModel.totalCount;
+            this._totalDonationsAmount = viewModel.totalDonationsAmount;
             this._totals = viewModel.totals;
             // viewModel.gifts.forEach(giftView => {
             //     console.log('Gift View: ', giftView);
@@ -32,14 +31,57 @@ class GiftBatch {
         return this._id;
     }
 
+    processedGiftsCount() {
+        return this._totals.PROCESSED;
+    }
+
+    failedGiftsCount() {
+        return this._totals.FAILED;
+    }
+
+    failedPaymentsCount() {
+        return this._totals.FAILED_PAYMENT;
+    }
+
+    expiredPaymentsCount() {
+        return this._totals.EXPIRED_PAYMENT;
+    }
+
+    authorizedPaymentsCount() {
+        return this._totals.AUTHORIZED_PAYMENT;
+    }
+
+    totalGiftsCount() {
+        return this._totals.TOTAL;
+    }
+
+    hasValuesGreaterThanZero() {
+        return Number(this._totals.PROCESSED) > 0 || Number(this._totals.FAILED) > 0;
+    }
+
+    hasPaymentsWithExpiredAuthorizations() {
+        return Number(this._totals.EXPIRED_PAYMENT) > 0;
+    }
+
+    isProcessingGifts() {
+        return Number(this._totals.PROCESSING) > 0;
+    }
+
     state() {
         return {
             id: this._id,
             name: this._name,
-            total: this._total,
-            totalCount: this._totalCount,
+            totalDonationsAmount: this._totalDonationsAmount,
             gifts: this._gifts,
-            totals: this._totals
+            processedGiftsCount: this.processedGiftsCount(),
+            failedGiftsCount: this.failedGiftsCount(),
+            failedPaymentsCount: this.failedPaymentsCount(),
+            expiredPaymentsCount: this.expiredPaymentsCount(),
+            authorizedPaymentsCount: this.authorizedPaymentsCount(),
+            totalGiftsCount: this.totalGiftsCount(),
+            hasValuesGreaterThanZero: this.hasValuesGreaterThanZero(),
+            hasPaymentsWithExpiredAuthorizations: this.hasPaymentsWithExpiredAuthorizations(),
+            isProcessingGifts: this.isProcessingGifts()
         }
     }
 }
