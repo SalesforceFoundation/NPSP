@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Address_Verification_Endpoint__c</fullName>
+    <description>URL used for address verification.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>URL used for address verification.</inlineHelpText>
+    <label>Address Verification Endpoint-DEPRECATED</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

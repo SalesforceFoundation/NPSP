@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Account2 יובא</label>
+    <name>Account2Imported__c</name>
+    <relationshipLabel>יבוא נתוני NPSP (Account2 יובא)</relationshipLabel>
+</CustomFieldTranslation>

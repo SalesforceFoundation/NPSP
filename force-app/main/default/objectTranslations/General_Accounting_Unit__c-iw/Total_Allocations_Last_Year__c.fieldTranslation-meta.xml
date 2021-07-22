@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סך כל ההקצאות של הזדמנויות בשלב של סגירה וזכייה בשנה שעברה.</help>
+    <label>סה&quot;כ הקצאות בשנה שעברה</label>
+    <name>Total_Allocations_Last_Year__c</name>
+</CustomFieldTranslation>

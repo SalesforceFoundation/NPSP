@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>主取引先責任者と主キャンペーンソースがキャンペーンメンバーに関連付けられている商談が進行中または不成立の場合に、キャンペーンメンバーにデフォルトで設定する状況。空白のままにすると、最初のレスポンスなしの状況が使用されます。</help>
+    <label>キャンペーンメンバーレスポンスなしの状況</label>
+    <name>Campaign_Member_Non_Responded_Status__c</name>
+</CustomFieldTranslation>

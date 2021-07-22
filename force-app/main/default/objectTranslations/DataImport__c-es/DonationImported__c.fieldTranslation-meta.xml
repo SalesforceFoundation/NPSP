@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Donación Importada</label>
+    <name>DonationImported__c</name>
+    <relationshipLabel>Importaciones de datos de NPSP (Oportunidad 1 importada)</relationshipLabel>
+</CustomFieldTranslation>

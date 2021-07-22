@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Notities over waarom de vraag naar donatie niet succesvol was.</help>
+    <label>Reden voor Gesloten Verloren</label>
+    <name>Closed_Lost_Reason__c</name>
+</CustomFieldTranslation>

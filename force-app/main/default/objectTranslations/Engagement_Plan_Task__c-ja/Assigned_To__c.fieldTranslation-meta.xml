@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この項目は ToDo の [割り当て先] 項目に対応付けられます。空白のままにした場合、ToDo はテンプレートの空白割り当てルールに基づいて割り当てられます。</help>
+    <label>割り当て先</label>
+    <name>Assigned_To__c</name>
+    <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
+</CustomFieldTranslation>

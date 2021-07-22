@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Primaire Contactpersoon voor deze Opportunity. Als dit een Individuele Donatie is, schrijft NPSP de Donatie toe aan de Primaire Contactpersoon. Als het een Organisatiedonatie is, schrijft NPSP een soft credit toe aan de Primaire Contactpersoon.</help>
+    <label>Primaire contactpersoon</label>
+    <name>Primary_Contact__c</name>
+    <relationshipLabel>Opportunities</relationshipLabel>
+</CustomFieldTranslation>

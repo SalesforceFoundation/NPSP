@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indique que cette tâche de plan d’engagement dépend d’une tâche parente.</help>
+    <label>Tâche parente</label>
+    <name>Parent_Task__c</name>
+    <relationshipLabel>Tâches du plan d’engagement</relationshipLabel>
+</CustomFieldTranslation>

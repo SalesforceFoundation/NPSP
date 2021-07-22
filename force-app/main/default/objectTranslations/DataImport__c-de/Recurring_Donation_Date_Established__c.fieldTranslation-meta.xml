@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Das Anfangsdatum für diese wiederkehrende Spende. Das Standarddatum ist das aktuelle Datum.</help>
+    <label>Einrichtungsdatum der wiederkehr. Spende</label>
+    <name>Recurring_Donation_Date_Established__c</name>
+</CustomFieldTranslation>

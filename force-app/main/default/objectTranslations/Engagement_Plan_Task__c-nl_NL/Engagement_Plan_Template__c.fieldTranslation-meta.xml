@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Sjabloon voor deze Taak van Betrokkenheidsplan</help>
+    <label>Sjabloon van Betrokkenheidsplan</label>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>Taken van Betrokkenheidsplan</relationshipLabel>
+</CustomFieldTranslation>

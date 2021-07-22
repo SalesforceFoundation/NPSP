@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El contacto existente al cual esta donación homenajea</help>
+    <label>Contacto homenajeado</label>
+    <name>Honoree_Contact__c</name>
+    <relationshipLabel>Oportunidades (Contacto homenajeado)</relationshipLabel>
+</CustomFieldTranslation>

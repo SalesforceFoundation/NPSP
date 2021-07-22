@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>VEROUDERD-Planbaar item</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>VEROUDERD-Planbare items</value>
+    </caseValues>
+    <gender>Neuter</gender>
+    <layouts>
+        <layout>Schedulable Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Naam van Opdracht</nameFieldLabel>
+</CustomObjectTranslation>

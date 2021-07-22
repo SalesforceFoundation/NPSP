@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מספר הימים לאחר תאריך היצירה של תוכנית המעורבות, או תאריך היעד של משימת האב, שבו יש להשלים משימה זו.</help>
+    <label>ימים לאחר</label>
+    <name>Days_After__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Niveau</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Niveaus</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
+    <gender>Neuter</gender>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>sectie lange tekst</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Niveaunaam</nameFieldLabel>
+    <validationRules>
+        <errorMessage>Doel is een verplicht veld op Niveau. Specificeer het Doelobject voor dit Niveau.</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

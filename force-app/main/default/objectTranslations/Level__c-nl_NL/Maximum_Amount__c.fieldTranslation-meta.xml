@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het bedrag waaronder de waarde moet zitten opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe voor elk bedrag groter dan of gelijk aan het Minimumbedrag van dit Niveau.</help>
+    <label>Maximumbedrag (&lt;)</label>
+    <name>Maximum_Amount__c</name>
+</CustomFieldTranslation>

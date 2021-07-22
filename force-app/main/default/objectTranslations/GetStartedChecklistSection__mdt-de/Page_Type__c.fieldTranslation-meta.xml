@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Typ der Seite &quot;Erste Schritte&quot; (Administrator oder Endbenutzer), auf der dieser Abschnitt angezeigt werden soll.</help>
+    <label>Seitentyp</label>
+    <name>Page_Type__c</name>
+    <picklistValues>
+        <masterLabel>Admin</masterLabel>
+        <translation>Administrator</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>End User</masterLabel>
+        <translation>Endbenutzer</translation>
+    </picklistValues>
+</CustomFieldTranslation>

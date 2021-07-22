@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul des cumuls de donateurs de crédits indirects dans l’objet compte.</help>
+    <label>Taille du lot crédit indirect du compte</label>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+</CustomFieldTranslation>

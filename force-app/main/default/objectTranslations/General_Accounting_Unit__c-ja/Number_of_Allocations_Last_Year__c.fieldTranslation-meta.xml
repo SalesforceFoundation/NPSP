@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>昨年の成立フェーズにある商談の割り当ての総数。</help>
+    <label>昨年の割り当て数</label>
+    <name>Number_of_Allocations_Last_Year__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en trabajo de lote de totalización en organizaciones con muchos millones de contactos, este parámetro especifica el número máximo de contactos procesados en cada lote.</help>
+    <label>LDV: Tam sección crédito blando contacto</label>
+    <name>ChunkSize_Contact_SoftCredit__c</name>
+</CustomFieldTranslation>

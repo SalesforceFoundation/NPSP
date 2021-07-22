@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El Id. de Salesforce de la función del contacto de oportunidad importada.</help>
+    <label>Función contacto oportunidad2: Importada</label>
+    <name>Opportunity_Contact_Role_2_Imported__c</name>
+</CustomFieldTranslation>

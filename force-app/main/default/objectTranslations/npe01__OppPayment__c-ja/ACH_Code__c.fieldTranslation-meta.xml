@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この ACH トランザクションで使用される Standard Entry Class (SEC) コード。</help>
+    <label>ACH コード</label>
+    <name>ACH_Code__c</name>
+</CustomFieldTranslation>

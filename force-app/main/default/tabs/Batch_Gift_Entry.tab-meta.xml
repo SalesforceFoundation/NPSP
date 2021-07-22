@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Batch Gift Entry</label>
+    <motif>Custom41: Stack of Cash</motif>
+    <auraComponent>BGE_BatchGiftEntryTab</auraComponent>
+</CustomTab>

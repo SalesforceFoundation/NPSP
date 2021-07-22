@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Operation__c</fullName>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Operation</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Count</fullName>
+                <default>true</default>
+                <label>Count</label>
+            </value>
+            <value>
+                <fullName>Sum</fullName>
+                <default>false</default>
+                <label>Sum</label>
+            </value>
+            <value>
+                <fullName>Average</fullName>
+                <default>false</default>
+                <label>Average</label>
+            </value>
+            <value>
+                <fullName>Largest</fullName>
+                <default>false</default>
+                <label>Largest</label>
+            </value>
+            <value>
+                <fullName>Smallest</fullName>
+                <default>false</default>
+                <label>Smallest</label>
+            </value>
+            <value>
+                <fullName>First</fullName>
+                <default>false</default>
+                <label>First</label>
+            </value>
+            <value>
+                <fullName>Last</fullName>
+                <default>false</default>
+                <label>Last</label>
+            </value>
+            <value>
+                <fullName>Years_Donated</fullName>
+                <default>false</default>
+                <label>Years Donated</label>
+            </value>
+            <value>
+                <fullName>Donor_Streak</fullName>
+                <default>false</default>
+                <label>Donor Streak</label>
+            </value>
+            <value>
+                <fullName>Best_Year</fullName>
+                <default>false</default>
+                <label>Best Year</label>
+            </value>
+            <value>
+                <fullName>Best_Year_Total</fullName>
+                <default>false</default>
+                <label>Best Year Total</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

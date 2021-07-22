@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records.</help>
+    <label>Post Process Implementing Class</label>
+    <name>Post_Process_Implementing_Class__c</name>
+</CustomFieldTranslation>

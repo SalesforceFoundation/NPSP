@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indien aangevinkt, zal NPSP het adres van deze Contactpersoon niet synchroniseren met het Standaardadres of het Seizoenadres van het Huishouden. Gebruik dit om een apart Postadres te bewaren voor deze bepaalde Contactpersoon.</help>
+    <label>Adresoverschrijving</label>
+    <name>is_Address_Override__c</name>
+</CustomFieldTranslation>

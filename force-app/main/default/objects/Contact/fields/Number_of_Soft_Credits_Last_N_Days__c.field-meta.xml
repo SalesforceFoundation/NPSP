@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Number_of_Soft_Credits_Last_N_Days__c</fullName>
+    <description>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</inlineHelpText>
+    <label>Number of Soft Credits Last N Days</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

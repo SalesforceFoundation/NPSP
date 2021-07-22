@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The salesforce id of the GAU to be used for the first allocation.</help>
+    <label>GAU Allocation 1: GAU</label>
+    <name>GAU_Allocation_1_GAU__c</name>
+    <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
+</CustomFieldTranslation>

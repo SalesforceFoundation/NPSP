@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La URL de destino para un vínculo en la página Empezar a trabajar.</help>
+    <label>URL de vínculo</label>
+    <name>Link_URL__c</name>
+</CustomFieldTranslation>

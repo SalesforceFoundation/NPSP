@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des contacts limite le nbre de contacts sélect. pour le recalcul en recherchant les contacts dont les opp. ont été m à j. Cela améliore la perf du traitement nocturne des cumuls pers.</help>
+    <label>Non-asym. crédit direct contact incrém.</label>
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Batch_Size__c</fullName>
+    <defaultValue>50</defaultValue>
+    <description>The number of NPSP Data Import records to process in each batch.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of NPSP Data Import records to process in each batch.</inlineHelpText>
+    <label>Batch Process Size</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

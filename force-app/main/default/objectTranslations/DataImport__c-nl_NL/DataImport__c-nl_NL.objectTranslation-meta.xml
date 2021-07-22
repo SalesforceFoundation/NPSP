@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP-Gegevensimport</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>NPSP-Gegevensimports</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>Account1 Organisatie-informatie</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Account2 Organisatie-informatie</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Campagne-informatie</label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>Contact1 Informatie</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>Contact2 Informatie</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Gegevens over GAU-toewijzing 1</label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label>Gegevens over GAU-toewijzing 2</label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>Thuisadres</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label>Informatie van Huishoudenaccount</label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label>Gegevens over Opportunitycontactpersoonsrol 1</label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label>Gegevens over Opportunitycontactpersoonsrol 2</label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label>Opportunitygegevens</label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsgegevens</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Informatie terugkerende donatie</label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>ID van Gegevensimport</nameFieldLabel>
+    <webLinks>
+        <label>Alle Gegevensimportrecords verwijderen</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Geïmporteerde Gegevensimportrecords verwijderen</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Gegevensimport starten</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

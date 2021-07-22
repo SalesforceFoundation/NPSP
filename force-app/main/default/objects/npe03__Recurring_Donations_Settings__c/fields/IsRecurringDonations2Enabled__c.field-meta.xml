@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsRecurringDonations2Enabled__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This option enables Enhanced Recurring Donations. IMPORTANT: You must enable Enhanced Recurring Donations in NPSP Settings. Enabling in Custom Settings may cause data inconsistencies.</inlineHelpText>
+    <label>Enhanced Recurring Donations</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

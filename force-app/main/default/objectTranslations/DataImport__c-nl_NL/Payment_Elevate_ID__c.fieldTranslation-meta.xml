@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De unieke ID van deze transactie in Elevate.</help>
+    <label>Betalings-ID in Elevate</label>
+    <name>Payment_Elevate_ID__c</name>
+</CustomFieldTranslation>

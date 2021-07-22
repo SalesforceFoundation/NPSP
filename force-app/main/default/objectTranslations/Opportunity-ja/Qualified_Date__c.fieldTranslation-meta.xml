@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この支援者がこの支援の資格があると認定された日付。</help>
+    <label>認定日</label>
+    <name>Qualified_Date__c</name>
+</CustomFieldTranslation>

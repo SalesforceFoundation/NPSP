@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El estado de afiliación de este hogar, por ej. Actual, Vencido o en período de gracia. El valor se basa en Fecha de finalización de afiliación y Período de gracia. El Período se establece en Configuración de NPSP, parámetros del hogar. Es de solo lectura.</help>
+    <label>Estado de la afiliación</label>
+    <name>Membership_Status__c</name>
+</CustomFieldTranslation>

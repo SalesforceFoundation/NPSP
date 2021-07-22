@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Data_Import_Field_Mapping_Set__c</fullName>
+    <description>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The custom metadata api name of the Data Import Field Mapping Set record that should be used by default.</inlineHelpText>
+    <label>Default Data Import Field Mapping Set</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

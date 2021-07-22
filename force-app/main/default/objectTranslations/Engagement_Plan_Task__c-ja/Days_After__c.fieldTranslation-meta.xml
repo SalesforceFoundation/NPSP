@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>エンゲージメント計画の作成日からの日数、またはこの ToDo の期日である親 ToDo の期日からの日数。</help>
+    <label>経過日数</label>
+    <name>Days_After__c</name>
+</CustomFieldTranslation>

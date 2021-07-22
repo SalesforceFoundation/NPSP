@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>提出書類</value>
+    </caseValues>
+    <layouts>
+        <layout>Grant Deadline Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>助成金の提出書類要件</label>
+            <section>Grant Deliverable Requirements</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>提出書類名</nameFieldLabel>
+</CustomObjectTranslation>

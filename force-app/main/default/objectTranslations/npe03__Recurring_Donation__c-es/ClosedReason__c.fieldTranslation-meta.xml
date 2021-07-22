@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
+    <label>Motivo de estado</label>
+    <name>ClosedReason__c</name>
+    <picklistValues>
+        <masterLabel>Card Expired</masterLabel>
+        <translation>Tarjeta caducada</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Commitment Completed</masterLabel>
+        <translation>Compromiso completado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Deceased Donor</masterLabel>
+        <translation>Donante fallecido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Financial Difficulty</masterLabel>
+        <translation>Dificultad financiera</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No Longer Interested</masterLabel>
+        <translation>Ya no interesa</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Unknown</masterLabel>
+        <translation>Desconocido</translation>
+    </picklistValues>
+</CustomFieldTranslation>

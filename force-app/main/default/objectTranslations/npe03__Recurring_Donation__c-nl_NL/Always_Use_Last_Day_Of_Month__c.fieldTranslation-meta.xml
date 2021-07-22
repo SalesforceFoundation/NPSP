@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Stelt toekomstige maandelijkse, aangepaste maandelijkse of driemaandelijkse donatietermijnen in op laatste dag van de maand, onafh. van Volgende Donatiedatum. Termijnperiode moet Maandelijks of Driemaandelijks zijn, of een aangepaste periode met maanden.</help>
+    <label>Altijd laatste dag van maand gebruiken</label>
+    <name>Always_Use_Last_Day_Of_Month__c</name>
+</CustomFieldTranslation>

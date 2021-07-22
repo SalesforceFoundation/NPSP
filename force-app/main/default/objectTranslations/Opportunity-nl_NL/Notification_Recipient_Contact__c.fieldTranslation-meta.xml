@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Opzoeking van de Contactpersoonrecord die van deze Donatie op de hoogte moet worden gebracht.</help>
+    <label>Contactpersoon Ontvanger van Meldingen</label>
+    <name>Notification_Recipient_Contact__c</name>
+    <relationshipLabel>Opportunities (Ontvanger van Meldingen)</relationshipLabel>
+</CustomFieldTranslation>

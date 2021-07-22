@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הפעלת הקצאות ברירת מחדל יוצרת אובייקט הקצאה עבור כל הזדמנות. הדבר מאפשר לדווח על הקצאות ליחידה חשבונאית כללית המהווה ברירת מחדל, אך עושה שימוש בשטח רב יותר לאחסון נתונים.</help>
+    <label>הקצאות ברירת מחדל מופעלות</label>
+    <name>Default_Allocations_Enabled__c</name>
+</CustomFieldTranslation>

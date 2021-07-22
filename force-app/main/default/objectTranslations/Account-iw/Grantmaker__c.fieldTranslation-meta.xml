@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין שארגון זה הוא ארגון פילנתרופי. יכול לחול על מוסדות, סוכנויות ממשלתיות, תאגידים וכו&apos;</help>
+    <label>פילנתרופי</label>
+    <name>Grantmaker__c</name>
+</CustomFieldTranslation>

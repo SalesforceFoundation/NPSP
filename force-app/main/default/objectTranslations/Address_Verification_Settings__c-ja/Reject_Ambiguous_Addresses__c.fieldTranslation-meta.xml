@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>API で複数の住所が返されたときに、あいまいな住所を無効としてマークします。未選択のままにすると、最初に提案された住所が有効な住所として受け入れられます。</help>
+    <label>あいまいな住所の拒否-廃止</label>
+    <name>Reject_Ambiguous_Addresses__c</name>
+</CustomFieldTranslation>

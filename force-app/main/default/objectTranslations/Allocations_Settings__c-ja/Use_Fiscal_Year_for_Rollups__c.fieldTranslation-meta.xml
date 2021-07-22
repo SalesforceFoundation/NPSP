@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このボックスをオンにすると、割り当て積み上げ集計の合計にカレンダー年設定の代わりに会計年度が使用されます。会計年度情報を設定するには、[設定] -&gt; [組織プロファイル] -&gt; [会計年度] に移動します。注意: カスタム会計年度設定はサポートされていません。</help>
+    <label>積み上げ集計に会計年度を使用</label>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+</CustomFieldTranslation>

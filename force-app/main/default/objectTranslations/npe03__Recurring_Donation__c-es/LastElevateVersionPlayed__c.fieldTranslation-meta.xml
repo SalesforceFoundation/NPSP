@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Entero de la última versión de evento de Elevate realizada con actualización en donación recurrente. Se incrementa tras cada llamada de cambios a la API de Elevate. Evita actualizaciones circulares y garantiza no sobreescribir la versión más reciente.</help>
+    <label>Última versión de Elevate realizada</label>
+    <name>LastElevateVersionPlayed__c</name>
+</CustomFieldTranslation>

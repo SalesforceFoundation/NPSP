@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Durch diese Einstellung wird basierend auf dem Wert in den aufgefüllten Feldern automatisch der Datensatzname für Opportunity-Datensätze generiert, die als Batch eingegeben wurden.</help>
+    <label>Opportunity-Benennung</label>
+    <name>Opportunity_Naming__c</name>
+</CustomFieldTranslation>

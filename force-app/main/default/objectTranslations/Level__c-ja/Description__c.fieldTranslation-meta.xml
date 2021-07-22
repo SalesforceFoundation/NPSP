@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このレベルの目的、またはこのベルを達成することの意味を説明します。</help>
+    <label>説明</label>
+    <name>Description__c</name>
+</CustomFieldTranslation>

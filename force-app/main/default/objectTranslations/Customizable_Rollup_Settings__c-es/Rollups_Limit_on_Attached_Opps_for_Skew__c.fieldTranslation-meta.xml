@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Número máximo de oportunidades relacionadas en una cuenta o contacto permitidas en trabajos por lotes de totalización en modo de no desfase. Una cuenta o contacto con más de este número de oportunidades siempre se totalizará utilizando el modo Desfase.</help>
+    <label>Umbral de modo Desfase</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

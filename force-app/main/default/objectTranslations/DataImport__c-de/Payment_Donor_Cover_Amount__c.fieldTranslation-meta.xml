@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Betrag, den der Spender über den Spendenbetrag hinaus gezahlt hat, oftmals um die Transaktionsgebühren abzudecken oder der Spende ein Trinkgeld hinzuzufügen.</help>
+    <label>Deckungsbetrag für Zahlung des Spenders</label>
+    <name>Payment_Donor_Cover_Amount__c</name>
+</CustomFieldTranslation>

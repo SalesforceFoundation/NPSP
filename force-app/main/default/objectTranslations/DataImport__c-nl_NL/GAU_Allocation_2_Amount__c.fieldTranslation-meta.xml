@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het geldbedrag dat is toegekend aan de tweede GAU-toewijzing van de opportunity. U moet Geavanceerd toewijzen voor gegevensimport gebruiken om dit veld toe te wijzen.</help>
+    <label>GAU-toewijzing 2: Bedrag</label>
+    <name>GAU_Allocation_2_Amount__c</name>
+</CustomFieldTranslation>

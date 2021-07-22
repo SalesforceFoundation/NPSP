@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La circonscription régionale (par exemple un « state upper district ») à laquelle appartient cette adresse.</help>
+    <label>Circonscription régionale</label>
+    <name>State_Upper_District__c</name>
+</CustomFieldTranslation>

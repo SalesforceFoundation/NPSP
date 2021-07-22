@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De objectnaam van verouderde gegevensimport van het object, waarop deze Objectgroep voor gegevensimport is gebaseerd.</help>
+    <label>Objectnaam van verouderde gegevensimport</label>
+    <name>Legacy_Data_Import_Object_Name__c</name>
+</CustomFieldTranslation>

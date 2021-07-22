@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הטקסט המלא של הודעת השגיאה</help>
+    <label>הודעה מלאה</label>
+    <name>Full_Message__c</name>
+</CustomFieldTranslation>

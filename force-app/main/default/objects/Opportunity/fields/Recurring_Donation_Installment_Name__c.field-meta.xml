@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Installment_Name__c</fullName>
+    <description>The installment name for inclusion in Opportunity naming. Shows the installment number in parentheses for open ended Recurring Donations, or the installment number out of the total for Recurring Donations with a set number of installments.</description>
+    <externalId>false</externalId>
+    <formula>IF(
+ISBLANK(npe03__Recurring_Donation__c),
+&apos;&apos;,
+  IF(
+    OR(ISPICKVAL(npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c, &apos;Open&apos;),ISPICKVAL(npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c, &apos;Closed&apos;),ISBLANK(npe03__Recurring_Donation__r.npe03__Installments__c)),
+    &apos;(&apos;&amp;TEXT(Recurring_Donation_Installment_Number__c)&amp;&apos;)&apos;,
+    &apos;(&apos;&amp;TEXT(Recurring_Donation_Installment_Number__c)&amp;&apos; &apos;&amp;$Label.oppInstallmentsOf&amp;&apos; &apos;&amp;TEXT(npe03__Recurring_Donation__r.npe03__Installments__c)&amp;&apos;)&apos;
+  )
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The installment name for inclusion in Opportunity naming. Shows the installment number in parentheses for open ended Recurring Donations, or the installment number out of the total for Recurring Donations with a set number of installments.</inlineHelpText>
+    <label>Recurring Donation Installment Name</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

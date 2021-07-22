@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Aktivieren Sie dieses Kontrollkästchen, um die neue NPSP-Engine für anpassbare Rollups zu aktivieren.</help>
+    <label>Anpassbare Rollups aktivieren</label>
+    <name>Customizable_Rollups_Enabled__c</name>
+</CustomFieldTranslation>

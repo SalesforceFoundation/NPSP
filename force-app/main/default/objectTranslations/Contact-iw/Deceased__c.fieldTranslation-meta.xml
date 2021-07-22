@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כשהיא נבחרת, אפשרות זו מסמנת את איש הקשר כנפטר ומונעת את הכללתו בשמות, הודעות דואר אלקטרוני ושיחות טלפון של משק הבית.</help>
+    <label>נפטר</label>
+    <name>Deceased__c</name>
+</CustomFieldTranslation>

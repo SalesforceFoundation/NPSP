@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de registros para procesar en el momento de migrar registros de Donaciones recurrentes existentes al modelo de datos de Donaciones recurrentes mejoradas.</help>
+    <label>Tamaño lote migración datos DR mejoradas</label>
+    <name>DataMigrationBatchSize__c</name>
+</CustomFieldTranslation>

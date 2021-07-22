@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מספר התשלומים המרבי הזמין באשף יצירת התשלומים.</help>
+    <label>תשלומים מרביים</label>
+    <name>Max_Payments__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Terugkerende Donatie waaraan deze Toewijzing is toegeschreven. NPSP wijst alle nieuwe Opportunities die aan de Terugkerende Donatie zijn gekoppeld automatisch op dezelfde wijze toe. </help>
+    <label>Terugkerende Donatie</label>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+</CustomFieldTranslation>

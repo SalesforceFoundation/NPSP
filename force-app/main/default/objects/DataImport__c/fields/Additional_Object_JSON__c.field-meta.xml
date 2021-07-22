@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Additional_Object_JSON__c</fullName>
+    <description>This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format.</inlineHelpText>
+    <label>Additional Object JSON</label>
+    <length>131072</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

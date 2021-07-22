@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>49.0</apiVersion>
+    <description>Lightning Event used when on HH_ManageHH contact autocomplete list an arrow key is pressed, new focussed element is 
+    computed for notifying it to get the focus</description>
+</AuraDefinitionBundle>

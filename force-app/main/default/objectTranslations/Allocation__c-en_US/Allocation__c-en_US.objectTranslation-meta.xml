@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>GAU Allocation</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>GAU Allocations</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <layouts>
+        <layout>Allocation Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label><!-- Manage_Allocations --></label>
+        <name>Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

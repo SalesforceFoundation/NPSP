@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La forma de pago para esta Donación recurrente. NPSP copia automáticamente el valor seleccionado con cada registro de Pago relacionado.</help>
+    <label>Método de pago de donación recurrente</label>
+    <name>Recurring_Donation_Payment_Method__c</name>
+</CustomFieldTranslation>

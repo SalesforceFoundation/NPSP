@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die max. Zahl an verb. Opp. in einem Acc. o. Kont., die i. d. Rollup-Batch-Aufträgen im nicht verz. Modus zulässig sind. Ein Acc. o. Kont. mit einer höheren Zahl als diese Zahl an verb. Opp. wird immer im verz. Modus zusammengefasst.</help>
+    <label>Verzerrter Modus – Schwellenwert</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Notification_Recipient_Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to the Contact record of the person who should be notified about this Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Lookup to the Contact record of the person who should be notified about this Donation.</inlineHelpText>
+    <label>Notification Recipient Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Opportunities (Notification Recipient)</relationshipLabel>
+    <relationshipName>Notification_Opportunities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

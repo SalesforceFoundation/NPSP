@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enable_Automatic_Verification__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Enable Automatic Verification</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enables automatic address verification for new addresses.</inlineHelpText>
+    <label>Enable Automatic Verification</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

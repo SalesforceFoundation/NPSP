@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The active package namespace prefix for NPSP. Do not edit manually.</help>
+    <label>Namespace Prefix</label>
+    <name>Namespace_Prefix__c</name>
+</CustomFieldTranslation>

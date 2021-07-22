@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כשהיא נבחרת, אפשרות זו מונעת הכללה של איש הקשר בהודעות דואר אלקטרוני ושיחות טלפון.</help>
+    <label>לא ליצור קשר</label>
+    <name>Do_Not_Contact__c</name>
+</CustomFieldTranslation>

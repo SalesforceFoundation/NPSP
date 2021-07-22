@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>支援金額に加えて支援者が支払った金額。多くの場合、手数料を補償したり支援にチップを追加したりするために使用されます。</help>
+    <label>支払支援者補償金額</label>
+    <name>Payment_Donor_Cover_Amount__c</name>
+</CustomFieldTranslation>

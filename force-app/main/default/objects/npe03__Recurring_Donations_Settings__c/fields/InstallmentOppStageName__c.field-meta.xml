@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InstallmentOppStageName__c</fullName>
+    <description>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Opportunity Stage that NPSP applies to each new installment Opportunity when you create a Recurring Donation.</inlineHelpText>
+    <label>Stage Name for Installment Opportunities</label>
+    <length>50</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Tipos de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
+    <label>Tipos de oportunidades excluidos</label>
+    <name>Excluded_Opp_Types__c</name>
+</CustomFieldTranslation>

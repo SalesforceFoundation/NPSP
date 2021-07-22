@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Informal_Greeting_Format__c</fullName>
+    <description>The format to use for the Household Informal Greeting.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The format to use for the Household Informal Greeting.</inlineHelpText>
+    <label>Informal Greeting Format</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

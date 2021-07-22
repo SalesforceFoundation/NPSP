@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Do Not Update. For Salesforce.org pilot testing only. Allows limited access override of the PilotEnabled Feature Parameter in Scratch Orgs to support pilot testing in orgs where there is no associated Product Licence in the LMO.</help>
+    <label>Scratch Org Override: Pilot Enabled</label>
+    <name>OverrideFeature_PilotEnabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Campaign__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Campaign associated with the Recurring Donation when this schedule record was created.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Campaign associated with the Recurring Donation when this schedule record was created.</inlineHelpText>
+    <label>Related Campaign</label>
+    <referenceTo>Campaign</referenceTo>
+    <relationshipLabel>Recurring Donation Schedules</relationshipLabel>
+    <relationshipName>RecurringDonationSchedules</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

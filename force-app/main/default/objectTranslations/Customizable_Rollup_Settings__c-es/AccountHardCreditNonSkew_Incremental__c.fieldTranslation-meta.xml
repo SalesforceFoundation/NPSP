@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se marcado, el trabajo nocturno Crédito duro cuenta (sin desfase) limita el número de cuentas para recalcularlas con oportunidades actualizadas recientemente en cuentas. Esto mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
+    <label>Crédito duro cuenta increm. sin desfase</label>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>

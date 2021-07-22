@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Ablaufmonat der Karte, die für diese Transaktion verwendet wurde.</help>
+    <label>Ablaufmonat der Karte</label>
+    <name>Card_Expiration_Month__c</name>
+</CustomFieldTranslation>

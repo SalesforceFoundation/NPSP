@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Selon le pays et la zone, il peut s‘agir d’une ville, commune, municipalité, ou tout type de division administrative associée à cette adresse.</help>
+    <label>Zone d’administration</label>
+    <name>Administrative_Area__c</name>
+</CustomFieldTranslation>

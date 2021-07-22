@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>URL utilizada para la verificación del código postal.</help>
+    <label>Extremo de verificación de código postal</label>
+    <name>Zipcode_Verification_Endpoint__c</name>
+</CustomFieldTranslation>

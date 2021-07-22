@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NPSP_Affiliation_Compact_Layout</fullName>
+    <fields>Name</fields>
+    <fields>npe5__Organization__c</fields>
+    <fields>npe5__Contact__c</fields>
+    <label>NPSP Affiliation Compact Layout</label>
+</CompactLayout>

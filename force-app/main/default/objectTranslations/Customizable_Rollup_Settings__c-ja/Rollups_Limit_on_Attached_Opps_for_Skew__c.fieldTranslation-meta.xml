@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>スキューモードでない積み上げ集計バッチジョブで許可する、取引先または取引先責任者の関連商談の最大数。関連商談数がこれを上回る取引先または取引先責任者は、常にスキューモードで積み上げ集計されます。</help>
+    <label>スキューモードしきい値</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

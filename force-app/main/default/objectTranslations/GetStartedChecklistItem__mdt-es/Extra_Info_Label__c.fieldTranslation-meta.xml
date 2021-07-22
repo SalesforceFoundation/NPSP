@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El nombre de API de la etiqueta Información adicional, que proporciona información extra sobre un elemento de la sección (como la longitud de un vídeo, PDF, etc.). Se muestra en la esquina superior derecha.</help>
+    <label>Nombre etiqueta de información adicional</label>
+    <name>Extra_Info_Label__c</name>
+</CustomFieldTranslation>

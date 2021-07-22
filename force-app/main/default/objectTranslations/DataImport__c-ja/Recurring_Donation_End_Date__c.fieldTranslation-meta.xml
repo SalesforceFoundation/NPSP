@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この日付以降、NPSP はこの継続支援の割賦を作成しなくなり、[状況] を [クローズ] に更新します。</help>
+    <label>継続支援の終了日</label>
+    <name>Recurring_Donation_End_Date__c</name>
+</CustomFieldTranslation>

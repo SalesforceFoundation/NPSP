@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Button_Type__c</fullName>
+    <description>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</inlineHelpText>
+    <label>Primary Button Type</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Disabled</fullName>
+                <default>true</default>
+                <label>Disabled</label>
+            </value>
+            <value>
+                <fullName>sfdc:new-tab</fullName>
+                <default>false</default>
+                <label>SFDC New Tab</label>
+            </value>
+            <value>
+                <fullName>link</fullName>
+                <default>false</default>
+                <label>External Page</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

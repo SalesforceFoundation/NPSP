@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Number of records per batch to process when recalculating soft credit donor rollups to the Contact object.</help>
+    <label>Contact Soft Credit Batch Size</label>
+    <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Allocations_Enabled__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enabling Default Allocations creates an Allocation object for each Opportunity. This enables reporting on allocations to a default General Accounting Unit, but uses more data storage.</inlineHelpText>
+    <label>Default Allocations Enabled</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

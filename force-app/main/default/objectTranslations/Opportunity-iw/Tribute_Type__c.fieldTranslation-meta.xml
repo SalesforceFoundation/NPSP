@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין אם התרומה היא בהוקרה או לזכרו של אדם.</help>
+    <label>סוג הוקרה</label>
+    <name>Tribute_Type__c</name>
+    <picklistValues>
+        <masterLabel>Honor</masterLabel>
+        <translation>הוקרה</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Memorial</masterLabel>
+        <translation>זיכרון</translation>
+    </picklistValues>
+</CustomFieldTranslation>

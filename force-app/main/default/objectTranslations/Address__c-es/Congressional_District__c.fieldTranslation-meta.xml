@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El distrito electoral de la dirección</help>
+    <label>Distrito electoral</label>
+    <name>Congressional_District__c</name>
+</CustomFieldTranslation>

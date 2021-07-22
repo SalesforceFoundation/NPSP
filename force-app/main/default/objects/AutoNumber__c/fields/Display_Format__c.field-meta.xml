@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Display_Format__c</fullName>
+    <description>The format for the auto-numbered field including number of digits and, if desired, a prefix.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The format for the auto-numbered field including number of digits and, if desired, a prefix.</inlineHelpText>
+    <label>Display Format</label>
+    <length>30</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

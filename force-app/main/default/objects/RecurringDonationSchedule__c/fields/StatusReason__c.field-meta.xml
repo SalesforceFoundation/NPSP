@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>StatusReason__c</fullName>
+    <description>Contains additional details for the schedule. For example, a paused reason for a paused schedule.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contains additional details for the schedule. For example, a paused reason for a paused schedule.</inlineHelpText>
+    <label>Status Reason</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

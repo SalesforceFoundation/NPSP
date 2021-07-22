@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La version de la fonctionnalité Entrée de saisie de dons utilisée pour créer ce lot.</help>
+    <label>Version de l&apos;entrée de saisie de dons</label>
+    <name>Batch_Gift_Entry_Version__c</name>
+</CustomFieldTranslation>

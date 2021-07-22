@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La última fecha de cierra de oportunidad de una asignación asociada a esta cuenta contable general.</help>
+    <label>Fecha de última asignación</label>
+    <name>Last_Allocation_Date__c</name>
+</CustomFieldTranslation>

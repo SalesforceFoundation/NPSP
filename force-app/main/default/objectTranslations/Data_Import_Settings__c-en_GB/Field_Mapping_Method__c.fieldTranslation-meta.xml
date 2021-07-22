@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Defines the way fields on the NPSP Data Import record are mapped to other objects in Salesforce. The options are Help Text or Data Import Field Mapping.</help>
+    <label>Field Mapping Method</label>
+    <name>Field_Mapping_Method__c</name>
+</CustomFieldTranslation>

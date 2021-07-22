@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この継続支援の支払のフォーム。NPSP は選択した値を関連する各支払レコードに自動的にコピーします。</help>
+    <label>継続支援の支払方法</label>
+    <name>Recurring_Donation_Payment_Method__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הNPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- NPSP Data Import --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הNPSP Data Import --></value>
+    </caseValues>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>פרטי Account1</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Account2</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label><!-- Campaign Information --></label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Contact1</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>פרטי Contact2</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- GAU Allocation 1 Information --></label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- GAU Allocation 2 Information --></label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>כתובת בבית</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label><!-- Household Account Information --></label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label><!-- Opportunity Information --></label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label><!-- Payment Information --></label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label><!-- Recurring Donation Information --></label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
+    <webLinks>
+        <label>מחק את כל רשומות יבוא הנתונים</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>מחק את כל רשומות יבוא הנתונים שיובאו</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>התחל יבוא נתונים</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

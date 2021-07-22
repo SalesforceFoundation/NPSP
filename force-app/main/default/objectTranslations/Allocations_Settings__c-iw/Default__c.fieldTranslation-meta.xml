@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מכילה את המזהה של היחידה החשבונאית הכללית, לצורך יצירה של הקצאות ברירת מחדל או לצורך הקצאת סכומים שלא הוקצו.</help>
+    <label>יחידה חשבונאית כללית המהווה ברירת מחדל</label>
+    <name>Default__c</name>
+</CustomFieldTranslation>

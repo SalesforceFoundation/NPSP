@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Kontakten, wird d. max. Anz. an Kont. angeg., die in jedem Batch verarb. werden.</help>
+    <label>Gr. Datenvol.: Kont-Hard Credit-Blockgr.</label>
+    <name>ChunkSize_Contact_HardCredit__c</name>
+</CustomFieldTranslation>

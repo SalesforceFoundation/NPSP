@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Suma total de todas las asignaciones de oportunidades cerradas ganadas. NPSP actualiza este campo en un trabajo programado nocturno.</help>
+    <label>Total de asignaciones</label>
+    <name>Total_Allocations__c</name>
+</CustomFieldTranslation>

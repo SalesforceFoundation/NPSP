@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De GAU waaraan deze Toewijzing is toegeschreven. Enkel GAU&apos;s die gemarkeerd zijn als actief zijn beschikbaar voor nieuwe Toewijzingen.</help>
+    <label>GAU</label>
+    <lookupFilter>
+        <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+        <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
+    </lookupFilter>
+    <name>General_Accounting_Unit__c</name>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Fecha en la que la información del regalo que iguala fue actualizada por última vez.</help>
+    <label>Info actualizada de regalo que iguala</label>
+    <name>Matching_Gift_Info_Updated__c</name>
+</CustomFieldTranslation>

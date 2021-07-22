@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>First_Soft_Credit_Date__c</fullName>
+    <description>The date of this Contact&apos;s earliest soft credit.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The date of this Contact&apos;s earliest soft credit.</inlineHelpText>
+    <label>First Soft Credit Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Date</type>
+</CustomField>

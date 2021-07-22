@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Membership_End_Date__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Opportunity.npe01__Membership_End_Date__c</inlineHelpText>
+    <label>Donation Membership End Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Name__c</fullName>
+    <description>Leave blank if you have a Recurring Donation Name Format selected. Otherwise, enter your own name.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Leave blank if you have a Recurring Donation Name Format selected. Otherwise, enter your own name.</inlineHelpText>
+    <label>Recurring Donation Name</label>
+    <length>80</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

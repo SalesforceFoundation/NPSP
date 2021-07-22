@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Ein optionales Feld mit einer eindeutigen Kennung zum Organisations-Account-Abgleich</help>
+    <label>Benutzerdef. eindeutige Account-Kennung</label>
+    <name>Account_Custom_Unique_ID__c</name>
+</CustomFieldTranslation>

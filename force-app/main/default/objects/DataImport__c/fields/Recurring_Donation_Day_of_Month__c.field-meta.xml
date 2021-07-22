@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Day_of_Month__c</fullName>
+    <description>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days.</inlineHelpText>
+    <label>Recurring Donation Day of Month</label>
+    <length>10</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

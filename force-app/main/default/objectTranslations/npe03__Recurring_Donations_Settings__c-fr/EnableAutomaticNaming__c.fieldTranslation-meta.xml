@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est activée, Salesforce remplit automatiquement le Nom du don récurrent.</help>
+    <label>Nommage automatique dons récurrents</label>
+    <name>EnableAutomaticNaming__c</name>
+</CustomFieldTranslation>

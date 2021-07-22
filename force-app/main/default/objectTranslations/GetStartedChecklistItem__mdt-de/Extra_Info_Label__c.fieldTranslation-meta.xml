@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der API-Name der Bezeichnung mit Zusatzinformationen, die zusätzliche Informationen über ein Abschnittselement (z. B. Videolänge, PDF usw.) bereitstellt. Wird in der Ecke rechts oben angezeigt.</help>
+    <label>Name f. Bezeichnung m. Zus-Informationen</label>
+    <name>Extra_Info_Label__c</name>
+</CustomFieldTranslation>

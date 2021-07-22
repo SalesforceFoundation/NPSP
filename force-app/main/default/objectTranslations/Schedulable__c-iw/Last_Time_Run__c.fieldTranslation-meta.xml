@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>המועד האחרון שבו הופעלה המשימה.</help>
+    <label>זמן הפעלה אחרונה</label>
+    <name>Last_Time_Run__c</name>
+</CustomFieldTranslation>

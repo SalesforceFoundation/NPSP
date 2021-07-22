@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GAU_Allocation_1_Imported__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>A lookup to the first GAU Allocation if it was successfully created.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A lookup to the first GAU Allocation if it was successfully created.</inlineHelpText>
+    <label>GAU Allocation 1: Imported</label>
+    <referenceTo>Allocation__c</referenceTo>
+    <relationshipLabel>NPSP Data Imports (GAU 1)</relationshipLabel>
+    <relationshipName>NPSP_Data_Imports_GAU1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

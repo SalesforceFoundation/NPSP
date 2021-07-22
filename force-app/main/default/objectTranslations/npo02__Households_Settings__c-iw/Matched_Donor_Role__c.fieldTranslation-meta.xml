@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>התפקיד הניתן לאנשי הקשר שצריכים לקבל קרדיט עבור השוואת תרומה.</help>
+    <label>סוג תורם השוואה</label>
+    <name>Matched_Donor_Role__c</name>
+</CustomFieldTranslation>

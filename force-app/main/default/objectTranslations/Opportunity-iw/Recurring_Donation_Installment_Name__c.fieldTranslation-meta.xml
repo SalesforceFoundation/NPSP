@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>שם תשלום להכללה במתן השם להזדמנות. מציג את מספר התשלום במירכאות עבור תרומות חוזרות עם סיום פתוח, או את מספר התשלום מתוך הסה&quot;כ עבור תרומות חוזרות שהוגדר עבורן מספר תשלומים.</help>
+    <label>שם תשלום תרומה חוזרת</label>
+    <name>Recurring_Donation_Installment_Name__c</name>
+</CustomFieldTranslation>

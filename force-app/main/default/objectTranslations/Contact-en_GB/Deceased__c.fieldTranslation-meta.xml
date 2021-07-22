@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</help>
+    <label>Deceased</label>
+    <name>Deceased__c</name>
+</CustomFieldTranslation>

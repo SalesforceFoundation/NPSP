@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Aktivieren, um zu verhindern, dass Hard Credit- u. Soft Credit-Rollups zu Accounts und Kontakten nur Account- und Kontaktdatensätze verarbeiten, die bereits über verbundene Opp.- oder Opp.-Kontaktrollen-Datensätze verfügen.</help>
+    <label>Verbundene Datensatzfilter deaktivieren</label>
+    <name>Disable_Related_Records_Filter__c</name>
+</CustomFieldTranslation>

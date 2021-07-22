@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <description>The status of the import for this record, for example, Imported or Failed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The status of the import for this record, for example, Imported or Failed.</inlineHelpText>
+    <label>Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Ready To Process</fullName>
+                <default>false</default>
+                <label>Ready to Process</label>
+            </value>
+            <value>
+                <fullName>Imported</fullName>
+                <default>false</default>
+                <label>Imported</label>
+            </value>
+            <value>
+                <fullName>Dry Run - Validated</fullName>
+                <default>false</default>
+                <label>Dry Run - Validated</label>
+            </value>
+            <value>
+                <fullName>Dry Run - Error</fullName>
+                <default>false</default>
+                <label>Dry Run - Error</label>
+            </value>
+            <value>
+                <fullName>Failed</fullName>
+                <default>false</default>
+                <label>Failed</label>
+            </value>
+            <value>
+                <fullName>Processing</fullName>
+                <default>false</default>
+                <label>Processing</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EnableAutomaticNaming__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If enabled, Salesforce automatically populates the Recurring Donation Name.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If enabled, Salesforce automatically populates the Recurring Donation Name.</inlineHelpText>
+    <label>Automatic Recurring Donation Naming</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

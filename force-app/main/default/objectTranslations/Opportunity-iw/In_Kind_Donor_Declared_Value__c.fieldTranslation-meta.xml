@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אפשרות זו מסומנת אם התורם סיפק את ערך השוק ההוגן של תרומה שוות-ערך זו.</help>
+    <label>ערך מוצהר על-ידי התורם</label>
+    <name>In_Kind_Donor_Declared_Value__c</name>
+</CustomFieldTranslation>

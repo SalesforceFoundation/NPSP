@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Acknowledgment</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Email Acknowledgment</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}OPP_SendAcknowledgmentBTN?OppId={!Opportunity.Id}</url>
+</WebLink>

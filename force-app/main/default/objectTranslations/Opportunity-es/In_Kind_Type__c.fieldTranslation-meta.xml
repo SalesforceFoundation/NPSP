@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El tipo de regalo en especie, como por ejemplo bienes o servicios.</help>
+    <label>Tipo en especie</label>
+    <name>In_Kind_Type__c</name>
+    <picklistValues>
+        <masterLabel>Goods</masterLabel>
+        <translation>Bienes</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Services</masterLabel>
+        <translation>Servicios</translation>
+    </picklistValues>
+</CustomFieldTranslation>

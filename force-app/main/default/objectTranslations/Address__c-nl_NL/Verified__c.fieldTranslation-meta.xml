@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Geeft aan of het Adres is geverifieerd door een externe dienst voor adresverificatie.</help>
+    <label>Geverifieerd</label>
+    <name>Verified__c</name>
+</CustomFieldTranslation>

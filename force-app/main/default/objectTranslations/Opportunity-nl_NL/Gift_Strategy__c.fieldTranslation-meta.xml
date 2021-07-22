@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Categoriseert het type vraag voor deze opportunity, bijvoorbeeld Nieuwe Donor.</help>
+    <label>Giftstrategie</label>
+    <name>Gift_Strategy__c</name>
+    <picklistValues>
+        <masterLabel>New Donor</masterLabel>
+        <translation>Nieuwe Donor</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Renewal</masterLabel>
+        <translation>Verlenging</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Upgrade</masterLabel>
+        <translation>Upgraden</translation>
+    </picklistValues>
+</CustomFieldTranslation>

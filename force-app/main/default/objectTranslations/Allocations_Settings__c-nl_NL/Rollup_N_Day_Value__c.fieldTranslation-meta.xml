@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Deze waarde heeft invloed op het aantal te tellen dagen voor N Dagen Toewijzingstotaliseringsvelden.</help>
+    <label>Waarde Totalisering N Dag</label>
+    <name>Rollup_N_Day_Value__c</name>
+</CustomFieldTranslation>

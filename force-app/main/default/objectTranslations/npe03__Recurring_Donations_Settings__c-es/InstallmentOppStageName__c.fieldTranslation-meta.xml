@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La etapa de oportunidad que NPSP aplica a cada Oportunidad de cuota cuando crea una Donación recurrente.</help>
+    <label>Nombre de etapa para oportunidades cuota</label>
+    <name>InstallmentOppStageName__c</name>
+</CustomFieldTranslation>

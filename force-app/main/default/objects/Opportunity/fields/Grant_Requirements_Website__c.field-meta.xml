@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grant_Requirements_Website__c</fullName>
+    <description>A URL that points to the grant requirements on the grantmaker&apos;s website.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A URL that points to the grant requirements on the grantmaker&apos;s website.</inlineHelpText>
+    <label>Grant Requirements Website</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>

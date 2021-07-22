@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Durchschnitt aller Zuweisungen insgesamt zu diesem Verwendungszweck. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
+    <label>Durchschnitt Zuweisung</label>
+    <name>Average_Allocation__c</name>
+</CustomFieldTranslation>

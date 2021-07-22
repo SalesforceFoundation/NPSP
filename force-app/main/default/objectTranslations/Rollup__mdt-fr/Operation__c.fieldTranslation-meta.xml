@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Opération</label>
+    <name>Operation__c</name>
+    <picklistValues>
+        <masterLabel>Average</masterLabel>
+        <translation>Moyenne</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Year</masterLabel>
+        <translation>Meilleure année</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Year Total</masterLabel>
+        <translation>Total de la meilleure année</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Count</masterLabel>
+        <translation>Nombre</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Donor Streak</masterLabel>
+        <translation>Série de donateurs</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>First</masterLabel>
+        <translation>Premier</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Largest</masterLabel>
+        <translation>Plus grand(e)</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Last</masterLabel>
+        <translation>Dernier</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Smallest</masterLabel>
+        <translation>Plus petit(e)</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Sum</masterLabel>
+        <translation>Somme</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Years Donated</masterLabel>
+        <translation>Années de don</translation>
+    </picklistValues>
+</CustomFieldTranslation>

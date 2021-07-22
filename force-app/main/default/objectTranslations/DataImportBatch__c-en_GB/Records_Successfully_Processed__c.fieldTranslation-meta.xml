@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Shows the number of records that were successfully processed on the date listed in the Last Processed On field.</help>
+    <label>Records Successfully Processed</label>
+    <name>Records_Successfully_Processed__c</name>
+</CustomFieldTranslation>

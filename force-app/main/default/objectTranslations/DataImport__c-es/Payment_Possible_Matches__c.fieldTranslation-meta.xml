@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Una lista separada por comas de los identificadores de las 10 primeras coincidencias de posibles pagos para una donación.</help>
+    <label>Posibles coincidencias de pago</label>
+    <name>Payment_Possible_Matches__c</name>
+</CustomFieldTranslation>

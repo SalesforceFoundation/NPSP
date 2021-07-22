@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אפשרות זו מסומנת אם המשתמש הוא איש הקשר הראשי בחשבון שלו.  ניתן לערוך בחשבון את איש הקשר הראשי.</help>
+    <label>איש קשר ראשי</label>
+    <name>Primary_Contact__c</name>
+</CustomFieldTranslation>

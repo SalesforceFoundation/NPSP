@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het lagere district van de staat (zoals een staatsassembleedistrict) waar dit Adres bij hoort.</help>
+    <label>Lager District van Staat</label>
+    <name>State_Lower_District__c</name>
+</CustomFieldTranslation>

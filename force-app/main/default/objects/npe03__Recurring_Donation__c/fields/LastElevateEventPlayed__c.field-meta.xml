@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>LastElevateEventPlayed__c</fullName>
+    <description>The last Elevate event played resulting in an update to this Recurring Donation.</description>
+    <externalId>true</externalId>
+    <inlineHelpText>The last Elevate event played resulting in an update to this Recurring Donation.</inlineHelpText>
+    <label>Last Elevate Event Played</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

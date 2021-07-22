@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סוג האובייקט שבו התרחשה השגיאה, אם ידוע.</help>
+    <label>סוג אובייקט</label>
+    <name>Object_Type__c</name>
+</CustomFieldTranslation>

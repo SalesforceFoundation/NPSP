@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der (vom Spender angegebene) Name d. Person, d. über diese Spende benachrichtigt werden soll. Wenn dieses Feld leer bleibt und d. Feld f. d. Kontakt des Benachrichtigungsempfängers einen Wert enthält, wird dieser automatisch von NPSP übertragen.</help>
+    <label>Name des Benachrichtigungsempfängers</label>
+    <name>Notification_Recipient_Name__c</name>
+</CustomFieldTranslation>

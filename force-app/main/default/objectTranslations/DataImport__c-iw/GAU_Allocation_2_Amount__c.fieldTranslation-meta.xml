@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The monetary amount attributed to the Opportunity&apos;s second GAU Allocation. You must use Data Import Advanced Mapping to map to this field. --></help>
+    <label><!-- GAU Allocation 2: Amount --></label>
+    <name>GAU_Allocation_2_Amount__c</name>
+</CustomFieldTranslation>

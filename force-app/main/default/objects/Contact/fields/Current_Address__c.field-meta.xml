@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Current_Address__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Lookup to the current Address record for this Contact. NPSP populates the Contact&apos;s Mailing Address field with the street, city, state, and postal code from the current Address record.</inlineHelpText>
+    <label>Current Address</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Address__c.Household_Account__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.AccountId</valueField>
+        </filterItems>
+        <infoMessage>To see all addresses for the Contact&apos;s household, enter A-* in the search window</infoMessage>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>Address__c</referenceTo>
+    <relationshipLabel>Contacts (Current Address)</relationshipLabel>
+    <relationshipName>Contacts1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>

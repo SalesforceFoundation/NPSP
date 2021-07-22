@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Failed_Data_Imports</fullName>
+    <columns>NAME</columns>
+    <columns>Status__c</columns>
+    <columns>FailureInformation__c</columns>
+    <columns>Contact1_Firstname__c</columns>
+    <columns>Contact1_Lastname__c</columns>
+    <columns>Account1_Name__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>equals</operation>
+        <value>Failed</value>
+    </filters>
+    <label>Failed Data Imports</label>
+</ListView>

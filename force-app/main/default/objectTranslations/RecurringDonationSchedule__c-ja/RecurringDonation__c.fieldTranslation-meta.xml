@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このスケジュールレコードが関連付けられている継続支援。</help>
+    <label>継続支援</label>
+    <name>RecurringDonation__c</name>
+    <relationshipLabel>継続支援スケジュール</relationshipLabel>
+</CustomFieldTranslation>

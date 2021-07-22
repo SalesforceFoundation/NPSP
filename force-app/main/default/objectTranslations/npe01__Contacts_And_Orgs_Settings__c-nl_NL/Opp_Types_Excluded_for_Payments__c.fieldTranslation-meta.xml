@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>NPSP maakt automatisch Betalingsrecords voor Opportunities met een van de waarden in de Typekeuzelijst. Selecteer hier alle Types waarvoor u geen automatische Betalingsrecords wenst. Klik op Control of Command om meer dan één Type te selecteren.</help>
+    <label>Uitgesloten Opportunitytypen</label>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+</CustomFieldTranslation>

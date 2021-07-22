@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP データインポート</value>
+    </caseValues>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>団体情報(取引先1)</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>団体情報(取引先2)</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label>キャンペーン情報</label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>取引先責任者１情報</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>取引先責任者２情報</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>一般会計単位の割り当て 1 の情報</label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label>一般会計単位の割り当て 2 の情報</label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>自宅住所</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label>世帯取引先情報</label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label>商談取引先責任者の役割 1 の情報</label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label>商談取引先責任者の役割 2 の情報</label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label>商談情報</label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>継続支援の情報</label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>データインポート ID</nameFieldLabel>
+    <webLinks>
+        <label>すべてのデータインポートレコードを削除</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>インポート済みのデータインポートレコードを削除</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>データインポートの開始</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

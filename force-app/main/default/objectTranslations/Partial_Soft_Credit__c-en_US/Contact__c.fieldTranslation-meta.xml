@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Lookup to the Contact who gets this soft credit. --></help>
+    <label><!-- Contact --></label>
+    <name>Contact__c</name>
+    <relationshipLabel><!-- Partial Soft Credits --></relationshipLabel>
+</CustomFieldTranslation>

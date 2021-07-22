@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Allow_Blank_Opportunity_Names__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If set, then Batch Data Entry will never name Opportunities, even if they are blank (not included on the BDE page).</inlineHelpText>
+    <label>Allow Blank Opportunity Names</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

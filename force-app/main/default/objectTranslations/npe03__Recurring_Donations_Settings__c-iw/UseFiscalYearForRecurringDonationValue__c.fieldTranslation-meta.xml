@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- When checked, this option enables fiscal year for Recurring Donation value totals. To set the fiscal year start month, go to Setup | Company Settings | Fiscal Year. NOTE: Use Standard Fiscal Year only. Do not enable Custom Fiscal Year. --></help>
+    <label><!-- Use Fiscal Year for Recurring Donations --></label>
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
+</CustomFieldTranslation>

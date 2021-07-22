@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Eine durch Komma getrennte Liste mit Kennungen für die ersten 10 möglichen Opportunity-Übereinstimmungen für eine Spende</help>
+    <label>Mögliche Spendenverdopplungen</label>
+    <name>Donation_Possible_Matches__c</name>
+</CustomFieldTranslation>

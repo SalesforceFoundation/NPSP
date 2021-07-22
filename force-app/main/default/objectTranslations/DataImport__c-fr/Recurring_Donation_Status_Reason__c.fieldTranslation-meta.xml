@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La raison pour laquelle ce don récurrent a sa valeur de statut actuelle.</help>
+    <label>Motif du statut du don récurrent</label>
+    <name>Recurring_Donation_Status_Reason__c</name>
+</CustomFieldTranslation>

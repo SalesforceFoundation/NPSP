@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, NPSP won&apos;t automatically schedule default recurring jobs.
+
+These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.
+
+When checked, every time you visit the NPSP Settings page, NPSP verifies that the default recurring jobs are scheduled. Rescheduling only applies to missing jobs, not updated jobs.
+
+To view these jobs, search for Scheduled Jobs in Salesforce Setup.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling.</inlineHelpText>
+    <label>Don&apos;t Auto Schedule Default NPSP Jobs</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De status van de poging tot invoegen van de eerste Opportunitycontactpersoonsrol.</help>
+    <label>Opportunitycont.pers.rol 1: ImportStatus</label>
+    <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+</CustomFieldTranslation>

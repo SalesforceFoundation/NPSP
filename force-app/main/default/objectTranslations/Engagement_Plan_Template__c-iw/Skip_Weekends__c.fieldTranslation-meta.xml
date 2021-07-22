@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם אפשרות זו מסומנת, תאריכי היעד של משימות שייווצרו בתוכנית מעורבות זו לא יהיו בימי שבת או ראשון.</help>
+    <label>דלג על סופי שבוע</label>
+    <name>Skip_Weekends__c</name>
+</CustomFieldTranslation>

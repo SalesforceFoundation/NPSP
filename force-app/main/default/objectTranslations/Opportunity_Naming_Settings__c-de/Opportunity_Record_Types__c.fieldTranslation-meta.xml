@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Gibt den Opportunity-Datensatztyp an, für den dieses Benennungschema gilt.</help>
+    <label>Opportunity-Datensatztypen</label>
+    <name>Opportunity_Record_Types__c</name>
+</CustomFieldTranslation>

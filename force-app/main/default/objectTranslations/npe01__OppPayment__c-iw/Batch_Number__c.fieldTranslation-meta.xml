@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The batch that set this Payment as paid. This field is automatically populated based on your Batch Number Settings in NPSP Settings. --></help>
+    <label><!-- Batch Number --></label>
+    <name>Batch_Number__c</name>
+</CustomFieldTranslation>

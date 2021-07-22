@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>ערך זה משפיע על מספר הימים שיש לספור עבור שדות סיכום של הקצאות במשך N ימים.</help>
+    <label>ערך N יום לסיכום</label>
+    <name>Rollup_N_Day_Value__c</name>
+</CustomFieldTranslation>

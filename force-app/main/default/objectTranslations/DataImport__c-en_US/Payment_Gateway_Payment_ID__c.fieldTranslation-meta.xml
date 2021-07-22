@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The unique ID for this transaction from the payment gateway. --></help>
+    <label><!-- Payment Gateway Payment ID --></label>
+    <name>Payment_Gateway_Payment_ID__c</name>
+</CustomFieldTranslation>

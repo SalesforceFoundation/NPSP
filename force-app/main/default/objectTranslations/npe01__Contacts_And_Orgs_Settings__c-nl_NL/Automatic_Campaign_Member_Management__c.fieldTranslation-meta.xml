@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Wanneer aangevinkt, maakt NPSP automatisch een Campagnelidrecord wanneer u een Opportunity maakt die een Primaire Contactpersoon en een Primaire Campagnebron heeft, of wanneer u die Opportunity bijwerkt naar een Gesloten/Gewonnen fase.</help>
+    <label>Automatisch Beheer Campagneleden</label>
+    <name>Automatic_Campaign_Member_Management__c</name>
+</CustomFieldTranslation>

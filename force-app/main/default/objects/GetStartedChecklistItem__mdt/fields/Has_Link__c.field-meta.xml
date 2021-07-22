@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Has_Link__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates if the item has a link to display.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>Indicates if the item has a link to display.</inlineHelpText>
+    <label>Has Link</label>
+    <type>Checkbox</type>
+</CustomField>

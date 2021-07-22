@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>שיוך אופציונלי של הקצאות לתרומה חוזרת. כל ההזדמנויות החדשות שנוצרו עם לוח זמנים זה של תרומה חוזרת יוקצו אוטומטית באותו אופן.</help>
+    <label>תרומה חוזרת</label>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>הקצאות GAU</relationshipLabel>
+</CustomFieldTranslation>

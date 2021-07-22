@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>自動採番シーケンスの最初の番号。</help>
+    <label>開始番号</label>
+    <name>Starting_Number__c</name>
+</CustomFieldTranslation>

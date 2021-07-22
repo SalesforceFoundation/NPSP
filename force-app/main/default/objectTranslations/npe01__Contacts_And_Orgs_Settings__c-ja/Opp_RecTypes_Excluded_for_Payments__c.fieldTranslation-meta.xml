@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>すべてのレコードタイプの商談の支払レコードが自動的に作成されます。自動的に作成しないレコードタイプをこちらで選択します。複数のレコードタイプを選択するには、Control キーまたは Command キーを押しながらクリックします。</help>
+    <label>支払から除外する支援レコードタイプ</label>
+    <name>Opp_RecTypes_Excluded_for_Payments__c</name>
+</CustomFieldTranslation>

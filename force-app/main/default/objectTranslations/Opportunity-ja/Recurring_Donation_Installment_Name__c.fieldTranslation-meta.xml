@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>商談の命名規則に含まれる各支払の名前。無期限の継続支援では括弧内に回数が表示され、規定回数が設定されている継続支援では回数/総数が表示されます。</help>
+    <label>継続支援の各支払の名前</label>
+    <name>Recurring_Donation_Installment_Name__c</name>
+</CustomFieldTranslation>

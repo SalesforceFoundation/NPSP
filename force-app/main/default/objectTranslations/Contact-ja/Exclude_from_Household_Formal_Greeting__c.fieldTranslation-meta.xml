@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このボックスをオンにすると、この取引先責任者が世帯の公式の挨拶から除外されます。</help>
+    <label>世帯の公式の挨拶から除外</label>
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
+</CustomFieldTranslation>

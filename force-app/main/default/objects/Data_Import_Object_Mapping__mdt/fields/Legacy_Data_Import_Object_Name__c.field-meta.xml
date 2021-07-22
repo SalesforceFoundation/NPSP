@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Legacy_Data_Import_Object_Name__c</fullName>
+    <description>The legacy Data Import object name of the object this Data Import Object Group is based on.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>The legacy Data Import object name of the object this Data Import Object Group is based on.</inlineHelpText>
+    <label>Legacy Data Import Object Name</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

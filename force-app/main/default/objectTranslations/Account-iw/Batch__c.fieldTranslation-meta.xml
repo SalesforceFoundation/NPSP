@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>האצווה שבה חשבון זה נוצר.</help>
+    <label>אצווה</label>
+    <name>Batch__c</name>
+    <relationshipLabel>חשבונות</relationshipLabel>
+</CustomFieldTranslation>

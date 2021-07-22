@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>NPSP crea automáticamente registros de pagos para oportunidades con valores en lista de selección Tipo. Seleccione cualquier tipo para el que no desee que se creen automáticamente registros de pago. Utilice control o comando para seleccionar más de uno.</help>
+    <label>Tipos de oportunidades excluidos</label>
+    <name>Opp_Types_Excluded_for_Payments__c</name>
+</CustomFieldTranslation>

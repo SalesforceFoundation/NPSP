@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>成立フェーズにある商談の割り当ての総数。</help>
+    <label>割り当ての総数</label>
+    <name>Total_Number_of_Allocations__c</name>
+</CustomFieldTranslation>

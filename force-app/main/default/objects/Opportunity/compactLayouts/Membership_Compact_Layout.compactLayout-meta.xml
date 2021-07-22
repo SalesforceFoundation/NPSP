@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Membership_Compact_Layout</fullName>
+    <fields>AccountId</fields>
+    <fields>Amount</fields>
+    <fields>StageName</fields>
+    <fields>npe01__Membership_Start_Date__c</fields>
+    <fields>npe01__Membership_End_Date__c</fields>
+    <fields>npe01__Member_Level__c</fields>
+    <label>DEPRECATED: Membership Compact Layout</label>
+</CompactLayout>

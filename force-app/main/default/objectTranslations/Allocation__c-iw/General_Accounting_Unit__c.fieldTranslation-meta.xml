@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>היחידה החשבונאית הכללית לשיוך הקצאה זו. רק יחידות חשבונאיות כלליות המסומנות כפעילות זמינות לצורך הקצאות חדשות.</help>
+    <label>יחידה חשבונאית כללית</label>
+    <lookupFilter>
+        <errorMessage>ניתן לשייך הקצאות רק ליחידות חשבונאיות כלליות במצב פעיל. לא ניתן לבצע שינויים בהקצאות המשויכות ליחידות חשבונאיות כלליות שאינן פעילות.</errorMessage>
+        <informationalMessage>ניתן לבחור רק יחידות חשבונאיות כלליות במצב פעיל.</informationalMessage>
+    </lookupFilter>
+    <name>General_Accounting_Unit__c</name>
+    <relationshipLabel>הקצאות GAU</relationshipLabel>
+</CustomFieldTranslation>

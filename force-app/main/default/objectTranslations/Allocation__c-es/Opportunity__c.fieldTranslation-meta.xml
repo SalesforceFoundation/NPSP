@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La oportunidad a la que desea atribuir esta asignación. NPSP totaliza todas las oportunidades de una etapa Cerrada/Ganada en la Cuenta contable general de esta asignación.</help>
+    <label>Oportunidad</label>
+    <name>Opportunity__c</name>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+</CustomFieldTranslation>

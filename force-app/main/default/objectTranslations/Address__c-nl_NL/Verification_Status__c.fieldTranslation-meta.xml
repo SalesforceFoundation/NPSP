@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Als dit Adres verificatie nodig heeft, klikt u in de rechterbovenhoek op het pijltje met de vervolgkeuzelijst Meer acties tonen en klikt u op Adres verifiëren. Raadpleeg de documentatie &apos;Power of Us Hub&apos; voor meer informatie over Adresverificatie.</help>
+    <label>Verificatiestatus</label>
+    <name>Verification_Status__c</name>
+</CustomFieldTranslation>

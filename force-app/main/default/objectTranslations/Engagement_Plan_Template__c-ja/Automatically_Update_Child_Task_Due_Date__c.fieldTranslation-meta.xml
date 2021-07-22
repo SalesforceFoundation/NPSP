@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>親 ToDo が実際にいつ完了したかに基づいて、子 ToDo の期日を再計算します。</help>
+    <label>子 ToDo の期日を自動的に更新</label>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+</CustomFieldTranslation>

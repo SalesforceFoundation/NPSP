@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De rol waarmee de Opportunitycontactpersoonsrol moet worden gemaakt.  Geef bijvoorbeeld &quot;soft credit&quot; om een Opportunitycontactpersoonsrol voor &quot;soft credit&quot; te maken.</help>
+    <label>Opportunitycontactpersoonsrol 1: Rol</label>
+    <name>Opportunity_Contact_Role_1_Role__c</name>
+</CustomFieldTranslation>

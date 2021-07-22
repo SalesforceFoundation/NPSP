@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Bepaalt of de opdracht actief zal zijn of niet.</help>
+    <label>Actief</label>
+    <name>Active__c</name>
+</CustomFieldTranslation>

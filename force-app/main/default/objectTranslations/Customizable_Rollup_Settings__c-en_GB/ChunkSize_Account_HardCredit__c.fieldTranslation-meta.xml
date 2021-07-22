@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>FOR LDV ORGS ONLY WITH SFDO GUIDANCE. To avoid a Query Timeout in the rollup batch job in orgs with many millions of Accounts, this specifies the maximum number of Accounts processed in each batch.</help>
+    <label>LDV: Account Hard Credit Chunk Size</label>
+    <name>ChunkSize_Account_HardCredit__c</name>
+</CustomFieldTranslation>

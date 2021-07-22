@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed. --></help>
+    <label><!-- Status --></label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation><!-- Active --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation><!-- Closed --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation><!-- Lapsed --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Paused</masterLabel>
+        <translation><!-- Paused --></translation>
+    </picklistValues>
+</CustomFieldTranslation>

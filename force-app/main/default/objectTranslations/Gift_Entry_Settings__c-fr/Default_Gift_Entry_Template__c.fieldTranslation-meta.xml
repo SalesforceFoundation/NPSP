@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Modèle de départ utilisé pour la Saisie de dons, qui peut être utilisé pour saisir des dons uniques ou des lots de dons. Ce modèle est défini par défaut pour la saisie de don unique.</help>
+    <label>Modèle Saisie de dons par défaut</label>
+    <name>Default_Gift_Entry_Template__c</name>
+</CustomFieldTranslation>

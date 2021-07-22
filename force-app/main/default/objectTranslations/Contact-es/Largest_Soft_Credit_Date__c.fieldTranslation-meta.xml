@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La fecha del crédito blando más grande de este contacto.</help>
+    <label>Fecha del crédito blando más grande</label>
+    <name>Largest_Soft_Credit_Date__c</name>
+</CustomFieldTranslation>

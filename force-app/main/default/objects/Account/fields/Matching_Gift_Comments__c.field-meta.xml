@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Matching_Gift_Comments__c</fullName>
+    <description>Additional notes about the company&apos;s Matching Gift program.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Additional notes about the company&apos;s Matching Gift program.</inlineHelpText>
+    <label>Matching Gift Comments</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

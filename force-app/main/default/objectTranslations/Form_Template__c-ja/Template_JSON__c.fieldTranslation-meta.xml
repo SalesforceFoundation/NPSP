@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このテンプレートのセクションと項目、およびそれらの順序、要件、デフォルト値。JSON として保存されます。直接編集しないでください。</help>
+    <label>テンプレートの JSON</label>
+    <name>Template_JSON__c</name>
+</CustomFieldTranslation>

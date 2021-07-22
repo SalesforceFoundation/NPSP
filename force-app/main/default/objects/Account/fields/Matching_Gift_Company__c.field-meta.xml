@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Matching_Gift_Company__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates that this company offers Matching Gifts.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates that this company offers Matching Gifts.</inlineHelpText>
+    <label>Matching Gift Company</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

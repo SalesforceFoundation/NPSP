@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Elevate_Payment_API_Declined_Reason__c</fullName>
+    <description>Provides detail about why a transaction was declined.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Provides detail about why a transaction was declined.</inlineHelpText>
+    <label>Elevate Payment API Declined Reason</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Excluded_Opp_RecTypes__c</fullName>
+    <description>Opportunity Record Types to exclude from calculations of Allocations rollups.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Opportunity Record Types to exclude from calculations of Allocations rollups.</inlineHelpText>
+    <label>Excluded Opp RecTypes</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

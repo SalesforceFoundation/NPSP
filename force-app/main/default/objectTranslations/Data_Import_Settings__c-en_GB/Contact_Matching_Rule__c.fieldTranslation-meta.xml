@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</help>
+    <label>Contact Matching Rule</label>
+    <name>Contact_Matching_Rule__c</name>
+</CustomFieldTranslation>

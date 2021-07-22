@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Legt den bestimmten Tag im Monat für künftige Raten-Opportunities bei monatlicher Ratenhäufigkeit fest. Wenn Sie 29 oder 30 auswählen, wird das Ratendatum in Monaten mit weniger Tagen auf den letzten Tag des Monats festgelegt.</help>
+    <label>Tag im Monat für wiederkehrende Spende</label>
+    <name>Recurring_Donation_Day_of_Month__c</name>
+</CustomFieldTranslation>

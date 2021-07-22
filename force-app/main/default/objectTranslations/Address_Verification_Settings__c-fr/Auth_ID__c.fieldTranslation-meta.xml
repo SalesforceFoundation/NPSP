@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>L’ID d’authentification de votre paire de clés secrètes.</help>
+    <label>ID d’authentification-DÉPRÉCIÉ</label>
+    <name>Auth_ID__c</name>
+</CustomFieldTranslation>

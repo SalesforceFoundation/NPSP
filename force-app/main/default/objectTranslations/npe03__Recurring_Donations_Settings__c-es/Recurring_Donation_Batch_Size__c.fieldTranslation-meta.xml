@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de registros que se procesa a la vez cuando se ejecuta el trabajo por lotes Donaciones recurrentes. El tamaño predeterminado es de 50. Reduzca a un número menor si el trabajo por lotes de donaciones recurrentes falla debido a limites del sistema</help>
+    <label>Tamaño lote de donaciones recurrentes</label>
+    <name>Recurring_Donation_Batch_Size__c</name>
+</CustomFieldTranslation>

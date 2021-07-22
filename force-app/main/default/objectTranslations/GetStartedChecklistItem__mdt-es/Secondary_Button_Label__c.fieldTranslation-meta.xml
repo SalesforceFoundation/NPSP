@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El nombre de API para la etiqueta Botón secundario en un elemento de sección en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
+    <label>Nombre de etiqueta de botón secundario</label>
+    <name>Secondary_Button_Label__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NCOA_Evaluation_Date__c</fullName>
+    <description>The date and time the address was evaluated by an NCOA process</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The most recent date and time the address was evaluated by the NCOA vendor.</inlineHelpText>
+    <label>NCOA Evaluation Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

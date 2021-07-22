@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Max_Payments__c</fullName>
+    <defaultValue>12</defaultValue>
+    <description>Determines the maximum number of payments available in the Payment Creation Wizard.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Determines the maximum number of Payments allowed when scheduling Payments for an Opportunity.</inlineHelpText>
+    <label>Max Payments</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

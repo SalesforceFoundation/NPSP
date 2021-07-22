@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Importé Contact1</label>
+    <name>Contact1Imported__c</name>
+    <relationshipLabel>Importation de données NPSP (Contact1 importé)</relationshipLabel>
+</CustomFieldTranslation>

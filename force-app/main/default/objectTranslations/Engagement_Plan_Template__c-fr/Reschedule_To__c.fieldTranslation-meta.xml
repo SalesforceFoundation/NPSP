@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Les tâches ayant une date d’échéance pendant un week-end doivent-elles être replanifiées pour le vendredi précédent ou le lundi suivant ? Ceci ne s’applique que si « Éviter les week-ends » est sélectionné.</help>
+    <label>Replanifier pour</label>
+    <name>Reschedule_To__c</name>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Vendredi</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monday</masterLabel>
+        <translation>Lundi</translation>
+    </picklistValues>
+</CustomFieldTranslation>

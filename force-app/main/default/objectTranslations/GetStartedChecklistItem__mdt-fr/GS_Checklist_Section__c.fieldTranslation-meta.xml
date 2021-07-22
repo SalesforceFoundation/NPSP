@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La section de la page Premiers pas à laquelle appartient cet élément.</help>
+    <label>Section de la liste de contrôle PP</label>
+    <name>GS_Checklist_Section__c</name>
+    <relationshipLabel>Élément de la liste de contrôle Premiers pas</relationshipLabel>
+</CustomFieldTranslation>

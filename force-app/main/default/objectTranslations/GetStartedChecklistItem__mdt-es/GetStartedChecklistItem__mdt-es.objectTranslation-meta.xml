@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Elemento de lista de comprobación de Empezar a trabajar de NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Elementos de listas de comprobación de Empezar a trabajar de NPSP</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>GS Checklist Item Layout</layout>
+        <sections>
+            <label>Botones</label>
+            <section>Buttons</section>
+        </sections>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Información</label>
+            <section>Info</section>
+        </sections>
+        <sections>
+            <label>Vínculo</label>
+            <section>Link</section>
+        </sections>
+    </layouts>
+</CustomObjectTranslation>

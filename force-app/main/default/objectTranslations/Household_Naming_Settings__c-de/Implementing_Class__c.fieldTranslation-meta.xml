@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Name einer Klasse, die die HH_INaming-Schnittstelle implementiert, die für die Benennung des Haushalts verwendet werden soll.</help>
+    <label>Implementierungsklasse</label>
+    <name>Implementing_Class__c</name>
+</CustomFieldTranslation>

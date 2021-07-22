@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CMT_API_Status__c</fullName>
+    <description>Result of the last CustomMetadataType deployment</description>
+    <externalId>false</externalId>
+    <inlineHelpText>JSON for the CMT deployment result
+{ &quot;jobId&quot;: &quot;repsonse&quot; }</inlineHelpText>
+    <label>CMT API Deployment Result</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

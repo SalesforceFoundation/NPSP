@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indien aangevinkt, wordt de batch automatisch verwerkt in overeenkomst met de planning voor de gekoppelde opdracht.</help>
+    <label>Verwerken met Geplande Opdracht</label>
+    <name>Process_Using_Scheduled_Job__c</name>
+</CustomFieldTranslation>

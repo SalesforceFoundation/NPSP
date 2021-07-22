@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Mappage d&apos;objets d&apos;importation de données</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Mappages d&apos;objets d&apos;importation de données</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Data Import Object Mapping Layout</layout>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Détails de la relation de l&apos;objet personnalisé</label>
+            <section>Custom Object Relationship Details</section>
+        </sections>
+    </layouts>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

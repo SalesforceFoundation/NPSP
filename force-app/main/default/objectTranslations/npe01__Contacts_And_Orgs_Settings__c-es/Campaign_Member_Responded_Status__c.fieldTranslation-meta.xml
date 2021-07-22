@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades cerradas ganadas que tiene un origen de campaña principal y un contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado respondido.</help>
+    <label>Estado de miembro campaña que responde</label>
+    <name>Campaign_Member_Responded_Status__c</name>
+</CustomFieldTranslation>

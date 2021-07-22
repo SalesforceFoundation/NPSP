@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>בחר את סוג המשתמש שאליו יישלחו הודעות.</help>
+    <label>נמעני הודעות שגיאה</label>
+    <name>Error_Notifications_To__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Overeenkomende Giftinformatie</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Hommage-informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Subsidie-informatie</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Informatie In Natura</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>Hommage-informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Grote Giftinformatie</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label>Overeenkomende Giftinformatie</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Hommage-informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Lidinformatie</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Systeeminformatie</label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nieuwe Betaling</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Erkenning e-mailen</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>Erkenningen e-mailen</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>Overeenkomende Giften zoeken</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>Soft Credits beheren</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>Naam opnieuw laden</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Formula_MailingStreetAddress__c</fullName>
+    <externalId>false</externalId>
+    <formula>MailingStreet__c + IF(ISBLANK(MailingStreet2__c), &apos;&apos;, &apos;, &apos; + MailingStreet2__c)</formula>
+    <label>Mailing Street Address</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

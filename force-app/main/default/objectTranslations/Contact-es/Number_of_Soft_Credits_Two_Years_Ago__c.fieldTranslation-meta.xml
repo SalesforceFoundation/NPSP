@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de créditos blandos atribuidos a este contacto hace dos años de calendario.</help>
+    <label>Número de créditos blandos hace dos años</label>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+</CustomFieldTranslation>

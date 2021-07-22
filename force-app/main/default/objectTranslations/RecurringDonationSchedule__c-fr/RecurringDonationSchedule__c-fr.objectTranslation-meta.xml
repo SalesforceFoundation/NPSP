@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Calendrier de dons récurrents</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Calendriers de dons récurrents</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Recurring Schedule Layout</layout>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Détails de planification</label>
+            <section>Schedule Details</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Numéro de planification récurrente</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

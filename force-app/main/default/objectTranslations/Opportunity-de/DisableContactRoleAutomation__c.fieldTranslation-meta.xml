@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Wenn dieses Kontrollkästchen aktiviert ist, werden mit diesem Feld mehrere Aspekte der NPSP-Opportunity-Kontaktrollen-Automatisierung deaktiviert, was ggf. zu falschen oder doppelten Daten führen kann. Nähere Einzelheiten enthält die Produktdokumentation.</help>
+    <label>Kontaktrollenautom. deaktivieren</label>
+    <name>DisableContactRoleAutomation__c</name>
+</CustomFieldTranslation>

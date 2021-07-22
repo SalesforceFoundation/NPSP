@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indica si el donante proporcionó el justiprecio de mercado para este regalo en especie.</help>
+    <label>Valor declarado de donante en especie</label>
+    <name>In_Kind_Donor_Declared_Value__c</name>
+</CustomFieldTranslation>

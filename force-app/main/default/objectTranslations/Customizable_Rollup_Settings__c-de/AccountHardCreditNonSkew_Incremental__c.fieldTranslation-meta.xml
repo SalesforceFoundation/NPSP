@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Bei Akt. begrenzt der nächtl. Auftr. z. Acc.-Hard Credit (nicht verz.) die Anz. der Acc‘s, die zur Neuberechn. ausgew. werden, indem nach vor Kurzem aktual. Opp. in d. Acc. gesucht wird. So wird die Leist. d. nächtl. Auftr. zu anpassb. Rollups verbessert.</help>
+    <label>Inkrement. Acc.-Hard Credit, nicht verz.</label>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>助成金提供団体から送信されたドキュメントまたは契約による、助成金の開始日付。</help>
+    <label>助成金契約日付</label>
+    <name>Grant_Contract_Date__c</name>
+</CustomFieldTranslation>

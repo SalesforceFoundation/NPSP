@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>オンの場合、支援の総数と総額は、バッチで入力された予測合計とマッチングしなければなりません。</help>
+    <label>予測合計のマッチが必須</label>
+    <name>RequireTotalMatch__c</name>
+</CustomFieldTranslation>

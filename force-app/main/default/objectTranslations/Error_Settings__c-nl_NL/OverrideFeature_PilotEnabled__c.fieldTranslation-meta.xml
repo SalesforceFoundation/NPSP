@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Niet bijwerken. Alleen voor testen van Salesforce-org.-proef. Staat overschrijven van beperkte toegang van parameter van voorziening PilotEnabled toe in Scratch-organisaties voor proeftesten in organisaties zonder gekoppelde productlicentie in de LMO.</help>
+    <label>Scratch-overschr.: proef ingeschakeld</label>
+    <name>OverrideFeature_PilotEnabled__c</name>
+</CustomFieldTranslation>

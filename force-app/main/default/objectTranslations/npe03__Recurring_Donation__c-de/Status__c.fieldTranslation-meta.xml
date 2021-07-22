@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
+    <label>Status</label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Active</masterLabel>
+        <translation>Aktiv</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation>Geschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Lapsed</masterLabel>
+        <translation>Erloschen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Paused</masterLabel>
+        <translation>Aufschub</translation>
+    </picklistValues>
+</CustomFieldTranslation>

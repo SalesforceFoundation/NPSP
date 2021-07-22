@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El importe que será asignado como crédito blando.</help>
+    <label>Importe</label>
+    <name>Amount__c</name>
+</CustomFieldTranslation>

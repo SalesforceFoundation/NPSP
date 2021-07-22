@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- If checked, changed addresses get updated automatically with the response from the service (when there is one verified result). --></help>
+    <label><!-- Auto-Update Addresses-DEPRECATED --></label>
+    <name>Auto_Update_Addresses__c</name>
+</CustomFieldTranslation>

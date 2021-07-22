@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Partial Soft Credit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Partial Soft Credits</value>
+    </caseValues>
+    <layouts>
+        <layout>Partial Soft Credit Layout</layout>
+        <sections>
+            <label>Custom Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Partial Soft Credit Name</nameFieldLabel>
+    <startsWith>Consonant</startsWith>
+    <webLinks>
+        <label>Manage Soft Credits</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+</CustomObjectTranslation>

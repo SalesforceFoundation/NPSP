@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם מענק זה הוא חידוש של מענק קודם, השתמש בשדה זה לקישור בין רשומה זו והרשומה הקודמת.</help>
+    <label>מענק/תרומה קודמת</label>
+    <name>Previous_Grant_Opportunity__c</name>
+    <relationshipLabel>מענקים/תרומות קשורים</relationshipLabel>
+</CustomFieldTranslation>

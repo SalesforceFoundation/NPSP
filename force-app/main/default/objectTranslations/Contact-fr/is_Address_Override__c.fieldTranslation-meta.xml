@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est sélectionnée, NPSN ne synchronise pas l’adresse de ce contact avec l’adresse par défaut ou l’adresse saisonnière du foyer. Utilisez cette option pour conserver une adresse postale distincte pour ce contact particulier.</help>
+    <label>Remplacement d’adresse</label>
+    <name>is_Address_Override__c</name>
+</CustomFieldTranslation>

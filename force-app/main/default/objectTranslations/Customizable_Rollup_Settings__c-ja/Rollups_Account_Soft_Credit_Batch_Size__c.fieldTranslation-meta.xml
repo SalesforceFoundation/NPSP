@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>取引先オブジェクトへのソフトクレジット支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
+    <label>取引先ソフトクレジットバッチサイズ</label>
+    <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+</CustomFieldTranslation>

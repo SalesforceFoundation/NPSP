@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このレコードを含む NPSP データインポートバッチに対する参照。</help>
+    <label>NPSP データインポートバッチ</label>
+    <name>NPSP_Data_Import_Batch__c</name>
+    <relationshipLabel>NPSP データインポート</relationshipLabel>
+</CustomFieldTranslation>

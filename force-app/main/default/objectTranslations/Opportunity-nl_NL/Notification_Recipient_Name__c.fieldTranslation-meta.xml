@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De naam die de donor verschaft van de persoon die u over deze Donatie op de hoogte moet brengen. Als dit veld leeg is en als het veld Contactpersoon Ontvanger van Meldingen een waarde bevat, vult NPSP dat veld automatisch in met die waarde.</help>
+    <label>Naam van Ontvanger van Meldingen</label>
+    <name>Notification_Recipient_Name__c</name>
+</CustomFieldTranslation>

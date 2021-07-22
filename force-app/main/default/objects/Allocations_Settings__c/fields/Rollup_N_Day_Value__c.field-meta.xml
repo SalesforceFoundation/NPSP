@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rollup_N_Day_Value__c</fullName>
+    <defaultValue>365</defaultValue>
+    <description>This value affects the number of days to count for N Days Allocations rollup fields.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This value affects the number of days to count for N Days Allocations rollup fields.</inlineHelpText>
+    <label>Rollup N Day Value</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

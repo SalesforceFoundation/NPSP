@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Utilisation par le système uniquement : Espace de nom pour la fonctionnalité de package croisé.</help>
+    <label>Espace de noms GEM</label>
+    <name>Advancement_Namespace__c</name>
+</CustomFieldTranslation>

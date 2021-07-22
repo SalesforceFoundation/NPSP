@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>is_Address_Override__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When selected, NPSP will not sync this Contact&apos;s address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When selected, NPSP will not sync this Contact&apos;s address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</inlineHelpText>
+    <label>Address Override</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Checkbox</type>
+</CustomField>

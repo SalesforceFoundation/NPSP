@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Salesforce-ID des GAU (Verwendungszweck), die für die erste Zuweisung verwendet werden soll.</help>
+    <label>GAU-Zuweisung 1: GAU</label>
+    <name>GAU_Allocation_1_GAU__c</name>
+    <relationshipLabel>NPSP-Datenimporte (GAU 1)</relationshipLabel>
+</CustomFieldTranslation>

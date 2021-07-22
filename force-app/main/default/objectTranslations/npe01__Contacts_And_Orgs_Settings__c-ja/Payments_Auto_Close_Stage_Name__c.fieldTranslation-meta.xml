@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>受取支払金額が商談金額と同額になると、商談のフェーズは自動的にこの値に設定されます。フェーズが選択されていない場合、商談フェーズは支払完了時に変更されません。</help>
+    <label>全額支払時の商談フェーズ</label>
+    <name>Payments_Auto_Close_Stage_Name__c</name>
+</CustomFieldTranslation>

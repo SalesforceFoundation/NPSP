@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Identifiant externe pour l’intégration du service de paiement Salesforce.org.</help>
+    <label>ID récurrent Elevate</label>
+    <name>CommitmentId__c</name>
+</CustomFieldTranslation>

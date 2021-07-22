@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le montant minimal pour que ce niveau soit attribué. Si ce champ est vide, NPSP attribuera ce niveau à un montant inférieur au montant maximal de ce niveau.</help>
+    <label>Montant minimal (&gt;=)</label>
+    <name>Minimum_Amount__c</name>
+</CustomFieldTranslation>

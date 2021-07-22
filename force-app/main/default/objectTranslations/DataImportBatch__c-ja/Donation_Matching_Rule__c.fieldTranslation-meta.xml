@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>既存の商談および支払に対してバッチレコードの商談をマッチングするとき、どの項目をマッチングするかを指定します。</help>
+    <label>支援マッチングルール</label>
+    <name>Donation_Matching_Rule__c</name>
+</CustomFieldTranslation>

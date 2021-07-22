@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>התחומים הכלליים שארגון זה מממן.</help>
+    <label>מיקוד המימון</label>
+    <name>Funding_Focus__c</name>
+    <picklistValues>
+        <masterLabel>Animal Welfare</masterLabel>
+        <translation>רווחת בעלי חיים</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Arts and Culture</masterLabel>
+        <translation>אמנות ותרבות</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Capacity Building</masterLabel>
+        <translation>בניית יכולת</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Education</masterLabel>
+        <translation>חינוך</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Environmental</masterLabel>
+        <translation>סביבתי</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Health Services</masterLabel>
+        <translation>שירותי בריאות</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Human Services</masterLabel>
+        <translation>שירותי אנוש</translation>
+    </picklistValues>
+</CustomFieldTranslation>

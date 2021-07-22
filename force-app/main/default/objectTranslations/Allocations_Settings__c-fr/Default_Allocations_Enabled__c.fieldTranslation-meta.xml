@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>L’activation des allocations par défaut crée un objet d’allocation pour chaque opportunité. Ceci permet des rapports sur les allocations pour une unité comptable générale par défaut, mais utilise plus d’espace de stockage.</help>
+    <label>Allocations par défaut activées</label>
+    <name>Default_Allocations_Enabled__c</name>
+</CustomFieldTranslation>

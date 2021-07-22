@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DisableRecordDataHealthChecks__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether record data related health checks are disabled</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If selected, Health Check only checks your NPSP configuration settings for problems. Select this option if your organization has a large volume of records and Health Check is having problems completing.</inlineHelpText>
+    <label>Disable Record Data Health Checks</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>מצב אצווה</label>
+    <name>Batch_Status__c</name>
+    <picklistValues>
+        <masterLabel>Complete</masterLabel>
+        <translation>השלמה</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>In Progress</masterLabel>
+        <translation>בביצוע</translation>
+    </picklistValues>
+</CustomFieldTranslation>

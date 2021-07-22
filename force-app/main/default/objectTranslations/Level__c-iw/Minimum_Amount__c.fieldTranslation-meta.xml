@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הסכום המינימלי הנדרש להקצאה לרמה זו.  אם ריק, כל סכום הנמוך מהסכום המרבי של רמה זו יביא להקצאה לרמה זו.</help>
+    <label>סכום מינימלי (=)</label>
+    <name>Minimum_Amount__c</name>
+</CustomFieldTranslation>

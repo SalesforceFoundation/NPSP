@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ambiguous__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether more than one valid Address was found when attempting to validate it through an external service.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates whether more than one valid Address was found when attempting to validate it through an external service.</inlineHelpText>
+    <label>Ambiguous</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

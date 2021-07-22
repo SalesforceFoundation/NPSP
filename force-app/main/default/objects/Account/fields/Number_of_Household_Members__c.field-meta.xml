@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Number_of_Household_Members__c</fullName>
+    <description>The number of Contacts who are members of this Household.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of Contacts who are members of this Household.</inlineHelpText>
+    <label>Number of Household Members</label>
+    <precision>10</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

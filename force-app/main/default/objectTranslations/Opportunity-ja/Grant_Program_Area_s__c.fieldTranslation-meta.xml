@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>助成金の資金調達領域を説明します。ここには任意の内容を入力できます。たとえば、助成金が適用されるプログラムの名前を入力できます。</help>
+    <label>助成金プログラム領域</label>
+    <name>Grant_Program_Area_s__c</name>
+</CustomFieldTranslation>

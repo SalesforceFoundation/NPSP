@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se selecciona, habilita la gestión de direcciones para cuentas que no son Hogar, como cuentas organizativas.</help>
+    <label>Direcciones cuentas organizativas habil.</label>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+</CustomFieldTranslation>

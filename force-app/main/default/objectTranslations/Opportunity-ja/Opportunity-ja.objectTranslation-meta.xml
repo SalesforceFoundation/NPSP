@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>マッチングギフト情報</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>敬意/追悼情報</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>助成金情報</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>現物情報</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>敬意/追悼情報</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>大口支援情報</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label>マッチングギフト情報</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>敬意/追悼情報</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>支援情報</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>項目</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>メンバー情報</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>お支払い情報</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>システム情報</label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>新規支払</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>クイック更新</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>メール受領確認</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>メール受領確認</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>マッチングされた支援の検索</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>ソフトクレジットの管理</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>名前の更新</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>

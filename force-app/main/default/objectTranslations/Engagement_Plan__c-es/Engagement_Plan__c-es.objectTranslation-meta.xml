@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Plan de acción</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Planes de acción</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Engagement Plan Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número del plan de acción</nameFieldLabel>
+</CustomObjectTranslation>

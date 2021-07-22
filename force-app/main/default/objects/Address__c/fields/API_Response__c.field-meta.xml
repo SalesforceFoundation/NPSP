@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>API_Response__c</fullName>
+    <description>Contains the raw response or an error message.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Contains the raw response or an error message.</inlineHelpText>
+    <label>API Response</label>
+    <length>32768</length>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>6</visibleLines>
+</CustomField>

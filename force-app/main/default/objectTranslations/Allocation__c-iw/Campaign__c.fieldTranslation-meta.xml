@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>שיוך אופציונלי של הקצאות למבצע. כל ההזדמנויות החדשות שנוצרו עם מבצע זה כמקור המבצע הראשי יוקצו אוטומטית באותו אופן.</help>
+    <label>מבצע</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>הקצאות GAU</relationshipLabel>
+</CustomFieldTranslation>

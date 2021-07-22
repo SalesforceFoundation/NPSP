@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Contiene la respuesta sin procesar o un mensaje de error.</help>
+    <label>Respuesta de API</label>
+    <name>API_Response__c</name>
+</CustomFieldTranslation>

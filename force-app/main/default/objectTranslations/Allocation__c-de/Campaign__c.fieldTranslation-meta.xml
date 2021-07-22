@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die mit dieser Zuweisung verbundene Kampagne. Verwenden Sie dieses Feld, wenn Sie möchten, dass neue mit dieser Kampagne verbundene Opportunities in derselben Weise zugewiesen werden sollen.</help>
+    <label>Kampagne</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>Zuweisungen Verwendungszweck</relationshipLabel>
+</CustomFieldTranslation>

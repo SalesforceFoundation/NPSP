@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>継続支援の命名に使用する形式。</help>
+    <label>継続支援名形式</label>
+    <name>RecurringDonationNameFormat__c</name>
+</CustomFieldTranslation>

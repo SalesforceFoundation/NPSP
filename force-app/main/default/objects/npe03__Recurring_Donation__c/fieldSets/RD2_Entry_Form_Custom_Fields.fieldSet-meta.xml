@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Fields to be displayed on Enhanced Recurring Donations Entry Form in the Custom Fields section</description>
+    <fullName>RD2_Entry_Form_Custom_Fields</fullName>
+    <label>Recurring Donations Entry Form Custom Fields</label>
+</FieldSet>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Establece si la programación de Donación recurrente está activa o inactiva en base a la fecha de finalización. Es de solo lectura.</help>
+    <label>Activo</label>
+    <name>Active__c</name>
+</CustomFieldTranslation>

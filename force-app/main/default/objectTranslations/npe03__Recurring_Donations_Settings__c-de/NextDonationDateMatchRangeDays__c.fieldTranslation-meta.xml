@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Anzahl der Tage vor oder nach dem nächsten Spendendatum, an denen NPSP keine neue Raten-Opportunity erstellt, wenn das Schlussdatum der nächsten offenen Opportunity geändert wird. Betrifft nur wiederkehrende Spenden mit monatlicher Ratenlaufzeit.</help>
+    <label>Datenabgleichsbereich für nächste Spende</label>
+    <name>NextDonationDateMatchRangeDays__c</name>
+</CustomFieldTranslation>

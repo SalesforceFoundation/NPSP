@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Standard-Kontaktrolle, die automatisch dem Hauptansprechpartner der Opportunity zugewiesen wird, wenn der Account der Opportunity KEIN Haushalt-, Eins-zu-Eins- oder Einzelperson-Account ist.</help>
+    <label>Kontaktrolle für Organisations-Opp‘ies</label>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+</CustomFieldTranslation>

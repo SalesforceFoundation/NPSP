@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pre_Verification_Address__c</fullName>
+    <description>Stores the Address as it was before verification with a remote service, in case any information is lost in the verification process.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Stores the Address as it was before verification with a remote service, in case any information is lost in the verification process.</inlineHelpText>
+    <label>Pre-Verification Address</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

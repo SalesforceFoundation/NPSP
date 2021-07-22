@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>האם משימות שתאריך היעד שלהן בסוף השבוע צריכות להיות מתוזמנות ליום שישי שלפני סוף השבוע, או ליום שני שאחריו? אפשרות זו תקפה רק אם האפשרות &apos;דלג על סופי שבוע&apos; מסומנת.</help>
+    <label>תזמן מחדש ל-</label>
+    <name>Reschedule_To__c</name>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>שישי</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monday</masterLabel>
+        <translation>שני</translation>
+    </picklistValues>
+</CustomFieldTranslation>

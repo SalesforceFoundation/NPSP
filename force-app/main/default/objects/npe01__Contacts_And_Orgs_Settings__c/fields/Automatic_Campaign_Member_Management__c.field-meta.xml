@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Automatic_Campaign_Member_Management__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When selected, NPSP automatically creates a Campaign Member record when you create an Opportunity that has a Primary Contact and a Primary Campaign Source, or when you update that Opportunity to a Closed/Won stage.</inlineHelpText>
+    <label>Automatic Campaign Member Management</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

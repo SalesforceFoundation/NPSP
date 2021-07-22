@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default_Gift_Entry_Template__c</fullName>
+    <description>This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This is a starter template used for Gift Entry and can be used to enter single gifts or batches of gifts. This is the default template for entering single gifts.</inlineHelpText>
+    <label>Default Gift Entry Template</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Unité comptable générale</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Unités comptables générales</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Informations d’allocation</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Totaux d’allocation</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nom de l’unité comptable générale</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label>Recalculer des cumuls</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

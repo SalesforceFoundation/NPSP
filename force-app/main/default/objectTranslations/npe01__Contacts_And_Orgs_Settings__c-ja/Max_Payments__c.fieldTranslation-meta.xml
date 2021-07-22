@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>商談の支払のスケジュール時に許可する支払の最大回数を決定します。</help>
+    <label>最大支払回数</label>
+    <name>Max_Payments__c</name>
+</CustomFieldTranslation>

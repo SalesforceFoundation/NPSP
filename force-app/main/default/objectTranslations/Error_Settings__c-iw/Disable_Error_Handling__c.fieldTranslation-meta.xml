@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם אפשרות זו מסומנת, מסגרת הטיפול בשגיאות של NPSP מושבתת.</help>
+    <label>השבת טיפול בשגיאות</label>
+    <name>Disable_Error_Handling__c</name>
+</CustomFieldTranslation>

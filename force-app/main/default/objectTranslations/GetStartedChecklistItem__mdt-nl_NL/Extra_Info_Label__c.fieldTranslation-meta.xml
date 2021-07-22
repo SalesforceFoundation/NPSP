@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De API-naam van het label dat extra informatie verschaft over een sectie-item, bijvoorbeeld duur van video, PDF, enzovoort. Wordt in de rechterbovenhoek weergegeven.</help>
+    <label>Naam extra-infolabel</label>
+    <name>Extra_Info_Label__c</name>
+</CustomFieldTranslation>

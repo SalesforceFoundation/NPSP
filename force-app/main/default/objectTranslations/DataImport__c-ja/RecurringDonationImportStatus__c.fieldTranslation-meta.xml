@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>継続支援の挿入の試行に基づく状況。</help>
+    <label>継続支援のインポート状況</label>
+    <name>RecurringDonationImportStatus__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de créditos blandos atribuidos a este contacto que se cerraron en los últimos N días. El valor de N se define en Configuración de NPSP | Donaciones | Datos estadísticos de donantes.</help>
+    <label>Número créd. blandos en últimos N días</label>
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
+</CustomFieldTranslation>

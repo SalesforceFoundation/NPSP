@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Elevate の関連する継続支援の外部の一意の ID。</help>
+    <label>継続支援の Elevate 継続 ID</label>
+    <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
+</CustomFieldTranslation>

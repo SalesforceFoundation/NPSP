@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Diese Option aktiviert Erweiterte wiederkehrende Spenden. WICHTIG: Sie müssen Erweiterte wiederkehrende Spenden in den NPSP-Einstellungen aktivieren. Die Aktivierung in den benutzerdefinierten Einstellungen kann zu Dateninkonsistenzen führen.</help>
+    <label>Erweiterte wiederkehrende Spenden</label>
+    <name>IsRecurringDonations2Enabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The general program area(s) that this organistion funds.</help>
+    <label>Funding Focus</label>
+    <name>Funding_Focus__c</name>
+    <picklistValues>
+        <masterLabel>Animal Welfare</masterLabel>
+        <translation>Animal Welfare</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Arts and Culture</masterLabel>
+        <translation>Arts and Culture</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Capacity Building</masterLabel>
+        <translation>Capacity Building</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Education</masterLabel>
+        <translation>Education</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Environmental</masterLabel>
+        <translation>Environmental</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Health Services</masterLabel>
+        <translation>Health Services</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Human Services</masterLabel>
+        <translation>Human Services</translation>
+    </picklistValues>
+</CustomFieldTranslation>

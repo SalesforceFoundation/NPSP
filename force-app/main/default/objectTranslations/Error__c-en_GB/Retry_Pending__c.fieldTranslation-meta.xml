@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When selected, indicates that the record specified in Related Record ID will be reprocessed in the next scheduled process. If reprocessing succeeds, this field is then deselected. Applies to specific types of errors that occur during scheduled processes.</help>
+    <label>Retry Pending?</label>
+    <name>Retry_Pending__c</name>
+</CustomFieldTranslation>

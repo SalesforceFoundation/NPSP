@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>継続支援の作成時に NPSP が新しい各割賦商談に適用する商談フェーズ。</help>
+    <label>割賦商談のフェーズ名</label>
+    <name>InstallmentOppStageName__c</name>
+</CustomFieldTranslation>

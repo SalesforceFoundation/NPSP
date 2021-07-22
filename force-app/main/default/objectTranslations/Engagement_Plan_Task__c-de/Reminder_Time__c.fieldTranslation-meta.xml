@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Uhrzeit am Fälligkeitstermin, zu der eine Erinnerung angezeigt wird.</help>
+    <label>Erinnerungszeit</label>
+    <name>Reminder_Time__c</name>
+</CustomFieldTranslation>

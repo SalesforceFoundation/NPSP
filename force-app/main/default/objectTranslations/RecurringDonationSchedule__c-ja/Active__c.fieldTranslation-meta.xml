@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>終了日に基づいて継続支援スケジュールが有効なのか無効なのかを確認します。参照のみになります。</help>
+    <label>有効</label>
+    <name>Active__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>会計データが完全であり、一貫性を保つように、支払と商談で複数のルールと自動化を有効にします。</help>
+    <label>会計データの一貫性</label>
+    <name>Enforce_Accounting_Data_Consistency__c</name>
+</CustomFieldTranslation>

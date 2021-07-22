@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency. --></help>
+    <label><!-- Use Dated Conversion Rates if available --></label>
+    <name>Use_Dated_Conversion_Rates__c</name>
+</CustomFieldTranslation>

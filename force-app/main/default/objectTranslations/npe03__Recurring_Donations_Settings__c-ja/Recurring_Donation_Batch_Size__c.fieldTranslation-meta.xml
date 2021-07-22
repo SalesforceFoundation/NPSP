@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>継続支援バッチジョブ実行時に一度に処理されるレコードの数。デフォルトサイズは 50 です。システムの制限により継続支援バッチジョブが失敗する場合は、この数値を小さくします。</help>
+    <label>継続支援バッチサイズ</label>
+    <name>Recurring_Donation_Batch_Size__c</name>
+</CustomFieldTranslation>

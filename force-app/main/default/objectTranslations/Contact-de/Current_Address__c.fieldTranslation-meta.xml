@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nachschlageoption zum aktuellen Adressdatensatz für diesen Kontakt. NPSP gibt die Straße, die Stadt, das Bundesland und die Postleitzahl aus dem aktuellen Adressdatensatz in das Postadressenfeld des Kontakts ein. </help>
+    <label>Aktuelle Adresse</label>
+    <name>Current_Address__c</name>
+    <relationshipLabel>Kontakte (Aktuelle Adresse)</relationshipLabel>
+</CustomFieldTranslation>

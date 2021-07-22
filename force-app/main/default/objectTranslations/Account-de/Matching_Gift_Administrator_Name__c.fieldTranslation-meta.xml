@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Name des Administrators für Spendenverdopplungen im Unternehmen.</help>
+    <label>Administratorname Spendenverdopplung</label>
+    <name>Matching_Gift_Administrator_Name__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The status of the Matching Gift for this Donation, for example, Submitted or Received. --></help>
+    <label>מצב השוואת תרומה</label>
+    <name>Matching_Gift_Status__c</name>
+    <picklistValues>
+        <masterLabel>Potential</masterLabel>
+        <translation>פוטנציאלי</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Received</masterLabel>
+        <translation>התקבל</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Submitted</masterLabel>
+        <translation>נשלח</translation>
+    </picklistValues>
+</CustomFieldTranslation>

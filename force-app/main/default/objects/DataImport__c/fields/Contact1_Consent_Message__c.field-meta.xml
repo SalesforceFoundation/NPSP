@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact1_Consent_Message__c</fullName>
+    <description>Provides details on what the Contact opted in to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Provides details on what the Contact opted in to.</inlineHelpText>
+    <label>Contact1 Consent Message</label>
+    <length>2000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>4</visibleLines>
+</CustomField>

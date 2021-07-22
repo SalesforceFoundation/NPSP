@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Contact Merge Found FS --></label>
+        <name>ContactMergeFoundFS</name>
+    </fieldSets>
+    <layouts>
+        <layout>Contact Layout</layout>
+        <sections>
+            <label>Détails du contact</label>
+            <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>Informations sur les dons</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Totaux des dons</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Adresse du foyer</label>
+            <section>Household Address</section>
+        </sections>
+        <sections>
+            <label>Informations sur les dons de foyers</label>
+            <section>Household Donation Info</section>
+        </sections>
+        <sections>
+            <label>Informations sur l’adhésion</label>
+            <section>Membership Information</section>
+        </sections>
+        <sections>
+            <label>Divers</label>
+            <section>Misc</section>
+        </sections>
+        <sections>
+            <label>Totaux des crédits indirects</label>
+            <section>Soft Credit Totals</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nouvelle affiliation</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>Nouveau don régulier</label>
+        <name>New_Recurring_Donation</name>
+    </quickActions>
+    <quickActions>
+        <label>Nouvelle relation</label>
+        <name>New_Relationship</name>
+    </quickActions>
+    <quickActions>
+        <label>Mise à jour rapide</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Fusionner des contacts</label>
+        <name>Merge_Contacts</name>
+    </webLinks>
+    <webLinks>
+        <label>Nouveau don</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
+        <label>Recalculer des cumuls</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

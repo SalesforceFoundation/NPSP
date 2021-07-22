@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>正常に作成されたときの最初の一般会計単位の割り当てへのルックアップ。</help>
+    <label>一般会計単位の割り当て 1: インポート済み</label>
+    <name>GAU_Allocation_1_Imported__c</name>
+    <relationshipLabel>NPSP データインポート (一般会計単位 1)</relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>המצב שבו יש להשתמש בעת יצירה של חבר במבצע עבור איש הקשר הראשי ומקור המבצע הראשי של הזדמנות זו. השאר ריק כדי להשתמש כברירת מחדל במצב של תגובה עבור הזדמנויות סגורות/זכייה, ובמצב של ללא תגובה עבור הזדמנויות אחרות.</help>
+    <label>מצב חבר במבצע של איש קשר ראשי</label>
+    <name>Primary_Contact_Campaign_Member_Status__c</name>
+</CustomFieldTranslation>

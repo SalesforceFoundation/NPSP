@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Rollups_IncrementalLastNDays_ValOverride__c</fullName>
+    <description/>
+    <externalId>false</externalId>
+    <inlineHelpText>For Incremental Rollups Override Use Only. This value overrides the calculated number of days used to filter related Opportunities to determine which Accounts, Contacts, GAUs or RDs are recalculated during a nightly scheduled job.</inlineHelpText>
+    <label>Incremental: Last N Days Value Override</label>
+    <precision>6</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

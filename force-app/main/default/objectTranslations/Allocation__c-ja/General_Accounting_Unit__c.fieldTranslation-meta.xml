@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この割り当ての対象となる一般会計単位。新しい割り当てでは、有効と設定された一般会計単位のみ使用できます。</help>
+    <label>一般会計単位</label>
+    <lookupFilter>
+        <errorMessage><!-- Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit. --></errorMessage>
+        <informationalMessage><!-- You must select an active General Accounting Unit for this Allocation. --></informationalMessage>
+    </lookupFilter>
+    <name>General_Accounting_Unit__c</name>
+    <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
+</CustomFieldTranslation>

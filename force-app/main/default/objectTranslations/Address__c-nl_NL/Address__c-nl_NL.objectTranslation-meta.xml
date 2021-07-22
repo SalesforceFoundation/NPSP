@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Adres</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Adressen</value>
+    </caseValues>
+    <gender>Neuter</gender>
+    <layouts>
+        <layout>Address Layout</layout>
+        <sections>
+            <label>Adresverificatie</label>
+            <section>Address Verification</section>
+        </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Seizoensinformatie</label>
+            <section>Seasonal Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Adres-ID</nameFieldLabel>
+    <quickActions>
+        <label>Adres bijwerken</label>
+        <name>Update_Address</name>
+    </quickActions>
+    <webLinks>
+        <label>Adres verifiëren</label>
+        <name>Verify_Address</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Address --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הAddress --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Address --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הAddress --></value>
+    </caseValues>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Address Layout</layout>
+        <sections>
+            <label><!-- Address Verification --></label>
+            <section>Address Verification</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>פרטים עונתיים</label>
+            <section>Seasonal Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Address ID --></nameFieldLabel>
+    <quickActions>
+        <label>עדכן כתובת</label>
+        <name>Update_Address</name>
+    </quickActions>
+    <webLinks>
+        <label>אימות כתובת</label>
+        <name>Verify_Address</name>
+    </webLinks>
+</CustomObjectTranslation>

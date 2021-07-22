@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Marque para tipos de cambio con fecha cuando Gestión de divisas avanzada está habilitada en la organización. Si se marca y ACM está habilitado, todas las totalizaciones de NPSP utilizarán el tipo de cambio predeterminado para la divisa.</help>
+    <label>Usar tipos de cambio con fecha si hay</label>
+    <name>Use_Dated_Conversion_Rates__c</name>
+</CustomFieldTranslation>

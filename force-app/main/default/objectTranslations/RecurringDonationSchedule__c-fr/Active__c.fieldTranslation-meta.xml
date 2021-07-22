@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Détermine si le Calendrier de dons récurrents est actif ou inactif en fonction de la Date de fin. En lecture seule.</help>
+    <label>Actif</label>
+    <name>Active__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>デフォルトの取引先責任者の役割は、商談の取引先が世帯、1 対 1、または個人の取引先でない場合に、商談の主取引先責任者に自動的に割り当てられます。</help>
+    <label>団体支援の取引先責任者の役割</label>
+    <name>Contact_Role_for_Organizational_Opps__c</name>
+</CustomFieldTranslation>

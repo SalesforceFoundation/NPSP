@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Door dit aan te vinken, respecteren de Toewijzingstotaliseringstotalen het fiscale jaar, niet kalenderjaar. Fiscaal Jaar instellen: Set-up &gt; Bedrijfsprofiel &gt; Fiscaal Jaar. OPMERKING: Instellingen voor Aangepast Fiscaal Jaar worden NIET ondersteund.</help>
+    <label>Fisc. Jaar voor Totaliseringen gebruiken</label>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+</CustomFieldTranslation>

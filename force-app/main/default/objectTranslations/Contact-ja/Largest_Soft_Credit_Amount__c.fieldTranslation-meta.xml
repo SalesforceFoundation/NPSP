@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>最大ソフトクレジットの金額。</help>
+    <label>最大ソフトクレジット額</label>
+    <name>Largest_Soft_Credit_Amount__c</name>
+</CustomFieldTranslation>

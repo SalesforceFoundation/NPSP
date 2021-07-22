@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Matching_Implementing_Class__c</fullName>
+    <description>The full developer name of an Apex class that implements the BDI_IMatching interface for Donations.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The developer name of an Apex class that implements the BDI_IMatching interface for Donations. Leave blank to let NPSP handle matching.</inlineHelpText>
+    <label>Donation Matching Implementing Class</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

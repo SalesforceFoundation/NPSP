@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この支払を支払済として設定したバッチ。この項目は、[NPSP 設定] の [バッチ番号設定] に基づいて自動的に入力されます。</help>
+    <label>バッチ番号</label>
+    <name>Batch_Number__c</name>
+</CustomFieldTranslation>

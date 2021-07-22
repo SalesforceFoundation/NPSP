@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Définit le jour précis du mois des futures opportunités de versement lorsque la période de versement est mensuelle. Si vous sélectionnez 29 ou 30, la date de versement sera le dernier jour du mois pour les mois qui n’ont pas autant de jours.</help>
+    <label>Jour du mois du don récurrent</label>
+    <name>Recurring_Donation_Day_of_Month__c</name>
+</CustomFieldTranslation>

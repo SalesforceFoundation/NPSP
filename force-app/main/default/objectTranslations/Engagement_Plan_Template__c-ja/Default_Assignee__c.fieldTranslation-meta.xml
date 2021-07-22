@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>エンゲージメント計画 ToDo の [割り当て先] 項目が空白の場合、ToDo を誰に割り当てる必要がありますか?</help>
+    <label>デフォルトの任命先</label>
+    <name>Default_Assignee__c</name>
+    <picklistValues>
+        <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+        <translation>エンゲージメント計画のオブジェクトの所有者</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>User Creating Engagement Plan</masterLabel>
+        <translation>エンゲージメント計画を作成しているユーザ</translation>
+    </picklistValues>
+</CustomFieldTranslation>

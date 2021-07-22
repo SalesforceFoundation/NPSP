@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Exclusivement pour le Remplacement des cumuls incrémentiels. Cette valeur remplace le nbre de jours calculés utilisé pour filtrer les opp. associées afin de déterminer les comptes, contacts, UCG ou RD recalculés pendant un traitement planifié de nuit.</help>
+    <label>Incrém. : Rempl. valeur N derniers jours</label>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+</CustomFieldTranslation>

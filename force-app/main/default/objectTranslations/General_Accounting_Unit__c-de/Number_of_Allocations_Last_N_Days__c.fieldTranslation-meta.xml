@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Gesamtanzahl der Zuweisungen von Opportunities in einer geschlossenen und gewonnenen Phase in den letzten N Tagen Der Wert N kann in den Einstellungen geändert werden.</help>
+    <label>Anzahl Zuweisungen in d. letzten N Tagen</label>
+    <name>Number_of_Allocations_Last_N_Days__c</name>
+</CustomFieldTranslation>

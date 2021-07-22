@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le statut de la tentative d&apos;insertion de la deuxième Allocation UCG.</help>
+    <label>Allocation UCG 2 : Statut d&apos;importation</label>
+    <name>GAU_Allocation_2_Import_Status__c</name>
+</CustomFieldTranslation>

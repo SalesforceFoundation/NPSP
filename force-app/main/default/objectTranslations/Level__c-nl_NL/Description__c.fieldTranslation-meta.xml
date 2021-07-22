@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Beschrijft waar dit Niveau voor dient, of wat het betekent om dit Niveau te bereiken.</help>
+    <label>Beschrijving</label>
+    <name>Description__c</name>
+</CustomFieldTranslation>

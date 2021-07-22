@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>返金の場合のみ。Elevate から取得した、元の支払トランザクションの ID を表示します。</help>
+    <label>Elevate の元の支払 ID</label>
+    <name>Elevate_Original_Payment_ID__c</name>
+</CustomFieldTranslation>

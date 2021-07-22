@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このセクションが表示される [使用開始] ページの種別 (管理者またはエンドユーザ)。</help>
+    <label>ページ種別</label>
+    <name>Page_Type__c</name>
+    <picklistValues>
+        <masterLabel>Admin</masterLabel>
+        <translation>管理者</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>End User</masterLabel>
+        <translation>エンドユーザ</translation>
+    </picklistValues>
+</CustomFieldTranslation>

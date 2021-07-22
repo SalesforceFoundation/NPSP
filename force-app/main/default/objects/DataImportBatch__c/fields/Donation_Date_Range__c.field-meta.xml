@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Date_Range__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. NPSP will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
+    <label>Number of Days from Donation Date</label>
+    <precision>2</precision>
+    <required>true</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

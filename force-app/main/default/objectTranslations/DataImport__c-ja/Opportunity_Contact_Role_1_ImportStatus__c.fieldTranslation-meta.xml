@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>最初の商談取引先責任者の役割の挿入の試行に基づく状況。</help>
+    <label>商談取引先責任者の役割 1: ImportStatus</label>
+    <name>Opportunity_Contact_Role_1_ImportStatus__c</name>
+</CustomFieldTranslation>

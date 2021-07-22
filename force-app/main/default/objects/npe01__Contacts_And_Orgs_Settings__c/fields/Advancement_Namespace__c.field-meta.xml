@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Advancement_Namespace__c</fullName>
+    <defaultValue>&quot;gem&quot;</defaultValue>
+    <description>For system use only: Namespace for cross package functionality.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>For system use only: Namespace for cross package functionality.</inlineHelpText>
+    <label>GEM Namespace</label>
+    <length>10</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

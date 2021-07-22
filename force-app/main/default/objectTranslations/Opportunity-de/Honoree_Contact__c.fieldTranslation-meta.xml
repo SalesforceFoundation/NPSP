@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der vorhandene Kontaktdatensatz des Begünstigten für diese Spende.</help>
+    <label>Kontakt des Begünstigten</label>
+    <name>Honoree_Contact__c</name>
+    <relationshipLabel>Opportunities (Kontakt des Begünstigten)</relationshipLabel>
+</CustomFieldTranslation>

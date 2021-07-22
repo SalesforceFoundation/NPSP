@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>L’ID du système sur lequel la transaction a été initiée.</help>
+    <label>ID d’origine</label>
+    <name>Origin_ID__c</name>
+</CustomFieldTranslation>

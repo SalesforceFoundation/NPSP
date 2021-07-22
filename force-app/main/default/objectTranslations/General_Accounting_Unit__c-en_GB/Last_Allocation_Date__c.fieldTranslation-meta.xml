@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The last Opportunity Close Date of an allocation associated with this general accounting unit.</help>
+    <label>Last Allocation Date</label>
+    <name>Last_Allocation_Date__c</name>
+</CustomFieldTranslation>

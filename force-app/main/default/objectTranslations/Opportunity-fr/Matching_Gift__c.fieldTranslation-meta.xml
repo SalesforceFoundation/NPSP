@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Recherche de l’enregistrement de l&apos;opportunité pour les dons jumelés pour ce don.</help>
+    <label>Dons jumelés</label>
+    <name>Matching_Gift__c</name>
+    <relationshipLabel>Dons jumelés</relationshipLabel>
+</CustomFieldTranslation>

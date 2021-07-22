@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se marca, el número total de regalos y el importe total deben coincidir con los totales esperados introducidos para el lote.</help>
+    <label>Requerir coincidencia totales esperados</label>
+    <name>RequireTotalMatch__c</name>
+</CustomFieldTranslation>

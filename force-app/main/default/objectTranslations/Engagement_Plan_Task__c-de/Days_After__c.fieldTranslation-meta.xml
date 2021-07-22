@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Anzahl der Tage nach dem Erstellungsdatum des Engagementplans, an dem diese Aufgabe fällig ist. Bei abhängigen Aufgaben die Anzahl der Tage nach dem Fälligkeitsdatum der übergeordneten Aufgabe, an dem diese Aufgabe fällig ist.</help>
+    <label>Tage nach</label>
+    <name>Days_After__c</name>
+</CustomFieldTranslation>

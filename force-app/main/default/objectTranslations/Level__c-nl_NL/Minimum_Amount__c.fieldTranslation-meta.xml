@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het minimumbedrag dat nodig is opdat NPSP dit Niveau toewijst. Als dit veld leeg is, wijst NPSP dit Niveau toe aan elk bedrag kleiner dan het Maximumbedrag van dit Niveau.</help>
+    <label>Minimumbedrag (&gt;=)</label>
+    <name>Minimum_Amount__c</name>
+</CustomFieldTranslation>

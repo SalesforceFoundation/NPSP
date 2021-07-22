@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סמן אפשרות זו אם תרצה שהמערכת תפרסם הודעות עבור סוגי שגיאות מסוימים.</help>
+    <label>הודעות שגיאה</label>
+    <name>Error_Notifications_On__c</name>
+</CustomFieldTranslation>

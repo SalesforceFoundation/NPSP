@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- NPSP Data Import Batch --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הNPSP Data Import Batch --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- NPSP Data Import Batch --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הNPSP Data Import Batch --></value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <name>BatchGiftEntryTabColumns</name>
+    </fieldSets>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>NPSP Data Import Batch Layout</layout>
+        <sections>
+            <label><!-- Contact &amp; Account Matching --></label>
+            <section>Contact &amp; Account Matching</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Matching --></label>
+            <section>Donation Matching</section>
+        </sections>
+        <sections>
+            <label><!-- Extensibility --></label>
+            <section>Extensibility</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <webLinks>
+        <label><!-- Process_Batch --></label>
+        <name>Process_Batch</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Gibt an, ob es sich bei dem Element um ein unter- oder ein übergeordnetes Element des Vorgängers handelt.</help>
+    <label>Beziehung zum Vorgänger</label>
+    <name>Relationship_To_Predecessor__c</name>
+    <picklistValues>
+        <masterLabel>Child</masterLabel>
+        <translation>Kind</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No Predecessor</masterLabel>
+        <translation>Kein Vorgänger</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Parent</masterLabel>
+        <translation>Elternteil</translation>
+    </picklistValues>
+</CustomFieldTranslation>

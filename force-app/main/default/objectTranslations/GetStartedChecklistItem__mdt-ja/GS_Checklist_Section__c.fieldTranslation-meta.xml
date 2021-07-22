@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この項目が含まれる [使用開始] ページのセクション。</help>
+    <label>GS チェックリストセクション</label>
+    <name>GS_Checklist_Section__c</name>
+    <relationshipLabel>GS チェックリスト項目</relationshipLabel>
+</CustomFieldTranslation>

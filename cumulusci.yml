@@ -1,6 +1,7 @@
 minimum_cumulusci_version: 3.23.0
 project:
     name: Cumulus
+    source_format: sfdx
     package:
         name: Nonprofit Success Pack
         namespace: npsp

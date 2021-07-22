@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Custom_Mapping_Logic_Class__c</fullName>
+    <description>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If custom apex logic should be used to map the fields for this object, then this field should be populated with the name of a class (including namespace if needed) that extends the BDI_ObjectMappingLogic class and overrides the populateObject method.</inlineHelpText>
+    <label>Custom Mapping Logic Class</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

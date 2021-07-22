@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The status from attempting to insert the first GAU Allocation.</help>
+    <label>GAU Allocation 1: Import Status</label>
+    <name>GAU_Allocation_1_Import_Status__c</name>
+</CustomFieldTranslation>

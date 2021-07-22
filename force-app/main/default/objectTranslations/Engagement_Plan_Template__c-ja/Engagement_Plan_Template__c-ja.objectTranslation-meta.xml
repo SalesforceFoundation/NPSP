@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>エンゲージメント計画テンプレート</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>エンゲージメント計画テンプレート名</nameFieldLabel>
+    <webLinks>
+        <label>テンプレートの管理</label>
+        <name>Manage_Template</name>
+    </webLinks>
+</CustomObjectTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין שיש להפעיל מודול זה באופן אסינכרוני בעסקה זו</help>
+    <label>אסינכרוני לאחר אירועים</label>
+    <name>Asynchronous__c</name>
+</CustomFieldTranslation>

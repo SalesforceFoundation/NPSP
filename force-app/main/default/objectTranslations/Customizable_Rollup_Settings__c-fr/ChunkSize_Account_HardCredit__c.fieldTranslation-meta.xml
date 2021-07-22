@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>POUR LES ORG. LDV UNIQUEMENT AVEC DES INSTRUCTIONS SFDO. Pour éviter un délai de requête dans le traitement par lots de cumul dans des org. contenant plusieurs millions de comptes, spécifiez le nombre max. de comptes traités dans chaque lot.</help>
+    <label>LDV : Taille bloc crédit direct compte</label>
+    <name>ChunkSize_Account_HardCredit__c</name>
+</CustomFieldTranslation>

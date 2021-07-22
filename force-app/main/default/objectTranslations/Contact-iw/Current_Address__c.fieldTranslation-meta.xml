@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הכתובת הנוכחית שרשומה בשדות הכתובת למשלוח דואר של איש הקשר.</help>
+    <label>כתובת נוכחית</label>
+    <lookupFilter>
+        <informationalMessage>כדי לראות את כל הכתובות עבור משק הבית של איש הקשר, הזן A-*‎ בחלון החיפוש</informationalMessage>
+    </lookupFilter>
+    <name>Current_Address__c</name>
+    <relationshipLabel>אנשי קשר (כתובת נוכחית)</relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecurringType__c</fullName>
+    <description>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select Open for an ongoing Recurring Donation. Select Fixed for a Recurring Donation that has a specific number of installments. For Fixed, you must also populate the Number of Planned Installments field.</inlineHelpText>
+    <label>Recurring Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open</fullName>
+                <default>true</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Fixed</fullName>
+                <default>false</default>
+                <label>Fixed</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

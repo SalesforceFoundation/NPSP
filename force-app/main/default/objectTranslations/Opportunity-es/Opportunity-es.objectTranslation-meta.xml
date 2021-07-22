@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS v2 --></label>
+        <name>BDE_Entry_FS_v2</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- New BDE List v2 --></label>
+        <name>BDE_List_FS_v2</name>
+    </fieldSets>
+    <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Información de la donación</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Información del regalo que iguala</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Información del pago</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Información del tributo</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Grant Layout</layout>
+        <sections>
+            <label>Información de la donación</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Información de la beca</label>
+            <section>Grant Information</section>
+        </sections>
+        <sections>
+            <label>Información del pago</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>In-Kind Gift Layout</layout>
+        <sections>
+            <label>Información de la donación</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Información del regalo en especie</label>
+            <section>In-Kind Information</section>
+        </sections>
+        <sections>
+            <label>Información del tributo</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Major Gift Layout</layout>
+        <sections>
+            <label>Información de la donación</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Información de regalo importante</label>
+            <section>Major Gift Information</section>
+        </sections>
+        <sections>
+            <label>Información del regalo que iguala</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Información del pago</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Información del tributo</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Matching Gift Layout</layout>
+        <sections>
+            <label>Información de la donación</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Información del pago</label>
+            <section>Payment Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Membership Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Campos</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Información del miembro</label>
+            <section>Member Information</section>
+        </sections>
+        <sections>
+            <label>Información del pago</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Información del sistema</label>
+            <section>System Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nuevo pago</label>
+        <name>New_Payment</name>
+    </quickActions>
+    <quickActions>
+        <label>Actualización rápida</label>
+        <name>Quick_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Acuse de recibo por correo electrónico</label>
+        <name>Email_Acknowledgment</name>
+    </webLinks>
+    <webLinks>
+        <label>Enviar Acuses de recibo</label>
+        <name>Email_Acknowledgments</name>
+    </webLinks>
+    <webLinks>
+        <label>Encontrar regalos igualados</label>
+        <name>Find_Matched_Gifts</name>
+    </webLinks>
+    <webLinks>
+        <label>Gestionar créditos blandos</label>
+        <name>Manage_Soft_Credits</name>
+    </webLinks>
+    <webLinks>
+        <label>Actualizar nombre</label>
+        <name>Refresh_Name</name>
+    </webLinks>
+</CustomObjectTranslation>

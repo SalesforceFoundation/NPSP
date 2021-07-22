@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le nombre d’enregistrements d’importation de données NPSP à traiter dans chaque lot.</help>
+    <label>Taille de lot</label>
+    <name>Batch_Size__c</name>
+</CustomFieldTranslation>

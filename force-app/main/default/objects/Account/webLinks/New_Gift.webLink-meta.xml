@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Gift</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>New Gift</masterLabel>
+    <openType>sidebar</openType>
+    <url>/lightning/n/{!$Setup.Package_Settings__c.Namespace_Prefix__c}GE_Gift_Entry?c__view=Single_Gift_Entry&amp;c__apiName=Account&amp;c__donorRecordId={!Account.Id}</url>
+    <protected>false</protected>
+</WebLink>

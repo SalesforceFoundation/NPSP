@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>L’année d’expiration de la carte utilisée pour cette transaction.</help>
+    <label>Année d&apos;expiration carte de paiement</label>
+    <name>Payment_Card_Expiration_Year__c</name>
+</CustomFieldTranslation>

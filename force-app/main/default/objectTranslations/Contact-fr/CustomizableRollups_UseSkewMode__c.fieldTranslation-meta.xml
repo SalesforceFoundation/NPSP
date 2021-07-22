@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est cochée, les cumuls personnalisables utilisent toujours le mode asymétrie pour cumuler les crédits directs et les crédits indirects de cet enregistrement.</help>
+    <label>Cumuls perso. : forcer mode asymétrie</label>
+    <name>CustomizableRollups_UseSkewMode__c</name>
+</CustomFieldTranslation>

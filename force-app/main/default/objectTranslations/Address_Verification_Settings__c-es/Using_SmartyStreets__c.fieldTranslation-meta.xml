@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Especifica si se esta utilizando o no el servicio de verificación de direcciones de SmartyStreets.</help>
+    <label>Uso de SmartyStreets-DESUSADO</label>
+    <name>Using_SmartyStreets__c</name>
+</CustomFieldTranslation>

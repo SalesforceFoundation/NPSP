@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indien aangevinkt, zal NPSP standaard terugkerende taken niet automatisch plannen. Deze terugkerende taken berekenen totaliseringen, werken terugkerende donaties en seizoenadressen bij en voeren foutenafhandeling uit.</help>
+    <label>Standaard NPSP-Taken niet Auto. Plannen</label>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כיצד צריך ליידע את נמען ההודעות.</help>
+    <label>העדפת הודעה</label>
+    <name>Notification_Preference__c</name>
+    <picklistValues>
+        <masterLabel>Do Not Notify</masterLabel>
+        <translation>אל תודיע</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>דואר אלקטרוני</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Phone</masterLabel>
+        <translation>טלפון</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Postal Mail</masterLabel>
+        <translation>כתובת למשלוח דואר</translation>
+    </picklistValues>
+</CustomFieldTranslation>

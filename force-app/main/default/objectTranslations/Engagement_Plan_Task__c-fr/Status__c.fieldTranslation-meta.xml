@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le statut d’une tâche. Les tâches dépendantes sont définies comme « En attente de la tâche parente » jusqu’à ce que leur tâche parente soit terminée.</help>
+    <label>Statut</label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Completed</masterLabel>
+        <translation>Terminé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Deferred</masterLabel>
+        <translation>Reporté</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>In Progress</masterLabel>
+        <translation>En cours</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Started</masterLabel>
+        <translation>Pas commencé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Waiting on someone else</masterLabel>
+        <translation>En attente d’une autre personne</translation>
+    </picklistValues>
+</CustomFieldTranslation>

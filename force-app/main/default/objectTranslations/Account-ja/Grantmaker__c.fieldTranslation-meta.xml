@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この団体が助成金提供団体であることを示します。財団、政府機関、法人などに適用できます。</help>
+    <label>助成金提供団体</label>
+    <name>Grantmaker__c</name>
+</CustomFieldTranslation>

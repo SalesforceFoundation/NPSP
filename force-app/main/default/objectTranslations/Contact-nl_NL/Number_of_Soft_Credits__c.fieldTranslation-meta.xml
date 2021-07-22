@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het totale aantal soft credits die toegekend zijn aan deze Contactpersoon.</help>
+    <label>Aantal Soft Credits</label>
+    <name>Number_of_Soft_Credits__c</name>
+</CustomFieldTranslation>

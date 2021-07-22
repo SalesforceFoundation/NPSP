@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このバッチで入力が予測されている支援の数。</help>
+    <label>予測支援数</label>
+    <name>Expected_Count_of_Gifts__c</name>
+</CustomFieldTranslation>

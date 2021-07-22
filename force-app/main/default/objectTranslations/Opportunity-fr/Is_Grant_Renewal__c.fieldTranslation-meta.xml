@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indique si la subvention est un renouvellement d’une subvention antérieure.</help>
+    <label>Renouvellement de subvention</label>
+    <name>Is_Grant_Renewal__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der API-Name für die Linkbezeichnung eines Links auf der Seite &quot;Erste Schritte&quot;. Muss mit einer importierten Bezeichnung in gsLabelMapper-LWC übereinstimmen.</help>
+    <label>Name der Linkbezeichnung</label>
+    <name>Link_Label__c</name>
+</CustomFieldTranslation>

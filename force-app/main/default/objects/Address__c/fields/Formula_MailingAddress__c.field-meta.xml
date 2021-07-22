@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Formula_MailingAddress__c</fullName>
+    <externalId>false</externalId>
+    <formula>MailingStreet__c &amp; BR() &amp;
+MailingStreet2__c &amp; IF(ISBLANK(MailingStreet2__c), &quot;&quot;, BR()) &amp; 
+MailingCity__c &amp; IF(ISBLANK(MailingCity__c), &quot;&quot;, &quot;, &quot;) &amp; MailingState__c &amp; &quot; &quot; &amp; MailingPostalCode__c 
+&amp; IF(ISBLANK(MailingCountry__c), &quot;&quot;, BR() &amp; MailingCOuntry__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Mailing Address</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ManageEPTemplateFS</fullName>
+    <availableFields>
+        <field>OwnerId</field>
+        <isFieldManaged>false</isFieldManaged>
+        <isRequired>false</isRequired>
+    </availableFields>
+    <description>Engagement Plan Template field set to add custom fields to the custom user interface for editing Engagement Plan Templates and related Engagement Plan Tasks.</description>
+    <label>Manage EP Template FS</label>
+</FieldSet>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se selecciona, NPSP crea automáticamente un registro de miembro de campaña cuando se crea una oportunidad que tiene un contacto principal y un origen de campaña principal o cuando se actualiza esa oportunidad a la etapa Cerrada/Ganada.</help>
+    <label>Automatización de miembros de campaña</label>
+    <name>Automatic_Campaign_Member_Management__c</name>
+</CustomFieldTranslation>

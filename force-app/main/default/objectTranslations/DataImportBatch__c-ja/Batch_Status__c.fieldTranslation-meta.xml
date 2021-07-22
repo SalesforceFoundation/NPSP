@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>バッチ状況は、バッチ内の NPSP データインポートレコードのインポート状況に基づきます。いずれかのレコードがインポートできなかった場合、そのバッチの状況は「失敗 - レビューが必要」になります。</help>
+    <label>バッチ状況</label>
+    <name>Batch_Status__c</name>
+    <picklistValues>
+        <masterLabel>Completed</masterLabel>
+        <translation>完了</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Failed - Needs Review</masterLabel>
+        <translation>失敗 - レビューが必要</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Open</masterLabel>
+        <translation>オープン</translation>
+    </picklistValues>
+</CustomFieldTranslation>

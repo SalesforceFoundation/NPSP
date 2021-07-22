@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La función del contacto en la oportunidad a la que este crédito blando se aplica.</help>
+    <label>Id. de la función del contacto</label>
+    <name>Contact_Role_ID__c</name>
+</CustomFieldTranslation>

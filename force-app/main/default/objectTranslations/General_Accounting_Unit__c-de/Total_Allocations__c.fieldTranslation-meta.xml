@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Gesamtsumme aller Zuweisungen von geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
+    <label>Zuweisungen insgesamt</label>
+    <name>Total_Allocations__c</name>
+</CustomFieldTranslation>

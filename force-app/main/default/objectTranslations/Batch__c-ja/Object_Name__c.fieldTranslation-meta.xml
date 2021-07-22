@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>バッチであるオブジェクトの API 参照名</help>
+    <label>オブジェクト名</label>
+    <name>Object_Name__c</name>
+</CustomFieldTranslation>

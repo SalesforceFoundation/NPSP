@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מילוי הגדרה זו יביא ליצירה אוטומטית של תפקיד איש קשר עבור הזדמנויות עם איש קשר המקבל הוקרה. השאר שדה זה ריק כדי להשבית יצירה אוטומטית של תפקיד איש קשר עבור מקבל ההוקרה.</help>
+    <label>תפקיד איש קשר בתרומה של מקבל הוקרה</label>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+</CustomFieldTranslation>

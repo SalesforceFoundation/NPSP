@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der vom Spender angegebene Name des Begünstigten. Wenn dieses Feld leer bleibt und das Feld für den Kontakt des Begünstigten einen Wert enthält, wird dieser Wert von NPSP automatisch in dieses Feld eingetragen.</help>
+    <label>Name des Begünstigten</label>
+    <name>Honoree_Name__c</name>
+</CustomFieldTranslation>

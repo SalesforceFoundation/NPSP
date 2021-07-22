@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>拡張継続支援の有効化の確認および状態が含まれます。</help>
+    <label>継続支援の有効化状態</label>
+    <name>RecurringDonations2EnablementState__c</name>
+</CustomFieldTranslation>

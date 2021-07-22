@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Décrit les zones de financement pour la subvention. Vous pouvez saisir ce que vous souhaitez ici. Vous pouvez par exemple écrire le nom du programme auquel la subvention s’applique.</help>
+    <label>Zones de programme</label>
+    <name>Grant_Program_Area_s__c</name>
+</CustomFieldTranslation>

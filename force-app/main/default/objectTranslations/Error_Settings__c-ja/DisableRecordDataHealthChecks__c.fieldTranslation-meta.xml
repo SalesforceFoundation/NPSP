@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>選択した場合、状態チェックでは、NPSP 設定に問題がないかどうかのみが確認されます。組織に大量のレコードがあり、状態チェックがなかなか完了しない場合は、このオプションを選択してください。</help>
+    <label>レコードデータの状態チェックを無効化</label>
+    <name>DisableRecordDataHealthChecks__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Establezca cuándo el registro de programación representa el intervalo de fechas en pausa de Donación recurrente</help>
+    <label>Es Pausa</label>
+    <name>IsPause__c</name>
+</CustomFieldTranslation>

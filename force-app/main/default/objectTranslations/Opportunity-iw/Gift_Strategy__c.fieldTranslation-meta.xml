@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סיווג סוג הבקשה עבור הזדמנות זו.</help>
+    <label>אסטרטגיית תרומה</label>
+    <name>Gift_Strategy__c</name>
+    <picklistValues>
+        <masterLabel>New Donor</masterLabel>
+        <translation>תורם חדש</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Renewal</masterLabel>
+        <translation>חידוש</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Upgrade</masterLabel>
+        <translation>שדרוג</translation>
+    </picklistValues>
+</CustomFieldTranslation>

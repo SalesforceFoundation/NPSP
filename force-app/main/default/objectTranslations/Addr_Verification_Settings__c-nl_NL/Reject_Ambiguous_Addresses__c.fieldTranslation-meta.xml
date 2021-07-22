@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Markeert dubbelzinnige adressen als ongeldig, wanneer de API meer dan één adres oplevert. Indien niet aangevinkt, zal Salesforce het eerste gesuggereerde adres als het geldige adres aanvaarden.</help>
+    <label>Dubbelzinnige Adressen Weigeren</label>
+    <name>Reject_Ambiguous_Addresses__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indien aangevinkt, zal Batch-Gegevensinvoer Opportunities nooit benoemen, zelfs niet als ze blanco zijn (niet inbegrepen op de BDE-pagina).</help>
+    <label>Blanco Opportunitynamen toestaan</label>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>演算</label>
+    <name>Operation__c</name>
+    <picklistValues>
+        <masterLabel>Average</masterLabel>
+        <translation>平均</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Year</masterLabel>
+        <translation>年間トップ</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Year Total</masterLabel>
+        <translation>年間総額トップ</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Count</masterLabel>
+        <translation>数</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Donor Streak</masterLabel>
+        <translation>支援継続</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>First</masterLabel>
+        <translation>名</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Largest</masterLabel>
+        <translation>最大</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Last</masterLabel>
+        <translation>姓</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Smallest</masterLabel>
+        <translation>最小</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Sum</masterLabel>
+        <translation>合計</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Years Donated</masterLabel>
+        <translation>支援年数</translation>
+    </picklistValues>
+</CustomFieldTranslation>

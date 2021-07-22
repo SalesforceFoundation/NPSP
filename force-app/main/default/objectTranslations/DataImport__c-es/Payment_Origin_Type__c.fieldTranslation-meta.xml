@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El tipo de sistema utilizado para iniciar la transacción. Los valores disponibles incluyen Núcleo de participación, Página de donaciones, API de pagos, Salesforce.</help>
+    <label>Tipo de origen de pago</label>
+    <name>Payment_Origin_Type__c</name>
+</CustomFieldTranslation>

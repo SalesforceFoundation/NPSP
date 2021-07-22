@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
+    <label>Grund für Status</label>
+    <name>ClosedReason__c</name>
+    <picklistValues>
+        <masterLabel>Card Expired</masterLabel>
+        <translation>Karte abgelaufen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Commitment Completed</masterLabel>
+        <translation>Engagement abgeschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Deceased Donor</masterLabel>
+        <translation>Spender verstorben</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Financial Difficulty</masterLabel>
+        <translation>Finanzielle Schwierigkeiten</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No Longer Interested</masterLabel>
+        <translation>Kein Interesse mehr</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Unknown</masterLabel>
+        <translation>Unbekannt</translation>
+    </picklistValues>
+</CustomFieldTranslation>

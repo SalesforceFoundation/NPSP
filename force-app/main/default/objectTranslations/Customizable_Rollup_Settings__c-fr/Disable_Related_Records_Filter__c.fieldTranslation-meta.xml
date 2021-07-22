@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cochez cette case pour empêcher les cumuls de crédits directs et de crédits indirects sur les comptes et contacts de traiter uniquement les enreg. de comptes et de contacts qui ont des enreg. d’opp. associées existantes ou des rôles de contact d’opp.</help>
+    <label>Désactiver le filtre d’enreg. associés</label>
+    <name>Disable_Related_Records_Filter__c</name>
+</CustomFieldTranslation>

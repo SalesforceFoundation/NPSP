@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>בהתאם לארץ והאזור, יכול להיות עיר, ישוב, רשות מקומית או אזור אחר המשויך לכתובת זו.</help>
+    <label>אזור מנהלי</label>
+    <name>Administrative_Area__c</name>
+</CustomFieldTranslation>

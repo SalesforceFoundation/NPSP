@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>InstallmentOppFirstCreateMode__c</fullName>
+    <description>Specifies the asynchronous processing behavior NPSP will use to create the first installment Opportunity for Recurring Donations. The default is Synchronous. Other options are Asynchronous and Asynchronous_When_Bulk.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies how NPSP will create the first installment Opportunity for Recurring Donations. The default is Synchronous.</inlineHelpText>
+    <label>Installment Opportunity Async Behavior</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

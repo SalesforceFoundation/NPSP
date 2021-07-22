@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si cette option est activée, toute adresse de compte aux États-Unis marquée comme non livrable par le service sera automatiquement effacée. (Vous pouvez examiner l’entrée non valide dans l’enregistrement d’adresse.)</help>
+    <label>Vider les adresses non valides-DÉPRÉCIÉ</label>
+    <name>Clear_Invalid_Addresses__c</name>
+</CustomFieldTranslation>

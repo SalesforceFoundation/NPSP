@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>האם זו כתובת ברירת המחדל שבה יש להשתמש עבור משק הבית ואנשי הקשר שלו?</help>
+    <label>כתובת ברירת מחדל</label>
+    <name>Default_Address__c</name>
+</CustomFieldTranslation>

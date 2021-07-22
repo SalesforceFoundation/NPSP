@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Programación de Donación recurrente</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Programaciones de Donaciones recurrentes</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Recurring Schedule Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Detalles de programación</label>
+            <section>Schedule Details</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número de programación recurrente</nameFieldLabel>
+</CustomObjectTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Laat het aantal records zien die niet succesvol zijn verwerkt op de datum in het veld Laatst Verwerkt Op.</help>
+    <label>Records Mislukt</label>
+    <name>Records_Failed__c</name>
+</CustomFieldTranslation>

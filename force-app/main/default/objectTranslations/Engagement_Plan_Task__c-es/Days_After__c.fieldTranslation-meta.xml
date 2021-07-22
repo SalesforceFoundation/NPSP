@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La cantidad de días después de la creación del plan de acción, o de la fecha de vencimiento de la tarea principal, cuando vence esta tarea.</help>
+    <label>Días después</label>
+    <name>Days_After__c</name>
+</CustomFieldTranslation>

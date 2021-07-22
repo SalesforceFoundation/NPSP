@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>תבנית תוכנית המעורבות שתחול על אובייקט היעד לאחר הגעה לרמה זו.</help>
+    <label>תבנית תוכנית מעורבות</label>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>רמות</relationshipLabel>
+</CustomFieldTranslation>

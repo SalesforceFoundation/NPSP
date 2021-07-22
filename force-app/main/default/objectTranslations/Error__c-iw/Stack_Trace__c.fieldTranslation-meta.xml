@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מעקב המחסנית של השגיאה שהתרחשה, אם זמין בזמן הריצה.</help>
+    <label>מעקב מחסנית</label>
+    <name>Stack_Trace__c</name>
+</CustomFieldTranslation>

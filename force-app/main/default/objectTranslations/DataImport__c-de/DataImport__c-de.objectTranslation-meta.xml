@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>NPSP-Datenimports</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>NPSP-Datenimporten</value>
+    </caseValues>
+    <gender>Masculine</gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>Account1 Organisationsinformationen</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Account2 Organisationsinformationen</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Kampagneninformationen</label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>Kontakt1 Informationen</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>Kontakt2 Informationen</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Informationen zur Zuweisung Verwendungszweck 1</label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label>Informationen zur Zuweisung Verwendungszweck 2</label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>Privatadresse</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label>Haushalt-Accountinformationen</label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label>Informationen zur Opportunity-Kontaktrolle 1</label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label>Informationen zur Opportunity-Kontaktrolle 2</label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label>Opportunity-Informationen</label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label>Zahlungsinformationen</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Informationen für wiederkehrende Spenden</label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Datenimport-ID</nameFieldLabel>
+    <webLinks>
+        <label>Alle Datenimportdatensätze löschen</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Importierte Datenimportdatensätze löschen</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Datenimport starten</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

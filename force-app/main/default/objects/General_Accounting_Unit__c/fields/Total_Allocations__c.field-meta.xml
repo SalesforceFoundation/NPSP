@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Total_Allocations__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
+    <label>Total Allocations</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

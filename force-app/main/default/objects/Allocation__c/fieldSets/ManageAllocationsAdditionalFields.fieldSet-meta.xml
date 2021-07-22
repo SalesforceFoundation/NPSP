@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FieldSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Fields added to this field set will be displayed as editable columns in the Manage Allocations table</description>
+    <fullName>ManageAllocationsAdditionalFields</fullName>
+    <label>Manage Allocations Additional Fields</label>
+</FieldSet>

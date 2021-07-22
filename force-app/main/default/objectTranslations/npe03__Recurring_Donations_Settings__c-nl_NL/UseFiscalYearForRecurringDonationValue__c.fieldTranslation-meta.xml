@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Ingeschakeld: schakelt fiscale jaar voor waardetotalen van Terugkerende donaties in. Voor Beginmaand fiscaal jaar: Set-up | Bedrijfsinstellingen | Fiscaal jaar. OPM.: Gebruik alleen Standaard fiscaal jaar. Schakel Aangepast fiscaal jaar niet in.</help>
+    <label>Fisc. jr. voor Terugk. donaties gebr.</label>
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
+</CustomFieldTranslation>

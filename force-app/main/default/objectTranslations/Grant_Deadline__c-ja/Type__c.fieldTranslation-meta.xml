@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>種別</label>
+    <name>Type__c</name>
+    <picklistValues>
+        <masterLabel>Application</masterLabel>
+        <translation>アプリケーション</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Final Report</masterLabel>
+        <translation>最終レポート</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Interim Report</masterLabel>
+        <translation>中間レポート</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>LOI</masterLabel>
+        <translation>LOI</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lookup to the Contact record of the person who should be notified about this Donation.</help>
+    <label>Notification Recipient Contact</label>
+    <name>Notification_Recipient_Contact__c</name>
+    <relationshipLabel>Opportunities (Notification Recipient)</relationshipLabel>
+</CustomFieldTranslation>
