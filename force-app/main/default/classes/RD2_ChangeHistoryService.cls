@@ -128,16 +128,9 @@ public without sharing class RD2_ChangeHistoryService {
             EffectiveDate__c = (Date)rd.getValue(npe03__Recurring_Donation__c.StartDate__c),
             NewAmount__c = (Decimal)rd.getValue(rdAmountField),
             PreviousAmount__c = (Decimal)oldRd.getValue(rdAmountField),
-            NewYearlyValue__c = returnYearlyValue(rd),
-            PreviousYearlyValue__c = returnYearlyValue(oldRd)
+            NewYearlyValue__c = rd.getAnnualValue(),
+            PreviousYearlyValue__c = oldRd.getAnnualValue()
         );
-    }
-
-    private Decimal returnYearlyValue(RD2_RecurringDonation rd){
-
-        // TODO: Calculate the yearly value of this rd
-        return (Decimal)rd.getValue(rdAmountField);
-
     }
 
 }

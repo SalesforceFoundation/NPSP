@@ -44,6 +44,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
     private static final Decimal RD_NEW_AMOUNT = 200;
+    private static final String RD_PERIOD = RD_Constants.INSTALLMENT_PERIOD_MONTHLY;
     private static final String RD_NEW_PERIOD = RD_Constants.INSTALLMENT_PERIOD_WEEKLY;
     private static final Decimal RD_NEW_FREQUENCY = 2;
 
@@ -104,7 +105,12 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         Test.stopTest();
 
         List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewYearlyValue__c, 'New Yearly Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousYearlyValue__c, 'Previous Yearly Value should be ' + RD_AMOUNT * 12);
     }
 
     /**
@@ -168,8 +174,14 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
         System.assertEquals(RD_NEW_PERIOD, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_NEW_PERIOD);
         System.assertEquals(RD_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        System.assertEquals(null, rdch.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
-        System.assertEquals(campaign.Id, rdch.PreviousCampaign__c, 'Previous Campaign should be ' + null);
+        System.assertEquals(campaign.Id, rdch.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
+        System.assertEquals(null, rdch.PreviousCampaign__c, 'Previous Campaign should be ' + null);
+
+        Decimal newYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_NEW_PERIOD) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+
+        System.assertEquals(newYearlyValue, rdch.NewYearlyValue__c, 'New Yearly Value should be match' );
+        System.assertEquals(previousYearlyValue, rdch.PreviousYearlyValue__c, 'Previous Yearly Value should match');
     }
 
     /**

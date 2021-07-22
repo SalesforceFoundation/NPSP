@@ -167,6 +167,16 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule
+    * @return Decimal The annual value of this Recurring Donation
+    */
+    public Decimal getAnnualValue(){
+        Decimal yearlyFrequency = RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
+        Decimal installmentFrequency = rd.InstallmentFrequency__c;
+        return rd.npe03__Amount__c * (yearlyFrequency / installmentFrequency);
+    }
+
+    /**
     * @description Revises and modifies the Recurring Donation status
     * @param currentDate Used to determined current date
     * @param scheduleService RD Schedule Service
