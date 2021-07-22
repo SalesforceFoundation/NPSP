@@ -139,12 +139,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public String batchCurrencyIsoCode() {
-        String giftBatchCurrencyIsoCode = '';
-        try {
-            giftBatchCurrencyIsoCode = (String) this.batch.get('CurrencyIsoCode');
-        } catch(SObjectException ex) {
-            giftBatchCurrencyIsoCode = UserInfo.getDefaultCurrency();
-        }
-        return giftBatchCurrencyIsoCode;
+        RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
+        return currencyCode.value();
     }
 }
