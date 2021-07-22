@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het bedrag voor de Opportunity van elke termijn.</help>
+    <label>Bedrag</label>
+    <name>InstallmentAmount__c</name>
+</CustomFieldTranslation>

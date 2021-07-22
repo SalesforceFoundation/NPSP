@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El nombre de la API de metadatos personalizada del registro del conjunto de asignación de campos de importación de datos que debe emplearse de forma predeterminada.</help>
+    <label>Conjunto asign. campos imp datos predet</label>
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
+</CustomFieldTranslation>

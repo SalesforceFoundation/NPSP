@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Specificeert het type opportunityrecord waar dit benoemingsschema voor dient.</help>
+    <label>Typen Opportunityrecords</label>
+    <name>Opportunity_Record_Types__c</name>
+</CustomFieldTranslation>

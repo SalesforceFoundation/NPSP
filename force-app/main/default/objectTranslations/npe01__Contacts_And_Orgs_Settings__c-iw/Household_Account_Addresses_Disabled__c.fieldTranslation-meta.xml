@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סמן אפשרות זו כדי להשבית ניהול כתובות עבור חשבונות משק בית.</help>
+    <label>כתובות חשבון משק בית מושבתות</label>
+    <name>Household_Account_Addresses_Disabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Prevent_Address_Overwrite__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Prevent Address Overwrite Checkbox</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Prevents the Cicero API from overwriting Addresses during verification.</inlineHelpText>
+    <label>Prevent Address Overwrite</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

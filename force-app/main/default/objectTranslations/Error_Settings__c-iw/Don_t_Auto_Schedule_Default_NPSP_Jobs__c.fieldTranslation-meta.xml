@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כאשר אפשרות זו מסומנת, NPSP לא תתזמן משימות ברירת מחדל חוזרות באופן אוטומטי. משימות חוזרות אלה מחשבות סיכומים, מעדכנות תרומות חוזרות וכתובות עונתיות, ומטפלות בשגיאות.</help>
+    <label>אל תתזמן משימות ב. מחדל של NPSP אוטומטית</label>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+</CustomFieldTranslation>

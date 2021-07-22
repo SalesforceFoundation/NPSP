@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Wenn dieses Kontrollkästchen ausgewählt ist, wird die Adressverwaltung für Nicht-Haushalt-Accounts wie etwa Organisations-Accounts aktiviert.</help>
+    <label>Organisatorische Account-Adressen aktiv</label>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+</CustomFieldTranslation>

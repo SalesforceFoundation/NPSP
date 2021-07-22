@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Status__c</fullName>
+    <description>The API status of the transaction from Elevate.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The API status of the transaction from Elevate.</inlineHelpText>
+    <label>Payment Elevate API Status</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

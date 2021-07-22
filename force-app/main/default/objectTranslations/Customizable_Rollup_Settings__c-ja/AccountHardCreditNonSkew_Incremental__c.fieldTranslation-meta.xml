@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>オンにすると、取引先ハードクレジット (スキューでない) 夜間ジョブは、これらの取引先の最近更新された商談を探し、再計算で選択される取引先の数を制限します。これにより、カスタマイズ可能な積み上げ集計の夜間ジョブのパフォーマンスが向上します。</help>
+    <label>スキューでない増分取引先ハードクレジット</label>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>

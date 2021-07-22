@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nombre d’enregistrements par lots à traiter lors du recalcul de niveaux.</help>
+    <label>Taille du lot attribution de niveau</label>
+    <name>Level_Assignment_Batch_Size__c</name>
+</CustomFieldTranslation>

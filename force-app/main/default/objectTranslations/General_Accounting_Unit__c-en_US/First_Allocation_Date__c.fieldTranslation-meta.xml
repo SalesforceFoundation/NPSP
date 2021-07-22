@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job. --></help>
+    <label><!-- First Allocation Date --></label>
+    <name>First_Allocation_Date__c</name>
+</CustomFieldTranslation>

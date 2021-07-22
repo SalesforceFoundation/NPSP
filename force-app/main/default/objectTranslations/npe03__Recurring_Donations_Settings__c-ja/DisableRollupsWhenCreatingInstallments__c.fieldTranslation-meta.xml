@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>選択されている場合、カスタマイズ可能な積み上げ集計が有効になっていても、継続支援の新しい割賦商談が作成されたときに積み上げ集計がすぐに計算されません。</help>
+    <label>割賦支援の作成時に CRLP を無効化</label>
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
+</CustomFieldTranslation>

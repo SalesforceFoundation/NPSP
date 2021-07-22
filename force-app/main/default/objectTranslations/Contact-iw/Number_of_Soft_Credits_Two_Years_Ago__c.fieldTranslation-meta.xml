@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מספר הקרדיטים לפני שנתיים.</help>
+    <label>מספר תרומות מערכתיות לפני שנתיים</label>
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
+</CustomFieldTranslation>

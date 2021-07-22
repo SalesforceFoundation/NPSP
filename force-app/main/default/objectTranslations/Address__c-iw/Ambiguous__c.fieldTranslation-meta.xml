@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין אם נמצאה יותר מכתובת חוקית אחת בעת ניסיון לאמת אותה באמצעות שירות חיצוני.</help>
+    <label>רב-משמעית</label>
+    <name>Ambiguous__c</name>
+</CustomFieldTranslation>

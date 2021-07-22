@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The Data Import Object Group record that must exist before this record can be created (either Parent or Child). --></help>
+    <label><!-- Predecessor --></label>
+    <name>Predecessor__c</name>
+</CustomFieldTranslation>

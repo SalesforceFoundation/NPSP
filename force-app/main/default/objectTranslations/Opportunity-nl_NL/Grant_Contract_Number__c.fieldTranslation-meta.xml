@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Gebruik dit om unieke nummers te volgen die soms door subsidieverlenende organisaties toegewezen worden.</help>
+    <label>Contractnummer Subsidie</label>
+    <name>Grant_Contract_Number__c</name>
+</CustomFieldTranslation>

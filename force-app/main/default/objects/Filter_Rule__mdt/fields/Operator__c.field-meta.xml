@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Operator__c</fullName>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Operator</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Equals</fullName>
+                <default>true</default>
+                <label>Equals</label>
+            </value>
+            <value>
+                <fullName>Not_Equals</fullName>
+                <default>false</default>
+                <label>Not Equals</label>
+            </value>
+            <value>
+                <fullName>Greater</fullName>
+                <default>false</default>
+                <label>Greater Than</label>
+            </value>
+            <value>
+                <fullName>Less</fullName>
+                <default>false</default>
+                <label>Less Than</label>
+            </value>
+            <value>
+                <fullName>Greater_or_Equal</fullName>
+                <default>false</default>
+                <label>Greater or Equal</label>
+            </value>
+            <value>
+                <fullName>Less_or_Equal</fullName>
+                <default>false</default>
+                <label>Less or Equal</label>
+            </value>
+            <value>
+                <fullName>Starts_With</fullName>
+                <default>false</default>
+                <label>Starts With</label>
+            </value>
+            <value>
+                <fullName>Contains</fullName>
+                <default>false</default>
+                <label>Contains</label>
+            </value>
+            <value>
+                <fullName>Does_Not_Contain</fullName>
+                <default>false</default>
+                <label>Does Not Contain</label>
+            </value>
+            <value>
+                <fullName>In_List</fullName>
+                <default>false</default>
+                <label>In List</label>
+            </value>
+            <value>
+                <fullName>Not_In_List</fullName>
+                <default>false</default>
+                <label>Not In List</label>
+            </value>
+            <value>
+                <fullName>Is_Included</fullName>
+                <default>false</default>
+                <label>Is Included</label>
+            </value>
+            <value>
+                <fullName>Is_Not_Included</fullName>
+                <default>false</default>
+                <label>Is Not Included</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

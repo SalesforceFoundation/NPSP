@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Détermine le nombre maximal de paiements autorisés lors de la planification de paiements pour une opportunité.</help>
+    <label>Nombre maximum de paiements</label>
+    <name>Max_Payments__c</name>
+</CustomFieldTranslation>

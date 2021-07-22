@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Wenn diese Option aktiviert ist, aktualisieren Änderungen an einem einzelnen Adressfeld eines Kontakts oder Accounts die vorhandene Adresse, anstatt eine neue Adresse zu erstellen.</help>
+    <label>Einfache Adressänd. als Aktualisierung</label>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+</CustomFieldTranslation>
