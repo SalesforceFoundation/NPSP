@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Lidmaatschapsstatus van dit Huishouden bijv. Huidig, Verlopen of Respijtperiode. De waarde is gebaseerd op de Einddatum en de Respijtperiode. Stel de Standaardrespijtperiode in NPSP-Instellingen onder Huishoudeninstellingen in. Dit veld is enkel lezen.</help>
+    <label>Lidmaatschapsstatus</label>
+    <name>Membership_Status__c</name>
+</CustomFieldTranslation>

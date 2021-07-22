@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>State_Upper_District__c</fullName>
+    <description>The state upper district (such as state senate district) this address belongs to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The state upper district (such as state senate district) this Address belongs to.</inlineHelpText>
+    <label>State Upper District</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

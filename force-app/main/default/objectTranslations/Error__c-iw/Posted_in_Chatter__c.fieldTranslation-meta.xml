@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין אם השגיאה פורסמה ב-Chatter.</help>
+    <label>פורסם ב-Chatter</label>
+    <name>Posted_in_Chatter__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El nombre del administrador del regalo que iguala en la empresa.</help>
+    <label>Nombre administrador del regalo igualado</label>
+    <name>Matching_Gift_Administrator_Name__c</name>
+</CustomFieldTranslation>

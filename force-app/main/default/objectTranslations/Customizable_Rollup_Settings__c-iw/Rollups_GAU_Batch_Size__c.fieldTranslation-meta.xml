@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object. --></help>
+    <label><!-- GAU Batch Size --></label>
+    <name>Rollups_GAU_Batch_Size__c</name>
+</CustomFieldTranslation>

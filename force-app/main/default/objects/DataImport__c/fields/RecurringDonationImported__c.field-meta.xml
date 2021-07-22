@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecurringDonationImported__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>A lookup to the Recurring Donation if it was successfully created.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>A lookup to the Recurring Donation if it was successfully created.</inlineHelpText>
+    <label>Recurring Donation Imported</label>
+    <referenceTo>npe03__Recurring_Donation__c</referenceTo>
+    <relationshipLabel>NPSP Data Imports</relationshipLabel>
+    <relationshipName>NPSP_Data_Imports</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

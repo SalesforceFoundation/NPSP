@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El importe total esperado de todos los regalos introducidos en este lote.</help>
+    <label>Importe de lote total esperado</label>
+    <name>Expected_Total_Batch_Amount__c</name>
+</CustomFieldTranslation>

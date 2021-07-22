@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この支援をマッチングする会社の名前。</help>
+    <label>マッチングギフト利用者</label>
+    <name>Matching_Gift_Employer__c</name>
+</CustomFieldTranslation>

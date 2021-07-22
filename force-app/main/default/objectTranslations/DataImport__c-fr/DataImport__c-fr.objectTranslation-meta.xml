@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Importation de données NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Importations de données NPSP</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Data Import Layout</layout>
+        <sections>
+            <label>Informations sur l’organisation Compte1</label>
+            <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur l’organisation Compte2</label>
+            <section>Account2 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Information de campagne</label>
+            <section>Campaign Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le Contact1</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le Contact2</label>
+            <section>Contact2 Information</section>
+        </sections>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Information 1 sur l&apos;allocation UCG</label>
+            <section>GAU Allocation 1 Information</section>
+        </sections>
+        <sections>
+            <label>Information 2 sur l&apos;allocation UCG</label>
+            <section>GAU Allocation 2 Information</section>
+        </sections>
+        <sections>
+            <label>Adresse de domicile</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
+            <label>Informations sur le compte du foyer</label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label>Information 1 sur le rôle de contact d&apos;opportunité</label>
+            <section>Opportunity Contact Role 1 Information</section>
+        </sections>
+        <sections>
+            <label>Information 2 sur le rôle de contact d&apos;opportunité</label>
+            <section>Opportunity Contact Role 2 Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur l&apos;opportunité</label>
+            <section>Opportunity Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le paiement</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Informations sur le don récurrent</label>
+            <section>Recurring Donation Information</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>ID d’importation de données</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label>Supprimer tous les enregistrements d’importation de données</label>
+        <name>Delete_All_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Supprimer les enregistrements d’importation de données importés</label>
+        <name>Delete_Imported_Data_Import_Records</name>
+    </webLinks>
+    <webLinks>
+        <label>Démarrer l’importation de données</label>
+        <name>Process_Data_Import</name>
+    </webLinks>
+</CustomObjectTranslation>

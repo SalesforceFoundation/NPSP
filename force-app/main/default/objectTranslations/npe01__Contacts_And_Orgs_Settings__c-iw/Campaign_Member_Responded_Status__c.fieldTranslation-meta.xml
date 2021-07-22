@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>המצב האוטומטי של חבר מבצע עבור הזדמנויות סגורות/זכייה, אשר משויך אליהן מקור של איש קשר ראשי ומבצע ראשי. אם ריק, מערכת Salesforce תשתמש במצב &apos;הגיב&apos; הראשון.</help>
+    <label>מצב &apos;הגיב&apos; של חבר מבצע</label>
+    <name>Campaign_Member_Responded_Status__c</name>
+</CustomFieldTranslation>

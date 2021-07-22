@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DisableRollupsWhenCreatingInstallments__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When selected, and if Customizable Rollups are enabled, then immediate rollup calculations are disabled when new Installment Opportunities are created for a Recurring Donation.</inlineHelpText>
+    <label>Disable CRLP When Creating Installments</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

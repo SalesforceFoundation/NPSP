@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このオプションにより、拡張継続支援が有効になります。重要: [NPSP 設定] で拡張継続支援を有効にする必要があります。カスタム設定で有効にすると、データの不整合が生じる可能性があります。</help>
+    <label>拡張継続支援</label>
+    <name>IsRecurringDonations2Enabled__c</name>
+</CustomFieldTranslation>

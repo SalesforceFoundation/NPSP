@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La campagne associée au don récurrent lors de la création de l&apos;enregistrement de ce calendrier.</help>
+    <label>Campagne associée</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>Calendriers de dons récurrents</relationshipLabel>
+</CustomFieldTranslation>

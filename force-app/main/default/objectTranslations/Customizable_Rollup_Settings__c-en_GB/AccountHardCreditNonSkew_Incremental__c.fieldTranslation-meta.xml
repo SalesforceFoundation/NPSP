@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When checked, the Account Hard Credit (Non-Skew) nightly job limits the number of Accounts selected for recalculation by looking for recently updated Opportunities on those Accounts. This helps to improve Customisable Rollup nightly job performance.</help>
+    <label>Incremental Account Hard Credit Non-Skew</label>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>
