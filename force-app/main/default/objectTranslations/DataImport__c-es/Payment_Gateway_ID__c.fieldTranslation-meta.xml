@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El Id. de la pasarela de pago que procesó esta transacción.</help>
+    <label>Id. de Pasarela de pago</label>
+    <name>Payment_Gateway_ID__c</name>
+</CustomFieldTranslation>

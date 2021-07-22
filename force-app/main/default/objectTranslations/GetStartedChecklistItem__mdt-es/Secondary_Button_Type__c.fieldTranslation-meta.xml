@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El tipo de acción relacionada con el botón secundario. Indica si el botón está desactivado, abre una nueva ficha de Salesforce o abre una página externa.</help>
+    <label>Tipo de botón secundario</label>
+    <name>Secondary_Button_Type__c</name>
+    <picklistValues>
+        <masterLabel>Disabled</masterLabel>
+        <translation>Desactivado</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>External Page</masterLabel>
+        <translation>Página externa</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>SFDC New Tab</masterLabel>
+        <translation>Nueva ficha de SFDC</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Especifica cómo NPSP creará la primera oportunidad de cuota de oportunidad para donaciones recurrentes. El valor predeterminado es Síncrona.</help>
+    <label>Comportamiento asíncr. oportunidad cuota</label>
+    <name>InstallmentOppFirstCreateMode__c</name>
+</CustomFieldTranslation>

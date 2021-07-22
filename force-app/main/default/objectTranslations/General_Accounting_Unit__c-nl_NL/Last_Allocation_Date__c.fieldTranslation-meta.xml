@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Sluitingsdatum van de laatste Opportunity van een toewijzing gekoppeld aan deze GAU.</help>
+    <label>Laatste Toewijzingsdatum</label>
+    <name>Last_Allocation_Date__c</name>
+</CustomFieldTranslation>

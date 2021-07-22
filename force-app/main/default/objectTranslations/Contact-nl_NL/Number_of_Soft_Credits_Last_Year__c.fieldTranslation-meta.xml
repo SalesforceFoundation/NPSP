@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het aantal soft credits die tijdens het vorige kalenderjaar zijn toegekend aan deze Contactpersoon.</help>
+    <label>Aantal Soft Credits Vorig Jaar</label>
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
+</CustomFieldTranslation>

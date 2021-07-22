@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>רשומת איש הקשר הקיימת של מקבל ההוקרה עבור תרומה זו.</help>
+    <label>איש קשר של מקבל הוקרה</label>
+    <name>Honoree_Contact__c</name>
+    <relationshipLabel>הזדמנויות (איש קשר מקבל הוקרה)</relationshipLabel>
+</CustomFieldTranslation>

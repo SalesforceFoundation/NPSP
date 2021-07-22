@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</help>
+    <label>Enhanced RD Data Migration Batch Size</label>
+    <name>DataMigrationBatchSize__c</name>
+</CustomFieldTranslation>

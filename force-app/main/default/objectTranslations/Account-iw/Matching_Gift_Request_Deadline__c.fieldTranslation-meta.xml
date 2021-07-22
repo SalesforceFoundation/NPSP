@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כל הגבלה על השוואה של תרומות שהוענקו בעבר.</help>
+    <label>תאריך יעד לבקשת השוואת תרומות</label>
+    <name>Matching_Gift_Request_Deadline__c</name>
+</CustomFieldTranslation>

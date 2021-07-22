@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Operator</label>
+    <name>Operator__c</name>
+    <picklistValues>
+        <masterLabel>Contains</masterLabel>
+        <translation>Enthält</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Does Not Contain</masterLabel>
+        <translation>Enthält nicht</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Equals</masterLabel>
+        <translation>Gleich</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater Than</masterLabel>
+        <translation>Größer als</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater or Equal</masterLabel>
+        <translation>Größer/Gleich</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>In List</masterLabel>
+        <translation>In Liste</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Included</masterLabel>
+        <translation>Ist eingeschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Is Not Included</masterLabel>
+        <translation>Ist nicht eingeschlossen</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less Than</masterLabel>
+        <translation>Kleiner als</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less or Equal</masterLabel>
+        <translation>Kleiner/Gleich</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Equals</masterLabel>
+        <translation>Ungleich</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not In List</masterLabel>
+        <translation>Nicht in Liste</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Starts With</masterLabel>
+        <translation>Beginnt mit</translation>
+    </picklistValues>
+</CustomFieldTranslation>

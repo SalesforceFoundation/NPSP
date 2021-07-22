@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El número de años que este hogar ha tenido una afiliación (solo lectura)</help>
+    <label>Duración de la membresía</label>
+    <name>Membership_Span__c</name>
+</CustomFieldTranslation>

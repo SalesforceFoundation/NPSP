@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>オンになっていると、NPSP は自動的にデフォルトの定期的なジョブをスケジュールしません。これらの定期的なジョブは、積み上げ集計の計算、継続支援や住所 (季節性) の更新、エラー処理の実行を行います。</help>
+    <label>デフォルトの NPSP ジョブを自動スケジュールしない</label>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+</CustomFieldTranslation>

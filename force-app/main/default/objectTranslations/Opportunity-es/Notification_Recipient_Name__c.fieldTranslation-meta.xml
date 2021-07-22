@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El nombre que el donante proporcionó de la persona que debe ser notificada sobre la donación. Si este campo se deja en blanco y campo Contacto destinatario de la notificación contiene un valor, NPSP automáticamente completa este campo con ese valor.</help>
+    <label>Nombre del destinatario de notificación</label>
+    <name>Notification_Recipient_Name__c</name>
+</CustomFieldTranslation>

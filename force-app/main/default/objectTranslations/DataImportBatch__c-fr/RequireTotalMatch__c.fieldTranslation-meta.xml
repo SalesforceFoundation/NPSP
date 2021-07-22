@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est sélectionnée, le nombre total de dons et le montant total doivent correspondre aux totaux attendus saisis pour ce lot.</help>
+    <label>Exiger correspondance totaux attendus</label>
+    <name>RequireTotalMatch__c</name>
+</CustomFieldTranslation>

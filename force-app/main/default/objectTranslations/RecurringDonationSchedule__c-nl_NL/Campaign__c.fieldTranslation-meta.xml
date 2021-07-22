@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De campagne die is gekoppeld aan de terugkerende donatie wanneer deze planningrecord wordt gemaakt.</help>
+    <label>Gerelateerd campagne</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>Terugkerende donatieplanningen</relationshipLabel>
+</CustomFieldTranslation>

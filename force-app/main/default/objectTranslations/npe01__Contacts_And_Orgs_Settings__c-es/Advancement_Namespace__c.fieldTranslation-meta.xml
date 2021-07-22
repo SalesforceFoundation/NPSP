@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Solo para uso del sistema: Espacio de nombres para funciones entre paquetes.</help>
+    <label>Espacio de nombres de GEM</label>
+    <name>Advancement_Namespace__c</name>
+</CustomFieldTranslation>

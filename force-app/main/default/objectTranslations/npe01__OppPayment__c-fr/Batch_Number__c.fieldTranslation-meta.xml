@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le lot qui définit ce paiement comme effectué. Ce champ est automatiquement rempli en fonction de vos Paramètres de Numéro du lot dans les Paramètres NPSP.</help>
+    <label>Numéro du lot</label>
+    <name>Batch_Number__c</name>
+</CustomFieldTranslation>

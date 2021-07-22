@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Aktion der Hauptschaltfläche.
+Schaltfläche für externe Seite: externe URL.
+Schaltflächen für neue SFDC-Registerkarte: &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Beispiele und alle Angaben finden Sie in der Lightning NavigationMixin-Dokumentation.</help>
+    <label>Wert für Hauptschaltfläche</label>
+    <name>Primary_Button_Value__c</name>
+</CustomFieldTranslation>

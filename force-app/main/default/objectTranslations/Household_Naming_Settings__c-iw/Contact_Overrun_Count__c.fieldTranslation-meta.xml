@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מציין את מספר אנשי הקשר שניתן להוסיף לשם באופן מפורש.  לאחר מספר זה, יתבצע שימוש בגלישת השמות.</help>
+    <label>ספירה לגלישת אנשי קשר</label>
+    <name>Contact_Overrun_Count__c</name>
+</CustomFieldTranslation>

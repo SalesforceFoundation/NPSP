@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La primera fecha de cierre de oportunidad de una asignación asociada a esta cuenta contable general. NPSP actualiza este campo en un trabajo programado nocturno.</help>
+    <label>Fecha de primera asignación</label>
+    <name>First_Allocation_Date__c</name>
+</CustomFieldTranslation>

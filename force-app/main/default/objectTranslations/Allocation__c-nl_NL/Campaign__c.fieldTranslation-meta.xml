@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De Campagne die aan deze Toewijzing is gekoppeld. Gebruik dit veld als u wilt dat nieuwe Opportunities die aan deze Campagne zijn gekoppeld op dezelfde wijze worden toegewezen.</help>
+    <label>Campagne</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>GAU-Toewijzingen</relationshipLabel>
+</CustomFieldTranslation>

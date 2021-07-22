@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Relationship_Field__c</fullName>
+    <description>If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>If this Object Group is a child of the predecessor, this field should look up to the parent. If it&apos;s the parent of the predecessor, this should be the lookup field on the child record.</inlineHelpText>
+    <label>Relationship Field</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

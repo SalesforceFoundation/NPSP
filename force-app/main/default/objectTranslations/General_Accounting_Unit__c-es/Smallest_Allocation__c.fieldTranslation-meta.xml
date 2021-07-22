@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La menor asignación relacionada a esta cuenta contable general. NPSP actualiza este campo en un trabajo programado nocturno.</help>
+    <label>Menor asignación</label>
+    <name>Smallest_Allocation__c</name>
+</CustomFieldTranslation>

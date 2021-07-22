@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この継続支援で使用されたカードの最後の 4 桁。</help>
+    <label>カードの最後の 4 桁</label>
+    <name>CardLast4__c</name>
+</CustomFieldTranslation>
