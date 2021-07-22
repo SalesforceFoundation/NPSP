@@ -106,15 +106,19 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.giftBatchId.value();
     }
 
+    public String name() {
+        return this.batch.name;
+    }
+
     public Gifts gifts() {
         return this.gifts;
     }
 
-    public Money total() {
-        return new Money(this.totals.totalAmount(), 'US');
+    public Map<String, Integer> totals() {
+        return this.totals.toMap();
     }
 
-    public Integer totalCount() {
-        return this.totals.totalGifts();
+    public Money totalDonations() {
+        return new Money(this.totals.totalAmount(), 'US');
     }
 }

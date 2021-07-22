@@ -35,14 +35,16 @@
 public inherited sharing class GiftBatchView {
 
     @AuraEnabled public Id giftBatchId;
-    @AuraEnabled public Integer totalCount;
-    @AuraEnabled public Decimal total;
+    @AuraEnabled public String name;
+    @AuraEnabled public Decimal totalDonationsAmount;
+    @AuraEnabled public Map<String, Integer> totals;
     @AuraEnabled public List<GiftView> gifts;
 
     public GiftBatchView(GiftBatchDTO giftBatchDTO) {
         this.giftBatchId = giftBatchDTO.giftBatchId;
-        this.totalCount = giftBatchDTO.totalCount;
-        this.total = giftBatchDTO.total;
+        this.name = giftBatchDTO.name;
+        this.totalDonationsAmount = giftBatchDTO.totalDonationsAmount;
+        this.totals = giftBatchDTO.totals;
 
         gifts = new List<GiftView>();
         for (GiftDTO giftDTO : giftBatchDTO.giftDTOs) {

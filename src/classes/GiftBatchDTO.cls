@@ -35,14 +35,16 @@
 public inherited sharing class GiftBatchDTO {
 
     public Id giftBatchId;
-    public Integer totalCount;
-    public Decimal total;
+    public String name;
+    public Decimal totalDonationsAmount;
+    public Map<String, Integer> totals;
     public List<GiftDTO> giftDTOs;
 
     public GiftBatchDTO(GiftBatch giftBatch) {
         this.giftBatchId = giftBatch.id();
-        this.totalCount = giftBatch.totalCount();
-        this.total = giftBatch.total().amount();
+        this.name = giftBatch.name();
+        this.totalDonationsAmount = giftBatch.totalDonations().amount();
+        this.totals = giftBatch.totals();
 
         giftDTOs = new List<GiftDTO>();
         for (Gift gift : giftBatch.gifts().all()) {

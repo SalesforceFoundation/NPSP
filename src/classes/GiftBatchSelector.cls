@@ -37,6 +37,7 @@ public inherited sharing class GiftBatchSelector {
     public DataImportBatch__c selectGiftBatchBy(GiftBatchId giftBatchId) {
         return [
             SELECT Id,
+                Name,
                 Form_Template__r.Template_JSON__c
             FROM DataImportBatch__c
             WHERE Id = :giftBatchId.value()
