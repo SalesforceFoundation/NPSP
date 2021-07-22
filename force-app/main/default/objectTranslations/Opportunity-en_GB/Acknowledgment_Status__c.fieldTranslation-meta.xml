@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The acknowledgement status of this Opportunity.</help>
+    <label>Acknowledgment Status</label>
+    <name>Acknowledgment_Status__c</name>
+    <picklistValues>
+        <masterLabel>Acknowledged</masterLabel>
+        <translation>Acknowledged</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Do Not Acknowledge</masterLabel>
+        <translation>Do Not Acknowledge</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Email Acknowledgment Not Sent</masterLabel>
+        <translation>Email Acknowledgment Not Sent</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Email Acknowledgment Now</masterLabel>
+        <translation>Email Acknowledgment Now</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>To Be Acknowledged</masterLabel>
+        <translation>To Be Acknowledged</translation>
+    </picklistValues>
+</CustomFieldTranslation>

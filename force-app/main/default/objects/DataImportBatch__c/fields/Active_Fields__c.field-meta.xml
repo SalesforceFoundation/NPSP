@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active_Fields__c</fullName>
+    <description>Represents the data model of active fields for a NPSP_DataImportBatch__c record. Not intended for direct customer use and should not be edited directly.</description>
+    <externalId>false</externalId>
+    <label>Active Fields</label>
+    <length>32768</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

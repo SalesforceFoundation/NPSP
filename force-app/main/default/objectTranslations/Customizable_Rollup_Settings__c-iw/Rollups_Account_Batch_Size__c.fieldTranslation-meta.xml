@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object. --></help>
+    <label><!-- Account Hard Credit Batch Size --></label>
+    <name>Rollups_Account_Batch_Size__c</name>
+</CustomFieldTranslation>

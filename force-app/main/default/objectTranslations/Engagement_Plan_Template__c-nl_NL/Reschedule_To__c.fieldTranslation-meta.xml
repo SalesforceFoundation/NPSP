@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Moeten Taken met een Vervaldatum in het weekend gepland worden voor vrijdag vóór het weekend of voor maandag erna? Dit is enkel van toepassing als Weekend overslaan is geselecteerd.</help>
+    <label>Opnieuw plannen voor</label>
+    <name>Reschedule_To__c</name>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Vrijdag</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monday</masterLabel>
+        <translation>Maandag</translation>
+    </picklistValues>
+</CustomFieldTranslation>

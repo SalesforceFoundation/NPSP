@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>קישור אל הרשומה שבה התרחשה השגיאה, אם זמינה.</help>
+    <label>כתובת URL של רשומה</label>
+    <name>Record_URL__c</name>
+</CustomFieldTranslation>

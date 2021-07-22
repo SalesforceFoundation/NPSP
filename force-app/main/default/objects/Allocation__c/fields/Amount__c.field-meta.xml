@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Amount__c</fullName>
+    <description>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</inlineHelpText>
+    <label>Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

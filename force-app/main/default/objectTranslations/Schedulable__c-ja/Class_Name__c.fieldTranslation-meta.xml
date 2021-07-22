@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>特定の頻度で実行するようにスケジュールされるクラス。</help>
+    <label>クラス名</label>
+    <name>Class_Name__c</name>
+</CustomFieldTranslation>

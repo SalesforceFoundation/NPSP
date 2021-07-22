@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הסכום המרבי שהחברה תשווה עבור עובד בשנה.</help>
+    <label>סכום מרבי להשוואת תרומות של עובד בשנה</label>
+    <name>Matching_Gift_Annual_Employee_Max__c</name>
+</CustomFieldTranslation>

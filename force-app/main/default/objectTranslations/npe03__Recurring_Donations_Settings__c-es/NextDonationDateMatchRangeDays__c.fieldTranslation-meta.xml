@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Número de días antes o después de la Fecha de próxima donación en el que NPSP no creará una nueva Oportunidad de cuota si cambia la siguiente Fecha de cierre de oportunidad abierta. Se aplica a Donaciones recurrentes donde el Período de cuota es mensual.</help>
+    <label>Intervalo coinc. fechas próxima donación</label>
+    <name>NextDonationDateMatchRangeDays__c</name>
+</CustomFieldTranslation>

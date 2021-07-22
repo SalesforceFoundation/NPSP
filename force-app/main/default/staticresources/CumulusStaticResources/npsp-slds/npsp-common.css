@@ -1,0 +1,69 @@
+html body.sfdcBody {
+    padding: 0 !important;
+}
+
+/* .lookupInput and .lookupInputSLDS changed to not override lightning style color handling */
+body .lookupInput, .slds-vf-scope .lookupInput {
+    width: 100%;
+}
+input.lookupInput {
+    width: 100%;
+    margin-right: -30px;
+}
+/* added to get the lookup icon button back within the input field, which didn't seem to work when using <apex:slds/> */
+.slds-scope input.lookupInput {
+    margin-right: -30px;
+}
+input.lookupInputSLDS {
+    width: 100%;
+    margin-right: -30px !important;
+}
+body .dateInput input[type="text"], .slds-vf-scope .dateInput input[type="text"] {
+    margin-left: 0;
+    width: 100%;
+    margin-right: -30px;
+}
+.slds-vf-scope div + .lookupInput {
+    margin-left: 0; !important;
+}
+
+/* Needed to eliminate excessive gap between label and info icon after conversion to lightning stylesheets */
+.slds-scope label {
+    margin-right: 0 !important;
+    border-right: 0 !important;
+}
+
+/* slds sets any multiselect to a smaller line height, but in visualforce, a single select looks like a multi with size=1, so this fixes the height */
+.slds-scope .slds-select[size="1"] {
+    min-height: calc(1.875rem + (1px * 2));
+    height: calc(1.875rem + (1px * 2)) !important;
+}
+span.dateFormat {
+    position: absolute;
+    right: .01rem;
+    line-height: 1.875rem;
+    color: transparent;
+}
+/* trick to display multiselect picklists as simple select, just add multipicklistSLDSFixup to the msp*/
+.multiSelectPicklistTable {
+    display: none !important;
+}
+.multipicklistSLDSFixup,
+.dependentMultiPicklistFixup select {
+    display: inline-block !important;
+}
+
+.dependentMultiPicklistFixup select {
+    height: inherit;
+}
+.dependentMultiPicklistFixup option {
+    padding: 8px;
+}
+body .datePicker, .slds-vf-scope .datePicker {
+    z-index: 10000;
+}
+
+/* the following are for our UTIL_Tooltip visualforce component to use */
+.slds-scope .slds-form-element__icon .util-tooltip { display: none; }
+.slds-button:hover + .util-tooltip { display:inline-block; position:absolute; width: 20em; top: 3em; left:-1em; }
+.slds-button:focus + .util-tooltip { display:inline-block; position:absolute; width: 20em; top: 3em; left:-1em; }

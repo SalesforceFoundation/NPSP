@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le don régulier auquel cette allocation est attribuée. NPSP alloue automatiquement toutes les nouvelles opportunités associées au don régulier de la même manière.</help>
+    <label>Don régulier</label>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>Allocations UCG</relationshipLabel>
+</CustomFieldTranslation>

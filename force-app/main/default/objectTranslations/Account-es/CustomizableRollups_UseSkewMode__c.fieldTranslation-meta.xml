@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando está marcada, Totalizaciones personalizables siempre utilizará el modo Desfase para totalizar los créditos duros y blandos para este registro.</help>
+    <label>Totalizaciones pers: Forzar modo Desfase</label>
+    <name>CustomizableRollups_UseSkewMode__c</name>
+</CustomFieldTranslation>

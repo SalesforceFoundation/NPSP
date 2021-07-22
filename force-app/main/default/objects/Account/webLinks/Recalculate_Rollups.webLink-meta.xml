@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recalculate_Rollups</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Recalculate Rollups</masterLabel>
+    <openType>sidebar</openType>
+    <page>CRLP_RollupAccount_BTN</page>
+    <protected>false</protected>
+</WebLink>

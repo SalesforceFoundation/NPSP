@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>חישוב מחדש של תאריך היעד של משימת צאצא לפי המועד שבו משימת האב הושלמה בפועל.</help>
+    <label>עדכן אוטומטית תאריך יעד של משימת צאצא</label>
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
+</CustomFieldTranslation>

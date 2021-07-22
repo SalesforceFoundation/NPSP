@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>false</plural>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Nominative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>false</plural>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Accusative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>false</plural>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Genitive</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>false</plural>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <caseType>Dative</caseType>
+        <plural>true</plural>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Zuweisungsinformationen</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Zuweisungen gesamt</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Name des Verwendungszwecks</nameFieldLabel>
+    <webLinks>
+        <label>Rollups neu berechnen</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

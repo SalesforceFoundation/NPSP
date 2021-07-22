@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch.</inlineHelpText>
+    <label>Calculate Donation Rollups with Batch</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

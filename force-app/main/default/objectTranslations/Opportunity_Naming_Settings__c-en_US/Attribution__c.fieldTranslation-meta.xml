@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Whether this setting applies to individual opportunities, organizational opportunities, or both. --></help>
+    <label><!-- Attribution --></label>
+    <name>Attribution__c</name>
+</CustomFieldTranslation>

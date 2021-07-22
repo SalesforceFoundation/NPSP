@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Status_Reason__c</fullName>
+    <description>The reason this Recurring Donation has its current Status value.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The reason this Recurring Donation has its current Status value.</inlineHelpText>
+    <label>Recurring Donation Status Reason</label>
+    <length>80</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
