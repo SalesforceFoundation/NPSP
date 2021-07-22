@@ -1,24 +1,15 @@
 ## ------------------------------------------------------------------------------------
 ## @description Snowfakery Configuration File to create potentially huge volumes of Contact
-## and related Recurring Donation, Opportunity, Relationship, etc. records. All data created
-## by this is in Enhanced Recurring Donations format.
+## and related Donations, Relationship, etc. records.
 ## @author Michael Smith
-## @date 2020-08-15
+## @date 2021-07-19
 ## ------------------------------------------------------------------------------------
 
-- include_file: recurring_donation_macros.yml
 - include_file: opportunity_macros.yml
 
 ## ===============================================================================
-## Create "constants" for GAU's and Campaign to use when creating RD's and Opps
+## Create "constants" for GAU's and Campaign to use when creating Opps
 ## ===============================================================================
-- object: General_Accounting_Unit__c
-  nickname: theRdGau
-  just_once: True
-  fields:
-    Name: The RD GAU
-    Description__c: ${{fake.paragraph}}
-
 - object: General_Accounting_Unit__c
   nickname: theOppGau
   just_once: True
@@ -27,7 +18,7 @@
     Description__c: ${{fake.paragraph}}
 
 - object: General_Accounting_Unit__c
-  count: 100
+  count: 10
   just_once: True
   fields:
     Name: The ${{fake.word}} ${{fake.word}} Program
@@ -64,92 +55,30 @@
 
 ## ===============================================================================
 # For each contact:
-#   - 95% of all Contacts will have an Recurring Donation created (in RD2 format)
-#       - 95% of them are for this Household Contact, the rest have this Contact and an Organization Account
-#       - DateEstablished/EffectiveDate is within the last 2 years
-#       - 5% of them have an Allocation and/or a linked Campaign
-#       - 95% of RD's are Open, the other 5% are Fixed length with 24 installments
-#       - There is a random distribution of Installment Periods, DayOfMonth, etc.
-#   - Create 0 to 5 non-RD related Opportunities for each Contact
+#   - 100% of all Contacts will have between 1 and 10 Opportunities
 #       - CloseDate between 3 years ago and 6 months in the future (ClosedWon if in the past)
 ## ===============================================================================
-- macro: ContactWithRecurringDonationAndOpps
+- macro: ContactWithOpportunities
   ## Assign a random "fake" value for the following fields on the Contact
   include: ContactName, ContactAddress
   friends:
-    - object: npe03__Recurring_Donation__c
-      ## 95% of the Contacts will have RD and 5% will not
-      count:
-        random_choice:
-          - choice:
-              probability: 95%
-              pick: 1
-          - choice:
-              probability: 5%
-              pick: 0
-      include: RD_RandomDonor, RD_RandomSchedule
-      fields:
-        Status__c: Active
-        npe03__Amount__c:
-          random_number:
-            min: 1
-            max: 100
-        npe03__Recurring_Donation_Campaign__c:
-          ## 5% of the RD's will be linked to a Campaign
-          random_choice:
-            - choice:
-                probability: 5%
-                pick:
-                  - reference: theCampaign
-            - choice:
-                probability: 95%
-                pick: ""
-      friends:
-        - object: __hidden_grouper_alloc
-          ## 5% of the RD's will have an associated Allocation
-          ## include: RD_RelatedAllocation
-          fields:
-            __fake_field:
-              - random_choice:
-                  - choice:
-                      probability: 5%
-                      pick:
-                        - object: Allocation__c
-                          fields:
-                            General_Accounting_Unit__c:
-                              reference: theRdGau
-                            Recurring_Donation__c:
-                              reference: npe03__Recurring_Donation__c
-                            Percent__c:
-                              random_number:
-                                min: 1
-                                max: 99
-                  - choice:
-                      probability: 95%
-                      pick: ${{None}}
-        - object: Opportunity
-          ## All RD's will have exactly 1 historical (ClosedWon) Opportunity
-          count: 1
-          include: RD_RelatedClosedWonOpp
-          fields:
-            npe03__Recurring_Donation__c:
-              reference: npe03__Recurring_Donation__c
     - object: Opportunity
-      ## For each Contact, create between 0 and 5 Opportunities. If the CloseDate is on or before today
+      ## For each Contact, create between 1 and 7 Opportunities. If the CloseDate is on or before today
       ## the Opp is marked as ClosedWon. If the CloseDate is after today, then the Opp is left as Pledged.
       count:
         random_number:
-          min: 0
-          max: 5
+          min: 1
+          max: 7
       include: ContactOpportunity
 
+## Allows Relationships to be created between Contacts
 - object: Contact
   nickname: Contact1
-  include: ContactWithRecurringDonationAndOpps
+  include: ContactWithOpportunities
 
 - object: Contact
   nickname: Contact2
-  include: ContactWithRecurringDonationAndOpps
+  include: ContactWithOpportunities
 
 ## ===============================================================================
 ## Generate Relationship records between two contacts, by using the Contact1 and Contact2 sets above.
@@ -172,17 +101,17 @@
     Related_Opportunity_Contact_Role__c:
       random_choice:
         - choice:
-            probability: 50%
+            probability: 25%
             pick: Soft Credit
         - choice:
-            probability: 50%
+            probability: 75%
             pick:
 
 ## ===============================================================================
-## Generate 10 households that has two household members and a single closed won opportunity
+## Generate 100 households that has two household members and a single closed won opportunity
 ## ===============================================================================
 - object: Account
-  count: 10
+  count: 100
   just_once: true
   nickname: multiHousehold
   fields:
@@ -203,11 +132,16 @@
         AccountId:
           reference: multiHousehold
     - object: Opportunity
+      # Create between 2 and 6 Opportunities for this household
+      count:
+        random_number:
+          min: 2
+          max: 6
       fields:
         RecordType: Donation
         CloseDate:
           date_between:
-            start_date: -90d
+            start_date: -900d
             end_date: -14d
         Amount:
           random_number:
