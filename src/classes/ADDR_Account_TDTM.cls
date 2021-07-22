@@ -64,14 +64,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 householdsApp.onAfterInsertOf(accounts, dmlWrapper);
             }
             when AfterUpdate {
-                // note that we detect whether the address change is coming from the address trigger,
-                // in which case we don't want to create a new address.
-                if (TDTM_ProcessControl.isRecursive(
-                        TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-                    UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Account_TDTM');
-                    return dmlWrapper;
-                }
-
                 accounts = new Accounts(listNew, listOld);
                 householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
             }

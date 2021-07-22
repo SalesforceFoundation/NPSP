@@ -114,6 +114,15 @@ public inherited sharing class HouseholdsApp {
     }
 
     public void onAfterUpdateOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        // note that we detect whether the change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (TDTM_ProcessControl.isRecursive(
+                TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+            UTIL_Debug.debug('**** RECURSION: ' +
+                    'Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return;
+        }
+
         List<Account> listAccCreateAddr = new List<Account>();
         if (isAddressManagementEnabled()) {
             listAccCreateAddr.addAll(accounts.withBillingAddressChanges().householdAccounts());
