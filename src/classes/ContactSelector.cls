@@ -140,6 +140,15 @@ public inherited sharing class ContactSelector {
         return Database.query(buildContactSoql(contacts));
     }
 
+    public static List<Contact> getContactOverridesForAddressesIn(Set<Id> addressIds) {
+        return [
+                SELECT Current_Address__c
+                FROM Contact
+                WHERE Current_Address__c IN :addressIds
+                AND is_Address_Override__c = true
+        ];
+    }
+
     /*******************************************************************************************************
      * @description Builds SOQL on Contact SObject. Fields include Household Naming Settings Format fields.
      * @return String SOQL

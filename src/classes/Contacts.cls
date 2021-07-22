@@ -49,6 +49,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
+    @TestVisible
     private ContactService contactService {
         get {
             if (contactService == null) {
@@ -285,6 +296,29 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
             UTIL_Address.normalizeLineBreak(newRecord);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
+    * @param addressesById a map of Address Id's to Addresses
+    * @param dmlWrapper to hold the Contacts to update
+    */
+    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+
+        List<Contact> contactsWithAddressOverrides = ContactSelector.getContactOverridesForAddressesIn(
+                addressesById.keySet()
+        );
+
+        for (Contact contact : contactsWithAddressOverrides) {
+            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
+
+            npspContact.mailingAddress(npspAddress);
+            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
+
+            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
     }
 
