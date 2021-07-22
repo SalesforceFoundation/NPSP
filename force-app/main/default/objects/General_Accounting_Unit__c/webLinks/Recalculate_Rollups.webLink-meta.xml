@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recalculate_Rollups</fullName>
+    <availability>online</availability>
+    <description>This button recalculates Allocations rollups for a single General Accounting Unit</description>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Recalculate Rollups</masterLabel>
+    <openType>sidebar</openType>
+    <page>ALLO_RollupBTN</page>
+    <protected>false</protected>
+</WebLink>

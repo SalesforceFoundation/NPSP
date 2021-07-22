@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The default status you want NPSP to use on Campaign Members for Closed/Won Opportunities that have a Primary Contact and a Primary Campaign Source associated with them. If you leave this blank, NPSP uses the first Responded status.</help>
+    <label>Campaign Member Responded Status</label>
+    <name>Campaign_Member_Responded_Status__c</name>
+</CustomFieldTranslation>

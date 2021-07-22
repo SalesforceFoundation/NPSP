@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この項目により、1 つのデータインポートレコードから動的な数のオブジェクトの動的な数のレコードを作成できます。追加オブジェクト情報は JSON 形式でここに保存されます。</help>
+    <label>追加オブジェクトの JSON</label>
+    <name>Additional_Object_JSON__c</name>
+</CustomFieldTranslation>

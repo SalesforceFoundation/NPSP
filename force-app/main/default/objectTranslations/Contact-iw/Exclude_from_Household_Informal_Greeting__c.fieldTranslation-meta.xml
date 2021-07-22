@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>סימון תיבה זו ימנע הכללה של איש קשר זה בברכה הלא רשמית של משק הבית.</help>
+    <label>אל תכלול בברכה לא רשמית של משק בית</label>
+    <name>Exclude_from_Household_Informal_Greeting__c</name>
+</CustomFieldTranslation>

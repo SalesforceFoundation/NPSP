@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El conjunto de asignaciones de campos de importación de datos que contiene esta asignación de campos.</help>
+    <label>Conjunto asign. campos importación datos</label>
+    <name>Data_Import_Field_Mapping_Set__c</name>
+    <relationshipLabel>Asignaciones de campo importación datos</relationshipLabel>
+</CustomFieldTranslation>

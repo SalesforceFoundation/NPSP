@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>今年または当会計年度の継続支援の総額 (参照のみ)。成立した商談とその年の残りの期間の割賦が含まれます。</help>
+    <label>今年の金額</label>
+    <name>CurrentYearValue__c</name>
+</CustomFieldTranslation>

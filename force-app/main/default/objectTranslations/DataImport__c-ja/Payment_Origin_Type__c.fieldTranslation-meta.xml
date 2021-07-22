@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>トランザクションの開始に使用されたシステムの種別。使用可能な値には、[エンゲージメントハブ]、[贈与ページ]、[支払 API]、[Salesforce] が含まれます。</help>
+    <label>支払発生源種別</label>
+    <name>Payment_Origin_Type__c</name>
+</CustomFieldTranslation>

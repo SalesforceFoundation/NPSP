@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Manage_Household</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <height>600</height>
+    <linkType>page</linkType>
+    <masterLabel>Manage Household</masterLabel>
+    <openType>noSidebar</openType>
+    <page>HH_ManageHHAccount</page>
+    <protected>false</protected>
+</WebLink>

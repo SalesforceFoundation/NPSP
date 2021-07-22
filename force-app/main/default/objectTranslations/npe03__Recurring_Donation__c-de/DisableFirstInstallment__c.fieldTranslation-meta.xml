@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Verhindert die Erstellung der Opportunity für die erste Rate für eine neue wiederkehrende Spende, unabhängig von der Einstellung für die automatische Erstellung von Raten-Opportunitys in den NPSP-Einstellungen.</help>
+    <label>Erste Rate deaktivieren</label>
+    <name>DisableFirstInstallment__c</name>
+</CustomFieldTranslation>

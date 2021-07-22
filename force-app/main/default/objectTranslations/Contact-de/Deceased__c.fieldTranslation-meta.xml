@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Gibt an, dass der Kontakt verstorben ist. Bei Auswahl dieser Option wird der Kontakt als verstorben gekennz. und von der Haushalt-Benennung und von den Standard-E-Mails und Telefonanrufen ausgeschl. (Wenn er nicht der einzige Kontakt i. d. Haush. ist).</help>
+    <label>Verstorben</label>
+    <name>Deceased__c</name>
+</CustomFieldTranslation>

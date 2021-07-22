@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si coché, le traitement nocturne des crédits directs (non asymétrie) des comptes limite les comptes sélectionnés pour le recalcul en recherchant des mises à jour d’opp. sur ces comptes. Cela améliore la performance du traitement de nuit des cumuls pers.</help>
+    <label>Non asym. crédit direct compte incrém.</label>
+    <name>AccountHardCreditNonSkew_Incremental__c</name>
+</CustomFieldTranslation>

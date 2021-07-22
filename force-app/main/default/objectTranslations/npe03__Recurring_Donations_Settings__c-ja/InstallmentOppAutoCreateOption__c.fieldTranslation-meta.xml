@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>NPSP が継続支援の割賦商談を作成するタイミングを指定します。デフォルトは [常に次の割賦を作成] です。</help>
+    <label>割賦商談の自動作成</label>
+    <name>InstallmentOppAutoCreateOption__c</name>
+</CustomFieldTranslation>

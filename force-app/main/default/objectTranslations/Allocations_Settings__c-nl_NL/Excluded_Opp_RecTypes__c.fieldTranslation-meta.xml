@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Uit berekeningen van Toewijzingstotaliseringen uit te sluiten Opportunityrecordtypen.</help>
+    <label>Uitgesloten Opportunityrecordtypen</label>
+    <name>Excluded_Opp_RecTypes__c</name>
+</CustomFieldTranslation>

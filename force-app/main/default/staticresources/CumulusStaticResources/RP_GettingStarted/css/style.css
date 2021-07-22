@@ -1,0 +1,169 @@
+.bodyDiv {
+
+    background-color: #f7f9fb;
+}
+
+h1, h2 {
+
+    color: #16325c !important;
+    font-weight: inherit !important;
+}
+
+.getting-started-section {
+
+    background-color: #fff;
+    padding: 0em !important;
+}
+
+.github-section {
+
+    background-color: #fff !important;
+    min-height: 28em;
+    max-height: 28em;
+}
+
+.github-title {
+
+    color: #109ad7;
+    font-weight: 400 !important;
+}
+
+.release-notes {
+
+    color: #465d7e;
+    overflow: hidden;
+    display: grid !important;
+    -webkit-box-orient: vertical;
+    line-height: 2em;
+    overflow: auto;
+    height: 12em;
+    word-wrap: break-word;
+}
+
+.release-notes h1, .release-notes h2 {
+
+    font-weight: bold !important;
+}
+
+.release-notes > ul {
+
+    list-style-type: disc !important;
+    padding-left: 2em;
+}
+
+.RP ul {
+
+    list-style-type: disc !important;
+    padding-left: 2em !important;
+}
+
+.github-subtitle {
+
+    color: #8897b0;
+}
+
+
+.links {
+
+    color: #109ad7 !important;
+    font-weight: 600;
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 40%;
+    width: 70%;
+    height: 0;
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top:  0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.spinner {
+
+    margin-top: 12em !important;
+    min-height: 28em;
+    max-height: 28em;
+    background-color: #f7f9fb !important;
+    margin-top: 0em !important;
+}
+
+*[data-tooltip] {
+    position: relative;
+}
+
+*[data-tooltip]::after {
+    content: attr(data-tooltip);
+
+    position: absolute;
+    top:   -20px;
+    right: -20px;
+    width: 150px;
+
+    pointer-events: none;
+    opacity: 0;
+    -webkit-transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -ms-transition: opacity .15s ease-in-out;
+    -o-transition: opacity .15s ease-in-out;
+    transition: opacity .15s ease-in-out;
+
+    display: block;
+    font-size: 12px;
+    color: #fff;
+    line-height: 16px;
+    background-color: #000;
+    padding: 2px 2px;
+    border: 1px solid #c0c0c0;
+    box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.4);
+}
+
+*[data-tooltip]:hover::after {
+    opacity: 1;
+}
+
+.youtube-section {
+
+    border: 0 !important;
+    padding-left: 12px !important;
+}
+
+.large-column {
+
+    margin-top: 7px !important;
+}
+
+.videos-hr {
+
+    border:0 !important;
+    height:10px !important;
+    margin:0 !important;
+    width:50% !important;
+}
+
+.video-thumbnail {
+
+    border:none !important;
+    float:left ;
+    cursor: pointer ;
+    cursor: hand ;
+    height:100% !important;
+    width:100% ;
+}
+
+.video-list {
+
+    max-height:30% !important;
+    width:100% !important;
+}
+
+@media only screen and (max-width: 400px) {
+    .github-section {
+        max-height: 50em !important;
+    }
+}

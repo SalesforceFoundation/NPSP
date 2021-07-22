@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The Engagement Plan Template to apply to the Target Object when this Level is achieved.</help>
+    <label>Engagement Plan Template</label>
+    <name>Engagement_Plan_Template__c</name>
+    <relationshipLabel>Levels</relationshipLabel>
+</CustomFieldTranslation>

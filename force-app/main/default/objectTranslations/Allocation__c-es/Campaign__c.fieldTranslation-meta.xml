@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La campaña asociada con esta asignación. Utilice este campo si desea que las nuevas oportunidades asociadas con esta campaña se asignen de la misma manera.</help>
+    <label>Campaña</label>
+    <name>Campaign__c</name>
+    <relationshipLabel>Asignaciones de CCG</relationshipLabel>
+</CustomFieldTranslation>

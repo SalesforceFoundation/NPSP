@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- This field allows a dynamic number of records for a dynamic number of objects to be created from a single Data Import record. Additional object information is stored here in JSON format. --></help>
+    <label><!-- Additional Object JSON --></label>
+    <name>Additional_Object_JSON__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ImportedDate__c</fullName>
+    <description>The date and time that the Data Import record was successfully imported.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The date and time that the Data Import record was successfully imported.</inlineHelpText>
+    <label>Imported Date</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

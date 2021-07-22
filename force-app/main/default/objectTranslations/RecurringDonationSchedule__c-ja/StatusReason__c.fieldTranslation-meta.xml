@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>一時停止されたスケジュールの一時停止の理由など、スケジュールに関する追加の詳細が含まれます。</help>
+    <label>状況の理由</label>
+    <name>StatusReason__c</name>
+</CustomFieldTranslation>
