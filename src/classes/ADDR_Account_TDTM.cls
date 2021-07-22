@@ -78,60 +78,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
             }
         }
-
         return dmlWrapper;
-    }
-
-    private Boolean isHouseholdAccount(Account newRecord) {
-        if (newRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE){
-            return true;
-        }
-        return false;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to see if an address management is enabled
-    * @param newRecord an Account
-    * @return Boolean.  true if address management is enabled
-    ********************************************************************************************************/
-    private Boolean isAddressManagementEnabled() {
-        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-            return true;
-        }
-        return false;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to see if an address management is enabled
-    * @param newRecord an Account
-    * @return Boolean.  true if address management is enabled
-    ********************************************************************************************************/
-    private Boolean isIndividualAccount(Account newRecord) {
-        if (newRecord.npe01__SYSTEMIsIndividual__c) {
-            return true;
-        }
-        return false;
-    }
-
-    private Boolean isOrgAccountAddressesEnabled() {
-        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
-            return true;
-        }
-        return false;
-    }
-
-    /*******************************************************************************************************
-    * @description for each Account, create a new default address and add it to dmlWrapper
-    * @param listAcc a list of Accounts
-    * @param dmlWrapper to hold the Addresses that need creating
-    ********************************************************************************************************/
-    private void createAddrFromAcc(List<Account> listAcc, DmlWrapper dmlWrapper) {
-        List<Address__c> listAddr = new List<Address__c>();
-        for (Account acc : listAcc) {
-            NPSP_Address npspAddress = new NPSP_Address(acc);
-            listAddr.add(npspAddress.getRecord());
-        }
-        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
-        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 }
