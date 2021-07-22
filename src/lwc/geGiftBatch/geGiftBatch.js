@@ -8,7 +8,7 @@ class GiftBatch {
     _expectedCountOfGifts
     _expectedTotalBatchAmount
     _batchTableColumns
-    _batchCurrencyIsoCode
+    _currencyIsoCode
     _gifts = [];
     _totals = {
         processedGiftsCount: 0,
@@ -33,7 +33,7 @@ class GiftBatch {
             this._expectedCountOfGifts = viewModel.expectedCountOfGifts
             this._expectedTotalBatchAmount = viewModel.expectedTotalBatchAmount
             this._batchTableColumns = viewModel.batchTableColumns
-            this._batchCurrencyIsoCode = viewModel.batchCurrencyIsoCode
+            this._currencyIsoCode = viewModel.batchCurrencyIsoCode
             this._totals = viewModel.totals;
             // viewModel.gifts.forEach(giftView => {
             //     console.log('Gift View: ', giftView);
@@ -103,7 +103,7 @@ class GiftBatch {
             expectedCountOfGifts: this._expectedCountOfGifts,
             expectedTotalBatchAmount: this._expectedTotalBatchAmount,
             batchTableColumns: this._batchTableColumns,
-            batchCurrencyIsoCode: this._batchCurrencyIsoCode,
+            currencyIsoCode: this._currencyIsoCode,
             processedGiftsCount: this.processedGiftsCount(),
             failedGiftsCount: this.failedGiftsCount(),
             failedPaymentsCount: this.failedPaymentsCount(),

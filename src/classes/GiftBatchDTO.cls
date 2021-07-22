@@ -41,7 +41,7 @@ public inherited sharing class GiftBatchDTO {
     public Decimal expectedCountOfGifts;
     public Decimal expectedTotalBatchAmount;
     public String batchTableColumns;
-    public String batchCurrencyIsoCode;
+    public String currencyIsoCode;
     public Map<String, Integer> totals;
     public List<GiftDTO> giftDTOs;
 
@@ -53,7 +53,7 @@ public inherited sharing class GiftBatchDTO {
         this.expectedCountOfGifts = giftBatch.expectedCountOfGifts();
         this.expectedTotalBatchAmount = giftBatch.expectedTotalBatchAmount();
         this.batchTableColumns = giftBatch.batchTableColumns();
-        this.batchCurrencyIsoCode = giftBatch.batchCurrencyIsoCode();
+        this.currencyIsoCode = giftBatch.currencyIsoCode();
         this.totals = giftBatch.totals();
 
         giftDTOs = new List<GiftDTO>();

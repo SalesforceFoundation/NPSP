@@ -41,7 +41,7 @@ public inherited sharing class GiftBatchView {
     @AuraEnabled public Decimal expectedCountOfGifts;
     @AuraEnabled public Decimal expectedTotalBatchAmount;
     @AuraEnabled public String batchTableColumns;
-    @AuraEnabled public String batchCurrencyIsoCode;
+    @AuraEnabled public String currencyIsoCode;
     @AuraEnabled public Map<String, Integer> totals;
     @AuraEnabled public List<GiftView> gifts;
 
@@ -53,7 +53,7 @@ public inherited sharing class GiftBatchView {
         this.expectedCountOfGifts = giftBatchDTO.expectedCountOfGifts;
         this.expectedTotalBatchAmount = giftBatchDTO.expectedTotalBatchAmount;
         this.batchTableColumns = giftBatchDTO.batchTableColumns;
-        this.batchCurrencyIsoCode = giftBatchDTO.batchCurrencyIsoCode;
+        this.currencyIsoCode = giftBatchDTO.currencyIsoCode;
         this.totals = giftBatchDTO.totals;
 
         gifts = new List<GiftView>();

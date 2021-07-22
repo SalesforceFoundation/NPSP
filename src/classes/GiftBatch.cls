@@ -138,7 +138,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.batch.Batch_Table_Columns__c;
     }
 
-    public String batchCurrencyIsoCode() {
+    public String currencyIsoCode() {
         RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
         return currencyCode.value();
     }
