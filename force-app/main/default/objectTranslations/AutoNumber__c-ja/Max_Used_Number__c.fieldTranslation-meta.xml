@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この形式で使用する自動採番の最大値。</help>
+    <label>使用する最大番号</label>
+    <name>Max_Used_Number__c</name>
+</CustomFieldTranslation>

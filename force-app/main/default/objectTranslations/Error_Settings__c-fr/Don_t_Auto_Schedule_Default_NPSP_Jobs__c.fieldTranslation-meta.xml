@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est sélectionnée, NPSP ne planifiera pas automatiquement les tâches récurrentes par défaut. Ces tâches calculent les cumuls, mettent à jour les dons réguliers et les adresses saisonnières, et effectuent une gestion des erreurs.</help>
+    <label>Pas de planif. auto. tâches NPSP par déf</label>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+</CustomFieldTranslation>

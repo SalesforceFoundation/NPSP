@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Error_Notifications_To__c</fullName>
+    <description>Who should receive error notifications.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Select the type of user to send notifications to.</inlineHelpText>
+    <label>Error Notification Recipients</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>TextArea</type>
+</CustomField>

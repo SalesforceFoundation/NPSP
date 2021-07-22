@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- Number of Account, Contact, or GAU records per batch to select for Skew Mode processing. --></help>
+    <label><!-- Skew Mode Dispatcher Batch Size --></label>
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
+</CustomFieldTranslation>

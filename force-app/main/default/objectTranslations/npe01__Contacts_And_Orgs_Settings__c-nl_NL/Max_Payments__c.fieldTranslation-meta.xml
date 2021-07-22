@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Bepaalt het maximale aantal toegestane Betalingen wanneer Betalingen voor een Opportunity worden gepland.</help>
+    <label>Maximale Aantal Betalingen</label>
+    <name>Max_Payments__c</name>
+</CustomFieldTranslation>

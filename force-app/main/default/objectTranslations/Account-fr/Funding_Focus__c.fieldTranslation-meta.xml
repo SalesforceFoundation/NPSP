@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le ou les secteur(s) financé(s) par cette organisation.</help>
+    <label>Focus de financement</label>
+    <name>Funding_Focus__c</name>
+    <picklistValues>
+        <masterLabel>Animal Welfare</masterLabel>
+        <translation>Protection des animaux</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Arts and Culture</masterLabel>
+        <translation>Arts et culture</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Capacity Building</masterLabel>
+        <translation>Développement de compétences</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Education</masterLabel>
+        <translation>Éducation</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Environmental</masterLabel>
+        <translation>Environnement</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Health Services</masterLabel>
+        <translation>Services de santé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Human Services</masterLabel>
+        <translation>Services sociaux</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Secondary_Button_Value__c</fullName>
+    <description>The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <inlineHelpText>The action of the Secondary Button.
+For an External Page button, the external URL.
+For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</inlineHelpText>
+    <label>Secondary Button Value</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- An Integer that represents the last Elevate event version played resulting in an update to this Recurring Donation. Incremented automatically after each call to the Elevate API for changes. Used to prevent circular updates and to ensure the latest version is never overwritten. --></help>
+    <label><!-- Last Elevate Version Played --></label>
+    <name>LastElevateVersionPlayed__c</name>
+</CustomFieldTranslation>

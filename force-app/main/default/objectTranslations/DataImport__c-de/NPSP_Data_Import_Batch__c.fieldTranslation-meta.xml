@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nachschlagen im NPSP-Datenimport-Batch, zu dem dieser Datensatz gehört.</help>
+    <label>NPSP-Datenimport-Batch</label>
+    <name>NPSP_Data_Import_Batch__c</name>
+    <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
+</CustomFieldTranslation>

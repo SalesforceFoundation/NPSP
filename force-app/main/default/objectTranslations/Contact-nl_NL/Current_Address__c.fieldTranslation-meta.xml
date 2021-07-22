@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Opzoeking van het huidige Adres van deze Contactpersoon. NPSP vult het veld Postadres van de Contactpersoon in met straat, stad, staat en postcode van de huidige Adresrecord.</help>
+    <label>Huidig Adres</label>
+    <name>Current_Address__c</name>
+    <relationshipLabel>Contactpersonen (Huidig Adres)</relationshipLabel>
+</CustomFieldTranslation>

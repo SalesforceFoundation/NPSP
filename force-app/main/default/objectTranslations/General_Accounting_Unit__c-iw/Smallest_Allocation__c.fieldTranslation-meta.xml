@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>ההקצאה הקטנה ביותר בכל הזמנים ליחידה חשבונאית כללית זו.</help>
+    <label>ההקצאה הקטנה ביותר</label>
+    <name>Smallest_Allocation__c</name>
+</CustomFieldTranslation>

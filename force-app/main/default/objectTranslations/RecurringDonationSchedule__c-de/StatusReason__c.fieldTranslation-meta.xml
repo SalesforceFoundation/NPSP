@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Enthält weitere Details zum Zeitplan. Beispielsweise einen Grund für einen Aufschub.</help>
+    <label>Grund für Status</label>
+    <name>StatusReason__c</name>
+</CustomFieldTranslation>

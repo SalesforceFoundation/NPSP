@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact avec un contact honoraire.</help>
+    <label>Rôle honoraire de contact d’opportunité</label>
+    <name>Honoree_Opportunity_Contact_Role__c</name>
+</CustomFieldTranslation>

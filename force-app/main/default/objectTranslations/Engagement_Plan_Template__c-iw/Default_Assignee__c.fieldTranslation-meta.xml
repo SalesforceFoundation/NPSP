@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>כאשר השדה &apos;הוקצה ל-&apos; של משימת תוכנית מעורבות נשאר ריק, למי יש להפנות את המשימה?</help>
+    <label>מוקצה ברירת מחדל</label>
+    <name>Default_Assignee__c</name>
+    <picklistValues>
+        <masterLabel>Owner of Object for Engagement Plan</masterLabel>
+        <translation>בעלים של אובייקט עבור תוכנית מעורבות</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>User Creating Engagement Plan</masterLabel>
+        <translation>משתמש היוצר תוכנית מעורבות</translation>
+    </picklistValues>
+</CustomFieldTranslation>

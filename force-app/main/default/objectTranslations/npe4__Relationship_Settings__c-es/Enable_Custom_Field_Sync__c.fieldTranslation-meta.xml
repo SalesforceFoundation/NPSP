@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si está TRUE, se habilita la sincronización de campos de relación personalizados.</help>
+    <label>Habilitar sincronización campos personal</label>
+    <name>Enable_Custom_Field_Sync__c</name>
+</CustomFieldTranslation>
