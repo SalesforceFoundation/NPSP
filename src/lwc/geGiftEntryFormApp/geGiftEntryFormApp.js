@@ -74,9 +74,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async connectedCallback() {
         this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        await this.gift.init(); 
 
         this.giftBatchState = await this.giftBatch.init(this.recordId);
+        this.isLoading = false;
     }
 
     disconnectedCallback() {
@@ -175,6 +175,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handlePermissionErrors() {
         this.isPermissionError = true;
     }
+
     handleEditBatch() {
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
@@ -252,29 +253,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return this.isElevateCustomer
             && this.giftBatchState.hasPaymentsWithExpiredAuthorizations
             && !this._hasDisplayedExpiredAuthorizationWarning;
-    }
-
-    @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [
-            BATCH_ID_FIELD,
-            BATCH_NAME
-        ],
-        optionalFields: [
-            BATCH_CURRENCY_ISO_CODE,
-            EXPECTED_COUNT_OF_GIFTS,
-            EXPECTED_TOTAL_BATCH_AMOUNT,
-            REQUIRE_TOTAL_MATCH,
-            BATCH_TABLE_COLUMNS_FIELD
-        ]
-    })
-    wiredBatch({data, error}) {
-        if (data) {
-            this.batch.data = data;
-            this.retrieveBatchTotals();
-        } else if (error) {
-            handleError(error);
-        }
     }
 
     async handleProcessBatch() {
