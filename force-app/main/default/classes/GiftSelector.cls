@@ -35,12 +35,35 @@
 
 public with sharing class GiftSelector {
 
-    public List<DataImport__c> getGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c, Status__c
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-        ];
+    private List<String> additionalGiftsFieldsToQuery;
+
+    public GiftSelector(GiftTemplate giftTemplate) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+    }
+
+    public List<DataImport__c> getGiftsFor(GiftBatchId giftBatchId) {
+        String dataImportBatchLookup = String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c);
+        Id dataImportBatchId = giftBatchId.value();
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fields())
+            .withWhere(dataImportBatchLookup + ' =: dataImportBatchId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
+    }
+
+    public DataImport__c getGiftById(Id giftId, GiftTemplate formTemplate) {
+        this.additionalGiftsFieldsToQuery = formTemplate.giftFieldApiNames();
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fields())
+            .withWhere('Id =: giftId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
     }
 
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
@@ -53,5 +76,64 @@ public with sharing class GiftSelector {
 
         return Database.query(queryString);
     }
-    
+
+    private List<String> elevateFields() {
+        List<String> elevateFieldApiNames = new List<String>{
+            String.valueOf(DataImport__c.Elevate_Payment_Status__c),
+            String.valueOf(DataImport__c.Payment_Declined_Reason__c),
+            String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c)
+        };
+
+        return elevateFieldApiNames;
+    }
+
+    private List<String> coreFields() {
+        List<String> giftEntryFieldApiNames = new List<String> {
+            String.valueOf(DataImport__c.Account1Imported__c),
+            String.valueOf(DataImport__c.Additional_Object_JSON__c),
+            String.valueOf(DataImport__c.Contact1Imported__c),
+            String.valueOf(DataImport__c.DonationImportStatus__c),
+            String.valueOf(DataImport__c.DonationImported__c),
+            String.valueOf(DataImport__c.Donation_Donor__c),
+            String.valueOf(DataImport__c.FailureInformation__c),
+            String.valueOf(DataImport__c.Id),
+            String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c),
+            String.valueOf(DataImport__c.PaymentImportStatus__c),
+            String.valueOf(DataImport__c.PaymentImported__c),
+            String.valueOf(DataImport__c.Payment_Status__c),
+            String.valueOf(DataImport__c.Status__c)
+        };
+
+        return giftEntryFieldApiNames;
+    }
+
+    private List<String> fields() {
+        Set<String> queryFieldAsSet = new Set<String>();
+        queryFieldAsSet.addAll(coreFields());
+        if (this.additionalGiftsFieldsToQuery != null) {
+            queryFieldAsSet.addAll(this.additionalGiftsFieldsToQuery);
+        }
+        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
+            queryFieldAsSet.addAll(elevateFields());
+        }
+
+        List<String> fields = new List<String>();
+        fields.addAll(filterByReadAccess(queryFieldAsSet));
+
+        return fields;
+    }
+
+    private List<String> filterByReadAccess(Set<String> fieldsToValidate) {
+        List<String> hasReadAccessTo = new List<String>();
+        for (String fieldApiName : fieldsToValidate) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            If (fieldDescribe.isAccessible()) {
+                hasReadAccessTo.add(fieldApiName);
+            }
+        }
+
+        return hasReadAccessTo;
+    }
 }

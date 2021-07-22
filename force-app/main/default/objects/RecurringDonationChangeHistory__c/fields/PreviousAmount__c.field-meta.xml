@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PreviousAmount__c</fullName>
+    <description>The previous Amount for the related Recurring Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The previous Amount for the related Recurring Donation.</inlineHelpText>
+    <label>Previous Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

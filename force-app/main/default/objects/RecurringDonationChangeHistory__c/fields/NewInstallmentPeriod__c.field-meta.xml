@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NewInstallmentPeriod__c</fullName>
+    <description>The new Installment Period for the related Recurring Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The new Installment Period for the related Recurring Donation.</inlineHelpText>
+    <label>New Installment Period</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

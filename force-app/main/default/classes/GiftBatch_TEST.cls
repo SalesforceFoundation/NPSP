@@ -30,15 +30,19 @@
 
 @IsTest
 private class GiftBatch_TEST {
-    @isTest static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
+
+    @isTest
+    static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
-        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
 
         giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+        giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.captureAuthorizedGifts();
 
         System.assert(elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
@@ -48,10 +52,12 @@ private class GiftBatch_TEST {
         }
     }
 
-    @isTest static void shouldUpdateGiftRecordsWithFailReason() {
+    @isTest
+    static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
-        Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
-        GiftBatch giftBatch = new GiftBatch(authorizedGifts);
+        Gifts authorizedGifts = new Gifts(buildGifts(numberOfGifts, ElevateTransactionStatus.AUTHORIZED.name()));
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = authorizedGifts;
         ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
 
         System.assert(authorizedGifts.giftsToUpdate.size() == 0);
@@ -66,7 +72,74 @@ private class GiftBatch_TEST {
         }
     }
 
-    public class ElevateBatchServiceMock implements StubProvider {
+    @isTest
+    static void shouldReturnTotalCountOf10AndTotalAmountOf35050() {
+        AggregateResultProxy mockTotalsResult = new AggregateResultProxy()
+            .withAliasAndValue('recordCount', 10);
+        AggregateResultProxy mockedTotalAmountResult = new AggregateResultProxy()
+            .withAliasAndValue('totalAmount', 350.50);
+
+        GiftBatchTotals totals = new GiftBatchTotals(mockTotalsResult, mockedTotalAmountResult);
+
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.totals = totals;
+
+        System.assertEquals(10, giftBatch.totalCount());
+        System.assertEquals(350.50, giftBatch.total().amount());
+    }
+
+    @isTest
+    static void shouldReturnTrueWhenElevateWidgetOnTemplate() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftTemplate = createDummyGiftTemplate(true);
+
+        System.assertEquals(true, giftBatch.hasElevateWidget());
+    }
+
+    @isTest
+    static void shouldReturnFalseWhenElevateWidgetNotOnTemplate() {
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.giftTemplate = createDummyGiftTemplate(false);
+
+        System.assertEquals(false, giftBatch.hasElevateWidget());
+    }
+
+    @isTest
+    static void shouldReturn3Gifts() {
+        Gifts gifts = new Gifts(buildGifts(3, null));
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = gifts;
+
+        System.assertEquals(3, giftBatch.gifts().size());
+    }
+
+    static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
+
+    private static GiftTemplate createDummyGiftTemplate(Boolean withElevateWidget) {
+        GE_Template.Element field =
+            new GE_Template.Element('field', 'True', null, 'CustomLabel', new List<String>{'Account_1_Name'});
+
+        GE_Template.Element[] elements = new GE_Template.Element[] { field };
+
+        if (withElevateWidget == true) {
+            GE_Template.Element widget =
+                new GE_Template.Element('widget', 'DisplayRule', 'geFormWidgetTokenizeCard', new List<String>{});
+            elements.add(widget);
+        }
+
+        GE_Template.Section section =
+            new GE_Template.Section('SectionLabel', 'Accordion', 'Expanded', 'True', elements);
+
+        GE_Template.Layout layout =
+            new GE_Template.Layout('DefaultMappingSet', new GE_Template.Section[]{section});
+
+        GE_Template.Template template =
+            new GE_Template.Template('Sample Template', 'This is the description.', '1.0', layout);
+
+        return new GiftTemplate(JSON.serialize(template));
+    }
+
+    private class ElevateBatchServiceMock implements StubProvider {
         public Boolean enqueuePaymentCaptureJobForCalled = false;
 
         public Object handleMethodCall(Object stubbedObject,
@@ -93,7 +166,7 @@ private class GiftBatch_TEST {
         );
     }
 
-    private static List<DataImport__c> buildAuthorizedGifts(Integer numberOfGifts) {
+    private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
@@ -103,7 +176,7 @@ private class GiftBatch_TEST {
                 Donation_Amount__c = 1,
                 Donation_Date__c = Date.today(),
                 Donation_Donor__c = 'Account1',
-                Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                Payment_Status__c = paymentStatus,
                 Payment_Elevate_Batch_ID__c = 'DUMMY_ELEVATE_BATCH_ID_' + i
             );
             dummyAuthorizedGifts.add(dummyGift);
@@ -118,4 +191,7 @@ private class GiftBatch_TEST {
         }
         return failReasonByElevateBatchId;
     }
+
+    private static final GiftBatchId DUMMY_GIFT_BATCH_ID =
+        new GiftBatchId(UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()));
 }
