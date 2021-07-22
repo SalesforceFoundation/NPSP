@@ -73,15 +73,13 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 accounts = new Accounts(listNew);
                 householdsApp.onAfterInsertOf(accounts, dmlWrapper);
             }
+            when AfterUpdate {
+                accounts = new Accounts(listNew, listOld);
+                householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
+            }
         }
 
-        // AFTER UPDATE
-        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            accounts = new Accounts(listNew, listOld);
-            householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
-        }
-
-        return dmlWrapper;    
+        return dmlWrapper;
     }
 
     private Boolean isHouseholdAccount(Account newRecord) {
