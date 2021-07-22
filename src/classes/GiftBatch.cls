@@ -138,6 +138,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.batch.Batch_Table_Columns__c;
     }
 
+    public DateTime lastModifiedDate() {
+        return this.batch.LastModifiedDate;
+    }
+
     public String currencyIsoCode() {
         RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
         return currencyCode.value();

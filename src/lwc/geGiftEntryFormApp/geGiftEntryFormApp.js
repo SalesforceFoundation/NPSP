@@ -218,29 +218,32 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get batchCurrencyIsoCode() {
-        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
+        return this.giftBatchState.currencyIsoCode;
     }
 
     get expectedCountOfGifts() {
-        return getFieldValue(this.batch.data, EXPECTED_COUNT_OF_GIFTS);
+        return this.giftBatchState.expectedCountOfGifts;
     }
 
     get expectedTotalBatchAmount() {
-        return getFieldValue(this.batch.data, EXPECTED_TOTAL_BATCH_AMOUNT);
+        return this.giftBatchState.expectedTotalBatchAmount;
     }
 
     get batchName() {
-        return getFieldValue(this.batch.data, BATCH_NAME);
+        return this.giftBatchState.name;
     }
 
+    // TODO: maybe is internal to batch table component OR internal to possible new GiftEntryBatchTable class
     get userDefinedBatchTableColumnNames() {
-        const batchTableColumns = validateJSONString(
-            getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD)
-        );
-        if (batchTableColumns) return batchTableColumns;
+        const batchTableColumns =
+            validateJSONString(this.giftBatchState.batchTableColumns);
+        if (batchTableColumns) {
+            return batchTableColumns;
+        }
         return [];
     }
 
+    // TODO: can be internal to batch table component
     get giftsTableTitle() {
         return format(geBatchGiftsHeader, [this.batchName]);
     }
@@ -378,7 +381,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     requireTotalMatch() {
-        return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
+        return this.giftBatchState.requireTotalMatch;
     }
 
     totalsMatch() {
@@ -420,35 +423,27 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get batchId() {
-        return getFieldValue(this.batch.data, BATCH_ID_FIELD);
+        return this.giftBatchState.id;
     }
 
-    handleReceiveEvent(event) {
-        const closeModalCallback = function() {
-            closeModal();
-            unregisterModalListener();
-        }
-        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
-        const unregisterModalListener = () =>
-            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
-
+    async handleReceiveEvent(event) {
         if (event.action === 'save') {
-            let fields = {};
-            fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
-            fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
-                JSON.stringify(event.payload.values);
+            await this.saveGiftBatchTableColumnChange(event.payload.values);
+        }
+        this.closeModalCallback();
+    }
 
-            const recordInput = { fields };
-            const lastModifiedDate =
-                this.batch.data.lastModifiedDate;
-            const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
-            updateRecord(recordInput, clientOptions)
-                .then(closeModalCallback)
-                .catch((error) =>
-                    handleError(error)
-                );
-        } else {
-            closeModalCallback();
+    async saveGiftBatchTableColumnChange(batchTableColumns) {
+        try {
+            const changedGiftBatchDataAsDataImportBatch = {
+                Id: this.giftBatchState.id,
+                [BATCH_TABLE_COLUMNS_FIELD.fieldApiName]: JSON.stringify(batchTableColumns)
+            };
+
+            this.giftBatchState =
+                await this.giftBatch.updateWith(changedGiftBatchDataAsDataImportBatch);
+        } catch(error) {
+            handleError(error);
         }
     }
 
@@ -573,6 +568,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showCloseButton: true
             }
         };
+    }
+
+    closeModalCallback = function() {
+        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
+        const unregisterModalListener = () =>
+            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        closeModal();
+        unregisterModalListener();
     }
 
 }

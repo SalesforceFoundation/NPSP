@@ -1,14 +1,17 @@
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
+import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
+
 class GiftBatch {
     _id;
-    _name;
+    _name = '';
     _totalDonationsAmount = 0;
-    _requireTotalMatch;
-    _expectedCountOfGifts
-    _expectedTotalBatchAmount
-    _batchTableColumns
-    _currencyIsoCode
+    _requireTotalMatch = false;
+    _expectedCountOfGifts = 0.0;
+    _expectedTotalBatchAmount = 0.00;
+    _batchTableColumns = '';
+    _currencyIsoCode = '';
+    _lastModifiedDate;
     _gifts = [];
     _totals = {
         processedGiftsCount: 0,
@@ -25,6 +28,11 @@ class GiftBatch {
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
         const viewModel = await getGiftBatchView({ dataImportBatchId: this._id });
+        this._setProperties(viewModel);
+        return this.state();
+    }
+
+    _setProperties(viewModel) {
         if (viewModel) {
             this._id = viewModel.giftBatchId;
             this._name = viewModel.name;
@@ -34,22 +42,27 @@ class GiftBatch {
             this._expectedTotalBatchAmount = viewModel.expectedTotalBatchAmount
             this._batchTableColumns = viewModel.batchTableColumns
             this._currencyIsoCode = viewModel.currencyIsoCode
+            this._lastModifiedDate = viewModel.lastModifiedDate;
             this._totals = viewModel.totals;
             // viewModel.gifts.forEach(giftView => {
             //     console.log('Gift View: ', giftView);
             //     this._gifts.push(new Gift(giftView));
             // });
+            this._gifts = [];
             viewModel.gifts.forEach(gift => {
                 this._gifts.push(gift);
             });
         }
+    }
 
+    async refreshTotals() {
+        this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
         return this.state();
     }
 
-    refreshTotals = async () => {
-        this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
-
+    async updateWith(newGiftBatchValues) {
+        const newViewModel = await updateGiftBatchWith({ newGiftBatchValues });
+        this._setProperties(newViewModel);
         return this.state();
     }
 
@@ -104,6 +117,7 @@ class GiftBatch {
             expectedTotalBatchAmount: this._expectedTotalBatchAmount,
             batchTableColumns: this._batchTableColumns,
             currencyIsoCode: this._currencyIsoCode,
+            lastModifiedDate: this._lastModifiedDate,
             processedGiftsCount: this.processedGiftsCount(),
             failedGiftsCount: this.failedGiftsCount(),
             failedPaymentsCount: this.failedPaymentsCount(),
