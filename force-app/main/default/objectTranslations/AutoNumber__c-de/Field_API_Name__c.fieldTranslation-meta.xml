@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der API-Name des Felds, das die automatische Nummerierung enthält.</help>
+    <label>Feld-API-Name</label>
+    <name>Field_API_Name__c</name>
+</CustomFieldTranslation>

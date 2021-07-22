@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Une liste d’identifiants séparés par des virgules pour les 10 premières correspondances de paiement possibles pour un don.</help>
+    <label>Correspondances possibles de paiements</label>
+    <name>Payment_Possible_Matches__c</name>
+</CustomFieldTranslation>

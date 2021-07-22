@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Wenn diese Option ausgewählt und anpassbare Rollups aktiviert sind, wird die sofortige Neuberechnung von Rollups beim Erstellen neuer Ratenzahlungs-Opportunities für eine wiederkehrende Spende deaktiviert.</help>
+    <label>CRLP bei Ratenerstellung deaktivieren</label>
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
+</CustomFieldTranslation>

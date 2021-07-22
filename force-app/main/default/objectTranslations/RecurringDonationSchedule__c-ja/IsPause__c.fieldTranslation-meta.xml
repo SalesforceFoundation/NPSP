@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>スケジュールレコードが継続支援の一時停止の日付範囲を示す場合に設定します</help>
+    <label>一時停止</label>
+    <name>IsPause__c</name>
+</CustomFieldTranslation>

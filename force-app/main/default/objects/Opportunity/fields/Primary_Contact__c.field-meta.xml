@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Contact__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organizational Donation, NPSP attributes a soft credit to the Primary Contact.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organizational Donation, NPSP attributes a soft credit to the Primary Contact.</inlineHelpText>
+    <label>Primary Contact</label>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Opportunities</relationshipLabel>
+    <relationshipName>Opportunities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

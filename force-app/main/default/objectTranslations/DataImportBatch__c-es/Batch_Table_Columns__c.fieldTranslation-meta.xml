@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lista de nombres de API incluidos en la tabla de regalos por lotes. Se almacena como JSON.</help>
+    <label>Columnas de tabla de lote</label>
+    <name>Batch_Table_Columns__c</name>
+</CustomFieldTranslation>

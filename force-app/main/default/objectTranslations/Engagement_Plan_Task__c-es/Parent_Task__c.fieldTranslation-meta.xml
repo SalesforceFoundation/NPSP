@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indica que esta tarea del plan de acción es dependiente de una tarea principal.</help>
+    <label>Tarea principal</label>
+    <name>Parent_Task__c</name>
+    <relationshipLabel>Tareas del plan de acción</relationshipLabel>
+</CustomFieldTranslation>

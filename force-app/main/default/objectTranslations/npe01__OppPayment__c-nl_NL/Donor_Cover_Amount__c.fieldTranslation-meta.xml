@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het bedrag dat de donateur heeft betaald boven op het donatiebedrag, vaak om de transactiekosten te dekken of om meer te doneren.</help>
+    <label>Bedrag door donateur gedekt</label>
+    <name>Donor_Cover_Amount__c</name>
+</CustomFieldTranslation>

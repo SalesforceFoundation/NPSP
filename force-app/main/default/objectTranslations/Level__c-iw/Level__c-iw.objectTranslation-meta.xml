@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Level --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הLevel --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Level --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הLevel --></value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- LevelEdit --></label>
+        <name>LevelEdit</name>
+    </fieldSets>
+    <gender><!-- Masculine --></gender>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>סעיף טקסט ארוך</label>
+            <section>long text section</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel><!-- Level Name --></nameFieldLabel>
+    <validationRules>
+        <errorMessage>היעד הוא שדה נדרש ברמה זו.  ציין את אובייקט היעד עבור רמה זו.</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+</CustomObjectTranslation>

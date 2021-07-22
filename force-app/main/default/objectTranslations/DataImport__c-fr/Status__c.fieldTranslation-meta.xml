@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le statut de l’importation de l’enregistrement d’importation de données.</help>
+    <label>Statut</label>
+    <name>Status__c</name>
+    <picklistValues>
+        <masterLabel>Dry Run - Error</masterLabel>
+        <translation>Essai - Erreur</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Dry Run - Validated</masterLabel>
+        <translation>Essai - Validé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Failed</masterLabel>
+        <translation>Échec</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Imported</masterLabel>
+        <translation>Importé</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Processing</masterLabel>
+        <translation><!-- Processing --></translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Ready to Process</masterLabel>
+        <translation>Prêt à traiter</translation>
+    </picklistValues>
+</CustomFieldTranslation>

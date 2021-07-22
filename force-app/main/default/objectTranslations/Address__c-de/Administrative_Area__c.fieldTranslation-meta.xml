@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Verwenden Sie diesen, um die dieser Adresse verbundene Stadt, Gemeinde, Kommune oder sonstige Verwaltungsregion zu erfassen.</help>
+    <label>Verwaltungsbereich</label>
+    <name>Administrative_Area__c</name>
+</CustomFieldTranslation>

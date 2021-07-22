@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequireTotalMatch__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
+    <label>Require Expected Totals Match</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

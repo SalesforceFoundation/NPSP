@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het gedeelte van een gift dat het bedrijf zal evenaren.</help>
+    <label>Percentage Geëvenaarde Gift</label>
+    <name>Matching_Gift_Percent__c</name>
+</CustomFieldTranslation>

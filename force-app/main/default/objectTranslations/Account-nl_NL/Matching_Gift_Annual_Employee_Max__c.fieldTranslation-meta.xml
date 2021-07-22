@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het maximumbedrag dat het bedrijf elk jaar voor een werknemer evenaart.</help>
+    <label>Max Geëvenaarde Gift Medew. Jaarlijks</label>
+    <name>Matching_Gift_Annual_Employee_Max__c</name>
+</CustomFieldTranslation>

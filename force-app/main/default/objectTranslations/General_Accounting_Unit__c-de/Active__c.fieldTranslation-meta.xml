@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Legt fest, ob dieser Verwendungszweck zur Auswahl für Zuweisungen zur Verfügung steht. Nur aktive Verwendungszwecke stehen zur Auswahl zur Verfügung.</help>
+    <label>Aktiv</label>
+    <name>Active__c</name>
+</CustomFieldTranslation>

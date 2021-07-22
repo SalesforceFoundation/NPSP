@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Grant_Contract_Number__c</fullName>
+    <description>Use this to track unique numbers sometimes assigned by grantmaking organizations.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Use this to track unique numbers sometimes assigned by grantmaking organizations.</inlineHelpText>
+    <label>Grant Contract Number</label>
+    <length>255</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

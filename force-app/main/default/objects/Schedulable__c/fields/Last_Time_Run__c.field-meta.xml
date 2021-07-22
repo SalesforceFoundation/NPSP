@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Time_Run__c</fullName>
+    <description>Last time the job was run.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Last time the job was run.</inlineHelpText>
+    <label>Last Time Run</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

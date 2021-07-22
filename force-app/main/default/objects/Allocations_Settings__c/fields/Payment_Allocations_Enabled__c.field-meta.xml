@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Allocations_Enabled__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether Allocations can be set at the Payment level. If selected, you can manually create Allocation records for each Payment, or let NPSP automatically create Payment Allocation records based on the related Opportunity Allocation settings.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting.</inlineHelpText>
+    <label>Payment Allocations Enabled</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>
