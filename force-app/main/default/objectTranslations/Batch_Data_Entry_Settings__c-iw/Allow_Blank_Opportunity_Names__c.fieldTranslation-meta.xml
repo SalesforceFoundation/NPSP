@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם אפשרות זו מוגדרת, הזנת ערכים באצווה לעולם לא תעניק שמות להזדמנויות, גם אם הם ריקים (לא נכלל בדף BDE).</help>
+    <label>אפשר שמות תרומה ריקים</label>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+</CustomFieldTranslation>

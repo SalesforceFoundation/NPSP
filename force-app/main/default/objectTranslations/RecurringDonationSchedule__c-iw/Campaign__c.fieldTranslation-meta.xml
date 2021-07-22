@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The Campaign associated with the Recurring Donation when this schedule record was created. --></help>
+    <label><!-- Related Campaign --></label>
+    <name>Campaign__c</name>
+    <relationshipLabel><!-- Recurring Donation Schedules --></relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Geeft aan dat deze Taak van Betrokkenheidsplan afhankelijk is van een bovenliggende Taak.</help>
+    <label>Bovenliggende Taak</label>
+    <name>Parent_Task__c</name>
+    <relationshipLabel>Taken van Betrokkenheidsplan</relationshipLabel>
+</CustomFieldTranslation>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>週末の期日を持つ ToDo を週末の前の金曜日または週末の後の月曜日にスケジュールする必要がありますか? これは、[週末をスキップ] が選択されている場合にのみ適用されます。</help>
+    <label>再スケジュール先</label>
+    <name>Reschedule_To__c</name>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>金曜日</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monday</masterLabel>
+        <translation>月曜日</translation>
+    </picklistValues>
+</CustomFieldTranslation>

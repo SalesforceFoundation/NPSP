@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le nom du représentant honoraire tel que fourni par le donateur. Si ce champ est laissé vide, et que le champ de contact honoraire contient une valeur, Salesforce remplit automatiquement ce champ avec cette valeur.</help>
+    <label>Nom du représentant honoraire</label>
+    <name>Honoree_Name__c</name>
+</CustomFieldTranslation>

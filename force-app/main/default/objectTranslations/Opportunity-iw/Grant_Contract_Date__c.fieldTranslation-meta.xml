@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>התאריך של יצירת המענק, בהתאם למסמך או החוזה שנשלח על-ידי הארגון הפילנתרופי.</help>
+    <label>תאריך חוזה מענק</label>
+    <name>Grant_Contract_Date__c</name>
+</CustomFieldTranslation>

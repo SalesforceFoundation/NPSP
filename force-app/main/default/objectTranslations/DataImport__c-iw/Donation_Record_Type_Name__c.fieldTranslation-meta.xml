@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>שם סוג רשומת תרומה</label>
+    <name>Donation_Record_Type_Name__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>数式: 期限内、期限切れ、または猶予期間。[世帯設定] で設定されるデフォルトの猶予期間。</help>
+    <label>会員状況</label>
+    <name>Membership_Status__c</name>
+</CustomFieldTranslation>

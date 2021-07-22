@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Festlegen, wenn der Zeitplan-Datensatz einen Aufschub-Datumsbereich für die wiederkehrende Spende darstellt</help>
+    <label>Stellt Aufschub dar</label>
+    <name>IsPause__c</name>
+</CustomFieldTranslation>

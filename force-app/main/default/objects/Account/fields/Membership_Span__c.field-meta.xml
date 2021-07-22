@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Membership_Span__c</fullName>
+    <description>The number of years that a member of this Household has had a Membership (read only).</description>
+    <externalId>false</externalId>
+    <formula>year(npo02__MembershipEndDate__c ) - year(npo02__MembershipJoinDate__c)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The number of years that a member of this Household has had a Membership (read only).</inlineHelpText>
+    <label>Membership Span</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indica si este contacto está designado como el contacto principal en su cuenta (solo lectura).</help>
+    <label>Contacto principal</label>
+    <name>Primary_Contact__c</name>
+</CustomFieldTranslation>

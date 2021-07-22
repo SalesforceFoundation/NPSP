@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Después de esta fecha, NPSP deja de crear cuotas para esta Donación recurrente y actualiza Estado a Cerrado.</help>
+    <label>Fecha finalización donación recurrente</label>
+    <name>Recurring_Donation_End_Date__c</name>
+</CustomFieldTranslation>

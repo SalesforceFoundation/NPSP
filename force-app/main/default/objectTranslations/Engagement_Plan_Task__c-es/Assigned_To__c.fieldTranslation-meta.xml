@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Búsqueda del usuario al que desea asignar la tarea. Si deja este campo en blanco, NPSP asignará la tarea basada en la persona asignada predeterminada de la plantilla del plan de acción.</help>
+    <label>Asignado a</label>
+    <name>Assigned_To__c</name>
+    <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
+</CustomFieldTranslation>

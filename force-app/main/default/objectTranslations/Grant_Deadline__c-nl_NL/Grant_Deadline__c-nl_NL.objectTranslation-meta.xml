@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Oplevering</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Opleveringen</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Grant Deadline Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Vereisten voor Oplevering Subsidie</label>
+            <section>Grant Deliverable Requirements</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Naam van Levering</nameFieldLabel>
+</CustomObjectTranslation>

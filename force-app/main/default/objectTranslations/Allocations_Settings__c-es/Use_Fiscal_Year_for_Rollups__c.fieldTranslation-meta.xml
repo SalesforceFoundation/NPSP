@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Esta casilla hace que los totales de las asignaciones respeten el año fiscal en vez del año calendario. Para establecer el año fiscal, vaya a Configuración -&gt; Perfil de la empresa -&gt; Año fiscal. NOTA: NO se admiten parámetros de año fiscal personalizados.</help>
+    <label>Usar año fiscal en totales</label>
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
+</CustomFieldTranslation>

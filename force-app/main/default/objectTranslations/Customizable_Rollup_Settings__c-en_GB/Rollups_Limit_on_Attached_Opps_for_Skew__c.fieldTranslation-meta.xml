@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</help>
+    <label>Skew Mode Threshold</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Betrokkenheidsplansjabloon</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Betrokkenheidsplansjablonen</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage EP Template FS --></label>
+        <name>ManageEPTemplateFS</name>
+    </fieldSets>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Engagement Plan Template Layout</layout>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Sjabloonnaam van Betrokkenheidsplan</nameFieldLabel>
+    <webLinks>
+        <label>Sjabloon beheren</label>
+        <name>Manage_Template</name>
+    </webLinks>
+</CustomObjectTranslation>
