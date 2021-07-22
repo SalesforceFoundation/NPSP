@@ -36,15 +36,15 @@
 private class GiftBatchView_TEST {
 
     @isTest
-    static void shouldReturn200TotalAmount() {
+    static void shouldReturn200TotalDonationsAmount() {
         GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
-        System.assertEquals(200, giftBatchView.total);
+        System.assertEquals(200, giftBatchView.totalDonationsAmount);
     }
 
     @isTest
-    static void shouldReturn2TotalCount() {
+    static void shouldReturn2TotalGiftsCount() {
         GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
-        System.assertEquals(2, giftBatchView.totalCount);
+        System.assertEquals(2, giftBatchView.totals.get('TOTAL'));
     }
 
     @isTest
