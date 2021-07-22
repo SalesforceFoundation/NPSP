@@ -58,6 +58,10 @@ public with sharing class ElevateBatch {
         return elevateBatchService.sendAddRequest(tokenizedGift, elevateBatchId());
     }
 
+    public ElevateAuthorizedGift remove(String elevatePaymentId) {
+        return elevateBatchService.sendRemoveRequest(elevatePaymentId, elevateBatchId());
+    }
+
     public String elevateBatchId() {
         return elevateBatchId;
     }

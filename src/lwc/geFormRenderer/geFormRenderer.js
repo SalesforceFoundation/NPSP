@@ -749,6 +749,7 @@ export default class GeFormRenderer extends LightningElement{
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
                 const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
+                this.latestElevateBatchId = currentElevateBatch.elevateBatchId;
                 const authorizedGift = await currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;

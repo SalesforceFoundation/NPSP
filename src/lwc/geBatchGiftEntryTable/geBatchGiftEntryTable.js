@@ -29,6 +29,10 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
+import ELEVATE_PAYMENT_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_ID__c';
+
+import ElevateBatch from './elevateBatch';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -296,18 +300,27 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         }
     }
 
-    handleRowActions(event) {
+    async handleRowActions(event) {
         switch (event.detail.action.name) {
             case 'open':
                 this.loadRow(event.detail.row);
                 break;
             case 'delete':
+                await this.removeFromElevateBatch(event.detail.row);
                 deleteRecord(event.detail.row.Id).then(() => {
                     this.deleteDIRow(event.detail.row);
                 }).catch(error => {
                     handleError(error);
                 });
                 break;
+        }
+    }
+
+    async removeFromElevateBatch(deletedRow) {
+        // TODO: Make status check an enum
+        if (this.isElevateCustomer && deletedRow[ELEVATE_PAYMENT_STATUS.fieldApiName] == 'Authorized') {
+            const elevateBatch = new ElevateBatch(deletedRow[ELEVATE_BATCH_ID.fieldApiName]); 
+            await elevateBatch.remove(deletedRow[ELEVATE_PAYMENT_ID.fieldApiName]);
         }
     }
 
