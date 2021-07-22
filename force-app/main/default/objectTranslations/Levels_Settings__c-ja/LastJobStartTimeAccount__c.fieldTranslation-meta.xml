@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>前回のジョブ開始時間 : 取引先</label>
+    <name>LastJobStartTimeAccount__c</name>
+</CustomFieldTranslation>

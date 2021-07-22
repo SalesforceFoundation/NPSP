@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このバッチは、バッチ支援エントリでの使用を想定しています。[バッチ支援エントリ] タブでバッチを設定すると、自動的に支援バッチとなります。この項目を手動で変更すると、意図しない結果を生むことがあります。</help>
+    <label>支援バッチ</label>
+    <name>GiftBatch__c</name>
+</CustomFieldTranslation>

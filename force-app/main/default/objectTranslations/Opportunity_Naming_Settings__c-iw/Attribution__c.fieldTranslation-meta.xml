@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>האם הגדרה זו חלה על הזדמנויות אישיות, הזדמנויות ארגוניות או שתיהן.</help>
+    <label>שיוך</label>
+    <name>Attribution__c</name>
+</CustomFieldTranslation>

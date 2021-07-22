@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この支援のマッチングギフトの状況 (送信済みや受信済みなど)。</help>
+    <label>マッチングギフトの状況</label>
+    <name>Matching_Gift_Status__c</name>
+    <picklistValues>
+        <masterLabel>Potential</masterLabel>
+        <translation>可能性</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Received</masterLabel>
+        <translation>受信済み</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Submitted</masterLabel>
+        <translation>送信済み</translation>
+    </picklistValues>
+</CustomFieldTranslation>

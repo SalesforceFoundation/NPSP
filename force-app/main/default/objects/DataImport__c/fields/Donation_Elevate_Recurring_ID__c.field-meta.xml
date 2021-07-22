@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Elevate_Recurring_ID__c</fullName>
+    <description>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The external, unique ID of the Recurring Donation in Elevate that this donation Opportunity is linked to.</inlineHelpText>
+    <label>Donation Elevate Recurring ID</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

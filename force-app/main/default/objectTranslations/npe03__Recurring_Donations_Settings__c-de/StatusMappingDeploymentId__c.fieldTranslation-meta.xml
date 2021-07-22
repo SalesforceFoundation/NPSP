@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Bereitstellungs-ID für benutzerdefinierte Metadaten der Statuszuordnung</help>
+    <label>Bereitstellungs-ID der Statuszuordnung</label>
+    <name>StatusMappingDeploymentId__c</name>
+</CustomFieldTranslation>

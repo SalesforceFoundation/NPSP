@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Offen zeigt eine fortlaufende wiederkehrende Spende an. &quot;Befristet&quot; zeigt eine wiederkehrende Spende mit einer bestimmten Anzahl Raten an. Für &quot;Befristet&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
+    <label>Wiederholungstyp der wiederkehr. Spende</label>
+    <name>Recurring_Donation_Recurring_Type__c</name>
+</CustomFieldTranslation>

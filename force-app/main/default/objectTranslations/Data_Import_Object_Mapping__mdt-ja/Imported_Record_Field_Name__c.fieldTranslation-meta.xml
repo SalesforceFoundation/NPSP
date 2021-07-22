@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>インポートが成功したときにインポートされたレコードの ID が配置される NPSP データインポートオブジェクトの項目 API 参照名。これは、コードでこのレコードがインポートまたは照合されたかどうかを検証する場所でもあります。</help>
+    <label>インポートされたレコードの項目名</label>
+    <name>Imported_Record_Field_Name__c</name>
+</CustomFieldTranslation>

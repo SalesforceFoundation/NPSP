@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When selected, disables Address management for Household Accounts.</help>
+    <label>Household Account Addresses Disabled</label>
+    <name>Household_Account_Addresses_Disabled__c</name>
+</CustomFieldTranslation>

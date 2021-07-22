@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Markiert zweideutige Adressen als ungültig, wenn die API mehr als eine Adresse zurückgibt. Wenn diese Option nicht ausgewählt ist, übernimmt Salesforce die erste vorgeschlagene Adresse als gültige Adresse.</help>
+    <label>Zweideutige Adressen ablehnen</label>
+    <name>Reject_Ambiguous_Addresses__c</name>
+</CustomFieldTranslation>

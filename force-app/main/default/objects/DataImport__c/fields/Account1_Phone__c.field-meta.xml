@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account1_Phone__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Account1.Phone</inlineHelpText>
+    <label>Account1 Phone</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Phone</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>[使用開始] ページでのセクション項目の [プライマリボタン] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
+    <label>プライマリボタン表示ラベル名</label>
+    <name>Primary_Button_Label__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indicates how the notification recipient should be notified, for example, by email or phone.</help>
+    <label>Notification Preference</label>
+    <name>Notification_Preference__c</name>
+    <picklistValues>
+        <masterLabel>Do Not Notify</masterLabel>
+        <translation>Do Not Notify</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>Email</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Phone</masterLabel>
+        <translation>Phone</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Postal Mail</masterLabel>
+        <translation>Postal Mail</translation>
+    </picklistValues>
+</CustomFieldTranslation>

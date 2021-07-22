@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם אפשרות זו מסומנת, חיפוש הכתובת הנוכחית של איש הקשר עוקף את כתובת ברירת המחדל של משק הבית או הכתובת העונתית.</help>
+    <label>עקיפת כתובת</label>
+    <name>is_Address_Override__c</name>
+</CustomFieldTranslation>

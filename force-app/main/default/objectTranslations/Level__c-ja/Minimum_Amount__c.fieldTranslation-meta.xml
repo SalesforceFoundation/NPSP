@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>このレベルに割り当てられる最小金額。空にすると、このレベルの最大金額未満の金額がこのレベルに割り当てられます。</help>
+    <label>最小金額 (&gt;=)</label>
+    <name>Minimum_Amount__c</name>
+</CustomFieldTranslation>

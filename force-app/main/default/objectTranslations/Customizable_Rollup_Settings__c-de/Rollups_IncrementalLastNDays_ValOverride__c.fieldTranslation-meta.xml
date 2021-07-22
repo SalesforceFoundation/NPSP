@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Nur zur Verw. b. Überschr. Inkrem. Rollups. Der Wert überschr. die berechn. Anz. an Tagen, die z. Filtern verb. Opp. verw. werden, um festzulegen, welche Acc‘s, Kont‘e, Verwendungszwecke oder RDs während eines nächtl. gepl. Auftrags neu berechnet werden.</help>
+    <label>Inkrem.: Überschr. d. W‘s Letzte N Tage</label>
+    <name>Rollups_IncrementalLastNDays_ValOverride__c</name>
+</CustomFieldTranslation>

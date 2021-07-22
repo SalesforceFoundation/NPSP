@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Ganze Zahl, die die letzte Version eines Elevate-Ereignisses darstellt, das die Aktualisierung der wiederkehrenden Spende bewirkt hat. Nach jedem Aufruf der Elevate-API wegen Änderungen aktualisiert. Dient zur Vermeidung zirkulärer Aktualisierungen, damit sichergestellt ist, dass die neueste Version nie überschrieben wird.</help>
+    <label>Letzte wiedergegebene Elevate-Version</label>
+    <name>LastElevateVersionPlayed__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Gesamtzahl der Zuweisungen dieses Jahr aus geschlossenen/gewonnenen Opportunities. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
+    <label>Anzahl der Zuweisungen dieses Jahr</label>
+    <name>Number_of_Allocations_This_Year__c</name>
+</CustomFieldTranslation>

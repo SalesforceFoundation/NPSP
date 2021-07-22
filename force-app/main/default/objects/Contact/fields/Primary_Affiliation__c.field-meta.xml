@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Primary_Affiliation__c</fullName>
+    <description>The Account marked as Primary in this Contact&apos;s list of Organization Affiliations.</description>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <inlineHelpText>The Account marked as Primary in this Contact&apos;s list of Organization Affiliations.</inlineHelpText>
+    <label>Primary Affiliation</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Do Not Use.  Use Organization Affiliations.</relationshipLabel>
+    <relationshipName>PrimaryAffiliatedContacts</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>
