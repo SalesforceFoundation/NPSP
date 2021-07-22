@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>継続支援</label>
+    <name>Recurring_Donation__c</name>
+    <relationshipLabel>エンゲージメント計画</relationshipLabel>
+</CustomFieldTranslation>

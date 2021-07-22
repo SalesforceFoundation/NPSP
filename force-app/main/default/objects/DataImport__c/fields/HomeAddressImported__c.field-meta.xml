@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>HomeAddressImported__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Home Address Imported</label>
+    <referenceTo>Address__c</referenceTo>
+    <relationshipLabel>NPSP Data Imports</relationshipLabel>
+    <relationshipName>Data_Imports</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

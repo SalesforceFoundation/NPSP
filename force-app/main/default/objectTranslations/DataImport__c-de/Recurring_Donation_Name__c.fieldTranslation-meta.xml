@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lassen Sie dieses Feld leer, wenn Sie ein Namensformat für wiederkehrende Spenden ausgewählt haben. Geben Sie andernfalls Ihre eigenen Namen ein.</help>
+    <label>Name für wiederkehrende Spende</label>
+    <name>Recurring_Donation_Name__c</name>
+</CustomFieldTranslation>

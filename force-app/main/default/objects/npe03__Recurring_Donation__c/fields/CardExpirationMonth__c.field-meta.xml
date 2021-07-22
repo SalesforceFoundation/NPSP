@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CardExpirationMonth__c</fullName>
+    <description>The expiration month of the card used for this Recurring Donation.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The expiration month of the card used for this Recurring Donation.</inlineHelpText>
+    <label>Card Expiration Month</label>
+    <length>2</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

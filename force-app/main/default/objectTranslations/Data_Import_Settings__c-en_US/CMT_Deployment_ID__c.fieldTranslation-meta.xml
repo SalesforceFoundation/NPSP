@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- ID of Custom Metadata deployment --></help>
+    <label><!-- CMT Deployment ID --></label>
+    <name>CMT_Deployment_ID__c</name>
+</CustomFieldTranslation>

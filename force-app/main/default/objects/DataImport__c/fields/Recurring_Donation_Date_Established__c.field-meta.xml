@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Date_Established__c</fullName>
+    <description>The initial inception date for this Recurring Donation. The default is the current date.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The initial inception date for this Recurring Donation. The default is the current date.</inlineHelpText>
+    <label>Recurring Donation Date Established</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

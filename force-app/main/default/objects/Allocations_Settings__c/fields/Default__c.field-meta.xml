@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Default__c</fullName>
+    <description>Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Holds the ID of the default General Accounting Unit for creation of default allocations or for the allocation of non allocated amounts.</inlineHelpText>
+    <label>Default General Accounting Unit</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

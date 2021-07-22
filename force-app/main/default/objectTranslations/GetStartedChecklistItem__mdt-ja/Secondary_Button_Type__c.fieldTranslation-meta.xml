@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>セカンダリボタンに関連するアクションの種別。ボタンが無効か、新しい Salesforce タブを開くか、外部ページを開くかを示します。</help>
+    <label>セカンダリボタン種別</label>
+    <name>Secondary_Button_Type__c</name>
+    <picklistValues>
+        <masterLabel>Disabled</masterLabel>
+        <translation>無効</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>External Page</masterLabel>
+        <translation>外部ページ</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>SFDC New Tab</masterLabel>
+        <translation>SFDC 新規タブ</translation>
+    </picklistValues>
+</CustomFieldTranslation>

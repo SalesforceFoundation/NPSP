@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Donation_Matching_Rule__c</fullName>
+    <defaultValue>&quot;npsp__Donation_Amount__c;npsp__Donation_Date&quot;</defaultValue>
+    <description>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
+    <label>Donation Matching Rule</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

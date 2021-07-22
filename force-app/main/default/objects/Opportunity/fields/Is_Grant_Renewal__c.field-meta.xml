@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Is_Grant_Renewal__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Indicates whether the Grant is a renewal of a previous Grant.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates whether the Grant is a renewal of a previous Grant.</inlineHelpText>
+    <label>Is Grant Renewal</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

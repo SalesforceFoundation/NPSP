@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Address_Verification_Status__c</fullName>
+    <description>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address.  Consult the Power of Us Hub documentation for more information on Address Verification..</description>
+    <externalId>false</externalId>
+    <formula>Current_Address__r.Verification_Status__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</inlineHelpText>
+    <label>Address Verification Status</label>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

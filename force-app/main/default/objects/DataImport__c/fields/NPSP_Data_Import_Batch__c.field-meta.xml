@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NPSP_Data_Import_Batch__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Lookup to the NPSP Data Import Batch this record belongs to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Lookup to the NPSP Data Import Batch this record belongs to.</inlineHelpText>
+    <label>NPSP Data Import Batch</label>
+    <referenceTo>DataImportBatch__c</referenceTo>
+    <relationshipLabel>NPSP Data Imports</relationshipLabel>
+    <relationshipName>NPSP_Data_Imports</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

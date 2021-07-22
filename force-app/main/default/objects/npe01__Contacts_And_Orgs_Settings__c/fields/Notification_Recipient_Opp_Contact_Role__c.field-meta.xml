@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Notification_Recipient_Opp_Contact_Role__c</fullName>
+    <description>Populating this setting will automatically create a Contact Role for Opportunities with a notification recipient Contact. Leaving this field blank will disable automatic Contact Role creation for the notification recipient.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>If you populate this setting, NPSP automatically creates a Contact Role record for Opportunities with a notification recipient Contact.</inlineHelpText>
+    <label>Notification Recipient Opp Contact Role</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
