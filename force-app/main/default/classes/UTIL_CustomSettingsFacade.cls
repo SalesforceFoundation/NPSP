@@ -159,6 +159,7 @@ public without sharing class UTIL_CustomSettingsFacade {
                 }
             }
         }
+
         return recurringDonationsSettings;
     }
 
@@ -642,6 +643,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             settings.EnableAutomaticNaming__c = false;
             settings.IsRecurringDonations2Enabled__c = false;
             settings.UseFiscalYearForRecurringDonationValue__c = false;
+            settings.EnableChangeHistory__c = false;
 
             List<RecordType> oppRecordTypes = [SELECT Id FROM RecordType WHERE SObjectType = 'Opportunity' AND IsActive = true];
             if (oppRecordTypes.size() > 0) {
@@ -884,6 +886,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return npe03__Recurring_Donations_Settings__c The configured settings.
     **/
     public static npe03__Recurring_Donations_Settings__c getRecurringDonationsSettingsForTest(npe03__Recurring_Donations_Settings__c settings) {
+        
         if (recurringDonationsSettings == null) {
             recurringDonationsSettings = new npe03__Recurring_Donations_Settings__c();
         }
@@ -906,6 +909,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.npe03__Record_Type__c = settings.npe03__Record_Type__c;
         recurringDonationsSettings.NextDonationDateMatchRangeDays__c = settings.NextDonationDateMatchRangeDays__c;
         recurringDonationsSettings.StatusMappingDeploymentId__c = settings.StatusMappingDeploymentId__c;
+        recurringDonationsSettings.EnableChangeHistory__c = settings.EnableChangeHistory__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
