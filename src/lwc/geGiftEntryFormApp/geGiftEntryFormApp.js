@@ -26,7 +26,6 @@ import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
-import BatchTotals from './helpers/batchTotals';
 import Gift from './helpers/gift';
 
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -44,7 +43,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
-    @track batchTotals = {}
     @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
@@ -86,11 +84,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async retrieveBatchTotals() {
-        this.batchTotals = await BatchTotals(this.batchId);
+        this.giftBatchState = await this.giftBatch.refreshTotals();
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
@@ -249,7 +247,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     shouldDisplayExpiredAuthorizationWarning() {
         return this.isElevateCustomer
-            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && this.giftBatchState.hasPaymentsWithExpiredAuthorizations
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }
 
@@ -375,8 +373,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async refreshBatchTotals() {
         this._hasDisplayedExpiredAuthorizationWarning = false;
-        this.batchTotals = await BatchTotals(this.batchId);
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this.giftBatchState = await this.giftBatch.refreshTotals();
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
     }
 
     requireTotalMatch() {

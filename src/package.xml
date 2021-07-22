@@ -4481,6 +4481,7 @@
         <members>geFormWidgetSoftCredit</members>
         <members>geFormWidgetSoftCreditRow</members>
         <members>geFormWidgetTokenizeCard</members>
+        <members>geGiftBatch</members>
         <members>geGiftEntryFormApp</members>
         <members>geHome</members>
         <members>geLabelService</members>

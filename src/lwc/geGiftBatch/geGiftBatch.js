@@ -1,11 +1,21 @@
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
+import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 class GiftBatch {
     _id;
     _name;
-    _totals = {};
-    _total = 0.00;
-    _totalCount = 0;
+    _totalDonationsAmount = 0;
     _gifts = [];
+    _totals = {
+        processedGiftsCount: 0,
+        failedGiftsCount: 0,
+        failedPaymentsCount: 0,
+        expiredPaymentsCount: 0,
+        authorizedPaymentsCount: 0,
+        totalGiftsCount: 0,
+        hasValuesGreaterThanZero: false,
+        hasPaymentsWithExpiredAuthorizations: false,
+        isProcessingGifts: false
+    };
 
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
@@ -23,6 +33,12 @@ class GiftBatch {
                 this._gifts.push(gift);
             });
         }
+
+        return this.state();
+    }
+
+    refreshTotals = async () => {
+        this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
 
         return this.state();
     }
