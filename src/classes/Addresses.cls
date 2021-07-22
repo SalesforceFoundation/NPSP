@@ -105,7 +105,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         if (addressChangesToSyncToContactOverrides().size() > 0) {
-            syncAddressChangesToContactOverrides(addressChangesToSyncToContactOverrides(), dmlWrapperLocal);
+            Contacts.syncAddressChangesToContactOverrides(addressChangesToSyncToContactOverrides(), dmlWrapperLocal);
         }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors
@@ -116,28 +116,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         dmlWrapperLocal, false);
         if (errors.errorsExist) {
             putErrorsOnAddresses(errors, addressChangesToSyncToHouseholdAccountsAndContacts(), addressChangesToSyncToContactOverrides());
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
-    * @param addressesById a map of Address Id's to Addresses
-    * @param dmlWrapper to hold the Contacts to update
-    */
-    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        List<Contact> contactsWithAddressOverrides = [SELECT Current_Address__c FROM Contact WHERE Current_Address__c
-                IN :addressesById.keySet() AND is_Address_Override__c = true];
-
-        for (Contact contact : contactsWithAddressOverrides) {
-            NPSP_Contact npspContact = new NPSP_Contact(contact);
-            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
-
-            npspContact.mailingAddress(npspAddress);
-            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
-
-            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
     }
 
