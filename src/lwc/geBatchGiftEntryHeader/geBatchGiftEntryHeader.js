@@ -1,7 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
-import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-
-import NAME_FIELD from '@salesforce/schema/DataImportBatch__c.Name';
+import { LightningElement, api } from 'lwc';
 import CUSTOM_LABELS from './helpers/customLabels';
 
 export default class GeBatchGiftEntryHeader extends LightningElement {
@@ -13,24 +10,36 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         EDIT_BATCH: 'EDIT_BATCH'
     });
 
-    @api batchId;
-    @api batchTotals = {};
+    // TODO: Look into moving permissions error checking out of geFormRenderer and to formApp
+    // formApp should control what is displayed via directives
+    // in the markup when there are permission errors
+    // want to remove this public property isPermissionError
     @api isPermissionError;
-    @api isElevateCustomer;
-    @api isBatchProcessing;
 
-    @wire(getRecord, {
-        recordId: '$batchId',
-        fields: NAME_FIELD
-    })
-    batch;
+    @api giftBatchState;
 
     get batchName() {
-        return getFieldValue(this.batch.data, NAME_FIELD);
+        return this.giftBatchState.name;
     }
 
     get shouldDisplayHeaderDetails() {
-        return this.batchTotals.hasValuesGreaterThanZero;
+        return this.giftBatchState.hasValuesGreaterThanZero;
+    }
+
+    get hasFailedPayments() {
+        return this.giftBatchState.failedPaymentsCount > 0;
+    }
+
+    get isGiftBatchProcessing() {
+        return this.giftBatchState.isProcessingGifts;
+    }
+
+    get processBatchButtonName() {
+        let buttonName = this.LABELS.bgeProcessBatch;
+        if (this.giftBatchState.authorizedPaymentsCount) {
+            buttonName = this.LABELS.bgeProcessBatchAndPayments;
+        }
+        return buttonName;
     }
 
     handleClick(event) {
@@ -50,7 +59,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     editBatch() {
         this.dispatchEvent(new CustomEvent(
-            'edit', { detail: this.batchId }
+            'edit', { detail: this.giftBatchState.id }
         ));
     }
 
@@ -63,14 +72,4 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorEditBatchInfo() {
         return `button ${this.LABELS.geEditBatchInfo}`;
     }
-
-    get processBatchButtonName() {
-        let buttonName = this.LABELS.bgeProcessBatch;
-        if (this.batchTotals.authorizedPaymentsCount) {
-            buttonName = this.LABELS.bgeProcessBatchAndPayments;
-        }
-        
-        return buttonName;
-    }
-    
 }

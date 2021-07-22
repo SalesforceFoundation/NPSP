@@ -32,6 +32,8 @@ import Gift from './helpers/gift';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
+import GiftBatch from 'c/geGiftBatch';
+
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
     // Expose custom labels to template
@@ -58,6 +60,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     batch = {};
     isLoading = true;
 
+    giftBatch = new GiftBatch();
+    @track giftBatchState = {};
+
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
@@ -72,6 +77,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
         await this.gift.init(); 
+
+        this.giftBatchState = await this.giftBatch.init(this.recordId);
     }
 
     disconnectedCallback() {

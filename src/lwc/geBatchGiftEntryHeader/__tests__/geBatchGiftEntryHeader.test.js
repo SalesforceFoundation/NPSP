@@ -1,8 +1,5 @@
 import { createElement } from 'lwc';
 import GeBatchGiftEntryHeader from 'c/geBatchGiftEntryHeader';
-import { getRecord } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiRecordApi/uiRecordApi";
-
-const mockGetRecord = require('./data/getRecord.json');
 
 describe('c-ge-batch-gift-entry-header', () => {
     afterEach(() => {
@@ -10,34 +7,18 @@ describe('c-ge-batch-gift-entry-header', () => {
         jest.clearAllMocks();
     });
 
-    function flushPromises() {
-        return new Promise((resolve) => setImmediate(resolve));
-    }
-
-    const setup = () => {
+    const setupComponentWithDummy = (giftBatchState) => {
         const element = createElement('c-ge-batch-gift-entry-header', {
             is: GeBatchGiftEntryHeader
         });
+        element.giftBatchState = giftBatchState;
         document.body.appendChild(element);
-        getRecord.emit(mockGetRecord);
         return element;
     }
 
-    describe('getRecord @wire data', () => {
-        it('renders the data import batch record name as the title', async () => {
-            const element = setup();
-
-            await flushPromises();
-            const headerElement = element.shadowRoot.querySelectorAll('c-util-page-header');
-            const headerElements = headerElement[0].shadowRoot.querySelectorAll('h1');
-            const text = headerElements[0].querySelectorAll('.uiOutputText');
-            expect(text[0].innerHTML).toBe(mockGetRecord.fields.Name.value);
-        });
-    });
-
     describe('gift entry batch header elements', () => {
         it('should render three action buttons', async () => {
-            const element = setup();
+            const element = setupComponentWithDummy({});
 
             await flushPromises();
             const buttons = element.shadowRoot.querySelectorAll('lightning-button');
@@ -45,10 +26,9 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('should render process batch and payments button', async () => {
-            const batchHeader = setup();
-            batchHeader.batchTotals = {
-                authorizedPaymentsCount: true
-            };
+            const batchHeader = setupComponentWithDummy({
+                authorizedPaymentsCount: 1
+            });
 
             await flushPromises();
 
@@ -58,9 +38,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('renders detail row', async () => {
-            const element = setup();
-
-            element.batchTotals = {
+            const element = setupComponentWithDummy({
                 hasValuesGreaterThanZero: true,
                 hasPaymentsWithExpiredAuthorizations: false,
                 totalGiftsCount: 20,
@@ -68,9 +46,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 failedPaymentsCount: 0,
                 failedGiftsCount: 5,
                 expiredPaymentsCount: 0
-            }
-
-            getRecord.emit(false);
+            });
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -78,9 +54,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('does not render detail row', async () => {
-            const element = setup();
-
-            element.batchTotals = {
+            const element = setupComponentWithDummy({
                 hasValuesGreaterThanZero: false,
                 hasPaymentsWithExpiredAuthorizations: false,
                 totalGiftsCount: 0,
@@ -88,7 +62,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 failedPaymentsCount: 0,
                 failedGiftsCount: 0,
                 expiredPaymentsCount: 0
-            }
+            });
 
             await flushPromises();
             const headerDetailRows = element.shadowRoot.querySelectorAll('c-util-page-header-detail-row');
@@ -96,9 +70,7 @@ describe('c-ge-batch-gift-entry-header', () => {
         });
 
         it('renders detail blocks for records processed and records failed with correct record counts on load', async () => {
-            const element = setup();
-
-            element.batchTotals = {
+            const element = setupComponentWithDummy({
                 hasValuesGreaterThanZero: true,
                 hasPaymentsWithExpiredAuthorizations: false,
                 totalGiftsCount: 20,
@@ -106,8 +78,7 @@ describe('c-ge-batch-gift-entry-header', () => {
                 failedPaymentsCount: 0,
                 failedGiftsCount: 5,
                 expiredPaymentsCount: 0
-            }
-            getRecord.emit(true);
+            });
 
             await flushPromises();
 
@@ -124,8 +95,9 @@ describe('c-ge-batch-gift-entry-header', () => {
 
     describe('event handling and dispatching', () => {
         it('should dispatch expected custom event when dry run button is clicked', async () => {
-            const batchHeader = setup();
-            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+            const batchHeader = setupComponentWithDummy({});
+            const handler = jest.fn();
+            batchHeader.addEventListener('batchdryrun', handler);
 
             const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
             const dryRunButton = buttons[0];
@@ -134,14 +106,14 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             await flushPromises();
 
-            const dryRunCustomEvent = new CustomEvent('batchdryrun');
-            expect(dispatchEventSpy).toHaveBeenCalledWith(dryRunCustomEvent);
-            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('batchdryrun');
+            expect(handler).toHaveBeenCalled();
+            expect(handler.mock.calls[0][0].type).toBe('batchdryrun');
         });
 
         it('should dispatch expected custom event when process batch button is clicked', async () => {
-            const batchHeader = setup();
-            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+            const batchHeader = setupComponentWithDummy({});
+            const handler = jest.fn();
+            batchHeader.addEventListener('processbatch', handler);
 
             const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
             const processBatchButton = buttons[1];
@@ -150,15 +122,15 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             await flushPromises();
 
-            const processBatchCustomEvent = new CustomEvent('processbatch');
-            expect(dispatchEventSpy).toHaveBeenCalledWith(processBatchCustomEvent);
-            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('processbatch');
+            expect(handler).toHaveBeenCalled();
+            expect(handler.mock.calls[0][0].type).toBe('processbatch');
         });
 
         it('should dispatch expected custom event when edit button is clicked', async () => {
-            const batchHeader = setup();
+            const batchHeader = setupComponentWithDummy({ id: 'DUMMY_ID' });
             batchHeader.batchId = 'DUMMY_ID';
-            const dispatchEventSpy = jest.spyOn(batchHeader, 'dispatchEvent');
+            const handler = jest.fn();
+            batchHeader.addEventListener('edit', handler);
 
             const buttons = batchHeader.shadowRoot.querySelectorAll('lightning-button');
             const editBatchButton = buttons[2];
@@ -167,10 +139,9 @@ describe('c-ge-batch-gift-entry-header', () => {
 
             await flushPromises();
 
-            const editBatchCustomEvent = new CustomEvent('edit');
-            expect(dispatchEventSpy).toHaveBeenCalledWith(editBatchCustomEvent);
-            expect(dispatchEventSpy.mock.calls[0][0].type).toBe('edit');
-            expect(dispatchEventSpy.mock.calls[0][0].detail).toBe('DUMMY_ID');
+            expect(handler).toHaveBeenCalled();
+            expect(handler.mock.calls[0][0].type).toBe('edit');
+            expect(handler.mock.calls[0][0].detail).toBe('DUMMY_ID');
         });
     });
 });
