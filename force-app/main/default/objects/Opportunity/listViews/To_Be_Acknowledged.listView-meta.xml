@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>To_Be_Acknowledged</fullName>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>Primary_Contact__c</columns>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>OPPORTUNITY.AMOUNT</columns>
+    <columns>OPPORTUNITY.CLOSE_DATE</columns>
+    <columns>OPPORTUNITY.STAGE_NAME</columns>
+    <columns>Acknowledgment_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Acknowledgment_Status__c</field>
+        <operation>equals</operation>
+        <value>To Be Acknowledged,Email Acknowledgment Not Sent</value>
+    </filters>
+    <label>To Be Acknowledged</label>
+    <language>en_US</language>
+</ListView>

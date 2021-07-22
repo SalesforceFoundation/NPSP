@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When selected, this field disables several aspects of NPSP Opportunity Contact Role automation, potentially resulting in incorrect or duplicate data. Refer to the product documentation for more details.</help>
+    <label>Disable Contact Role Automation</label>
+    <name>DisableContactRoleAutomation__c</name>
+</CustomFieldTranslation>

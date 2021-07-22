@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Records_Failed__c</fullName>
+    <description>Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field.</inlineHelpText>
+    <label>Records Failed</label>
+    <precision>8</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

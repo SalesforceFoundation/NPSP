@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מספר הטלפון של משרד תוכנית השוואת התרומות.</help>
+    <label>טלפון של השוואת תרומות</label>
+    <name>Matching_Gift_Phone__c</name>
+</CustomFieldTranslation>

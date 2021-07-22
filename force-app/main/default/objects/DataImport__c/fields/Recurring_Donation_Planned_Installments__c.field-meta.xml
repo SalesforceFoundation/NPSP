@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Planned_Installments__c</fullName>
+    <description>Number of installments you expect to receive. Only used when Recurring Type is Fixed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of installments you expect to receive. Only used when Recurring Type is Fixed.</inlineHelpText>
+    <label>Recurring Donation Planned Installments</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>התאריך שבו התורם התבקש להעניק את התרומה, לעומת תאריך סגירת ההזדמנות שהארגון עשוי לקבוע כמועד היצירה הראשון של ההזדמנות, או כמועד הזכייה בהזדמנות.</help>
+    <label>תאריך בקשה</label>
+    <name>Ask_Date__c</name>
+</CustomFieldTranslation>

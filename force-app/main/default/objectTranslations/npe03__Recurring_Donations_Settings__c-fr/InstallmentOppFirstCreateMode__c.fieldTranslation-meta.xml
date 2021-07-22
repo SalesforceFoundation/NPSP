@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Spécifie comment NPSP crée la première opportunité de versement pour des dons récurrents. La valeur par défaut est Synchrone.</help>
+    <label>Comportement async opportunité versement</label>
+    <name>InstallmentOppFirstCreateMode__c</name>
+</CustomFieldTranslation>

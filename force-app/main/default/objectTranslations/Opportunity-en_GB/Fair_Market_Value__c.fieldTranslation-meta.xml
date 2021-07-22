@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The Fair Market Value of an In-Kind gift.</help>
+    <label>Fair Market Value</label>
+    <name>Fair_Market_Value__c</name>
+</CustomFieldTranslation>

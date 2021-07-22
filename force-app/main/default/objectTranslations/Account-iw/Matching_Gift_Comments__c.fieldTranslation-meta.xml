@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>הערות נוספות בנושא תוכנית השוואת התרומות של החברה.</help>
+    <label>הערות בנושא השוואת תרומות</label>
+    <name>Matching_Gift_Comments__c</name>
+</CustomFieldTranslation>

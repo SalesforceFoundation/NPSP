@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>来年または翌会計年度の継続支援の予測総額 (参照のみ)。</help>
+    <label>来年の金額</label>
+    <name>NextYearValue__c</name>
+</CustomFieldTranslation>

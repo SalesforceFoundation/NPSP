@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אחוז ההזדמנות שיש להקצות ליחידה חשבונאית כללית זו. שינוי סכום ההזדמנות של הקצאה המבוססת על אחוזים יביא לשינוי סכום ההקצאה.</help>
+    <label>אחוז</label>
+    <name>Percent__c</name>
+</CustomFieldTranslation>

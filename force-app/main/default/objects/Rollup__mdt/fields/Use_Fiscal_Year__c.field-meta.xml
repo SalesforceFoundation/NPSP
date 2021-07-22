@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Fiscal_Year__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Use Fiscal Year</label>
+    <type>Checkbox</type>
+</CustomField>

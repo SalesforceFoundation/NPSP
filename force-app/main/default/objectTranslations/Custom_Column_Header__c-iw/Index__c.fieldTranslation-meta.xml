@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The position of the field in the list view. --></help>
+    <label><!-- Index --></label>
+    <name>Index__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se marca, NPSP calcula las totalizaciones de donantes al procesar donaciones. Si no se marca, las totalizaciones se calculan durante el trabajo nocturno predeterminado. Tenga en cuenta que al seleccionar se ralentizará el procesamiento del lote.</help>
+    <label>Calcular totalizaciones donaciones lote</label>
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
+</CustomFieldTranslation>

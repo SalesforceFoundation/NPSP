@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The name of the county the Address is in.</help>
+    <label>County Name</label>
+    <name>County_Name__c</name>
+</CustomFieldTranslation>

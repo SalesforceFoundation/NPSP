@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>אם אפשרות זו מסומנת, שינויים בשדה הכתובת של איש קשר או חשבון יחיד מעדכנים את הכתובת הקיימת, במקום ליצור כתובת חדשה.</help>
+    <label>שינוי כתובת פשוט מטופל כעדכון</label>
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
+</CustomFieldTranslation>

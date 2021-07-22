@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>שדה זה ממפה אל השדה &apos;הוקצה ל-&apos; של המשימה. אם הוא ריק, המשימה תוקצה לפי כלל ההקצאה הריקה של התבנית.</help>
+    <label>הוקצה ל-</label>
+    <name>Assigned_To__c</name>
+    <relationshipLabel>משימות תוכנית מעורבות</relationshipLabel>
+</CustomFieldTranslation>
