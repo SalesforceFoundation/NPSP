@@ -101,16 +101,29 @@ public inherited sharing class HouseholdsApp {
     }
 
     public void onBeforeUpdateOf(Accounts accounts) {
-        Accounts accountsWithBillingAddressChanges = accounts.withBillingAddressChanges();
         if (isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
-                    accountsWithBillingAddressChanges.householdAccounts()
+                    accounts.withBillingAddressChanges().householdAccounts()
             );
         }
         if (isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(
-                    accountsWithBillingAddressChanges.orgAccounts()
+                    accounts.withBillingAddressChanges().orgAccounts()
             );
+        }
+    }
+
+    public void onAfterUpdateOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Account> listAccCreateAddr = new List<Account>();
+        if (isAddressManagementEnabled()) {
+            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().orgAccounts());
+        }
+        // create any new Address objects
+        if (listAccCreateAddr.size() > 0) {
+            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
         }
     }
 

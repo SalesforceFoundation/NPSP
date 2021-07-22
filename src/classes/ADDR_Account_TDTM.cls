@@ -69,36 +69,16 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
                 accounts = new Accounts(listNew, listOld);
                 householdsApp.onBeforeUpdateOf(accounts);
             }
-        }
-
-        // AFTER INSERT
-        if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            accounts = new Accounts(listNew);
-            householdsApp.onAfterInsertOf(accounts, dmlWrapper);
+            when AfterInsert {
+                accounts = new Accounts(listNew);
+                householdsApp.onAfterInsertOf(accounts, dmlWrapper);
+            }
         }
 
         // AFTER UPDATE
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            List<Account> listAccCreateAddr = new List<Account>();
-            for (Integer i = 0; i < listNew.size(); i++) {
-                Account newRecord = (Account) listNew[i];
-                Account oldRecord = (listOld != null ? (Account) listOld[i] : null);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(newRecord, oldRecord);
-
-                if ((isAddressManagementEnabled() &&
-                        isHouseholdAccount(newRecord)) ||
-                        (!isIndividualAccount(newRecord) &&
-                                isOrgAccountAddressesEnabled())) {
-                    // if the address changed, remember the account we want to add a new address for
-                    if (npspHousehold.isBillingAddressChanged()) {
-                        listAccCreateAddr.add(newRecord);
-                    }
-                }
-            }
-            // create any new Address objects
-            if (listAccCreateAddr.size() > 0) {
-                createAddrFromAcc(listAccCreateAddr, dmlWrapper);
-            }
+            accounts = new Accounts(listNew, listOld);
+            householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
         }
 
         return dmlWrapper;    
