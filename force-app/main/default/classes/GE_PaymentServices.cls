@@ -203,6 +203,7 @@ public with sharing class GE_PaymentServices {
     */
     public with sharing class Metadata {
         public String campaignCode;
+        public String originType = 'CRM';
     }
 
     /**
