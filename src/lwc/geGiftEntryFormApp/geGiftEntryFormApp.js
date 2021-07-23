@@ -31,7 +31,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
-    @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
 
