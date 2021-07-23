@@ -6,7 +6,7 @@ import GeBatchGiftEntryTable from 'c/geBatchGiftEntryTable';
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 
-const mockRenderWrapper = require('./data/retrieveDefaultSGERenderWrapper.json');
+const mockRenderWrapper = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const mockSections = require('./data/sections.json');
 const mockLegacyDataImportModel = require('./data/legacyDataImportModel.json');
 const mockDataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');

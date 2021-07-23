@@ -12,7 +12,7 @@ import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBat
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
-const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
+const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
 const legacyDataImportModel = require('./data/legacyDataImportModel.json');
 
