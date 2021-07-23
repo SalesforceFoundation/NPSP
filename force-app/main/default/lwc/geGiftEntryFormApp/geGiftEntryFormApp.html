@@ -46,6 +46,7 @@
             <template if:false={isBatchProcessing}>
                 <c-ge-form-renderer
                         batch-id={recordId}
+                        onclearcurrentgift={handleClearCurrentGift}
                         onsubmit={handleSubmit}
                         onsectionsretrieved={handleSectionsRetrieved}
                         onpermissionerror={handlePermissionErrors}

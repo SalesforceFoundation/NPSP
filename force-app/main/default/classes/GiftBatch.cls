@@ -119,6 +119,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.gifts;
     }
 
+    public void deleteGiftBy(GiftId giftId) {
+        Gift memberGift = this.gifts.findBy(giftId);
+        memberGift.deleteRecord();
+    }
+
     public Map<String, Integer> totals() {
         return this.totals.toMap();
     }

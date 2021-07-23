@@ -152,6 +152,17 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static GiftBatchView deleteGiftFromGiftBatch(Id batchId, Id dataImportId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(batchId);
+            GiftId giftId = new GiftId(dataImportId);
+            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Indicates if the org is connected to Elevate
     * @return Boolean

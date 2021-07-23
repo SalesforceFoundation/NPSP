@@ -496,6 +496,8 @@ export default class GeFormRenderer extends LightningElement{
             } else {
                 this.goToLandingPage();
             }
+        } else {
+            this.dispatchEvent(new CustomEvent('clearcurrentgift'));
         }
     }
 

@@ -59,6 +59,15 @@ public with sharing class Gifts {
         setElevateBatchIds(dataImports);
     }
 
+    public Gift findBy(GiftId giftId) {
+        for (DataImport__c dataImport : dataImports) {
+            if (giftId.value() == dataImport.Id) {
+                return new Gift(dataImport);
+            }
+        }
+        return null;
+    }
+
     public List<Gift> all() {
         List<Gift> gifts = new List<Gift>();
         for (DataImport__c dataImport : dataImports) {

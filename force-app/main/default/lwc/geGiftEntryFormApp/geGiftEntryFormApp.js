@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
@@ -16,6 +16,7 @@ import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFo
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 
+import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
@@ -97,9 +98,23 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
         try {
             if (this.isBatchMode) {
+
                 const gift = event.detail.dataImportRecord;
-                this.giftBatchState = await this.giftBatch.add(gift);
+                if (gift.Id) {
+                    this.giftBatchState = await this.giftBatch.updateMember(gift);
+                } else {
+                    this.giftBatchState = await this.giftBatch.addMember(gift);
+                }
+
                 event.detail.success();
+
+                showToast(
+                    this.CUSTOM_LABELS.PageMessagesConfirm,
+                    'Gift successfully saved',
+                    'success',
+                    'dismissible',
+                    null
+                );
             }
         } catch (error) {
             this.errorCallback(error);
@@ -147,6 +162,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleLoadData(event) {
         const form = this.template.querySelector('c-ge-form-renderer');
         form.loadDataImportRecord(event.detail);
+        this.currentGift = event.detail;
     }
 
     handlePermissionErrors() {
@@ -347,9 +363,26 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return !this.requireTotalMatch();
     }
 
-    handleDelete(event) {
-        this.count--;
-        this.total = this.total - event.detail.amount;
+    handleClearCurrentGift() {
+        this.currentGift = null;
+    }
+
+    async handleDelete(event) {
+        // TODO: maybe throw spinner while record is being deleted?
+        const gift = event.detail;
+        this.giftBatchState = await this.giftBatch.remove(gift);
+
+        if (this.currentGift?.Id === gift?.Id) {
+            fireEvent(this, 'formRendererReset', {});
+        }
+
+        showToast(
+            this.CUSTOM_LABELS.PageMessagesConfirm,
+            bgeGridGiftDeleted,
+            'success',
+            'dismissible',
+            null
+        );
     }
 
     handleCountChanged(event) {

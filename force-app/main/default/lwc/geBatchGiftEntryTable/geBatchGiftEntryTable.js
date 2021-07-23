@@ -312,11 +312,14 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 this.loadRow(event.detail.row);
                 break;
             case 'delete':
-                deleteRecord(event.detail.row.Id).then(() => {
-                    this.deleteDIRow(event.detail.row);
-                }).catch(error => {
-                    handleError(error);
-                });
+                this.dispatchEvent(new CustomEvent('delete', {
+                    detail: event.detail.row
+                }));
+                // deleteRecord(event.detail.row.Id).then(() => {
+                //     this.deleteDIRow(event.detail.row);
+                // }).catch(error => {
+                //     handleError(error);
+                // });
                 break;
         }
     }

@@ -192,41 +192,10 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('save, update, and delete behavior', () => {
-        // it('should call expected methods on the table component when a gift is saved in batch mode', async () => {
-        //     saveAndDryRunDataImport.mockResolvedValue(JSON.stringify(legacyDataImportModel));
-        //     const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
-        //     await flushPromises();
-
-        //     const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
-        //     const submitEventSpy = jest.spyOn(batchTable, 'handleSubmit');
-
-        //     const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
-        //     const submitEvent = new CustomEvent('submit', {
-        //         detail: {
-        //             dataImportRecord: { Id: 'DUMMY_ID' },
-        //             success: jest.fn(),
-        //             error: jest.fn()
-        //         }
-        //     });
-        //     geFormRenderer.dispatchEvent(submitEvent);
-        //     await flushPromises();
-
-        //     expect(submitEventSpy).toHaveBeenCalled();
-        //     const spiedSubmitEventDetails = submitEventSpy.mock.calls[0][0].detail;
-        //     expect(spiedSubmitEventDetails.dataImportRecord.Id).toEqual('DUMMY_ID');
-        //     console.log('spiedEventDetail: ', spiedSubmitEventDetails);
-        //     expect(spiedSubmitEventDetails.success).toHaveBeenCalled();
-        // });
-
-        it('should call expected methods on the table component when a gift save fails in batch mode', async () => {
-            saveAndDryRunDataImport.mockImplementation(() => {
-                throw new Error();
-            });;
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
+        it('should call saveAndDryRunDataImport with expected arguments when a gift is saved in batch mode', async () => {
+            saveAndDryRunDataImport.mockResolvedValue(JSON.stringify(legacyDataImportModel));
+            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
-
-            const batchTable = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-table');
-            const badSubmitEventSpy = jest.spyOn(batchTable, 'handleSubmit');
 
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
             const submitEvent = new CustomEvent('submit', {
@@ -239,10 +208,32 @@ describe('c-ge-gift-entry-form-app', () => {
             geFormRenderer.dispatchEvent(submitEvent);
             await flushPromises();
 
-            expect(badSubmitEventSpy).toHaveBeenCalled();
-            const spiedSubmitEventDetails = badSubmitEventSpy.mock.calls[0][0].detail;
-            expect(spiedSubmitEventDetails.dataImportRecord.Id).toEqual('DUMMY_ID');
-            expect(spiedSubmitEventDetails.error).toHaveBeenCalled();
+            expect(submitEvent.detail.success).toHaveBeenCalled();
+            expect(saveAndDryRunDataImport).toHaveBeenCalled();
+            expect(saveAndDryRunDataImport.mock.calls[0][0].batchId).toEqual('DUMMY_BATCH_ID');
+            expect(saveAndDryRunDataImport.mock.calls[0][0].dataImport.Id).toEqual('DUMMY_ID');
+        });
+
+        it('should call expected methods when a gift save fails in batch mode', async () => {
+            saveAndDryRunDataImport.mockImplementation(() => {
+                throw new Error();
+            });
+            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const submitEvent = new CustomEvent('submit', {
+                detail: {
+                    dataImportRecord: { Id: 'DUMMY_ID' },
+                    success: jest.fn(),
+                    error: jest.fn()
+                }
+            });
+
+            geFormRenderer.dispatchEvent(submitEvent);
+            await flushPromises();
+
+            expect(submitEvent.detail.error).toHaveBeenCalled();
         });
     });
 });

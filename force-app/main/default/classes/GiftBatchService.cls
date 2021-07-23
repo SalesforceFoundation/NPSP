@@ -73,4 +73,10 @@ public with sharing class GiftBatchService {
         giftBatch.updateWith(giftBatchChanges);
         return viewModelFrom(giftBatchId);
     }
+
+    public GiftBatchView deleteMemberGiftBy(GiftBatchId giftBatchId, GiftId giftId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.deleteGiftBy(giftId);
+        return viewModelFrom(giftBatchId);
+    }
 }
