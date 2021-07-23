@@ -2,6 +2,7 @@ import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBat
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import Gift from 'c/geGift';
 
@@ -67,6 +68,11 @@ class GiftBatch {
 
     async dryRun() {
         await runBatchDryRun({ batchId: this._id, numberOfRowsToReturn: 0 });
+        return await this._latestState();
+    }
+
+    async add(gift) {
+        await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
         return await this._latestState();
     }
 

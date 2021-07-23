@@ -90,16 +90,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @param {object} event: Custom Event containing the Data Import record and
     * potentially other objects (booleans, callbacks, etc).
     */
-    handleSubmit(event) {
+    async handleSubmit(event) {
         // Callback received from geFormRenderer. Provides functions that
         // toggle the form save button, toggle the lightning spinner, and displays aura exceptions.
         this.errorCallback = event.detail.error;
 
         try {
             if (this.isBatchMode) {
-                this.batchGiftSubmit(event);
-            } else {
-                // TODO: potentially receive event here and navigate to record detail page
+                const gift = event.detail.dataImportRecord;
+                this.giftBatchState = await this.giftBatch.add(gift);
+                event.detail.success();
             }
         } catch (error) {
             this.errorCallback(error);
