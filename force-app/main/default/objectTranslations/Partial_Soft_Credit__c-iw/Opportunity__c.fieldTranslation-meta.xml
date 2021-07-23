@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>ההזדמנות שעליה יחול קרדיט זה.</help>
+    <label>הזדמנות</label>
+    <name>Opportunity__c</name>
+    <relationshipLabel>קרדיט חלקי</relationshipLabel>
+</CustomFieldTranslation>

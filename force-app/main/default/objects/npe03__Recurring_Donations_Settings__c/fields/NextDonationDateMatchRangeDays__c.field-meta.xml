@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NextDonationDateMatchRangeDays__c</fullName>
+    <defaultValue>3</defaultValue>
+    <description>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new
+            installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to
+            Recurring Donations where Installment Period is Monthly or Yearly.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of days before or after the Next Donation Date that NPSP won&apos;t create a new
+            installment Opportunity if the next open Opportunity&apos;s Close Date is changed. Applies only to
+            Recurring Donations where Installment Period is Monthly or Yearly.</inlineHelpText>
+    <label>Next Donation Date Match Range</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

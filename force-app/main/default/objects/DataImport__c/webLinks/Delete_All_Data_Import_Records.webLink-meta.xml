@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delete_All_Data_Import_Records</fullName>
+    <availability>online</availability>
+    <displayType>massActionButton</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <height>600</height>
+    <linkType>url</linkType>
+    <masterLabel>Delete All Data Import Records</masterLabel>
+    <openType>sidebar</openType>
+    <protected>false</protected>
+    <requireRowSelection>false</requireRowSelection>
+    <url>/apex/{!$Setup.Package_Settings__c.Namespace_Prefix__c}BDI_DataImportDeleteBTN?action=deleteAll&amp;retURL={!URLFOR($Action.DataImport__c.Tab, $ObjectType.DataImport__c)}</url>
+</WebLink>

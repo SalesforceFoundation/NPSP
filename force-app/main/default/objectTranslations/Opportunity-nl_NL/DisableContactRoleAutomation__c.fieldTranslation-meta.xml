@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indien aangevinkt, schakelt dit veld verscheidene aspecten van de automatisering van NPSP-Opportunitycontactpersoonrol uit, wat mogelijk leidt tot onjuiste gegevens of duplicaatgegevens. Raadpleeg de productdocumentatie voor meer informatie.</help>
+    <label>Automatisering Contactpersoonrol uitsch.</label>
+    <name>DisableContactRoleAutomation__c</name>
+</CustomFieldTranslation>

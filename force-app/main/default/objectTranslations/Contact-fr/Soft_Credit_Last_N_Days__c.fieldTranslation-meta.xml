@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le montant total des crédits indirects attribués à ce contact au cours des N derniers jours. La valeur de N est définie dans les Paramètres NPSP | Dons | Statistiques des donateurs.</help>
+    <label>Crédits indirects des N derniers jours</label>
+    <name>Soft_Credit_Last_N_Days__c</name>
+</CustomFieldTranslation>

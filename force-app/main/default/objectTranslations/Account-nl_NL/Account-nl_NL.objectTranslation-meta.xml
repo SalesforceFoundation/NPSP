@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldSets>
+        <label><!-- BDE Entry FS --></label>
+        <name>BDE_Entry_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- BDE List FS --></label>
+        <name>BDE_List_FS</name>
+    </fieldSets>
+    <fieldSets>
+        <label><!-- Manage Household Custom --></label>
+        <name>Manage_Household_Custom</name>
+    </fieldSets>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Adres</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Beschrijving</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Donatietotalen</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Lidmaatschapsinformatie</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Adres</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label>Beschrijving</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Donatietotalen</label>
+            <section>Donation Totals</section>
+        </sections>
+        <sections>
+            <label>Velden</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Subsidieverleningsinformatie</label>
+            <section>Grantmaking Information</section>
+        </sections>
+        <sections>
+            <label>Opmerkingen Geëvenaarde Gift</label>
+            <section>Matching Gift Comments</section>
+        </sections>
+        <sections>
+            <label>Overeenkomende Giftinformatie</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Lidmaatschapsinformatie</label>
+            <section>Membership Information</section>
+        </sections>
+    </layouts>
+    <quickActions>
+        <label>Nieuw Adres</label>
+        <name>New_Address</name>
+    </quickActions>
+    <quickActions>
+        <label>Nieuwe Gelieerde Organisatie</label>
+        <name>New_Affiliation</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Household_Update</name>
+    </quickActions>
+    <quickActions>
+        <label>Snelle Update</label>
+        <name>Quick_Organization_Update</name>
+    </quickActions>
+    <webLinks>
+        <label>Huishouden beheren</label>
+        <name>Manage_Household</name>
+    </webLinks>
+    <webLinks>
+        <label>Nieuwe gift</label>
+        <name>New_Gift</name>
+    </webLinks>
+    <webLinks>
+        <label>Totaliseringen opnieuw berekenen</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

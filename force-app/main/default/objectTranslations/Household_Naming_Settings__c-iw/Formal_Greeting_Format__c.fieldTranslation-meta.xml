@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>התבנית שתשמש עבור הברכה הרשמית של משק הבית.</help>
+    <label>תבנית ברכה רשמית</label>
+    <name>Formal_Greeting_Format__c</name>
+</CustomFieldTranslation>

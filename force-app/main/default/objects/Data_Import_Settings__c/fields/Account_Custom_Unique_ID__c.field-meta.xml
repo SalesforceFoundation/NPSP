@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Custom_Unique_ID__c</fullName>
+    <description>An optional Unique Id field to use for Organization Account matching</description>
+    <externalId>false</externalId>
+    <inlineHelpText>An optional Unique Id field to use for Organization Account matching</inlineHelpText>
+    <label>Account Custom Unique ID</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

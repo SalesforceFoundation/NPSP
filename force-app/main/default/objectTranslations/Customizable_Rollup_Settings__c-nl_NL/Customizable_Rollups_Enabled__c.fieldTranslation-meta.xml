@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Vink dit selectievakje aan om de nieuwe Motor voor NPSP-Aanpasbare Totaliseringen in te schakelen</help>
+    <label>Aanpasbare Totaliseringen inschakelen</label>
+    <name>Customizable_Rollups_Enabled__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Process_Using_Scheduled_Job__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When checked, the batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
+    <label>Process Using Scheduled Job</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>助成金提供団体の Web サイトにある助成金の要件を指し示す URL。</help>
+    <label>助成金の要件 Web サイト</label>
+    <name>Grant_Requirements_Website__c</name>
+</CustomFieldTranslation>

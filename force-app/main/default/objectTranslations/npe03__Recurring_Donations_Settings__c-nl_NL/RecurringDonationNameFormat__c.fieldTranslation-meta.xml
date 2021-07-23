@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>De indeling die moet worden gebruikt voor de naam van terugkerende donaties.</help>
+    <label>Indeling naam van terugkerende donatie</label>
+    <name>RecurringDonationNameFormat__c</name>
+</CustomFieldTranslation>

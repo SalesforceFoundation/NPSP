@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het max. aantal gerelateerde Opp. op een Account of Contactpersoon toegestaan in Batchtaken Totalisering in niet-Verschuivingsmodus. Een Account of Contactpersoon met meer gerelateerde Opp. wordt altijd getotaliseerd aan de hand van de Verschuivingsmodus.</help>
+    <label>Drempelwaarde Verschuivingsmodus</label>
+    <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+</CustomFieldTranslation>

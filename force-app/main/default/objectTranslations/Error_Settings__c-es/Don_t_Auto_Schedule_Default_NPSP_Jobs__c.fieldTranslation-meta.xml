@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Cuando se marca, NPSP no programará automáticamente trabajos recurrentes predeterminado. Estos trabajos recurrentes calculan totalizaciones, actualizan donaciones recurrentes y direcciones de temporada y realizan el control de errores.</help>
+    <label>No programar autom trabajos NPSP predet</label>
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
+</CustomFieldTranslation>
