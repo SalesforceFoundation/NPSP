@@ -33,32 +33,17 @@ cci flow run dependencies --org translations
 cci flow run deploy_unmanaged --org translations
 cci task run update_admin_profile --org translations
 
-echo "# ==== RESET the Package.xml and use retrieve_unpackaged to pull down the metadata ===="
-git checkout src/package.xml
-cci task run retrieve_unpackaged --org translations -o path src -o package_xml src/package.xml
+echo "# ==== Use force:source:retrieve to pull down the non-object related translation metadata ===="
+# cci task run retrieve_unpackaged --org translations
+sfdx force:source:retrieve -p force-app/main/default/translations -u Cumulus__translations
 
-echo "# ==== DISCARD other files pulled down by the above task that we do not need ===="
-git checkout src/applications/*
-git checkout src/aura/*
-git checkout src/classes/*
-git checkout src/components/*
-git checkout src/customMetadata/*
-git checkout src/email/*
-git checkout src/featureParameters/*
-git checkout src/labels/*
-git checkout src/layouts/*
-git checkout -- src/lwc
-git checkout src/objects/*
-git checkout src/pages/*
-git checkout src/reports/*
-git checkout src/tabs/*
-git checkout src/triggers/*
-git checkout src/workflows/*
-git checkout src/package.xml
+echo "# ==== CLEANUP task to strip out extraneous elements from the translation files ===="
+cci task run cleanup_translation_metadata
+
 
 echo "# ==== CLEANUP Empty Unpackaged ObjectTranslation Files ===="
 
-rm src/objectTranslations/DuplicateRecordSet*.objectTranslation
+# rm force-app/main/default/objectTranslations/DuplicateRecordSet*.objectTranslation
 
 rm unpackaged/config/trial/objectTranslations/___NAMESPACE___Allocation__c-*.objectTranslation
 rm unpackaged/config/trial/objectTranslations/___NAMESPACE___Batch__c-*.objectTranslation
@@ -72,9 +57,6 @@ rm unpackaged/config/trial/objectTranslations/___NAMESPACE___Schedulable__c-*.ob
 rm unpackaged/config/trial/objectTranslations/___NAMESPACE___Trigger_Handler__c-*.objectTranslation
 
 rm unpackaged/post/first/objectTranslations/Global-*.objectTranslation
-
-echo "# ==== CLEANUP task to strip out extraneous elements from the translation files ===="
-cci task run cleanup_translation_metadata
 
 echo "# ==== Insert special translation overrides for Enhanced Recurring Donations unpackaged metadata ===="
 
@@ -118,4 +100,6 @@ fi
 
 cci org remove translations
 
+echo "###############################################################################################"
 echo "# ==== DONE! - Review the remaining modified translation files before committing back into the branch"
+echo "###############################################################################################"
