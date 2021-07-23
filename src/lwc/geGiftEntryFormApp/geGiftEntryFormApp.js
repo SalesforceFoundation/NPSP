@@ -17,8 +17,6 @@ import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFo
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 
-import Gift from './helpers/gift';
-
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
@@ -45,7 +43,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     namespace;
     count;
     total;
-    batch = {};
     isLoading = true;
 
     giftBatch = new GiftBatch();
@@ -66,7 +63,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
 
         this.giftBatchState = await this.giftBatch.init(this.recordId);
-        this.isLoading = false;
+        await this.updateAppDisplay();
     }
 
     disconnectedCallback() {
@@ -75,6 +72,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async retrieveBatchTotals() {
         this.giftBatchState = await this.giftBatch.refreshTotals();
+        await this.updateAppDisplay();
+    }
+
+    async updateAppDisplay() {
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
