@@ -2,6 +2,8 @@ import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBat
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 
+import Gift from 'c/geGift';
+
 class GiftBatch {
     _id;
     _name = '';
@@ -44,13 +46,8 @@ class GiftBatch {
             this._currencyIsoCode = viewModel.currencyIsoCode
             this._lastModifiedDate = viewModel.lastModifiedDate;
             this._totals = viewModel.totals;
-            // viewModel.gifts.forEach(giftView => {
-            //     console.log('Gift View: ', giftView);
-            //     this._gifts.push(new Gift(giftView));
-            // });
-            this._gifts = [];
-            viewModel.gifts.forEach(gift => {
-                this._gifts.push(gift);
+            viewModel.gifts.forEach(giftView => {
+                this._gifts.push(new Gift(giftView));
             });
         }
     }
