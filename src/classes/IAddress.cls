@@ -57,5 +57,6 @@ public interface IAddress {
     Boolean isDifferentIncludingLatLong(IAddress other);
     Boolean isUndeliverable();
     Boolean isUndeliverableStatusChanged();
-
+    Boolean isNewDefault();
+    Boolean isDefault();
 }

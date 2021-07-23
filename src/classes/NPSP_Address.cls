@@ -307,6 +307,10 @@ public inherited sharing class NPSP_Address implements IAddress {
         return address.Default_Address__c;
     }
 
+    public Boolean isNewDefault() {
+        return address.Default_Address__c && (address.Default_Address__c != oldAddress.Default_Address__c);
+    }
+
     public void setAsDefault() {
         address.Default_Address__c = true;
     }
