@@ -1,5 +1,4 @@
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
@@ -16,20 +15,11 @@ import checkForElevateCustomer
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import BATCH_NAME
-    from '@salesforce/schema/DataImportBatch__c.Name';
-import EXPECTED_COUNT_OF_GIFTS
-    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import EXPECTED_TOTAL_BATCH_AMOUNT
-    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
-import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
-import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
 import Gift from './helpers/gift';
 
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
-const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
 
 import GiftBatch from 'c/geGiftBatch';
 
