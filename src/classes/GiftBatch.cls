@@ -102,6 +102,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         gifts.updateRecords();
     }
 
+    public void updateWith(InboundGiftBatchDTO giftBatchChanges) {
+        unitOfWork.registerDirty(new List<sObject> { giftBatchChanges.toSObject() });
+        Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
+    }
+
     public Id id() {
         return this.giftBatchId.value();
     }
@@ -145,5 +150,16 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     public String currencyIsoCode() {
         RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
         return currencyCode.value();
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
     }
 }

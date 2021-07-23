@@ -28,11 +28,11 @@ class GiftBatch {
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
         const viewModel = await getGiftBatchView({ dataImportBatchId: this._id });
-        this._setProperties(viewModel);
+        this._setPropertiesFrom(viewModel);
         return this.state();
     }
 
-    _setProperties(viewModel) {
+    _setPropertiesFrom(viewModel) {
         if (viewModel) {
             this._id = viewModel.giftBatchId;
             this._name = viewModel.name;
@@ -60,9 +60,9 @@ class GiftBatch {
         return this.state();
     }
 
-    async updateWith(newGiftBatchValues) {
-        const newViewModel = await updateGiftBatchWith({ newGiftBatchValues });
-        this._setProperties(newViewModel);
+    async updateWith(giftBatchChanges) {
+        const newViewModel = await updateGiftBatchWith({ giftBatchChanges: JSON.stringify(giftBatchChanges) });
+        this._setPropertiesFrom(newViewModel);
         return this.state();
     }
 

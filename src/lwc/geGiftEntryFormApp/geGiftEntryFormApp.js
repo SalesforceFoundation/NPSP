@@ -413,13 +413,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async saveGiftBatchTableColumnChange(batchTableColumns) {
         try {
-            const changedGiftBatchDataAsDataImportBatch = {
-                Id: this.giftBatchState.id,
-                [BATCH_TABLE_COLUMNS_FIELD.fieldApiName]: JSON.stringify(batchTableColumns)
+            const giftBatchChanges = {
+                giftBatchId: this.giftBatchState.id,
+                batchTableColumns: JSON.stringify(batchTableColumns)
             };
 
             this.giftBatchState =
-                await this.giftBatch.updateWith(changedGiftBatchDataAsDataImportBatch);
+                await this.giftBatch.updateWith(giftBatchChanges);
         } catch(error) {
             handleError(error);
         }

@@ -142,9 +142,11 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static GiftBatchView updateGiftBatchWith(DataImportBatch__c newGiftBatchValues){
+    public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
         try {
-            return giftBatchService.store(newGiftBatchValues);
+            GiftBatchDTO giftBatchChanges =
+                (GiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, GiftBatchDTO.class);
+            return giftBatchService.store(giftBatchChanges);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }

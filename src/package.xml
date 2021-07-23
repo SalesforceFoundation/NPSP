@@ -420,6 +420,7 @@
         <members>IGiftBatch</members>
         <members>INamingExclusions</members>
         <members>INamingExclusionsString</members>
+        <members>InboundGiftBatchDTO</members>
         <members>LD_LeadConvertOverride_CTRL</members>
         <members>LD_LeadConvertOverride_TEST</members>
         <members>LVL_LevelAssignBATCH_TEST</members>
@@ -595,6 +596,7 @@
         <members>RP_YoutubeController</members>
         <members>RP_YoutubeTest</members>
         <members>RP_YoutubeTestMock</members>
+        <members>RecordCurrencyCode</members>
         <members>STG_DataBoundMultiSelect_CTRL</members>
         <members>STG_InstallScript</members>
         <members>STG_InstallScript_TEST</members>

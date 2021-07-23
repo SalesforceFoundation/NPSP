@@ -67,22 +67,10 @@ public with sharing class GiftBatchService {
         return new GiftBatchView(giftBatchDTO);
     }
 
-    public GiftBatchView store(DataImportBatch__c dataImportBatch) {
-        unitOfWork.registerDirty(new List<sObject> { dataImportBatch });
-        Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
-        GiftBatchId giftBatchId = new GiftBatchId(giftBatchSaveResults[0].Id);
-
+    public GiftBatchView store(InboundGiftBatchDTO giftBatchChanges) {
+        GiftBatchId giftBatchId = new GiftBatchId(giftBatchChanges.giftBatchId);
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.updateWith(giftBatchChanges);
         return viewModelFrom(giftBatchId);
-    }
-
-    @TestVisible
-    private UnitOfWork unitOfWork {
-        get {
-            if (unitOfWork == null) {
-                unitOfWork = new UnitOfWork();
-            }
-            return unitOfWork;
-        }
-        set;
     }
 }
