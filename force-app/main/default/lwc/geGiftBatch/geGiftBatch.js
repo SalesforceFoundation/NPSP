@@ -1,6 +1,7 @@
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
+import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 
 import Gift from 'c/geGift';
 
@@ -60,6 +61,17 @@ class GiftBatch {
 
     async updateWith(giftBatchChanges) {
         const newViewModel = await updateGiftBatchWith({ giftBatchChangesAsJSON: JSON.stringify(giftBatchChanges) });
+        this._setPropertiesFrom(newViewModel);
+        return this.state();
+    }
+
+    async dryRun() {
+        await runBatchDryRun({ batchId: this._id, numberOfRowsToReturn: 0 });
+        return await this._latestState();
+    }
+
+    async _latestState() {
+        const newViewModel = await getGiftBatchView({ dataImportBatchId: this._id });
         this._setPropertiesFrom(newViewModel);
         return this.state();
     }

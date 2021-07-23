@@ -133,27 +133,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } finally {
             if (this.shouldDisplayExpiredAuthorizationWarning()) {
                 this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
-                    () => { 
-                        this.callBatchDryRun(); 
+                    async () => {
+                        this.giftBatchState = await this.giftBatch.dryRun();
                         this.dispatchEvent(new CustomEvent('closemodal')); 
                     } 
                 );
             } else {
-                this.callBatchDryRun();
+                this.giftBatchState = await this.giftBatch.dryRun();
             }
         }
-    }
-    
-    callBatchDryRun() {
-        //toggle the spinner on the form
-        const form = this.template.querySelector('c-ge-form-renderer');
-        const toggleSpinner = function () {
-            form.showSpinner = !form.showSpinner
-        };
-        form.showSpinner = true;
-
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.runBatchDryRun(toggleSpinner);
     }
 
     handleLoadData(event) {

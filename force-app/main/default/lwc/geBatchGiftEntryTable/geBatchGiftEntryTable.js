@@ -2,7 +2,7 @@ import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
-import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
+// import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
@@ -371,31 +371,31 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     //         });
     // }
 
-    @api
-    runBatchDryRun(callback) {
-        // TODO: should be performed in formApp
-        runBatchDryRun({
-            batchId: this.batchId,
-            numberOfRowsToReturn: this.data.length
-        })
-            .then(result => {
-                const dataImportModel = JSON.parse(result);
-                this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.batchTotalRowAmount;
-                dataImportModel.dataImportRows.forEach(row => {
-                    this.upsertData(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)), 'Id');
-                });
-            })
-            .catch(error => {
-                handleError(error);
-            })
-            .finally(() => {
-                callback();
-            });
-    }
+    // @api
+    // runBatchDryRun(callback) {
+    //     // TODO: should be performed in formApp
+    //     runBatchDryRun({
+    //         batchId: this.batchId,
+    //         numberOfRowsToReturn: this.data.length
+    //     })
+    //         .then(result => {
+    //             const dataImportModel = JSON.parse(result);
+    //             this._count = dataImportModel.totalCountOfRows;
+    //             this._total = dataImportModel.batchTotalRowAmount;
+    //             dataImportModel.dataImportRows.forEach(row => {
+    //                 this.upsertData(
+    //                     Object.assign(row,
+    //                         this.appendUrlColumnProperties.call(row.record,
+    //                             this._dataImportObjectInfo)), 'Id');
+    //             });
+    //         })
+    //         .catch(error => {
+    //             handleError(error);
+    //         })
+    //         .finally(() => {
+    //             callback();
+    //         });
+    // }
 
     get geBatchGiftsCountLabel() {
         return geBatchGiftsCount;
