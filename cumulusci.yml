@@ -1497,8 +1497,8 @@ flows:
             10:
                 task: delete_files
                 options:
-                    path: ["force-app/main/default/featureParameters/Data_CountGERowsLast30DaysBatch.featureParameterInteger",
-                            "force-app/main/default/featureParameters/P10_Application_Date.featureParameterDate"]
+                    path: ["force-app/main/default/featureParameters/Data_CountGERowsLast30DaysBatch.featureParameterInteger-meta.xml",
+                            "force-app/main/default/featureParameters/P10_Application_Date.featureParameterDate-meta.xml"]
 
 orgs:
     scratch:
