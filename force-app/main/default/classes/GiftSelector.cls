@@ -48,6 +48,7 @@ public with sharing class GiftSelector {
             .withFrom(DataImport__c.SObjectType)
             .withSelectFields(fields())
             .withWhere(dataImportBatchLookup + ' =: dataImportBatchId')
+            .withOrderBy('CreatedDate DESC')
             .withSecurityEnforced()
             .build();
 
