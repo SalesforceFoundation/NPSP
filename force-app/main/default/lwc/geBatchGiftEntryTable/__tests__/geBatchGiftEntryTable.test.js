@@ -9,7 +9,7 @@ import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.g
 const mockRenderWrapper = require('./data/retrieveDefaultSGERenderWrapper.json');
 const mockSections = require('./data/sections.json');
 const mockLegacyDataImportModel = require('./data/legacyDataImportModel.json');
-const mockDataImportObjectInfo = require('./data/dataImportObjectInfo.json');
+const mockDataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
 
 jest.mock('c/geFormService', () => {
     return {
