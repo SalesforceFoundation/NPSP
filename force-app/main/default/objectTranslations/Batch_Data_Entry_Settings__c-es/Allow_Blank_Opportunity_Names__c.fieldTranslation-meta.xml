@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Si se establece, la entrada de datos de lote nunca asignará un nombre a las oportunidades, incluso si esta en blanco (no se incluye en la página BDE).</help>
+    <label>Permitir nombres oportunidades en blanco</label>
+    <name>Allow_Blank_Opportunity_Names__c</name>
+</CustomFieldTranslation>

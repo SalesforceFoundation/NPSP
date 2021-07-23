@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La moyenne de toutes les allocations de cette unité comptable générale, présentes ou passées. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocation moyenne</label>
+    <name>Average_Allocation__c</name>
+</CustomFieldTranslation>

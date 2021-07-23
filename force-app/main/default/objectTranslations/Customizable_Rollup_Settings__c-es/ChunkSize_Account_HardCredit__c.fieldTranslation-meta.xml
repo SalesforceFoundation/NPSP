@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>SOLO PARA ORGANIZACIONES LDV CON ORIENTACIÓN DE SFDO. Para evitar la espera de consulta en el trabajo de lote de totalización en organizaciones con muchos millones de cuentas, este parámetro especifica el número máximo de cuentas procesadas en cada lote.</help>
+    <label>LDV: Tamaño sección crédito duro cuenta</label>
+    <name>ChunkSize_Account_HardCredit__c</name>
+</CustomFieldTranslation>

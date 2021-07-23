@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Dry Run およびデータ移行の最新の結果が含まれます。</help>
+    <label>拡張継続支援データ移行状態</label>
+    <name>RecurringDonations2MigrationState__c</name>
+</CustomFieldTranslation>

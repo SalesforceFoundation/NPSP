@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>מחוז המדינה העליון (מחוז בחירה בארה&quot;ב, כגון מחוז הסנאט של מדינה) שאליו שייכת כתובת זו.</help>
+    <label>מחוז מדינה עליון</label>
+    <name>State_Upper_District__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>世帯取引先または世帯オブジェクトの現在の世帯の ID を保持します。</help>
+    <label>HHId</label>
+    <name>HHId__c</name>
+</CustomFieldTranslation>

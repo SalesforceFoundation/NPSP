@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</help>
+    <label>Recurring Donation Status</label>
+    <name>Recurring_Donation_Status__c</name>
+</CustomFieldTranslation>

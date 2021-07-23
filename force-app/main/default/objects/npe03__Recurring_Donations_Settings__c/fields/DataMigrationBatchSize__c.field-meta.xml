@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>DataMigrationBatchSize__c</fullName>
+    <defaultValue>25</defaultValue>
+    <description>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The number of records to process at a time when migrating existing Recurring Donation records to the Enhanced Recurring Donations data model.</inlineHelpText>
+    <label>Enhanced RD Data Migration Batch Size</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Abschnitt der Seite &quot;Erste Schritte&quot;, zu dem dieses Element gehört.</help>
+    <label>GS-Checklistenabschnitt</label>
+    <name>GS_Checklist_Section__c</name>
+    <relationshipLabel>GS-Checklistenelemente</relationshipLabel>
+</CustomFieldTranslation>

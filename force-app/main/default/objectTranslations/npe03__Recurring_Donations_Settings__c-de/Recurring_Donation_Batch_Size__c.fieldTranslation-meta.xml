@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Die Anzahl der zuverarbeitenden Datensätze beim Ausführen des Wiederkehrende Spenden-Batch-Auftrags. Die Standardgröße ist 50. Verringern Sie die Anzahl, wenn der Wiederkehrende Spenden-Batch-Auftrag aufgrund von Systembeschränkungen fehlschlägt.</help>
+    <label>Batch-Größe Wiederkehrende Spende</label>
+    <name>Recurring_Donation_Batch_Size__c</name>
+</CustomFieldTranslation>

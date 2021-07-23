@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>יוצר חבר מבצע באופן אוטומטי כאשר אתה יוצר הזדמנות שמשויך אליה מקור של איש קשר ראשי ומבצע ראשי, או מעדכן את ההזדמנות עם שלב של סגירה/זכייה.</help>
+    <label>ניהול אוטומטי של חברי מבצע</label>
+    <name>Automatic_Campaign_Member_Management__c</name>
+</CustomFieldTranslation>

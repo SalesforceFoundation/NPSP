@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>El lote desde el que se creó este candidato.</help>
+    <label>Lote</label>
+    <name>Batch__c</name>
+    <relationshipLabel>Candidatos</relationshipLabel>
+</CustomFieldTranslation>
