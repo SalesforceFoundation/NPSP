@@ -61,7 +61,7 @@ class GiftBatch {
     }
 
     async updateWith(giftBatchChanges) {
-        const newViewModel = await updateGiftBatchWith({ giftBatchChanges: JSON.stringify(giftBatchChanges) });
+        const newViewModel = await updateGiftBatchWith({ giftBatchChangesAsJSON: JSON.stringify(giftBatchChanges) });
         this._setPropertiesFrom(newViewModel);
         return this.state();
     }

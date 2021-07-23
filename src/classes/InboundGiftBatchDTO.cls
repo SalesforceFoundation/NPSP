@@ -42,14 +42,30 @@ public inherited sharing class InboundGiftBatchDTO {
     public String batchDefaults {get;set;}
 
     public DataImportBatch__c toSObject() {
-        return new DataImportBatch__c(
-            Id = giftBatchId,
-            Name = name,
-            Expected_Count_of_Gifts__c = expectedCountOfGifts,
-            Expected_Total_Batch_Amount__c = expectedTotalBatchAmount,
-            Batch_Table_Columns__c = batchTableColumns,
-            Batch_Defaults__c = batchDefaults
-        );
+        DataImportBatch__c giftBatchChanges = new DataImportBatch__c();
+        giftBatchChanges.Id = giftBatchId;
+
+        if (name != null) {
+            giftBatchChanges.Name = name;
+        }
+
+        if (expectedCountOfGifts != null) {
+            giftBatchChanges.Expected_Count_of_Gifts__c = expectedCountOfGifts;
+        }
+
+        if (expectedTotalBatchAmount != null) {
+            giftBatchChanges.Expected_Total_Batch_Amount__c = expectedTotalBatchAmount;
+        }
+
+        if (batchTableColumns != null) {
+            giftBatchChanges.Batch_Table_Columns__c = batchTableColumns;
+        }
+
+        if (batchDefaults != null) {
+            giftBatchChanges.Batch_Defaults__c = batchDefaults;
+        }
+
+        return giftBatchChanges;
     }
 
 }

@@ -144,8 +144,8 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
         try {
-            GiftBatchDTO giftBatchChanges =
-                (GiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, GiftBatchDTO.class);
+            InboundGiftBatchDTO giftBatchChanges =
+                (InboundGiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, InboundGiftBatchDTO.class);
             return giftBatchService.store(giftBatchChanges);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
