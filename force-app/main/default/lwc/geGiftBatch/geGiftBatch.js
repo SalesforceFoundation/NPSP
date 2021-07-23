@@ -46,6 +46,7 @@ class GiftBatch {
             this._currencyIsoCode = viewModel.currencyIsoCode
             this._lastModifiedDate = viewModel.lastModifiedDate;
             this._totals = viewModel.totals;
+            this._gifts = [];
             viewModel.gifts.forEach(giftView => {
                 this._gifts.push(new Gift(giftView));
             });

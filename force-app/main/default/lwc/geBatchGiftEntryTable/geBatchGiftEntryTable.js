@@ -2,13 +2,12 @@ import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
-import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
 import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 
 import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty, deepClone, format} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
 import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
 
@@ -17,6 +16,7 @@ import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
+import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
@@ -73,11 +73,13 @@ const ACTIONS_COLUMN = {
 };
 
 export default class GeBatchGiftEntryTable extends LightningElement {
+    giftsFromView = [];
+
     @api batchId;
     @api isElevateCustomer = false;
 
     get ready() {
-        return this._columnsLoaded && this._dataImportModel;
+        return this._columnsLoaded && this._batchLoaded;
     }
 
     _columnsLoaded = false;
@@ -85,11 +87,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     _batchLoaded = false;
 
-    @api title;
-    @api total;
-    @api expectedTotal;
-    @api count;
-    @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     @api batchCurrencyIsoCode;
     isLoaded = true;
@@ -103,8 +100,45 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     connectedCallback() {
-        this.loadBatch();
         registerListener('refreshtable', this.refreshTable, this);
+    }
+
+    get title() {
+        return format(geBatchGiftsHeader, [this.giftBatchState?.name]);
+    }
+
+    get giftBatchState() {
+        return this._giftBatchState;
+    }
+
+    @api
+    set giftBatchState(giftBatchState) {
+        console.log('GiftBatchState: ', deepClone(giftBatchState));
+        this._giftBatchState = giftBatchState;
+        if (this._dataImportObjectInfo) {
+            this._setTableProperties();
+        }
+    }
+
+    _setTableProperties() {
+        if (this._giftBatchState?.gifts) {
+            this.giftsFromView = [];
+
+            this._giftBatchState.gifts.forEach(giftView => {
+                let giftViewAsTableRow = deepClone(giftView);
+
+                this.giftsFromView.push( Object.assign(giftViewAsTableRow.fields,
+                    this.appendUrlColumnProperties.call(giftViewAsTableRow.fields,
+                        this._dataImportObjectInfo)));
+            });
+
+            // TODO: need to update method below to work for geGift instead of record object.
+            // this.assignDataImportErrorsToTableRows(this.giftsFromView);
+
+            this._count = this._giftBatchState.totalGiftsCount;
+            this._total = this._giftBatchState.totalDonationsAmount;
+            this._batchLoaded = true;
+        }
     }
 
     refreshTable() {
@@ -125,7 +159,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     get hasData() {
-        return this.data.length > 0;
+        return this.giftsFromView.length > 0;
     }
 
     _data = [];
@@ -157,7 +191,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 });
     }
 
-
     getErrorPropertiesToDisplayInRow() {
         return [apiNameFor(FAILURE_INFORMATION_FIELD),
                 apiNameFor(PAYMENT_DECLINED_REASON)];
@@ -188,41 +221,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this._sections;
     }
 
-    _dataImportModel;
-    loadBatch() {
-        getDataImportModel({batchId: this.batchId})
-            .then(
-                response => {
-                    this._dataImportModel = JSON.parse(response);
-                    this.setTableProperties();
-                    this._batchLoaded = true;
-                }
-            )
-            .catch(error => handleError(error));
-    }
-
-
-    _propertiesSet = false;
-    setTableProperties() {
-        if (this._propertiesSet) {
-            return;
-        }
-        if (!this._dataImportObjectInfo) {
-            return;
-        }
-        if (!this._dataImportModel) {
-            return;
-        }
-        this._count = this._dataImportModel.totalCountOfRows;
-        this._total = this._dataImportModel.batchTotalRowAmount;
-        this._dataImportModel.dataImportRows.forEach(row => {
-            this.data.push(Object.assign(row,
-                this.appendUrlColumnProperties.call(row.record,
-                    this._dataImportObjectInfo)));
-        });
-        this.data = this.data.slice(0);
-        this._propertiesSet = true;
-    }
+    // _dataImportModel;
+    // loadBatch() {
+    //     getDataImportModel({batchId: this.batchId})
+    //         .then(
+    //             response => {
+    //                 this._dataImportModel = JSON.parse(response);
+    //                 this.setTableProperties();
+    //                 this._batchLoaded = true;
+    //             }
+    //         )
+    //         .catch(error => handleError(error));
+    // }
 
     get columns() {
         return this.userDefinedBatchTableColumnNames &&
@@ -332,37 +342,38 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         );
     }
 
-    loadMoreData(event) {
-        event.target.isLoading = true;
-        const disableInfiniteLoading = function () {
-            this.enableInfiniteLoading = false;
-        }.bind(event.target);
+    // loadMoreData(event) {
+    //     event.target.isLoading = true;
+    //     const disableInfiniteLoading = function () {
+    //         this.enableInfiniteLoading = false;
+    //     }.bind(event.target);
 
-        const disableIsLoading = function () {
-            this.isLoading = false;
-        }.bind(event.target);
+    //     const disableIsLoading = function () {
+    //         this.isLoading = false;
+    //     }.bind(event.target);
 
-        getDataImportRows({ batchId: this.batchId, offset: this.data.length })
-            .then(rows => {
-                rows.forEach(row => {
-                    this.data.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = this.data.splice(0);
-                if (this.data.length >= this.count) {
-                    disableInfiniteLoading();
-                }
-                disableIsLoading();
-            })
-            .catch(error => {
-                handleError(error);
-            });
-    }
+    //     getDataImportRows({ batchId: this.batchId, offset: this.data.length })
+    //         .then(rows => {
+    //             rows.forEach(row => {
+    //                 this.data.push(
+    //                     Object.assign(row,
+    //                         this.appendUrlColumnProperties.call(row.record,
+    //                             this._dataImportObjectInfo)));
+    //             });
+    //             this.data = this.data.splice(0);
+    //             if (this.data.length >= this.count) {
+    //                 disableInfiniteLoading();
+    //             }
+    //             disableIsLoading();
+    //         })
+    //         .catch(error => {
+    //             handleError(error);
+    //         });
+    // }
 
     @api
     runBatchDryRun(callback) {
+        // TODO: should be performed in formApp
         runBatchDryRun({
             batchId: this.batchId,
             numberOfRowsToReturn: this.data.length
@@ -397,27 +408,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     loadRow(row) {
         this.dispatchEvent(new CustomEvent('loaddata', {
             detail: row
-        }));
-    }
-
-    /*************************************************************************************
-     * @description Internal setters used to communicate the current count and total
-     *              up to the App, which needs them to keep track of whether the batch's
-     *              expected totals match.
-     */
-    set _count(count) {
-        this.dispatchEvent(new CustomEvent('countchanged', {
-            detail: {
-                value: count
-            }
-        }));
-    }
-
-    set _total(total) {
-        this.dispatchEvent(new CustomEvent('totalchanged', {
-            detail: {
-                value: total
-            }
         }));
     }
 
@@ -496,6 +486,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     handleSubmit(event) {
+        // TODO: dispatch event to formApp
         saveAndDryRunDataImport({
             batchId: this.batchId,
             dataImport: event.detail.dataImportRecord
@@ -528,9 +519,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     wiredDataImportObjectInfo({error, data}) {
         if (data) {
             this._dataImportObjectInfo = data;
-            if (!this._propertiesSet) {
-                this.setTableProperties();
-            }
+            this._setTableProperties();
         }
     }
 

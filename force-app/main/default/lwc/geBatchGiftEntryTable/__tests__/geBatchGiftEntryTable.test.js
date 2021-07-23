@@ -64,7 +64,6 @@ describe('ge-batch-gift-entry-table', () => {
         await flushPromises();
 
         const batchTable = createBatchTable();
-        batchTable.title = 'DUMMY_TITLE';
         batchTable.sections = JSON.parse(mockSections);
         document.body.appendChild(batchTable);
         getObjectInfo.emit(mockDataImportObjectInfo, config => {
@@ -77,6 +76,9 @@ describe('ge-batch-gift-entry-table', () => {
     describe('render behavior', () => {
         it('should render illustration when no data is available', async () => {
             const batchTable = await setupBatchTableWithData(false);
+            batchTable.giftBatchState = {
+                gifts: []
+            };
 
             await flushPromises();
 
@@ -86,16 +88,22 @@ describe('ge-batch-gift-entry-table', () => {
 
         it('should render title', async () => {
             const batchTable = await setupBatchTableWithData(true);
+            batchTable.giftBatchState = {
+                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+            };
 
             await flushPromises();
 
             const title = shadowQuerySelector(batchTable, 'h1');
             expect(title).toBeTruthy();
-            expect(title.innerHTML).toBe('DUMMY_TITLE');
+            expect(title.innerHTML).toBe('c.geBatchGiftsHeader');
         });
 
         it('should render button menu', async () => {
             const batchTable = await setupBatchTableWithData(true);
+            batchTable.giftBatchState = {
+                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+            };
 
             await flushPromises();
 
@@ -107,10 +115,13 @@ describe('ge-batch-gift-entry-table', () => {
 
         it('should render gift count and total donation amount progress bar', async () => {
             const batchTable = await setupBatchTableWithData(true);
-            batchTable.count = 5;
-            batchTable.expectedCount = 10;
-            batchTable.total = 300.25;
-            batchTable.expectedTotal = 500;
+            batchTable.giftBatchState = {
+                totalDonationsAmount: 300.25,
+                totalGiftsCount: 5,
+                expectedCountOfGifts: 10,
+                expectedTotalBatchAmount: 500,
+                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+            };
             await flushPromises();
 
             const progressBars = batchTable.shadowRoot.querySelectorAll('c-util-progress-bar');
@@ -129,6 +140,9 @@ describe('ge-batch-gift-entry-table', () => {
 
         it('should render lightning datatable', async () => {
             const batchTable = await setupBatchTableWithData(true);
+            batchTable.giftBatchState = {
+                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+            };
 
             await flushPromises();
 

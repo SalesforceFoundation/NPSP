@@ -5,7 +5,6 @@ import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
-import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
 import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
@@ -208,18 +207,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this[NavigationMixin.Navigate](pageReference, true);
     }
 
-    get batchCurrencyIsoCode() {
-        return this.giftBatchState.currencyIsoCode;
-    }
-
-    get expectedCountOfGifts() {
-        return this.giftBatchState.expectedCountOfGifts;
-    }
-
-    get expectedTotalBatchAmount() {
-        return this.giftBatchState.expectedTotalBatchAmount;
-    }
-
     get batchName() {
         return this.giftBatchState.name;
     }
@@ -232,11 +219,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             return batchTableColumns;
         }
         return [];
-    }
-
-    // TODO: can be internal to batch table component
-    get giftsTableTitle() {
-        return format(geBatchGiftsHeader, [this.batchName]);
     }
 
     shouldDisplayExpiredAuthorizationWarning() {

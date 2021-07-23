@@ -57,17 +57,10 @@
 
                 <template if:false={isPermissionError}>
                     <c-ge-batch-gift-entry-table
-                        title={giftsTableTitle}
-                        count={count}
-                        expected-count={expectedCountOfGifts}
-                        total={total}
-                        expected-total={expectedTotalBatchAmount}
+                        gift-batch-state={giftBatchState}
                         user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
                         batch-id={recordId}
-                        onloaddata={handleLoadData}
                         ondelete={handleDelete}
-                        oncountchanged={handleCountChanged}
-                        ontotalchanged={handleTotalChanged}
                         onselectcolumns={handleSelectColumns}
                         batch-currency-iso-code={batchCurrencyIsoCode}
                         is-elevate-customer={isElevateCustomer}>
