@@ -141,6 +141,17 @@ public with sharing class GE_GiftEntryController {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
 
+    @AuraEnabled
+    public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
+        try {
+            InboundGiftBatchDTO giftBatchChanges =
+                (InboundGiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, InboundGiftBatchDTO.class);
+            return giftBatchService.store(giftBatchChanges);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Indicates if the org is connected to Elevate
     * @return Boolean

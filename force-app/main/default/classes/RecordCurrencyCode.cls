@@ -30,13 +30,24 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Defines common functionality between Gift Batches used in NPSP.
+* @description Value object for a record's currency code
 */
-public interface IGiftBatch {
+public inherited sharing class RecordCurrencyCode {
 
-    /**
-     * @return Sum of all Gift Donation Amounts in the GiftBatch.
-     */
-    Money totalDonations();
+    private String recordCurrencyCode = '';
 
+    public RecordCurrencyCode(SObject record) {
+        try {
+            recordCurrencyCode = (String) record.get('CurrencyIsoCode');
+        } catch(Exception ex) {
+            // Return default currency code if none exist on the record
+            recordCurrencyCode = UserInfo.getDefaultCurrency();
+        }
+    }
+
+    public String value() {
+        return this.recordCurrencyCode;
+    }
+
+    public class RecordCurrencyCodeException extends Exception {}
 }

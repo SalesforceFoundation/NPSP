@@ -102,19 +102,64 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         gifts.updateRecords();
     }
 
+    public void updateWith(InboundGiftBatchDTO giftBatchChanges) {
+        unitOfWork.registerDirty(new List<sObject> { giftBatchChanges.toSObject() });
+        Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
+    }
+
     public Id id() {
         return this.giftBatchId.value();
+    }
+
+    public String name() {
+        return this.batch.name;
     }
 
     public Gifts gifts() {
         return this.gifts;
     }
 
-    public Money total() {
+    public Map<String, Integer> totals() {
+        return this.totals.toMap();
+    }
+
+    public Money totalDonations() {
         return new Money(this.totals.totalAmount(), 'US');
     }
 
-    public Integer totalCount() {
-        return this.totals.totalGifts();
+    public Boolean requireTotalMatch() {
+        return this.batch.RequireTotalMatch__c;
+    }
+
+    public Decimal expectedCountOfGifts() {
+        return this.batch.Expected_Count_of_Gifts__c;
+    }
+
+    public Decimal expectedTotalBatchAmount() {
+        return this.batch.Expected_Total_Batch_Amount__c;
+    }
+
+    public String batchTableColumns() {
+        return this.batch.Batch_Table_Columns__c;
+    }
+
+    public DateTime lastModifiedDate() {
+        return this.batch.LastModifiedDate;
+    }
+
+    public String currencyIsoCode() {
+        RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
+        return currencyCode.value();
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
     }
 }

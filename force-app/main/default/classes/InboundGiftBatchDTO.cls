@@ -30,13 +30,42 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Defines common functionality between Gift Batches used in NPSP.
+* @description DTO class.
 */
-public interface IGiftBatch {
+public inherited sharing class InboundGiftBatchDTO {
 
-    /**
-     * @return Sum of all Gift Donation Amounts in the GiftBatch.
-     */
-    Money totalDonations();
+    public Id giftBatchId {get;set;}
+    public String name {get;set;}
+    public Decimal expectedCountOfGifts {get;set;}
+    public Decimal expectedTotalBatchAmount {get;set;}
+    public String batchTableColumns {get;set;}
+    public String batchDefaults {get;set;}
+
+    public DataImportBatch__c toSObject() {
+        DataImportBatch__c giftBatchChanges = new DataImportBatch__c();
+        giftBatchChanges.Id = giftBatchId;
+
+        if (name != null) {
+            giftBatchChanges.Name = name;
+        }
+
+        if (expectedCountOfGifts != null) {
+            giftBatchChanges.Expected_Count_of_Gifts__c = expectedCountOfGifts;
+        }
+
+        if (expectedTotalBatchAmount != null) {
+            giftBatchChanges.Expected_Total_Batch_Amount__c = expectedTotalBatchAmount;
+        }
+
+        if (batchTableColumns != null) {
+            giftBatchChanges.Batch_Table_Columns__c = batchTableColumns;
+        }
+
+        if (batchDefaults != null) {
+            giftBatchChanges.Batch_Defaults__c = batchDefaults;
+        }
+
+        return giftBatchChanges;
+    }
 
 }

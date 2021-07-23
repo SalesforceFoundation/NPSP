@@ -1,8 +1,4 @@
-/*******************************************************************************
-* @description Server / Platform  Imports
-*/
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
@@ -18,28 +14,12 @@ import checkForElevateCustomer
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
-/*******************************************************************************
-* @description Schema imports
-*/
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import BATCH_NAME
-    from '@salesforce/schema/DataImportBatch__c.Name';
-import EXPECTED_COUNT_OF_GIFTS
-    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import EXPECTED_TOTAL_BATCH_AMOUNT
-    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
-import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
-import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
-import BatchTotals from './helpers/batchTotals';
-import Gift from './helpers/gift';
-
-/*******************************************************************************
-* @description Constants
-*/
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
-const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
+
+import GiftBatch from 'c/geGiftBatch';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -51,8 +31,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
-    @track batchTotals = {}
-    @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
 
@@ -64,8 +42,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     namespace;
     count;
     total;
-    batch = {};
     isLoading = true;
+
+    giftBatch = new GiftBatch();
+    @track giftBatchState = {};
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -78,9 +58,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async connectedCallback() {
-        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        await this.gift.init(); 
         this.isElevateCustomer = await checkForElevateCustomer();
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+
+        this.giftBatchState = await this.giftBatch.init(this.recordId);
+        await this.updateAppDisplay();
     }
 
     disconnectedCallback() {
@@ -88,11 +70,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async retrieveBatchTotals() {
-        this.batchTotals = await BatchTotals(this.batchId);
+        this.giftBatchState = await this.giftBatch.refreshTotals();
+        await this.updateAppDisplay();
+    }
+
+    async updateAppDisplay() {
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
@@ -108,7 +94,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleSubmit(event) {
         // Callback received from geFormRenderer. Provides functions that
         // toggle the form save button, toggle the lightning spinner, and displays aura exceptions.
-        this.errorCallback = event.detail.errorCallback;
+        this.errorCallback = event.detail.error;
 
         try {
             if (this.isBatchMode) {
@@ -179,6 +165,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handlePermissionErrors() {
         this.isPermissionError = true;
     }
+
     handleEditBatch() {
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
@@ -222,60 +209,40 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get batchCurrencyIsoCode() {
-        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
+        return this.giftBatchState.currencyIsoCode;
     }
 
     get expectedCountOfGifts() {
-        return getFieldValue(this.batch.data, EXPECTED_COUNT_OF_GIFTS);
+        return this.giftBatchState.expectedCountOfGifts;
     }
 
     get expectedTotalBatchAmount() {
-        return getFieldValue(this.batch.data, EXPECTED_TOTAL_BATCH_AMOUNT);
+        return this.giftBatchState.expectedTotalBatchAmount;
     }
 
     get batchName() {
-        return getFieldValue(this.batch.data, BATCH_NAME);
+        return this.giftBatchState.name;
     }
 
+    // TODO: maybe is internal to batch table component OR internal to possible new GiftEntryBatchTable class
     get userDefinedBatchTableColumnNames() {
-        const batchTableColumns = validateJSONString(
-            getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD)
-        );
-        if (batchTableColumns) return batchTableColumns;
+        const batchTableColumns =
+            validateJSONString(this.giftBatchState.batchTableColumns);
+        if (batchTableColumns) {
+            return batchTableColumns;
+        }
         return [];
     }
 
+    // TODO: can be internal to batch table component
     get giftsTableTitle() {
         return format(geBatchGiftsHeader, [this.batchName]);
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
         return this.isElevateCustomer
-            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && this.giftBatchState.hasPaymentsWithExpiredAuthorizations
             && !this._hasDisplayedExpiredAuthorizationWarning;
-    }
-
-    @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [
-            BATCH_ID_FIELD,
-            BATCH_NAME
-        ],
-        optionalFields: [
-            BATCH_CURRENCY_ISO_CODE,
-            EXPECTED_COUNT_OF_GIFTS,
-            EXPECTED_TOTAL_BATCH_AMOUNT,
-            REQUIRE_TOTAL_MATCH,
-            BATCH_TABLE_COLUMNS_FIELD
-        ]
-    })
-    wiredBatch({data, error}) {
-        if (data) {
-            this.batch.data = data;
-            this.retrieveBatchTotals();
-        } else if (error) {
-            handleError(error);
-        }
     }
 
     async handleProcessBatch() {
@@ -367,18 +334,22 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     collapseForm() {
+        // TODO: formRenderer should be able to
+        // figure out when it's collapse based on
+        // props that are received from formApp.
+        // Look into removing this function entirely
         const form = this.template.querySelector('c-ge-form-renderer');
         form.collapse();
     }
 
     async refreshBatchTotals() {
         this._hasDisplayedExpiredAuthorizationWarning = false;
-        this.batchTotals = await BatchTotals(this.batchId);
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this.giftBatchState = await this.giftBatch.refreshTotals();
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
     }
 
     requireTotalMatch() {
-        return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
+        return this.giftBatchState.requireTotalMatch;
     }
 
     totalsMatch() {
@@ -420,35 +391,27 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     get batchId() {
-        return getFieldValue(this.batch.data, BATCH_ID_FIELD);
+        return this.giftBatchState.id;
     }
 
-    handleReceiveEvent(event) {
-        const closeModalCallback = function() {
-            closeModal();
-            unregisterModalListener();
-        }
-        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
-        const unregisterModalListener = () =>
-            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
-
+    async handleReceiveEvent(event) {
         if (event.action === 'save') {
-            let fields = {};
-            fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
-            fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
-                JSON.stringify(event.payload.values);
+            await this.saveGiftBatchTableColumnChange(event.payload.values);
+        }
+        this.closeModalCallback();
+    }
 
-            const recordInput = { fields };
-            const lastModifiedDate =
-                this.batch.data.lastModifiedDate;
-            const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
-            updateRecord(recordInput, clientOptions)
-                .then(closeModalCallback)
-                .catch((error) =>
-                    handleError(error)
-                );
-        } else {
-            closeModalCallback();
+    async saveGiftBatchTableColumnChange(batchTableColumns) {
+        try {
+            const giftBatchChanges = {
+                giftBatchId: this.giftBatchState.id,
+                batchTableColumns: JSON.stringify(batchTableColumns)
+            };
+
+            this.giftBatchState =
+                await this.giftBatch.updateWith(giftBatchChanges);
+        } catch(error) {
+            handleError(error);
         }
     }
 
@@ -573,6 +536,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showCloseButton: true
             }
         };
+    }
+
+    closeModalCallback = function() {
+        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
+        const unregisterModalListener = () =>
+            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        closeModal();
+        unregisterModalListener();
     }
 
 }

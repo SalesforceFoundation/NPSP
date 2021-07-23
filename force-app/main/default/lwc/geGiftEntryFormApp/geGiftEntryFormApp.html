@@ -24,15 +24,11 @@
         </template>
         <template if:false={isLoading}>
             <template if:true={isBatchMode}>
-                <c-ge-batch-gift-entry-header
-                        batch-id={recordId}
-                        batch-totals={batchTotals}
-                        is-permission-error={isPermissionError}
-                        is-elevate-customer={isElevateCustomer}
-                        onbatchdryrun={handleBatchDryRun}
-                        onedit={handleEditBatch}
-                        is-batch-processing={isBatchProcessing}
-                        onprocessbatch={handleProcessBatch}>
+                <c-ge-batch-gift-entry-header is-permission-error={isPermissionError}
+                                              gift-batch-state={giftBatchState}
+                                              onbatchdryrun={handleBatchDryRun}
+                                              onedit={handleEditBatch}
+                                              onprocessbatch={handleProcessBatch}>
                 </c-ge-batch-gift-entry-header>
             </template>
 
@@ -45,13 +41,11 @@
                     <p class='loading-text slds-text-heading_medium'>{CUSTOM_LABELS.geProcessingBatch}</p>
                     <c-util-stencil row-count=20 column-count=4></c-util-stencil>
                 </div>
-
             </template>
 
             <template if:false={isBatchProcessing}>
                 <c-ge-form-renderer
                         batch-id={recordId}
-                        gift={gift}
                         onsubmit={handleSubmit}
                         onsectionsretrieved={handleSectionsRetrieved}
                         onpermissionerror={handlePermissionErrors}
@@ -87,7 +81,6 @@
     <template if:false={isBatchMode}>
         <c-ge-form-renderer
                 batch-id={recordId}
-                gift={gift}
                 onsubmit={handleSubmit}
                 onsectionsretrieved={handleSectionsRetrieved}
                 onpermissionerror={handlePermissionErrors}

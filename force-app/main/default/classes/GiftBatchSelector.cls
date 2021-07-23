@@ -35,13 +35,23 @@
 public inherited sharing class GiftBatchSelector {
 
     public DataImportBatch__c selectGiftBatchBy(GiftBatchId giftBatchId) {
-        return [
-            SELECT Id,
-                Form_Template__r.Template_JSON__c
-            FROM DataImportBatch__c
-            WHERE Id = :giftBatchId.value()
-            WITH SECURITY_ENFORCED
-        ];
+        Id dataImportBatchId = giftBatchId.value();
+        List<String> giftBatchFields = giftBatchFields();
+
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        if (isMultiCurrencyEnabled) {
+            giftBatchFields.add(UTIL_Currency.CURRENCY_ISO_CODE_FIELD);
+        }
+
+        String queryString = new UTIL_Query()
+            .withFrom(DataImportBatch__c.SObjectType)
+            .withSelectFields(giftBatchFields)
+            .withWhere('Id =: dataImportBatchId')
+            .withSecurityEnforced()
+            .withLimit(1)
+            .build();
+
+        return Database.query(queryString);
     }
 
     public List<DataImportBatch__c> selectGiftBatchesById(Set<Id> ids) {
@@ -95,5 +105,22 @@ public inherited sharing class GiftBatchSelector {
             results.add(new AggregateResultProxy().withAggregateResult(result));
         }
         return results;
+    }
+
+    private List<String> giftBatchFields() {
+        List<String> fields = new List<String> {
+            String.valueOf(DataImportBatch__c.Id),
+            String.valueOf(DataImportBatch__c.Name),
+            String.valueOf(DataImportBatch__c.Expected_Count_of_Gifts__c),
+            String.valueOf(DataImportBatch__c.Expected_Total_Batch_Amount__c),
+            String.valueOf(DataImportBatch__c.RequireTotalMatch__c),
+            String.valueOf(DataImportBatch__c.Batch_Table_Columns__c),
+            String.valueOf(DataImportBatch__c.LastModifiedDate),
+            UTIL_Namespace.StrTokenNSPrefix('Form_Template__r')
+            + '.'
+            + String.valueOf(Form_Template__c.Template_JSON__c)
+        };
+
+        return fields;
     }
 }

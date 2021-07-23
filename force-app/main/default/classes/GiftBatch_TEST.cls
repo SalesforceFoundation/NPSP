@@ -84,8 +84,8 @@ private class GiftBatch_TEST {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.totals = totals;
 
-        System.assertEquals(10, giftBatch.totalCount());
-        System.assertEquals(350.50, giftBatch.total().amount());
+        System.assertEquals(10, giftBatch.totals().get('TOTAL'));
+        System.assertEquals(350.50, giftBatch.totalDonations().amount());
     }
 
     @isTest
@@ -111,6 +111,17 @@ private class GiftBatch_TEST {
         giftBatch.gifts = gifts;
 
         System.assertEquals(3, giftBatch.gifts().size());
+    }
+
+    @isTest
+    static void shouldReturnExpectedGiftBatchRecordProperties() {
+        DataImportBatch__c dummyDataImportBatch = new DataImportBatch__c();
+        dummyDataImportBatch.name = 'DUMMY_GIFT_BATCH_NAME';
+
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.batch = dummyDataImportBatch;
+
+        System.assertEquals('DUMMY_GIFT_BATCH_NAME', giftBatch.name());
     }
 
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';

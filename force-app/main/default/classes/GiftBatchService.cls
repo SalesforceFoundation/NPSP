@@ -66,4 +66,11 @@ public with sharing class GiftBatchService {
         GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
         return new GiftBatchView(giftBatchDTO);
     }
+
+    public GiftBatchView store(InboundGiftBatchDTO giftBatchChanges) {
+        GiftBatchId giftBatchId = new GiftBatchId(giftBatchChanges.giftBatchId);
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.updateWith(giftBatchChanges);
+        return viewModelFrom(giftBatchId);
+    }
 }
