@@ -150,7 +150,13 @@ public with sharing class CON_ContactMerge_CTRL {
      * @description To store the selected DRS recordId 
      */
     public String drsRecordId { get; set; }
-            
+
+    /***********************************************************************************************
+     * @description Set of DRS records that include a single Contact
+     * with one or more other SObject types
+     */
+    Set<Id> unactionableDuplicateRecordSets;
+
     /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
     * implemented on Duplicate Record Set diplay page.
@@ -1057,20 +1063,6 @@ public with sharing class CON_ContactMerge_CTRL {
                     dupRecSet.DuplicateRecordItems).values());
             }
 
-            List<AggregateResult> leadTotals = [
-                SELECT DuplicateRecordSetId, COUNT(Id) LeadTotal
-                FROM DuplicateRecordItem
-                WHERE Record.Type = 'Lead'
-                AND DuplicateRecordSetId IN :duplicateRecordSets
-                GROUP BY DuplicateRecordSetId];
-
-            Map<Id, DuplicateRecordSet> duplicateRecordSetsByIds = new Map<Id, DuplicateRecordSet>(duplicateRecordSets);
-            for (AggregateResult leadTotal : leadTotals) {
-//                if (duplicateRecordSetsByIds.get(leadTotal.get('DuplicateRecordSetId')).leadTotal.get('LeadTotal')) {
-//
-//                }
-            }
-
             //Fetch the remaining query row limit to ensure that the page will not
             //break due to too many query rows error.
             if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
@@ -1125,6 +1117,20 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return String Returns the query to fetch Duplicate Record Sets
     */
     public String constructDRSSOQL() {
+        List<AggregateResult> leadTotals = [
+            SELECT DuplicateRecordSetId DRSId, DuplicateRecordSet.RecordCount RecordCount, COUNT(Id) LeadTotal
+            FROM DuplicateRecordItem
+            WHERE Record.Type = 'Lead'
+            GROUP BY DuplicateRecordSetId, DuplicateRecordSet.RecordCount
+        ];
+
+        unactionableDuplicateRecordSets = new Set<Id>();
+        for (AggregateResult result : leadTotals) {
+            if ((Integer) result.get('RecordCount') - (Integer) result.get('LeadTotal') <= 1) {
+                unactionableDuplicateRecordSets.add((Id) result.get('DRSId'));
+            }
+        }
+
         //build the SOQL query and execute
         List<String> forDuplicateRecordSet = getDuplicateRuleSetQuerySelectClause();
         String forDuplicateRecordSetsRelatedToAtLeastOneContact = getDuplicateRuleSetQueryWhereClause();
@@ -1171,7 +1177,9 @@ public with sharing class CON_ContactMerge_CTRL {
             .withSelectFields(new List<String>{'DuplicateRecordSetId'})
             .withWhere('Record.Type = \'Contact\'')
             .build();
-        return 'RecordCount > 1 AND Id IN (' + duplicateRecordItemsForContacts + ')';
+        return 'RecordCount > 1 AND Id IN ('
+                + duplicateRecordItemsForContacts
+                + ') AND Id NOT IN :unactionableDuplicateRecordSets';
     }
 
     /***********************************************************************************************
