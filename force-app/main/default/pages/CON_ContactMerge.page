@@ -165,6 +165,8 @@
                                         <th class="slds-text-heading_label" scope="col">Last Modified Date</th>
                                         <th class="slds-text-heading_label" scope="col">Duplicate Rule</th>
                                         <th class="slds-text-heading_label" scope="col">Record Count</th>
+                                        <!-- TODO Need a label for this -->
+                                        <th class="slds-text-heading_label" scope="col">Contact Count</th>
                                         <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
                                                      var="field">
                                             <th class="slds-text-heading_label" scope="col">
@@ -199,6 +201,11 @@
                                                     <apex:outputField value="{!drs.RecordCount}"/>
                                                 </span>
                                             </td>
+                                            <td>
+                                                <span class="slds-truncate">
+                                                    <apex:outputText value="{!contactCountByDRSId[drs.Id]}"/>
+                                                </span>
+                                            </td>
                                             <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
                                                          var="field">
                                                 <td>
@@ -220,8 +227,8 @@
                                                                       styleClass="slds-button slds-button_brand">
                                                         <apex:param name="DRSID" value="{!drs.Id}"
                                                                     assignTo="{!drsRecordId}"/>
-                                                    </apex:commandlink>  
-                                                </apex:actionRegion>   
+                                                    </apex:commandlink>
+                                                </apex:actionRegion>
                                             </td>
                                         </tr>
                                     </apex:repeat>

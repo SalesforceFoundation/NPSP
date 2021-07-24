@@ -155,7 +155,12 @@ public with sharing class CON_ContactMerge_CTRL {
      * @description Set of DRS records that include a single Contact
      * with one or more other SObject types
      */
-    Set<Id> unactionableDuplicateRecordSets;
+    private Set<Id> unactionableDuplicateRecordSets;
+
+    /***********************************************************************************************
+     * @description Map of DRS record Ids to count of Contacts in that set
+     */
+    public Map<Id, Integer> contactCountByDRSId { get; set; }
 
     /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
@@ -1056,11 +1061,13 @@ public with sharing class CON_ContactMerge_CTRL {
             //Fetch the ids of all Duplicate Record Items
             Set<Id> allDRIIds = new Set<Id>();
             List<DuplicateRecordItem> allDRIs = new List<DuplicateRecordItem>();
+            contactCountByDRSId = new Map<Id, Integer>();
             for (DuplicateRecordSet dupRecSet : duplicateRecordSets) {
                 allDRIIds.addAll(new Map<Id, DuplicateRecordItem>(
                     dupRecSet.DuplicateRecordItems).keySet());
                 allDRIs.addAll(new Map<Id, DuplicateRecordItem>(
                     dupRecSet.DuplicateRecordItems).values());
+                contactCountByDRSId.put(dupRecSet.Id, 0);
             }
 
             //Fetch the remaining query row limit to ensure that the page will not
@@ -1095,6 +1102,8 @@ public with sharing class CON_ContactMerge_CTRL {
                 if (dri.Record.Type != 'Contact') {
                     continue;
                 }
+                contactCountByDRSId.put(dri.DuplicateRecordSetId,
+                    contactCountByDRSId.get(dri.DuplicateRecordSetId) + 1);
                 Contact con = contacts.get(dri.RecordId);
                 if (!(firstContactOfDRS.containsKey(dri.DuplicateRecordSetId))) {
                     firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
