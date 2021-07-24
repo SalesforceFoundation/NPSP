@@ -5686,6 +5686,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>There&apos;&apos;s already a job running on the {0} Apex class. The job must complete before it can be run again.</value>
     </labels>
     <labels>
+        <fullName>commonContactCount</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Count</shortDescription>
+        <value>Contact Count</value>
+    </labels>
+    <labels>
         <fullName>commonContactSystemAdminMessage</fullName>
         <categories>Entry-Form</categories>
         <language>en_US</language>
