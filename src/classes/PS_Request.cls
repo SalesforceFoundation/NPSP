@@ -200,6 +200,18 @@ public inherited sharing class PS_Request {
             request.setMethod(method.name());
             setHeader(request, endpoint);
 
+            System.debug('LOOK AT ME');
+
+            System.debug(PS_IntegrationServiceConfig.JWT_TOKEN);
+            System.debug(PS_IntegrationServiceConfig.SFDO_USERNAME);
+            System.debug('Content-Type');
+            System.debug(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS);
+            System.debug(request.getHeader(PS_IntegrationServiceConfig.JWT_TOKEN));
+            System.debug(request.getHeader(PS_IntegrationServiceConfig.SFDO_USERNAME));
+            System.debug(request.getHeader('Content-Type'));
+            System.debug(request.getHeader(PS_IntegrationServiceConfig.SFDO_MERCHANTIDS));
+            System.debug(request);
+
             // Default timeout is 10s if the value is not specified
             if (timeout != null) {
                 request.setTimeout(timeout);
@@ -280,11 +292,13 @@ public inherited sharing class PS_Request {
                 value = String.format(
                         ENDPOINT_REMOVE_FROM_ELEVATE_BATCH,
                         new String[] {
-                                elevateBatchId,
-                                elevatePaymentId
+                            elevatePaymentId,   
+                            elevateBatchId      
                         }
                 );
             }
+
+            System.debug(value);
 
             return String.isBlank(value)
                 ? null

@@ -306,6 +306,17 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static ElevateAuthorizedGift removeFromElevateBatch(AuthorizedGift authorizedGift) {
+        ElevateAuthorizedGift authorizedGift;
+        try {
+            authorizedGift = elevateBatchService.removeFromElevateBatch(authorizedGift);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return authorizedGift;
+    }
+
+    @AuraEnabled
     public static void validateAuthorizedGiftEdit(DataImport__c dataImport){
         Gift editedGift = new Gift(dataImport);
         if (editedGift.requiresReauthorizationBeforeChange()) { 

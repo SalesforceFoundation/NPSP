@@ -70,6 +70,9 @@ public without sharing class UTIL_Http {
         public Response sendRequest(HttpRequest request) {
             Response response;
 
+            System.debug('request');
+            System.debug(request);
+
             try {
                 HttpResponse requestResponse = new Http().send(request);
 

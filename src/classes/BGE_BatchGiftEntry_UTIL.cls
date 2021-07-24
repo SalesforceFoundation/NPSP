@@ -199,7 +199,8 @@ public with sharing class BGE_BatchGiftEntry_UTIL {
                 String.valueOf(DataImport__c.Payment_Declined_Reason__c),
                 String.valueOf(DataImport__c.Elevate_Payment_Status__c),
                 String.valueOf(DataImport__c.Payment_Authorization_Token__c),
-                String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c)
+                String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c),
+                String.valueOf(DataImport__c.Payment_Elevate_ID__c)
             };
         }
 
