@@ -294,7 +294,7 @@ public with sharing class GE_GiftEntryController {
         return elevateBatch;
     }
 
-    @AuraEnabled
+    /*@AuraEnabled
     public static ElevateAuthorizedGift removeFromElevateBatch(String elevateBatchId, String elevatePaymentId) {
         ElevateAuthorizedGift authorizedGift;
         try {
@@ -303,17 +303,19 @@ public with sharing class GE_GiftEntryController {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
-    }
+    }*/
 
     @AuraEnabled
-    public static ElevateAuthorizedGift removeFromElevateBatch(AuthorizedGift authorizedGift) {
-        ElevateAuthorizedGift authorizedGift;
+    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        ElevateAuthorizedGift updatedAuthorizedGift;
+        System.debug('HERE = ');
+        System.debug(authorizedGift);
         try {
-            authorizedGift = elevateBatchService.removeFromElevateBatch(authorizedGift);
+            updatedAuthorizedGift = elevateBatchService.removeFromElevateBatch(authorizedGift);
         } catch (AuraHandledException ex) {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
-        return authorizedGift;
+        return updatedAuthorizedGift;
     }
 
     @AuraEnabled

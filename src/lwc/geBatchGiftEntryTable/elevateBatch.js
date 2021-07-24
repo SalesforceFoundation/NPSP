@@ -6,27 +6,20 @@ class ElevateBatch {
     
     constructor(elevateBatchId) {
         this.elevateBatchId = elevateBatchId;
-        this._hasAddRun = false;
     }
     
     async add(tokenizedGift) {
-        if (!this.elevateBatchId) {
-            this.elevateBatchId = await this.create();
-        }
-
         try {
+            if (!this.elevateBatchId) {
+                this.elevateBatchId = await this.create();
+            }
+
             const authorizedGift = await apexAddToElevateBatch(
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
             return authorizedGift;
         } catch (exception) {
-            if (!this._hasAddRun) {
-                this._hasAddRun = true;
-                this.elevateBatchId = await this.create();
-                return this.add(tokenizedGift);
-            } else {
-                throw(exception);
-            }
+            throw (exception);
         }
     }
 
@@ -36,13 +29,11 @@ class ElevateBatch {
     }
 
     async remove(paymentId) {
-        console.log('removing here');
-        console.log(this.elevateBatchId);
         const removedGift = await apexRemoveFromElevateBatch(
-            {elevateBatchId: this.elevateBatchId, elevatePaymentId: paymentId}
+            { authorizedGift: 
+                {elevateBatchId: this.elevateBatchId, paymentId: paymentId}
+            }
         );
-
-        console.log('calling remove endpoint');
     }
 }
 

@@ -319,8 +319,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
 
     removeFromElevateBatch(deletedRow) {
-        // TODO: Make status check an enum
-        console.log(`deleted row = ${JSON.stringify(deletedRow)}`);
         if (this.isElevateCustomer && deletedRow[ELEVATE_PAYMENT_STATUS.fieldApiName] == 'Authorized') {
             const elevateBatch = new ElevateBatch(deletedRow[ELEVATE_BATCH_ID.fieldApiName]); 
             elevateBatch.remove(deletedRow[ELEVATE_PAYMENT_ID.fieldApiName]);

@@ -37,7 +37,9 @@ class ElevateBatch {
 
     async remove(paymentId) {
         const removedGift = await apexRemoveFromElevateBatch(
-            {elevateBatchId: this.elevateBatchId, elevatePaymentId: paymentId}
+            { authorizedGift:
+                {elevateBatchId: this.elevateBatchId, elevatePaymentId: paymentId}
+            }
         );
 
         console.log('calling remove endpoint');
