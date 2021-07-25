@@ -254,9 +254,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             householdContacts.add(contact);
         }
 
-        List<Account> listAccUpdate = new List<Account>();
-        List<Address__c> listAddrUpdate = new List<Address__c>();
-        List<Contact> listConUpdate = new List<Contact>();
+        List<Account> accountsToUpdate = new List<Account>();
+        List<Address__c> addressesToUpdate = new List<Address__c>();
+        List<Contact> contactsToUpdate = new List<Contact>();
 
         // now go through each HH, and do all the work!
         for (Id accountId : accountIds) {
@@ -266,7 +266,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Address__c addressToSyncToAccountsAndContacts = householdInfo.seasonalAddress != null ?
                 householdInfo.seasonalAddress : householdInfo.defaultAddress;
 
-            // update HH Account's Billing address fields
             NPSP_Address npspAddress = new NPSP_Address(addressToSyncToAccountsAndContacts);
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
@@ -277,19 +276,19 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 npspHouseholdAccount.billingAddress(npspAddress);
                 npspHouseholdAccount.setBillingAddressUndeliverableStatus(npspAddress.isUndeliverable());
 
-                listAccUpdate.add(npspHouseholdAccount.getRecord());
+                accountsToUpdate.add(npspHouseholdAccount.getRecord());
             }
 
             // check other addresses on this household that are no longer the default
             if (allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 && allAddressesByAccountId.get(accountId) != null) {
-                for (Address__c addrHH : allAddressesByAccountId.get(accountId)) {
-                    if (addrHH.Id == householdInfo.defaultAddress.Id) {
+                for (Address__c address : allAddressesByAccountId.get(accountId)) {
+                    if (address.Id == householdInfo.defaultAddress.Id) {
                         continue;
                     }
-                    if (addrHH.Default_Address__c) {
-                        addrHH.Default_Address__c = false;
-                        addrHH.Latest_End_Date__c = System.today();
-                        listAddrUpdate.add(addrHH);
+                    if (address.Default_Address__c) {
+                        address.Default_Address__c = false;
+                        address.Latest_End_Date__c = System.today();
+                        addressesToUpdate.add(address);
                     }
                 }
             }
@@ -313,19 +312,19 @@ public inherited sharing class Addresses extends fflib_SObjects {
                             npspContact.currentAddress(npspAddress);
                         }
                     }
-                    listConUpdate.add(con);
+                    contactsToUpdate.add(con);
                 }
             }
         }
 
-        if (listAccUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAccUpdate);
+        if (accountsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate);
         }
-        if (listAddrUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listAddrUpdate);
+        if (addressesToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressesToUpdate);
         }
-        if (listConUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)listConUpdate);
+        if (contactsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactsToUpdate);
         }
 
         return householdInfoByAccountId;
@@ -342,30 +341,30 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
     /*******************************************************************************************************
     * @description utility to create a map of HH Account Id to a list of Addresses in that HH, given a list of HH Account Id.
-    * @param acctIds the list of Account Id's
+    * @param accountIds the list of Account Id's
     * @return map<Id, list<Address__c>> map that contains the Addresses for each HH Account Id
     */
-    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(List<Id> acctIds) {
-        Map<Id, List<Address__c>> mapAccIdListAddrHH = new Map<Id, List<Address__c>>();
-        List<Address__c> listAddrOther = [
+    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(List<Id> accountIds) {
+        Map<Id, List<Address__c>> allAddressesByAccountId = new Map<Id, List<Address__c>>();
+        List<Address__c> allAddressesForAccountIds = [
                 SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
                         MailingStreet__c, MailingStreet2__c, MailingCity__c, MailingState__c,
                         MailingPostalCode__c, MailingCountry__c,
                         Seasonal_Start_Month__c, Seasonal_Start_Day__c, Seasonal_End_Month__c,
                         Seasonal_End_Day__c, Geolocation__Latitude__s, Geolocation__Longitude__s, Undeliverable__c
                 FROM Address__c
-                WHERE Household_Account__c IN :acctIds
+                WHERE Household_Account__c IN :accountIds
                 ORDER BY Default_Address__c DESC, LastModifiedDate ASC
         ]; // ordering needed by cleanupAccountAddresses().
-        for (Address__c addr : listAddrOther) {
-            List<Address__c> listAddrHH = mapAccIdListAddrHH.get(addr.Household_Account__c);
-            if (listAddrHH == null) {
-                listAddrHH = new List<Address__c>();
-                mapAccIdListAddrHH.put(addr.Household_Account__c, listAddrHH);
+        for (Address__c address : allAddressesForAccountIds) {
+            List<Address__c> accountAddresses = allAddressesByAccountId.get(address.Household_Account__c);
+            if (accountAddresses == null) {
+                accountAddresses = new List<Address__c>();
+                allAddressesByAccountId.put(address.Household_Account__c, accountAddresses);
             }
-            listAddrHH.add(addr);
+            accountAddresses.add(address);
         }
-        return mapAccIdListAddrHH;
+        return allAddressesByAccountId;
     }
 
     /*******************************************************************************************************
