@@ -294,17 +294,6 @@ public with sharing class GE_GiftEntryController {
         return elevateBatch;
     }
 
-    /*@AuraEnabled
-    public static ElevateAuthorizedGift removeFromElevateBatch(String elevateBatchId, String elevatePaymentId) {
-        ElevateAuthorizedGift authorizedGift;
-        try {
-            authorizedGift = elevateBatchService.removeFromElevateBatch(elevateBatchId, elevatePaymentId);
-        } catch (AuraHandledException ex) {
-          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
-        }
-        return authorizedGift;
-    }*/
-
     @AuraEnabled
     public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
         ElevateAuthorizedGift updatedAuthorizedGift;

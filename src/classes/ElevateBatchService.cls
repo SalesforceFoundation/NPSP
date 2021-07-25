@@ -33,10 +33,6 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch(elevateBatchId).add(tokenizedGift);
     }
 
-    public virtual ElevateAuthorizedGift removeFromElevateBatch(String elevateBatchId, String elevatePaymentId) {
-        return new ElevateBatch(elevateBatchId).remove(elevatePaymentId);
-    }
-
     public virtual ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
         return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.paymentId);
     }
@@ -67,23 +63,6 @@ public virtual with sharing class ElevateBatchService {
 
         //return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
         return null;
-    } 
-
-       public ElevateAuthorizedGift sendRemoveRequest(ElevateAuthorizedGift authorizedGift) {
-        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
-                removeRequest(authorizedGift)
-        );
-        
-        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
-                (response.body, ElevateAuthorizedGiftResponse.class);
-        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
-
-        //return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
-        return null;
-    } 
-
-    public ElevateAuthorizedGift sendRemoveRequest(ElevateTokenizedGift g, String s) {
-        return null;
     }
 
     public ElevateBatch getElevateBatch() {
@@ -109,15 +88,6 @@ public virtual with sharing class ElevateBatchService {
                 .withMethod(UTIL_Http.Method.POST)
                 .withElevateBatchId(elevateBatchId)
                 .withElevatePaymentId(elevatePaymentId)
-                .withEndpoint(PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH)
-                .build();
-    }
-
-    private HttpRequest removeRequest(ElevateAuthorizedGift authorizedGift) {
-        return new PS_Request.Builder()
-                .withMethod(UTIL_Http.Method.POST)
-                .withElevateBatchId(authorizedGift.elevateBatchId)
-                .withElevatePaymentId(authorizedGift.paymentId)
                 .withEndpoint(PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH)
                 .build();
     }
