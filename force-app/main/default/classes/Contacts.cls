@@ -537,16 +537,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // get the default and seasonal address for each HH
-        Map<Id, Addresses.HHInfo> mapAccIdHHInfo =
-                Addresses.refreshCurrentHHAddress(mapAccIdAddr, null, true);
+        Map<Id, Addresses.HouseholdInfo> mapAccIdHHInfo =
+                Addresses.syncAddressesToAccountsAndContacts(mapAccIdAddr, null, true);
 
         // reset the Contact's address fields with the appropriate address
         for (Contact con : (List<Contact>) getRecords()) {
-            Addresses.HHInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
+            Addresses.HouseholdInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
             if (hhinfo != null) {
-                Address__c addr = hhinfo.addrSeasonal;
+                Address__c addr = hhinfo.seasonalAddress;
                 if (addr == null) {
-                    addr = hhinfo.addrDefault;
+                    addr = hhinfo.defaultAddress;
                 }
                 if (addr != null) {
                     NPSP_Address npspAddress = new NPSP_Address(addr);
