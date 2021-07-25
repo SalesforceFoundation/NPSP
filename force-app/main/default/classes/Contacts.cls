@@ -538,7 +538,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // get the default and seasonal address for each HH
         Map<Id, Addresses.HouseholdInfo> mapAccIdHHInfo =
-                Addresses.syncAddressesToAccountsAndContacts(mapAccIdAddr, null, true);
+                Addresses.syncAddressesForAccountsAndContacts(mapAccIdAddr, null, true);
 
         // reset the Contact's address fields with the appropriate address
         for (Contact con : (List<Contact>) getRecords()) {

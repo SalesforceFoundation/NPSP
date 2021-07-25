@@ -76,7 +76,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        syncAddressesToAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
+        syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
 
         // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
         // errors
@@ -101,7 +101,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public void onAfterUpdate() {
 
         if (addressChangesToSyncToHouseholdAccountsAndContacts().size() > 0) {
-            syncAddressesToAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
+            syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
         }
 
         if (addressChangesToSyncToContactOverrides().size() > 0) {
@@ -123,7 +123,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Address__c> addressesByAccountId = addressesByAccountId();
         if (!addressesByAccountId.isEmpty()) {
             clearAddressesForEachAccount(addressesByAccountId);
-            syncAddressesToAccountsAndContacts(addressesByAccountId, dmlWrapperLocal,
+            syncAddressesForAccountsAndContacts(addressesByAccountId, dmlWrapperLocal,
                     false);
         }
 
@@ -172,7 +172,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * and not do any changes to dmlWrapper.
     * @return map<Id, HHInfo> a map of Account Id to the HHInfo object for the account
     ********************************************************************************************************/
-    public static Map<Id, HouseholdInfo> syncAddressesToAccountsAndContacts(Map<Id, Address__c> defaultSeasonalAddressesByAccountId,
+    public static Map<Id, HouseholdInfo> syncAddressesForAccountsAndContacts(
+            Map<Id, Address__c> defaultSeasonalAddressesByAccountId,
             TDTM_Runnable.DmlWrapper dmlWrapper, Boolean shouldReturnHouseholdInfoOnly) {
 
         // assumptions:
@@ -190,49 +191,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
         //
 
         // get all Addresses by HH, that might need updating
-        List<Id> accountIds = new List<Id>(defaultSeasonalAddressesByAccountId.keySet());
+        Set<Id> accountIds = new Set<Id>(defaultSeasonalAddressesByAccountId.keySet());
         Map<Id, List<Address__c>> allAddressesByAccountId = getAllAddressesByAccountId(accountIds);
 
         // for each hh, find the current address to use (seasonal vs default)
-        Map<Id, HouseholdInfo> householdInfoByAccountId = new Map<Id, HouseholdInfo>();
-        for (Id accountId : accountIds) {
-            // create a HHInfo for each household
-            HouseholdInfo householdInfo = new HouseholdInfo();
-            householdInfo.accountId = accountId;
-            householdInfoByAccountId.put(accountId, householdInfo);
-
-            // if there is a provided Default address, use it over all other defaults.
-            Address__c defaultSeasonalAddress = defaultSeasonalAddressesByAccountId.get(accountId);
-            if (defaultSeasonalAddress != null && defaultSeasonalAddress.Default_Address__c) {
-                householdInfo.defaultAddress = defaultSeasonalAddress;
-            }
-
-            // go through the hh addresses storing the default and any seasonal
-            if (allAddressesByAccountId.get(accountId) != null) {
-                for (Address__c address : allAddressesByAccountId.get(accountId)) {
-                    NPSP_Address npspAddress = new NPSP_Address(address);
-
-                    if (householdInfo.defaultAddress == null && address.Default_Address__c) {
-                        householdInfo.defaultAddress = address;
-                    }
-                    if (npspAddress.isSeasonalAddr()) {
-                        Date dtStart = dtStartOrEndOfAddrSeasonal(address, true);
-                        Date dtEnd = dtStartOrEndOfAddrSeasonal(address, false);
-                        Date dtToday = System.today();
-                        if (dtToday >= dtStart && dtToday < dtEnd) {
-                            householdInfo.seasonalAddress = address;
-                        }
-                    }
-                }
-            }
-
-            // finally, if no default found, create an empty default
-            if (householdInfo.defaultAddress == null) {
-                Address__c defaultAddress = new Address__c();
-                defaultAddress.Household_Account__c = accountId;
-                householdInfo.defaultAddress = defaultAddress;
-            }
-        }
+        Map<Id, HouseholdInfo> householdInfoByAccountId = getHouseholdAccountAddressInfoByAccountId(accountIds,
+                defaultSeasonalAddressesByAccountId, allAddressesByAccountId);
 
         // some callers just need the HHInfo for each HH Account.
         if (shouldReturnHouseholdInfoOnly) {
@@ -242,10 +206,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         // get all Contacts by HH, that might need updating
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
         Map<Id, List<Contact>> contactsByHouseholdAccountId = new Map<Id, List<Contact>>();
-        Map<Id, Account> accountsById = getAccountsByIds(defaultSeasonalAddressesByAccountId.keySet());
-        Set<Id> householdAccountIds =  defaultSeasonalAddressesByAccountId.keySet();
 
-        for (Contact contact : contactSelector.getContactAddressFieldsForContactsIn(householdAccountIds)) {
+        for (Contact contact : contactSelector.getContactAddressFieldsForContactAccountsIn(accountIds)) {
             List<Contact> householdContacts = contactsByHouseholdAccountId.get(contact.AccountId);
             if (householdContacts == null) {
                 householdContacts = new List<Contact>();
@@ -259,22 +221,58 @@ public inherited sharing class Addresses extends fflib_SObjects {
         List<Contact> contactsToUpdate = new List<Contact>();
 
         // now go through each HH, and do all the work!
+        setAddressForAccountsAndContacts(
+                accountIds,
+                householdInfoByAccountId,
+                accountsToUpdate,
+                allAddressesByAccountId,
+                addressesToUpdate,
+                contactsByHouseholdAccountId,
+                contactsToUpdate
+        );
+
+        if (accountsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate);
+        }
+        if (addressesToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressesToUpdate);
+        }
+        if (contactsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactsToUpdate);
+        }
+
+        return householdInfoByAccountId;
+    }
+
+    private static NPSP_Address getAddressToSyncToAccountsAndContacts(Id accountId,
+            Map<Id, HouseholdInfo> householdInfoByAccountId) {
+
+        HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
+
+        return new NPSP_Address(householdInfo.seasonalAddress != null ?
+               householdInfo.seasonalAddress : householdInfo.defaultAddress);
+    }
+
+    private static void setAddressForAccountsAndContacts(Set<Id> accountIds,
+            Map<Id, HouseholdInfo> householdInfoByAccountId, List<Account> accountsToUpdate,
+            Map<Id, List<Address__c>> allAddressesByAccountId, List<Address__c> addressesToUpdate,
+            Map<Id, List<Contact>> contactsByHouseholdAccountId, List<Contact> contactsToUpdate) {
+
+        Map<Id, Account> accountsById = getAccountsByIds(accountIds);
         for (Id accountId : accountIds) {
 
-            // pick the address to use
-            HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
-            Address__c addressToSyncToAccountsAndContacts = householdInfo.seasonalAddress != null ?
-                householdInfo.seasonalAddress : householdInfo.defaultAddress;
-
-            NPSP_Address npspAddress = new NPSP_Address(addressToSyncToAccountsAndContacts);
+            NPSP_Address addressToSyncToAccountsAndContacts = getAddressToSyncToAccountsAndContacts(accountId,
+                householdInfoByAccountId);
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
 
-            if (npspHouseholdAccount.billingAddressIsDifferentFrom(npspAddress) ||
-                npspHouseholdAccount.undeliverableAddressStatus() != npspAddress.isUndeliverable()) {
+            if (npspHouseholdAccount.billingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts) ||
+                    npspHouseholdAccount.undeliverableAddressStatus() !=
+                            addressToSyncToAccountsAndContacts.isUndeliverable()) {
 
-                npspHouseholdAccount.billingAddress(npspAddress);
-                npspHouseholdAccount.setBillingAddressUndeliverableStatus(npspAddress.isUndeliverable());
+                npspHouseholdAccount.billingAddress(addressToSyncToAccountsAndContacts);
+                npspHouseholdAccount.setBillingAddressUndeliverableStatus(
+                        addressToSyncToAccountsAndContacts.isUndeliverable());
 
                 accountsToUpdate.add(npspHouseholdAccount.getRecord());
             }
@@ -282,6 +280,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
             // check other addresses on this household that are no longer the default
             if (allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 && allAddressesByAccountId.get(accountId) != null) {
                 for (Address__c address : allAddressesByAccountId.get(accountId)) {
+                    HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
                     if (address.Id == householdInfo.defaultAddress.Id) {
                         continue;
                     }
@@ -307,27 +306,88 @@ public inherited sharing class Addresses extends fflib_SObjects {
                                 npspHouseholdAccount.getRecord().Undeliverable_Address__c;
                     }
                     if (npspContact.hasAddressOverride() == false ||
-                            npspContact.currentAddress() == addressToSyncToAccountsAndContacts.Id) {
-                        if (npspContact.mailingAddressIsDifferentFrom(npspAddress)) {
-                            npspContact.currentAddress(npspAddress);
+                            npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
+                        if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
+                            npspContact.currentAddress(addressToSyncToAccountsAndContacts);
                         }
                     }
                     contactsToUpdate.add(con);
                 }
             }
         }
+    }
 
-        if (accountsToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate);
-        }
-        if (addressesToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressesToUpdate);
-        }
-        if (contactsToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactsToUpdate);
-        }
+    private static Map<Id, HouseholdInfo> getHouseholdAccountAddressInfoByAccountId(Set<Id> accountIds, Map<Id,
+            Address__c> defaultSeasonalAddressesByAccountId, Map<Id, List<Address__c>> allAddressesByAccountId) {
+        Map<Id, HouseholdInfo> householdInfoByAccountId = new Map<Id, HouseholdInfo>();
+        setAddressForHouseholdInfo(accountIds,
+                defaultSeasonalAddressesByAccountId,
+                allAddressesByAccountId,
+                householdInfoByAccountId);
 
         return householdInfoByAccountId;
+    }
+
+    private static void setAddressForHouseholdInfo(Set<Id> accountIds, Map<Id, Address__c>
+            defaultSeasonalAddressesByAccountId, Map<Id, List<Address__c>> allAddressesByAccountId, Map<Id, HouseholdInfo> householdInfoByAccountId) {
+        for (Id accountId : accountIds) {
+            // create a HHInfo for each household
+            HouseholdInfo householdInfo = getHouseholdInfoForAccount(accountId);
+
+            // if there is a provided Default address, use it over all other defaults.
+            setHouseholdAddressesToDefaultAddress(defaultSeasonalAddressesByAccountId, accountId, householdInfo, allAddressesByAccountId);
+
+            // finally, if no default found, create an empty default
+            if (householdHasNoDefaultAddress(householdInfo)) {
+                setNewHouseholdDefaultAddress(accountId, householdInfo);
+            }
+            householdInfoByAccountId.put(accountId, householdInfo);
+        }
+    }
+
+    private static void setNewHouseholdDefaultAddress(Id accountId, HouseholdInfo householdInfo) {
+        Address__c defaultAddress = new Address__c();
+        defaultAddress.Household_Account__c = accountId;
+        householdInfo.defaultAddress = defaultAddress;
+    }
+
+    private static Boolean householdHasNoDefaultAddress(HouseholdInfo householdInfo) {
+        return householdInfo.defaultAddress == null;
+    }
+
+    private static void setHouseholdAddressesToDefaultAddress(Map<Id, Address__c> defaultSeasonalAddressesByAccountId, Id accountId, HouseholdInfo householdInfo, Map<Id, List<Address__c>> allAddressesByAccountId) {
+        Address__c accountAddress = defaultSeasonalAddressesByAccountId.get(accountId);
+        if (accountAddress != null) {
+            NPSP_Address accountNpspAddress = new NPSP_Address(accountAddress);
+            if (accountNpspAddress.isDefault()) {
+                householdInfo.defaultAddress = accountNpspAddress.getRecord();
+            }
+        }
+
+        // go through the hh addresses storing the default and any seasonal
+        if (allAddressesByAccountId.get(accountId) != null) {
+            for (Address__c address : allAddressesByAccountId.get(accountId)) {
+                NPSP_Address npspAddress = new NPSP_Address(address);
+
+                if (householdInfo.defaultAddress == null && address.Default_Address__c) {
+                    householdInfo.defaultAddress = address;
+                }
+                if (npspAddress.isSeasonalAddr()) {
+                    Date dtStart = dtStartOrEndOfAddrSeasonal(address, true);
+                    Date dtEnd = dtStartOrEndOfAddrSeasonal(address, false);
+                    Date dtToday = System.today();
+                    if (dtToday >= dtStart && dtToday < dtEnd) {
+                        householdInfo.seasonalAddress = address;
+                    }
+                }
+            }
+        }
+    }
+
+    private static HouseholdInfo getHouseholdInfoForAccount(Id accountId) {
+        HouseholdInfo householdInfo = new HouseholdInfo();
+        householdInfo.accountId = accountId;
+        return householdInfo;
     }
 
     /*******************************************************************************************************
@@ -344,7 +404,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param accountIds the list of Account Id's
     * @return map<Id, list<Address__c>> map that contains the Addresses for each HH Account Id
     */
-    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(List<Id> accountIds) {
+    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(Set<Id> accountIds) {
         Map<Id, List<Address__c>> allAddressesByAccountId = new Map<Id, List<Address__c>>();
         List<Address__c> allAddressesForAccountIds = [
                 SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
@@ -445,7 +505,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private void checkForOverlapsAgainstHouseholdAddresses(List<NPSP_Address> seasonalAddresses) {
-        List<Id> listAccId = new List<Id>();
+        Set<Id> listAccId = new Set<Id>();
         for (NPSP_Address addr : seasonalAddresses) {
             listAccId.add(addr.householdId());
         }
@@ -600,7 +660,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     */
     public static Map<Address__c, Address__c> findDuplicateAddresses(List<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
-        List<Id> listAccId = new List<Id>();
+        Set<Id> listAccId = new Set<Id>();
         for (Address__c addr : listAddr) {
             listAccId.add(addr.Household_Account__c);
         }
@@ -656,7 +716,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     *
     * @param listAccId a list of Account Id's to process
     */
-    public static void cleanupAccountAddresses(List<Id> listAccId) {
+    public static void cleanupAccountAddresses(Set<Id> listAccId) {
 
         // use dmlWrapper to handle all of our database operations
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -717,7 +777,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // now make sure all contacts are using the correct default address
         dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        syncAddressesToAccountsAndContacts(mapAccIdAddr, dmlWrapper, false);
+        syncAddressesForAccountsAndContacts(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 
@@ -737,7 +797,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // get the default and seasonal address for each HH
         Map<Id, Addresses.HouseholdInfo> mapAccIdHHInfo =
-                syncAddressesToAccountsAndContacts(mapAccIdAddr, null, true);
+                syncAddressesForAccountsAndContacts(mapAccIdAddr, null, true);
 
         // now see which accounts actually had their address change, so we only update them.
         for (Account acc : listAcc) {
@@ -767,7 +827,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
-        syncAddressesToAccountsAndContacts(mapAccIdAddr, dmlWrapper, false);
+        syncAddressesForAccountsAndContacts(mapAccIdAddr, dmlWrapper, false);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
     }
@@ -906,12 +966,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return oldMap?.get(address.Id);
     }
 
-    private static Map<Id, Account> getAccountsByIds(Set<Id> acctIds) {
+    private static Map<Id, Account> getAccountsByIds(Set<Id> accountIds) {
         return new Map<Id, Account>([
                 SELECT Id, BillingStreet, BillingCity, BillingState,
                         BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude, Undeliverable_Address__c
                 FROM Account
-                WHERE Id IN :acctIds
+                WHERE Id IN :accountIds
         ]);
     }
 

@@ -98,7 +98,7 @@ public inherited sharing class ContactSelector {
         return queryForContactNamingFields;
     }
 
-    public static List<Contact> getContactAddressFieldsForContactsIn(Set<Id> householdAccountIds) {
+    public static List<Contact> getContactAddressFieldsForContactAccountsIn(Set<Id> householdAccountIds) {
         return Database.query(contactAddressFieldsSOQL(householdAccountIds));
     }
 
