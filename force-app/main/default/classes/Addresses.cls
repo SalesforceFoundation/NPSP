@@ -176,21 +176,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Map<Id, Address__c> defaultSeasonalAddressesByAccountId,
             TDTM_Runnable.DmlWrapper dmlWrapper, Boolean shouldReturnHouseholdInfoOnly) {
 
-        // assumptions:
-        // called after all modifications saved to db
-        // so either from a scheduled job,
-        // or in the Address AfterUpdate trigger, AFTER any related objects updated
-        //
-        // strategy:
-        // for each hh, get all its addresses (query)
-        // for each hh, find all its contacts (query)
-        // for each hh, find its current seasonal or default address (loop calculation)
-        // for each hh, update its billing fields with seasonal current/default
-        // for each hh addr, clear its Default field if it isn't default
-        // for each hh contact, if no override, update mailing fields with seasonal current/default
-        //
-
-        // get all Addresses by HH, that might need updating
         Set<Id> accountIds = new Set<Id>(defaultSeasonalAddressesByAccountId.keySet());
         Map<Id, List<Address__c>> allAddressesByAccountId = getAllAddressesByAccountId(accountIds);
 
@@ -205,23 +190,14 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // get all Contacts by HH, that might need updating
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
-        Map<Id, List<Contact>> contactsByHouseholdAccountId = new Map<Id, List<Contact>>();
-
-        for (Contact contact : contactSelector.getContactAddressFieldsForContactAccountsIn(accountIds)) {
-            List<Contact> householdContacts = contactsByHouseholdAccountId.get(contact.AccountId);
-            if (householdContacts == null) {
-                householdContacts = new List<Contact>();
-                contactsByHouseholdAccountId.put(contact.AccountId, householdContacts);
-            }
-            householdContacts.add(contact);
-        }
+        Map<Id, List<Contact>> contactsByHouseholdAccountId = getContactsByHouseholdAccountId(accountIds);
 
         List<Account> accountsToUpdate = new List<Account>();
         List<Address__c> addressesToUpdate = new List<Address__c>();
         List<Contact> contactsToUpdate = new List<Contact>();
 
         // now go through each HH, and do all the work!
-        setAddressForAccountsAndContacts(
+        updateAddressInfoForAccountsAndContacts(
                 accountIds,
                 householdInfoByAccountId,
                 accountsToUpdate,
@@ -244,6 +220,20 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return householdInfoByAccountId;
     }
 
+    private static Map<Id, List<Contact>> getContactsByHouseholdAccountId(Set<Id> accountIds) {
+        Map<Id, List<Contact>> contactsByHouseholdAccountId = new Map<Id, List<Contact>>();
+
+        for (Contact contact : contactSelector.getContactAddressFieldsForContactAccountsIn(accountIds)) {
+            List<Contact> householdContacts = contactsByHouseholdAccountId.get(contact.AccountId);
+            if (householdContacts == null) {
+                householdContacts = new List<Contact>();
+                contactsByHouseholdAccountId.put(contact.AccountId, householdContacts);
+            }
+            householdContacts.add(contact);
+        }
+        return contactsByHouseholdAccountId;
+    }
+
     private static NPSP_Address getAddressToSyncToAccountsAndContacts(Id accountId,
             Map<Id, HouseholdInfo> householdInfoByAccountId) {
 
@@ -253,68 +243,105 @@ public inherited sharing class Addresses extends fflib_SObjects {
                householdInfo.seasonalAddress : householdInfo.defaultAddress);
     }
 
-    private static void setAddressForAccountsAndContacts(Set<Id> accountIds,
+    private static void updateAddressInfoForAccountsAndContacts(Set<Id> accountIds,
             Map<Id, HouseholdInfo> householdInfoByAccountId, List<Account> accountsToUpdate,
             Map<Id, List<Address__c>> allAddressesByAccountId, List<Address__c> addressesToUpdate,
             Map<Id, List<Contact>> contactsByHouseholdAccountId, List<Contact> contactsToUpdate) {
 
         Map<Id, Account> accountsById = getAccountsByIds(accountIds);
-        for (Id accountId : accountIds) {
+        for (Id accountId : accountsById.keySet()) {
 
             NPSP_Address addressToSyncToAccountsAndContacts = getAddressToSyncToAccountsAndContacts(accountId,
                 householdInfoByAccountId);
 
             NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(accountsById.get(accountId));
+            updateAccountAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts, accountsToUpdate);
 
-            if (npspHouseholdAccount.billingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts) ||
-                    npspHouseholdAccount.undeliverableAddressStatus() !=
-                            addressToSyncToAccountsAndContacts.isUndeliverable()) {
+            clearAccountAddressDefaults(allAddressesByAccountId,
+                accountId, householdInfoByAccountId, addressesToUpdate);
 
-                npspHouseholdAccount.billingAddress(addressToSyncToAccountsAndContacts);
-                npspHouseholdAccount.setBillingAddressUndeliverableStatus(
-                        addressToSyncToAccountsAndContacts.isUndeliverable());
+            updateAddressForHouseholdContacts(contactsByHouseholdAccountId,
+                accountId, npspHouseholdAccount, addressToSyncToAccountsAndContacts, contactsToUpdate);
+        }
+    }
 
-                accountsToUpdate.add(npspHouseholdAccount.getRecord());
-            }
+    private static void updateAccountAddress(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts, List<Account> accountsToUpdate) {
+        Boolean accountUpdated = false;
 
-            // check other addresses on this household that are no longer the default
-            if (allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 && allAddressesByAccountId.get(accountId) != null) {
-                for (Address__c address : allAddressesByAccountId.get(accountId)) {
-                    HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
-                    if (address.Id == householdInfo.defaultAddress.Id) {
-                        continue;
-                    }
-                    if (address.Default_Address__c) {
-                        address.Default_Address__c = false;
-                        address.Latest_End_Date__c = System.today();
-                        addressesToUpdate.add(address);
+        if (shouldUpdateBillingAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts)) {
+            npspHouseholdAccount.setBillingAddress(addressToSyncToAccountsAndContacts);
+            accountUpdated = true;
+        }
+
+        if (shouldUpdateBillingAddressUndeliverableStatus(npspHouseholdAccount,
+                addressToSyncToAccountsAndContacts)) {
+
+            npspHouseholdAccount.setBillingAddressUndeliverableStatus(
+                    addressToSyncToAccountsAndContacts.isUndeliverable());
+            accountUpdated = true;
+        }
+        if (accountUpdated) {
+            accountsToUpdate.add(npspHouseholdAccount.getRecord());
+        }
+    }
+
+    private static void updateAddressForHouseholdContacts(Map<Id, List<Contact>> contactsByHouseholdAccountId, Id accountId, NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts, List<Contact> contactsToUpdate) {
+        if (accountHasContacts(contactsByHouseholdAccountId, accountId)) {
+            for (Contact con : contactsByHouseholdAccountId.get(accountId)) {
+                NPSP_Contact npspContact = new NPSP_Contact(con);
+                // detect that the contact's current address was deleted.
+                // and if so clear any override flag so it will get the default address.
+                if (npspContact.currentAddress() == null) {
+                    npspContact.getRecord().is_Address_Override__c = false;
+                }
+                if (npspContact.hasAddressOverride() == false) {
+                    npspContact.getRecord().Undeliverable_Address__c =
+                            npspHouseholdAccount.getRecord().Undeliverable_Address__c;
+                }
+                if (npspContact.hasAddressOverride() == false ||
+                        npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
+                    if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
+                        npspContact.currentAddress(addressToSyncToAccountsAndContacts);
                     }
                 }
+                contactsToUpdate.add(con);
             }
+        }
+    }
 
-            // check the Contacts on this household
-            if (contactsByHouseholdAccountId != null && contactsByHouseholdAccountId.containsKey(accountId)) {
-                for (Contact con : contactsByHouseholdAccountId.get(accountId)) {
-                    NPSP_Contact npspContact = new NPSP_Contact(con);
-                    // detect that the contact's current address was deleted.
-                    // and if so clear any override flag so it will get the default address.
-                    if (npspContact.currentAddress() == null) {
-                        npspContact.getRecord().is_Address_Override__c = false;
-                    }
-                    if (npspContact.hasAddressOverride() == false) {
-                        npspContact.getRecord().Undeliverable_Address__c =
-                                npspHouseholdAccount.getRecord().Undeliverable_Address__c;
-                    }
-                    if (npspContact.hasAddressOverride() == false ||
-                            npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
-                        if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
-                            npspContact.currentAddress(addressToSyncToAccountsAndContacts);
-                        }
-                    }
-                    contactsToUpdate.add(con);
+    private static Boolean accountHasContacts(Map<Id, List<Contact>> contactsByHouseholdAccountId, Id accountId) {
+        return contactsByHouseholdAccountId != null && contactsByHouseholdAccountId.containsKey(accountId);
+    }
+
+    private static void clearAccountAddressDefaults(Map<Id, List<Address__c>> allAddressesByAccountId,
+        Id accountId, Map<Id, HouseholdInfo> householdInfoByAccountId, List<Address__c> addressesToUpdate) {
+
+        if (accountHasAddresses(allAddressesByAccountId, accountId)) {
+            for (Address__c address : allAddressesByAccountId.get(accountId)) {
+                HouseholdInfo householdInfo = householdInfoByAccountId.get(accountId);
+                if (address.Id == householdInfo.defaultAddress.Id) {
+                    continue;
+                }
+                if (address.Default_Address__c) {
+                    address.Default_Address__c = false;
+                    address.Latest_End_Date__c = System.today();
+                    addressesToUpdate.add(address);
                 }
             }
         }
+    }
+
+    private static Boolean accountHasAddresses(Map<Id, List<Address__c>> allAddressesByAccountId, Id accountId) {
+        return allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 && allAddressesByAccountId.get(accountId) != null;
+    }
+
+    private static Boolean shouldUpdateBillingAddressUndeliverableStatus(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts) {
+        return npspHouseholdAccount.undeliverableAddressStatus() !=
+                addressToSyncToAccountsAndContacts.isUndeliverable();
+    }
+
+    private static Boolean shouldUpdateBillingAddress(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts) {
+        return npspHouseholdAccount.billingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts);
     }
 
     private static Map<Id, HouseholdInfo> getHouseholdAccountAddressInfoByAccountId(Set<Id> accountIds, Map<Id,
