@@ -52,7 +52,7 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
     }
 
-    public ElevateAuthorizedGift sendRemoveRequest(String elevateBatchId, String elevatePaymentId) {
+    public ElevateAuthorizedGift sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
         UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
                 removeRequest(elevateBatchId, elevatePaymentId)
         );

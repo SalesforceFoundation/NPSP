@@ -292,8 +292,8 @@ public inherited sharing class PS_Request {
                 value = String.format(
                         ENDPOINT_REMOVE_FROM_ELEVATE_BATCH,
                         new String[] {
-                            elevatePaymentId,   
-                            elevateBatchId      
+                            elevateBatchId,
+                            elevatePaymentId     
                         }
                 );
             }
