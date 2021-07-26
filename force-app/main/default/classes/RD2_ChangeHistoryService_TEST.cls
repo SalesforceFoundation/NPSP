@@ -34,7 +34,7 @@
 * @description All logic specific to Enhanced Recurring Donation Change History
 *
 */
-@IsTest(IsParallel=true)
+@IsTest(IsParallel=false)
 public with sharing class RD2_ChangeHistoryService_TEST {
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
@@ -63,23 +63,23 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     @IsTest
     private static void shouldNotCreateChangeHistoryWhenSettingIsNotEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
-        
+
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withDayOfMonth('20')
             .build();
 
-        Test.startTest();
         insert rd;
-        Test.stopTest();
 
         List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-
         System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
 
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
-        update rd;
-        rdchList = getRecurringDonationChangeHistory(rd.Id);
 
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        rdchList = getRecurringDonationChangeHistory(rd.Id);
         System.assertEquals(0, rdchList.size(), 'There should be no Change History with the Setting not Enabled');
     }
 
@@ -257,7 +257,50 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(2, rdchList.size(), 'There should be 2 Change Histories after the update');
         System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 'New Status should be ' + RD2_Constants.STATUS_LAPSED);
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
+    }
 
+    /**
+     * @description Verifies that Change History can be created regardless of User permissions
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryWithoutPermissionsToObject(){
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withDayOfMonth('20')
+            .withCalculateNextDonationDate()
+            .build();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+
+        rdUpdate.InstallmentFrequency__c = RD_NEW_FREQUENCY;
+        rdUpdate.npe03__Installment_Period__c = RD_NEW_PERIOD;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        System.runAs(UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER)) {
+            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeHistory__c.fields
+                    .NewInstallmentFrequency__c.isAccessible(),
+                    'This Standard User created for the test should not have read access ' +
+                            'to RD Change History New Installment field.');
+            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeHistory__c.fields
+                    .NewInstallmentFrequency__c.isUpdateable(),
+                    'This Standard User created for the test should not have edit access ' +
+                            'to RD Change History New Installment field.');
+
+            // User without permissions runs the code to generate Change History records
+            rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        }
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
+        System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
+        System.assertEquals(RD_NEW_PERIOD, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_NEW_PERIOD);
     }
 
     // Helpers

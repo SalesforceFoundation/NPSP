@@ -373,14 +373,14 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
     }
 
     /***
-    * @description Determine if Recurring Donation Change History records need to be created.
+    * @description Determine if Recurring Donation Change History records need to be created, then create them.
     *
-    * @param rds Trigger.new records
+    * @param updatedRds Trigger.new records
     * @param oldRds Trigger.old records
     * @param triggerAction BeforeInsert, AfterInsert, etc.
     * @return void
     */
-    public void createChangeHistoryOnUpdate(List<npe03__Recurring_Donation__c> rds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
+    public void createChangeHistoryOnUpdate(List<npe03__Recurring_Donation__c> updatedRds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
 
         if (triggerAction != TDTM_Runnable.Action.AfterUpdate || !changeHistoryService.isChangeHistoryEnabled) {
             return;
@@ -388,25 +388,15 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
 
         Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
 
-        for (npe03__Recurring_Donation__c rd : rds) {
+        for (npe03__Recurring_Donation__c rd : updatedRds) {
             npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
-            RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rd);
+            RD2_RecurringDonation updatedRdEntity = new RD2_RecurringDonation(rd);
             RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
 
-            changeHistoryService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+            changeHistoryService.handleHistoryFieldChanged(updatedRdEntity, oldRdEntity);
         }
         
-        createChangeHistoryRecords(changeHistoryService.getChangeHistoryRecords());
-    }
-
-    /***
-    * @description Handles Change History creation after update of recurring donation
-    * @param changeHistoryList Recurring Donation Change History records
-    */
-    private void createChangeHistoryRecords(List<RecurringDonationChangeHistory__c> changeHistoryList) {
-        if(changeHistoryList.size() > 0){
-            dmlActions.objectsToInsert.addAll(changeHistoryList);
-        }
+        changeHistoryService.insertChangeHistoryRecords();
     }
 
     /***

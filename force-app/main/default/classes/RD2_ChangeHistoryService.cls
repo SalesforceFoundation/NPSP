@@ -34,7 +34,7 @@
 * @description All services specific to Recurring Donation Change History
 *
 */
-public without sharing class RD2_ChangeHistoryService {
+public inherited sharing class RD2_ChangeHistoryService {
 
     /***
     * @description Determines if Change History is enabled for the org
@@ -49,16 +49,47 @@ public without sharing class RD2_ChangeHistoryService {
         set;
     }
 
-    SObjectField rdAmountField = npe03__Recurring_Donation__c.npe03__Amount__c;
-    SObjectField rdInstallmentPeriodField = npe03__Recurring_Donation__c.npe03__Installment_Period__c;
-    SObjectField rdInstallmentFrequencyField = npe03__Recurring_Donation__c.InstallmentFrequency__c;
-    SObjectField rdStatusField = npe03__Recurring_Donation__c.Status__c;
-    SObjectField rdStatusReasonField = npe03__Recurring_Donation__c.ClosedReason__c;
-    SObjectField rdPaymentMethodField = npe03__Recurring_Donation__c.PaymentMethod__c;
-    SObjectField rdCampaignField = npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c;
+    /***
+    * @description Instance of ChangeHistoryCreator to create Change History without sharing
+    */
+    private ChangeHistoryCreator changeHistoryCreator {
+        get {
+            if (changeHistoryCreator == null) {
+                changeHistoryCreator = new ChangeHistoryCreator();
+            }
+            return changeHistoryCreator;
+        }
+        set;
+    }
 
     private List<RecurringDonationChangeHistory__c> changeHistoryList = 
         new List<RecurringDonationChangeHistory__c>();
+
+    /**
+     * @description Returns true if any of the key fields used to create Change History has been changed.
+     * @param updatedRd Changed Recurring Donation
+     * @param originalRd Old Recurring Donation
+     * @return Boolean
+     */
+    public void handleHistoryFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
+        RecurringDonationChangeHistory__c changeHistory;
+
+        changeHistory = changeHistoryCreator.setChangedFields(changeHistory, updatedRd, originalRd);
+
+        if (changeHistory != null) {
+            changeHistoryList.add(changeHistory);
+        }
+    }
+
+    public List<RecurringDonationChangeHistory__c> getChangeHistoryRecords(){
+        return changeHistoryList;
+    }
+
+    public void insertChangeHistoryRecords(){
+        if (changeHistoryList.size() > 0) {
+            changeHistoryCreator.insertChangeHistoryRecords(getChangeHistoryRecords());
+        }
+    }
 
     private class ChangeHistoryFieldSet {
         ChangeHistoryFieldSet(SObjectField newField, SObjectField previousField) {
@@ -70,67 +101,70 @@ public without sharing class RD2_ChangeHistoryService {
         SObjectField previousField;
     }
 
-    private Map<SObjectField, ChangeHistoryFieldSet> recurringDonationToChangeHistoryFields = new Map<SObjectField, ChangeHistoryFieldSet>{
-        rdAmountField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewAmount__c, 
-            RecurringDonationChangeHistory__c.PreviousAmount__c),
-        rdInstallmentPeriodField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentPeriod__c, 
-            RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c),
-        rdInstallmentFrequencyField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentFrequency__c, 
-            RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c),
-        rdStatusField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatus__c, 
-            RecurringDonationChangeHistory__c.PreviousStatus__c),
-        rdStatusReasonField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatusReason__c, 
-            RecurringDonationChangeHistory__c.PreviousStatusReason__c),
-        rdPaymentMethodField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPaymentMethod__c, 
-            RecurringDonationChangeHistory__c.PreviousPaymentMethod__c),
-        rdCampaignField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewCampaign__c, 
-            RecurringDonationChangeHistory__c.PreviousCampaign__c)
-    };
+    private without sharing class ChangeHistoryCreator {
 
-    /**
-     * @description Returns true if any of the key fields used to create Change History has been changed.
-     * @param rd Changed Recurring Donation
-     * @param oldRd Old Recurring Donation
-     * @return Boolean
-     */
-    public void handleHistoryFieldChanged(RD2_RecurringDonation rd, RD2_RecurringDonation oldRd) {
-        RecurringDonationChangeHistory__c rdch;
+        private final SObjectField rdAmountField = npe03__Recurring_Donation__c.npe03__Amount__c;
+        private final SObjectField rdInstallmentPeriodField = npe03__Recurring_Donation__c.npe03__Installment_Period__c;
+        private final SObjectField rdInstallmentFrequencyField = npe03__Recurring_Donation__c.InstallmentFrequency__c;
+        private final SObjectField rdStatusField = npe03__Recurring_Donation__c.Status__c;
+        private final SObjectField rdStatusReasonField = npe03__Recurring_Donation__c.ClosedReason__c;
+        private final SObjectField rdPaymentMethodField = npe03__Recurring_Donation__c.PaymentMethod__c;
+        private final SObjectField rdCampaignField = npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c;    
 
-        for(SObjectField rdField : recurringDonationToChangeHistoryFields.keySet()){
+        private final Map<SObjectField, ChangeHistoryFieldSet> rd2ChangeHistoryFields = new Map<SObjectField, ChangeHistoryFieldSet>{
+            rdAmountField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewAmount__c, 
+                RecurringDonationChangeHistory__c.PreviousAmount__c),
+            rdInstallmentPeriodField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentPeriod__c, 
+                RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c),
+            rdInstallmentFrequencyField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentFrequency__c, 
+                RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c),
+            rdStatusField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatus__c, 
+                RecurringDonationChangeHistory__c.PreviousStatus__c),
+            rdStatusReasonField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatusReason__c, 
+                RecurringDonationChangeHistory__c.PreviousStatusReason__c),
+            rdPaymentMethodField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPaymentMethod__c, 
+                RecurringDonationChangeHistory__c.PreviousPaymentMethod__c),
+            rdCampaignField => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewCampaign__c, 
+                RecurringDonationChangeHistory__c.PreviousCampaign__c)
+        };
 
-            if(rd.fieldChanged(rdField, oldRd)){
-                if(rdch == null){
-                    rdch = returnChangeHistory(rd, oldRd);
+        public RecurringDonationChangeHistory__c setChangedFields(RecurringDonationChangeHistory__c changeHistory,
+            RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
+
+                for (SObjectField rdField : rd2ChangeHistoryFields.keySet()) {
+                    if (updatedRd.fieldChanged(rdField, originalRd)) {
+                        
+                        if (changeHistory == null) {
+                            changeHistory = initChangeHistoryRecord(updatedRd, originalRd);
+                        }
+
+                        changeHistory.put(rd2ChangeHistoryFields.get(rdField).newField, 
+                            updatedRd.getValue(rdField));
+                        changeHistory.put(rd2ChangeHistoryFields.get(rdField).previousField, 
+                            originalRd.getValue(rdField));
+                    }
                 }
 
-                rdch.put(recurringDonationToChangeHistoryFields.get(rdField).newField, 
-                    rd.getValue(rdField));
-                rdch.put(recurringDonationToChangeHistoryFields.get(rdField).previousField, 
-                    oldRd.getValue(rdField));
-            }
+                return changeHistory;
         }
 
-        if(rdch != null){
-            changeHistoryList.add(rdch);
+        public RecurringDonationChangeHistory__c initChangeHistoryRecord(RD2_RecurringDonation updatedRd, 
+            RD2_RecurringDonation originalRd){
+
+                return new RecurringDonationChangeHistory__c(
+                    RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
+                    EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
+                    NewAmount__c = (Decimal)updatedRd.getValue(rdAmountField),
+                    PreviousAmount__c = (Decimal)originalRd.getValue(rdAmountField),
+                    NewAnnualValue__c = updatedRd.getAnnualValue(),
+                    PreviousAnnualValue__c = originalRd.getAnnualValue()
+                );
         }
 
-    }
+        public void insertChangeHistoryRecords(List<RecurringDonationChangeHistory__c> changeHistoryList){
+            insert changeHistoryList;
+        }
 
-    public List<RecurringDonationChangeHistory__c> getChangeHistoryRecords(){
-        return changeHistoryList;
-    }
-
-    private RecurringDonationChangeHistory__c returnChangeHistory(RD2_RecurringDonation rd, 
-        RD2_RecurringDonation oldRd){
-
-        return new RecurringDonationChangeHistory__c(
-            RecurringDonation__c = (Id)rd.getValue(npe03__Recurring_Donation__c.Id),
-            EffectiveDate__c = (Date)rd.getValue(npe03__Recurring_Donation__c.StartDate__c),
-            NewAmount__c = (Decimal)rd.getValue(rdAmountField),
-            PreviousAmount__c = (Decimal)oldRd.getValue(rdAmountField),
-            NewAnnualValue__c = rd.getAnnualValue(),
-            PreviousAnnualValue__c = oldRd.getAnnualValue()
-        );
     }
 
 }
