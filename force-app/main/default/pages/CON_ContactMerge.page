@@ -164,7 +164,6 @@
                                         <th class="slds-text-heading_label" scope="col">Duplicate Record Set Name</th>
                                         <th class="slds-text-heading_label" scope="col">Last Modified Date</th>
                                         <th class="slds-text-heading_label" scope="col">Duplicate Rule</th>
-                                        <th class="slds-text-heading_label" scope="col">Record Count</th>
                                         <th class="slds-text-heading_label" scope="col">{!$Label.commonContactCount}</th>
                                         <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
                                                      var="field">
@@ -193,11 +192,6 @@
                                             <td>
                                                 <span class="slds-truncate">
                                                     <apex:outputField value="{!drs.DuplicateRuleId}"/>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="slds-truncate">
-                                                    <apex:outputField value="{!drs.RecordCount}"/>
                                                 </span>
                                             </td>
                                             <td>
