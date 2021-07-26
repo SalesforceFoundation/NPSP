@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Lorsque cette option est sélectionnée, NPSP exclut ce contact du nom du foyer (défini dans les Paramètres NPSP | Personnes | Foyers).</help>
+    <label>Exclure du nom du foyer</label>
+    <name>Exclude_from_Household_Name__c</name>
+</CustomFieldTranslation>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Seleccione Abierto para una Donación recurrente. Seleccione Fijo para una Donación recurrente que tiene un número específico de cuotas. Para Fijo también debe rellenar el campo Cantidad de cuotas planificadas.</help>
+    <label>Tipo de recurrencia</label>
+    <name>RecurringType__c</name>
+    <picklistValues>
+        <masterLabel>Fixed</masterLabel>
+        <translation>Fijo</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Open</masterLabel>
+        <translation>Abierto</translation>
+    </picklistValues>
+</CustomFieldTranslation>

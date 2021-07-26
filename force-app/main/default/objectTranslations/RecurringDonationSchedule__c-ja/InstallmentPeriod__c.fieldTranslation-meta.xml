@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>[頻度] と共にこの継続支援の割賦スケジュールを定義します。たとえば、[間隔] が [毎月] で [頻度] が 3 の場合、たとえば、[間隔] が [毎月] で、[頻度] が 3 の場合、スケジュールは「3 か月ごと」として定義されます。</help>
+    <label>間隔</label>
+    <name>InstallmentPeriod__c</name>
+    <picklistValues>
+        <masterLabel>1st and 15th</masterLabel>
+        <translation>1 日と 15 日</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Daily</masterLabel>
+        <translation>毎日</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Monthly</masterLabel>
+        <translation>毎月</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Weekly</masterLabel>
+        <translation>毎週</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Yearly</masterLabel>
+        <translation>毎年</translation>
+    </picklistValues>
+</CustomFieldTranslation>

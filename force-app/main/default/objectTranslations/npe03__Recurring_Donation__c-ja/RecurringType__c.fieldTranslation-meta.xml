@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>継続的な継続支援には [無期限] を選択し、特定の回数が設定されている継続支援には [固定] を選択します。[固定] の場合、[予定回数] 項目も入力する必要があります。</help>
+    <label>継続種別</label>
+    <name>RecurringType__c</name>
+    <picklistValues>
+        <masterLabel>Fixed</masterLabel>
+        <translation>固定</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Open</masterLabel>
+        <translation>無期限</translation>
+    </picklistValues>
+</CustomFieldTranslation>

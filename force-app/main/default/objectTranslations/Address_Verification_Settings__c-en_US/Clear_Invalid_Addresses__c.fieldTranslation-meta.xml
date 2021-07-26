@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- If checked, any US account address that the service marks undeliverable will automatically get cleared out. (You can review the invalid entry in the Address record.) --></help>
+    <label><!-- Clear Invalid Addresses-DEPRECATED --></label>
+    <name>Clear_Invalid_Addresses__c</name>
+</CustomFieldTranslation>

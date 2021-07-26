@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Détermine si un e-mail est envoyé à l’utilisateur du champ « Attribué à » de la tâche lorsque la tâche devient active. Les tâches dépendantes sont actives lorsque leur tâche parente est terminée.</help>
+    <label>Envoyer l’e-mail</label>
+    <name>Send_Email__c</name>
+</CustomFieldTranslation>

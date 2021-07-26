@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</inlineHelpText>
+    <label>Active</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

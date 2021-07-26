@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GAU_Allocation_1_Percent__c</fullName>
+    <description>The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The percent attributed to the Opportunity&apos;s first GAU Allocation. You must use Data Import Advanced Mapping to map to this field.</inlineHelpText>
+    <label>GAU Allocation 1: Percent</label>
+    <precision>9</precision>
+    <required>false</required>
+    <scale>6</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

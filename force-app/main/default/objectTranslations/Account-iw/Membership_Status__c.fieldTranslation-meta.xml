@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>נוסחה: עדכני, הסתיים או תקופת חסד.  ברירת המחדל לתקופת חסד שנקבעה בהגדרות משק הבית.</help>
+    <label>מצב חברות</label>
+    <name>Membership_Status__c</name>
+</CustomFieldTranslation>

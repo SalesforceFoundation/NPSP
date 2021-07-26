@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>この項目を表示するリストビュー (バッチまたはテンプレート)。</help>
+    <label>リスト名</label>
+    <name>List_Name__c</name>
+</CustomFieldTranslation>

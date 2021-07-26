@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Somme des allocations d’opportunités Clôturées/Gagnées au cours des derniers N jours. (La valeur de N peut être modifiée dans les paramètres NPSP, sous Dons, Allocations UCG). NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
+    <label>Allocations totales des N derniers jours</label>
+    <name>Total_Allocations_Last_N_Days__c</name>
+</CustomFieldTranslation>

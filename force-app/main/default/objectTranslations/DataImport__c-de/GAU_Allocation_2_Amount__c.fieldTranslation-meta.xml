@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Der Geldbetrag, der der zweiten GAU-Zuweisung (Verwendungszweck) zugeschrieben wurde. Für die Zuweisung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
+    <label>GAU-Zuweisung 2: Betrag</label>
+    <name>GAU_Allocation_2_Amount__c</name>
+</CustomFieldTranslation>

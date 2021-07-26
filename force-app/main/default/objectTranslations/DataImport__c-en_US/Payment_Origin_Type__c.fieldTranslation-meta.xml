@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The type of system used to initiate the transaction. Available values include Engagement Hub, Giving Page, Payments API, Salesforce. --></help>
+    <label><!-- Payment Origin Type --></label>
+    <name>Payment_Origin_Type__c</name>
+</CustomFieldTranslation>

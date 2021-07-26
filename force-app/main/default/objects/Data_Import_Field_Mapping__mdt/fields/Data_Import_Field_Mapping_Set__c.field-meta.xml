@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Data_Import_Field_Mapping_Set__c</fullName>
+    <description>The Data Import Field Mapping Set containing this field mapping.</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>The Data Import Field Mapping Set containing this field mapping.</inlineHelpText>
+    <label>Data Import Field Mapping Set</label>
+    <referenceTo>Data_Import_Field_Mapping_Set__mdt</referenceTo>
+    <relationshipLabel>Data Import Field Mappings</relationshipLabel>
+    <relationshipName>Data_Import_Field_Mappings</relationshipName>
+    <required>true</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>
