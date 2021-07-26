@@ -95,6 +95,10 @@ class GiftBatch {
         return this.state();
     }
 
+    findGiftBy(giftId) {
+        return this._gifts.find(gift => gift.id() === giftId);
+    }
+
     id() {
         return this._id;
     }

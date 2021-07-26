@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
+import { validateJSONString, deepClone, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsExpectedTotalsMessage
@@ -20,6 +20,7 @@ import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
+import Gift from 'c/geGift';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -46,6 +47,20 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     giftBatch = new GiftBatch();
     @track giftBatchState = {};
+    gift = new Gift();
+    @track giftInView = {};
+
+    handleLoadData(event) {
+        const giftId = event.detail.Id;
+        this.gift = this.giftBatch.findGiftBy(giftId);
+        this.giftInView = this.gift.state();
+    }
+
+    handleFormStateChange(event) {
+        const giftFieldChanges = event.detail;
+        this.gift.updateFieldsWith(giftFieldChanges);
+        this.giftInView = this.gift.state();
+    }
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -115,6 +130,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     'dismissible',
                     null
                 );
+
+                this.handleClearGiftInView();
             }
         } catch (error) {
             this.errorCallback(error);
@@ -157,12 +174,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.giftBatchState = await this.giftBatch.dryRun();
             }
         }
-    }
-
-    handleLoadData(event) {
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.loadDataImportRecord(event.detail);
-        this.currentGift = event.detail;
     }
 
     handlePermissionErrors() {
@@ -363,8 +374,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return !this.requireTotalMatch();
     }
 
-    handleClearCurrentGift() {
-        this.currentGift = null;
+    handleClearGiftInView() {
+        this.gift = new Gift();
+        this.giftInView = this.gift.state();
+        // fireEvent(this, 'formRendererReset', {});
     }
 
     async handleDelete(event) {
@@ -372,8 +385,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const gift = event.detail;
         this.giftBatchState = await this.giftBatch.remove(gift);
 
-        if (this.currentGift?.Id === gift?.Id) {
-            fireEvent(this, 'formRendererReset', {});
+        if (this.giftInView?.fields.Id === gift?.Id) {
+            // fireEvent(this, 'formRendererReset', {});
+            this.handleClearGiftInView();
         }
 
         showToast(

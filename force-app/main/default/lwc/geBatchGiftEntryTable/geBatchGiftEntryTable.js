@@ -113,7 +113,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     @api
     set giftBatchState(giftBatchState) {
-        console.log('GiftBatchState: ', deepClone(giftBatchState));
         this._giftBatchState = giftBatchState;
         if (this._dataImportObjectInfo) {
             this._setTableProperties();
@@ -124,8 +123,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         if (this._giftBatchState?.gifts) {
             this.giftsFromView = [];
 
-            this._giftBatchState.gifts.forEach(giftView => {
-                let giftViewAsTableRow = deepClone(giftView);
+            this._giftBatchState.gifts.forEach(gift => {
+                let giftViewAsTableRow = deepClone(gift.state());
 
                 this.giftsFromView.push( Object.assign(giftViewAsTableRow.fields,
                     this.appendUrlColumnProperties.call(giftViewAsTableRow.fields,

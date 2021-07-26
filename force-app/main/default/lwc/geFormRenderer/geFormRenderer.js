@@ -65,7 +65,8 @@ import {
     relatedRecordFieldNameFor,
     apiNameFor,
     isString,
-    showToast
+    showToast,
+    isEmptyObject
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateBatch from './elevateBatch';
@@ -1678,6 +1679,23 @@ export default class GeFormRenderer extends LightningElement{
         return `button ${this.saveActionLabel}`;
     }
 
+    get giftInView() {
+        return this._giftInView;
+    }
+
+    @api
+    set giftInView(gift) {
+        if (gift && isEmptyObject(gift.fields)) {
+            this.reset();
+        } else if (gift && gift.fields) {
+            this._giftInView = gift;
+            this.formState = gift.fields;
+            if (gift.softCredits) {
+                this._softCredits = deepClone(gift.softCredits);
+            }
+        }
+    }
+
     get formState() {
         return this._formState;
     }
@@ -1685,6 +1703,14 @@ export default class GeFormRenderer extends LightningElement{
     set formState(formState) {
         this._formState = formState;
     }
+
+    // get formState() {
+    //     return this._formState;
+    // }
+
+    // set formState(formState) {
+    //     this._formState = formState;
+    // }
 
     lookupFieldApiNameFor(recordId) {
         const valueForKeyByStartsWith =
@@ -1702,7 +1728,7 @@ export default class GeFormRenderer extends LightningElement{
     updateFormState(fields) {
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
-        Object.assign(this.formState, fields);
+        // Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
             this.updateFormStateForDonationRecordType(fields);
         }
@@ -1712,7 +1738,9 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         // Shallow-copy to a new object to prompt reactivity
-        this.formState = Object.assign({}, this.formState);
+        // this.formState = Object.assign({}, this.formState);
+        const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
+        this.dispatchEvent(formStateChangeEvent);
     }
 
     removeFieldsNotUpdatableInFormState(fieldsToUpdate) {

@@ -1,15 +1,29 @@
 class Gift {
-    softCredits = {};
-    fields = {};
+    _softCredits = {};
+    _fields = {};
 
     constructor(giftView) {
-        this.softCredits = giftView.softCredits;
-        this.fields = giftView.fields;
+        if (giftView) {
+            this._fields = giftView.fields;
+            this._softCredits = giftView.softCredits;
+        }
     }
 
-    view() {
+    id() {
+        return this._fields.Id;
+    }
+
+    updateFieldsWith(changes) {
+        this._fields = {
+            ...this._fields,
+            ...changes
+        };
+    }
+
+    state() {
         return {
-            ...this.fields
+            fields: { ...this._fields },
+            softCredits: { ...this._softCredits }
         }
     }
 }
