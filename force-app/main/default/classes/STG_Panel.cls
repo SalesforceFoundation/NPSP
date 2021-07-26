@@ -110,6 +110,64 @@ public with sharing virtual class STG_Panel {
         } private set;
     }
 
+    /**
+    * @description Boolean to determin if the Upgrade to Enhanced RD page should be displayed or not
+    */
+    public Boolean isDisplayingRD2UpgradePage {
+        get {
+            return isDisplayingRD2UpgradePage();
+        } private set;
+    }
+
+    /**
+    * @description Determine if Enhanced RD page should be displayed
+    */
+    private Boolean isDisplayingRD2UpgradePage() {
+        RD2_EnablementDelegate_CTRL.EnablementState enablementState = RD2_EnablementDelegate_CTRL.getEnablementState();
+        if (enablementState.isMetaConfirmed == false) {
+            return false;
+        }
+
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();            
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
+        
+        return isMirgrationComplete7DaysAgo(summaryByType)
+            || isSimpleEnablmentEnableMoreThan7Days(summaryByType);
+    }
+
+    /**
+    * @description Check if RD2 Data Migration Jobs has been completed more than 7 days ago
+    * @param summaryByType RD2 Data Migration Summary
+    * @return Boolean 
+    */
+    private Boolean isMirgrationComplete7DaysAgo(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+        UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
+        if (migrationSummary == null) {
+            return false;
+        }
+
+        Id batchId = migrationSummary.batchId;
+
+        UTIL_BatchJobService batchService = new UTIL_BatchJobService();
+        Integer days = batchService.getCompleteDaysBetween(batchId);
+
+        return days > 7;
+    }
+
+    /**
+    * @description Check if RD Enhancement is completed in simple version and RD2 nightly jobs have been completed more than 7 times
+    * @param summaryByType RD2 Data Migration Summary
+    * @return Boolean 
+    */
+    private Boolean isSimpleEnablmentEnableMoreThan7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+        Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
+
+        UTIL_BatchJobService batchService = new UTIL_BatchJobService();
+
+        return isSimpleRecurringDonationEnablement 
+            && batchService.asyncJobHasBeenRunMultipleTimes('RD2_OpportunityEvaluation_BATCH', 7);
+    }
+
     /*******************************************************************************************************
     * @description the shared Settings Service object panels should use.
     */

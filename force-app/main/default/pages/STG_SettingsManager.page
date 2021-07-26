@@ -195,7 +195,8 @@
                                 <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav" class="slds-tree__item">
 
                                     <a href="#" onclick="ShowPanel('idPanelRD2Enablement'); fireRefreshViewEvent(); return false;"
-                                        class="slds-grow slds-m-left_large">
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(!isDisplayingRD2UpgradePage, 'display: block', 'display: none')}">
                                         {!$Label.stgNavRD2Enablement}
                                     </a>
                                 </li>
