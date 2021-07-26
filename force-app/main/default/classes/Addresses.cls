@@ -176,11 +176,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
             Map<Id, Address__c> defaultSeasonalAddressesByAccountId,
             TDTM_Runnable.DmlWrapper dmlWrapper, Boolean shouldReturnHouseholdInfoOnly) {
 
-        Set<Id> accountIds = new Set<Id>(defaultSeasonalAddressesByAccountId.keySet());
+        List<Id> accountIds = new List<Id>(defaultSeasonalAddressesByAccountId.keySet());
         Map<Id, List<Address__c>> allAddressesByAccountId = getAllAddressesByAccountId(accountIds);
 
         // for each hh, find the current address to use (seasonal vs default)
-        Map<Id, HouseholdInfo> householdInfoByAccountId = getHouseholdAccountAddressInfoByAccountId(accountIds,
+        Map<Id, HouseholdInfo> householdInfoByAccountId = getHouseholdAccountAddressInfoByAccountId(new
+                Set<Id>(accountIds),
                 defaultSeasonalAddressesByAccountId, allAddressesByAccountId);
 
         // some callers just need the HHInfo for each HH Account.
@@ -190,7 +191,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // get all Contacts by HH, that might need updating
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
-        Map<Id, List<Contact>> contactsByHouseholdAccountId = getContactsByHouseholdAccountId(accountIds);
+        Map<Id, List<Contact>> contactsByHouseholdAccountId = getContactsByHouseholdAccountId(new Set<Id>(accountIds));
 
         List<Account> accountsToUpdate = new List<Account>();
         List<Address__c> addressesToUpdate = new List<Address__c>();
@@ -198,7 +199,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
         // now go through each HH, and do all the work!
         updateAddressInfoForAccountsAndContacts(
-                accountIds,
+                new Set<Id>(accountIds),
                 householdInfoByAccountId,
                 accountsToUpdate,
                 allAddressesByAccountId,
@@ -431,7 +432,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param accountIds the list of Account Id's
     * @return map<Id, list<Address__c>> map that contains the Addresses for each HH Account Id
     */
-    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(Set<Id> accountIds) {
+    public static Map<Id, List<Address__c>> getAllAddressesByAccountId(List<Id> accountIds) {
         Map<Id, List<Address__c>> allAddressesByAccountId = new Map<Id, List<Address__c>>();
         List<Address__c> allAddressesForAccountIds = [
                 SELECT Id, Default_Address__c, Household_Account__c, Address_Type__c,
@@ -532,7 +533,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private void checkForOverlapsAgainstHouseholdAddresses(List<NPSP_Address> seasonalAddresses) {
-        Set<Id> listAccId = new Set<Id>();
+        List<Id> listAccId = new List<Id>();
         for (NPSP_Address addr : seasonalAddresses) {
             listAccId.add(addr.householdId());
         }
@@ -687,7 +688,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     */
     public static Map<Address__c, Address__c> findDuplicateAddresses(List<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
-        Set<Id> listAccId = new Set<Id>();
+        List<Id> listAccId = new List<Id>();
         for (Address__c addr : listAddr) {
             listAccId.add(addr.Household_Account__c);
         }
@@ -743,7 +744,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     *
     * @param listAccId a list of Account Id's to process
     */
-    public static void cleanupAccountAddresses(Set<Id> listAccId) {
+    public static void cleanupAccountAddresses(List<Id> listAccId) {
 
         // use dmlWrapper to handle all of our database operations
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
