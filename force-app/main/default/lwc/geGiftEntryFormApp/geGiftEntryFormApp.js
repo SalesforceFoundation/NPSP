@@ -93,8 +93,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
 
-        this.giftBatchState = await this.giftBatch.init(this.recordId);
-        await this.updateAppDisplay();
+        if (this.recordId) {
+            this.giftBatchState = await this.giftBatch.init(this.recordId);
+            await this.updateAppDisplay();
+        }
     }
 
     disconnectedCallback() {
