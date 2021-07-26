@@ -324,7 +324,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
-                    this.handleProcessedBatch();
                     clearInterval(poll);
                 }
                 if (!this.isBatchGiftEntryInFocus()) {
@@ -338,7 +337,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return location.href.includes(this.batchId);
     }
 
-    handleProcessedBatch() {
+    async handleProcessedBatch() {
+        this.giftBatchState = await this.giftBatch.init(this.recordId);
         this.collapseForm();
         showToast(
             this.CUSTOM_LABELS.PageMessagesConfirm,
@@ -362,9 +362,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async refreshBatchTotals() {
         try {
+            const wasProcessing = this._isBatchProcessing;
+
             this._hasDisplayedExpiredAuthorizationWarning = false;
             this.giftBatchState = await this.giftBatch.refreshTotals();
             this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+
+            const finishedProcessingDuringThisRefresh =
+                wasProcessing && this._isBatchProcessing === false;
+            if (finishedProcessingDuringThisRefresh) {
+                this.handleProcessedBatch();
+            }
         } catch(error) {
             handleError(error);
         }
