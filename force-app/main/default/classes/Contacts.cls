@@ -316,7 +316,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
 
             npspContact.mailingAddress(npspAddress);
-            npspContact.undeliverableAddress(npspAddress.isUndeliverable());
+            npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
 
             dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
         }
@@ -1046,6 +1046,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueue() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
+
         if (isRecursive() || isRecursiveFromContact()) {
             if (isRecursive()) {
                 UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
@@ -1243,6 +1244,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private void createAddressesForContacts() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
+
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
