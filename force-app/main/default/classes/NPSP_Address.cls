@@ -511,6 +511,9 @@ public inherited sharing class NPSP_Address implements IAddress {
         return address.Undeliverable__c != oldAddress.Undeliverable__c;
     }
 
+    public void setUndeliverable(Boolean isUndeliverable) {
+        address.Undeliverable__c = isUndeliverable;
+    }
 
     /*******************************************************************************************************
     * @description utility to combine mailing street fields into a single string with embedded CR LF

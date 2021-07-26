@@ -447,10 +447,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
     * when pushing a new default address, we need to do it in the AfterInsert/Update.
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
-    * @param listConAll the list of Contacts
+    * @param contacts the list of Contacts
     * @param dmlWrapper to hold the Addresses that need inserting/updating
     ********************************************************************************************************/
-    public void createAddrFromConAfterInsertUpdate(List<Contact> listConAll,
+    public void createAddressFromContactAfterInsertUpdate(List<Contact> contacts,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         // Strategy:
@@ -472,61 +472,67 @@ public inherited sharing class Contacts extends fflib_SObjects {
         //     put it on dmlWrapper
         //
 
-        Map<Contact, Address__c> mapConAddr = new Map<Contact, Address__c>();
+        Map<Contact, Address__c> addressesByContact = new Map<Contact, Address__c>();
         List<Contact> listCon = new List<Contact>();
 
-        for (Contact con : listConAll) {
-            listCon.add(con);
-            NPSP_Address npspAddressFromContact = new NPSP_Address(con);
-            mapConAddr.put(con, npspAddressFromContact.getRecord());
+        for (Contact contact : contacts) {
+            listCon.add(contact);
+            NPSP_Address npspAddressFromContact = new NPSP_Address(contact);
+            addressesByContact.put(contact, npspAddressFromContact.getRecord());
         }
 
         // look for duplicates for our proposed new addresses
-        Map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
-                .values());
+        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.findDuplicateAddresses(addressesByContact.values());
 
         // maps & lists to keep track of the addresses we must insert or update
-        List<Address__c> listAddrUpdateDefault = new List<Address__c>();
-        List<Address__c> listAddrInsertDefault = new List<Address__c>();
+        List<Address__c> addressesToUpdate = new List<Address__c>();
+        List<Address__c> addressesToInsert = new List<Address__c>();
 
-        for (Contact con : listCon) {
-            Address__c addrNew = mapConAddr.get(con);
-            Address__c addrDup = mapAddrDupAddr.get(addrNew);
+        for (Contact contact : listCon) {
+            NPSP_Address npspAddress = new NPSP_Address(addressesByContact.get(contact));
+            NPSP_Address npspMatchingAddress = new NPSP_Address(addressMatchesByAddress.get(npspAddress.getRecord()));
+            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            Boolean addressUpdated = false;
 
             // if found a match
-            if (addrDup != null) {
+            if (npspMatchingAddress.getRecord() != null) {
                 // record the match in the contact
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                NPSP_Address npspAddress = new NPSP_Address(addrNew);
-                NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
-
-                if (!npspAddress.isEqualToIncludingAddressType(npspAddressDup, true)) {
-                    npspAddressDup.copyFrom(npspAddress);
-                    if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
-                        addrDup.Default_Address__c = true;
+                if (npspContact.isUndeliverableStatusChanged()) {
+                    npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
+                    addressUpdated = true;
+                }
+                if (!npspAddress.isEqualToIncludingAddressType(npspMatchingAddress, true)) {
+                    npspMatchingAddress.copyFrom(npspAddress);
+                    if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
+                        npspMatchingAddress.setAsDefault();
                     }
-                    listAddrUpdateDefault.add(addrDup);
+                    addressUpdated = true;
                 }
                 // exact match. we aren't specifying override, so the address should become the new hh default address
-                else if (!con.is_Address_Override__c && !addrDup.Default_Address__c) {
-                    addrDup.Default_Address__c = true;
-                    listAddrUpdateDefault.add(addrDup);
+                else if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
+                    npspMatchingAddress.setAsDefault();
+                    addressUpdated = true;
+                }
+                if (addressUpdated) {
+                    addressesToUpdate.add(npspMatchingAddress.getRecord());
                 }
             } else {
                 // no match, not an override, make it a new default hh address
-                addrNew.Default_Address__c = true;
-                listAddrInsertDefault.add(addrNew);
+                npspAddress.setAsDefault();
+                npspAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
+                addressesToInsert.add(npspAddress.getRecord());
             }
         }
 
-        if (listAddrUpdateDefault.size() > 0) {
-            for (Address__c addr : listAddrUpdateDefault) {
+        if (addressesToUpdate.size() > 0) {
+            for (Address__c addr : addressesToUpdate) {
                 dmlWrapper.objectsToUpdate.add(addr);
             }
         }
 
-        if (listAddrInsertDefault.size() > 0) {
-            dmlWrapper.objectsToInsert.addAll((List<SObject>) listAddrInsertDefault);
+        if (addressesToInsert.size() > 0) {
+            dmlWrapper.objectsToInsert.addAll((List<SObject>) addressesToInsert);
         }
     }
 
@@ -1129,7 +1135,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 continue;
             }
 
-            if (npspContact.isAddressChanged() || npspContact.isMovingToANewHousehold()) {
+            if (npspContact.isAddressChanged() ||
+                npspContact.isMovingToANewHousehold() ||
+                (npspContact.isUndeliverableStatusChanged())) {
+
                 addressCreationQueue.add(npspContact.getRecord());
             }
         }
@@ -1247,7 +1256,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            createAddrFromConAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+            createAddressFromContactAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);

@@ -87,7 +87,7 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean isUndeliverableStatusChanged() {
-        return contact.Undeliverable_Address__c != oldContact.Undeliverable_Address__c;
+        return contact.Undeliverable_Address__c != oldContact?.Undeliverable_Address__c;
     }
 
     public Id currentAddress() {
@@ -99,7 +99,7 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean accountChanged() {
-        return (oldContact != null && oldContact.AccountId != contact.AccountId);
+        return oldContact?.AccountId != contact.AccountId;
     }
 
     public Boolean isAddressChanged() {
@@ -111,11 +111,11 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean addressOverrideChanged() {
-        return contact.is_Address_Override__c != oldContact.is_Address_Override__c;
+        return contact.is_Address_Override__c != oldContact?.is_Address_Override__c;
     }
 
     public Boolean currentAddressChanged() {
-        return contact.Current_Address__c != oldContact.Current_Address__c;
+        return contact.Current_Address__c != oldContact?.Current_Address__c;
     }
 
     public Boolean hasAccount() {
