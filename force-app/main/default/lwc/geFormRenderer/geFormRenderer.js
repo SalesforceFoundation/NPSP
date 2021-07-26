@@ -1739,6 +1739,8 @@ export default class GeFormRenderer extends LightningElement{
 
         // Shallow-copy to a new object to prompt reactivity
         // this.formState = Object.assign({}, this.formState);
+        // TODO: improve and reduce this down to sending only
+        // data for the field that changed.
         const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
         this.dispatchEvent(formStateChangeEvent);
     }

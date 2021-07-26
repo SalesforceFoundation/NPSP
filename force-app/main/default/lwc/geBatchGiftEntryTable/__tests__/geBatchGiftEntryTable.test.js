@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
 import GeBatchGiftEntryTable from 'c/geBatchGiftEntryTable';
+import Gift from 'c/geGift';
 
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
@@ -10,6 +11,7 @@ const mockRenderWrapper = require('../../../../../../tests/__mocks__/apex/data/r
 const mockSections = require('./data/sections.json');
 const mockLegacyDataImportModel = require('./data/legacyDataImportModel.json');
 const mockDataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
+const mockGiftView = require('../../../../../../tests/__mocks__/apex/data/giftView.json');
 
 jest.mock('c/geFormService', () => {
     return {
@@ -89,7 +91,7 @@ describe('ge-batch-gift-entry-table', () => {
         it('should render title', async () => {
             const batchTable = await setupBatchTableWithData(true);
             batchTable.giftBatchState = {
-                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+                gifts: [ new Gift(mockGiftView) ]
             };
 
             await flushPromises();
@@ -102,7 +104,7 @@ describe('ge-batch-gift-entry-table', () => {
         it('should render button menu', async () => {
             const batchTable = await setupBatchTableWithData(true);
             batchTable.giftBatchState = {
-                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+                gifts: [ new Gift(mockGiftView) ]
             };
 
             await flushPromises();
@@ -120,7 +122,7 @@ describe('ge-batch-gift-entry-table', () => {
                 totalGiftsCount: 5,
                 expectedCountOfGifts: 10,
                 expectedTotalBatchAmount: 500,
-                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+                gifts: [ new Gift(mockGiftView) ]
             };
             await flushPromises();
 
@@ -141,7 +143,7 @@ describe('ge-batch-gift-entry-table', () => {
         it('should render lightning datatable', async () => {
             const batchTable = await setupBatchTableWithData(true);
             batchTable.giftBatchState = {
-                gifts: [{ fields: {Donation_Amount__c: 1.50} }]
+                gifts: [ new Gift(mockGiftView) ]
             };
 
             await flushPromises();

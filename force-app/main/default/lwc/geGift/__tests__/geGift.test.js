@@ -1,6 +1,6 @@
 import Gift from 'c/geGift';
 
-const giftView = require('./data/giftView.json');
+const mockGiftView = require('../../../../../../tests/__mocks__/apex/data/giftView.json');
 
 describe('ge-gift', () => {
 
@@ -10,7 +10,7 @@ describe('ge-gift', () => {
     });
 
     it('should initialize with expected properties', async () => {
-        const gift = new Gift(giftView);
+        const gift = new Gift(mockGiftView);
 
         await flushPromises();
 
