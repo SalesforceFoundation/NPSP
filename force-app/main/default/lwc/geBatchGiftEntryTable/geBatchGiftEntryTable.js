@@ -90,6 +90,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     @api userDefinedBatchTableColumnNames;
     @api batchCurrencyIsoCode;
     isLoaded = true;
+    isLoading = false;
 
 
     constructor() {
@@ -137,6 +138,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this._count = this._giftBatchState.totalGiftsCount;
             this._total = this._giftBatchState.totalDonationsAmount;
             this._batchLoaded = true;
+            this.isLoading = false;
         }
     }
 
@@ -342,6 +344,22 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             'dismissible',
             null
         );
+    }
+
+    handleLoadMoreGifts() {
+        if (this.hasAllExistingGifts() || this.isLoading) {
+            return;
+        }
+
+        const loadMoreGiftsEvent = new CustomEvent('loadmoregifts', {
+            detail: { giftsOffset: this.giftsFromView.length }
+        });
+        this.dispatchEvent(loadMoreGiftsEvent);
+        this.isLoading = true;
+    }
+
+    hasAllExistingGifts() {
+        return this.giftsFromView.length === this.giftBatchState.totalGiftsCount;
     }
 
     // loadMoreData(event) {

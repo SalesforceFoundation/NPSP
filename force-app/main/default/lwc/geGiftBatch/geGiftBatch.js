@@ -1,4 +1,5 @@
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
+import getGiftBatchViewWithLimitsAndOffsets from '@salesforce/apex/GE_GiftEntryController.getGiftBatchViewWithLimitsAndOffsets';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
@@ -34,12 +35,16 @@ class GiftBatch {
 
     async init(dataImportBatchId) {
         this._id = dataImportBatchId;
-        const viewModel = await getGiftBatchView({ dataImportBatchId: this._id });
+        const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
+            dataImportBatchId: this._id,
+            giftsLimit: 15,
+            giftsOffset: 0
+        });
         this._setPropertiesFrom(viewModel);
         return this.state();
     }
 
-    _setPropertiesFrom(viewModel) {
+    _setPropertiesFrom(viewModel, appendGifts) {
         if (viewModel) {
             this._id = viewModel.giftBatchId;
             this._name = viewModel.name;
@@ -51,7 +56,9 @@ class GiftBatch {
             this._currencyIsoCode = viewModel.currencyIsoCode
             this._lastModifiedDate = viewModel.lastModifiedDate;
             this._totals = viewModel.totals;
-            this._gifts = [];
+            if (!appendGifts) {
+                this._gifts = [];
+            }
             viewModel.gifts.forEach(giftView => {
                 this._gifts.push(new Gift(giftView));
             });
@@ -60,6 +67,16 @@ class GiftBatch {
 
     async refreshTotals() {
         this._totals = await getGiftBatchTotalsBy({ batchId: this._id });
+        return this.state();
+    }
+
+    async getMoreGifts(giftsOffset) {
+        const newViewModel = await getGiftBatchViewWithLimitsAndOffsets({
+            dataImportBatchId: this._id,
+            giftsLimit: 15,
+            giftsOffset: giftsOffset
+        });
+        this._setPropertiesFrom(newViewModel, true);
         return this.state();
     }
 

@@ -56,6 +56,12 @@
                 </lightning-layout>
 
                 <div style="height: 20rem;">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}
+                                           variant='brand'
+                                           size='large'>
+                        </lightning-spinner>
+                    </template>
                     <lightning-datatable key-field="Id"
                                          data={giftsFromView}
                                          errors={tableRowErrors}
@@ -64,6 +70,8 @@
                                          show-row-number-column="true"
                                          onrowaction={handleRowActions}
                                          enable-infinite-loading
+                                         onloadmore={handleLoadMoreGifts}
+                                         suppress-bottom-bar
                                          data-qa-locator="datatable Batch Gifts">
                     </lightning-datatable>
                 </div>

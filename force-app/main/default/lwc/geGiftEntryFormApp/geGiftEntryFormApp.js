@@ -50,6 +50,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     gift = new Gift();
     @track giftInView = {};
 
+    async handleLoadMoreGifts(event) {
+        const giftsOffset = event.detail.giftsOffset;
+        this.giftBatchState = await this.giftBatch.getMoreGifts(giftsOffset);
+    }
+
     handleLoadData(event) {
         const giftId = event.detail.Id;
         this.gift = this.giftBatch.findGiftBy(giftId);

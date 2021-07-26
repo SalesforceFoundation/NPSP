@@ -67,6 +67,13 @@ public with sharing class GiftBatchService {
         return new GiftBatchView(giftBatchDTO);
     }
 
+    public GiftBatchView viewModelWithLimitsAndOffsets(
+        GiftBatchId giftBatchId, Integer giftsLimit, Integer giftsOffset) {
+            GiftBatch giftBatch = new GiftBatch(giftBatchId, giftsLimit, giftsOffset);
+            GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
+            return new GiftBatchView(giftBatchDTO);
+    }
+
     public GiftBatchView store(InboundGiftBatchDTO giftBatchChanges) {
         GiftBatchId giftBatchId = new GiftBatchId(giftBatchChanges.giftBatchId);
         GiftBatch giftBatch = new GiftBatch(giftBatchId);

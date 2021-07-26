@@ -127,6 +127,17 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static GiftBatchView getGiftBatchViewWithLimitsAndOffsets(
+        Id dataImportBatchId, Integer giftsLimit, Integer giftsOffset){
+            try {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                return giftBatchService.viewModelWithLimitsAndOffsets(giftBatchId, giftsLimit, giftsOffset);
+            } catch (AuraHandledException e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+    }
+
+    @AuraEnabled
     public static GiftView getGiftView(Id dataImportId){
         try {
             GiftId giftId = new GiftId(dataImportId);
