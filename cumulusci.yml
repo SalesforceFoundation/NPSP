@@ -49,6 +49,25 @@ sources:
 
 
 tasks:
+    delete_opp_rd:
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            ignore_row_errors: true            
+            objects:
+                - Opportunity
+            where:
+                CreatedDate = LAST_N_DAYS:1
+
+    delete_err_rd:
+        class_path: cumulusci.tasks.bulkdata.DeleteData
+        options:
+            ignore_row_errors: true            
+            objects:
+                - Error__c
+            where:
+                CreatedDate = LAST_N_DAYS:1
+                           
+
     modify_xml_file:
         description: Make changes to an XML file
         group: Salesforce Metadata
@@ -1686,3 +1705,36 @@ plans:
                     unmanaged: False
                 ui_options:
                     name: NPSP Reports & Dashboards
+
+    delete_rd_records:
+        steps:
+            1:
+                task: disable_triggers
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CON_ContactMerge_TDTM
+                        - ACCT_AccountMerge_TDTM
+                        - REL_Relationships_TDTM
+                        - CON_CascadeDeleteLookups_TDTM
+                        - ACCT_CascadeDeleteLookups_TDTM
+                    active: false
+                    restore: false
+            2:
+                task: delete_opp_rd
+            3:
+                task: restore_triggers
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CON_ContactMerge_TDTM
+                        - ACCT_AccountMerge_TDTM
+                        - REL_Relationships_TDTM
+                        - CON_CascadeDeleteLookups_TDTM
+                        - ACCT_CascadeDeleteLookups_TDTM
+                    active: true
+                    restore: false
