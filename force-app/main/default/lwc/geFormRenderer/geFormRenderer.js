@@ -774,7 +774,6 @@ export default class GeFormRenderer extends LightningElement{
                         [apiNameFor(STATUS_FIELD)]: null
                     });
 
-                    this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
                     dataImportFromFormState = this.saveableFormState();
                 } else {
                     await this.handleAuthorizationFailure(authorizedGift.declineReason);
@@ -2205,6 +2204,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+        delete dataImportRecord[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
 
         return dataImportRecord;
     }
@@ -2330,6 +2330,7 @@ export default class GeFormRenderer extends LightningElement{
 
         const responseBody = JSON.parse(responseBodyString);
         await this.processPurchaseResponse(responseBody);
+        await this.saveDataImport(this.saveableFormState());
     }
 
     buildPurchaseRequestBodyParameters() {
@@ -2429,8 +2430,6 @@ export default class GeFormRenderer extends LightningElement{
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
-
-        await this.saveDataImport(this.saveableFormState());
     }
 
     isPurchaseCreated(responseBody) {
@@ -2546,7 +2545,6 @@ export default class GeFormRenderer extends LightningElement{
 
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
         const dataImportRecord = this.saveableFormState();
 
         submitDataImportToBDI({

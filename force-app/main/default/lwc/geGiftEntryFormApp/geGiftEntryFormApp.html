@@ -79,6 +79,9 @@
 
     <template if:false={isBatchMode}>
         <c-ge-form-renderer
+                gift-in-view={giftInView}
+                onformstatechange={handleFormStateChange}
+
                 batch-id={recordId}
                 onsubmit={handleSubmit}
                 onsectionsretrieved={handleSectionsRetrieved}
