@@ -156,6 +156,21 @@ public without sharing class UTIL_BatchJobService {
 
     /***
     * @description Determines number of days passed since the batch job has completed
+    * @param batchId Batch job Id
+    * @return Integer
+    */
+    public Integer getCompleteDaysBetween(Id batchId) {
+        AsyncApexJob batchJob = getAsyncApexJob(batchId);
+
+        if (batchJob == null) {
+            return MAX_DAYS_EXCEEDED;
+        }
+
+        return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);
+    }
+
+    /***
+    * @description Determines number of days passed since the batch job has completed
     * @param completedDate Batch completed date and time
     * @param status Batch status
     * @return Integer
@@ -225,12 +240,18 @@ public without sharing class UTIL_BatchJobService {
     * @return AsyncApexJob
     */
     public AsyncApexJob getAsyncApexJob(String className) {
+        List<AsyncApexJob> apexJobs = getAsyncApexJobs(className, 1);
+
+        return apexJobs.isEmpty() ? null : apexJobs[0];
+    }
+
+    public List<AsyncApexJob> getAsyncApexJobs(String className, Integer jobCounts) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
 
         //Remove the namespace from the class name
         className = UTIL_Namespace.removeClassNamespace(className);  
 
-        List<AsyncApexJob> apexJobs = [
+        return [
             SELECT
                 Status, ApexClass.Name,
                 ExtendedStatus, NumberOfErrors,
@@ -241,10 +262,13 @@ public without sharing class UTIL_BatchJobService {
                 AND ApexClass.Name = :className
                 AND ApexClass.NamespacePrefix = :namespacePrefix
             ORDER BY CreatedDate DESC
-            LIMIT 1
+            LIMIT : jobCounts
         ];
+    }
 
-        return apexJobs.isEmpty() ? null : apexJobs[0];
+    public Boolean asyncJobHasBeenRunMultipleTimes(String className, Integer jobCounts) {
+        List<AsyncApexJob> apexJobs = getAsyncApexJobs(className, jobCounts);
+        return apexJobs.size() == jobCounts;
     }
 
     /***
