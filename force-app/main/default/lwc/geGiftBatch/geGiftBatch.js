@@ -10,6 +10,8 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 
 import Gift from 'c/geGift';
 
+const DEFAULT_MEMBER_GIFTS_QUERY_LIMIT = 25;
+
 class GiftBatch {
     _id;
     _name = '';
@@ -37,7 +39,7 @@ class GiftBatch {
         this._id = dataImportBatchId;
         const viewModel = await getGiftBatchViewWithLimitsAndOffsets({
             dataImportBatchId: this._id,
-            giftsLimit: 15,
+            giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
             giftsOffset: 0
         });
         this._setPropertiesFrom(viewModel);
@@ -73,7 +75,7 @@ class GiftBatch {
     async getMoreGifts(giftsOffset) {
         const newViewModel = await getGiftBatchViewWithLimitsAndOffsets({
             dataImportBatchId: this._id,
-            giftsLimit: 15,
+            giftsLimit: DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
             giftsOffset: giftsOffset
         });
         this._setPropertiesFrom(newViewModel, true);
@@ -93,21 +95,25 @@ class GiftBatch {
 
     async addMember(gift) {
         await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
-        return await this._latestState();
+        return await this._latestState(this._gifts.length + 1);
     }
 
     async updateMember(gift) {
         await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
-        return await this._latestState();
+        return await this._latestState(this._gifts.length + 1);
     }
 
     async remove(gift) {
         await deleteGiftFromGiftBatch({ batchId: this._id, dataImportId: gift.Id });
-        return await this._latestState();
+        return await this._latestState(this._gifts.length - 1);
     }
 
-    async _latestState() {
-        const newViewModel = await getGiftBatchView({ dataImportBatchId: this._id });
+    async _latestState(length) {
+        const newViewModel = await getGiftBatchViewWithLimitsAndOffsets({
+            dataImportBatchId: this._id,
+            giftsLimit: length || DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
+            giftsOffset: 0
+        });
         this._setPropertiesFrom(newViewModel);
         return this.state();
     }

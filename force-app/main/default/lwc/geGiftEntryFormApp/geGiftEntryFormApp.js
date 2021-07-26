@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, deepClone, getNamespace, showToast } from 'c/utilCommon';
+import { validateJSONString, deepClone, getNamespace, showToast, constructErrorMessage } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsExpectedTotalsMessage
@@ -51,20 +51,32 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track giftInView = {};
 
     async handleLoadMoreGifts(event) {
-        const giftsOffset = event.detail.giftsOffset;
-        this.giftBatchState = await this.giftBatch.getMoreGifts(giftsOffset);
+        try {
+            const giftsOffset = event.detail.giftsOffset;
+            this.giftBatchState = await this.giftBatch.getMoreGifts(giftsOffset);
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     handleLoadData(event) {
-        const giftId = event.detail.Id;
-        this.gift = this.giftBatch.findGiftBy(giftId);
-        this.giftInView = this.gift.state();
+        try {
+            const giftId = event.detail.Id;
+            this.gift = this.giftBatch.findGiftBy(giftId);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     handleFormStateChange(event) {
-        const giftFieldChanges = event.detail;
-        this.gift.updateFieldsWith(giftFieldChanges);
-        this.giftInView = this.gift.state();
+        try {
+            const giftFieldChanges = event.detail;
+            this.gift.updateFieldsWith(giftFieldChanges);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     get isBatchMode() {
@@ -90,8 +102,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async retrieveBatchTotals() {
-        this.giftBatchState = await this.giftBatch.refreshTotals();
-        await this.updateAppDisplay();
+        try {
+            this.giftBatchState = await this.giftBatch.refreshTotals();
+            await this.updateAppDisplay();
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     async updateAppDisplay() {
@@ -345,9 +361,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async refreshBatchTotals() {
-        this._hasDisplayedExpiredAuthorizationWarning = false;
-        this.giftBatchState = await this.giftBatch.refreshTotals();
-        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+        try {
+            this._hasDisplayedExpiredAuthorizationWarning = false;
+            this.giftBatchState = await this.giftBatch.refreshTotals();
+            this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     requireTotalMatch() {
@@ -387,21 +407,24 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleDelete(event) {
         // TODO: maybe throw spinner while record is being deleted?
-        const gift = event.detail;
-        this.giftBatchState = await this.giftBatch.remove(gift);
+        try {
+            const gift = event.detail;
+            this.giftBatchState = await this.giftBatch.remove(gift);
 
-        if (this.giftInView?.fields.Id === gift?.Id) {
-            // fireEvent(this, 'formRendererReset', {});
-            this.handleClearGiftInView();
+            if (this.giftInView?.fields.Id === gift?.Id) {
+                this.handleClearGiftInView();
+            }
+
+            showToast(
+                this.CUSTOM_LABELS.PageMessagesConfirm,
+                bgeGridGiftDeleted,
+                'success',
+                'dismissible',
+                null
+            );
+        } catch(error) {
+            handleError(error);
         }
-
-        showToast(
-            this.CUSTOM_LABELS.PageMessagesConfirm,
-            bgeGridGiftDeleted,
-            'success',
-            'dismissible',
-            null
-        );
     }
 
     handleCountChanged(event) {
