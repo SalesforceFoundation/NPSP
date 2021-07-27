@@ -1728,17 +1728,13 @@ export default class GeFormRenderer extends LightningElement{
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
-            this.updateFormStateForDonationRecordType(fields);
+            fields = this.updateFormStateForDonationRecordType(fields);
         }
 
         if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
             this.deleteRelationshipFieldsFromStateFor(fields);
         }
 
-        // Shallow-copy to a new object to prompt reactivity
-        // this.formState = Object.assign({}, this.formState);
-        // TODO: improve and reduce this down to sending only
-        // data for the field that changed.
         const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
         this.dispatchEvent(formStateChangeEvent);
     }
@@ -1778,11 +1774,17 @@ export default class GeFormRenderer extends LightningElement{
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[apiNameFor(DONATION_RECORD_TYPE_NAME)] =
-                this.opportunityRecordTypeNameFor(val);
+            if (isId) {
+                fields = {
+                    ...fields,
+                    [apiNameFor(DONATION_RECORD_TYPE_NAME)]: this.opportunityRecordTypeNameFor(val)
+                }
+            }
 
             this.setDonationRecordTypeIdInFormState(val);
         }
+
+        return fields;
     }
 
     opportunityRecordTypeNameFor(id) {
@@ -2021,7 +2023,7 @@ export default class GeFormRenderer extends LightningElement{
         let updatedRecord;
         if (relatedRecord) {
             updatedRecord = Object.assign(
-                relatedRecord,
+                deepClone(relatedRecord),
                 {recordTypeId: opportunityRecordTypeId});
         } else {
             updatedRecord = {recordTypeId: opportunityRecordTypeId};
