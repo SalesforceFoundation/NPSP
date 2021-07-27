@@ -155,6 +155,7 @@ public with sharing class CON_ContactMerge_CTRL {
      * @description Set of DRS records that include a single Contact
      * with one or more other SObject types
      */
+    @TestVisible
     private Set<Id> unactionableDuplicateRecordSets;
 
     /***********************************************************************************************
@@ -1157,6 +1158,7 @@ public with sharing class CON_ContactMerge_CTRL {
         return duplicateRecordSetsQuery;
     }
 
+    @TestVisible
     private void getUnactionableDuplicateRecordSets() {
         if (unactionableDuplicateRecordSets != null) {
             return;
