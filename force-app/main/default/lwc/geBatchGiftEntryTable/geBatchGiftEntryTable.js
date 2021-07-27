@@ -132,8 +132,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                         this._dataImportObjectInfo)));
             });
 
-            // TODO: need to update method below to work for geGift instead of record object.
-            // this.assignDataImportErrorsToTableRows(this.giftsFromView);
+            this.assignDataImportErrorsToTableRows(this.giftsFromView);
 
             this._count = this._giftBatchState.totalGiftsCount;
             this._total = this._giftBatchState.totalDonationsAmount;
@@ -199,15 +198,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     hasDataImportRowError(row) {
         return this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
-                    row.record.hasOwnProperty(errorProperty))
+                    row.hasOwnProperty(errorProperty))
 
     }
 
     getTableRowErrorMessages(dataImportRow) {
         let errorMessages = [];
         this.getErrorPropertiesToDisplayInRow().forEach(errorProperty => {
-            if (dataImportRow.record.hasOwnProperty(errorProperty)) {
-                errorMessages.push(dataImportRow.record[errorProperty]);
+            if (dataImportRow.hasOwnProperty(errorProperty)) {
+                errorMessages.push(dataImportRow[errorProperty]);
             }
         });
         return errorMessages;
