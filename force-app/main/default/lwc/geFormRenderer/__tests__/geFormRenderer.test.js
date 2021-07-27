@@ -16,7 +16,7 @@ import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
 const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
-const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
+const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
 
 describe('c-ge-form-renderer', () => {
 

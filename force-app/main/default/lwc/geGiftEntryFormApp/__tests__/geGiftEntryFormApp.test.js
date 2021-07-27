@@ -14,7 +14,7 @@ import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
-const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
+const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
 const legacyDataImportModel = require('../../../../../../tests/__mocks__/apex/data/legacyDataImportModel.json');
 
 const createGeGiftEntryFormApp = () => {
