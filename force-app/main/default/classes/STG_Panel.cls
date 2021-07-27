@@ -138,10 +138,11 @@ public with sharing virtual class STG_Panel {
         }
 
         npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();            
-        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType =
+            new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
         
-        return isMirgrationCompleteInThePast7Days(summaryByType)
-            || isSimpleEnablmentEnableInThePast7Days(summaryByType);
+        return isMigrationCompleteInThePast7Days(summaryByType)
+            || isSimpleEnablementComplete(summaryByType);
     }
 
     /**
@@ -149,7 +150,7 @@ public with sharing virtual class STG_Panel {
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
-    public Boolean isMirgrationCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+    public Boolean isMigrationCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
         if (migrationSummary == null) {
             return false;
@@ -157,9 +158,9 @@ public with sharing virtual class STG_Panel {
 
         Id batchId = migrationSummary.batchId;
 
-        Integer days = batchService.getCompleteDaysBetween(batchId);
+        Integer days = batchService.getCompletedDaysBetween(batchId);
 
-        return days <= 7;
+        return days <= 0;
     }
 
     /**
@@ -167,7 +168,7 @@ public with sharing virtual class STG_Panel {
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
-    public Boolean isSimpleEnablmentEnableInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+    public Boolean isSimpleEnablementComplete(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
 
         return isSimpleRecurringDonationEnablement

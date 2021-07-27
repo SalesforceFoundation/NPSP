@@ -769,7 +769,6 @@ public with sharing class RD2_EnablementDelegate_TEST {
     * @description Setup RD2 enablement environment 
     */
     public static void setupRD2Environment() {
-        setEnablementDelegateRD2Enabled();
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
@@ -779,6 +778,7 @@ public with sharing class RD2_EnablementDelegate_TEST {
         expectedState.isMetaLaunched = true;
         expectedState.isMetaConfirmed = true;
         setEnablementState(JSON.serialize(expectedState));
+        setEnablementDelegateRD2Enabled();
 
     }
 

@@ -1949,7 +1949,7 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(true, isDisplayingRD2UpgradePage,
-            'Should not display RD2 Upgrade page if migration has completed but cannot find');
+            'Should not display RD2 Upgrade page if migration batch job has completed but the job cannot be found');
     }
 
     /**
@@ -1974,10 +1974,11 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-    * @description Verifies when RD2 is enabled through simple upgrade 7 days has not passed, the RD2 Upgrade page should display 
+    * @description Verifies RD2 Upgrade page should display when the user goes through simple upgrade and less than
+    * 7 RD2 nightly batch job has ran.
     */
     @isTest
-    private static void shouldDisplayRD2UpgradePageWhenUserFinishRD2SetupWithSimpleUpgradeLastThen7Days() {
+    private static void shouldDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAndButLessThan7NightlyBatchJobHasRan() {
         RD2_EnablementDelegate_TEST.setupRD2Environment();
 
         for (Integer i = 0; i < 6; i++) {
@@ -1996,7 +1997,7 @@ private with sharing class STG_SettingsManager_TEST {
     * @description Verifies when RD2 is enabled through simple upgrade and 7 days has pass, the RD2 Upgrade page should be hidden 
     */
     @isTest
-    private static void shouldNotDisplayRD2UpgradePageWhenUserFinishRD2SetupWithSimpleUpgrade7DaysAgo() {
+    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {
         RD2_EnablementDelegate_TEST.setupRD2Environment();
 
         for (Integer i = 0; i < 7; i++) {
@@ -2034,8 +2035,6 @@ private with sharing class STG_SettingsManager_TEST {
         
         System.assert(error.Full_Message__c.contains(expectedMessage),
             'User with Read Only Profile should not be abled to update RD Setting: ' + error.Full_Message__c);
-
-
     }
 
     /**
