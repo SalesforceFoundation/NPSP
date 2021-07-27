@@ -30,6 +30,7 @@ const setupForBatchMode = (giftBatchView) => {
 
     const formApp = createGeGiftEntryFormApp();
     formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
+    formApp.recordId = 'DUMMY_RECORD_ID';
 
     document.body.appendChild(formApp);
 
@@ -56,7 +57,6 @@ describe('c-ge-gift-entry-form-app', () => {
     describe('rendering behavior', () => {
         it('should render processing batch spinner if batch is still processing', async () => {
             const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1, PROCESSING: 1 }});
-            formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
 
             document.body.appendChild(formApp);
 
@@ -99,6 +99,7 @@ describe('c-ge-gift-entry-form-app', () => {
 
             const formApp = createGeGiftEntryFormApp();
             formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;
+            formApp.recordId = 'DUMMY_RECORD_ID';
 
             document.body.appendChild(formApp);
 
@@ -200,7 +201,6 @@ describe('c-ge-gift-entry-form-app', () => {
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
             const submitEvent = new CustomEvent('submit', {
                 detail: {
-                    dataImportRecord: { Id: 'DUMMY_ID' },
                     success: jest.fn(),
                     error: jest.fn()
                 }
@@ -211,7 +211,6 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(submitEvent.detail.success).toHaveBeenCalled();
             expect(saveAndDryRunDataImport).toHaveBeenCalled();
             expect(saveAndDryRunDataImport.mock.calls[0][0].batchId).toEqual('DUMMY_BATCH_ID');
-            expect(saveAndDryRunDataImport.mock.calls[0][0].dataImport.Id).toEqual('DUMMY_ID');
         });
 
         it('should call expected methods when a gift save fails in batch mode', async () => {
