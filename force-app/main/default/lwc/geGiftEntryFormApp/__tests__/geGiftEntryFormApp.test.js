@@ -223,7 +223,6 @@ describe('c-ge-gift-entry-form-app', () => {
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
             const submitEvent = new CustomEvent('submit', {
                 detail: {
-                    dataImportRecord: { Id: 'DUMMY_ID' },
                     success: jest.fn(),
                     error: jest.fn()
                 }
