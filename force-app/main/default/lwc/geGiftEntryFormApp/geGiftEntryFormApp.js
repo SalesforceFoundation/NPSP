@@ -15,7 +15,6 @@ import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFo
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
-import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -148,13 +147,12 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         try {
             if (this.isBatchMode) {
 
-                const gift = deepClone(this.giftInView.fields);
-                delete gift[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
+                const giftForSubmit = this.gift.asDataImport();
 
-                if (gift.Id) {
-                    this.giftBatchState = await this.giftBatch.updateMember(gift);
+                if (giftForSubmit.Id) {
+                    this.giftBatchState = await this.giftBatch.updateMember(giftForSubmit);
                 } else {
-                    this.giftBatchState = await this.giftBatch.addMember(gift);
+                    this.giftBatchState = await this.giftBatch.addMember(giftForSubmit);
                 }
 
                 event.detail.success();

@@ -1,3 +1,5 @@
+import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+
 class Gift {
     _softCredits = {};
     _fields = {};
@@ -22,6 +24,19 @@ class Gift {
 
     removeField(field) {
         delete this._fields[field];
+    }
+
+    asDataImport() {
+        let dataImportRecord = { ...this._fields };
+        delete dataImportRecord[undefined];
+        for (const key of Object.keys(dataImportRecord)) {
+            if (key.includes('__r'
+                || key === undefined)
+                || key === PAYMENT_AUTHORIZE_TOKEN.fieldApiName) {
+                delete dataImportRecord[key];
+            }
+        }
+        return dataImportRecord;
     }
 
     state() {
