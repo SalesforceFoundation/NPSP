@@ -1703,14 +1703,6 @@ export default class GeFormRenderer extends LightningElement{
         this._formState = formState;
     }
 
-    // get formState() {
-    //     return this._formState;
-    // }
-
-    // set formState(formState) {
-    //     this._formState = formState;
-    // }
-
     lookupFieldApiNameFor(recordId) {
         const valueForKeyByStartsWith =
             this.getValueForKeyByStartsWith(recordId,
