@@ -58,7 +58,7 @@ public with sharing class GE_PaymentServices {
     * dependency injection in tests.
     * @return Instance of GE_PaymentServices class.
     */
-    public static GE_PaymentServices getInstance(){
+    public static GE_PaymentServices getInstance() {
         if (paymentServicesInstance == null) {
             paymentServicesInstance = new GE_PaymentServices();
         }
@@ -71,7 +71,7 @@ public with sharing class GE_PaymentServices {
     * @param paymentServicesInstance An instance of the GE_PaymentServices class.
     */
     @TestVisible
-    private static void setInstance(GE_PaymentServices instance){
+    private static void setInstance(GE_PaymentServices instance) {
         paymentServicesInstance = instance;
     }
 
@@ -203,15 +203,6 @@ public with sharing class GE_PaymentServices {
             .build();
     }
 
-    /***
-    * @description Inner class of PurchaseCallBody to assist in constructing the metadata property.
-    * This could/should probably just be a map.
-    */
-    public with sharing class Metadata {
-        public String campaignCode;
-        public String originType = 'CRM';
-    }
-
     /**
      * @description Inner class for constructing ACH specific data for the purchase request body
      */
@@ -242,8 +233,6 @@ public with sharing class GE_PaymentServices {
         /*********************************
         * Optional properties
         */
-        // May be any key:value pairs. i.e. campaignCode: 123
-        public Metadata metadata;
         public String phone;
         public String city;
         public String state;
