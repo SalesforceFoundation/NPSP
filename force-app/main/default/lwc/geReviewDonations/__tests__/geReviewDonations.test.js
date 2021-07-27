@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
 
 import GeReviewDonations from 'c/geReviewDonations';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 
 import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
 
@@ -19,10 +20,25 @@ jest.mock(
     { virtual: true }
 );
 
+//mock the pubSub methods
+jest.mock('c/pubsubNoPageRef', () => {
+    return {
+        registerListener: jest.fn(),
+        unregisterListener: jest.fn()
+    }
+});
+
 const DUMMY_OPEN_DONATIONS = [
     { opportunity: {}, unpaidPayments: [] },
     { opportunity: {}, unpaidPayments: [] }
 ]
+
+const DUMMY_SELECTED_DONATION = {
+    Name: 'DUMMY SELECTED DONATION NAME',
+    attributes: {
+        type: 'npe01__OppPayment__c'
+    }
+};
 
 describe('c-ge-review-donations', () => {
 
@@ -96,18 +112,41 @@ describe('c-ge-review-donations', () => {
             getRecord.emit({});
             getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
 
-            reviewDonationsElement.selectedDonation = {
-                Name: 'DUMMY SELECTED DONATION NAME',
-                attributes: {
-                    type: 'npe01__OppPayment__c'
-                }
-            };;
+            reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
 
             await flushPromises();
 
             const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
             expect(buttonElement).toBeTruthy();
             expect(buttonElement.innerHTML).toBe('DUMMY SELECTED DONATION NAME');
+        });
+
+        it('should clear selected donation when reset pubsub event is fired', async () => {
+            const reviewDonationsElement = createReviewDonationsElement();
+            reviewDonationsElement.donorId = 'DUMMY_DONOR_ID';
+
+            document.body.appendChild(reviewDonationsElement);
+
+            // Emit data from @wire
+            getRecord.emit({});
+            getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
+
+            reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
+
+            await flushPromises();
+
+            const buttonElement = shadowQuerySelector(reviewDonationsElement, 'button');
+            expect(buttonElement).toBeTruthy();
+            expect(buttonElement.innerHTML).toBe('DUMMY SELECTED DONATION NAME');
+
+            await flushPromises();
+
+            let mockResetReviewDonationsComponent = registerListener.mock.calls[0][1];
+            mockResetReviewDonationsComponent.call(reviewDonationsElement);
+
+            await flushPromises();
+
+            expect(buttonElement.innerHTML).not.toBe('DUMMY SELECTED DONATION NAME');
         });
     });
 });
