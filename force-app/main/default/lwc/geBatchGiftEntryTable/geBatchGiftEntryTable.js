@@ -22,6 +22,10 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
+import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
+import CONTACT_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import ORGANIZATION_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -41,16 +45,19 @@ const columnTypeByDescribeType = {
     'PICKLIST': 'text'
 };
 
+const DONOR_LINK = 'donorLink';
+const DONOR_NAME = 'donorName';
+
 const COLUMNS = [
     { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text', editable: true },
     { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
     {
-        label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-        typeAttributes: { label: { fieldName: 'donorName' } }
+        label: geDonorColumnLabel, fieldName: DONOR_LINK, type: 'url',
+        typeAttributes: { label: { fieldName: DONOR_NAME } }
     },
     {
-        label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-        typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
+        label: geDonationColumnLabel, fieldName: `${DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`, type: 'url',
+        typeAttributes: { label: { fieldName: `${DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}` } }
     }
 ];
 
@@ -115,10 +122,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
             this._giftBatchState.gifts.forEach(gift => {
                 let giftViewAsTableRow = deepClone(gift.state());
-
-                this.giftsFromView.push( Object.assign(giftViewAsTableRow.fields,
-                    this.appendUrlColumnProperties.call(giftViewAsTableRow.fields,
-                        this._dataImportObjectInfo)));
+                giftViewAsTableRow = Object.assign(
+                    giftViewAsTableRow.fields,
+                    this.appendUrlColumnProperties.call(
+                        giftViewAsTableRow.fields,
+                        this._dataImportObjectInfo
+                    )
+                );
+                giftViewAsTableRow = this.populateDonorLink(giftViewAsTableRow);
+                this.giftsFromView.push(giftViewAsTableRow);
             });
 
             this.assignDataImportErrorsToTableRows(this.giftsFromView);
@@ -396,6 +408,18 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 }
         });
         return this;
+    }
+
+    populateDonorLink(giftViewAsTableRow) {
+        const donorType = giftViewAsTableRow[DONATION_DONOR.fieldApiName];
+        if (donorType === 'Contact1') {
+            giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        } else if (donorType === 'Account1') {
+            giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        }
+        return giftViewAsTableRow;
     }
 
     get batchCurrencyISOCode() {
