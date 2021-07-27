@@ -1727,7 +1727,6 @@ export default class GeFormRenderer extends LightningElement{
     updateFormState(fields) {
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
-        // Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
             this.updateFormStateForDonationRecordType(fields);
         }
@@ -1815,7 +1814,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     deleteFieldFromFormState(field) {
-        delete this.formState[field];
+        const deleteFieldFromGiftState =
+            new CustomEvent('deletefieldfromgiftstate', {
+                detail: field
+            });
+        this.dispatchEvent(deleteFieldFromGiftState);
     }
 
     hasRelatedRecordFieldInFormState(field) {

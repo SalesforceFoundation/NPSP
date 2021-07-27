@@ -20,6 +20,10 @@ class Gift {
         };
     }
 
+    removeField(field) {
+        delete this._fields[field];
+    }
+
     state() {
         return {
             fields: { ...this._fields },

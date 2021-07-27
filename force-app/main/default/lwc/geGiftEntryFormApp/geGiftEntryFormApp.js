@@ -80,6 +80,16 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         }
     }
 
+    handleDeleteFieldFromGiftState(event) {
+        try {
+            const field = event.detail;
+            this.gift.removeField(field);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
+    }
+
     get isBatchMode() {
         return this.sObjectName &&
             this.sObjectName === DATA_IMPORT_BATCH_OBJECT.objectApiName;
