@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import { getNavigateCalledWith } from 'lightning/navigation';
 
 import GeGiftEntryFormApp from 'c/geGiftEntryFormApp';
+import * as utilTemplateBuilder from 'c/utilTemplateBuilder';
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
 import getAllocationsSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
@@ -232,6 +233,69 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             expect(submitEvent.detail.error).toHaveBeenCalled();
+        });
+    });
+
+    describe('batch processing', () => {
+
+        it('should not allow batch processing if total count of gifts is required and totals do not match', async () => {
+            const formApp = setupForBatchMode({ requireTotalMatch: true, expectedCountOfGifts: 5, gifts: [], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            const handleErrorSpy = jest.spyOn(utilTemplateBuilder, 'handleError');
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(handleErrorSpy).toHaveBeenCalled();
+            expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedCountOrTotalMessage');
+        });
+
+        it('should not allow batch processing if both types of totals are required and totals do not match', async () => {
+            const formApp = setupForBatchMode({
+                requireTotalMatch: true,
+                expectedCountOfGifts: 5,
+                expectedTotalBatchAmount: 100,
+                gifts: [],
+                totals: { TOTAL: 1 },
+                totalDonationsAmount: 50
+            });
+            await flushPromises();
+
+            const handleErrorSpy = jest.spyOn(utilTemplateBuilder, 'handleError');
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(handleErrorSpy).toHaveBeenCalled();
+            expect(handleErrorSpy.mock.calls[0][0]).toBe('c.geBatchGiftsExpectedTotalsMessage');
+        });
+
+        it('should allow batch processing if both types of totals are required and totals match', async () => {
+            const formApp = setupForBatchMode({
+                requireTotalMatch: true,
+                expectedCountOfGifts: 5,
+                expectedTotalBatchAmount: 100,
+                gifts: [],
+                totals: { TOTAL: 5 },
+                totalDonationsAmount: 100
+            });
+            await flushPromises();
+
+            const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
+            const processEvent = new CustomEvent('processbatch');
+            geBatchGiftEntryHeader.dispatchEvent(processEvent);
+
+            await flushPromises();
+
+            expect(spinner(formApp)).toBeTruthy();
+            expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
         });
     });
 });
