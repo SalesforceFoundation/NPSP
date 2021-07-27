@@ -4,7 +4,7 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { handleError } from 'c/utilTemplateBuilder';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 import geLabelService from 'c/geLabelService';
-import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
+import getOpenDonationsView from '@salesforce/apex/GE_GiftEntryController.getOpenDonationsView';
 import OPPORTUNITY from '@salesforce/schema/Opportunity';
 import PAYMENT from '@salesforce/schema/npe01__OppPayment__c';
 import { hasNestedProperty } from 'c/utilCommon';
@@ -39,10 +39,10 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
         }
     }
 
-    @wire(getOpenDonations, { donorId: '$donorId', donorType: '$_donorType' })
+    @wire(getOpenDonationsView, { donorId: '$donorId' })
     wiredGetOpenDonations({ error, data }) {
         if (error) return handleError(error);
-        if (data) return this.opportunities = JSON.parse(data);
+        if (data) return this.opportunities = data.donations;
     }
 
     @api

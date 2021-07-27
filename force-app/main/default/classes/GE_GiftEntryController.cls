@@ -465,9 +465,13 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static DonationsView getOpenDonationsView(Id donorId) {
         try {
+            if (donorId == null) {
+                return null;
+            }
+
             return donationService.getDonationsView(donorId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());

@@ -4,11 +4,11 @@ import { getRecord } from 'lightning/uiRecordApi';
 import GeReviewDonations from 'c/geReviewDonations';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
 
-import getOpenDonations from '@salesforce/apex/GE_GiftEntryController.getOpenDonations';
+import getOpenDonationsView from '@salesforce/apex/GE_GiftEntryController.getOpenDonationsView';
 
 // Mock Apex wire adapter
 jest.mock(
-    '@salesforce/apex/GE_GiftEntryController.getOpenDonations',
+    '@salesforce/apex/GE_GiftEntryController.getOpenDonationsView',
     () => {
         const {
             createApexTestWireAdapter
@@ -28,10 +28,10 @@ jest.mock('c/pubsubNoPageRef', () => {
     }
 });
 
-const DUMMY_OPEN_DONATIONS = [
-    { opportunity: {}, unpaidPayments: [] },
-    { opportunity: {}, unpaidPayments: [] }
-]
+const DUMMY_OPEN_DONATIONS = {donations: [
+    { opportunity: {}, unpaidPayments: [], softCredits: { all: [] } },
+    { opportunity: {}, unpaidPayments: [], softCredits: { all: [] } }
+]};
 
 const DUMMY_SELECTED_DONATION = {
     Name: 'DUMMY SELECTED DONATION NAME',
@@ -74,7 +74,7 @@ describe('c-ge-review-donations', () => {
 
             // Emit data from @wire
             getRecord.emit({});
-            getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
+            getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             await flushPromises();
 
@@ -91,7 +91,7 @@ describe('c-ge-review-donations', () => {
 
             // Emit data from @wire
             getRecord.emit({});
-            getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
+            getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = {};
 
@@ -110,7 +110,7 @@ describe('c-ge-review-donations', () => {
 
             // Emit data from @wire
             getRecord.emit({});
-            getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
+            getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
 
@@ -129,7 +129,7 @@ describe('c-ge-review-donations', () => {
 
             // Emit data from @wire
             getRecord.emit({});
-            getOpenDonations.emit(JSON.stringify(DUMMY_OPEN_DONATIONS));
+            getOpenDonationsView.emit(DUMMY_OPEN_DONATIONS);
 
             reviewDonationsElement.selectedDonation = DUMMY_SELECTED_DONATION;
 
