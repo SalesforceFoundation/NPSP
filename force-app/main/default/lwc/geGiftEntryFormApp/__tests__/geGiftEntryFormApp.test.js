@@ -15,7 +15,7 @@ const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
-const legacyDataImportModel = require('./data/legacyDataImportModel.json');
+const legacyDataImportModel = require('../../../../../../tests/__mocks__/apex/data/legacyDataImportModel.json');
 
 const createGeGiftEntryFormApp = () => {
     return createElement('c-ge-gift-entry-form-app',
