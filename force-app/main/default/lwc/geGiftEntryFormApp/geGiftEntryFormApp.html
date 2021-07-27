@@ -24,8 +24,7 @@
         </template>
         <template if:false={isLoading}>
             <template if:true={isBatchMode}>
-                <c-ge-batch-gift-entry-header is-permission-error={isPermissionError}
-                                              gift-batch-state={giftBatchState}
+                <c-ge-batch-gift-entry-header gift-batch-state={giftBatchState}
                                               onbatchdryrun={handleBatchDryRun}
                                               onedit={handleEditBatch}
                                               onprocessbatch={handleProcessBatch}>

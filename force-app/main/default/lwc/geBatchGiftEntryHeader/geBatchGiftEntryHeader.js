@@ -10,12 +10,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         EDIT_BATCH: 'EDIT_BATCH'
     });
 
-    // TODO: Look into moving permissions error checking out of geFormRenderer and to formApp
-    // formApp should control what is displayed via directives
-    // in the markup when there are permission errors
-    // want to remove this public property isPermissionError
-    @api isPermissionError;
-
     @api giftBatchState;
 
     get batchName() {
