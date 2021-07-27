@@ -35,10 +35,16 @@
 public with sharing class SfdoInstrumentationEnum {
 
     /**
-     * High Level product feature for the log entry
+     * @description High Level product feature for the instrumentation entries. New Features can be added to this list when required.
+     * Always be sure to avoid duplicate or ambiguous feature names. Features defined here will be queryable in SFDC's internal system.
      */
     public enum Feature {
         TDTM,
+        ErrorHandling,
+        Addresses,
+        GetStarted,
+        AccountModelConversion,
+        Settings,
         EnhancedRecurringDonations,
         LegacyRecurringDonations,
         GiftEntry,
@@ -52,31 +58,31 @@ public with sharing class SfdoInstrumentationEnum {
         Relationships,
         Affiliations,
         SoftCreditAutomation,
+        MatchingGifts,
+        PartialSoftCredits,
         CustomizableRollups,
         LegacyRollups,
         PaymentServices,
         LeadConversion,
-        RecordMerge,
-        ErrorHandling,
-        Addresses,
-        MatchingGifts,
-        PartialSoftCredits,
-        GetStarted,
-        AccountModelConversion,
-        Settings
+        RecordMerge
     }
 
     /**
-     * Component within the feature. 
+     * @description Components within a product Feature for the instrumentation entries. New Components can be added to this 
+     * list when required. Always be sure to avoid duplicate or ambiguous component names. Components defined here will be 
+     * queryable in SFDC's internal system. 
      */
     public enum Component {
+        /* LWC, Aura or VF */
         Page,
+        /* ASynchronous processing */
         Batch,
         Queueable,
         Schedule,
         Future,
         TriggerAction,
-        Contact_HardCredit,
+        /* Specific Rollup Job Types */
+        Contact_HardCredit, 
         Account_HardCredit,
         Contact_SoftCredit,
         Account_SoftCredit,
@@ -86,31 +92,38 @@ public with sharing class SfdoInstrumentationEnum {
     }
 
     /**
-     * The action being taken within the Feature and Component. 
+     * @description The "Action" being taken to define the instrumentation entry. New Actions can be added to this list when required.
+     * Always be sure to avoid duplicate or ambiguous Actions. Actions defined here will be queryable in SFDC's internal system.
+     * Note that some Action names are defined to to avoid conflict with Apex internal types (ex: Insert, Delete, etc.)
      */
     public enum Action {
+        /* Page Operations*/
         Open,
         Save,
         Cancel,
         Create,
+        /* DML Operations */
         Dml_Insert,
         Dml_Delete,
         Dml_Update,
         Dml_Merge,
         Dml_Undelete,
+        /* Batch/ASynchronous Operations */
         Duration,
         DML_Count,
         Query_Count,
         Batch_Count,
         Processed_Count,
-        Validation,
-        Verification,
+        /* Trigger Operations */
         BeforeInsert, 
         BeforeUpdate, 
         BeforeDelete, 
         AfterInsert, 
         AfterUpdate, 
         AfterDelete,
-        AfterUndelete
+        AfterUndelete,
+        /* Others */
+        Validation,
+        Verification
     }
 }

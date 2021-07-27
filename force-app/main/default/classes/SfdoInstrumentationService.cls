@@ -29,11 +29,10 @@
 * @date 2021
 * @group Product Instrumentation
 * @description Primary class to enable product instrumentation for adoption and usage aggregation
-* See DOC_LINK for more information properly using Instrumentation Services
+* See DOC_LINK_TBD for more information properly using Instrumentation Services
 *
 */
 public inherited sharing class SfdoInstrumentationService {
-    public SfdoInstrumentationService() { }
 
     // =============================================================================================================================
     // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
