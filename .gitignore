@@ -44,6 +44,5 @@ datasets/dev_org/test_data.db
 .cci
 
 # LWC
-force-app/main/default/lwc/jsconfig.json
 force-app/main/default/lwc/.eslintrc.json
 /node_modules
