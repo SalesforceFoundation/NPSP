@@ -90,25 +90,25 @@ class GiftBatch {
 
     async dryRun() {
         await runBatchDryRun({ batchId: this._id, numberOfRowsToReturn: 0 });
-        return await this._latestState();
+        return await this.latestState();
     }
 
     async addMember(gift) {
         await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
-        return await this._latestState(this._gifts.length + 1);
+        return await this.latestState(this._gifts.length + 1);
     }
 
     async updateMember(gift) {
         await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
-        return await this._latestState(this._gifts.length + 1);
+        return await this.latestState(this._gifts.length + 1);
     }
 
     async remove(gift) {
         await deleteGiftFromGiftBatch({ batchId: this._id, dataImportId: gift.Id });
-        return await this._latestState(this._gifts.length - 1);
+        return await this.latestState(this._gifts.length - 1);
     }
 
-    async _latestState(length) {
+    async latestState(length) {
         const newViewModel = await getGiftBatchViewWithLimitsAndOffsets({
             dataImportBatchId: this._id,
             giftsLimit: length || DEFAULT_MEMBER_GIFTS_QUERY_LIMIT,
@@ -116,6 +116,10 @@ class GiftBatch {
         });
         this._setPropertiesFrom(newViewModel);
         return this.state();
+    }
+
+    giftsInViewSize() {
+        return this._gifts.length;
     }
 
     findGiftBy(giftId) {

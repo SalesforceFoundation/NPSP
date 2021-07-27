@@ -100,6 +100,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async connectedCallback() {
         this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        registerListener('refreshbatchtable', this.refreshBatchTable, this);
 
         if (this.recordId) {
             this.giftBatchState = await this.giftBatch.init(this.recordId);
@@ -109,6 +110,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     disconnectedCallback() {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    async refreshBatchTable() {
+        this.giftBatchState = await this.giftBatch.latestState(this.giftBatch.giftsInViewSize());
     }
 
     async retrieveBatchTotals() {

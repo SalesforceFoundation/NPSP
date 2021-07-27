@@ -799,7 +799,7 @@ export default class GeFormRenderer extends LightningElement{
         const errors = [{ message: declineReason }];
         this.handleElevateAPIErrors(errors);
 
-        fireEvent(this, 'refreshtable', {});
+        fireEvent(this, 'refreshbatchtable', {});
     }
 
     /*******************************************************************************

@@ -1,15 +1,8 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { deleteRecord } from 'lightning/uiRecordApi';
-
-// import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
-import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
-// import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-
-import { handleError } from 'c/utilTemplateBuilder';
 import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty, deepClone, format} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
-import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
@@ -100,10 +93,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         });
     }
 
-    connectedCallback() {
-        registerListener('refreshtable', this.refreshTable, this);
-    }
-
     get title() {
         return format(geBatchGiftsHeader, [this.giftBatchState?.name]);
     }
@@ -139,23 +128,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
             this._batchLoaded = true;
             this.isLoading = false;
         }
-    }
-
-    refreshTable() {
-        let refreshedRows = [];
-        getDataImportRows({ batchId: this.batchId, offset: 0 })
-            .then(rows => {
-                rows.forEach(row => {
-                    refreshedRows.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = [ ...refreshedRows ];
-            })
-            .catch(error => {
-                handleError(error);
-            });
     }
 
     get hasData() {
