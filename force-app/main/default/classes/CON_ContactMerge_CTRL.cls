@@ -161,7 +161,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
      * @description Map of DRS record Ids to count of Contacts in that set
      */
-    public Map<Id, Integer> contactCountByDRSId { get; set; }
+    public Map<Id, Integer> contactCountByDuplicateRecordSetId { get; set; }
 
     /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
@@ -1064,18 +1064,18 @@ public with sharing class CON_ContactMerge_CTRL {
     private void getDuplicateRecordItemDetails() {
         List<DuplicateRecordSet> duplicateRecordSets = queryAllDuplicateRecordSets();
 
-        Set<Id> allDRIIds = new Set<Id>();
-        List<DuplicateRecordItem> allDRIs = new List<DuplicateRecordItem>();
-        contactCountByDRSId = new Map<Id, Integer>();
+        Set<Id> allDuplicateRecordItemIds = new Set<Id>();
+        List<DuplicateRecordItem> allDuplicateRecordItems = new List<DuplicateRecordItem>();
+        contactCountByDuplicateRecordSetId = new Map<Id, Integer>();
         for (DuplicateRecordSet dupRecSet : duplicateRecordSets) {
-            allDRIIds.addAll(new Map<Id, DuplicateRecordItem>(
+            allDuplicateRecordItemIds.addAll(new Map<Id, DuplicateRecordItem>(
                 dupRecSet.DuplicateRecordItems).keySet());
-            allDRIs.addAll(new Map<Id, DuplicateRecordItem>(
+            allDuplicateRecordItems.addAll(new Map<Id, DuplicateRecordItem>(
                 dupRecSet.DuplicateRecordItems).values());
-            contactCountByDRSId.put(dupRecSet.Id, dupRecSet.RecordCount);
+            contactCountByDuplicateRecordSetId.put(dupRecSet.Id, dupRecSet.RecordCount);
         }
 
-        getDRSFirstContacts(allDRIIds, allDRIs);
+        getDuplicateRecordSetFirstContacts(allDuplicateRecordItemIds, allDuplicateRecordItems);
     }
 
     private List<DuplicateRecordSet> queryAllDuplicateRecordSets() {
@@ -1089,7 +1089,7 @@ public with sharing class CON_ContactMerge_CTRL {
         return duplicateRecordSets;
     }
 
-    private void getDRSFirstContacts(Set<Id> allDRIIds, List<DuplicateRecordItem> allDRIs) {
+    private void getDuplicateRecordSetFirstContacts(Set<Id> allDRIIds, List<DuplicateRecordItem> allDRIs) {
         if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
             ApexPages.addMessage(new ApexPages.Message
                 (ApexPages.Severity.Error, Label.conMergeTooManyContactError));
@@ -1098,10 +1098,14 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         Map<Id, Contact> contacts = getDRSRelatedContacts(allDRIIds);
+        populateFirstContacts(allDRIs, contacts);
+    }
+
+    private void populateFirstContacts(List<DuplicateRecordItem> allDRIs, Map<Id, Contact> contacts) {
         for (DuplicateRecordItem dri : allDRIs) {
             if (dri.Record.Type != 'Contact') {
-                contactCountByDRSId.put(dri.DuplicateRecordSetId,
-                    contactCountByDRSId.get(dri.DuplicateRecordSetId) - 1);
+                contactCountByDuplicateRecordSetId.put(dri.DuplicateRecordSetId,
+                    contactCountByDuplicateRecordSetId.get(dri.DuplicateRecordSetId) - 1);
                 continue;
             }
             Contact con = contacts.get(dri.RecordId);

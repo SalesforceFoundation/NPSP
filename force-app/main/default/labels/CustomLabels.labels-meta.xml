@@ -6110,6 +6110,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Person accounts are not supported.</value>
     </labels>
     <labels>
+        <fullName>conMergeFirstContactLabel</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Name of First Contact in the Duplicate Record Set</shortDescription>
+        <value>First Contact Name</value>
+    </labels>
+    <labels>
         <fullName>conMergeFoundContacts</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
