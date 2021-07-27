@@ -34,13 +34,13 @@
 */
 public inherited sharing class GiftBatchView {
 
-    @AuraEnabled public Id giftBatchId { get; set; }
-    @AuraEnabled public String name { get; set; }
+    @AuraEnabled public Id giftBatchId;
+    @AuraEnabled public String name;
     @AuraEnabled public Decimal totalDonationsAmount;
     @AuraEnabled public Boolean requireTotalMatch;
     @AuraEnabled public Decimal expectedCountOfGifts;
     @AuraEnabled public Decimal expectedTotalBatchAmount;
-    @AuraEnabled public String batchTableColumns { get; set; }
+    @AuraEnabled public String batchTableColumns;
     @AuraEnabled public String currencyIsoCode;
     @AuraEnabled public DateTime lastModifiedDate;
     @AuraEnabled public Map<String, Integer> totals;
