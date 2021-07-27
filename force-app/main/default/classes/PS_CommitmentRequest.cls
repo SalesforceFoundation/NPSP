@@ -215,7 +215,7 @@ public inherited sharing class PS_CommitmentRequest {
             ? (String) rd.get('CurrencyIsoCode')
             : UserInfo.getDefaultCurrency();
 
-        ProductMetadata productMetadata = new ProductMetadata()
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
             .withCampaign(rd.npe03__Recurring_Donation_Campaign__c)
             .withOrigin(PS_Request.OriginType.CRM.name());
     
@@ -275,7 +275,7 @@ public inherited sharing class PS_CommitmentRequest {
 
     private Map<String, Object> buildUpdatedProductMetadata(npe03__Recurring_Donation__c rd) {
         Map<String, Object> existingProductMetadata = getExistingProductMetadata(rd.CommitmentId__c);
-        ProductMetadata productMetadata = new ProductMetadata()
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
                 .withCampaign(rd.npe03__Recurring_Donation_Campaign__c);
 
         Map<String, Object> mergedMetadata = productMetadata.mergeWithExistingMetadata(existingProductMetadata);
@@ -794,7 +794,7 @@ public inherited sharing class PS_CommitmentRequest {
     /***
     * @description Product metadata property on the commitment request
     */
-    public class ProductMetadata {
+    public class PS_ProductMetadata {
         public Origin origin;
         public Campaign campaign;
 
@@ -803,7 +803,7 @@ public inherited sharing class PS_CommitmentRequest {
         * @param type origin type
         * @return productMetadata This product metadata instance
         */
-        public ProductMetadata withOrigin(String type) {
+        public PS_ProductMetadata withOrigin(String type) {
             this.origin = new Origin(type);
             return this;
         }
@@ -813,7 +813,7 @@ public inherited sharing class PS_CommitmentRequest {
         * @param campaignId campaign Id
         * @return productMetadata This product metadata instance
         */
-        public ProductMetadata withCampaign(Id campaignId) {
+        public PS_ProductMetadata withCampaign(Id campaignId) {
             if (campaignId != null) {
                 this.campaign = new Campaign(campaignId);
             }

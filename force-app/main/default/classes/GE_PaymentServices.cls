@@ -148,7 +148,7 @@ public with sharing class GE_PaymentServices {
         Map<String, Object> requestBodyParameters =
             (Map<String, Object>) JSON.deserializeUntyped(jsonRequestBody);
 
-        ProductMetadata productMetadata = new ProductMetadata()
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
             .withOrigin(PS_Request.OriginType.CRM.name());    
 
         PurchaseCallBody requestBody = new PurchaseCallBody(
@@ -280,90 +280,4 @@ public with sharing class GE_PaymentServices {
             return (PurchaseCallBody) JSON.deserialize(JSON.serialize(selfAsUntyped), PurchaseCallBody.class);
         }
     }
-
-    /***
-    * @description Product metadata property on the commitment request
-    */
-    public class ProductMetadata {
-        public Origin origin;
-        public Campaign campaign;
-
-        /**
-        * @description Sets origin info
-        * @param type origin type
-        * @return productMetadata This product metadata instance
-        */
-        public ProductMetadata withOrigin(String type) {
-            this.origin = new Origin(type);
-            return this;
-        }
-
-        /**
-        * @description Sets campaign info
-        * @param campaignId campaign Id
-        * @return productMetadata This product metadata instance
-        */
-        public ProductMetadata withCampaign(Id campaignId) {
-            if (campaignId != null) {
-                this.campaign = new Campaign(campaignId);
-            }
-
-            return this;
-        }
-
-        private Boolean hasCampaign() {
-            return this.campaign?.id != null;
-        }
-
-        private Boolean hasOrigin() {
-            return this.origin?.type != null;
-        }
-
-        public Map<String, Object> mergeWithExistingMetadata(Map<String, Object> existingMetadata) {
-            Map<String, Object> updatedMetadata = this.toUntypedMap();
-
-            for(String key : updatedMetadata.keySet()) {
-                existingMetadata.put(key, updatedMetadata.get(key));
-            }
-
-            return existingMetadata;
-        }
-
-        public Map<String, Object> toUntypedMap() {
-            Map<String, Object> productMetadataMap = new Map<String, Object>();
-
-            if (hasOrigin()) {
-                productMetadataMap.put('origin', this.origin);
-            }
-
-            if (hasCampaign()) {
-                productMetadataMap.put('campaign', this.campaign);
-            }
-
-            return productMetadataMap;
-        }
-    }
-
-    /***
-    * @description Origin property on the commitment product metadata request
-    */
-    public class Origin {
-        public String type;
-
-        public Origin(String type) {
-            this.type = type;
-        }
-    }
-
-    /***
-    * @description Campaign property on the commitment product metadata request
-    */
-    public class Campaign {
-        public String id;
-
-        public Campaign(Id campaignId) {
-            this.id = campaignId;
-        }
-    }
-
 }
