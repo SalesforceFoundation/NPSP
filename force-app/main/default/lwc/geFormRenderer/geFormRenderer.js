@@ -284,6 +284,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     connectedCallback() {
+        this._connected = true;
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
@@ -1684,6 +1685,8 @@ export default class GeFormRenderer extends LightningElement{
 
     @api
     set giftInView(gift) {
+        if (!this._connected) return;
+
         if (gift && isEmptyObject(gift.fields)) {
             this.reset();
         } else if (gift && gift.fields) {
