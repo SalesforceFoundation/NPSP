@@ -167,13 +167,14 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
-    * @description Returns the annual value of this Recurring Donation based on the amount and schedule
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule.
+    * Used to determine if the value of a donation increased or decreased based on changes that were made.
     * @return Decimal The annual value of this Recurring Donation
     */
     public Decimal getAnnualValue(){
         Decimal yearlyFrequency = RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
-        Decimal annualValueToRound = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
-        return annualValueToRound.setScale(2);
+        Decimal annualValue = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
+        return annualValue.setScale(2);
     }
 
     /**

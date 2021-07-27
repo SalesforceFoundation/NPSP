@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>PreviousAnnualValue__c</fullName>
-    <description>The previous annual value for this Recurring Donation.</description>
+    <description>The previous annual value for this Recurring Donation, based on the amount and schedule</description>
     <externalId>false</externalId>
-    <inlineHelpText>The previous annual value for this Recurring Donation.</inlineHelpText>
+    <inlineHelpText>The previous annual value for this Recurring Donation, based on the amount and schedule</inlineHelpText>
     <label>Previous Annual Value</label>
     <precision>18</precision>
     <required>false</required>
