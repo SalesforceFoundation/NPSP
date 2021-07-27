@@ -172,8 +172,8 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Decimal getAnnualValue(){
         Decimal yearlyFrequency = RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
-        Decimal installmentFrequency = rd.InstallmentFrequency__c;
-        return rd.npe03__Amount__c * (yearlyFrequency / installmentFrequency);
+        Decimal annualValueToRound = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
+        return annualValueToRound.setScale(2);
     }
 
     /**
@@ -558,7 +558,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @param oldRd RD2_RecurringDonation The Recurring Donation to compare to
     * @return Boolean
     */
-    public Boolean fieldChanged(SObjectField rdField, RD2_RecurringDonation oldRd){
+    public Boolean isFieldChanged(SObjectField rdField, RD2_RecurringDonation oldRd){
         return getValue(rdField) != oldRd.getValue(rdField);
     }
 
