@@ -14,8 +14,6 @@ describe('ge-gift', () => {
     it('should initialize with expected properties', async () => {
         const gift = new Gift(mockGiftView);
 
-        await flushPromises();
-
         expect(gift.state().fields).toEqual(DUMMY_GIFT_VIEW);
         expect(gift.state().softCredits.all.length).toBe(0);
     });
@@ -23,16 +21,20 @@ describe('ge-gift', () => {
     it('should return the expected id', async () => {
         const gift = new Gift(mockGiftView);
 
-        await flushPromises();
-
         expect(gift.id()).toEqual('a0U2F000002HwNrUAK');
     });
 
     it('should return object without relationship fields', async () => {
         const gift = new Gift(mockGiftView);
 
-        await flushPromises();
-
         expect(gift.asDataImport()).toEqual(DUMMY_DATA_IMPORT);
+    });
+
+    it('should return remove indicated field from internal property', async () => {
+        const gift = new Gift(mockGiftView);
+
+        gift.removeField('Contact1Imported__c');
+
+        expect(Object.keys(gift.state().fields)).not.toContain('Contact1Imported__c');
     });
 });
