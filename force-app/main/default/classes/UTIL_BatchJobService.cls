@@ -245,6 +245,12 @@ public without sharing class UTIL_BatchJobService {
         return apexJobs.isEmpty() ? null : apexJobs[0];
     }
 
+    /***
+    * @description Return the past batch jobs for the specified batch class name
+    * @param className Batch class name
+    * @param jobCounts how many jobs to return
+    * @return List<AsyncApexJob>
+    */
     public List<AsyncApexJob> getAsyncApexJobs(String className, Integer jobCounts) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
 
@@ -266,7 +272,13 @@ public without sharing class UTIL_BatchJobService {
         ];
     }
 
-    public Boolean asyncJobHasBeenRunMultipleTimes(String className, Integer jobCounts) {
+    /**
+    * @description Check if a job has ran certain time
+    * @param className Batch class name
+    * @param jobCounts how many time the job has ran
+    * @return Boolean
+    */
+    public Boolean asyncJobHasBeenRunAtLeastCertainTimes(String className, Integer jobCounts) {
         List<AsyncApexJob> apexJobs = getAsyncApexJobs(className, jobCounts);
         return apexJobs.size() == jobCounts;
     }

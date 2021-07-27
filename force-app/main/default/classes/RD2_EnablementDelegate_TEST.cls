@@ -765,6 +765,23 @@ public with sharing class RD2_EnablementDelegate_TEST {
         );
     }
 
+    /**
+    * @description Setup RD2 enablement environment 
+    */
+    public static void setupRD2Environment() {
+        setEnablementDelegateRD2Enabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        RD2_EnablementDelegate_CTRL.EnablementState expectedState = new RD2_EnablementDelegate_CTRL.EnablementState();
+        expectedState.isReady = true;
+        expectedState.isConfirmed = true;
+        expectedState.isEnabled = true;
+        expectedState.isMetaLaunched = true;
+        expectedState.isMetaConfirmed = true;
+        setEnablementState(JSON.serialize(expectedState));
+
+    }
+
     /****
     * @description Sets latest dry run validation as valid,
     * ie today - Completed Date <= dry run valid days

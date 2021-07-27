@@ -237,6 +237,7 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, STG_Panel.listSORelTypes);
         system.assertNotEquals(null, STG_Panel.listSOCampaignTypes);
         system.assertNotEquals(null, STG_Panel.listSOMailingReportIds);
+        system.assertNotEquals(null, ctrl.isDisplayingRD2UpgradePage);
     }
 
     /*********************************************************************************************************
@@ -1907,6 +1908,107 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
 
         System.assertEquals(System.Label.stgHelpEnhancedRDBatch, batchDescription, 'RD2 batch description should be displayed');
+    }
+
+    /**
+    * @description Verifies when RD2 is not enabled, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2IsNotEnabled() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage, 'Should Display RD2 Upgrade page if user has not initiate RD2 upgrade');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled but not fully complete, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2IsNotFullyEnabled() {
+        RD2_EnablementDelegate_TEST.setEnablementDelegateRD2Enabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage,
+            'Should Display RD2 Upgrade page if user has not initiate RD2 upgrade');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled but migration has not run yet, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasNotRun() {
+        RD2_EnablementDelegate_TEST.setupRD2Environment();
+
+        STG_Panel panel = new STG_Panel();
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = panel.isDisplayingRD2UpgradePage;
+        Test.stopTest();
+
+        System.assertEquals(true, isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if migration has completed but cannot find');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration has completed long time ago, the RD2 Upgrade page should be hidden 
+    */
+    @isTest
+    private static void shouldNotDisplayRD2UpgradePageIfRD2MigrationHasRunInThePast() {
+        RD2_EnablementDelegate_TEST.setupRD2Environment();
+
+        UTIL_BatchJobService.JobSummary summary =
+        new UTIL_BatchJobService.JobSummary('707f100007HyXHJAA3')
+        .withTotalRecords(2)
+        .withTotalRecordsProcessed(2);
+    
+        RD2_DataMigrationEnablement.BatchJob batchJob = new RD2_DataMigrationEnablement.BatchJob();
+        batchJob.saveSummary(summary, false);
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(false, panel.isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has ran Migration long time ago');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled through simple upgrade 7 days has not passed, the RD2 Upgrade page should display 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageWhenUserFinishRD2SetupWithSimpleUpgradeLastThen7Days() {
+        RD2_EnablementDelegate_TEST.setupRD2Environment();
+
+        for (Integer i = 0; i < 6; i++) {
+            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);
+        }
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = new STG_Panel().isDisplayingRD2UpgradePage;
+        Test.stopTest();
+    
+        System.assertEquals(true, isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has upgrade RD through Simple Upgrade and has not pass 7 days');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled through simple upgrade and 7 days has pass, the RD2 Upgrade page should be hidden 
+    */
+    @isTest
+    private static void shouldNotDisplayRD2UpgradePageWhenUserFinishRD2SetupWithSimpleUpgrade7DaysAgo() {
+        RD2_EnablementDelegate_TEST.setupRD2Environment();
+
+        for (Integer i = 0; i < 7; i++) {
+            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);
+        }
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = new STG_Panel().isDisplayingRD2UpgradePage;
+        Test.stopTest();
+    
+        System.assertEquals(false, isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has upgrade RD through Simple Upgrade and ran nightly batch job 7 times');
     }
 
     /**

@@ -49,6 +49,15 @@ public with sharing virtual class STG_Panel {
     */
 	public virtual string idPanel() { return null; }
 
+    private UTIL_BatchJobService batchService {
+        get {
+            if (batchService == null) {
+                batchService = new UTIL_BatchJobService();
+            }
+            return batchService;
+        } set;
+    }
+
     /*******************************************************************************************************
     * @description Opportunity object label
     */
@@ -125,22 +134,22 @@ public with sharing virtual class STG_Panel {
     private Boolean isDisplayingRD2UpgradePage() {
         RD2_EnablementDelegate_CTRL.EnablementState enablementState = RD2_EnablementDelegate_CTRL.getEnablementState();
         if (enablementState.isMetaConfirmed == false) {
-            return false;
+            return true;
         }
 
         npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();            
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
         
-        return isMirgrationComplete7DaysAgo(summaryByType)
-            || isSimpleEnablmentEnableMoreThan7Days(summaryByType);
+        return isMirgrationCompleteInThePast7Days(summaryByType)
+            || isSimpleEnablmentEnableInThePast7Days(summaryByType);
     }
 
     /**
-    * @description Check if RD2 Data Migration Jobs has been completed more than 7 days ago
+    * @description Check if RD2 Data Migration Jobs has been completed in the past 7 days
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
-    private Boolean isMirgrationComplete7DaysAgo(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+    public Boolean isMirgrationCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
         if (migrationSummary == null) {
             return false;
@@ -148,24 +157,21 @@ public with sharing virtual class STG_Panel {
 
         Id batchId = migrationSummary.batchId;
 
-        UTIL_BatchJobService batchService = new UTIL_BatchJobService();
         Integer days = batchService.getCompleteDaysBetween(batchId);
 
-        return days > 7;
+        return days <= 7;
     }
 
     /**
-    * @description Check if RD Enhancement is completed in simple version and RD2 nightly jobs have been completed more than 7 times
+    * @description Check if RD Enhancement is completed in simple version in the past 7 days
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
-    private Boolean isSimpleEnablmentEnableMoreThan7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+    public Boolean isSimpleEnablmentEnableInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
 
-        UTIL_BatchJobService batchService = new UTIL_BatchJobService();
-
-        return isSimpleRecurringDonationEnablement 
-            && batchService.asyncJobHasBeenRunMultipleTimes('RD2_OpportunityEvaluation_BATCH', 7);
+        return isSimpleRecurringDonationEnablement
+            && batchService.asyncJobHasBeenRunAtLeastCertainTimes('RD2_OpportunityEvaluation_BATCH', 7) == false;
     }
 
     /*******************************************************************************************************
