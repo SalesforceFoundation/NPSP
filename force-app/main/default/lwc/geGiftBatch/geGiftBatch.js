@@ -126,6 +126,14 @@ class GiftBatch {
         return this._id;
     }
 
+    matchesExpectedCountOfGifts() {
+        return this._totals.TOTAL === this._expectedCountOfGifts;
+    }
+
+    matchesExpectedTotalBatchAmount() {
+        return this._totalDonationsAmount === this._expectedTotalBatchAmount;
+    }
+
     processedGiftsCount() {
         return this._totals.PROCESSED;
     }

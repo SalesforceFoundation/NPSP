@@ -41,8 +41,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isElevateCustomer = false;
 
     namespace;
-    count;
-    total;
     isLoading = true;
 
     giftBatch = new GiftBatch();
@@ -308,7 +306,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleBatchProcessingErrors() {
-        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+        if (this.giftBatchState.expectedCountOfGifts && this.giftBatchState.expectedTotalBatchAmount) {
             handleError(geBatchGiftsExpectedTotalsMessage);
         } else {
             handleError(geBatchGiftsExpectedCountOrTotalMessage);
@@ -396,21 +394,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     totalsMatch() {
-        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-            return this.countMatches && this.amountMatches;
-        } else if (this.expectedCountOfGifts) {
-            return this.countMatches;
-        } else if (this.expectedTotalBatchAmount) {
-            return this.amountMatches;
+        if (this.giftBatchState.expectedCountOfGifts && this.giftBatchState.expectedTotalBatchAmount) {
+            return this.giftBatch.matchesExpectedCountOfGifts() && this.giftBatch.matchesExpectedTotalBatchAmount();
+
+        } else if (this.giftBatchState.expectedCountOfGifts) {
+            return this.giftBatch.matchesExpectedCountOfGifts();
+
+        } else if (this.giftBatchState.expectedTotalBatchAmount) {
+            return this.giftBatch.matchesExpectedTotalBatchAmount();
         }
-    }
-
-    get countMatches() {
-        return this.count === this.expectedCountOfGifts;
-    }
-
-    get amountMatches() {
-        return this.total === this.expectedTotalBatchAmount;
     }
 
     isProcessable() {
@@ -446,14 +438,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } catch(error) {
             handleError(error);
         }
-    }
-
-    handleCountChanged(event) {
-        this.count = event.detail.value;
-    }
-
-    handleTotalChanged(event) {
-        this.total = event.detail.value;
     }
 
     get batchId() {
