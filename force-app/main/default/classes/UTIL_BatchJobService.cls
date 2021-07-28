@@ -140,7 +140,7 @@ public without sharing class UTIL_BatchJobService {
     }
 
     /***
-    * @description Determines number of days passed since the batch job has completed
+    * @description Determines number of days passed since the batch job has completed, return -1 when Job does not exist
     * @param className Batch job class name
     * @return Integer
     */
@@ -148,14 +148,14 @@ public without sharing class UTIL_BatchJobService {
         AsyncApexJob batchJob = getAsyncApexJob(className);
 
         if (batchJob == null) {
-            return 0;
+            return -1;
         }
 
         return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);
     }
 
     /***
-    * @description Determines number of days passed since the batch job has completed
+    * @description Determines number of days passed since the batch job has completed, return -1 when Job does not exist
     * @param batchId Batch job Id
     * @return Integer
     */
@@ -163,7 +163,7 @@ public without sharing class UTIL_BatchJobService {
         AsyncApexJob batchJob = getAsyncApexJob(batchId);
 
         if (batchJob == null) {
-            return MAX_DAYS_EXCEEDED;
+            return -1;
         }
 
         return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);

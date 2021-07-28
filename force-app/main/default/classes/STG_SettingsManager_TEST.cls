@@ -2063,11 +2063,12 @@ private with sharing class STG_SettingsManager_TEST {
         Test.stopTest();
     
         System.assertEquals(true, isDisplayingRD2UpgradePage,
-            'Should not display RD2 Upgrade page if user has upgrade RD through Simple Upgrade and has not pass 7 days');
+            'Should display RD2 Upgrade page if simple RD2 upgrade has completed but less than 7 RD2 nightly batch job has ran.');
     }
 
     /**
-    * @description Verifies when RD2 is enabled through simple upgrade and 7 days has pass, the RD2 Upgrade page should be hidden 
+    * @description Verifies when RD2 is enabled through simple upgrade and nightly batch job has ran more than 7 times,
+    * the RD2 Upgrade page should be hidden
     */
     @isTest
     private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {

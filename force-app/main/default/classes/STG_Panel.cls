@@ -152,16 +152,18 @@ public with sharing virtual class STG_Panel {
     */
     public Boolean isMigrationCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
-        if (migrationSummary == null) {
+        Integer lastRunDayDifference = batchJobService.getCompletedDaysByBatchId(migrationSummary?.batchId);
+    
+        if (migrationSummary == null || lastRunDayDifference == -1) {
             return false;
         }
 
-        Integer daysDifference = batchJobService.getCompletedDaysByBatchId(migrationSummary.batchId);
-        return daysDifference <= 7;
+        return lastRunDayDifference <= 7;
     }
 
     /**
-    * @description Check if RD Enhancement is completed in simple version in the past 7 days
+    * @description Check if RD Enhancement is completed in simple version
+    * and RD2 Nightly Batch jobs has ran at least 7 times
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
