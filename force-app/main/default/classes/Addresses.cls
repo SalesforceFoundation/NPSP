@@ -269,19 +269,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return new AddressAndRelationshipsToUpdate(accountsToUpdate, addressesToUpdate, contactsToUpdate);
     }
 
-    private class AddressAndRelationshipsToUpdate {
-        List<Account> accountsToUpdate;
-        List<Address__c> addressesToUpdate;
-        List<Contact> contactsToUpdate;
-
-        private AddressAndRelationshipsToUpdate(List<Account> accountsToUpdate, List<Address__c> addressesToUpdate,
-                List<Contact> contactsToUpdate) {
-
-            this.accountsToUpdate = accountsToUpdate;
-            this.addressesToUpdate = addressesToUpdate;
-            this.contactsToUpdate = contactsToUpdate;
-        }
-    }
     private static void updateAccountAddress(NPSP_HouseholdAccount npspHouseholdAccount,
             NPSP_Address addressToSyncToAccountsAndContacts, List<Account> accountsToUpdate) {
 
@@ -1051,8 +1038,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-
-
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId,
             Map<Id, Address__c> mapAddressesById) {
         for (Error__c error : errors.errorRecords) {
@@ -1070,4 +1055,17 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
+    private class AddressAndRelationshipsToUpdate {
+        List<Account> accountsToUpdate;
+        List<Address__c> addressesToUpdate;
+        List<Contact> contactsToUpdate;
+
+        private AddressAndRelationshipsToUpdate(List<Account> accountsToUpdate, List<Address__c> addressesToUpdate,
+                List<Contact> contactsToUpdate) {
+
+            this.accountsToUpdate = accountsToUpdate;
+            this.addressesToUpdate = addressesToUpdate;
+            this.contactsToUpdate = contactsToUpdate;
+        }
+    }
 }
