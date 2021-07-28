@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description DTO class.
+* @description DTO class for inbound data changes to the Gift Batch from the Gift Entry UI.
 */
 public inherited sharing class InboundGiftBatchDTO {
 

@@ -84,11 +84,13 @@ private class GiftBatchView_TEST {
     private static List<DataImport__c> DUMMY_DATA_IMPORTS_WITH_CONTACT_FIRST_NAME =
         new List<DataImport__c>{
             new DataImport__c(
+                    Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                     Contact1_Firstname__c = 'Dummy First Name',
                     Donation_Amount__c = 100,
                     Donation_Date__c = Date.today()
             ),
             new DataImport__c(
+                    Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                     Contact1_Firstname__c = 'Dummy First Name',
                     Donation_Amount__c = 200,
                     Donation_Date__c = Date.today()

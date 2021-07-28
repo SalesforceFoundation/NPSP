@@ -181,6 +181,7 @@ private class GiftBatch_TEST {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                 Status__c = null,
                 NPSP_Data_Import_Batch__c = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
                 Account1_Name__c = 'DUMMY ACCOUNT ' +  i,
