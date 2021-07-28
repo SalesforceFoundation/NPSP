@@ -447,44 +447,6 @@ private with sharing class PS_CommitmentRequest_TEST {
     }
 
     @IsTest
-    static void productMetadataPreservesOrigin() {
-        String newCampaignId = '701R00000027JNdIAA';
-        String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"}}';
-        Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
-
-        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
-                .withCampaign(newCampaignId);
-        Map<String, Object> updatedUntypedMetadata = productMetadata.mergeWithExistingMetadata(untypedMetadata);
-
-        PS_ProductMetadata updatedMetadata = parseUntypedMetadata(updatedUntypedMetadata);
-        System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
-        System.assertEquals('CRM', updatedMetadata.origin.type);
-    }
-
-    @IsTest
-    static void productMetadataPreservesAny() {
-        String newCampaignId = '701R00000027JNdIAA';
-        String serializedProductMetadata = '{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"},"consent":{"message":"Some message","optin":true}}';
-        Map<String, Object> untypedMetadata = (Map<String, Object>) JSON.deserializeUntyped(serializedProductMetadata);
-
-        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
-                .withCampaign(newCampaignId);
-        Map<String, Object> updatedUntypedMetadata = productMetadata.mergeWithExistingMetadata(untypedMetadata);
-
-        PS_ProductMetadata updatedMetadata = parseUntypedMetadata(updatedUntypedMetadata);
-        System.assertEquals(newCampaignId, updatedMetadata.campaign.id);
-        System.assertEquals('CRM', updatedMetadata.origin.type);
-
-        Map<String, Object> consentData = (Map<String, Object>) updatedUntypedMetadata.get('consent');
-
-        String consentMessage = (String) consentData.get('message');
-        Boolean optin = (Boolean) consentData.get('optin');
-
-        System.assertEquals('Some message', consentMessage);
-        System.assertEquals(true, optin);
-    }
-
-    @IsTest
     static void campaignUpdateCallsOutForProductMetadata() {
         String MOCK_GET_RESPONSE_BODY = '{"commitment":{"productMetadata":{"origin":{"type":"CRM"},"campaign":{"id":"701R00000027JNdIAM"}}}}';
 
@@ -585,7 +547,7 @@ private with sharing class PS_CommitmentRequest_TEST {
 
         if (untypedProductMetadata.containsKey('campaign')) {
             Object campaign = untypedProductMetadata.get('campaign');
-            if (campaign instanceof PS_CommitmentRequest.Campaign) {
+            if (campaign instanceof PS_ProductMetadata.Campaign) {
                 productMetadata.campaign = (PS_ProductMetadata.Campaign)campaign;
             } else {
                 Map<String, Object> untypedCampaign = (Map<String, Object>)campaign;
