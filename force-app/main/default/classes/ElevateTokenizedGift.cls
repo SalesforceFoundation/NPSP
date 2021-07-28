@@ -58,7 +58,7 @@ public with sharing class ElevateTokenizedGift {
         this.productMetadata = productMetadata.toUntypedMap();
     }
 
-    private void productMetadataSchemaUri() {
+    private void setProductMetadataSchemaUri() {
         this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
     }
 
