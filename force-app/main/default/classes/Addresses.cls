@@ -193,30 +193,24 @@ public inherited sharing class Addresses extends fflib_SObjects {
         // note that if we have an organizational account, our query will not pick up any contacts (by design!)
         Map<Id, List<Contact>> contactsByHouseholdAccountId = getContactsByHouseholdAccountId(new Set<Id>(accountIds));
 
-        List<Account> accountsToUpdate = new List<Account>();
-        List<Address__c> addressesToUpdate = new List<Address__c>();
-        List<Contact> contactsToUpdate = new List<Contact>();
-
         // now go through each HH, and do all the work!
-        updateAddressInfoForAccountsAndContacts(
+        AddressAndRelationshipsToUpdate addressAndRelationshipsToUpdate = updateAddressInfoForAccountsAndContacts(
                 new Set<Id>(accountIds),
                 householdInfoByAccountId,
-                accountsToUpdate,
                 allAddressesByAccountId,
-                addressesToUpdate,
-                contactsByHouseholdAccountId,
-                contactsToUpdate
+                contactsByHouseholdAccountId
         );
 
-        if (accountsToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)accountsToUpdate);
+        if (addressAndRelationshipsToUpdate.accountsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressAndRelationshipsToUpdate.accountsToUpdate);
         }
-        if (addressesToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressesToUpdate);
+        if (addressAndRelationshipsToUpdate.addressesToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressAndRelationshipsToUpdate.addressesToUpdate);
         }
-        if (contactsToUpdate.size() > 0) {
-            dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactsToUpdate);
+        if (addressAndRelationshipsToUpdate.contactsToUpdate.size() > 0) {
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)addressAndRelationshipsToUpdate.contactsToUpdate);
         }
+
 
         return householdInfoByAccountId;
     }
@@ -244,12 +238,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
                householdInfo.seasonalAddress : householdInfo.defaultAddress);
     }
 
-    private static void updateAddressInfoForAccountsAndContacts(Set<Id> accountIds,
-            Map<Id, HouseholdInfo> householdInfoByAccountId, List<Account> accountsToUpdate,
-            Map<Id, List<Address__c>> allAddressesByAccountId, List<Address__c> addressesToUpdate,
-            Map<Id, List<Contact>> contactsByHouseholdAccountId, List<Contact> contactsToUpdate) {
+    private static AddressAndRelationshipsToUpdate updateAddressInfoForAccountsAndContacts(Set<Id> accountIds,
+            Map<Id, HouseholdInfo> householdInfoByAccountId,
+            Map<Id, List<Address__c>> allAddressesByAccountId,
+            Map<Id, List<Contact>> contactsByHouseholdAccountId) {
 
+        List<Account> accountsToUpdate = new List<Account>();
+        List<Address__c> addressesToUpdate = new List<Address__c>();
+        List<Contact> contactsToUpdate = new List<Contact>();
         Map<Id, Account> accountsById = getAccountsByIds(accountIds);
+
         for (Id accountId : accountsById.keySet()) {
 
             NPSP_Address addressToSyncToAccountsAndContacts = getAddressToSyncToAccountsAndContacts(accountId,
@@ -263,9 +261,24 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
             updateAddressForHouseholdContacts(contactsByHouseholdAccountId,
                 accountId, npspHouseholdAccount, addressToSyncToAccountsAndContacts, contactsToUpdate);
+
         }
+        return new AddressAndRelationshipsToUpdate(accountsToUpdate, addressesToUpdate, contactsToUpdate);
     }
 
+    private class AddressAndRelationshipsToUpdate {
+        List<Account> accountsToUpdate;
+        List<Address__c> addressesToUpdate;
+        List<Contact> contactsToUpdate;
+
+        private AddressAndRelationshipsToUpdate(List<Account> accountsToUpdate, List<Address__c> addressesToUpdate,
+                List<Contact> contactsToUpdate) {
+
+            this.accountsToUpdate = accountsToUpdate;
+            this.addressesToUpdate = addressesToUpdate;
+            this.contactsToUpdate = contactsToUpdate;
+        }
+    }
     private static void updateAccountAddress(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts, List<Account> accountsToUpdate) {
         Boolean accountUpdated = false;
 
