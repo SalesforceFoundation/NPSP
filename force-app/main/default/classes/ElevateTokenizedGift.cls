@@ -48,11 +48,18 @@ public with sharing class ElevateTokenizedGift {
         setConfigServiceInstance();
         setGatewayId();
         setMerchantId();
+        setProductMetadata();
+        setProductMetadataSchemaUri();
+    }
 
+    private void setProductMetadata() {
         PS_ProductMetadata productMetadata = new PS_ProductMetadata()
             .withOrigin(PS_Request.OriginType.CRM.name());    
 
         this.productMetadata = productMetadata.toUntypedMap();
+    }
+
+    private void productMetadataSchemaUri() {
         this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
     }
 
