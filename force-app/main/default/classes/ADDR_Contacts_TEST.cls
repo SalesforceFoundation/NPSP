@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014, Salesforce.org
+    Copyright (c) 2021, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,12 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2021
+* @group Address Management
+* @description Tests specific to Address Management changes initiated by a DML operation on a contact record.
 */
 @IsTest
 public with sharing class ADDR_Contacts_TEST {
