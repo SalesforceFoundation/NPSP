@@ -516,7 +516,7 @@ tasks:
                 User sunil = [SELECT Id FROM User WHERE LastName = 'Divani'];
                 sunil.IsActive = false;
                 update sunil;
-          
+
     dx:
         group: "Salesforce DX"
         description: "Calls a sfdx task with the cci Org User specified.  Enter the sfdx task with the command option"
@@ -731,7 +731,7 @@ tasks:
 
     set_bdi_mapping_mode:
         description: Set the BDI Mapping mode to 'Help Text' or 'Data Import Field Mapping'
-        class_path: tasks.set_BDI_mapping_mode.SetBDIMappingMode            
+        class_path: tasks.set_BDI_mapping_mode.SetBDIMappingMode
 
 
 flows:
@@ -1296,7 +1296,7 @@ flows:
                     path: scripts/New_Testing_User.cls
                     apex: createTestingUser();
 
-    ldv_test_data:
+    ldv_test_data_rd2:
         description: Creates 1000 Household Contact records with associated Recurring Donations (RD2 format) and between 0 and 5 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records
         group: NPSP
         steps:
@@ -1335,7 +1335,6 @@ flows:
                     num_records_tablename: Contact
                     batch_size: 200000
                     bulk_mode: parallel
-                    mapping: datasets/rd2/data_recipe_with_rd2_mapping.yml
             25:
                 task: restore_triggers
                 ## Reactivate the Rollup and Merge triggers after data loading completes
@@ -1353,6 +1352,50 @@ flows:
                 options:
                     path: datasets/rd2/config_npsp_for_ldv_data_load.cls
                     apex: after_data_load();
+
+    ldv_test_data:
+        description: Creates 1000 Household Contact records with and between 1 and 7 standard Donation opps on each, along with GAU's, Affliiation, Relationships, etc.. Use "-o generate_and_load_from_yaml__num_records {num}" to change the number of created Contacts & related records
+        group: NPSP
+        steps:
+            10:
+                task: disable_triggers
+                ## Disable Rollups for both the delete and the data load to avoid lock errors
+                ## Disable the RD2 Opp trigger to prevent it from attempting to create a new RD opp
+                options:
+                    handlers:
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                        - RD2_RecurringDonationsOpp_TDTM
+                    active: false
+                    restore: false
+            15:
+                task: unschedule_apex
+                ## Delete all scheduled NPSP jobs ... just in case.
+            16:
+                task: set_duplicate_rule_status
+                options:
+                    api_names: Account.Standard_Account_Duplicate_Rule, Contact.Standard_Contact_Duplicate_Rule
+                    active: false
+            20:
+                task: generate_and_load_from_yaml
+                ## The actual data-loading task.
+                ## Use command line parameters to override the num_records and batch_size parameters
+                options:
+                    generator_yaml: datasets/donations/donations_recipe.yml
+                    num_records: 1000
+                    num_records_tablename: Contact
+                    batch_size: 200000
+                    bulk_mode: parallel
+            25:
+                task: restore_triggers
+                ## Reactivate the Rollup and Merge triggers after data loading completes
+                options:
+                    handlers:
+                        - RD2_RecurringDonationsOpp_TDTM
+                        - CRLP_Rollup_TDTM
+                        - RLLP_OppRollup_TDTM
+                    active: true
+                    restore: false
 
     ldv_data_delete:
         description: Hard Delete all NPSP related data in org, disabling and reenabling triggers to reduce errors and improve performance
@@ -1402,6 +1445,7 @@ flows:
                         - ACCT_CascadeDeleteLookups_TDTM
                     active: true
                     restore: false
+
     test_customizable_rollups:
         description: CRLP Full Regression Test -- Installs unpackaged metadata from crlp_testing, configures an org with CRLP enabled, and then executes the legacy and CRLP rollup regression test suite by creating data, running rollups, and validating the resulting rollup math.
         group: NPSP
