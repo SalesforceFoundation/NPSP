@@ -1,4 +1,3 @@
-import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import getGiftBatchViewWithLimitsAndOffsets from '@salesforce/apex/GE_GiftEntryController.getGiftBatchViewWithLimitsAndOffsets';
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';

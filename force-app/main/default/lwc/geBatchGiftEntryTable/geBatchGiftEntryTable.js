@@ -382,7 +382,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
         Object.keys(this)
             .filter(key =>
-                key.endsWith('__r') || this[key].attributes
+                key.endsWith('__r') || this[key]?.attributes
             )
             .forEach(key => {
                 const referenceObj = this[key];
