@@ -115,13 +115,29 @@ private class GiftBatch_TEST {
 
     @isTest
     static void shouldReturnExpectedGiftBatchRecordProperties() {
-        DataImportBatch__c dummyDataImportBatch = new DataImportBatch__c();
-        dummyDataImportBatch.name = 'DUMMY_GIFT_BATCH_NAME';
+        String dummyDataImportBatchJSON = '{"attributes":{"type":"DataImportBatch__c"},"LastModifiedDate":"2021-10-04T17:54:26.000Z"}';
+        DataImportBatch__c dummyDataImportBatch = (DataImportBatch__c) JSON.deserialize(dummyDataImportBatchJSON, DataImportBatch__c.class);
+        dummyDataImportBatch.Name = 'DUMMY_GIFT_BATCH_NAME';
+        dummyDataImportBatch.RequireTotalMatch__c = false;
+        dummyDataImportBatch.Expected_Count_of_Gifts__c = 5;
+        dummyDataImportBatch.Expected_Total_Batch_Amount__c = 100.25;
+        dummyDataImportBatch.Batch_Table_Columns__c = '[dummy_batch_table_columns]';
 
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.batch = dummyDataImportBatch;
 
         System.assertEquals('DUMMY_GIFT_BATCH_NAME', giftBatch.name());
+        System.assertEquals(false, giftBatch.requireTotalMatch());
+        System.assertEquals(5, giftBatch.expectedCountOfGifts());
+        System.assertEquals(100.25, giftBatch.expectedTotalBatchAmount());
+        System.assertEquals('[dummy_batch_table_columns]', giftBatch.batchTableColumns());
+
+        DateTime expectedLastModifiedDate = dummyDataImportBatch.LastModifiedDate;
+        System.assertEquals(expectedLastModifiedDate, giftBatch.lastModifiedDate());
+
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            System.assertEquals(UserInfo.getDefaultCurrency(), giftBatch.currencyIsoCode());
+        }
     }
 
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
@@ -171,10 +187,7 @@ private class GiftBatch_TEST {
     }
 
     private static ElevateBatchService stubFor(ElevateBatchServiceMock elevateBatchServiceMock) {
-        return (ElevateBatchService) Test.createStub(
-            ElevateBatchService.class,
-            elevateBatchServiceMock
-        );
+        return (ElevateBatchService) Test.createStub(ElevateBatchService.class, elevateBatchServiceMock);
     }
 
     private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
