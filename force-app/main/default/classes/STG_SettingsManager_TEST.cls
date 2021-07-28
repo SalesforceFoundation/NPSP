@@ -1940,7 +1940,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasNotRun() {
-        RD2_EnablementDelegate_TEST.setupRD2Environment();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         STG_Panel panel = new STG_Panel();
 
@@ -1953,19 +1953,92 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
-    * @description Verifies when RD2 is enabled and migration has completed long time ago, the RD2 Upgrade page should be hidden 
+    * @description Verifies when RD2 is enabled and migration async job is completed less than 7 days ago,
+    * the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasRunMoreLessThan7DaysAgo() {
+        Integer MigrationJobRanDay = 5;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        STG_Panel.batchJobService = (UTIL_BatchJobService) Test.createStub(
+            UTIL_BatchJobService.class, new UTIL_BatchJobService_TEST.Stub().withCompletedDaysBetween(MigrationJobRanDay)
+        );
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage,
+            'Should display RD2 Upgrade page if user has ran Migration job in the past 7 days');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration async job is completed more than 7 days ago,
+    * the RD2 Upgrade page should be hidden 
+    */
+    @isTest
+    private static void shouldNotDisplayRD2UpgradePageIfRD2MigrationHasRunMoreThan7DaysAgo() {
+        Integer MigrationJobRanDay = 8;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        STG_Panel.batchJobService = (UTIL_BatchJobService) Test.createStub(
+            UTIL_BatchJobService.class, new UTIL_BatchJobService_TEST.Stub().withCompletedDaysBetween(MigrationJobRanDay)
+        );
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(false, panel.isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has ran Migration job more than 7 days ago');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration async job is already deleted,
+    * the RD2 Upgrade page should be hidden 
     */
     @isTest
     private static void shouldNotDisplayRD2UpgradePageIfRD2MigrationHasRunInThePast() {
-        RD2_EnablementDelegate_TEST.setupRD2Environment();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
-        UTIL_BatchJobService.JobSummary summary =
-        new UTIL_BatchJobService.JobSummary('707f100007HyXHJAA3')
-        .withTotalRecords(2)
-        .withTotalRecordsProcessed(2);
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
     
-        RD2_DataMigrationEnablement.BatchJob batchJob = new RD2_DataMigrationEnablement.BatchJob();
-        batchJob.saveSummary(summary, false);
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
 
         STG_Panel panel = new STG_Panel();
 
@@ -1979,7 +2052,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAndButLessThan7NightlyBatchJobHasRan() {
-        RD2_EnablementDelegate_TEST.setupRD2Environment();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         for (Integer i = 0; i < 6; i++) {
             Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);
@@ -1998,7 +2071,7 @@ private with sharing class STG_SettingsManager_TEST {
     */
     @isTest
     private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {
-        RD2_EnablementDelegate_TEST.setupRD2Environment();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         for (Integer i = 0; i < 7; i++) {
             Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);

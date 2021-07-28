@@ -144,7 +144,7 @@ public without sharing class UTIL_BatchJobService {
     * @param className Batch job class name
     * @return Integer
     */
-    public Integer getCompletedDaysBetween(String className) {
+    public Integer getCompletedDaysByClassName(String className) {
         AsyncApexJob batchJob = getAsyncApexJob(className);
 
         if (batchJob == null) {
@@ -159,7 +159,7 @@ public without sharing class UTIL_BatchJobService {
     * @param batchId Batch job Id
     * @return Integer
     */
-    public Integer getCompleteDaysBetween(Id batchId) {
+    public Integer getCompletedDaysByBatchId(Id batchId) {
         AsyncApexJob batchJob = getAsyncApexJob(batchId);
 
         if (batchJob == null) {

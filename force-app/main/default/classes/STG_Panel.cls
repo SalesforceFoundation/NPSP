@@ -49,12 +49,13 @@ public with sharing virtual class STG_Panel {
     */
 	public virtual string idPanel() { return null; }
 
-    private UTIL_BatchJobService batchService {
+    @TestVisible
+    private static UTIL_BatchJobService batchJobService {
         get {
-            if (batchService == null) {
-                batchService = new UTIL_BatchJobService();
+            if (batchJobService == null) {
+                batchJobService = new UTIL_BatchJobService();
             }
-            return batchService;
+            return batchJobService;
         } set;
     }
 
@@ -132,8 +133,7 @@ public with sharing virtual class STG_Panel {
     * @description Determine if Enhanced RD page should be displayed
     */
     private Boolean isDisplayingRD2UpgradePage() {
-        RD2_EnablementDelegate_CTRL.EnablementState enablementState = RD2_EnablementDelegate_CTRL.getEnablementState();
-        if (enablementState.isMetaConfirmed == false) {
+        if (RD2_EnablementService.isMetadataDeployed == false) {
             return true;
         }
 
@@ -156,11 +156,8 @@ public with sharing virtual class STG_Panel {
             return false;
         }
 
-        Id batchId = migrationSummary.batchId;
-
-        Integer days = batchService.getCompletedDaysBetween(batchId);
-
-        return days <= 0;
+        Integer daysDifference = batchJobService.getCompletedDaysByBatchId(migrationSummary.batchId);
+        return daysDifference <= 7;
     }
 
     /**
@@ -172,7 +169,7 @@ public with sharing virtual class STG_Panel {
         Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
 
         return isSimpleRecurringDonationEnablement
-            && batchService.asyncJobHasBeenRunAtLeastCertainTimes('RD2_OpportunityEvaluation_BATCH', 7) == false;
+            && batchJobService.asyncJobHasBeenRunAtLeastCertainTimes('RD2_OpportunityEvaluation_BATCH', 7) == false;
     }
 
     /*******************************************************************************************************
