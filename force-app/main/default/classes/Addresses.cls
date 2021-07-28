@@ -76,14 +76,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public void onAfterInsert() {
-        syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
+        syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(),
+                dmlWrapperLocal, false);
 
         // we must process dmlWrapperLocal ourselves, so we can extract out the appropriate
         // errors
         // that might occur updating contacts and accounts, and associating those errors with
         // the correct addresses.
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing
-                (dmlWrapperLocal, false);
+            (dmlWrapperLocal, false);
         if (errors.errorsExist) {
             putErrorsOnAddresses(errors, addressesByAccountId(), new Map<Id, Address__c>());
         }
@@ -101,7 +102,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     public void onAfterUpdate() {
 
         if (addressChangesToSyncToHouseholdAccountsAndContacts().size() > 0) {
-            syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(), dmlWrapperLocal, false);
+            syncAddressesForAccountsAndContacts(addressChangesToSyncToHouseholdAccountsAndContacts(),
+                dmlWrapperLocal, false);
         }
 
         if (addressChangesToSyncToContactOverrides().size() > 0) {
@@ -115,7 +117,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 TDTM_TriggerHandler.processDMLAllOrNothing(
                         dmlWrapperLocal, false);
         if (errors.errorsExist) {
-            putErrorsOnAddresses(errors, addressChangesToSyncToHouseholdAccountsAndContacts(), addressChangesToSyncToContactOverrides());
+            putErrorsOnAddresses(errors, addressChangesToSyncToHouseholdAccountsAndContacts(),
+                addressChangesToSyncToContactOverrides());
         }
     }
 
@@ -216,7 +219,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private static Map<Id, List<Contact>> getContactsByHouseholdAccountId(Set<Id> accountIds) {
-        Map<Id, List<Contact>> contactsByHouseholdAccountId = new Map<Id, List<Contact>>();
+            Map<Id, List<Contact>> contactsByHouseholdAccountId = new Map<Id, List<Contact>>();
 
         for (Contact contact : contactSelector.getContactAddressFieldsForContactAccountsIn(accountIds)) {
             List<Contact> householdContacts = contactsByHouseholdAccountId.get(contact.AccountId);
@@ -279,7 +282,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
             this.contactsToUpdate = contactsToUpdate;
         }
     }
-    private static void updateAccountAddress(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts, List<Account> accountsToUpdate) {
+    private static void updateAccountAddress(NPSP_HouseholdAccount npspHouseholdAccount,
+            NPSP_Address addressToSyncToAccountsAndContacts, List<Account> accountsToUpdate) {
+
         Boolean accountUpdated = false;
 
         if (shouldUpdateBillingAddress(npspHouseholdAccount, addressToSyncToAccountsAndContacts)) {
@@ -299,7 +304,10 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-    private static void updateAddressForHouseholdContacts(Map<Id, List<Contact>> contactsByHouseholdAccountId, Id accountId, NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts, List<Contact> contactsToUpdate) {
+    private static void updateAddressForHouseholdContacts(Map<Id, List<Contact>> contactsByHouseholdAccountId,
+            Id accountId, NPSP_HouseholdAccount npspHouseholdAccount,
+            NPSP_Address addressToSyncToAccountsAndContacts, List<Contact> contactsToUpdate) {
+
         if (accountHasContacts(contactsByHouseholdAccountId, accountId)) {
             for (Contact con : contactsByHouseholdAccountId.get(accountId)) {
                 NPSP_Contact npspContact = new NPSP_Contact(con);
@@ -346,15 +354,18 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private static Boolean accountHasAddresses(Map<Id, List<Address__c>> allAddressesByAccountId, Id accountId) {
-        return allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 && allAddressesByAccountId.get(accountId) != null;
+        return allAddressesByAccountId != null && allAddressesByAccountId.size() > 0 &&
+               allAddressesByAccountId.get(accountId) != null;
     }
 
-    private static Boolean shouldUpdateBillingAddressUndeliverableStatus(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts) {
+    private static Boolean shouldUpdateBillingAddressUndeliverableStatus(NPSP_HouseholdAccount npspHouseholdAccount,
+            NPSP_Address addressToSyncToAccountsAndContacts) {
         return npspHouseholdAccount.undeliverableAddressStatus() !=
                 addressToSyncToAccountsAndContacts.isUndeliverable();
     }
 
-    private static Boolean shouldUpdateBillingAddress(NPSP_HouseholdAccount npspHouseholdAccount, NPSP_Address addressToSyncToAccountsAndContacts) {
+    private static Boolean shouldUpdateBillingAddress(NPSP_HouseholdAccount npspHouseholdAccount,
+            NPSP_Address addressToSyncToAccountsAndContacts) {
         return npspHouseholdAccount.billingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts);
     }
 
@@ -370,13 +381,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private static void setAddressForHouseholdInfo(Set<Id> accountIds, Map<Id, Address__c>
-            defaultSeasonalAddressesByAccountId, Map<Id, List<Address__c>> allAddressesByAccountId, Map<Id, HouseholdInfo> householdInfoByAccountId) {
+            defaultSeasonalAddressesByAccountId, Map<Id, List<Address__c>> allAddressesByAccountId,
+            Map<Id, HouseholdInfo> householdInfoByAccountId) {
+
         for (Id accountId : accountIds) {
             // create a HHInfo for each household
             HouseholdInfo householdInfo = getHouseholdInfoForAccount(accountId);
 
             // if there is a provided Default address, use it over all other defaults.
-            setHouseholdAddressesToDefaultAddress(defaultSeasonalAddressesByAccountId, accountId, householdInfo, allAddressesByAccountId);
+            setHouseholdAddressesToDefaultAddress(defaultSeasonalAddressesByAccountId, accountId,
+                householdInfo, allAddressesByAccountId);
 
             // finally, if no default found, create an empty default
             if (householdHasNoDefaultAddress(householdInfo)) {
@@ -396,7 +410,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         return householdInfo.defaultAddress == null;
     }
 
-    private static void setHouseholdAddressesToDefaultAddress(Map<Id, Address__c> defaultSeasonalAddressesByAccountId, Id accountId, HouseholdInfo householdInfo, Map<Id, List<Address__c>> allAddressesByAccountId) {
+    private static void setHouseholdAddressesToDefaultAddress(Map<Id, Address__c> defaultSeasonalAddressesByAccountId,
+            Id accountId, HouseholdInfo householdInfo, Map<Id, List<Address__c>> allAddressesByAccountId) {
         Address__c accountAddress = defaultSeasonalAddressesByAccountId.get(accountId);
         if (accountAddress != null) {
             NPSP_Address accountNpspAddress = new NPSP_Address(accountAddress);
@@ -486,13 +501,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
         ]);
         for (Address__c addr : (List<Address__c>) getRecords()) {
             if (addr.Household_Account__c == null) {
-                // with TDTM, have to use addError, not throw an exception, or the error will just get logged but not passed to Salesforce to stop its DML.
+                // with TDTM, have to use addError, not throw an exception, or the error will just
+                // get logged but not passed to Salesforce to stop its DML.
                 addr.addError(Label.addrHHAccountOnly);
             } else {
                 Account acc = mapAccIdAcc.get(addr.Household_Account__c);
                 if ((acc.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) &&
-                        (acc.npe01__SYSTEMIsIndividual__c || !UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
-                    // with TDTM, have to use addError, not throw an exception, or the error will just get logged but not passed to Salesforce to stop its DML.
+                        (acc.npe01__SYSTEMIsIndividual__c ||
+                        !UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c)) {
+                    // with TDTM, have to use addError, not throw an exception, or the error will just get logged
+                    // but not passed to Salesforce to stop its DML.
                     addr.addError(Label.addrHHAccountOnly);
                 }
             }
@@ -608,7 +626,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     public Map<Id, Address__c> addressesByAccountId() {
-        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
+        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
         for (Address__c address : (List<Address__c>) getRecords()) {
             if (hasHouseholdAccount(address)) {
                 addressesByAccountId.put(householdAccountIdFor(address), address);
@@ -834,7 +852,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         // now mapAccIdAddr only contains those Accounts (and Contacts) who need updating.
         // we'll go thru refreshCurrentHHAddress() again, this time allowing it to do the updates
 
-        // must manually set our semaphore, so when we update contacts and households, they don't try to create additional addresses
+        // must manually set our semaphore, so when we update contacts and households,
+        // they don't try to create additional addresses
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, true);
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -1022,7 +1041,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listCon the list of Contacts to evaluate
     * @param dmlWrapper to hold any Contacts that need updating
     */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
         for (Contact con : listCon) {
             if (con.Current_Address__c == addrLoser.Id) {
                 con.Current_Address__c = addrWinner.Id;
@@ -1033,7 +1053,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
 
 
-    private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId, Map<Id, Address__c> mapAddressesById) {
+    private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId,
+            Map<Id, Address__c> mapAddressesById) {
         for (Error__c error : errors.errorRecords) {
             Id objId = ERR_Handler.getErrorObjectId(error);
             UTIL_Debug.debug(LoggingLevel.WARN, '**** Address TDTM error on object: ' + objId);
