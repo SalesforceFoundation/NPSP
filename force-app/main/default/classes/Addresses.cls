@@ -586,36 +586,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
 
         for (Address__c address : (List<Address__c>) getRecords()) {
-            Address__c addressOld = oldVersionOf(address);
+            NPSP_Address npspAddress = new NPSP_Address(address, oldVersionOf(address));
 
-            if (shouldSyncAddressToHouseholdAccountAndContacts(address, addressOld)) {
+            if (npspAddress.shouldSyncAddressToHouseholdAccountAndContacts()) {
                 addressesByAccountId.put(householdAccountIdFor(address), address);
             }
         }
         return addressesByAccountId;
-    }
-
-    private Boolean shouldSyncAddressToHouseholdAccountAndContacts(Address__c address, Address__c oldAddress) {
-        NPSP_Address npspAddress = new NPSP_Address(address, oldAddress);
-
-        if (oldAddress == null) {
-            return npspAddress.isDefault() ||
-                    npspAddress.isSeasonalAddr() ||
-                    (npspAddress.isUndeliverable() && npspAddress.isDefault());
-        }
-
-        if (npspAddress.isNewDefault() ||
-            isSeasonalChanged(address, oldAddress) ||
-            (npspAddress.isUndeliverableStatusChanged()) && npspAddress.isDefault()) {
-
-            return true;
-        } else if (!npspAddress.isEqualToIncludingAddressType(npspAddress.oldVersion(), TRUE)) {
-            if (npspAddress.isDefault()) {
-
-                return true;
-            }
-        }
-        return false;
     }
 
     public Map<Id, Address__c> addressChangesToSyncToContactOverrides() {
@@ -623,19 +600,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
         for (Address__c address : (List<Address__c>) getRecords()) {
             NPSP_Address npspAddress = new NPSP_Address(address, oldVersionOf(address));
 
-            if (shouldSyncAddressChangesToContactOverrides(npspAddress)) {
+            if (npspAddress.shouldSyncAddressChangesToContactOverrides()) {
                 addressesById.put(npspAddress.getId(), npspAddress.getRecord());
             }
         }
         return addressesById;
     }
-
-
-    private Boolean shouldSyncAddressChangesToContactOverrides(NPSP_Address npspAddress) {
-        return !npspAddress.isEqualToIncludingAddressType(npspAddress.oldVersion(), TRUE) ||
-            npspAddress.isUndeliverableStatusChanged();
-    }
-
 
     public Map<Id, Address__c> addressesByAccountId() {
         Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>(); // map of HH Accounts, and their default Address
@@ -929,27 +899,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
 
     private Id householdAccountIdFor(Address__c address) {
         return address.Household_Account__c;
-    }
-
-    /*******************************************************************************************************
-    * @description utility to compare two address objects seasonal fields
-    * @param addrNew the new version of the Address
-    * @param addrOld the old version of the Address
-    * @return boolean. true if any of the seasonal fields have changed on the Address
-    */
-    private Boolean isSeasonalChanged(Address__c addrNew, Address__c addrOld) {
-        if (addrNew == null || addrOld == null) {
-            return false;
-        }
-        return (
-                addrNew.Seasonal_Start_Month__c != addrOld.Seasonal_Start_Month__c ||
-                        addrNew.Seasonal_Start_Day__c != addrOld.Seasonal_Start_Day__c ||
-                        addrNew.Seasonal_End_Month__c != addrOld.Seasonal_End_Month__c ||
-                        addrNew.Seasonal_End_Day__c != addrOld.Seasonal_End_Day__c);
-    }
-
-    private Id idOf(Address__c addr) {
-        return addr.Id;
     }
 
     private void setLatestDatesOnDefaults() {

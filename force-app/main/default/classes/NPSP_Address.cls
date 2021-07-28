@@ -467,6 +467,49 @@ public inherited sharing class NPSP_Address implements IAddress {
                 address.Seasonal_End_Month__c != null && address.Seasonal_End_Day__c != null);
     }
 
+    /*******************************************************************************************************
+    * @description utility to compare two address objects seasonal fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @return boolean. true if any of the seasonal fields have changed on the Address
+    */
+    private Boolean isSeasonalChanged() {
+        if (address == null || oldAddress == null) {
+            return false;
+        }
+        return (
+                address.Seasonal_Start_Month__c != oldAddress.Seasonal_Start_Month__c ||
+                        address.Seasonal_Start_Day__c != oldAddress.Seasonal_Start_Day__c ||
+                        address.Seasonal_End_Month__c != oldAddress.Seasonal_End_Month__c ||
+                        address.Seasonal_End_Day__c != oldAddress.Seasonal_End_Day__c);
+    }
+
+    public Boolean shouldSyncAddressChangesToContactOverrides() {
+        return !isEqualToIncludingAddressType(oldVersion(), TRUE) ||
+                isUndeliverableStatusChanged();
+    }
+
+    public Boolean shouldSyncAddressToHouseholdAccountAndContacts() {
+        if (oldAddress == null) {
+            return isDefault() ||
+                    isSeasonalAddr() ||
+                    (isUndeliverable() && isDefault());
+        }
+
+        if (isNewDefault() ||
+                isSeasonalChanged() ||
+                (isUndeliverableStatusChanged()) && isDefault()) {
+
+            return true;
+        } else if (!isEqualToIncludingAddressType(oldVersion(), TRUE)) {
+            if (isDefault()) {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void state(String state) {
         address.MailingState__c = state;
     }
