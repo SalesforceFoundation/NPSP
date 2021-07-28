@@ -482,7 +482,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // look for duplicates for our proposed new addresses
-        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.findDuplicateAddresses(addressesByContact.values());
+        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.findDuplicateAddresses(
+                addressesByContact.values());
 
         // maps & lists to keep track of the addresses we must insert or update
         List<Address__c> addressesToUpdate = new List<Address__c>();
@@ -537,41 +538,31 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void resetAddressUsingHouseholdAddress() {
-        Map<Id, Address__c> mapAccIdAddr = new Map<Id, Address__c>();
+        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
         for (Contact con : (List<Contact>) getRecords()) {
-            mapAccIdAddr.put(con.AccountId, null);
+            addressesByAccountId.put(con.AccountId, null);
         }
 
         // get the default and seasonal address for each HH
-        Map<Id, Addresses.HouseholdInfo> mapAccIdHHInfo =
-                Addresses.syncAddressesForAccountsAndContacts(mapAccIdAddr, null, true);
+        Map<Id, Addresses.HouseholdInfo> addressHouseholdInfoByAccountId =
+                Addresses.syncAddressesForAccountsAndContacts(addressesByAccountId,
+            null, true);
 
         // reset the Contact's address fields with the appropriate address
-        for (Contact con : (List<Contact>) getRecords()) {
-            Addresses.HouseholdInfo hhinfo = mapAccIdHHInfo.get(con.AccountId);
-            if (hhinfo != null) {
-                Address__c addr = hhinfo.seasonalAddress;
-                if (addr == null) {
-                    addr = hhinfo.defaultAddress;
+        for (Contact contact : (List<Contact>) getRecords()) {
+            Addresses.HouseholdInfo householdInfo = addressHouseholdInfoByAccountId.get(contact.AccountId);
+            if (householdInfo != null) {
+                Address__c address = householdInfo.seasonalAddress;
+                if (address == null) {
+                    address = householdInfo.defaultAddress;
                 }
-                if (addr != null) {
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
-                    NPSP_Contact npspContact = new NPSP_Contact(con);
+                if (address != null) {
+                    NPSP_Address npspAddress = new NPSP_Address(address);
+                    NPSP_Contact npspContact = new NPSP_Contact(contact);
                     npspContact.currentAddress(npspAddress);
                 }
             }
         }
-    }
-
-    public Contacts contactsInHouseholdAccounts() {
-        List<Contact> contactsInHouseholdAccounts = new List<Contact>();
-        for (SObject so : getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact((Contact) so);
-            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
-                contactsInHouseholdAccounts.add(npspContact.getRecord());
-            }
-        }
-        return new Contacts(contactsInHouseholdAccounts);
     }
 
     public List<Contact> getOneToOneContactsToUpdate() {
