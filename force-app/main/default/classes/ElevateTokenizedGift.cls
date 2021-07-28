@@ -42,7 +42,6 @@ public with sharing class ElevateTokenizedGift {
      */
     public Map<String, Object> productMetadata;
 
-
     public ElevateTokenizedGift() {
         this.currencyCode = UserInfo.getDefaultCurrency();
         setConfigServiceInstance();
