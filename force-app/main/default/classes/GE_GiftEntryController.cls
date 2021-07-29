@@ -174,6 +174,18 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled
+    public static void unDeleteGift(Id dataImportId){
+        try {
+            /*GiftBatchId giftBatchId = new GiftBatchId(batchId);
+            GiftId giftId = new GiftId(dataImportId);
+            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);*/
+            
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Indicates if the org is connected to Elevate
     * @return Boolean
@@ -319,6 +331,18 @@ public with sharing class GE_GiftEntryController {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        System.debug('HERE = ');
+        System.debug(authorizedGift);
+        try {
+           elevateBatchService.removeFromElevateBatch(authorizedGift);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return null;
     }
 
     @AuraEnabled

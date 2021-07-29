@@ -45,6 +45,15 @@ class Gift {
             softCredits: { ...this._softCredits }
         }
     }
+
+    isRemovableFromElevateBatch() {
+        // PLACEHOLDER; validate that Status = 'Authorized' AND ...
+        return true;
+    }
+
+    isGiftAuthorized() {
+        return true;
+    }
 }
 
 export default Gift;

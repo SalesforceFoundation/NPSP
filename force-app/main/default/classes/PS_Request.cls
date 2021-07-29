@@ -42,7 +42,8 @@ public inherited sharing class PS_Request {
         COMMITMENT_CANCEL,
         CREATE_ELEVATE_BATCH,
         ADD_TO_ELEVATE_BATCH,
-        CHARGE_ELEVATE_BATCH
+        CHARGE_ELEVATE_BATCH,
+        REMOVE_FROM_ELEVATE_BATCH
     }
 
     public enum ProductType {
@@ -76,6 +77,7 @@ public inherited sharing class PS_Request {
     public static String ENDPOINT_CREATE_ELEVATE_BATCH = '/v1/payments/verified/batch';
     public static String ENDPOINT_ADD_TO_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/add';
     public static String ENDPOINT_CHARGE_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/capture';
+    public static String ENDPOINT_REMOVE_FROM_ELEVATE_BATCH = '/v1/payments/verified/batch/{0}/remove/{1}';
 
     public static String PRODUCT_METADATA_SCHEMA_URI = 'https://payments-js.elevate.salesforce.org/schema/productMetadata/donation-v1.1.0';
     private static Integer RECOMMENDED_TIMEOUT_MS = 20000;
@@ -111,6 +113,7 @@ public inherited sharing class PS_Request {
         private String jsonBody;
         private String commitmentId;
         private String elevateBatchId;
+        private String elevatePaymentId;
         private Integer timeout;
 
         /***
@@ -150,6 +153,11 @@ public inherited sharing class PS_Request {
         */
         public Builder withElevateBatchId(String elevateBatchId) {
             this.elevateBatchId = elevateBatchId;
+            return this;
+        }
+
+        public Builder withElevatePaymentId(String elevatePaymentId) {
+            this.elevatePaymentId = elevatePaymentId;
             return this;
         }
 
@@ -266,6 +274,14 @@ public inherited sharing class PS_Request {
                         ENDPOINT_CHARGE_ELEVATE_BATCH,
                         new String[] {
                                 elevateBatchId
+                        }
+                );
+            } else if (endpoint == ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH) {
+                value = String.format(
+                        ENDPOINT_REMOVE_FROM_ELEVATE_BATCH,
+                        new String[] {
+                            elevateBatchId,
+                            elevatePaymentId     
                         }
                 );
             }
@@ -390,7 +406,8 @@ public inherited sharing class PS_Request {
         private Boolean isElevateBatchEndpoint() {
             return endpoint == ElevateEndpoint.CREATE_ELEVATE_BATCH
                     || endpoint == ElevateEndpoint.ADD_TO_ELEVATE_BATCH
-                    || endpoint == ElevateEndpoint.CHARGE_ELEVATE_BATCH;
+                    || endpoint == ElevateEndpoint.CHARGE_ELEVATE_BATCH
+                    || endpoint == ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH;
         }
 
         private Boolean isCommitmentEndpoint () {

@@ -21,6 +21,7 @@ const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
 import Gift from 'c/geGift';
+import ElevateBatch from 'c/geFormRenderer';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -44,6 +45,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isLoading = true;
 
     giftBatch = new GiftBatch();
+    elevateBatch = new ElevateBatch();
     @track giftBatchState = {};
     gift = new Gift();
     @track giftInView = {};
@@ -429,6 +431,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const gift = event.detail;
             this.giftBatchState = await this.giftBatch.remove(gift);
 
+            if (gift.isAuthorized()) {
+                this.deleteFromElevateBatch(gift);
+            }
+
             if (this.giftInView?.fields.Id === gift?.Id) {
                 this.handleClearGiftInView();
             }
@@ -443,6 +449,17 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } catch(error) {
             handleError(error);
         }
+    }
+
+    async handleDeleteFromElevateBatch(event) {
+        const gift = event.detail;
+        this.deleteFromElevateBatch(gift);
+    }
+
+    async deleteFromElevateBatch(gift) {
+        this.elevateBatch.remove(gift);
+
+        // WHERE SHOULD ERROR HANDLING LIVE?
     }
 
     get batchId() {
