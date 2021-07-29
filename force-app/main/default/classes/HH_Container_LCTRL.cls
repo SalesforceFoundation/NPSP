@@ -487,7 +487,7 @@ public with sharing class HH_Container_LCTRL {
     * @param accountIds List of Account Ids
     */
     private static void cleanupAddresses(List<Id> accountIds) {
-        Id[] cleanupAccountIds = new Id[0];       
+        Id[] cleanupAccountIds = new Id[0];
         
         for (Account acc : [SELECT npe01__SYSTEM_AccountType__c FROM Account WHERE Id IN :accountIds]) {
             if (isHouseholdOrOrganization(acc)) {

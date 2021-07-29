@@ -98,7 +98,7 @@ public inherited sharing class ContactSelector {
         return queryForContactNamingFields;
     }
 
-    public static List<Contact> getContactAddressFieldsForContactsIn(Set<Id> householdAccountIds) {
+    public static List<Contact> getContactAddressFieldsForContactAccountsIn(Set<Id> householdAccountIds) {
         return Database.query(contactAddressFieldsSOQL(householdAccountIds));
     }
 
@@ -138,6 +138,15 @@ public inherited sharing class ContactSelector {
 
     public List<Contact> getContactsWithAccountAndAddressFields(List<Contact> contacts) {
         return Database.query(buildContactSoql(contacts));
+    }
+
+    public static List<Contact> getContactOverridesForAddressesIn(Set<Id> addressIds) {
+        return [
+                SELECT Current_Address__c
+                FROM Contact
+                WHERE Current_Address__c IN :addressIds
+                AND is_Address_Override__c = TRUE
+        ];
     }
 
     /*******************************************************************************************************
