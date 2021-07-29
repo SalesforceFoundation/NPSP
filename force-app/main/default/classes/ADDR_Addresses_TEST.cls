@@ -689,8 +689,8 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Address__c address: testAddresses) {
             Account updatedAccount = updatedAccountsById.get(address.Household_Account__c);
-            System.assertEquals(address.Undeliverable__c,
-                    updatedAccount.Undeliverable_Address__c, 'account address' +
+            System.assert(address.Default_Address__c);
+            System.assertEquals(address.Undeliverable__c, updatedAccount.Undeliverable_Address__c, 'account address' +
                             ' undeliverable status should not match the address undeliverable status.');
             for (Contact contact : updatedAccount.Contacts) {
                 System.assert(contact.is_Address_Override__c == false, 'The contact should not be marked with an ' +
@@ -748,43 +748,6 @@ public with sharing class ADDR_Addresses_TEST {
                 'undeliverable address status should match the override address undeliverable status.');
     }
 
-    @isTest
-    private static void updatedUndeliverableDefaultAddressShouldSyncToOrganizationContact() {
-        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
-                npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
-
-        List<Account> organizationAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
-        insert organizationAccounts;
-
-        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-
-        buildTestAddress(3);
-        for (Integer i = 0; i < testAddresses.size(); i++) {
-            Address__c address = testAddresses[i];
-            address.Household_Account__c = organizationAccounts[0].Id;
-            address.Default_Address__c = true;
-        }
-        insert testAddresses;
-
-        for (Contact contact : testContacts) {
-            populateContactAddress(contact, testAddresses[0]);
-            contact.is_Address_Override__c = true;
-            contact.Current_Address__c = testAddresses[0].Id;
-        }
-        insert testContacts;
-
-        Test.startTest();
-            testAddresses[0].Undeliverable__c = true;
-            update testAddresses;
-        Test.stopTest();
-
-        Contact updatedContact = [SELECT Undeliverable_Address__c
-                                  FROM Contact
-                                  WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The default ' +
-                'organization address undeliverable status should match the organization contact undeliverable status' +
-                ' using that address as an override.');
-    }
 
     @isTest
     private static void updatedUndeliverableNonDefaultAddressShouldSyncToOrganizationContact() {
@@ -811,16 +774,66 @@ public with sharing class ADDR_Addresses_TEST {
         insert testContacts;
 
         Test.startTest();
-        testAddresses[0].Undeliverable__c = true;
-        update testAddresses;
+            testAddresses[0].Undeliverable__c = true;
+            update testAddresses;
         Test.stopTest();
 
         Contact updatedContact = [SELECT Undeliverable_Address__c
-        FROM Contact
-        WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The ' +
+                                  FROM Contact
+                                  WHERE Id = :testContacts[0].Id];
+        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Id = :testAddresses[0].Id];
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The ' +
                 'non-default organization address undeliverable status should match the organization contact ' +
                 'undeliverable status using that address as an override.');
+    }
+
+    @isTest
+    private static void updatedUndeliverableDefaultAddressDoesNotCauseMultipleOverrideUpdates() {
+        createTestData(2, 2);
+        Address__c overrideAddressToCreate = new Address__c();
+        overrideAddressToCreate.Address_Type__c = 'Home';
+        overrideAddressToCreate.MailingStreet__c = 'Street Override';
+        overrideAddressToCreate.MailingCity__c = 'City Override';
+        overrideAddressToCreate.MailingState__c = 'Washington';
+        overrideAddressToCreate.MailingPostalCode__c = 'Zip Override';
+        overrideAddressToCreate.MailingCountry__c = 'United States';
+        overrideAddressToCreate.Default_Address__c = true;
+        overrideAddressToCreate.Household_Account__c = testAccounts[0].Id;
+        insert overrideAddressToCreate;
+
+        Contact contact = new Contact(
+                FirstName = 'Test Contact',
+                LastName = 'Override',
+                is_Address_Override__c = true,
+                AccountId = testAccounts[0].Id,
+                MailingState = 'Washington',
+                MailingCity = 'City Override',
+                MailingStreet = 'Street Override',
+                MailingPostalCode = 'Zip Override',
+                MailingCountry = 'United States',
+                npe01__Primary_Address_Type__c = 'Home'
+        );
+        insert contact;
+
+        DmlException updateError;
+        Test.startTest();
+            overrideAddressToCreate.Undeliverable__c = true;
+            try {
+                update overrideAddressToCreate;
+            } catch (DmlException ex) {
+                updateError = ex;
+            }
+        Test.stopTest();
+
+        Address__c updatedAddress = [SELECT Default_Address__c, Undeliverable__c FROM Address__c WHERE Id = :overrideAddressToCreate.Id];
+        Contact updatedContact = [SELECT Undeliverable_Address__c FROM Contact WHERE Id = :contact.Id];
+
+        System.assert(updatedAddress.Default_Address__c, 'The test address should be a default address.');
+        System.assertEquals(null, updateError, 'Updating the address undeliverable status' +
+            'should not result in an error.');
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
+                'undeliverable address status should match the address undeliverable status.');
+
     }
 
     /*********************************************************************************************************

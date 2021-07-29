@@ -266,6 +266,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
                 accountId, npspHouseholdAccount, addressToSyncToAccountsAndContacts, contactsToUpdate);
 
         }
+
         return new AddressAndRelationshipsToUpdate(accountsToUpdate, addressesToUpdate, contactsToUpdate);
     }
 
@@ -296,24 +297,37 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address addressToSyncToAccountsAndContacts, List<Contact> contactsToUpdate) {
 
         if (accountHasContacts(contactsByHouseholdAccountId, accountId)) {
-            for (Contact con : contactsByHouseholdAccountId.get(accountId)) {
-                NPSP_Contact npspContact = new NPSP_Contact(con);
+            for (Contact contact : contactsByHouseholdAccountId.get(accountId)) {
+                NPSP_Contact npspContact = new NPSP_Contact(contact);
+
+                Boolean shouldUpdateContact= false;
                 // detect that the contact's current address was deleted.
                 // and if so clear any override flag so it will get the default address.
                 if (npspContact.currentAddress() == null) {
                     npspContact.getRecord().is_Address_Override__c = false;
                 }
-                if (npspContact.hasAddressOverride() == false) {
-                    npspContact.getRecord().Undeliverable_Address__c =
-                            npspHouseholdAccount.getRecord().Undeliverable_Address__c;
-                }
-                if (npspContact.hasAddressOverride() == false ||
+
+                if (!npspContact.hasAddressOverride() ||
                         npspContact.currentAddress() == addressToSyncToAccountsAndContacts.getId()) {
-                    if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
-                        npspContact.currentAddress(addressToSyncToAccountsAndContacts);
+
+                    if (npspContact.isUndeliverableMailingAddress() !=
+                            addressToSyncToAccountsAndContacts.isUndeliverable()) {
+                        npspContact.setUndeliverableMailingAddress(
+                            addressToSyncToAccountsAndContacts.isUndeliverable());
+
+                        shouldUpdateContact = true;
                     }
+
+                    if (npspContact.mailingAddressIsDifferentFrom(addressToSyncToAccountsAndContacts)) {
+                        npspContact.setCurrentAddress(addressToSyncToAccountsAndContacts);
+
+                        shouldUpdateContact = true;
+                    }
+
                 }
-                contactsToUpdate.add(con);
+                if (shouldUpdateContact) {
+                    contactsToUpdate.add(contact);
+                }
             }
         }
     }

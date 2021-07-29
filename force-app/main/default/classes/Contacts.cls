@@ -35,7 +35,6 @@
 public inherited sharing class Contacts extends fflib_SObjects {
 
     public Map<Id, Contact> oldMap;
-    private Boolean isUpdate = false;
 
     @TestVisible
     private static ContactAndOrgSettings contactAndOrgSettings {
@@ -179,7 +178,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterUpdate() {
-        isUpdate = true;
         createAddressesForContacts();
     }
 
@@ -499,7 +497,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (npspMatchingAddress.getRecord() != null) {
                 // record the match in the contact
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (npspContact.isUndeliverableStatusChanged()) {
+                if (npspContact.isUndeliverableStatusChanged() && npspContact.isUndeliverableMailingAddress() !=
+                        npspMatchingAddress.isUndeliverable()) {
+
                     npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
                     addressUpdated = true;
                 }
@@ -559,7 +559,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 if (address != null) {
                     NPSP_Address npspAddress = new NPSP_Address(address);
                     NPSP_Contact npspContact = new NPSP_Contact(contact);
-                    npspContact.currentAddress(npspAddress);
+                    npspContact.setCurrentAddress(npspAddress);
                 }
             }
         }

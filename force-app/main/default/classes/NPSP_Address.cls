@@ -485,8 +485,8 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     public Boolean shouldSyncAddressChangesToContactOverrides() {
-        return !isEqualToIncludingAddressType(oldVersion(), TRUE) ||
-                isUndeliverableStatusChanged();
+        return !isDefault() && (!isEqualToIncludingAddressType(oldVersion(), TRUE) ||
+                isUndeliverableStatusChanged());
     }
 
     public Boolean shouldSyncAddressToHouseholdAccountAndContacts() {
@@ -497,8 +497,8 @@ public inherited sharing class NPSP_Address implements IAddress {
         }
 
         if (isNewDefault() ||
-                isSeasonalChanged() ||
-                (isUndeliverableStatusChanged()) && isDefault()) {
+            isSeasonalChanged() ||
+            (isUndeliverableStatusChanged()) && isDefault()) {
 
             return true;
         } else if (!isEqualToIncludingAddressType(oldVersion(), TRUE)) {

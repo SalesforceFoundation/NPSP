@@ -73,7 +73,7 @@ public inherited sharing class NPSP_Contact {
         return this.contact;
     }
 
-    public void currentAddress(IAddress npspAddress) {
+    public void setCurrentAddress(IAddress npspAddress) {
         contact.Current_Address__c = npspAddress.getRecord()?.Id;
         mailingAddress(npspAddress);
     }

@@ -145,7 +145,7 @@ public inherited sharing class ContactSelector {
                 SELECT Current_Address__c
                 FROM Contact
                 WHERE Current_Address__c IN :addressIds
-                AND is_Address_Override__c = true
+                AND is_Address_Override__c = TRUE
         ];
     }
 
