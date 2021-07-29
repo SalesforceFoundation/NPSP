@@ -153,6 +153,10 @@
                 <behavior>Edit</behavior>
                 <field>is_Address_Override__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Undeliverable_Address__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
