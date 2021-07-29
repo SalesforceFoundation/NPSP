@@ -76,7 +76,7 @@ public inherited sharing class NPSP_HouseholdAccount {
         return householdAccount;
     }
 
-    public void billingAddress(IAddress anAddress) {
+    public void setBillingAddress(IAddress anAddress) {
         addressService.copyOntoSObject(
                 anAddress, householdAccount, 'Billing',
                 null);
