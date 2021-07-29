@@ -594,12 +594,12 @@ tasks:
                 errSettings.%%%NAMESPACE%%%OverrideFeature_PilotEnabled__c = true;
                 upsert errSettings;
 
-    deploy_core_mock_class:
-        description: Deploy a mock apex class that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes
+    deploy_core_mock_classes:
+        description: Deploy mock apex class(9)es) that will prevent compilation errors when the packaged code references file-based apex in the core stack for instrumentation purposes
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Salesforce Metadata
         options:
-            path: unpackaged/pre/core_apex_class_mock
+            path: unpackaged/pre/core_instrumentation_mock_classes
 
     run_tests:
         options:
@@ -847,7 +847,7 @@ flows:
         steps:
             2.1:
                 when: not org_config.namespace
-                task: deploy_core_mock_class
+                task: deploy_core_mock_classes
 
     qa_org_namespaced:
         description: Execute the qa_org flow against a namespaced scratch org and patch help text.
