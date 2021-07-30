@@ -120,7 +120,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */ 
     public ApexPages.StandardSetController drsSetController {
         get {
-            if(drsSetController == null){ 
+            if(drsSetController == null){
                 drsSetController = new ApexPages.StandardSetController
                     (Database.getQueryLocator(constructDRSSOQL())); 
                 drsSetController.setPageSize(pageSize);    
@@ -150,7 +150,19 @@ public with sharing class CON_ContactMerge_CTRL {
      * @description To store the selected DRS recordId 
      */
     public String drsRecordId { get; set; }
-            
+
+    /***********************************************************************************************
+     * @description Set of DRS records that include a single Contact
+     * with one or more other SObject types
+     */
+    @TestVisible
+    private Set<Id> unactionableDuplicateRecordSets;
+
+    /***********************************************************************************************
+     * @description Map of DRS record Ids to count of Contacts in that set
+     */
+    public Map<Id, Integer> contactCountByDuplicateRecordSetId { get; set; }
+
     /***********************************************************************************************
     * @description Checks whether there are more records to display on next page in pagination  
     * implemented on Duplicate Record Set diplay page.
@@ -1041,63 +1053,92 @@ public with sharing class CON_ContactMerge_CTRL {
             loadMergePage = true;
             step = 1;
             listDuplicateRecordSets = getDuplicateRecordSets();
-            driFieldNames.add('DuplicateRecordSetId');
-            List<DuplicateRecordSet> duplicateRecordSets = new List<DuplicateRecordSet>(
-                (List<DuplicateRecordSet>)Database.query(constructDRSSOQL()));
-            driFieldNames.remove(driFieldNames.indexOf('DuplicateRecordSetId'));
-            //Fetch the ids of all Duplicate Record Items
-            Set<Id> allDRIIds = new Set<Id>();
-            List<DuplicateRecordItem> allDRIs = new List<DuplicateRecordItem>();
-            for (DuplicateRecordSet dupRecSet : duplicateRecordSets) {
-                allDRIIds.addAll(new Map<Id, DuplicateRecordItem>(
-                    dupRecSet.DuplicateRecordItems).keySet());
-                allDRIs.addAll(new Map<Id, DuplicateRecordItem>(
-                    dupRecSet.DuplicateRecordItems).values());
-            }
-            //Fetch the remaining query row limit to ensure that the page will not 
-            //break due to too many query rows error.
-            if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
-                ApexPages.addMessage(new ApexPages.Message
-                    (ApexPages.Severity.Error, Label.conMergeTooManyContactError));
-                step = 0;
-                return;
-            }
-            // Construct query to fetch all the related contact records 
-            // to find the first contact related to the DRS record
-            List<String> contactField = new List<String>();
-            contactField.add('Id');
-            contactField.add('Name');
-            contactField.add('createdDate');
-             
-            String whereString = new UTIL_Query()
-                .withFrom('DuplicateRecordItem')
-                .withSelectFields(driFieldNames)
-                .withWhere('Id IN :allDRIIds')
-                .build();
-            whereString = 'Id IN (' + whereString + ')'; 
-            String contactQueryStr =  new UTIL_Query()
-                .withFrom('Contact')
-                .withSelectFields(contactField)
-                .withWhere(whereString)
-                .build();
-            Map<Id,Contact> contacts = new Map<Id,Contact>(
-                (List<Contact>)Database.query(contactQueryStr));
-            for (DuplicateRecordItem dri : allDRIs) {
-                Contact con = contacts.get(dri.RecordId);
-                if (!(firstContactOfDRS.containsKey(dri.DuplicateRecordSetId))) {
-                    firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
-                } else {
-                    if (con.createdDate < 
-                        firstContactOfDRS.get(dri.DuplicateRecordSetId).createdDate) {
-                        firstContactOfDRS.put(dri.DuplicateRecordSetId,con);
-                    }
-                }
-            }
-            totalPages = getTotalPages(); 
+            getDuplicateRecordItemDetails();
+            totalPages = getTotalPages();
         } catch (exception ex) {
                 ApexPages.addMessage(new ApexPages.Message
                     (ApexPages.Severity.Error, ex.getMessage()));
         }
+    }
+
+    private void getDuplicateRecordItemDetails() {
+        List<DuplicateRecordSet> duplicateRecordSets = queryAllDuplicateRecordSets();
+
+        Set<Id> allDuplicateRecordItemIds = new Set<Id>();
+        List<DuplicateRecordItem> allDuplicateRecordItems = new List<DuplicateRecordItem>();
+        contactCountByDuplicateRecordSetId = new Map<Id, Integer>();
+        for (DuplicateRecordSet dupRecSet : duplicateRecordSets) {
+            allDuplicateRecordItemIds.addAll(new Map<Id, DuplicateRecordItem>(
+                dupRecSet.DuplicateRecordItems).keySet());
+            allDuplicateRecordItems.addAll(new Map<Id, DuplicateRecordItem>(
+                dupRecSet.DuplicateRecordItems).values());
+            contactCountByDuplicateRecordSetId.put(dupRecSet.Id, dupRecSet.RecordCount);
+        }
+
+        getDuplicateRecordSetFirstContacts(allDuplicateRecordItemIds, allDuplicateRecordItems);
+    }
+
+    private List<DuplicateRecordSet> queryAllDuplicateRecordSets() {
+        driFieldNames.add('DuplicateRecordSetId');
+        driFieldNames.add('Record.Type');
+        List<DuplicateRecordSet> duplicateRecordSets = new List<DuplicateRecordSet>(
+            (List<DuplicateRecordSet>) Database.query(constructDRSSOQL()));
+        driFieldNames.remove(driFieldNames.indexOf('DuplicateRecordSetId'));
+        driFieldNames.remove(driFieldNames.indexOf('Record.Type'));
+
+        return duplicateRecordSets;
+    }
+
+    private void getDuplicateRecordSetFirstContacts(Set<Id> allDRIIds, List<DuplicateRecordItem> allDRIs) {
+        if ((Limits.getLimitQueryRows() -  Limits.getQueryRows()) < allDRIIds.size()) {
+            ApexPages.addMessage(new ApexPages.Message
+                (ApexPages.Severity.Error, Label.conMergeTooManyContactError));
+            step = 0;
+            return;
+        }
+
+        Map<Id, Contact> contacts = getDRSRelatedContacts(allDRIIds);
+        populateFirstContacts(allDRIs, contacts);
+    }
+
+    private void populateFirstContacts(List<DuplicateRecordItem> allDRIs, Map<Id, Contact> contacts) {
+        for (DuplicateRecordItem dri : allDRIs) {
+            if (dri.Record.Type != 'Contact') {
+                contactCountByDuplicateRecordSetId.put(dri.DuplicateRecordSetId,
+                    contactCountByDuplicateRecordSetId.get(dri.DuplicateRecordSetId) - 1);
+                continue;
+            }
+            Contact con = contacts.get(dri.RecordId);
+            if (!(firstContactOfDRS.containsKey(dri.DuplicateRecordSetId))) {
+                firstContactOfDRS.put(dri.DuplicateRecordSetId, con);
+            } else {
+                if (con.createdDate <
+                    firstContactOfDRS.get(dri.DuplicateRecordSetId).createdDate) {
+                    firstContactOfDRS.put(dri.DuplicateRecordSetId, con);
+                }
+            }
+        }
+    }
+
+    private Map<Id, Contact> getDRSRelatedContacts(Set<Id> allDRIIds) {
+        List<String> contactField = new List<String>();
+        contactField.add('Id');
+        contactField.add('Name');
+        contactField.add('createdDate');
+
+        String whereString = new UTIL_Query()
+            .withFrom('DuplicateRecordItem')
+            .withSelectFields(driFieldNames)
+            .withWhere('Id IN :allDRIIds')
+            .build();
+        whereString = 'Id IN (' + whereString + ')';
+        String contactQueryStr = new UTIL_Query()
+            .withFrom('Contact')
+            .withSelectFields(contactField)
+            .withWhere(whereString)
+            .build();
+
+        return new Map<Id, Contact>((List<Contact>) Database.query(contactQueryStr));
     }
 
     /**********************************************************************************************
@@ -1105,7 +1146,8 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return String Returns the query to fetch Duplicate Record Sets
     */
     public String constructDRSSOQL() {
-        //build the SOQL query and execute
+        getUnactionableDuplicateRecordSets();
+
         List<String> forDuplicateRecordSet = getDuplicateRuleSetQuerySelectClause();
         String forDuplicateRecordSetsRelatedToAtLeastOneContact = getDuplicateRuleSetQueryWhereClause();
 
@@ -1118,6 +1160,68 @@ public with sharing class CON_ContactMerge_CTRL {
             .build();
 
         return duplicateRecordSetsQuery;
+    }
+
+    @TestVisible
+    private void getUnactionableDuplicateRecordSets() {
+        if (unactionableDuplicateRecordSets != null) {
+            return;
+        }
+        unactionableDuplicateRecordSets = new Set<Id>();
+
+        List<DuplicateRecordSet> mixedDRS = getMixedRecordTypeDuplicateRecordSetIds();
+        if (mixedDRS.isEmpty()) {
+            return;
+        }
+
+        List<AggregateResult> leadTotals = [
+            SELECT DuplicateRecordSetId DRSId, COUNT(Id) ContactTotal
+            FROM DuplicateRecordItem
+            WHERE Record.Type = 'Contact'
+            AND DuplicateRecordSetId IN :mixedDRS
+            GROUP BY DuplicateRecordSetId, DuplicateRecordSet.RecordCount
+        ];
+
+        for (AggregateResult result : leadTotals) {
+            if ((Integer) result.get('ContactTotal') <= 1) {
+                unactionableDuplicateRecordSets.add((Id) result.get('DRSId'));
+            }
+        }
+    }
+
+    /**********************************************************************************************
+    * @description Queries for mixed record type Duplicate Record Sets with at least one Contact.
+    * @return List<DuplicateRecordSet>
+    */
+    private List<DuplicateRecordSet> getMixedRecordTypeDuplicateRecordSetIds() {
+        String duplicateRecordSetsQuery =  new UTIL_Query()
+            .withFrom(DuplicateRecordSet.sObjectType)
+            .withSelectFields(new List<String>{'Id'})
+            .withWhere(getMixedDuplicateRuleSetQueryWhereClause())
+            .build();
+
+        return (List<DuplicateRecordSet>) Database.query(duplicateRecordSetsQuery);
+    }
+
+    /**********************************************************************************************
+    * @description Builds a where string used to query for Duplicate Record Sets.
+    * Limits the query to Duplicate Record Sets that have both a Contact Duplicate Record Item
+    * and a non-Contact Duplicate Record Item.
+    * @return String Returns a where clause string
+    */
+    private String getMixedDuplicateRuleSetQueryWhereClause() {
+        String duplicateRecordItemsForContacts = new UTIL_Query()
+            .withFrom(DuplicateRecordItem.sObjectType)
+            .withSelectFields(new List<String>{'DuplicateRecordSetId'})
+            .withWhere('Record.Type = \'Contact\'')
+            .build();
+        String duplicateRecordItemsForNonContacts = new UTIL_Query()
+            .withFrom(DuplicateRecordItem.sObjectType)
+            .withSelectFields(new List<String>{'DuplicateRecordSetId'})
+            .withWhere('Record.Type != \'Contact\'')
+            .build();
+        return 'Id IN (' + duplicateRecordItemsForContacts + ') AND ' +
+            'Id IN (' + duplicateRecordItemsForNonContacts + ')';
     }
 
     /**********************************************************************************************
@@ -1151,7 +1255,9 @@ public with sharing class CON_ContactMerge_CTRL {
             .withSelectFields(new List<String>{'DuplicateRecordSetId'})
             .withWhere('Record.Type = \'Contact\'')
             .build();
-        return 'RecordCount > 1 AND Id IN (' + duplicateRecordItemsForContacts + ')';
+        return 'RecordCount > 1 AND Id IN ('
+                + duplicateRecordItemsForContacts
+                + ') AND Id NOT IN :unactionableDuplicateRecordSets';
     }
 
     /***********************************************************************************************
