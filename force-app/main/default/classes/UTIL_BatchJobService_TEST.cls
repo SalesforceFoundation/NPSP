@@ -425,7 +425,10 @@ public with sharing class UTIL_BatchJobService_TEST {
                 when 'isInProgress' {
                     return isInProgress;
 
-                } when 'getCompletedDaysBetween' {
+                } when 'getCompletedDaysByClassName' {
+                    return completedDaysBetween;
+
+                } when 'getCompletedDaysByBatchId' {
                     return completedDaysBetween;
 
                 } when 'getAsyncApexJob' {
