@@ -12,8 +12,8 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
         """
         Waits for the current page to be a Engagement Plan list view page
         """
-        self.npsp.wait_for_locator('frame','Manage Engagement Plan Template')
-        self.npsp.choose_frame('Manage Engagement Plan Template')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
     def click_eng_plan_dropdown(self, title):
         locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
