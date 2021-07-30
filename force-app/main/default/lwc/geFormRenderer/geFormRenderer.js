@@ -488,9 +488,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCancel() {
-        this.reset();
-        this.initializeFormState();
-
         if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
             if (originatedFromRecordDetailPage) {
@@ -500,6 +497,8 @@ export default class GeFormRenderer extends LightningElement{
             }
         } else {
             this.dispatchEvent(new CustomEvent('clearcurrentgift'));
+            this.reset();
+            this.initializeFormState();
         }
     }
 
