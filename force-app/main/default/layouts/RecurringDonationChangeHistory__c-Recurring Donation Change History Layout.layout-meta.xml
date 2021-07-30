@@ -45,7 +45,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>PreviousYearlyValue__c</field>
+                <field>PreviousAnnualValue__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -87,7 +87,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>NewYearlyValue__c</field>
+                <field>NewAnnualValue__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>

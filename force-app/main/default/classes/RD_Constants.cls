@@ -61,4 +61,13 @@ public class RD_Constants {
     public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
     public static final String INSTALLMENT_PERIOD_QUARTERLY = 'Quarterly';
 
+    public static final Map<String, Integer> PERIOD_TO_YEARLY_FREQUENCY = new Map<String, Integer>{
+      INSTALLMENT_PERIOD_YEARLY => 1,
+      INSTALLMENT_PERIOD_QUARTERLY => 4,
+      INSTALLMENT_PERIOD_MONTHLY => 12,
+      INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => 24,
+      INSTALLMENT_PERIOD_WEEKLY => 52,
+      INSTALLMENT_PERIOD_DAILY => 365
+    };
+
 }
