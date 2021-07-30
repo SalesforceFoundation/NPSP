@@ -13,10 +13,10 @@ import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
-const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
+const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
-const dataImportObjectInfo = require('./data/dataImportObjectInfo.json');
-const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
+const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
+const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
 
 describe('c-ge-form-renderer', () => {
 
@@ -77,8 +77,10 @@ describe('c-ge-form-renderer', () => {
 
         const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
         expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
-
-        dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
+        element.giftInView = {
+            fields: { 'Payment_Method__c': 'Credit Card' },
+            softCredits: { all: [] }
+        };
         await flushPromises();
 
         const {commonPaymentServices} = GeLabelService.CUSTOM_LABELS;
@@ -93,7 +95,7 @@ describe('c-ge-form-renderer', () => {
     it('form without contact firstname when lookup populated and widget in chargeable state then sendPurchaseRequest is called with first name',
         async () => {
             const EXPECTED_PURCHASE_BODY_PARAMS = JSON.stringify({
-                "firstName": "DummyFirstName",
+                "firstName": "",
                 "lastName": "DummyLastName",
                 "metadata": {},
                 "amount": 1,
@@ -103,10 +105,10 @@ describe('c-ge-form-renderer', () => {
             const EXPECTED_UPSERT_DATAIMPORT_FIELDS = {
                 Donation_Donor__c: 'Contact',
                 Contact1Imported__c: '003J000001zoYLGIA2',
+                Contact1_Lastname__c: 'DummyLastName',
                 Donation_Date__c: '2021-02-23',
                 Donation_Amount__c: '0.01',
                 Payment_Method__c: "Credit Card",
-                Payment_Status__c: "PENDING"
             };
             const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
 
@@ -140,12 +142,18 @@ describe('c-ge-form-renderer', () => {
             const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
 
             expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
-
-            dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
-            dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
-            dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
-            dispatchFormFieldChange(sectionWithWidget, '2021-02-23', 'Donation_Date_de92fcb14');
-            dispatchFormFieldChange(sectionWithWidget, DUMMY_CONTACT_ID, 'Contact1Imported__c');
+            element.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01',
+                    'Contact1Imported__c': DUMMY_CONTACT_ID,
+                    'Donation_Date__c': '2021-02-23',
+                    'Donation_Donor__c': 'Contact',
+                    'Payment_Authorization_Token__c': 'a_dummy_token',
+                    'Contact1_Lastname__c': 'DummyLastName'
+                },
+                softCredits: { all: [] }
+            };
             await flushPromises();
 
             // simulate getting back data for DUMMY_CONTACT_ID
@@ -167,13 +175,6 @@ describe('c-ge-form-renderer', () => {
             });
             expect(upsertDataImport).toHaveBeenLastCalledWith({
                 dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
-            });
-            // first name should not be present in upsert request if not on template
-            expect(upsertDataImport).toHaveBeenLastCalledWith({
-                dataImport: expect.not.objectContaining({
-                    Contact1_Firstname__c: expect.anything(),
-                    Contact1_LastName__c: expect.anything()
-                })
             });
         });
 });

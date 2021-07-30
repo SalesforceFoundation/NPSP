@@ -36,21 +36,48 @@
 public with sharing class GiftSelector {
 
     private List<String> additionalGiftsFieldsToQuery;
+    private List<Id> giftIds;
+    private Integer giftsOffset;
+    private Integer giftsLimit;
 
     public GiftSelector(GiftTemplate giftTemplate) {
         this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
     }
 
+    public GiftSelector(GiftTemplate giftTemplate, List<Id> giftIds) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+        this.giftIds = giftIds;
+    }
+
+    public GiftSelector(GiftTemplate giftTemplate, Integer giftsLimit, Integer giftsOffset) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+        this.giftsLimit = giftsLimit;
+        this.giftsOffset = giftsOffset;
+    }
+
     public List<DataImport__c> getGiftsFor(GiftBatchId giftBatchId) {
         String dataImportBatchLookup = String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c);
         Id dataImportBatchId = giftBatchId.value();
-        String queryString = new UTIL_Query()
+        UTIL_Query query = new UTIL_Query()
             .withFrom(DataImport__c.SObjectType)
             .withSelectFields(fields())
             .withWhere(dataImportBatchLookup + ' =: dataImportBatchId')
-            .withSecurityEnforced()
-            .build();
+            .withOrderBy('CreatedDate DESC')
+            .withSecurityEnforced();
 
+        if (this.giftsLimit != null) {
+            query.withLimit(this.giftsLimit);
+        }
+
+        if (this.giftIds != null) {
+            query.withWhere('Ids IN :giftIds');
+        }
+
+        if (this.giftsOffset != null) {
+            query.withOffset(this.giftsOffset);
+        }
+
+        String queryString = query.build();
         return Database.query(queryString);
     }
 
@@ -119,6 +146,7 @@ public with sharing class GiftSelector {
 
         List<String> fields = new List<String>();
         fields.addAll(filterByReadAccess(queryFieldAsSet));
+        fields.addAll(enrichWithLightningDatatablePropertiesForRelationshipFields(fields));
 
         return fields;
     }
@@ -135,5 +163,25 @@ public with sharing class GiftSelector {
         }
 
         return hasReadAccessTo;
+    }
+
+    private List<String> enrichWithLightningDatatablePropertiesForRelationshipFields(List<String> fields) {
+        List<String> relationshipFieldsToAdd = new List<String>();
+
+        for (String fieldApiName : fields) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            if (fieldDescribe.type == Schema.DisplayType.REFERENCE) {
+                String referencedObjectName = fieldDescribe.getReferenceTo()[0].getDescribe().name;
+                String relationshipField =
+                    fieldDescribe.getName().substringBefore('__c') + '__r.'
+                    + UTIL_Describe.getNameField(referencedObjectName);
+
+                relationshipFieldsToAdd.add(relationshipField);
+            }
+        }
+
+        return relationshipFieldsToAdd;
     }
 }

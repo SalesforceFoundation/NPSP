@@ -127,6 +127,17 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static GiftBatchView getGiftBatchViewWithLimitsAndOffsets(
+        Id dataImportBatchId, Integer giftsLimit, Integer giftsOffset){
+            try {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                return giftBatchService.viewModelWithLimitsAndOffsets(giftBatchId, giftsLimit, giftsOffset);
+            } catch (AuraHandledException e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+    }
+
+    @AuraEnabled
     public static GiftView getGiftView(Id dataImportId){
         try {
             GiftId giftId = new GiftId(dataImportId);
@@ -139,6 +150,28 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
+
+    @AuraEnabled
+    public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
+        try {
+            InboundGiftBatchDTO giftBatchChanges =
+                (InboundGiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, InboundGiftBatchDTO.class);
+            return giftBatchService.store(giftBatchChanges);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView deleteGiftFromGiftBatch(Id batchId, Id dataImportId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(batchId);
+            GiftId giftId = new GiftId(dataImportId);
+            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /*******************************************************************************************************
@@ -432,9 +465,13 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
-    @AuraEnabled
+    @AuraEnabled(cacheable=true)
     public static DonationsView getOpenDonationsView(Id donorId) {
         try {
+            if (donorId == null) {
+                return null;
+            }
+
             return donationService.getDonationsView(donorId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
