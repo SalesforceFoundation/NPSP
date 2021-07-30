@@ -57,6 +57,85 @@ public inherited sharing class HouseholdsApp {
         set;
     }
 
+    public void onBeforeInsertOf(Accounts accounts) {
+        if (isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(accounts.householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(accounts.orgAccounts());
+        }
+    }
+
+    public void onAfterInsertOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        createNewAddressesAndAddToDmlWrapperForProcessing(accounts, dmlWrapper);
+    }
+
+    private void createNewAddressesAndAddToDmlWrapperForProcessing(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Account> listAccCreateAddr = new List<Account>();
+        if (isAddressManagementEnabled()) {
+            listAccCreateAddr.addAll(accounts.withAddresses().householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            listAccCreateAddr.addAll(accounts.withAddresses().orgAccounts());
+        }
+        // create any new Address objects
+        if (listAccCreateAddr.size() > 0) {
+            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description for each Account, create a new default address and add it to dmlWrapper
+    * @param listAcc a list of Accounts
+    * @param dmlWrapper to hold the Addresses that need creating
+    ********************************************************************************************************/
+    private void createAddrFromAcc(List<Account> listAcc,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Address__c> listAddr = new List<Address__c>();
+        for (Account acc : listAcc) {
+            NPSP_Address npspAddress = new NPSP_Address(acc);
+            listAddr.add(npspAddress.getRecord());
+        }
+        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
+        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
+    }
+
+    public void onBeforeUpdateOf(Accounts accounts) {
+        if (isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(
+                    accounts.withBillingAddressChanges().householdAccounts()
+            );
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(
+                    accounts.withBillingAddressChanges().orgAccounts()
+            );
+        }
+    }
+
+    public void onAfterUpdateOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        // note that we detect whether the change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (TDTM_ProcessControl.isRecursive(
+                TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+            UTIL_Debug.debug('**** RECURSION: ' +
+                    'Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return;
+        }
+
+        List<Account> listAccCreateAddr = new List<Account>();
+        if (isAddressManagementEnabled()) {
+            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().householdAccounts());
+        }
+        if (isOrgAccountAddressesEnabled()) {
+            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().orgAccounts());
+        }
+        // create any new Address objects
+        if (listAccCreateAddr.size() > 0) {
+            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        }
+    }
+
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
@@ -119,6 +198,27 @@ public inherited sharing class HouseholdsApp {
 
     private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
+    }
+
+    private Boolean isAddressManagementEnabled() {
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean isOrgAccountAddressesEnabled() {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+            return true;
+        }
+        return false;
+    }
+
+    private void normalizeLineBreaksFor(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
 }
