@@ -161,17 +161,25 @@
                             <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
                                 <thead>
                                     <tr>
-                                        <th class="slds-text-heading_label" scope="col">Duplicate Record Set Name</th>
-                                        <th class="slds-text-heading_label" scope="col">Last Modified Date</th>
-                                        <th class="slds-text-heading_label" scope="col">Duplicate Rule</th>
-                                        <th class="slds-text-heading_label" scope="col">Record Count</th>
+                                        <th class="slds-text-heading_label" scope="col">
+                                            {!$objectType.DuplicateRecordSet.fields.Name.label}
+                                        </th>
+                                        <th class="slds-text-heading_label" scope="col">
+                                            {!$objectType.DuplicateRecordSet.fields.LastModifiedDate.label}
+                                        </th>
+                                        <th class="slds-text-heading_label" scope="col">
+                                            {!$objectType.DuplicateRecordSet.fields.DuplicateRuleId.label}
+                                        </th>
+                                        <th class="slds-text-heading_label" scope="col">{!$Label.commonContactCount}</th>
                                         <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
                                                      var="field">
                                             <th class="slds-text-heading_label" scope="col">
                                                 <apex:outputText value="{!field.label}"/>
                                             </th>
                                         </apex:repeat>
-                                        <th class="slds-text-heading_label" scope="col">First Contact Name</th>
+                                        <th class="slds-text-heading_label" scope="col">
+                                            {!$Label.conMergeFirstContactLabel}
+                                        </th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -196,7 +204,7 @@
                                             </td>
                                             <td>
                                                 <span class="slds-truncate">
-                                                    <apex:outputField value="{!drs.RecordCount}"/>
+                                                    <apex:outputText value="{!contactCountByDuplicateRecordSetId[drs.Id]}"/>
                                                 </span>
                                             </td>
                                             <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
@@ -220,8 +228,8 @@
                                                                       styleClass="slds-button slds-button_brand">
                                                         <apex:param name="DRSID" value="{!drs.Id}"
                                                                     assignTo="{!drsRecordId}"/>
-                                                    </apex:commandlink>  
-                                                </apex:actionRegion>   
+                                                    </apex:commandlink>
+                                                </apex:actionRegion>
                                             </td>
                                         </tr>
                                     </apex:repeat>
