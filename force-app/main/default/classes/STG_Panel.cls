@@ -49,6 +49,16 @@ public with sharing virtual class STG_Panel {
     */
 	public virtual string idPanel() { return null; }
 
+    @TestVisible
+    private static UTIL_BatchJobService batchJobService {
+        get {
+            if (batchJobService == null) {
+                batchJobService = new UTIL_BatchJobService();
+            }
+            return batchJobService;
+        } set;
+    }
+
     /*******************************************************************************************************
     * @description Opportunity object label
     */
@@ -108,6 +118,60 @@ public with sharing virtual class STG_Panel {
         get {
             return RD2_EnablementService.isRecurringDonations2Enabled;
         } private set;
+    }
+
+    /**
+    * @description Boolean to determin if the Upgrade to Enhanced RD page should be displayed or not
+    */
+    public Boolean isDisplayingRD2UpgradePage {
+        get {
+            return isDisplayingRD2UpgradePage();
+        } private set;
+    }
+
+    /**
+    * @description Determine if Enhanced RD page should be displayed
+    */
+    private Boolean isDisplayingRD2UpgradePage() {
+        if (RD2_EnablementService.isMetadataDeployed == false) {
+            return true;
+        }
+
+        npe03__Recurring_Donations_Settings__c rdSettings = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();            
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType =
+            new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
+        
+        return isMigrationCompleteInThePast7Days(summaryByType)
+            || isSimpleEnablementComplete(summaryByType);
+    }
+
+    /**
+    * @description Check if RD2 Data Migration Jobs has been completed in the past 7 days
+    * @param summaryByType RD2 Data Migration Summary
+    * @return Boolean 
+    */
+    public Boolean isMigrationCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+        UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
+        Integer lastRunDayDifference = batchJobService.getCompletedDaysByBatchId(migrationSummary?.batchId);
+    
+        if (migrationSummary == null || lastRunDayDifference == -1) {
+            return false;
+        }
+
+        return lastRunDayDifference <= 7;
+    }
+
+    /**
+    * @description Check if RD Enhancement is completed in simple version
+    * and RD2 Nightly Batch jobs has ran at least 7 times
+    * @param summaryByType RD2 Data Migration Summary
+    * @return Boolean 
+    */
+    public Boolean isSimpleEnablementComplete(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+        Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
+
+        return isSimpleRecurringDonationEnablement
+            && batchJobService.asyncJobHasBeenRunAtLeastCertainTimes('RD2_OpportunityEvaluation_BATCH', 7) == false;
     }
 
     /*******************************************************************************************************
