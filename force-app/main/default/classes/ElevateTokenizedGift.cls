@@ -36,12 +36,30 @@ public with sharing class ElevateTokenizedGift {
     @AuraEnabled public String lastName {get; set;}
     @AuraEnabled public String currencyCode {get; set;}
     public PS_IntegrationServiceConfig.Service configService;
+    public String productMetadataSchemaUri;
+    /***
+     * Optional properties
+     */
+    public Map<String, Object> productMetadata;
 
     public ElevateTokenizedGift() {
         this.currencyCode = UserInfo.getDefaultCurrency();
         setConfigServiceInstance();
         setGatewayId();
         setMerchantId();
+        setProductMetadata();
+        setProductMetadataSchemaUri();
+    }
+
+    private void setProductMetadata() {
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
+            .withOrigin(PS_Request.OriginType.CRM.name());    
+
+        this.productMetadata = productMetadata.toUntypedMap();
+    }
+
+    private void setProductMetadataSchemaUri() {
+        this.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
     }
 
     private void setMerchantId() {
