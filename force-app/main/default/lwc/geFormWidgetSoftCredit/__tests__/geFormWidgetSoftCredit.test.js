@@ -1,6 +1,23 @@
 import { createElement } from 'lwc';
 import GeFormWidgetSoftCredit from 'c/geFormWidgetSoftCredit';
 
+const DUMMY_SOFT_CREDITS = [
+    {
+        Role: 'Influencer',
+        ContactId: '1',
+        Id: '1'
+    },
+    {
+        Role: 'Honoree',
+        ContactId: '2'
+    }
+]
+
+jest.mock('@salesforce/apex/GE_GiftEntryController.getDummySoftCredits',
+    () => { return { default: jest.fn(() => DUMMY_SOFT_CREDITS) } },
+    { virtual: true }
+);
+
 describe('c-form-widget-soft-credit', () => {
     afterEach(() => {
         clearDOM();
@@ -14,20 +31,6 @@ describe('c-form-widget-soft-credit', () => {
         const element = createElement('c-form-widget-soft-credit', {
             is: GeFormWidgetSoftCredit
         });
-        let aGift = {
-            softCredits: [
-                {
-                    Role: 'Influencer',
-                    ContactId: '1',
-                    Id: '1'
-                },
-                {
-                    Role: 'Honoree',
-                    ContactId: '2'
-                }
-            ]
-        };
-        element.gift = aGift;
         document.body.appendChild(element);
         return element;
     }

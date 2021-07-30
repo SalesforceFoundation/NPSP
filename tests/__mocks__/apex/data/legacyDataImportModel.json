@@ -1,0 +1,32 @@
+{
+	"totalRowAmount": 495.76,
+	"totalCountOfRows": 5,
+	"notices": [],
+	"labels": null,
+	"isNamespaced": null,
+	"id": "a0T1k000001U3paEAC",
+	"dataImportRows": [{
+		"record": {
+			"attributes": {
+				"type": "DataImport__c",
+				"url": "/services/data/v52.0/sobjects/DataImport__c/a0U1k0000023uwHEAQ"
+			},
+			"Id": "a0U1k0000023uwHEAQ",
+			"Donation_Donor__c": "Contact1",
+			"DonationImportStatus__c": "Dry Run - Matched None",
+			"NPSP_Data_Import_Batch__c": "a0T1k000001U3paEAC",
+			"Status__c": "Dry Run - Validated",
+			"Contact1_Firstname__c": "John",
+			"Contact1_Lastname__c": "Doe",
+			"Donation_Date__c": "2021-07-19",
+			"Donation_Amount__c": 50
+		},
+		"matchedRecordUrl": "",
+		"matchedRecordLabel": "",
+		"errors": [],
+		"donorName": null,
+		"donorLink": null
+	}],
+	"columns": null,
+	"batchTotalRowAmount": 495.76
+}
