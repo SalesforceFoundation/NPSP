@@ -156,7 +156,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     // =====================================================================================================
-    // Data Factory Methods - Contact, Account, Opportunity, Engagement Plan
+    // Data Factory Methods - Contact, Lead, Account, Opportunity, Engagement Plan
     // =====================================================================================================
 
     /**
@@ -197,6 +197,35 @@ public class UTIL_UnitTestData_TEST {
         }
 
         return contactsToAdd;
+    }
+
+    /**
+     * @description Return a single Lead SObject for tests with a unique last name
+     * @return Lead
+     */
+    public static Lead getLead() {
+        return new Lead (
+            FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + getUniqueString(),
+            Email = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            Company = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + getUniqueString()
+        );
+    }
+
+    /**
+     * @description Return a list of Lead SObjects for tests with a unique first and last name
+     * @param n The number of Lead records to create
+     * @return List<Lead>
+     */
+    public static List<Lead> createMultipleTestLeads(Integer n) {
+
+        List<Lead> leadsToAdd = new List<Lead> ();
+
+        for (Integer i=0; i<n; i++) {
+            leadsToAdd.add (getLead());
+        }
+
+        return leadsToAdd;
     }
 
     /**
