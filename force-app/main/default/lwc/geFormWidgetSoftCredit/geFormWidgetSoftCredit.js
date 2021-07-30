@@ -1,6 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 import { isNotEmpty } from 'c/utilCommon';
 
+import getDummySoftCredits from '@salesforce/apex/GE_GiftEntryController.getDummySoftCredits';
+
 import GeLabelService from 'c/geLabelService';
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
@@ -17,8 +19,9 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
         this.init();
     }
 
-    init() {
-        this.gift.softCredits.forEach(softCredit => {
+    async init() {
+        const softCreditOppContactRoles = await getDummySoftCredits();
+        softCreditOppContactRoles.forEach(softCredit => {
             this.addRow(softCredit);
         });        
     };

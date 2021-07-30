@@ -35,14 +35,30 @@
 public inherited sharing class GiftBatchView {
 
     @AuraEnabled public Id giftBatchId;
-    @AuraEnabled public Integer totalCount;
-    @AuraEnabled public Decimal total;
+    @AuraEnabled public String name;
+    @AuraEnabled public Decimal totalDonationsAmount;
+    @AuraEnabled public Boolean requireTotalMatch;
+    @AuraEnabled public Decimal expectedCountOfGifts;
+    @AuraEnabled public Decimal expectedTotalBatchAmount;
+    @AuraEnabled public String batchTableColumns;
+    @AuraEnabled public String currencyIsoCode;
+    @AuraEnabled public DateTime lastModifiedDate;
+    @AuraEnabled public Map<String, Integer> totals;
     @AuraEnabled public List<GiftView> gifts;
+
+    public GiftBatchView() {}
 
     public GiftBatchView(GiftBatchDTO giftBatchDTO) {
         this.giftBatchId = giftBatchDTO.giftBatchId;
-        this.totalCount = giftBatchDTO.totalCount;
-        this.total = giftBatchDTO.total;
+        this.name = giftBatchDTO.name;
+        this.totalDonationsAmount = giftBatchDTO.totalDonationsAmount;
+        this.requireTotalMatch = giftBatchDTO.requireTotalMatch;
+        this.expectedCountOfGifts = giftBatchDTO.expectedCountOfGifts;
+        this.expectedTotalBatchAmount = giftBatchDTO.expectedTotalBatchAmount;
+        this.batchTableColumns = giftBatchDTO.batchTableColumns;
+        this.currencyIsoCode = giftBatchDTO.currencyIsoCode;
+        this.lastModifiedDate = giftBatchDTO.lastModifiedDate;
+        this.totals = giftBatchDTO.totals;
 
         gifts = new List<GiftView>();
         for (GiftDTO giftDTO : giftBatchDTO.giftDTOs) {

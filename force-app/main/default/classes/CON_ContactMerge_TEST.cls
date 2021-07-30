@@ -1002,18 +1002,46 @@ public class CON_ContactMerge_TEST {
     }
 
     static testMethod void testSelectDRSrecord() {
-        
+
         Test.startTest();
-        getDuplicateSetOfRecords(15);  
-        
+        getDuplicateSetOfRecords(15);
+
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller 
+        CON_ContactMerge_CTRL controller
             = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
         controller.showDuplicateRecordSets();
         controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
+        controller.search();
         System.assertEquals(controller.step, 2);
         System.assertNotEquals(controller.searchResults.size(), 0 ,'Contact Not found');
+        Test.stopTest();
+    }
+
+    static testMethod void shouldDisplayDuplicateRecordSetWithLeadAndTwoContacts() {
+
+        Test.startTest();
+        getDuplicateSetOfRecords(15, 2, true);
+
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        controller.getUnactionableDuplicateRecordSets();
+        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 0,
+            'All Duplicate Record Sets should be visible');
+        Test.stopTest();
+    }
+
+    static testMethod void shouldNotDisplayDuplicateRecordSetWithLeadAndOneContact() {
+
+        Test.startTest();
+        getDuplicateSetOfRecords(15, 1, true);
+
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller
+            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        controller.getUnactionableDuplicateRecordSets();
+        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 15,
+            'All 15 Duplicate Record Sets should not be visible');
         Test.stopTest();
     }
 
@@ -1137,9 +1165,15 @@ public class CON_ContactMerge_TEST {
 
         Test.stopTest();
     }
+
+    public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
+        getDuplicateSetOfRecords(duplicateRecordSize, 2, false);
+    }
     
     //Create the duplicate data for contact
-    public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
+    public static void getDuplicateSetOfRecords(Integer duplicateRecordSize,
+                                                Integer contactsPerSet,
+                                                Boolean createLeads) {
         DuplicateRule dR = [
                             SELECT 
                                 Id
@@ -1159,6 +1193,14 @@ public class CON_ContactMerge_TEST {
         
         //Create Duplicate Contact Records
         List<Contact> duplicatecontacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
+
+        //Create Duplicate Leads
+        List<Lead> duplicateleads;
+        if (createLeads) {
+            //Create Duplicate Contact Records
+            duplicateleads = UTIL_UnitTestData_TEST.createMultipleTestLeads(duplicateRecordSize);
+            insert duplicateleads;
+        }
         
         //Create Duplicate Record Items
         List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
@@ -1170,7 +1212,12 @@ public class CON_ContactMerge_TEST {
         for (Database.SaveResult sr : srList) {
             if (sr.isSuccess()) {
                 duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id , sr.getId()));
-                duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id , contacts[index].Id));
+                if (contactsPerSet == 2) {
+                    duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id, contacts[index].Id));
+                }
+                if (createLeads) {
+                    duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[index].Id, duplicateleads[index].Id));
+                }
             }
             index = index + 1;
         }

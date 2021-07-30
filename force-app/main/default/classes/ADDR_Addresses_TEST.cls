@@ -689,16 +689,14 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Address__c address: testAddresses) {
             Account updatedAccount = updatedAccountsById.get(address.Household_Account__c);
-            System.assertEquals(address.Undeliverable__c,
-                    updatedAccount.Undeliverable_Address__c, 'account address' +
-                            ' undeliverable status should not match the address undeliverable status when the address' +
-                            ' is not marked as the default address.');
+            System.assert(address.Default_Address__c);
+            System.assertEquals(address.Undeliverable__c, updatedAccount.Undeliverable_Address__c, 'account address' +
+                            ' undeliverable status should not match the address undeliverable status.');
             for (Contact contact : updatedAccount.Contacts) {
                 System.assert(contact.is_Address_Override__c == false, 'The contact should not be marked with an ' +
-                        'address override since that will cause inaccuracies in this test scenario.');
+                        'address override.');
                 System.assertEquals(address.Undeliverable__c, contact.Undeliverable_Address__c, 'The contact ' +
-                        'undeliverable address status should match the default address undeliverable status when the ' +
-                        'contact address override value is false.');
+                        'undeliverable address status should match the default address undeliverable status.');
             }
         }
     }
@@ -739,15 +737,20 @@ public with sharing class ADDR_Addresses_TEST {
             update overrideAddress;
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Undeliverable_Address__c, is_Address_Override__c
+        Contact updatedContact = [SELECT is_Address_Override__c, Current_Address__c, Current_Address__r.MailingStreet__c, Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :contact.Id];
-        System.assert(updatedContact.is_Address_Override__c == true);
-        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        System.assert(updatedContact.Current_Address__c == overrideAddress.Id, 'Contact should have the override ' +
+                'address as its current address.');
+
+        System.assert(updatedContact.is_Address_Override__c == true, 'The contact address override should be true.');
+        System.assertEquals(overrideAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
+                'undeliverable address status should match the override address undeliverable status.');
     }
 
+
     @isTest
-    private static void updatedUndeliverableDefaultAddressShouldSyncToContactOverrideNonHousehold() {
+    private static void updatedUndeliverableNonDefaultAddressShouldSyncToOrganizationContact() {
         npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
                 npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
 
@@ -760,7 +763,6 @@ public with sharing class ADDR_Addresses_TEST {
         for (Integer i = 0; i < testAddresses.size(); i++) {
             Address__c address = testAddresses[i];
             address.Household_Account__c = organizationAccounts[0].Id;
-            address.Default_Address__c = true;
         }
         insert testAddresses;
 
@@ -779,42 +781,59 @@ public with sharing class ADDR_Addresses_TEST {
         Contact updatedContact = [SELECT Undeliverable_Address__c
                                   FROM Contact
                                   WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Id = :testAddresses[0].Id];
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The ' +
+                'non-default organization address undeliverable status should match the organization contact ' +
+                'undeliverable status using that address as an override.');
     }
 
     @isTest
-    private static void updatedUndeliverableNonDefaultAddressShouldSyncToContactOverrideNonHousehold() {
-        npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
-                npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
+    private static void updatedUndeliverableDefaultAddressDoesNotCauseMultipleOverrideUpdates() {
+        createTestData(2, 2);
+        Address__c overrideAddressToCreate = new Address__c();
+        overrideAddressToCreate.Address_Type__c = 'Home';
+        overrideAddressToCreate.MailingStreet__c = 'Street Override';
+        overrideAddressToCreate.MailingCity__c = 'City Override';
+        overrideAddressToCreate.MailingState__c = 'Washington';
+        overrideAddressToCreate.MailingPostalCode__c = 'Zip Override';
+        overrideAddressToCreate.MailingCountry__c = 'United States';
+        overrideAddressToCreate.Default_Address__c = true;
+        overrideAddressToCreate.Household_Account__c = testAccounts[0].Id;
+        insert overrideAddressToCreate;
 
-        List<Account> organizationAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
-        insert organizationAccounts;
+        Contact contact = new Contact(
+                FirstName = 'Test Contact',
+                LastName = 'Override',
+                is_Address_Override__c = true,
+                AccountId = testAccounts[0].Id,
+                MailingState = 'Washington',
+                MailingCity = 'City Override',
+                MailingStreet = 'Street Override',
+                MailingPostalCode = 'Zip Override',
+                MailingCountry = 'United States',
+                npe01__Primary_Address_Type__c = 'Home'
+        );
+        insert contact;
 
-        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-
-        buildTestAddress(3);
-        for (Integer i = 0; i < testAddresses.size(); i++) {
-            Address__c address = testAddresses[i];
-            address.Household_Account__c = organizationAccounts[0].Id;
-        }
-        insert testAddresses;
-
-        for (Contact contact : testContacts) {
-            populateContactAddress(contact, testAddresses[0]);
-            contact.is_Address_Override__c = true;
-            contact.Current_Address__c = testAddresses[0].Id;
-        }
-        insert testContacts;
-
+        DmlException updateError;
         Test.startTest();
-        testAddresses[0].Undeliverable__c = true;
-        update testAddresses;
+            overrideAddressToCreate.Undeliverable__c = true;
+            try {
+                update overrideAddressToCreate;
+            } catch (DmlException ex) {
+                updateError = ex;
+            }
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Undeliverable_Address__c
-        FROM Contact
-        WHERE Id = :testContacts[0].Id];
-        System.assertEquals(testAddresses[0].Undeliverable__c, updatedContact.Undeliverable_Address__c);
+        Address__c updatedAddress = [SELECT Default_Address__c, Undeliverable__c FROM Address__c WHERE Id = :overrideAddressToCreate.Id];
+        Contact updatedContact = [SELECT Undeliverable_Address__c FROM Contact WHERE Id = :contact.Id];
+
+        System.assert(updatedAddress.Default_Address__c, 'The test address should be a default address.');
+        System.assertEquals(null, updateError, 'Updating the address undeliverable status' +
+            'should not result in an error.');
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c, 'The contact ' +
+                'undeliverable address status should match the address undeliverable status.');
+
     }
 
     /*********************************************************************************************************

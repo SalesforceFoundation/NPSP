@@ -76,7 +76,7 @@ public inherited sharing class NPSP_HouseholdAccount {
         return householdAccount;
     }
 
-    public void billingAddress(IAddress anAddress) {
+    public void setBillingAddress(IAddress anAddress) {
         addressService.copyOntoSObject(
                 anAddress, householdAccount, 'Billing',
                 null);
@@ -94,7 +94,7 @@ public inherited sharing class NPSP_HouseholdAccount {
     * @description utility to compare two Accounts' (billing) addresses
     * @return boolean. true if there are any changes between the two accounts.
     ********************************************************************************************************/
-    public Boolean isAccountAddressChanged() {
+    public Boolean isBillingAddressChanged() {
         if (householdAccount == null || oldVersion == null) {
             return false;
         }

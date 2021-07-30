@@ -35,13 +35,8 @@
 public interface IGiftBatch {
 
     /**
-     * @return Sum of all Gifts in the GiftBatch.
+     * @return Sum of all Gift Donation Amounts in the GiftBatch.
      */
-    Money total();
-
-    /**
-     * @return Count of all Gifts in the GiftBatch.
-     */
-    Integer totalCount();
+    Money totalDonations();
 
 }
