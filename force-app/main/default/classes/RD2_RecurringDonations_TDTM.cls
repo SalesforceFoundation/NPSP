@@ -123,7 +123,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         adjustDataAndValidate(rds, oldRds, triggerAction);
         transformDataInBeforeContext(rds, oldRds, triggerAction);
         handleSchedulesInAfterContext(rds, oldRds, triggerAction);
-        createChangeHistoryOnUpdate(rds, oldRds, triggerAction);
 
         // Insert/Update any pending RecurringDonationSchedule records before the
         // evaluation service is called so that the full schedule is available to the
@@ -364,39 +363,12 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged)
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged, oldRds)
                 .executeOppEvaluationService();
 
         } else {
-            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged);
+            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, oldRds);
         }
-    }
-
-    /***
-    * @description Determine if Recurring Donation Change History records need to be created, then create them.
-    *
-    * @param updatedRds Trigger.new records
-    * @param oldRds Trigger.old records
-    * @param triggerAction BeforeInsert, AfterInsert, etc.
-    * @return void
-    */
-    public void createChangeHistoryOnUpdate(List<npe03__Recurring_Donation__c> updatedRds, List<npe03__Recurring_Donation__c> oldRds, TDTM_Runnable.Action triggerAction) {
-
-        if (triggerAction != TDTM_Runnable.Action.AfterUpdate || !changeHistoryService.isChangeHistoryEnabled) {
-            return;
-        }
-
-        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
-
-        for (npe03__Recurring_Donation__c rd : updatedRds) {
-            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rd.Id);
-            RD2_RecurringDonation updatedRdEntity = new RD2_RecurringDonation(rd);
-            RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
-
-            changeHistoryService.handleHistoryFieldChanged(updatedRdEntity, oldRdEntity);
-        }
-        
-        changeHistoryService.insertChangeHistoryRecords();
     }
 
     /***

@@ -263,7 +263,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     /**
      * @description Verifies that creating and updating a Recurring Donation with Change History Enabled
-     * does create Change History records
+     * creates a Change History record for each update.
+     * Using DML to test 2 separate Update calls does not work since they are both async
      */
     @IsTest
     private static void shouldCreateChangeHistoryForEachUpdateWhereFieldsChange() {
@@ -274,28 +275,36 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             .withCalculateNextDonationDate()
             .build();
 
-        insert rd;
+        // First Update
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
         
-        rd.PaymentMethod__c = PAYMENT_CREDIT_CARD;
+        rdUpdate.PaymentMethod__c = PAYMENT_CREDIT_CARD;
         
-        Test.startTest();
-        update rd;
-        Test.stopTest();
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
         System.assertEquals(PAYMENT_CREDIT_CARD, rdch.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
         System.assertEquals(PAYMENT_CHECK, rdch.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
         System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
 
-        rd.Status__c = RD2_Constants.STATUS_LAPSED;
-        update rd;
+        // Second Update
+        npe03__Recurring_Donation__c rdUpdate2 = rdUpdate.clone();
 
-        rdchList = getRecurringDonationChangeHistory(rd.Id);
-        RecurringDonationChangeHistory__c rdch2 = rdchList[1];
+        rdUpdate2.Status__c = RD2_Constants.STATUS_LAPSED;
 
+        RD2_RecurringDonation rdEntity2 = new RD2_RecurringDonation(rdUpdate2);
+        rdchService.handleHistoryFieldChanged(rdEntity2, rdEntity);
+
+        rdchList = rdchService.getChangeHistoryRecords();
         System.assertEquals(2, rdchList.size(), 'There should be 2 Change Histories after the update');
+
+        RecurringDonationChangeHistory__c rdch2 = rdchList[1];
         System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 'New Status should be ' + RD2_Constants.STATUS_LAPSED);
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
         System.assertEquals(null, rdch2.ChangeType__c, 'The Change Type should be null');
@@ -392,7 +401,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
      * @param rdId Reuccring Donation Id
      * @return List<RecurringDonationChangeHistory__c>
      */
-    private static List<RecurringDonationChangeHistory__c> getRecurringDonationChangeHistory(Id rdId){
+    public static List<RecurringDonationChangeHistory__c> getRecurringDonationChangeHistory(Id rdId){
         return [
             SELECT Id, EffectiveDate__c, ChangeType__c, RecurringDonation__c, NewAmount__c, 
                 NewCampaign__c, NewInstallmentFrequency__c, NewInstallmentPeriod__c, NewPaymentMethod__c, 
@@ -410,7 +419,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     * @description Stubs custom settings configuration to enable enhanced Recurring Donations
     * @return none
     */
-    public static void configureRecurringDonationChangeHistoryEnabled() {
+    private static void configureRecurringDonationChangeHistoryEnabled() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
