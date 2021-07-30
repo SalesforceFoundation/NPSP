@@ -2092,7 +2092,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assert(installmentsClosedDate.contains(pauseEndDate.addMonths(1)),
             'An installment with close date after pause shuold be created');
 
-            System.assert(!installmentsClosedDate.contains(pauseStartDate),
+        System.assert(!installmentsClosedDate.contains(pauseStartDate),
             'No installment should be created with close date during the pause');
     }
 

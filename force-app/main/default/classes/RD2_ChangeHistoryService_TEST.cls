@@ -62,7 +62,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .build();
 
         insert rd;
@@ -89,7 +88,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -116,6 +114,54 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
+     * @description Verifies that creating and updating multiple Recurring Donations
+     * with Change History Enabled does create Change History records
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryWhenMultipleRdsAreUpdated() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        npe03__Recurring_Donation__c rd2 = rd.clone();
+
+        List<npe03__Recurring_Donation__c> rdList = new List<npe03__Recurring_Donation__c>{
+            rd, rd2
+        };
+        insert rdList;
+
+        rdList[0].npe03__Amount__c = RD_NEW_AMOUNT;
+        rdList[1].Status__c = RD2_Constants.STATUS_LAPSED;
+        
+        Test.startTest();
+        update rdList;
+        Test.stopTest();
+
+        // Check first change
+        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+
+        // Check second change
+        rdchList = getRecurringDonationChangeHistory(rd2.Id);
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        RecurringDonationChangeHistory__c rdch2 = rdchList[0];
+        System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 
+            'New Status should be ' + RD2_Constants.STATUS_LAPSED);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 
+            'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
+        System.assertEquals(null, rdch2.ChangeType__c, 'The Change Type should be null');
+    }
+
+    /**
      * @description Verifies that creating and updating a Recurring Donation Amount
      * with Change History Enabled does create Change History records
      */
@@ -124,7 +170,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -162,7 +207,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -190,7 +234,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -225,7 +268,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         insert campaign;
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -271,7 +313,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 
@@ -318,7 +359,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
-            .withDayOfMonth('20')
             .withCalculateNextDonationDate()
             .build();
 

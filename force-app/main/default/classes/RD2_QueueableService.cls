@@ -53,7 +53,7 @@ public class RD2_QueueableService {
         if (isScheduleChanged) {
             rdIdsWhereScheduleChanged.add(rdId);
         }
-        enqueueOppEvalService(new Set<Id>{ rdId }, rdIdsWhereScheduleChanged);
+        enqueueOppEvalService(new Set<Id>{ rdId }, rdIdsWhereScheduleChanged, null);
     }
 
     /**
@@ -63,7 +63,7 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds) { 
-        enqueueOppEvalService(rdIds, null);
+        enqueueOppEvalService(rdIds, null, null);
     }
 
     /**
