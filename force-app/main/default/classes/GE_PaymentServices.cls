@@ -148,12 +148,18 @@ public with sharing class GE_PaymentServices {
         Map<String, Object> requestBodyParameters =
             (Map<String, Object>) JSON.deserializeUntyped(jsonRequestBody);
 
+        PS_ProductMetadata productMetadata = new PS_ProductMetadata()
+            .withOrigin(PS_Request.OriginType.CRM.name());    
+
         PurchaseCallBody requestBody = new PurchaseCallBody(
             UserInfo.getDefaultCurrency(),
             configService.getMerchantIds(),
             configService.getGatewayIds()
         ).applyAll(requestBodyParameters);
 
+        requestBody.productMetadata = productMetadata.toUntypedMap();
+        requestBody.productMetadataSchemaUri = PS_Request.PRODUCT_METADATA_SCHEMA_URI;
+        
         return requestBody;
     }
 
@@ -231,12 +237,6 @@ public with sharing class GE_PaymentServices {
         public String email;
         public String firstName;
         public String lastName;
-
-        /*********************************
-        * Optional properties
-        */
-        // May be any key:value pairs. i.e. campaignCode: 123
-        public Metadata metadata;
         public String phone;
         public String city;
         public String state;
@@ -246,6 +246,13 @@ public with sharing class GE_PaymentServices {
         public AchData achData;
         public String paymentMethodType;
         public String accountName;
+        public String productMetadataSchemaUri;
+        /***
+         * Optional properties
+         */
+        public Map<String, Object> productMetadata;
+
+
 
         public PurchaseCallBody(String currencyCode, String merchantIds, String gatewayIds) {
             this.currencyCode = currencyCode;
