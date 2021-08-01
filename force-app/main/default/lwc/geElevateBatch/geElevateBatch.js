@@ -1,17 +1,17 @@
 import apexAddToElevateBatch from '@salesforce/apex/GE_GiftEntryController.addToElevateBatch';
 import apexCreateElevateBatch from '@salesforce/apex/GE_GiftEntryController.createElevateBatch';
 import apexRemoveFromElevateBatch from '@salesforce/apex/GE_GiftEntryController.removeFromElevateBatch';
+import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 
 
 class ElevateBatch {
 
     constructor() {
         this.elevateBatchId = null;
-        console.log('inside ElevateBatch constructor');
     }
     
     async add(tokenizedGift) {
-        console.log('inside add()');
         return await this.performAdd(tokenizedGift, true);
     }
 
@@ -45,8 +45,16 @@ class ElevateBatch {
         console.log('in remove');
         console.log(`authorized gift = ${JSON.stringify(authorizedGift)}`);
 
+        // Do we need a new authorized gift data type?
+        const authorizedGift1 = {
+            elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
+            paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
+        };
+
+        console.log(`auth = ${JSON.stringify(authorizedGift1)}`);
+
         return await apexRemoveFromElevateBatch({
-            authorizedGift: authorizedGift
+            authorizedGift: authorizedGift1
         });
     }
 }

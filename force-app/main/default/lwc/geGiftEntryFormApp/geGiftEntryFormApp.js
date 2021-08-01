@@ -21,7 +21,7 @@ const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
 import Gift from 'c/geGift';
-import ElevateBatch from 'c/geFormRenderer';
+import ElevateBatch from 'c/geElevateBatch';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -426,13 +426,20 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleDelete(event) {
-        // TODO: maybe throw spinner while record is being deleted?
         try {
             const gift = event.detail;
+            const oldGiftBatchState = this.giftBatchState;
             this.giftBatchState = await this.giftBatch.remove(gift);
 
-            if (gift.isAuthorized()) {
-                this.deleteFromElevateBatch(gift);
+            if (true) { // If gift is authorized
+                try {
+                    await this.deleteFromElevateBatch(gift);
+                } catch (exception) {
+                    console.log(`exception = ${JSON.stringify(exception)}`);
+                    this.giftBatch.undelete(gift);
+                    this.giftBatchState = oldGiftBatchState;
+                    throw new Error('There was an issue removing this donation from Elevate. Not deleted');
+                }
             }
 
             if (this.giftInView?.fields.Id === gift?.Id) {
@@ -453,13 +460,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleDeleteFromElevateBatch(event) {
         const gift = event.detail;
-        this.deleteFromElevateBatch(gift);
+        await this.deleteFromElevateBatch(gift);
     }
 
     async deleteFromElevateBatch(gift) {
-        this.elevateBatch.remove(gift);
+        if (!this.isElevateCustomer) {
+            return; 
+        }
 
-        // WHERE SHOULD ERROR HANDLING LIVE?
+        try {
+            return await this.elevateBatch.remove(gift);
+        } catch (exception) {
+            throw exception;
+        }
     }
 
     get batchId() {

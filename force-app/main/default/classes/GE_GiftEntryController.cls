@@ -175,12 +175,13 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static void unDeleteGift(Id dataImportId){
+    public static void unDeleteGiftFromGiftBatch(Id dataImportId){
         try {
-            /*GiftBatchId giftBatchId = new GiftBatchId(batchId);
-            GiftId giftId = new GiftId(dataImportId);
-            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);*/
-            
+            System.debug(dataImportId);
+            /*GiftId giftId = new GiftId(dataImportId);
+            Gift gift = new Gift(giftId);
+            gift.unDeleteRecord();*/
+            undelete new DataImport__c(Id = dataImportId);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }
