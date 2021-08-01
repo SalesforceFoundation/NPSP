@@ -422,7 +422,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     handleClearGiftInView() {
         this.gift = new Gift();
         this.giftInView = this.gift.state();
-        // fireEvent(this, 'formRendererReset', {});
     }
 
     async handleDelete(event) {

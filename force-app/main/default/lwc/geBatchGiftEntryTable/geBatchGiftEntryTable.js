@@ -23,6 +23,7 @@ import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_De
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
 import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
+import PAYMENT_IMPORTED from '@salesforce/schema/DataImport__c.PaymentImported__c';
 import CONTACT_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
 import ORGANIZATION_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
 import DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
@@ -47,6 +48,8 @@ const columnTypeByDescribeType = {
 
 const DONOR_LINK = 'donorLink';
 const DONOR_NAME = 'donorName';
+const MATCHED_DONATION_LINK = 'matchedRecordUrl';
+const MATCHED_DONATION_LABEL = 'matchedRecordLabel';
 
 const COLUMNS = [
     { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text', editable: true },
@@ -56,8 +59,8 @@ const COLUMNS = [
         typeAttributes: { label: { fieldName: DONOR_NAME } }
     },
     {
-        label: geDonationColumnLabel, fieldName: `${DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`, type: 'url',
-        typeAttributes: { label: { fieldName: `${DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}` } }
+        label: geDonationColumnLabel, fieldName: MATCHED_DONATION_LINK, type: 'url',
+        typeAttributes: { label: { fieldName: MATCHED_DONATION_LABEL } }
     }
 ];
 
@@ -130,6 +133,8 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                     )
                 );
                 giftViewAsTableRow = this.populateDonorLink(giftViewAsTableRow);
+                giftViewAsTableRow = this.populateMatchedDonationLink(giftViewAsTableRow);
+
                 this.giftsFromView.push(giftViewAsTableRow);
             });
 
@@ -412,12 +417,27 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     populateDonorLink(giftViewAsTableRow) {
         const donorType = giftViewAsTableRow[DONATION_DONOR.fieldApiName];
+
         if (donorType === 'Contact1') {
             giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
             giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
         } else if (donorType === 'Account1') {
             giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
             giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        }
+        return giftViewAsTableRow;
+    }
+
+    populateMatchedDonationLink(giftViewAsTableRow) {
+        const isMatchedToAPaymentRecord = giftViewAsTableRow[PAYMENT_IMPORTED.fieldApiName];
+        const isMatchedToAnOpportunityRecord = giftViewAsTableRow[DONATION_IMPORTED.fieldApiName];
+
+        if (isMatchedToAPaymentRecord) {
+            giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${PAYMENT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${PAYMENT_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        } else if (isMatchedToAnOpportunityRecord) {
+            giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
         }
         return giftViewAsTableRow;
     }
