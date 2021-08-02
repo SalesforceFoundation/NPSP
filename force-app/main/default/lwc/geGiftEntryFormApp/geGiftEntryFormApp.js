@@ -1,15 +1,10 @@
-/*******************************************************************************
-* @description Server / Platform  Imports
-*/
 import { LightningElement, api, track, wire } from 'lwc';
-import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, format, getNamespace, showToast } from 'c/utilCommon';
+import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { validateJSONString, deepClone, getNamespace, showToast, apiNameFor } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
-import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
 import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
@@ -18,28 +13,14 @@ import checkForElevateCustomer
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
-/*******************************************************************************
-* @description Schema imports
-*/
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import BATCH_NAME
-    from '@salesforce/schema/DataImportBatch__c.Name';
-import EXPECTED_COUNT_OF_GIFTS
-    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import EXPECTED_TOTAL_BATCH_AMOUNT
-    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
-import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
-import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
-import BatchTotals from './helpers/batchTotals';
-import Gift from './helpers/gift';
-
-/*******************************************************************************
-* @description Constants
-*/
+import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
-const BATCH_CURRENCY_ISO_CODE = 'DataImportBatch__c.CurrencyIsoCode';
+
+import GiftBatch from 'c/geGiftBatch';
+import Gift from 'c/geGift';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -51,8 +32,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     @track isPermissionError;
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
-    @track batchTotals = {}
-    @track gift = new Gift();
 
     _hasDisplayedExpiredAuthorizationWarning = false;
 
@@ -62,10 +41,51 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isElevateCustomer = false;
 
     namespace;
-    count;
-    total;
-    batch = {};
     isLoading = true;
+
+    giftBatch = new GiftBatch();
+    @track giftBatchState = {};
+    gift = new Gift();
+    @track giftInView = {};
+
+    async handleLoadMoreGifts(event) {
+        try {
+            const giftsOffset = event.detail.giftsOffset;
+            this.giftBatchState = await this.giftBatch.getMoreGifts(giftsOffset);
+        } catch(error) {
+            handleError(error);
+        }
+    }
+
+    handleLoadData(event) {
+        try {
+            const giftId = event.detail.Id;
+            this.gift = this.giftBatch.findGiftBy(giftId);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
+    }
+
+    handleFormStateChange(event) {
+        try {
+            const giftFieldChanges = event.detail;
+            this.gift.updateFieldsWith(giftFieldChanges);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
+    }
+
+    handleDeleteFieldFromGiftState(event) {
+        try {
+            const field = event.detail;
+            this.gift.removeField(field);
+            this.giftInView = this.gift.state();
+        } catch(error) {
+            handleError(error);
+        }
+    }
 
     get isBatchMode() {
         return this.sObjectName &&
@@ -78,21 +98,38 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async connectedCallback() {
-        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        await this.gift.init(); 
         this.isElevateCustomer = await checkForElevateCustomer();
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        registerListener('refreshbatchtable', this.refreshBatchTable, this);
+
+        if (this.recordId) {
+            this.giftBatchState = await this.giftBatch.init(this.recordId);
+            await this.updateAppDisplay();
+        }
     }
 
     disconnectedCallback() {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
 
+    async refreshBatchTable() {
+        this.giftBatchState = await this.giftBatch.latestState(this.giftBatch.giftsInViewSize());
+    }
+
     async retrieveBatchTotals() {
-        this.batchTotals = await BatchTotals(this.batchId);
+        try {
+            this.giftBatchState = await this.giftBatch.refreshTotals();
+            await this.updateAppDisplay();
+        } catch(error) {
+            handleError(error);
+        }
+    }
+
+    async updateAppDisplay() {
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
+        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
@@ -105,16 +142,33 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     * @param {object} event: Custom Event containing the Data Import record and
     * potentially other objects (booleans, callbacks, etc).
     */
-    handleSubmit(event) {
+    async handleSubmit(event) {
         // Callback received from geFormRenderer. Provides functions that
         // toggle the form save button, toggle the lightning spinner, and displays aura exceptions.
-        this.errorCallback = event.detail.errorCallback;
+        this.errorCallback = event.detail.error;
 
         try {
             if (this.isBatchMode) {
-                this.batchGiftSubmit(event);
-            } else {
-                // TODO: potentially receive event here and navigate to record detail page
+
+                const giftForSubmit = this.gift.asDataImport();
+
+                if (giftForSubmit.Id) {
+                    this.giftBatchState = await this.giftBatch.updateMember(giftForSubmit);
+                } else {
+                    this.giftBatchState = await this.giftBatch.addMember(giftForSubmit);
+                }
+
+                event.detail.success();
+
+                showToast(
+                    this.CUSTOM_LABELS.PageMessagesConfirm,
+                    'Gift successfully saved',
+                    'success',
+                    'dismissible',
+                    null
+                );
+
+                this.handleClearGiftInView();
             }
         } catch (error) {
             this.errorCallback(error);
@@ -148,37 +202,21 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } finally {
             if (this.shouldDisplayExpiredAuthorizationWarning()) {
                 this.displayExpiredAuthorizationWarningModalForProcessAndDryRun(
-                    () => { 
-                        this.callBatchDryRun(); 
+                    async () => {
+                        this.giftBatchState = await this.giftBatch.dryRun();
                         this.dispatchEvent(new CustomEvent('closemodal')); 
                     } 
                 );
             } else {
-                this.callBatchDryRun();
+                this.giftBatchState = await this.giftBatch.dryRun();
             }
         }
-    }
-    
-    callBatchDryRun() {
-        //toggle the spinner on the form
-        const form = this.template.querySelector('c-ge-form-renderer');
-        const toggleSpinner = function () {
-            form.showSpinner = !form.showSpinner
-        };
-        form.showSpinner = true;
-
-        const table = this.template.querySelector('c-ge-batch-gift-entry-table');
-        table.runBatchDryRun(toggleSpinner);
-    }
-
-    handleLoadData(event) {
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.loadDataImportRecord(event.detail);
     }
 
     handlePermissionErrors() {
         this.isPermissionError = true;
     }
+
     handleEditBatch() {
         this.dispatchEvent(new CustomEvent('editbatch'));
     }
@@ -221,61 +259,24 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this[NavigationMixin.Navigate](pageReference, true);
     }
 
-    get batchCurrencyIsoCode() {
-        return getFieldValue(this.batch.data, BATCH_CURRENCY_ISO_CODE);
-    }
-
-    get expectedCountOfGifts() {
-        return getFieldValue(this.batch.data, EXPECTED_COUNT_OF_GIFTS);
-    }
-
-    get expectedTotalBatchAmount() {
-        return getFieldValue(this.batch.data, EXPECTED_TOTAL_BATCH_AMOUNT);
-    }
-
     get batchName() {
-        return getFieldValue(this.batch.data, BATCH_NAME);
+        return this.giftBatchState.name;
     }
 
+    // TODO: maybe is internal to batch table component OR internal to possible new GiftEntryBatchTable class
     get userDefinedBatchTableColumnNames() {
-        const batchTableColumns = validateJSONString(
-            getFieldValue(this.batch.data, BATCH_TABLE_COLUMNS_FIELD)
-        );
-        if (batchTableColumns) return batchTableColumns;
+        const batchTableColumns =
+            validateJSONString(this.giftBatchState.batchTableColumns);
+        if (batchTableColumns) {
+            return batchTableColumns;
+        }
         return [];
-    }
-
-    get giftsTableTitle() {
-        return format(geBatchGiftsHeader, [this.batchName]);
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
         return this.isElevateCustomer
-            && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
+            && this.giftBatchState.hasPaymentsWithExpiredAuthorizations
             && !this._hasDisplayedExpiredAuthorizationWarning;
-    }
-
-    @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [
-            BATCH_ID_FIELD,
-            BATCH_NAME
-        ],
-        optionalFields: [
-            BATCH_CURRENCY_ISO_CODE,
-            EXPECTED_COUNT_OF_GIFTS,
-            EXPECTED_TOTAL_BATCH_AMOUNT,
-            REQUIRE_TOTAL_MATCH,
-            BATCH_TABLE_COLUMNS_FIELD
-        ]
-    })
-    wiredBatch({data, error}) {
-        if (data) {
-            this.batch.data = data;
-            this.retrieveBatchTotals();
-        } else if (error) {
-            handleError(error);
-        }
     }
 
     async handleProcessBatch() {
@@ -310,7 +311,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleBatchProcessingErrors() {
-        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
+        if (this.giftBatchState.expectedCountOfGifts && this.giftBatchState.expectedTotalBatchAmount) {
             handleError(geBatchGiftsExpectedTotalsMessage);
         } else {
             handleError(geBatchGiftsExpectedCountOrTotalMessage);
@@ -339,7 +340,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 this.refreshBatchTotals();
             }).then(() => {
                 if (!this._isBatchProcessing) {
-                    this.handleProcessedBatch();
                     clearInterval(poll);
                 }
                 if (!this.isBatchGiftEntryInFocus()) {
@@ -353,7 +353,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return location.href.includes(this.batchId);
     }
 
-    handleProcessedBatch() {
+    async handleProcessedBatch() {
+        this.giftBatchState = await this.giftBatch.init(this.recordId);
         this.collapseForm();
         showToast(
             this.CUSTOM_LABELS.PageMessagesConfirm,
@@ -367,36 +368,46 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     collapseForm() {
+        // TODO: formRenderer should be able to
+        // figure out when it's collapse based on
+        // props that are received from formApp.
+        // Look into removing this function entirely
         const form = this.template.querySelector('c-ge-form-renderer');
         form.collapse();
     }
 
     async refreshBatchTotals() {
-        this._hasDisplayedExpiredAuthorizationWarning = false;
-        this.batchTotals = await BatchTotals(this.batchId);
-        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
-    }
+        try {
+            const wasProcessing = this._isBatchProcessing;
 
-    requireTotalMatch() {
-        return getFieldValue(this.batch.data, REQUIRE_TOTAL_MATCH);
-    }
+            this._hasDisplayedExpiredAuthorizationWarning = false;
+            this.giftBatchState = await this.giftBatch.refreshTotals();
+            this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
 
-    totalsMatch() {
-        if (this.expectedCountOfGifts && this.expectedTotalBatchAmount) {
-            return this.countMatches && this.amountMatches;
-        } else if (this.expectedCountOfGifts) {
-            return this.countMatches;
-        } else if (this.expectedTotalBatchAmount) {
-            return this.amountMatches;
+            const finishedProcessingDuringThisRefresh =
+                wasProcessing && this._isBatchProcessing === false;
+            if (finishedProcessingDuringThisRefresh) {
+                this.handleProcessedBatch();
+            }
+        } catch(error) {
+            handleError(error);
         }
     }
 
-    get countMatches() {
-        return this.count === this.expectedCountOfGifts;
+    requireTotalMatch() {
+        return this.giftBatchState.requireTotalMatch;
     }
 
-    get amountMatches() {
-        return this.total === this.expectedTotalBatchAmount;
+    totalsMatch() {
+        if (this.giftBatchState.expectedCountOfGifts && this.giftBatchState.expectedTotalBatchAmount) {
+            return this.giftBatch.matchesExpectedCountOfGifts() && this.giftBatch.matchesExpectedTotalBatchAmount();
+
+        } else if (this.giftBatchState.expectedCountOfGifts) {
+            return this.giftBatch.matchesExpectedCountOfGifts();
+
+        } else if (this.giftBatchState.expectedTotalBatchAmount) {
+            return this.giftBatch.matchesExpectedTotalBatchAmount();
+        }
     }
 
     isProcessable() {
@@ -406,49 +417,55 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         return !this.requireTotalMatch();
     }
 
-    handleDelete(event) {
-        this.count--;
-        this.total = this.total - event.detail.amount;
+    handleClearGiftInView() {
+        this.gift = new Gift();
+        this.giftInView = this.gift.state();
     }
 
-    handleCountChanged(event) {
-        this.count = event.detail.value;
-    }
+    async handleDelete(event) {
+        // TODO: maybe throw spinner while record is being deleted?
+        try {
+            const gift = event.detail;
+            this.giftBatchState = await this.giftBatch.remove(gift);
 
-    handleTotalChanged(event) {
-        this.total = event.detail.value;
+            if (this.giftInView?.fields.Id === gift?.Id) {
+                this.handleClearGiftInView();
+            }
+
+            showToast(
+                this.CUSTOM_LABELS.PageMessagesConfirm,
+                bgeGridGiftDeleted,
+                'success',
+                'dismissible',
+                null
+            );
+        } catch(error) {
+            handleError(error);
+        }
     }
 
     get batchId() {
-        return getFieldValue(this.batch.data, BATCH_ID_FIELD);
+        return this.giftBatchState.id;
     }
 
-    handleReceiveEvent(event) {
-        const closeModalCallback = function() {
-            closeModal();
-            unregisterModalListener();
-        }
-        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
-        const unregisterModalListener = () =>
-            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
-
+    async handleReceiveEvent(event) {
         if (event.action === 'save') {
-            let fields = {};
-            fields[BATCH_ID_FIELD.fieldApiName] = this.batchId;
-            fields[BATCH_TABLE_COLUMNS_FIELD.fieldApiName] =
-                JSON.stringify(event.payload.values);
+            await this.saveGiftBatchTableColumnChange(event.payload.values);
+        }
+        this.closeModalCallback();
+    }
 
-            const recordInput = { fields };
-            const lastModifiedDate =
-                this.batch.data.lastModifiedDate;
-            const clientOptions = {'ifUnmodifiedSince': lastModifiedDate};
-            updateRecord(recordInput, clientOptions)
-                .then(closeModalCallback)
-                .catch((error) =>
-                    handleError(error)
-                );
-        } else {
-            closeModalCallback();
+    async saveGiftBatchTableColumnChange(batchTableColumns) {
+        try {
+            const giftBatchChanges = {
+                giftBatchId: this.giftBatchState.id,
+                batchTableColumns: JSON.stringify(batchTableColumns)
+            };
+
+            this.giftBatchState =
+                await this.giftBatch.updateWith(giftBatchChanges);
+        } catch(error) {
+            handleError(error);
         }
     }
 
@@ -573,6 +590,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 showCloseButton: true
             }
         };
+    }
+
+    closeModalCallback = function() {
+        const closeModal = () => this.dispatchEvent(new CustomEvent('closemodal'));
+        const unregisterModalListener = () =>
+            unregisterListener('privateselectcolumns', this.handleReceiveEvent, this);
+
+        closeModal();
+        unregisterModalListener();
     }
 
 }

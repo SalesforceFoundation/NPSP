@@ -40,7 +40,7 @@ private class Gifts_TEST {
         dummyGifts.addAll(dummyAuthorizedGiftsGroup2);
 
         Gifts gifts = new Gifts(dummyGifts);
-        System.assertEquals(dummyGifts.size(), gifts.dataImports?.size());
+        System.assertEquals(dummyGifts.size(), gifts.all().size());
         System.assertEquals(2, gifts.elevateBatchIds()?.size());
     }
 
@@ -90,8 +90,10 @@ private class Gifts_TEST {
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock(true);
         Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
 
-        System.assertEquals('Dummy First Name', gifts.dataImports[0].Contact1_Firstname__c);
-        System.assertEquals('Dummy First Name', gifts.dataImports[1].Contact1_Firstname__c);
+        Gift dummyGift0 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_0));
+        System.assertEquals('Dummy First Name 0', dummyGift0.fields().get(CONTACT1_FIRST_NAME));
+        Gift dummyGift1 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_1));
+        System.assertEquals('Dummy First Name 1', dummyGift1.fields().get(CONTACT1_FIRST_NAME));
     }
 
     @isTest
@@ -99,8 +101,45 @@ private class Gifts_TEST {
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock(false);
         Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
 
-        System.assertEquals(null, gifts.dataImports[0].Contact1_Firstname__c);
-        System.assertEquals(null, gifts.dataImports[1].Contact1_Firstname__c);
+        Gift dummyGift0 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_0));
+        System.assertEquals(null, dummyGift0.fields().get(CONTACT1_FIRST_NAME));
+        Gift dummyGift1 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_1));
+        System.assertEquals(null, dummyGift1.fields().get(CONTACT1_FIRST_NAME));
+    }
+
+    @isTest
+    static void shouldFailCorrectGiftWithProvidedReason() {
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock(true);
+        GiftBatchId dummyGiftBatchId = new GiftBatchId(DUMMY_BATCH_ID);
+        Gifts gifts = new Gifts(dummyGiftBatchId, stubFor(giftSelectorMock));
+
+        Map<String, String> failReasonMap = new Map<String, String> {
+            DUMMY_ELEVATE_BATCH_ID => 'Something went wrong!'
+        };
+        gifts.failGiftsByElevateBatchIdWithReason(failReasonMap);
+
+        Gift dummyGift0 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_0));
+        String failureInformationField = String.valueOf(DataImport__c.FailureInformation__c);
+        System.assertEquals('Something went wrong!', dummyGift0.fields().get(failureInformationField));
+    }
+
+    @isTest
+    static void shouldUpdateGiftsToProcessingStatus() {
+        DataImport__c testDataImport = new DataImport__c(
+            Status__c = BDI_DataImport_API.bdiDryRunValidated
+        );
+        insert testDataImport;
+
+        Gifts gifts = new Gifts();
+        gifts = new Gifts(new List<DataImport__c> { testDataImport });
+
+        test.startTest();
+        gifts.giftsToProcessingStatus();
+        test.stopTest();
+
+        Gift testGift = gifts.findBy(new GiftId(testDataImport.Id));
+        String statusField = String.valueOf(DataImport__c.Status__c);
+        System.assertEquals(testGift.fields().get(statusField), BDI_DataImport_API.bdiProcessing);
     }
 
     private static List<DataImport__c> buildGifts(
@@ -111,6 +150,7 @@ private class Gifts_TEST {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                 Status__c = null,
                 NPSP_Data_Import_Batch__c = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
                 Account1_Name__c = 'DUMMY ACCOUNT ' +  i,
@@ -163,16 +203,24 @@ private class Gifts_TEST {
     }
 
     private final static Id DUMMY_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+    private final static Id DUMMY_GIFT_ID_0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType());
+    private final static Id DUMMY_GIFT_ID_1 = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType());
+    private final static String CONTACT1_FIRST_NAME = String.valueOf(DataImport__c.Contact1_Firstname__c);
+    private final static String DUMMY_ELEVATE_BATCH_ID = 'DUMMY_ELEVATE_BATCH_ID';
 
     private static List<DataImport__c> dummyDataImportsWithContactFirstName =
         new List<DataImport__c>{
             new DataImport__c(
-                    Contact1_Firstname__c = 'Dummy First Name',
+                    Id = DUMMY_GIFT_ID_0,
+                    Contact1_Firstname__c = 'Dummy First Name 0',
                     Donation_Amount__c = 100,
-                    Donation_Date__c = Date.today()
+                    Donation_Date__c = Date.today(),
+                    Status__c = BDI_DataImport_API.bdiDryRunValidated,
+                    Payment_Elevate_Batch_ID__c = DUMMY_ELEVATE_BATCH_ID
             ),
             new DataImport__c(
-                    Contact1_Firstname__c = 'Dummy First Name',
+                    Id = DUMMY_GIFT_ID_1,
+                    Contact1_Firstname__c = 'Dummy First Name 1',
                     Donation_Amount__c = 200,
                     Donation_Date__c = Date.today()
             )
@@ -181,10 +229,12 @@ private class Gifts_TEST {
     private static List<DataImport__c> dummyDataImports =
         new List<DataImport__c>{
             new DataImport__c(
+                    Id = DUMMY_GIFT_ID_0,
                     Donation_Amount__c = 100,
                     Donation_Date__c = Date.today()
             ),
             new DataImport__c(
+                    Id = DUMMY_GIFT_ID_1,
                     Donation_Amount__c = 200,
                     Donation_Date__c = Date.today()
             )

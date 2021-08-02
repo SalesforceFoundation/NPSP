@@ -36,15 +36,15 @@
 private class GiftBatchView_TEST {
 
     @isTest
-    static void shouldReturn200TotalAmount() {
+    static void shouldReturn200TotalDonationsAmount() {
         GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
-        System.assertEquals(200, giftBatchView.total);
+        System.assertEquals(200, giftBatchView.totalDonationsAmount);
     }
 
     @isTest
-    static void shouldReturn2TotalCount() {
+    static void shouldReturn2TotalGiftsCount() {
         GiftBatchView giftBatchView = createDummyGiftBatchViewWith(new Gifts());
-        System.assertEquals(2, giftBatchView.totalCount);
+        System.assertEquals(2, giftBatchView.totals.get('TOTAL'));
     }
 
     @isTest
@@ -69,6 +69,11 @@ private class GiftBatchView_TEST {
 
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = new GiftBatchId(DUMMY_DATA_IMPORT_BATCH_ID);
+        giftBatch.batch = new DataImportBatch__c();
+        giftBatch.batch.RequireTotalMatch__c = false;
+        giftBatch.batch.Expected_Count_of_Gifts__c = 2.0;
+        giftBatch.batch.Expected_Total_Batch_Amount__c = 200.00;
+        giftBatch.batch.Batch_Table_Columns__c = 'DUMMY BATCH COLUMNS';
         giftBatch.totals = totals;
         giftBatch.gifts = gifts;
 
@@ -79,11 +84,13 @@ private class GiftBatchView_TEST {
     private static List<DataImport__c> DUMMY_DATA_IMPORTS_WITH_CONTACT_FIRST_NAME =
         new List<DataImport__c>{
             new DataImport__c(
+                    Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                     Contact1_Firstname__c = 'Dummy First Name',
                     Donation_Amount__c = 100,
                     Donation_Date__c = Date.today()
             ),
             new DataImport__c(
+                    Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                     Contact1_Firstname__c = 'Dummy First Name',
                     Donation_Amount__c = 200,
                     Donation_Date__c = Date.today()

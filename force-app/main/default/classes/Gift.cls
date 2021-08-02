@@ -78,6 +78,10 @@ public with sharing class Gift {
         return this.dataImport.getPopulatedFieldsAsMap();
     }
 
+    public void deleteRecord() {
+        delete this.dataImport;
+    }
+
     private void populateAvailableFields() {
         Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
         List<String> fields = new List<String>();

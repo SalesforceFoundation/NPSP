@@ -84,8 +84,8 @@ private class GiftBatch_TEST {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.totals = totals;
 
-        System.assertEquals(10, giftBatch.totalCount());
-        System.assertEquals(350.50, giftBatch.total().amount());
+        System.assertEquals(10, giftBatch.totals().get('TOTAL'));
+        System.assertEquals(350.50, giftBatch.totalDonations().amount());
     }
 
     @isTest
@@ -111,6 +111,33 @@ private class GiftBatch_TEST {
         giftBatch.gifts = gifts;
 
         System.assertEquals(3, giftBatch.gifts().size());
+    }
+
+    @isTest
+    static void shouldReturnExpectedGiftBatchRecordProperties() {
+        String dummyDataImportBatchJSON = '{"attributes":{"type":"DataImportBatch__c"},"LastModifiedDate":"2021-10-04T17:54:26.000Z"}';
+        DataImportBatch__c dummyDataImportBatch = (DataImportBatch__c) JSON.deserialize(dummyDataImportBatchJSON, DataImportBatch__c.class);
+        dummyDataImportBatch.Name = 'DUMMY_GIFT_BATCH_NAME';
+        dummyDataImportBatch.RequireTotalMatch__c = false;
+        dummyDataImportBatch.Expected_Count_of_Gifts__c = 5;
+        dummyDataImportBatch.Expected_Total_Batch_Amount__c = 100.25;
+        dummyDataImportBatch.Batch_Table_Columns__c = '[dummy_batch_table_columns]';
+
+        GiftBatch giftBatch = new GiftBatch();
+        giftBatch.batch = dummyDataImportBatch;
+
+        System.assertEquals('DUMMY_GIFT_BATCH_NAME', giftBatch.name());
+        System.assertEquals(false, giftBatch.requireTotalMatch());
+        System.assertEquals(5, giftBatch.expectedCountOfGifts());
+        System.assertEquals(100.25, giftBatch.expectedTotalBatchAmount());
+        System.assertEquals('[dummy_batch_table_columns]', giftBatch.batchTableColumns());
+
+        DateTime expectedLastModifiedDate = dummyDataImportBatch.LastModifiedDate;
+        System.assertEquals(expectedLastModifiedDate, giftBatch.lastModifiedDate());
+
+        if (!UserInfo.isMultiCurrencyOrganization()) {
+            System.assertEquals(UserInfo.getDefaultCurrency(), giftBatch.currencyIsoCode());
+        }
     }
 
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
@@ -160,16 +187,14 @@ private class GiftBatch_TEST {
     }
 
     private static ElevateBatchService stubFor(ElevateBatchServiceMock elevateBatchServiceMock) {
-        return (ElevateBatchService) Test.createStub(
-            ElevateBatchService.class,
-            elevateBatchServiceMock
-        );
+        return (ElevateBatchService) Test.createStub(ElevateBatchService.class, elevateBatchServiceMock);
     }
 
     private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
         List<DataImport__c> dummyAuthorizedGifts = new List<DataImport__c>();
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
+                Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
                 Status__c = null,
                 NPSP_Data_Import_Batch__c = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
                 Account1_Name__c = 'DUMMY ACCOUNT ' +  i,

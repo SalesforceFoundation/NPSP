@@ -622,7 +622,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
                 NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.billingAddress(npspAddress);
+                npspHousehold.setBillingAddress(npspAddress);
                 UTIL_DMLService.updateRecord(npspHousehold.getRecord());
             }
             // handle the optional Affiliation to a new or existing Account.
@@ -635,7 +635,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
                 NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.billingAddress(npspAddress);
+                npspHousehold.setBillingAddress(npspAddress);
                 UTIL_DMLService.insertRecord(npspHousehold.getRecord());
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {

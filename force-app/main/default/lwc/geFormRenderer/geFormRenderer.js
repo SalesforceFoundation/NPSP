@@ -65,7 +65,8 @@ import {
     relatedRecordFieldNameFor,
     apiNameFor,
     isString,
-    showToast
+    showToast,
+    isEmptyObject
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateBatch from './elevateBatch';
@@ -283,6 +284,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     connectedCallback() {
+        this._connected = true;
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
@@ -486,9 +488,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCancel() {
-        this.reset();
-        this.initializeFormState();
-
         if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
             if (originatedFromRecordDetailPage) {
@@ -496,6 +495,10 @@ export default class GeFormRenderer extends LightningElement{
             } else {
                 this.goToLandingPage();
             }
+        } else {
+            this.dispatchEvent(new CustomEvent('clearcurrentgift'));
+            this.reset();
+            this.initializeFormState();
         }
     }
 
@@ -771,7 +774,6 @@ export default class GeFormRenderer extends LightningElement{
                         [apiNameFor(STATUS_FIELD)]: null
                     });
 
-                    this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
                     dataImportFromFormState = this.saveableFormState();
                 } else {
                     await this.handleAuthorizationFailure(authorizedGift.declineReason);
@@ -797,7 +799,7 @@ export default class GeFormRenderer extends LightningElement{
         const errors = [{ message: declineReason }];
         this.handleElevateAPIErrors(errors);
 
-        fireEvent(this, 'refreshtable', {});
+        fireEvent(this, 'refreshbatchtable', {});
     }
 
     /*******************************************************************************
@@ -1676,6 +1678,25 @@ export default class GeFormRenderer extends LightningElement{
         return `button ${this.saveActionLabel}`;
     }
 
+    get giftInView() {
+        return this._giftInView;
+    }
+
+    @api
+    set giftInView(gift) {
+        if (!this._connected) return;
+
+        if (gift && isEmptyObject(gift.fields)) {
+            this.reset();
+        } else if (gift && gift.fields) {
+            this._giftInView = gift;
+            this.formState = gift.fields;
+            if (gift.softCredits) {
+                this._softCredits = deepClone(gift.softCredits);
+            }
+        }
+    }
+
     get formState() {
         return this._formState;
     }
@@ -1700,17 +1721,16 @@ export default class GeFormRenderer extends LightningElement{
     updateFormState(fields) {
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
-        Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
-            this.updateFormStateForDonationRecordType(fields);
+            fields = this.updateFormStateForDonationRecordType(fields);
         }
 
         if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
             this.deleteRelationshipFieldsFromStateFor(fields);
         }
 
-        // Shallow-copy to a new object to prompt reactivity
-        this.formState = Object.assign({}, this.formState);
+        const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
+        this.dispatchEvent(formStateChangeEvent);
     }
 
     removeFieldsNotUpdatableInFormState(fieldsToUpdate) {
@@ -1748,11 +1768,17 @@ export default class GeFormRenderer extends LightningElement{
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[apiNameFor(DONATION_RECORD_TYPE_NAME)] =
-                this.opportunityRecordTypeNameFor(val);
+            if (isId) {
+                fields = {
+                    ...fields,
+                    [apiNameFor(DONATION_RECORD_TYPE_NAME)]: this.opportunityRecordTypeNameFor(val)
+                }
+            }
 
             this.setDonationRecordTypeIdInFormState(val);
         }
+
+        return fields;
     }
 
     opportunityRecordTypeNameFor(id) {
@@ -1784,7 +1810,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     deleteFieldFromFormState(field) {
-        delete this.formState[field];
+        const deleteFieldFromGiftState =
+            new CustomEvent('deletefieldfromgiftstate', {
+                detail: field
+            });
+        this.dispatchEvent(deleteFieldFromGiftState);
     }
 
     hasRelatedRecordFieldInFormState(field) {
@@ -1987,7 +2017,7 @@ export default class GeFormRenderer extends LightningElement{
         let updatedRecord;
         if (relatedRecord) {
             updatedRecord = Object.assign(
-                relatedRecord,
+                deepClone(relatedRecord),
                 {recordTypeId: opportunityRecordTypeId});
         } else {
             updatedRecord = {recordTypeId: opportunityRecordTypeId};
@@ -2173,6 +2203,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+        delete dataImportRecord[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
 
         return dataImportRecord;
     }
@@ -2298,6 +2329,7 @@ export default class GeFormRenderer extends LightningElement{
 
         const responseBody = JSON.parse(responseBodyString);
         await this.processPurchaseResponse(responseBody);
+        await this.saveDataImport(this.saveableFormState());
     }
 
     buildPurchaseRequestBodyParameters() {
@@ -2397,8 +2429,6 @@ export default class GeFormRenderer extends LightningElement{
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
-
-        await this.saveDataImport(this.saveableFormState());
     }
 
     isPurchaseCreated(responseBody) {
@@ -2514,7 +2544,6 @@ export default class GeFormRenderer extends LightningElement{
 
     processDataImport = async () => {
         this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
         const dataImportRecord = this.saveableFormState();
 
         submitDataImportToBDI({
