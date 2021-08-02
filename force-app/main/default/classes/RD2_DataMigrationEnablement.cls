@@ -106,7 +106,7 @@ public with sharing class RD2_DataMigrationEnablement {
         * @param rdSettings Recurring Donation custom settings
         * @return Map<String, UTIL_BatchJobService.JobSummary>
         */
-        private Map<String, UTIL_BatchJobService.JobSummary> getSummaryByType(npe03__Recurring_Donations_Settings__c rdSettings) {
+        public Map<String, UTIL_BatchJobService.JobSummary> getSummaryByType(npe03__Recurring_Donations_Settings__c rdSettings) {
             String migrationState = rdSettings.RecurringDonations2MigrationState__c;
 
             return String.isBlank(migrationState)

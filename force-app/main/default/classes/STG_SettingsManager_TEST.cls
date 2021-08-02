@@ -237,6 +237,7 @@ private with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, STG_Panel.listSORelTypes);
         system.assertNotEquals(null, STG_Panel.listSOCampaignTypes);
         system.assertNotEquals(null, STG_Panel.listSOMailingReportIds);
+        system.assertNotEquals(null, ctrl.isDisplayingRD2UpgradePage);
     }
 
     /*********************************************************************************************************
@@ -1910,6 +1911,182 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
+    * @description Verifies when RD2 is not enabled, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2IsNotEnabled() {
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(new npe03__Recurring_Donations_Settings__c());
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage, 'Should Display RD2 Upgrade page if user has not initiate RD2 upgrade');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled but not fully complete, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2IsNotFullyEnabled() {
+        RD2_EnablementDelegate_TEST.setEnablementDelegateRD2Enabled();
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage,
+            'Should Display RD2 Upgrade page if user has not initiate RD2 upgrade');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled but migration has not run yet, the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasNotRun() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        STG_Panel panel = new STG_Panel();
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = panel.isDisplayingRD2UpgradePage;
+        Test.stopTest();
+
+        System.assertEquals(true, isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if migration batch job has completed but the job cannot be found');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration async job is completed less than 7 days ago,
+    * the RD2 Upgrade page should be displayed 
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasRunMoreLessThan7DaysAgo() {
+        Integer MigrationJobRanDay = 5;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        STG_Panel.batchJobService = (UTIL_BatchJobService) Test.createStub(
+            UTIL_BatchJobService.class, new UTIL_BatchJobService_TEST.Stub().withCompletedDaysBetween(MigrationJobRanDay)
+        );
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage,
+            'Should display RD2 Upgrade page if user has ran Migration job in the past 7 days');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration async job is completed more than 7 days ago,
+    * the RD2 Upgrade page should be hidden 
+    */
+    @isTest
+    private static void shouldNotDisplayRD2UpgradePageIfRD2MigrationHasRunMoreThan7DaysAgo() {
+        Integer MigrationJobRanDay = 8;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        STG_Panel.batchJobService = (UTIL_BatchJobService) Test.createStub(
+            UTIL_BatchJobService.class, new UTIL_BatchJobService_TEST.Stub().withCompletedDaysBetween(MigrationJobRanDay)
+        );
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(false, panel.isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has ran Migration job more than 7 days ago');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled and migration async job is already deleted,
+    * the RD2 Upgrade page should be hidden 
+    */
+    @isTest
+    private static void shouldNotDisplayRD2UpgradePageIfRD2MigrationHasRunInThePast() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'run' => summary
+        };
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(false, panel.isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has ran Migration long time ago');
+    }
+
+    /**
+    * @description Verifies RD2 Upgrade page should display when the user goes through simple upgrade and less than
+    * 7 RD2 nightly batch job has ran.
+    */
+    @isTest
+    private static void shouldDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAndButLessThan7NightlyBatchJobHasRan() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        for (Integer i = 0; i < 6; i++) {
+            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);
+        }
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = new STG_Panel().isDisplayingRD2UpgradePage;
+        Test.stopTest();
+    
+        System.assertEquals(true, isDisplayingRD2UpgradePage,
+            'Should display RD2 Upgrade page if simple RD2 upgrade has completed but less than 7 RD2 nightly batch job has ran.');
+    }
+
+    /**
+    * @description Verifies when RD2 is enabled through simple upgrade and nightly batch job has ran more than 7 times,
+    * the RD2 Upgrade page should be hidden
+    */
+    @isTest
+    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        for (Integer i = 0; i < 7; i++) {
+            Database.executeBatch(new RD2_OpportunityEvaluation_BATCH(), 1);
+        }
+
+        Test.startTest();
+        Boolean isDisplayingRD2UpgradePage = new STG_Panel().isDisplayingRD2UpgradePage;
+        Test.stopTest();
+    
+        System.assertEquals(false, isDisplayingRD2UpgradePage,
+            'Should not display RD2 Upgrade page if user has upgrade RD through Simple Upgrade and ran nightly batch job 7 times');
+    }
+
+    /**
     * @description Verifies that when the User without Customize Application permission 
     *   executes the saveSettings in System mode (directly calling saveSettings Apex class),
     *   the code will still enfore Salesforce Security on updating RD Settings custom settings.
@@ -1932,8 +2109,6 @@ private with sharing class STG_SettingsManager_TEST {
         
         System.assert(error.Full_Message__c.contains(expectedMessage),
             'User with Read Only Profile should not be abled to update RD Setting: ' + error.Full_Message__c);
-
-
     }
 
     /**
