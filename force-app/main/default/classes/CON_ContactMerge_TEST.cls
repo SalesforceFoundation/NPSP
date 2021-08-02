@@ -1028,6 +1028,9 @@ public class CON_ContactMerge_TEST {
         controller.getUnactionableDuplicateRecordSets();
         System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 0,
             'All Duplicate Record Sets should be visible');
+        System.assertEquals(Label.commonContactCount, Label.commonContactCount,
+            'Label should be ' + Label.commonContactCount);
+
         Test.stopTest();
     }
 
