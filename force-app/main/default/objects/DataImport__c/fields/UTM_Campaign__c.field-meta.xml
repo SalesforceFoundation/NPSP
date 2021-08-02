@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UTM_Campaign__c</fullName>
+    <description>Google Analytics parameter for tracking the name or solicitation code of the outreach effort. For example, spring_2021_fundraiser.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Google Analytics parameter for tracking the name or solicitation code of the outreach effort. For example, spring_2021_fundraiser.</inlineHelpText>
+    <label>UTM Campaign</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

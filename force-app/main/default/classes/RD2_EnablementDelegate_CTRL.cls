@@ -130,8 +130,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     * @description Retrieves the current enablement state
     * @return EnablementState
     */
-    @TestVisible
-    private static EnablementState getEnablementState() {
+    public static EnablementState getEnablementState() {
         EnablementState state = new EnablementState();
 
         try {
@@ -172,7 +171,7 @@ public with sharing class RD2_EnablementDelegate_CTRL extends STG_Panel {
     private static Boolean isDryRunOutdated(EnablementState state) {
         return (isSimpleVersion)
             ? false
-            : batchJobService.getCompletedDaysBetween('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
+            : batchJobService.getCompletedDaysByClassName('RD2_DataMigrationDryRun_BATCH') > state.dryRunLimit;
     }
 
     /***
