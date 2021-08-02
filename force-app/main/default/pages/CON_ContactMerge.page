@@ -170,7 +170,9 @@
                                         <th class="slds-text-heading_label" scope="col">
                                             {!$objectType.DuplicateRecordSet.fields.DuplicateRuleId.label}
                                         </th>
-                                        <th class="slds-text-heading_label" scope="col">{!$Label.commonContactCount}</th>
+                                        <th class="slds-text-heading_label" scope="col">
+                                            {!$Label.commonContactCount}
+                                        </th>
                                         <apex:repeat value="{!$ObjectType.DuplicateRecordSet.FieldSets.ContactMergeDRS}"
                                                      var="field">
                                             <th class="slds-text-heading_label" scope="col">
