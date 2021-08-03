@@ -59,9 +59,16 @@ public with sharing class Gifts {
         setElevateBatchIds(dataImportsById.values());
     }
 
+    public void add(Gift gift) {
+        this.dataImportsById.put(gift.id(), gift.asDataImport());
+    }
+
     public Gift findBy(GiftId giftId) {
         DataImport__c matchingDataImport = this.dataImportsById.get(giftId.value());
-        return new Gift(matchingDataImport);
+        if (matchingDataImport != null) {
+            return new Gift(matchingDataImport);
+        }
+        return null;
     }
 
     public List<Gift> all() {
