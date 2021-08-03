@@ -236,8 +236,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void updateDefaultAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -276,8 +274,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void deleteDefaultAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -313,8 +309,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void deleteNonDefaultOverrideAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -367,9 +361,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void updateNonDefaultAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
 
@@ -407,8 +398,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void setConAddrOverride() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -533,9 +522,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void newUndeliverableAddressShouldSyncToAccount() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
@@ -566,9 +552,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccount() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
@@ -601,9 +584,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void newUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
@@ -632,9 +612,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldNotSyncToAccountWhenNotDefault() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         List<Account> accounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(5, CAO_Constants.HH_ACCOUNT_TYPE);
         insert accounts;
 
@@ -666,8 +643,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void newUndeliverableAddressShouldSyncToAccountAndContacts() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         Test.startTest();
             createTestData(2, 2, true);
@@ -697,9 +672,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccountAndContacts() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         createTestData(3, 3);
 
         Test.startTest();
@@ -731,9 +703,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccountAndHouseholdContactOverrides() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         createTestData(2, 2);
         Address__c overrideAddressToCreate = new Address__c();
             overrideAddressToCreate.Address_Type__c = 'Home';
@@ -782,11 +751,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableNonDefaultAddressShouldSyncToOrganizationContact() {
-        // Prevent test from running if GEM is installed
-        if (ADV_PackageInfo_SVC.useAdv()) {
-            return;
-        }
-
         npe01__Contacts_And_Orgs_Settings__c settings = UTIL_CustomSettingsFacade.getContactsSettingsForTests( new
                 npe01__Contacts_And_Orgs_Settings__c(Organizational_Account_Addresses_Enabled__c = true));
 
@@ -825,9 +789,6 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableDefaultAddressDoesNotCauseMultipleOverrideUpdates() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         createTestData(2, 2);
         Address__c overrideAddressToCreate = new Address__c();
         overrideAddressToCreate.Address_Type__c = 'Home';
@@ -884,8 +845,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void insertNewDefaultAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -941,8 +900,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void insertNewDefaultAddrAndReset() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
 
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
@@ -1316,9 +1273,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testAddressOverrideCreatesNewAddressWhenStateCodeIsChanged() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
 
             return;
@@ -1387,9 +1341,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressCountryIsPopulatedFromCountryCode() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
 
             return;
@@ -1427,9 +1378,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testEmptyAddressStateIsPopulatedFromStateCode() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
 
             return;
@@ -1469,9 +1417,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void testIsMatchingStateCode() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         if (!orgConfig.isStateCountryPicklistsEnabled()) {
 
             return;
@@ -1998,9 +1943,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void newAddrNoAccount() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         buildTestAddress(totalAccountsToCreate);
         for (Integer i = 0; i < totalAccountsToCreate; i++) {
             System.assertEquals(null, testAddresses[i].Household_Account__c);
@@ -2024,9 +1966,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void newAddrNotHHAccount() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(totalAccountsToCreate, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
         insert testAccounts;
 
@@ -2062,9 +2001,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void insertNewSeasonalAddr() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
 
@@ -2116,9 +2052,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void insertNewSeasonalAddrNotCurrent() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
 
@@ -2169,9 +2102,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
@@ -2191,9 +2121,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         Integer hhSize = 2;
         Integer contactSize = 2;
         createTestData(hhSize, contactSize);
@@ -2213,9 +2140,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         Integer hhSize = 2;
         Integer contactSize = 2;
         createTestData(hhSize, contactSize);
@@ -2261,9 +2185,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void addressShouldBePropagatedToAccountsAndContactsOnMultipleTriggerCalls() {
-        // Prevent test from running if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) { return; }
-
         Integer totalHH = 210;
         Integer totalContactPerHH = 1;
 
