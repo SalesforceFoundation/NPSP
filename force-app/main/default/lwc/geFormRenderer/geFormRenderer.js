@@ -70,6 +70,8 @@ import {
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateBatch from 'c/geElevateBatch';
+import GiftBatch from 'c/geGiftBatch';
+import Gift from 'c/geGiftBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -179,6 +181,7 @@ export default class GeFormRenderer extends LightningElement{
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
     currentElevateBatch = new ElevateBatch();
+    giftBatch = new GiftBatch();
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -302,6 +305,7 @@ export default class GeFormRenderer extends LightningElement{
                 // When the form is being used for Batch Gift Entry, the Form Template JSON
                 // uses the @wire service below to retrieve the Template using the Template Id
                 // stored on the Batch.
+                this.giftBatch.init(this.batchId);
                 return;
             }
 
@@ -730,6 +734,14 @@ export default class GeFormRenderer extends LightningElement{
             const canUpdate = await this.canAuthorizedGiftBeUpdated(
                 this.saveableFormState(), formControls);
             if (!canUpdate) { return; }
+        }
+
+        const recordId = this.formState['Id'];
+        if (recordId && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+            const gift = this.giftBatch.findGiftBy(recordId);
+            if (gift.isGiftAuthorized()) {
+                await this.currentElevateBatch.remove(gift.asDataImport());
+            }
         }
 
         const hasSaved = await this.saveDataImport(this.saveableFormState());
