@@ -38,6 +38,9 @@ public with sharing class ADDR_Contacts_TEST {
 
     @IsTest
     private static void newContactUndeliverableStatusShouldSyncToNewAddressAndAccount() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 1, 0);
 
         Contact testContact = UTIL_UnitTestData_TEST.getContact();
@@ -72,6 +75,9 @@ public with sharing class ADDR_Contacts_TEST {
 
     @IsTest
     private static void updatedContactUndeliverableStatusShouldSyncToNewAddressAndAccount() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 1, 0);
 
         Contact testContact = UTIL_UnitTestData_TEST.getContact();
@@ -109,6 +115,9 @@ public with sharing class ADDR_Contacts_TEST {
 
     @IsTest
     private static void updatedContactUndeliverableStatusShouldSyncToExistingAddressAndAccount() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) return;
+
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 1, 0);
 
         Address__c testAddress = new Address__c();

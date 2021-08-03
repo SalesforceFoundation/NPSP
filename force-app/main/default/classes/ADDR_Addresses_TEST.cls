@@ -703,6 +703,11 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccountAndHouseholdContactOverrides() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
         createTestData(2, 2);
         Address__c overrideAddressToCreate = new Address__c();
             overrideAddressToCreate.Address_Type__c = 'Home';
