@@ -65,6 +65,48 @@ private class GiftDTO_TEST {
         System.assertEquals(3, dummyGift.softCredits().unprocessed().size());
     }
 
+    @isTest
+    static void shouldHaveExpectedPropertiesWhenConstructedWithAGenericMap() {
+        List<OpportunityContactRole> dummyOpportunityContactRoles = buildDummyOCRs(5);
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOpportunityContactRoles);
+        SoftCreditsDTO dummySoftCreditsDTO = new SoftCreditsDTO(dummySoftCredits);
+
+        Map<String, Object> giftDTOAsGenericMap = new Map<String, Object>();
+        giftDTOAsGenericMap.put('fields', new Map<String, Object> {
+            'Id' => DUMMY_DATA_IMPORT_ID,
+            ACCOUNT1_IMPORTED_FIELD => DUMMY_ACCOUNT_ID
+        });
+        giftDTOAsGenericMap.put('softCreditsDTO', dummySoftCreditsDTO);
+
+        GiftDTO dummyGiftDTO = new GiftDTO(giftDTOAsGenericMap);
+
+        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGiftDTO.fields.get('Id'));
+        System.assertEquals(dummySoftCreditsDTO, dummyGiftDTO.softCreditsDTO);
+    }
+
+    @isTest
+    static void shouldHaveExpectedPropertiesWhenConstructedWithAGift() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        DataImport__c dummyDataImport = new DataImport__c(
+            Id = DUMMY_DATA_IMPORT_ID,
+            Account1Imported__c = DUMMY_ACCOUNT_ID,
+            Donation_Amount__c = 33.33,
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift dummyGift = new Gift(dummyDataImport);
+
+        GiftDTO dummyGiftDTO = new GiftDTO(dummyGift);
+
+        System.assertEquals(33.33, dummyGiftDTO.fields.get(DONATION_AMOUNT_FIELD));
+        System.assertEquals(DUMMY_ACCOUNT_ID, dummyGiftDTO.fields.get(ACCOUNT1_IMPORTED_FIELD));
+        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGiftDTO.fields.get('Id'));
+        System.assertEquals(2, dummyGiftDTO.softCreditsDTO.softCredits.size());
+    }
+
     private static List<OpportunityContactRole> buildDummyOCRs(Integer count) {
         List<OpportunityContactRole> dummyOpportunityContactRoles = new List<OpportunityContactRole>();
         for (Integer i = 0; i < count; i++) {
