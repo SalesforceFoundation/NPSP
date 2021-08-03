@@ -192,10 +192,13 @@
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree3-node0-link">
-                                <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav" class="slds-tree__item">
+                                <li role="treeitem" aria-level="2" id="idPanelRD2EnablementNav"
+                                    class="{!IF(isDisplayingRD2UpgradePage, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(isDisplayingRD2UpgradePage, 'display: block', 'display: none')}">
 
                                     <a href="#" onclick="ShowPanel('idPanelRD2Enablement'); fireRefreshViewEvent(); return false;"
-                                        class="slds-grow slds-m-left_large">
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(isDisplayingRD2UpgradePage, 'display: block', 'display: none')}">
                                         {!$Label.stgNavRD2Enablement}
                                     </a>
                                 </li>
