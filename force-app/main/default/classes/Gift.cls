@@ -62,6 +62,10 @@ public with sharing class Gift {
         this.populateSoftCredits();
     }
 
+    public Id id() {
+        return this.dataImport.Id;
+    }
+
     public Boolean requiresReauthorizationBeforeChange() {
         if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
             return false; 
@@ -84,6 +88,10 @@ public with sharing class Gift {
 
     public void addSoftCredits(SoftCredits incomingSoftCredits) {
         this.softCredits.addAll(incomingSoftCredits.all());
+    }
+
+    public DataImport__c asDataImport() {
+        return this.dataImport;
     }
 
     private void populateAvailableFields() {

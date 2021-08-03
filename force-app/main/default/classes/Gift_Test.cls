@@ -94,6 +94,41 @@ private class Gift_Test {
         System.assertEquals(0, gift.softCredits().size());
     }
 
+    @isTest
+    static void shouldAdd3SoftCreditsToGift() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(),
+            new OpportunityContactRole(),
+            new OpportunityContactRole()
+        };
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+
+        gift.addSoftCredits(dummySoftCredits);
+
+        System.assertEquals(3, gift.softCredits().size());
+    }
+
+    @isTest
+    static void shouldReturnAsDataImport() {
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(dataImport.Id, gift.id());
+        System.assertEquals(dataImport, gift.asDataImport());
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
