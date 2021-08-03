@@ -43,7 +43,7 @@ Add New Address to Household
 
     Click Button                         Manage Household
     Current Page Should Be               Custom                             ManageHousehold
-    Select Frame And Click Element       Manage Household
+    Select Frame And Click Element       accessibility title
     ...                                  span_button
     ...                                  Change Address
     Change Address Using                 Enter a new address               Street=123 Dummy Street
