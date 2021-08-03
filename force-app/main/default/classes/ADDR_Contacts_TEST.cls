@@ -37,7 +37,7 @@
 public with sharing class ADDR_Contacts_TEST {
 
     @IsTest
-    private static void newContactUndeliverableStatusShouldSyncToNewAddressAndAccount() {
+    private static void newContactUndeliverableStatusShouldSyncToNewDefaultAddressAndAccount() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -60,13 +60,13 @@ public with sharing class ADDR_Contacts_TEST {
                                   FROM Contact
                                   WHERE Id = :testContact.Id];
 
-        Address__c updatedAddress = [SELECT Undeliverable__c
+        Address__c updatedAddress = [SELECT Undeliverable__c, Default_Address__c
                                      FROM Address__c
                                      WHERE Id = :updatedContact.Current_Address__c];
         Account updatedAccount = [SELECT Undeliverable_Address__c
                                   FROM Account
                                   WHERE Id = :UTIL_UnitTestData_TEST.listAccT[0].Id];
-
+        System.assert(updatedAddress.Default_Address__c, 'New address should be set as the default address.');
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'Contact address ' +
                 'undeliverable status should match address undeliverable status.');
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAccount.Undeliverable_Address__c,
