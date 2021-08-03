@@ -2,7 +2,7 @@ import getGiftBatchViewWithLimitsAndOffsets from '@salesforce/apex/GE_GiftEntryC
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
-import undeleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.unDeleteGiftFromGiftBatch';
+import undeleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.undeleteGiftFromGiftBatch';
 
 // Methods below still need to be replaced/updated to go through service x domain. These were only moved.
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
