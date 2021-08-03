@@ -44,15 +44,6 @@ class ElevateBatch {
     }
 
     async remove(authorizedGift) {
-        console.log('in remove');
-        console.log(`authorized gift = ${JSON.stringify(authorizedGift)}`);
-
-        // Do we need a new authorized gift data type?
-        console.log(`auth = ${JSON.stringify({
-            elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
-            paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
-        })}`);
-
         return await apexRemoveFromElevateBatch({
             authorizedGift: {
                 elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],

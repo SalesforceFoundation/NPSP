@@ -430,12 +430,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.remove(gift);
 
             try {
-                //throw new Error('firing');
                 await this.deleteFromElevateBatch(gift);    
             } catch (exception) {
-                console.log(`exception = ${JSON.stringify(exception)}`);
                 this.giftBatchState = this.giftBatch.undelete(gift);
-                throw new Error('There was an issue removing this donation from Elevate. Not deleted');
+                throw new Error('There was an issue removing this donation from Elevate. Not deleted'); // TODO: Label
             }
 
             if (this.giftInView?.fields.Id === gift?.Id) {
@@ -452,11 +450,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } catch(error) {
             handleError(error);
         }
-    }
-
-    async handleDeleteFromElevateBatch(event) {
-        const gift = event.detail;
-        await this.deleteFromElevateBatch(gift);
     }
 
     async deleteFromElevateBatch(gift) {

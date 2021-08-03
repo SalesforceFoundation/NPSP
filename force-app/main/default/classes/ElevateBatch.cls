@@ -59,7 +59,7 @@ public with sharing class ElevateBatch {
     }
 
     public ElevateAuthorizedGift remove(String elevateTransactionId) {
-        return null;
+        return elevateBatchService.sendRemoveRequest(elevateTransactionId, elevateBatchId());
     }
 
     public String elevateBatchId() {
