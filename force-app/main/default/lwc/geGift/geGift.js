@@ -1,7 +1,7 @@
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 
 class Gift {
-    _softCredits = {};
+    _softCredits = { all: [] };
     _fields = {};
 
     constructor(giftView) {
@@ -26,6 +26,10 @@ class Gift {
         delete this._fields[field];
     }
 
+    softCredits() {
+        return this._softCredits.all;
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -39,8 +43,11 @@ class Gift {
         return dataImportRecord;
     }
 
-    toJSON() {
-        return JSON.stringify(this.state());
+    forSave() {
+        return {
+            fields: this.asDataImport(),
+            softCredits: [ ...this.softCredits() ]
+        }
     }
 
     state() {
