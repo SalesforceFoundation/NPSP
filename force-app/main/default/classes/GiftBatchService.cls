@@ -87,8 +87,8 @@ public with sharing class GiftBatchService {
         return viewModelFrom(giftBatchId);
     }
 
-    public void add(GiftBatchId giftBatchId, GiftDTO giftDTO) {
+    public void add(GiftBatchId giftBatchId, InboundGiftDTO inboundGift) {
         GiftBatch giftBatch = new GiftBatch(giftBatchId);
-        giftBatch.add(giftDTO.asGift());
+        giftBatch.add(inboundGift.asGift());
     }
 }

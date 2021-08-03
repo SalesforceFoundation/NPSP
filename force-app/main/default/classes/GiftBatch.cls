@@ -124,6 +124,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void add(Gift gift) {
+        gift.saveRecord();
         this.gifts.add(gift);
     }
 

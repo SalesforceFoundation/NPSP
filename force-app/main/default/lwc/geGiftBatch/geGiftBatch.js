@@ -2,6 +2,7 @@ import getGiftBatchViewWithLimitsAndOffsets from '@salesforce/apex/GE_GiftEntryC
 import getGiftBatchTotalsBy from '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy';
 import updateGiftBatchWith from '@salesforce/apex/GE_GiftEntryController.updateGiftBatchWith';
 import deleteGiftFromGiftBatch from '@salesforce/apex/GE_GiftEntryController.deleteGiftFromGiftBatch';
+import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
 
 // Methods below still need to be replaced/updated to go through service x domain. These were only moved.
 import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
@@ -98,7 +99,7 @@ class GiftBatch {
     }
 
     async updateMember(gift) {
-        await saveAndDryRunDataImport({ batchId: this._id, dataImport: gift });
+        await addGiftTo({ dataImportBatchId: this._id, inboundGift: gift.forSave() });
         return await this.latestState(this._gifts.length + 1);
     }
 

@@ -86,6 +86,12 @@ public with sharing class Gift {
         delete this.dataImport;
     }
 
+    public void saveRecord() {
+        // TODO: convert members like softcredit to additionalobject json string
+        unitOfWork.registerDirty(new List<sObject> { this.dataImport });
+        unitOfWork.save();
+    }
+
     public void addSoftCredits(SoftCredits incomingSoftCredits) {
         this.softCredits.addAll(incomingSoftCredits.all());
     }
@@ -125,6 +131,17 @@ public with sharing class Gift {
         }
 
         return false;
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
     }
 
 }

@@ -117,13 +117,10 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
-    public static void addGiftTo(Id dataImportBatchId, String giftString) {
+    public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
-            Map<String, Object> giftAsGenericMap = (Map<String, Object>) JSON.deserializeUntyped(giftString);
-            GiftDTO giftDTO = new GiftDTO(giftAsGenericMap);
             GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
-
-            giftBatchService.add(giftBatchId, giftDTO);
+            giftBatchService.add(giftBatchId, inboundGift);
         } catch (AuraHandledException e) {
             throw new AuraHandledException(e.getMessage());
         }
