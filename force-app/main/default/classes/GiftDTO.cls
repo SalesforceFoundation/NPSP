@@ -41,4 +41,25 @@ public with sharing class GiftDTO {
         this.fields = gift.fields();
         this.softCreditsDTO = new SoftCreditsDTO(gift.softCredits());
     }
+
+    public Gift asGift() {
+        DataImport__c dataImport = new DataImport__c();
+
+        if (fields != null) {
+            for (String key : fields.keySet()) {
+                dataImport.put(key, fields.get(key));
+            }
+        }
+
+        Gift gift = new Gift(dataImport);
+
+        if (softCreditsDTO != null) {
+            gift.addSoftCredits(softCreditsDTO.asSoftCredits());
+        }
+
+        return gift;
+    }
+
+    @TestVisible
+    private GiftDTO() {}
 }

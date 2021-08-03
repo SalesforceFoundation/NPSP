@@ -82,6 +82,10 @@ public with sharing class Gift {
         delete this.dataImport;
     }
 
+    public void addSoftCredits(SoftCredits incomingSoftCredits) {
+        this.softCredits.addAll(incomingSoftCredits.all());
+    }
+
     private void populateAvailableFields() {
         Map<String, Object> dataImportFields = this.dataImport.getPopulatedFieldsAsMap();
         List<String> fields = new List<String>();
