@@ -39,6 +39,10 @@ class Gift {
         return dataImportRecord;
     }
 
+    toJSON() {
+        return JSON.stringify(this.state());
+    }
+
     state() {
         return {
             fields: { ...this._fields },

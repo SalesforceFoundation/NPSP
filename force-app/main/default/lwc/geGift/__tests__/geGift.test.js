@@ -37,4 +37,9 @@ describe('ge-gift', () => {
 
         expect(Object.keys(gift.state().fields)).not.toContain('Contact1Imported__c');
     });
+
+    it('should return a string representation of the gift state', async () => {
+        const gift = new Gift(mockGiftView);
+        expect(gift.toJSON()).toBe(JSON.stringify(mockGiftView));
+    });
 });
