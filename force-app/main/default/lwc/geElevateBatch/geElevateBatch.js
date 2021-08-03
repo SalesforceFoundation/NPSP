@@ -25,6 +25,8 @@ class ElevateBatch {
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
 
+            console.log(`elevate batch id = ${this.elevateBatchId}`);
+
             return authorizedGift;
         } catch (exception) {
             if (retryOnFailure) {
@@ -46,15 +48,16 @@ class ElevateBatch {
         console.log(`authorized gift = ${JSON.stringify(authorizedGift)}`);
 
         // Do we need a new authorized gift data type?
-        const authorizedGift1 = {
+        console.log(`auth = ${JSON.stringify({
             elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
             paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
-        };
-
-        console.log(`auth = ${JSON.stringify(authorizedGift1)}`);
+        })}`);
 
         return await apexRemoveFromElevateBatch({
-            authorizedGift: authorizedGift1
+            authorizedGift: {
+                elevateBatchId: authorizedGift[PAYMENT_ELEVATE_ELEVATE_BATCH_ID.fieldApiName],
+                paymentId: authorizedGift[PAYMENT_ELEVATE_ID.fieldApiName]
+            }
         });
     }
 }

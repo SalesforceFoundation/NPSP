@@ -82,7 +82,7 @@ public with sharing class Gift {
         delete this.dataImport;
     }
 
-    public void unDeleteRecord() {
+    public void undeleteRecord() {
         undelete this.dataImport;
     }
 

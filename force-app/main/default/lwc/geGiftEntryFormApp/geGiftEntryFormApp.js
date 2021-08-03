@@ -427,18 +427,15 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async handleDelete(event) {
         try {
             const gift = event.detail;
-            const oldGiftBatchState = this.giftBatchState;
             this.giftBatchState = await this.giftBatch.remove(gift);
 
-            if (true) { // If gift is authorized
-                try {
-                    await this.deleteFromElevateBatch(gift);
-                } catch (exception) {
-                    console.log(`exception = ${JSON.stringify(exception)}`);
-                    this.giftBatch.undelete(gift);
-                    this.giftBatchState = oldGiftBatchState;
-                    throw new Error('There was an issue removing this donation from Elevate. Not deleted');
-                }
+            try {
+                //throw new Error('firing');
+                await this.deleteFromElevateBatch(gift);    
+            } catch (exception) {
+                console.log(`exception = ${JSON.stringify(exception)}`);
+                this.giftBatchState = this.giftBatch.undelete(gift);
+                throw new Error('There was an issue removing this donation from Elevate. Not deleted');
             }
 
             if (this.giftInView?.fields.Id === gift?.Id) {
@@ -463,10 +460,6 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async deleteFromElevateBatch(gift) {
-        if (!this.isElevateCustomer) {
-            return; 
-        }
-
         try {
             return await this.elevateBatch.remove(gift);
         } catch (exception) {

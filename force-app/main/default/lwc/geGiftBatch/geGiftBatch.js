@@ -109,8 +109,8 @@ class GiftBatch {
     }
 
     async undelete(gift) {
-        console.log(`gift to be deleted = ${JSON.stringify(gift)}`);
-        return await undeleteGiftFromGiftBatch({dataImportId: gift.Id });
+        await undeleteGiftFromGiftBatch({ batchId: this._id, dataImportId: gift.Id });
+        return await this.latestState(this._gifts.length + 1);
     }
 
     async latestState(length) {

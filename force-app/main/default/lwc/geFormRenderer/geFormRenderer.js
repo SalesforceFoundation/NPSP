@@ -69,7 +69,7 @@ import {
     isEmptyObject
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateBatch from './elevateBatch';
+import ElevateBatch from 'c/geElevateBatch';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -178,6 +178,7 @@ export default class GeFormRenderer extends LightningElement{
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
+    currentElevateBatch = new ElevateBatch();
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -751,15 +752,17 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const currentElevateBatch = new ElevateBatch();
-                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
-                console.log(`authorized gift = ${JSON.stringify(authorizedGift)}`);
+                if (this.isGiftAuthorized()) {
+                    await this.currentElevateBatch.remove(dataImportFromFormState);
+                }
+
+                const authorizedGift = await this.currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
                 if (isAuthorized) {
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: currentElevateBatch.elevateBatchId,
+                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
