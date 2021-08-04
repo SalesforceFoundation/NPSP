@@ -106,7 +106,7 @@ public class ACCT_AccountMerge_TDTM extends TDTM_Runnable {
             }
         }
 
-        Households.renameHHAccounts(listHHId);
+        Households.updateNameAndMemberCount(listHHId);
 
         listTemp.addAll(listHHId);
         listTemp.addAll(listOne2OneId);

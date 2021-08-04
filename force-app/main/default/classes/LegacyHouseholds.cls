@@ -296,7 +296,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
 
         Households.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
-        Households.renameHHAccounts(
+        Households.updateNameAndMemberCount(
                 contactsInstance.getHouseholdIdsToRename());
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
@@ -443,7 +443,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
-        Households.renameHHAccounts(getHouseholdsNeedingNameUpdates());
+        Households.updateNameAndMemberCount(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {

@@ -172,7 +172,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
     }
 
     private void renameHouseholdsNeedingNameUpdate() {
-        Households.renameHHAccounts(getHouseholdsNeedingNameUpdate());
+        Households.updateNameAndMemberCount(getHouseholdsNeedingNameUpdate());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdate() {

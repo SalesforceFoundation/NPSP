@@ -186,7 +186,7 @@ public inherited sharing class Households extends fflib_SObjects {
         }
 
         resetPrimaryContactForAccount(accountIds, dmlWrapper);
-        renameHHAccounts(accountIds);
+        updateNameAndMemberCount(accountIds);
         rollupAccounts(accountIds);
     }
 
@@ -195,7 +195,7 @@ public inherited sharing class Households extends fflib_SObjects {
     * @param accountIds the list of Household or Account Ids that need updating.
     * @return void
     */
-    public static void renameHHAccounts(List<Id> accountIds) {
+    public static void updateNameAndMemberCount(List<Id> accountIds) {
         if (accountIds.isEmpty()) {
             return;
         }
@@ -426,7 +426,7 @@ public inherited sharing class Households extends fflib_SObjects {
             }
         }
 
-        renameHHAccounts(householdIdsToRename);
+        updateNameAndMemberCount(householdIdsToRename);
     }
 
     /**
