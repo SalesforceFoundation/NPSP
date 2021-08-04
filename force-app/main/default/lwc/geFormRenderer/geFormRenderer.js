@@ -1689,11 +1689,16 @@ export default class GeFormRenderer extends LightningElement{
         if (gift && isEmptyObject(gift.fields)) {
             this.reset();
         } else if (gift && gift.fields) {
-            this._giftInView = gift;
-            this.formState = gift.fields;
-            if (gift.softCredits) {
-                this._softCredits = deepClone(gift.softCredits);
+            let giftLocalCopy = deepClone(gift);
+
+            if (giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
+                giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
+                    convertBDIToWidgetJson(giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)])
             }
+
+            this._giftInView = giftLocalCopy;
+            this.formState = giftLocalCopy.fields;
+            this.expandForm();
         }
     }
 
