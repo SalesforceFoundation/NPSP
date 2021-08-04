@@ -45,7 +45,10 @@ public inherited sharing class AdditionalObjectJSON {
     }
 
     public String asJSON() {
-        return JSON.serialize(dynamicSourceGroup);
+        if (hasAdditionalObjects()) {
+            return JSON.serialize(dynamicSourceGroup);
+        }
+        return null;
     }
 
     public void add(SoftCredits softCredits) {
@@ -155,5 +158,10 @@ public inherited sharing class AdditionalObjectJSON {
         Blob blob128 = Crypto.GenerateAESKey(128);
         String hex = EncodingUtil.ConvertToHex(blob128);
         return hex.left(length);
+    }
+
+    private Boolean hasAdditionalObjects() {
+        return this.dynamicSourceGroup != null
+            && this.dynamicSourceGroup.dynamicSourceByObjMappingDevName?.keySet()?.size() > 0;
     }
 }
