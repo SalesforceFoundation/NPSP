@@ -30,9 +30,11 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Top-level Application class for Households functionality in NPSP.
+* @description Top-level Application class for NPSP. The Application class creates
+ * Households for new Contacts and passes existing Contacts to either
+ * their Household domain (Households or LegacyHouseholds) or the Organizations domain.
 */
-public inherited sharing class HouseholdsApp {
+public inherited sharing class Application {
 
     @TestVisible
     private ContactSelector contactSelector {
