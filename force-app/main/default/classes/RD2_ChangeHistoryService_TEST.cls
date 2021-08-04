@@ -247,11 +247,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
-
         rdUpdate.PaymentMethod__c = PAYMENT_CREDIT_CARD;
 
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+        rdEntity.storeAndClearChangeType();
 
         rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
 
@@ -425,6 +425,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+        rdEntity.storeAndClearChangeType();
 
         rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
 
