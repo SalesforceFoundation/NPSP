@@ -4,7 +4,6 @@ import apexRemoveFromElevateBatch from '@salesforce/apex/GE_GiftEntryController.
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 import PAYMENT_ELEVATE_ELEVATE_BATCH_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_Batch_Id__c';
 
-
 class ElevateBatch {
 
     constructor() {
