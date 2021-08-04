@@ -288,13 +288,13 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 return;
             }
 
-            HouseholdAccounts.renameHHAccounts(householdIds);
-            HouseholdAccounts.moveOppsToContactAccount(
+            Households.renameHHAccounts(householdIds);
+            Households.moveOppsToContactAccount(
                 newIndividualAcctIdByMasterId,
                 oldIndividualAcctIdByMasterId
             );
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
-            HouseholdAccounts.rollupAccounts(accountIds);
+            Households.rollupAccounts(accountIds);
         }
 
         /*******************************************************************************************************

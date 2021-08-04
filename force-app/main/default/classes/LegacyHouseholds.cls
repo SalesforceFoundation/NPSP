@@ -295,8 +295,8 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         updateOneToOneAccounts(
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
 
-        HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
-        HouseholdAccounts.renameHHAccounts(
+        Households.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
+        Households.renameHHAccounts(
                 contactsInstance.getHouseholdIdsToRename());
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
@@ -372,7 +372,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
                     'Shipping');
 
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                accountRecord.Name = HouseholdAccounts.strNameOne2OneAccountForContact(contactRecord);
+                accountRecord.Name = Households.strNameOne2OneAccountForContact(contactRecord);
             }
 
             // HH Account naming updates handled seperately to deal with asyncronous naming
@@ -443,7 +443,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
-        HouseholdAccounts.renameHHAccounts(getHouseholdsNeedingNameUpdates());
+        Households.renameHHAccounts(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
@@ -481,7 +481,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     public static void handleContactsBeforeUpdate(Contacts contacts) {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+        Households.createOneToOneAndHouseholdAccountsFor(
                 contactsWithoutAccounts(contacts));
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {

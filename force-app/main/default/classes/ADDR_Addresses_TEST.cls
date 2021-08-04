@@ -2105,7 +2105,7 @@ public with sharing class ADDR_Addresses_TEST {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
-        HouseholdAccounts householdAccounts = new HouseholdAccounts(new Set<Id>{
+        Households householdAccounts = new Households(new Set<Id>{
                 account.Id
         });
 
@@ -2125,7 +2125,7 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createTestData(hhSize, contactSize);
 
-        HouseholdAccounts contactRepo = new HouseholdAccounts(
+        Households contactRepo = new Households(
                 UTIL_SObject.extractIds(testAccounts)
         );
 
@@ -2144,10 +2144,10 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createTestData(hhSize, contactSize);
 
-        HouseholdAccounts contactRepo = new HouseholdAccounts(new Set<Id>());
+        Households contactRepo = new Households(new Set<Id>());
         testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
 
-        contactRepo = new HouseholdAccounts(new Set<Id>{
+        contactRepo = new Households(new Set<Id>{
                 testAccounts[0].Id
         });
         testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
@@ -2159,7 +2159,7 @@ public with sharing class ADDR_Addresses_TEST {
     verify:
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
-    static void testAndAssertContactRepositoryGetContacts(HouseholdAccounts contactRepo, List<Account> accounts, List<Contact> contacts) {
+    static void testAndAssertContactRepositoryGetContacts(Households contactRepo, List<Account> accounts, List<Contact> contacts) {
         Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
         for (Contact c : contacts) {
             if (!contactsByAccountId.containsKey(c.AccountId)) {

@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class HouseholdAccounts extends fflib_SObjects {
+public inherited sharing class Households extends fflib_SObjects {
 
     /*******************************************************************************************************
     * @description Account filter when querying Contacts
@@ -104,7 +104,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects {
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public HouseholdAccounts(Set<Id> accountIds) {
+    public Households(Set<Id> accountIds) {
         super(new List<Account>());
         queryAccountIds = accountIds == null
                 ? new Set<Id>()
@@ -115,7 +115,7 @@ public inherited sharing class HouseholdAccounts extends fflib_SObjects {
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
-    public HouseholdAccounts(List<Account> accounts) {
+    public Households(List<Account> accounts) {
         super(accounts);
     }
 

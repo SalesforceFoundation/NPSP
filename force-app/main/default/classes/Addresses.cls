@@ -758,7 +758,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getAllAddressesByAccountId(listAccId);
 
         // Construct Contact repository for Accounts having Addresses
-        HouseholdAccounts householdAccounts = new HouseholdAccounts(mapAccIdListAddrHH.keySet());
+        Households householdAccounts = new Households(mapAccIdListAddrHH.keySet());
 
         for (Id accId : mapAccIdListAddrHH.keySet()) {
             if (mapAccIdListAddrHH.get(accId) != null) {

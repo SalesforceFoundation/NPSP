@@ -141,7 +141,7 @@ public inherited sharing class Application {
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+        Households.createOneToOneAndHouseholdAccountsFor(
                 //todo: pull out settings check
                 (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
@@ -156,7 +156,7 @@ public inherited sharing class Application {
         LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+        Households.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
 
@@ -188,7 +188,7 @@ public inherited sharing class Application {
         LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+        Households.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
 
@@ -198,7 +198,7 @@ public inherited sharing class Application {
         return contactsWithAccountAndAddressFields;
     }
 
-    private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
+    private Households getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
     }
 

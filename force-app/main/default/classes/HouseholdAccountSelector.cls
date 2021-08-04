@@ -11,8 +11,8 @@ public inherited sharing class HouseholdAccountSelector {
         return accounts;
     }
 
-    public HouseholdAccounts findByIdWithOneContactAndGift(Set<Id> ids){
-        return new HouseholdAccounts(getAccounts(new List<Id>(ids)));
+    public Households findByIdWithOneContactAndGift(Set<Id> ids){
+        return new Households(getAccounts(new List<Id>(ids)));
     }
 
 }
