@@ -148,6 +148,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /***
+    * @description Recurring Donation change history service instance
+    */
+    private RD2_ChangeHistoryService changeHistoryService {
+        get {
+            if (changeHistoryService == null) {
+                changeHistoryService = new RD2_ChangeHistoryService();
+            }
+            return changeHistoryService;
+        }
+        set;
+    }
+
+    /***
     * @description Calculates Current and Next Year Values for a Recurring Donation
     */
     @TestVisible
@@ -453,7 +466,6 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return void
      */
     private void createChangeHistory(List<RD2_RecurringDonation> rdRecords){
-        RD2_ChangeHistoryService changeHistoryService = new RD2_ChangeHistoryService();
         if(!changeHistoryService.isChangeHistoryEnabled){
             return;
         }

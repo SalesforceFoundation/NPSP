@@ -69,19 +69,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
-    /***
-    * @description Recurring Donation change history service instance
-    */
-    private RD2_ChangeHistoryService changeHistoryService {
-        get {
-            if (changeHistoryService == null) {
-                changeHistoryService = new RD2_ChangeHistoryService();
-            }
-            return changeHistoryService;
-        }
-        set;
-    }
-
     /**
      * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
      * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
