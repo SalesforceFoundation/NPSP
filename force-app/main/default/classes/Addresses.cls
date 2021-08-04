@@ -652,32 +652,32 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @description For the list of Addresses, sees if there is already an existing Address in the Account that
     * matches. Creates only unique addresses from their respective household, and mark any existing matches
     * as Default if the caller specifies it on the new address.
-    * @param listAddr a list of Addresses to update
+    * @param addresses a list of Addresses to update
     * @param dmlWrapper the Addresses to update
     * @param includeAddressType whether to include comparing the AddressType field
     */
-    public static void createNonDuplicateAddresses(List<Address__c> listAddr,
+    public static void createNonDuplicateAddresses(List<Address__c> addresses,
             TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
 
-        Map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
-        for (Address__c addrNew : listAddr) {
-            NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
-            Address__c addrDup = mapAddrDupAddr.get(addrNew);
-            NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
-            if (addrDup != null) {
+        Map<Address__c, Address__c> existingAddressesByAddress = getExistingAddresses(addresses);
+        for (Address__c newAddress : addresses) {
+            NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
+            Address__c existingAddress = existingAddressesByAddress.get(newAddress);
+            NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
+            if (existingAddress != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (!npspAddressNew.isEqualToIncludingAddressType(npspAddressDup, includeAddressType)) {
-                    npspAddressDup.copyFrom(npspAddressNew);
-                    if (npspAddressNew.isDefault()) {
-                        npspAddressDup.setAsDefault();
+                if (!npspNewAddress.isEqualToIncludingAddressType(npspExistingAddress, includeAddressType)) {
+                    npspExistingAddress.copyFrom(npspNewAddress);
+                    if (npspNewAddress.isDefault()) {
+                        npspExistingAddress.setAsDefault();
                     }
-                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
-                } else if (npspAddressNew.isDefault() && !npspAddressDup.isDefault()) {
-                    npspAddressDup.setAsDefault();
-                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
+                    dmlWrapper.objectsToUpdate.add(npspExistingAddress.getRecord());
+                } else if (npspNewAddress.isDefault() && !npspExistingAddress.isDefault()) {
+                    npspExistingAddress.setAsDefault();
+                    dmlWrapper.objectsToUpdate.add(npspExistingAddress.getRecord());
                 }
             } else {
-                dmlWrapper.objectsToInsert.add(npspAddressNew.getRecord());
+                dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
             }
         }
     }
@@ -688,7 +688,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listAddr a list of Addresses to update
     * @return map<Address__c, Address__c>
     */
-    public static Map<Address__c, Address__c> findDuplicateAddresses(List<Address__c> listAddr) {
+    public static Map<Address__c, Address__c> getExistingAddresses(List<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
         List<Id> listAccId = new List<Id>();
         for (Address__c addr : listAddr) {

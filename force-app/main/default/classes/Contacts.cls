@@ -396,7 +396,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
 
             // look for duplicates for our proposed new addresses
-            Map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+            Map<Address__c, Address__c> mapAddrDupAddr = Addresses.getExistingAddresses(mapConAddr
                     .values());
 
             // maps & lists to keep track of the addresses we must insert or update
@@ -480,7 +480,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // look for duplicates for our proposed new addresses
-        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.findDuplicateAddresses(
+        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.getExistingAddresses(
                 addressesByContact.values());
 
         // maps & lists to keep track of the addresses we must insert or update
