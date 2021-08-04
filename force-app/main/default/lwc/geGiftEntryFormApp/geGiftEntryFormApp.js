@@ -438,7 +438,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 }
             }
 
-            if (this.giftInView?.fields.Id === gift?.Id) {
+            if (this.giftInView?.fields.Id === gift?.id()) {
                 this.handleClearGiftInView();
             }
 
