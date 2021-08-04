@@ -176,11 +176,14 @@ public inherited sharing class RD2_ChangeHistoryService {
 
                 Decimal newAnnualValue = updatedRd.getAnnualValue();
                 Decimal previousAnnualValue = originalRd.getAnnualValue();
-                String changeType = null;
-                if(newAnnualValue > previousAnnualValue){
-                    changeType = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
-                } else if(newAnnualValue < previousAnnualValue){
-                    changeType = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+                String changeType = updatedRd.getChangeType();
+
+                if (changeType == null) {
+                    if (newAnnualValue > previousAnnualValue) {
+                        changeType = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+                    } else if (newAnnualValue < previousAnnualValue) {
+                        changeType = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+                    }
                 }
 
                 return new RecurringDonationChangeHistory__c(

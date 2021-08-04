@@ -436,6 +436,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             //when Opportunities were evaluated so no need to redo the work
             if (rdRecord
                 .reviseYearValues(yearValueProcessor)
+                .storeAndClearChangeType()
                 .isOutdated()//checks all changed values on the RD
             ) {
                 outdatedRDs.add(rdRecord.getUpdate());

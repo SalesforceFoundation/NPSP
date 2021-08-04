@@ -134,7 +134,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         rdList[0].npe03__Amount__c = RD_NEW_AMOUNT;
         rdList[1].Status__c = RD2_Constants.STATUS_LAPSED;
-        
+        rdList[1].ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+
         Test.startTest();
         update rdList;
         Test.stopTest();
@@ -151,14 +152,19 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
 
         // Check second change
-        rdchList = getRecurringDonationChangeHistory(rd2.Id);
+        Id rd2Id = rd2.Id;
+        rdchList = getRecurringDonationChangeHistory(rd2Id);
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
         RecurringDonationChangeHistory__c rdch2 = rdchList[0];
         System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 
             'New Status should be ' + RD2_Constants.STATUS_LAPSED);
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 
             'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(null, rdch2.ChangeType__c, 'The Change Type should be null');
+        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE, rdch2.ChangeType__c, 
+            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE);
+
+        rdList = [SELECT Id, ChangeType__c FROM npe03__Recurring_Donation__c WHERE Id = :rd2Id];
+        System.assertEquals(null, rdList[0].ChangeType__c, 'The Change Type should be null');
     }
 
     /**
@@ -240,6 +246,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
+        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
 
         rdUpdate.PaymentMethod__c = PAYMENT_CREDIT_CARD;
 
@@ -253,7 +260,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
         System.assertEquals(PAYMENT_CREDIT_CARD, rdch.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
         System.assertEquals(PAYMENT_CHECK, rdch.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
-        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
     }
 
     /**
@@ -394,6 +402,67 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_NEW_PERIOD, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_NEW_PERIOD);
         System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
             'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+    }
+
+    /**
+     * @description Verifies that setting the Change Type on an RD overrides the default value
+     * when the Amount changes
+     */
+    @IsTest
+    private static void shouldOverrideDefaultChangeTypeWhenValueIsSetOnRD() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+        
+        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+        rdUpdate.npe03__Amount__c = RD_NEW_AMOUNT;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE);
+    }
+
+    /**
+     * @description Verifies that only setting the Change Type on an RD does not create a
+     * Change History record
+     */
+    @IsTest
+    private static void shouldNotCreateChangeHistoryWhenOnlyChangeTypeChanges() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        System.assertEquals(0, rdchList.size(), 'There should be 0 Change History after the update');
     }
 
     // Helpers

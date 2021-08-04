@@ -46,6 +46,11 @@ public inherited sharing class RD2_RecurringDonation {
     private Boolean isNew;
 
     /**
+    * @description Stores the Change Type for this Update, so we can clear the Recurring Donation field
+    */
+    private String changeType;
+
+    /**
     * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
     */
     private String state {
@@ -141,6 +146,20 @@ public inherited sharing class RD2_RecurringDonation {
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
         }
 
+        return this;
+    }
+
+    /**
+    * @description Stores the Change Type in the object, then sets it to null on the Recurring Donation
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation storeAndClearChangeType() {
+        if(rd.ChangeType__c != null){
+            changeType = rd.ChangeType__c;
+            rd.ChangeType__c = null;
+            changedFields.add(npe03__Recurring_Donation__c.ChangeType__c);
+        }
+        
         return this;
     }
 
@@ -430,6 +449,13 @@ public inherited sharing class RD2_RecurringDonation {
         return state;
     }
 
+    /**
+    * @description Return the Change Type of the Recurring Donation.
+    * @return String 
+    */
+    public String getChangeType() {
+        return changeType;
+    }
 
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
