@@ -86,7 +86,7 @@ public inherited sharing class HouseholdService {
     }
 
     public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds = new Households(
+        LegacyHouseholds oldHouseholds = new LegacyHouseholds(
                 new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
                 new HouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
@@ -123,8 +123,8 @@ public inherited sharing class HouseholdService {
         if (contactsInLegacyHouseholds.householdsWithMembershipChanges().isEmpty()) {
             return; //No need to fire rollups if no Contacts changed Households
         }
-        Households householdsWithMembershipChanges =
-                new Households(
+        LegacyHouseholds householdsWithMembershipChanges =
+                new LegacyHouseholds(
                         contactsInLegacyHouseholds.householdsWithMembershipChanges(),
                         new HouseholdSelector());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
@@ -132,8 +132,8 @@ public inherited sharing class HouseholdService {
 
     public void processOldHouseholdsAfterDeletingContacts(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        Households oldHouseholds =
-                new Households(contactsInLegacyHouseholds.householdIds(),
+        LegacyHouseholds oldHouseholds =
+                new LegacyHouseholds(contactsInLegacyHouseholds.householdIds(),
                         new HouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();

@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Households in NPSP.
 */
-public inherited sharing class Households extends fflib_SObjects {
+public inherited sharing class LegacyHouseholds extends fflib_SObjects {
 
     @TestVisible
     private static ContactAndOrgSettings contactAndOrgSettingsInst {
@@ -78,15 +78,15 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
-    public Households(Set<Id> ids, HouseholdSelector selector) {
+    public LegacyHouseholds(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
 
-    public Households(List<npo02__Household__c> records) {
+    public LegacyHouseholds(List<npo02__Household__c> records) {
         this(records, null);
     }
 
-    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
+    public LegacyHouseholds(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
         super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
@@ -109,24 +109,24 @@ public inherited sharing class Households extends fflib_SObjects {
         delete emptyHouseholds().getRecords();
     }
 
-    public Households emptyHouseholds() {
+    public LegacyHouseholds emptyHouseholds() {
         List<npo02__Household__c> emptyHouseholds = new List<npo02__Household__c>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
             if (household.npo02__Contacts__r.isEmpty()) {
                 emptyHouseholds.add(household);
             }
         }
-        return new Households(emptyHouseholds);
+        return new LegacyHouseholds(emptyHouseholds);
     }
 
-    public Households nonEmptyHouseholds() {
+    public LegacyHouseholds nonEmptyHouseholds() {
         List<npo02__Household__c> nonEmptyHouseholds = new List<npo02__Household__c>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
             if (!household.npo02__Contacts__r.isEmpty()) {
                 nonEmptyHouseholds.add(household);
             }
         }
-        return new Households(nonEmptyHouseholds);
+        return new LegacyHouseholds(nonEmptyHouseholds);
     }
 
     public Map<Id, Integer> getHouseholdCountMap() {
@@ -138,7 +138,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     public void calculateLegacyHouseholdRollups() {
-        Households nonEmptyHouseholds =
+        LegacyHouseholds nonEmptyHouseholds =
                 nonEmptyHouseholds();
         if (nonEmptyHouseholds.ids().size() > 0) {
             if (rollupsShouldRunSynchronously(nonEmptyHouseholds.ids())) {

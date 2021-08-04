@@ -212,8 +212,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         if (isOneToOneEnabled()) {
             for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (Households.isWithoutAccount(contactRecord)
-                        || Households.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+                if (LegacyHouseholds.isWithoutAccount(contactRecord)
+                        || LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
                     // Avoid creating a new contact with the 1:1 account of another contact
                     if (contactRecord.AccountId != null) {
                         contactRecord.AccountId = null;

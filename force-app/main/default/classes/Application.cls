@@ -146,14 +146,14 @@ public inherited sharing class Application {
                 (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        Households.addToBucketAccount(contacts);
+        LegacyHouseholds.addToBucketAccount(contacts);
     }
 
     public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
 
-        Households.updatePrimaryContactOnAccountsAfterInsert(
+        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
         HouseholdAccounts.renameHouseholdAccountsAfterInsert(
@@ -164,14 +164,14 @@ public inherited sharing class Application {
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      */
     public void onBeforeUpdateOf(Contacts contacts) {
-        Households.handleContactsBeforeUpdate(contacts);
+        LegacyHouseholds.handleContactsBeforeUpdate(contacts);
     }
 
     public void onAfterUpdateOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 new ContactSelector().getContactsWithAccountAndAddressFields(
                         contacts.getRecords());
-        Households.handleContactsAfterUpdate(
+        LegacyHouseholds.handleContactsAfterUpdate(
                 new Contacts(contactsWithAccountAndAddressFields, contacts.oldMap.values()),
                 dmlWrapper);
     }
@@ -185,7 +185,7 @@ public inherited sharing class Application {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
 
-        Households.updatePrimaryContactOnAccountsAfterInsert(
+        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
         HouseholdAccounts.renameHouseholdAccountsAfterInsert(
