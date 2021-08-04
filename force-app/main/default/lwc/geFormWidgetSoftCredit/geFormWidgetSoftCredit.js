@@ -9,7 +9,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @api gift;
+    @api giftInView;
     @api element;
     @track alertBanner = {};
 
@@ -20,10 +20,9 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     }
 
     async init() {
-        const softCreditOppContactRoles = await getDummySoftCredits();
-        softCreditOppContactRoles.forEach(softCredit => {
+        this.giftInView.softCredits.all.forEach(softCredit => {
             this.addRow(softCredit);
-        });        
+        });
     };
 
     addRow(softCredit) {
