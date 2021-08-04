@@ -1,4 +1,5 @@
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 
 class Gift {
     _softCredits = {};
@@ -26,6 +27,10 @@ class Gift {
         delete this._fields[field];
     }
 
+    getFieldValue(field) {
+        return this._fields[field];
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -46,13 +51,8 @@ class Gift {
         }
     }
 
-    isRemovableFromElevateBatch() {
-        // PLACEHOLDER; validate that Status = 'Authorized' AND ...
-        return true;
-    }
-
-    isGiftAuthorized() {
-        return true;
+    isAuthorized() {
+        return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED';
     }
 }
 

@@ -432,8 +432,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             try {
                 await this.deleteFromElevateBatch(gift);    
             } catch (exception) {
-                this.giftBatchState = this.giftBatch.undelete(gift);
-                throw new Error('There was an issue removing this donation from Elevate. Not deleted'); // TODO: Label
+                this.giftBatchState = await this.giftBatch.undelete(gift);
+                throw new Error('There was an issue removing this donation from Elevate. Not deleted');
             }
 
             if (this.giftInView?.fields.Id === gift?.Id) {
