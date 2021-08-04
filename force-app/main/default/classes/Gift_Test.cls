@@ -129,6 +129,51 @@ private class Gift_Test {
         System.assertEquals(dataImport, gift.asDataImport());
     }
 
+    @isTest
+    static void shouldCallMethodsInUnitOfWorkWhenSaved() {
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        gift.unitOfWork = stubFor(unitOfWorkMock);
+        gift.saveRecord();
+
+        System.assertEquals(true, unitOfWorkMock.registerDirtyCalled);
+        System.assertEquals(true, unitOfWorkMock.saveCalled);
+    }
+
+    @isTest
+    static void shouldConvertSoftCreditsToAdditionalObjectJSONWhenSaved() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        gift.unitOfWork = stubFor(unitOfWorkMock);
+
+        Id dummyContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(Role = 'Influencer', ContactId = dummyContactId)
+        };
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+        gift.addSoftCredits(dummySoftCredits);
+
+        System.assertEquals(1, gift.softCredits().size());
+        System.assertEquals(null, gift.additionalObjectJSON());
+
+        gift.saveRecord();
+
+        System.assert(gift.additionalObjectJSON().contains(dummyContactId));
+        System.assert(gift.additionalObjectJSON().contains('Influencer'));
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
@@ -163,5 +208,33 @@ private class Gift_Test {
             GiftSelector.class,
             giftSelectorMock
         );
+    }
+
+    private class UnitOfWorkMock implements StubProvider {
+        public Boolean registerDirtyCalled = false;
+        public Boolean saveCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'registerDirty' {
+                    registerDirtyCalled = true;
+                }
+                when 'save' {
+                    saveCalled = true;
+                    return new List<Database.SaveResult>();
+                }
+            }
+            return null;
+        }
+    }
+
+    private static UnitOfWork stubFor(UnitOfWorkMock unitOfWorkMock) {
+        return (UnitOfWork) Test.createStub( UnitOfWork.class, unitOfWorkMock );
     }
 }

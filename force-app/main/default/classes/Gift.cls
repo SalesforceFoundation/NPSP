@@ -88,6 +88,7 @@ public with sharing class Gift {
 
     public void saveRecord() {
         // TODO: convert members like softcredit to additionalobject json string
+        convertAdditionalObjectMembers();
         unitOfWork.registerDirty(new List<sObject> { this.dataImport });
         unitOfWork.save();
     }
@@ -98,6 +99,18 @@ public with sharing class Gift {
 
     public DataImport__c asDataImport() {
         return this.dataImport;
+    }
+
+    public String additionalObjectJSON() {
+        return this.dataImport.Additional_Object_JSON__c;
+    }
+
+    private void convertAdditionalObjectMembers() {
+        System.debug(this.softCredits);
+        AdditionalObjectJSON additionalObjectJSONHelper = new AdditionalObjectJSON(additionalObjectJSON());
+        additionalObjectJSONHelper.add(this.softCredits);
+
+        this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
     private void populateAvailableFields() {

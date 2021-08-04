@@ -40,11 +40,8 @@ public inherited sharing class AdditionalObjectJSON {
     private BDI_MappingServiceAdvanced mappingService;
 
     public AdditionalObjectJSON(String additionalObjectString) {
-        mappingService = BDI_MappingServiceAdvanced.getInstance();
-        if (additionalObjectString != null) {
-            this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
-                JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
-        }
+        this.mappingService = BDI_MappingServiceAdvanced.getInstance();
+        instantiateDynamicSourceGroup(additionalObjectString);
     }
 
     public String asJSON() {
@@ -57,6 +54,17 @@ public inherited sharing class AdditionalObjectJSON {
             dynamicSourceGroup.dynamicSourceByObjMappingDevName.put(
                 dynamicSource.objectMappingDevName,
                 dynamicSource);
+        }
+    }
+
+    private void instantiateDynamicSourceGroup(String additionalObjectString) {
+        this.dynamicSourceGroup = new BDI_DynamicSourceGroup();
+        if (additionalObjectString != null) {
+            this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
+                JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
+        } else {
+            this.dynamicSourceGroup.dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+            this.dynamicSourceGroup.name = String.valueOf(DataImport__c.Additional_Object_JSON__c);
         }
     }
 
@@ -81,7 +89,7 @@ public inherited sharing class AdditionalObjectJSON {
     }
 
     public SoftCredits asSoftCredits() {
-        if (dynamicSourceGroup == null) {
+        if (dynamicSourceGroup.dynamicSourceByObjMappingDevName == null) {
             return new SoftCredits(new List<OpportunityContactRole>());
         }
 
