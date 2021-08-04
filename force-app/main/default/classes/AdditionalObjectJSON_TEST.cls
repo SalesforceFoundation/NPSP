@@ -67,4 +67,36 @@ private class AdditionalObjectJSON_TEST {
 
         System.assertEquals(0, softCredits.size());
     }
+
+    @isTest
+    static void shouldAddSoftCreditsToDynamicSourceGroup() {
+        String additionalObjectString =
+            new UTIL_AdditionalObjectData_TEST()
+            .withGeneralAccountingUnits(3)
+            .build();
+
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON(additionalObjectString);
+
+        String dummyContactId0 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        String dummyContactId1 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        String dummyContactId2 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(Role = 'Influencer', ContactId = dummyContactId0),
+            new OpportunityContactRole(Role = 'Soft Credit', ContactId = dummyContactId1)
+        };
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+
+        BDI_DynamicSourceGroup dynamicSourceGroup = additionalObjectJSON.dynamicSourceGroup;
+        System.assertEquals(dynamicSourceGroup.dynamicSourceByObjMappingDevName.values().size(), 3);
+
+        additionalObjectJSON.add(dummySoftCredits);
+
+        System.assertEquals(dynamicSourceGroup.dynamicSourceByObjMappingDevName.values().size(), 5);
+
+        String backToJSON = additionalObjectJSON.asJSON();
+        System.assert(backToJSON.contains(dummyContactId0));
+        System.assert(backToJSON.contains(dummyContactId1));
+        System.assert(!backToJSON.contains(dummyContactId2));
+    }
 }

@@ -35,13 +35,49 @@
 */
 public inherited sharing class AdditionalObjectJSON {
 
+    @TestVisible
     private BDI_DynamicSourceGroup dynamicSourceGroup;
+    private BDI_MappingServiceAdvanced mappingService;
 
     public AdditionalObjectJSON(String additionalObjectString) {
+        mappingService = BDI_MappingServiceAdvanced.getInstance();
         if (additionalObjectString != null) {
             this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
                 JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
         }
+    }
+
+    public String asJSON() {
+        return JSON.serialize(dynamicSourceGroup);
+    }
+
+    public void add(SoftCredits softCredits) {
+        for (OpportunityContactRole softCredit : softCredits.unprocessed()) {
+            BDI_DynamicSource dynamicSource = dynamicSourceFrom(softCredit);
+            dynamicSourceGroup.dynamicSourceByObjMappingDevName.put(
+                dynamicSource.objectMappingDevName,
+                dynamicSource);
+        }
+    }
+
+    private BDI_DynamicSource dynamicSourceFrom(OpportunityContactRole opportunityContactRole) {
+        BDI_ObjectMapping objectMapping = objectMappingFor(SObjectType.OpportunityContactRole.getName());
+        List<BDI_FieldMapping> fieldMappings =
+            mappingService.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+        DataImport__c tempDI = new DataImport__c();
+
+        for (BDI_FieldMapping fieldMapping : fieldMappings) {
+            Object value = opportunityContactRole.get(fieldMapping.Target_Field_API_Name);
+            tempDI.put(fieldMapping.Source_Field_API_Name, value);
+        }
+
+        BDI_DynamicSource dynamicSource = new BDI_DynamicSource();
+        dynamicSource.objectMappingDevName = objectMapping.DeveloperName + generateRandomString(7);
+        dynamicSource.objectMappingTemplateDevName = objectMapping.DeveloperName;
+        dynamicSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+        dynamicSource.sourceObj = tempDI;
+
+        return dynamicSource;
     }
 
     public SoftCredits asSoftCredits() {
@@ -87,18 +123,29 @@ public inherited sharing class AdditionalObjectJSON {
     }
 
     private List<String> objectMappingNamesFor(String objectApiName) {
-        List<Data_import_Object_Mapping__mdt> objectMappings = [
-            SELECT DeveloperName
-            FROM Data_Import_Object_Mapping__mdt
-            WHERE Object_API_Name__c = :objectApiName
-                AND Is_Deleted__c = false
-        ];
-
+        List<BDI_ObjectMapping> objectMappings = mappingService.objectMappingByDevName.values();
         List<String> objectMappingNames = new List<String>();
-        for (Data_Import_Object_Mapping__mdt objectMapping : objectMappings) {
-            objectMappingNames.add(objectMapping.DeveloperName);
+        for (BDI_ObjectMapping objectMapping : objectMappings) {
+            if (objectMapping.Object_API_Name == objectApiName) {
+                objectMappingNames.add(objectMapping.DeveloperName);
+            }
         }
 
         return objectMappingNames;
+    }
+
+    private BDI_ObjectMapping objectMappingFor(String objectAPIName) {
+        for (BDI_ObjectMapping objectMapping : mappingService.objectMappingByDevName.values()) {
+            if (objectMapping.Object_API_Name == objectAPIName) {
+                return objectMapping;
+            }
+        }
+        return null;
+    }
+
+    private String generateRandomString(Integer length) {
+        Blob blob128 = Crypto.GenerateAESKey(128);
+        String hex = EncodingUtil.ConvertToHex(blob128);
+        return hex.left(length);
     }
 }
