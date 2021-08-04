@@ -94,7 +94,7 @@ public inherited sharing class Households extends fflib_SObjects {
     private Map<Id, Contact[]> contactsByAccountId {
         get {
             return contactsByAccountId = contactsByAccountId == null
-                    ? findContactsByAccount()
+                    ? getContactsByAccountId()
                     : contactsByAccountId;
         }
         set;
@@ -140,7 +140,7 @@ public inherited sharing class Households extends fflib_SObjects {
     * @description Queries DB for specified ContactRepository Account Ids
     * @return Map<Id, Contact[]> Map of Contacts by an Account Id
     */
-    private Map<Id, Contact[]> findContactsByAccount() {
+    private Map<Id, Contact[]> getContactsByAccountId() {
         Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
 
         if (queryAccountIds.isEmpty()) {
@@ -220,20 +220,7 @@ public inherited sharing class Households extends fflib_SObjects {
             accountIds, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         // for each account, we need a set of their contacts.
-        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
-
-        for (Contact contactRecord : [
-                SELECT Id, AccountId, Account.npe01__One2OneContact__c
-                FROM Contact
-                WHERE AccountId IN :accountIds
-        ]) {
-            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
-            if (contactIds == null) {
-                contactIds = new Set<Id>();
-                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
-            }
-            contactIds.add(contactRecord.Id);
-        }
+        Map<Id, Set<Id>> contactIdsByAccountId = getContactIdsByAccountId(accountIds);
 
         // now go thru each account and update their primary contact if the current one isn't valid
         List<Account> accounts = new List<Account>();
@@ -248,6 +235,24 @@ public inherited sharing class Households extends fflib_SObjects {
         if (accounts != null && !accounts.isEmpty()) {
             dmlWrapper.objectsToUpdate.addAll(accounts);
         }
+    }
+
+    private static Map<Id, Set<Id>> getContactIdsByAccountId(List<Id> accountIds) {
+        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
+
+        for (Contact contactRecord : [
+                SELECT Id, AccountId, Account.npe01__One2OneContact__c
+                FROM Contact
+                WHERE AccountId IN :accountIds
+        ]) {
+            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
+            if (contactIds == null) {
+                contactIds = new Set<Id>();
+                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
+            }
+            contactIds.add(contactRecord.Id);
+        }
+        return contactIdsByAccountId;
     }
 
     /*******************************************************************************************************
