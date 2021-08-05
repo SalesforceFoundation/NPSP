@@ -1083,24 +1083,6 @@ export default class GeFormRenderer extends LightningElement{
         this.erroredFields = [];
     }
 
-    @api
-    loadDataImportRecord(dataImport) {
-        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
-        if (isAlreadyOpen) {
-            return;
-        }
-
-        this.expandForm();
-        const dataImportWithNullValuesAppended =
-            this.appendNullValuesForMissingFields(dataImport);
-
-        dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
-            convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-        this.reset();
-        this.updateFormState(dataImportWithNullValuesAppended);
-        this._openedGiftId = dataImport.Id;
-    }
-
     reset() {
         this.clearErrors();
         this.resetFormState();
