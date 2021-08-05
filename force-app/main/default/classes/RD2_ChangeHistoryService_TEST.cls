@@ -367,8 +367,19 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         update rd;
         Test.stopTest();
 
-        RD2_ChangeHistoryView view = RD2_ChangeHistoryController.getChangeHistory(rd.Id, 3, null);
-        System.debug(JSON.serializePretty(view));
+        RD2_ChangeHistoryView historyView = RD2_ChangeHistoryController.getChangeHistory(rd.Id, 3, null);
+
+        System.assertEquals(1, historyView.changes.size(), 'Expected 1 change.');
+        RD2_ChangeView changeView = historyView.changes[0];
+
+        System.assertEquals(2, changeView.fields.size(), 'Expected 2 fields changed.');
+
+        System.assertEquals(100, changeView.fields[0].oldValue, 'Unexpected old Amount');
+        System.assertEquals(200, changeView.fields[0].newValue, 'Unexpected new Amount');
+
+        System.assertEquals(100, changeView.fields[1].oldValue, 'Unexpected old Annual Value');
+        System.assertEquals(200, changeView.fields[1].newValue, 'Unexpected new Annual Value');
+
     }
 
     // Helpers
