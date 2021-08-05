@@ -158,7 +158,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }
     }
 
-    private void publishProductUpdates () {
+    // This method is public right now so enable testing through anonymous apex, will be private before release
+    public void publishProductUpdates () {
         new InstallNotifications().publishNotifications();
     }
 

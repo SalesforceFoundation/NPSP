@@ -114,10 +114,12 @@ public inherited sharing class InstallNotifications {
    }
 
    private void publish() {
+      String DUMMY_ID = '000000000000000AAA';
       Messaging.CustomNotification notification = new Messaging.CustomNotification();
       notification.setBody(this.body);
       notification.setTitle(this.title);
       notification.setNotificationTypeId(this.notificationTypeId);
+      notification.setTargetId(DUMMY_ID);
       notification.send(this.audience);
    }
 
