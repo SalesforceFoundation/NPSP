@@ -177,8 +177,8 @@ public inherited sharing class Application {
     }
 
     public void onAfterDeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        HouseholdAccounts householdAccounts = getHouseholdsFor(contacts.accountIds());
-        householdAccounts.handleContactDeletion(dmlWrapper);
+        Households households = getHouseholdsFor(contacts.accountIds());
+        households.handleContactDeletion(dmlWrapper);
     }
 
     public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
