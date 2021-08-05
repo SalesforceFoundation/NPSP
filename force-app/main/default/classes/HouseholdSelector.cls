@@ -1,4 +1,4 @@
-public inherited sharing class HouseholdAccountSelector {
+public inherited sharing class HouseholdSelector {
 
     private List<Account> getAccounts(List<Id> accountIds) {
         List<Account> accounts = [
@@ -12,7 +12,7 @@ public inherited sharing class HouseholdAccountSelector {
         return accounts;
     }
 
-    public Households findByIdWithOneContactAndGift(Set<Id> ids){
+    public Households findByIds(Set<Id> ids){
         return new Households(getAccounts(new List<Id>(ids)));
     }
 
