@@ -1679,6 +1679,7 @@ export default class GeFormRenderer extends LightningElement{
             }
 
             this._giftInView = giftLocalCopy;
+            this._openedGiftId = giftLocalCopy.fields.Id || null;
             this.formState = giftLocalCopy.fields;
             this.expandForm();
         }
