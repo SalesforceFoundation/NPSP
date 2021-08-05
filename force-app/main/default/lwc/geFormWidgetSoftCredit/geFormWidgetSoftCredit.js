@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 
-import { deepClone, isNotEmpty } from 'c/utilCommon';
+import { isNotEmpty } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
@@ -14,12 +14,7 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
 
     @track rowList = [];
 
-    connectedCallback() {
-        console.log('Gift In View: ', deepClone(this.giftInView));
-    }
-
     handleAddRow() {
-        console.log('handleAddRow');
         fireEvent(this, 'softcreditwidgetchange', { action: 'addSoftCredit' });
     }
 

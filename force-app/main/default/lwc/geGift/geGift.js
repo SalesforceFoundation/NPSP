@@ -28,7 +28,6 @@ class Gift {
     }
 
     addNewSoftCredit(softCredit) {
-        console.log('addSoftCredit...', softCredit);
         this.softCredits.addNew();
     }
 

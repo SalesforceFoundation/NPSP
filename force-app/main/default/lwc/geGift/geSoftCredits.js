@@ -3,7 +3,6 @@ class SoftCredits {
     _all = [];
 
     constructor(softCredits) {
-        console.log('cosntructor: ', softCredits);
         this._indexSoftCredits(softCredits);
     }
 
@@ -16,21 +15,16 @@ class SoftCredits {
     }
 
     add(softCredit) {
-        console.log('add...', softCredit);
         this._indexSoftCredits([softCredit]);
     }
 
     addAll(softCredits) {
-        console.log('addAll: ', softCredits);
         this._indexSoftCredits(softCredits);
     }
 
     remove(key) {
-        console.log('remove: ', key);
-        console.log(this._all);
         this._all.splice(key, 1);
         this._reIndexSoftCredits(this._all);
-        console.log(this._all);
     }
 
     update(softCreditWithChange) {

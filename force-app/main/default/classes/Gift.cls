@@ -34,7 +34,7 @@
 */
 
 public with sharing class Gift {
-    
+
     @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
     private List<String> availableFields;
@@ -96,7 +96,6 @@ public with sharing class Gift {
     }
 
     public void saveRecord() {
-        // TODO: convert members like softcredit to additionalobject json string
         convertAdditionalObjectMembers();
         unitOfWork.registerDirty(new List<sObject> { this.dataImport });
         unitOfWork.save();
@@ -120,7 +119,6 @@ public with sharing class Gift {
     }
 
     private void convertAdditionalObjectMembers() {
-        System.debug(this.softCredits);
         AdditionalObjectJSON additionalObjectJSONHelper =
             new AdditionalObjectJSON(additionalObjectString());
 
@@ -143,9 +141,6 @@ public with sharing class Gift {
     }
 
     private void populateSoftCredits() {
-        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
-        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
-        // related to the Gift in question
         String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
         this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
     }

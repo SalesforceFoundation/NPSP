@@ -114,26 +114,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleSoftCreditWidgetChange(event) {
-        console.log('handleSoftCreditWidgetChange', deepClone(event));
         switch(event.action) {
             case 'addSoftCredit':
-                console.log('case addSoftCredit');
                 this.gift.addNewSoftCredit();
-                this.giftInView = this.gift.state();
                 break;
             case 'removeSoftCredit':
-                console.log('case removeSoftCredit');
                 this.gift.removeSoftCredit(event.detail.key);
-                this.giftInView = this.gift.state();
                 break;
             case 'updateSoftCredit':
-                console.log('case updateSoftCredit');
                 this.gift.updateSoftCredit(event.detail.softCredit);
-                this.giftInView = this.gift.state();
                 break;
         }
 
-        console.log('New Gift In View: ', deepClone(this.giftInView));
+        this.giftInView = this.gift.state();
     }
 
     async refreshBatchTable() {

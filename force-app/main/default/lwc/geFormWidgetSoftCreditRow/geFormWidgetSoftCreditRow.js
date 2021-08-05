@@ -15,7 +15,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     handleContactIdChange(event) {
-        console.log('handleContactIdChange: ', deepClone(event.detail));
         const newContactId = event.detail.value[0];
         fireEvent(this, 'softcreditwidgetchange', {
             action: 'updateSoftCredit',
@@ -29,7 +28,6 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     handleRoleChange(event) {
-        console.log('handleRoleChange: ', deepClone(event.detail));
         const newRole = event.detail.value;
         fireEvent(this, 'softcreditwidgetchange', {
             action: 'updateSoftCredit',
