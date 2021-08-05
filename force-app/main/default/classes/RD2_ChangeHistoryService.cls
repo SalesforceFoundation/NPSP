@@ -52,6 +52,46 @@ public inherited sharing class RD2_ChangeHistoryService {
         set;
     }
 
+    @TestVisible
+    private RD2_ChangeHistorySelector changeHistorySelector {
+        get {
+            if (changeHistorySelector == null) {
+                changeHistorySelector = new RD2_ChangeHistorySelector();
+            }
+            return changeHistorySelector;
+        }
+        set;
+    }
+
+    public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String filter) {
+        Integer limitPlusOne = recordLimit + 1;
+        changeHistorySelector.withRecordLimit(limitPlusOne);
+
+        if (filter != null) {
+            changeHistorySelector.withChangeTypeFilter(filter);
+        }
+
+        List<RecurringDonationChangeHistory__c> changes = changeHistorySelector.getChangeHistories(recurringDonationId);
+        System.debug(JSON.serializePretty(changes));
+        RD2_ChangeHistoryView changeHistoryView = buildView(changes, recordLimit);
+
+        return changeHistoryView;
+    }
+
+    private RD2_ChangeHistoryView buildView(List<RecurringDonationChangeHistory__c> changes, Integer recordLimit) {
+        RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
+
+        changeHistoryView.settingEnabled = this.isChangeHistoryEnabled;
+        changeHistoryView.hasMore = changes.size() > recordLimit;
+
+        for (Integer i = 0; i < recordLimit && i < changes.size(); i++) {
+            RD2_ChangeHistory change = new RD2_ChangeHistory(changes[i]);
+            changeHistoryView.changes.add(change.getChangeView());
+        }
+
+        return changeHistoryView;
+    }
+
     /***
     * @description Instance of ChangeHistoryCreator to create Change History without sharing
     */

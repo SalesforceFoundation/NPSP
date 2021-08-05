@@ -347,6 +347,30 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
     }
 
+    @IsTest
+    static void amountChangeIsShownInChangeHistoryView() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+                .withDayOfMonth('20')
+                .withCalculateNextDonationDate()
+                .build();
+
+        insert rd;
+
+        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
+        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        RD2_ChangeHistoryView view = RD2_ChangeHistoryController.getChangeHistory(rd.Id, 3, null);
+        System.debug(JSON.serializePretty(view));
+    }
+
     // Helpers
     ///////////////////
 

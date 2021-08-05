@@ -2800,6 +2800,22 @@
         <value>UnPause requests cannot include Start Date or End Date.</value>
     </labels>
     <labels>
+        <fullName>RDCH_Annual_Value</fullName>
+        <categories>RD2_ChangeHistory</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Annual Value change field label</shortDescription>
+        <value>Annual Value</value>
+    </labels>
+    <labels>
+        <fullName>RDCH_Frequency</fullName>
+        <categories>RD2_ChangeHistory</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency change field label</shortDescription>
+        <value>Frequency</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
