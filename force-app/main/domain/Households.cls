@@ -161,12 +161,18 @@ public inherited sharing class Households extends fflib_SObjects {
     * @description Updates the accounts for contacts that have been deleted if they have other hh members
     */
     public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        Households householdsWithContactsOrOpportunities =
+                getHouseholdsWithContactsOrOpportunities();
+        householdsWithContactsOrOpportunities.updateHouseholds(dmlWrapper);
+    }
+
+    private Households getHouseholdsWithContactsOrOpportunities() {
         List<Account> accountsWithContactsOrOpportunities = new List<Account>();
         accountsWithContactsOrOpportunities.addAll(withContacts());
         accountsWithContactsOrOpportunities.addAll(withOpportunities());
         Households householdsWithContactsOrOpportunities =
-             new Households(accountsWithContactsOrOpportunities);
-        householdsWithContactsOrOpportunities.updateHouseholds(dmlWrapper);
+                new Households(accountsWithContactsOrOpportunities);
+        return householdsWithContactsOrOpportunities;
     }
 
     private List<Account> withOpportunities() {
