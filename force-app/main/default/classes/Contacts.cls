@@ -1278,4 +1278,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         ]);
     }
 
+    public Set<Id> ids() {
+       return getIdFieldValues(Contact.Id);
+    }
+
 }

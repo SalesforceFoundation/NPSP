@@ -161,19 +161,32 @@ public inherited sharing class Households extends fflib_SObjects {
     * @description Updates the accounts for contacts that have been deleted if they have other hh members
     */
     public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Set<Id> householdIdsToUpdate = new Set<Id>();
+        List<Account> accountsWithContactsOrOpportunities = new List<Account>();
+        accountsWithContactsOrOpportunities.addAll(withContacts());
+        accountsWithContactsOrOpportunities.addAll(withOpportunities());
+        Households householdsWithContactsOrOpportunities =
+             new Households(accountsWithContactsOrOpportunities);
+        householdsWithContactsOrOpportunities.updateHouseholds(dmlWrapper);
+    }
 
+    private List<Account> withOpportunities() {
+        List<Account> withOpportunities = new List<Account>();
         for (Account accountRecord : (List<Account>) getRecords()) {
-            Boolean needsAccountUpdate =
-                    (!accountRecord.Contacts.isEmpty()
-                            || !accountRecord.Opportunities.isEmpty());
-
-            if (needsAccountUpdate) {
-                householdIdsToUpdate.add(accountRecord.Id);
+            if (!accountRecord.Opportunities.isEmpty()) {
+                withOpportunities.add(accountRecord);
             }
         }
+        return withOpportunities;
+    }
 
-        updateHouseholds(new List<Id>(householdIdsToUpdate), dmlWrapper);
+    private List<Account> withContacts() {
+        List<Account> withContacts = new List<Account>();
+        for (Account accountRecord : (List<Account>) getRecords()) {
+            if (!accountRecord.Contacts.isEmpty()) {
+                withContacts.add(accountRecord);
+            }
+        }
+        return withContacts;
     }
 
     /*******************************************************************************************************
@@ -201,9 +214,9 @@ public inherited sharing class Households extends fflib_SObjects {
         List<Account> accounts = new List<Account>();
         for (Account accountRecord : (List<Account>) getRecords()) {
             // Households domain always has its Contacts
-            Set<Id> contactIds = new Set<Id>(accountRecord.Contacts);
-            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
-                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
+            Contacts members = new Contacts(accountRecord.Contacts);
+            if (!members.ids().contains(accountRecord.npe01__One2OneContact__c)) {
+                accountRecord.npe01__One2OneContact__c = extractFirstId(members.ids());
                 accounts.add(accountRecord);
             }
         }
@@ -214,7 +227,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private List<Id> ids() {
-        return (List<Id>) getIdFieldValues(Account.Id);
+        return new List<Id>(getIdFieldValues(Account.Id));
     }
 
     /*******************************************************************************************************

@@ -2,8 +2,9 @@ public inherited sharing class HouseholdAccountSelector {
 
     private List<Account> getAccounts(List<Id> accountIds) {
         List<Account> accounts = [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c,
-                (SELECT Id FROM Contacts LIMIT 1),
+                SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c,
+                (SELECT Id, AccountId, Account.npe01__One2OneContact__c FROM Contacts LIMIT
+                        1),
                 (SELECT Id FROM Opportunities LIMIT 1)
                 FROM Account
                 WHERE Id IN :accountIds
