@@ -110,7 +110,7 @@ private class Gift_Test {
 
         SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
 
-        gift.addSoftCredits(dummySoftCredits);
+        gift.assignSoftCredits(dummySoftCredits);
 
         System.assertEquals(3, gift.softCredits().size());
     }
@@ -163,7 +163,7 @@ private class Gift_Test {
         };
 
         SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
-        gift.addSoftCredits(dummySoftCredits);
+        gift.assignSoftCredits(dummySoftCredits);
 
         System.assertEquals(1, gift.softCredits().size());
         System.assertEquals(null, gift.additionalObjectJSON());

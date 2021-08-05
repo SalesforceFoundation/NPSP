@@ -52,6 +52,7 @@ public inherited sharing class AdditionalObjectJSON {
     }
 
     public void add(SoftCredits softCredits) {
+        clearSoftCreditsFromDynamicSourceGroup();
         for (OpportunityContactRole softCredit : softCredits.unprocessed()) {
             BDI_DynamicSource dynamicSource = dynamicSourceFrom(softCredit);
             dynamicSourceGroup.dynamicSourceByObjMappingDevName.put(
@@ -60,11 +61,49 @@ public inherited sharing class AdditionalObjectJSON {
         }
     }
 
+    public void clearSoftCreditsFromDynamicSourceGroup() {
+        List<String> softCreditObjectMappingNames =
+            objectMappingNamesFor(SObjectType.OpportunityContactRole.getName());
+        for (String key : this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.keySet()) {
+            BDI_DynamicSource dynamicSource =
+                this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.get(key);
+
+            if (softCreditObjectMappingNames.contains(dynamicSource.objectMappingTemplateDevName)) {
+                this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.remove(key);
+            }
+        }
+    }
+
+    public SoftCredits asSoftCredits() {
+        if (dynamicSourceGroup.dynamicSourceByObjMappingDevName == null) {
+            return new SoftCredits(new List<OpportunityContactRole>());
+        }
+
+        String opportunityContactRole = SObjectType.OpportunityContactRole.getName();
+        List<String> objectMappingNames = objectMappingNamesFor(opportunityContactRole);
+
+        List<OpportunityContactRole> opportunityContactRoles = new List<OpportunityContactRole>();
+        List<BDI_DynamicSource> ocrSourceObjects =
+            collectDynamicSourceObjectsFor(opportunityContactRole, objectMappingNames);
+
+        for (BDI_DynamicSource sourceObject : ocrSourceObjects) {
+            opportunityContactRoles.add(opportunityContactRoleFrom(sourceObject));
+        }
+
+        return new SoftCredits(opportunityContactRoles);
+    }
+
     private void instantiateDynamicSourceGroup(String additionalObjectString) {
         this.dynamicSourceGroup = new BDI_DynamicSourceGroup();
         if (additionalObjectString != null) {
             this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
                 JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
+
+            if (this.dynamicSourceGroup.name == null) {
+                String asAdditionalObjectJSON = convertWidgetDataToObjectJSON(additionalObjectString);
+                this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
+                    JSON.deserialize(asAdditionalObjectJSON, BDI_DynamicSourceGroup.class);
+            }
         } else {
             this.dynamicSourceGroup.dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
             this.dynamicSourceGroup.name = String.valueOf(DataImport__c.Additional_Object_JSON__c);
@@ -89,25 +128,6 @@ public inherited sharing class AdditionalObjectJSON {
         dynamicSource.sourceObj = tempDI;
 
         return dynamicSource;
-    }
-
-    public SoftCredits asSoftCredits() {
-        if (dynamicSourceGroup.dynamicSourceByObjMappingDevName == null) {
-            return new SoftCredits(new List<OpportunityContactRole>());
-        }
-
-        String opportunityContactRole = SObjectType.OpportunityContactRole.getName();
-        List<String> objectMappingNames = objectMappingNamesFor(opportunityContactRole);
-
-        List<OpportunityContactRole> opportunityContactRoles = new List<OpportunityContactRole>();
-        List<BDI_DynamicSource> ocrSourceObjects =
-            collectDynamicSourceObjectsFor(opportunityContactRole, objectMappingNames);
-
-        for (BDI_DynamicSource sourceObject : ocrSourceObjects) {
-            opportunityContactRoles.add(opportunityContactRoleFrom(sourceObject));
-        }
-
-        return new SoftCredits(opportunityContactRoles);
     }
 
     private OpportunityContactRole opportunityContactRoleFrom(BDI_DynamicSource dynamicSource) {
@@ -163,5 +183,74 @@ public inherited sharing class AdditionalObjectJSON {
     private Boolean hasAdditionalObjects() {
         return this.dynamicSourceGroup != null
             && this.dynamicSourceGroup.dynamicSourceByObjMappingDevName?.keySet()?.size() > 0;
+    }
+
+    private String convertWidgetDataToObjectJSON(String widgetData) {
+
+        if (String.isBlank(widgetData)) {
+            return null;
+        }
+
+        Map<String, BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String, BDI_DynamicSource>();
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+
+        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
+        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+
+        Map<String, Object> objMappingDevNameToObjList;
+
+        try {
+            objMappingDevNameToObjList = (Map<String, Object>) JSON.deserializeUntyped(widgetData);
+        } catch (Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+
+        // Create a map of sobject type to sobject list for processing
+        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
+
+            BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+
+            List<String> serializedSObjects = new List<String>();
+
+            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+            for (Object obj : (List<Object>) objMappingDevNameToObjList.get(objMappingDevName)) {
+                serializedSObjects.add(JSON.serialize(obj));
+            }
+
+            if (serializedSObjects != null && serializedSObjects.size() > 0) {
+
+                Integer i = 0;
+                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+                for (String objString : serializedSObjects) {
+
+                    SObject sObj = (SObject) JSON.deserialize(objString, Sobject.class);
+
+                    i++;
+                    DataImport__c tempDI = new DataImport__c();
+
+                    //Reverse mapping the fields back onto a tempDI Record that respresents the source obj.
+                    for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                        Object value = sObj.get(fieldMapping.Target_Field_API_Name);
+                        tempDI.put(fieldMapping.Source_Field_API_Name, value);
+                    }
+
+                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+                    dynSource.objectMappingDevName = objMapping.DeveloperName + generateRandomString(7);
+                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+                    dynSource.sourceObj = tempDI;
+
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName, dynSource);
+                }
+            }
+        }
+
+        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+            return dynSourceGroupString;
+        }
+        return null;
     }
 }

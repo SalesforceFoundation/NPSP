@@ -61,7 +61,7 @@ public with sharing class GiftDTO {
         Gift gift = new Gift(dataImport);
 
         if (softCreditsDTO != null) {
-            gift.addSoftCredits(softCreditsDTO.asSoftCredits());
+            gift.assignSoftCredits(softCreditsDTO.asSoftCredits());
         }
 
         return gift;

@@ -93,8 +93,8 @@ public with sharing class Gift {
         unitOfWork.save();
     }
 
-    public void addSoftCredits(SoftCredits incomingSoftCredits) {
-        this.softCredits.addAll(incomingSoftCredits.all());
+    public void assignSoftCredits(SoftCredits incomingSoftCredits) {
+        this.softCredits = incomingSoftCredits;
     }
 
     public DataImport__c asDataImport() {
@@ -108,6 +108,7 @@ public with sharing class Gift {
     private void convertAdditionalObjectMembers() {
         System.debug(this.softCredits);
         AdditionalObjectJSON additionalObjectJSONHelper = new AdditionalObjectJSON(additionalObjectJSON());
+
         additionalObjectJSONHelper.add(this.softCredits);
 
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();

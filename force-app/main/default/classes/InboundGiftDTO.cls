@@ -45,7 +45,7 @@ public with sharing class InboundGiftDTO {
         Gift gift = new Gift(fields);
 
         if (softCredits != null) {
-            gift.addSoftCredits(new SoftCredits(softCredits));
+            gift.assignSoftCredits(new SoftCredits(softCredits));
         }
 
         return gift;
