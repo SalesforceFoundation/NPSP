@@ -54,7 +54,7 @@ public with sharing class RD2_ChangeHistory {
         if (this.isAnnualValueChanged()) {
             view.newValue = this.record.NewAnnualValue__c;
         }
-        view.label = Label.RD2_Annual_Value;
+        view.label = Label.RDCH_Annual_Value;
         view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.MONEY;
         return view;
     }
