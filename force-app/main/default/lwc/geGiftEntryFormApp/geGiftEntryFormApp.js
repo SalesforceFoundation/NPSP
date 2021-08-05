@@ -430,7 +430,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const giftAsDataImport = gift.asDataImport();
             this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
 
-            if (gift && gift.isAuthorized() && this.isElevateCustomer) {
+            if (this.shouldRemoveFromElevateBatch(gift)) {
                 try {
                     await this.deleteFromElevateBatch(giftAsDataImport);    
                 } catch (exception) {
@@ -453,6 +453,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } catch(error) {
             handleError(error);
         }
+    }
+
+    shouldRemoveFromElevateBatch(gift) {
+        return gift && gift.isAuthorized() && this.isElevateCustomer;
     }
 
     async deleteFromElevateBatch(gift) {

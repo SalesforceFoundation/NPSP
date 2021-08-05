@@ -161,6 +161,7 @@ export default class GeFormRenderer extends LightningElement{
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
+    @api isElevateCustomer = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -734,7 +735,7 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const gift = new Gift(this.giftInView);
-        if (gift && gift.id() && gift.isAuthorized() && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD && this.isElevateCustomer) {
+        if (this.shouldRemoveFromElevateBatch(gift)) {
             try {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 this.handleNullPaymentFieldsInFormState();
@@ -753,6 +754,13 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
+    }
+
+    shouldRemoveFromElevateBatch(gift) {
+        return gift && 
+               gift.isAuthorized() && 
+               this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD && 
+               this.isElevateCustomer;
     }
 
     shouldNullPaymentRelatedFields() {
