@@ -40,7 +40,11 @@ private class Gift_Test {
         );
         Gift authorizedGift = new Gift(dataImport);
 
-        GiftSelector mockedGiftSelector = stubFor(new GiftSelectorMock(5.00));
+        GiftSelector mockedGiftSelector = stubFor(new GiftSelectorMock(3.00));
+        authorizedGift.giftSelector = mockedGiftSelector;
+        System.assertEquals(false, authorizedGift.requiresReauthorizationBeforeChange());
+
+        mockedGiftSelector = stubFor(new GiftSelectorMock(5.00));
         authorizedGift.giftSelector = mockedGiftSelector;
 
         Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
@@ -166,12 +170,28 @@ private class Gift_Test {
         gift.assignSoftCredits(dummySoftCredits);
 
         System.assertEquals(1, gift.softCredits().size());
-        System.assertEquals(null, gift.additionalObjectJSON());
+        System.assertEquals(null, gift.additionalObjectString());
 
         gift.saveRecord();
 
-        System.assert(gift.additionalObjectJSON().contains(dummyContactId));
-        System.assert(gift.additionalObjectJSON().contains('Influencer'));
+        System.assert(gift.additionalObjectString().contains(dummyContactId));
+        System.assert(gift.additionalObjectString().contains('Influencer'));
+    }
+
+    @isTest
+    static void shouldDryRunGift() {
+        DataImport__c dataImport = new DataImport__c(
+            Account1_Name__c = 'testAcct',
+            Donation_Donor__c = 'Account1',
+            Donation_Amount__c = 100,
+            Donation_Date__c = Date.today()
+        );
+        insert dataImport;
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(null, gift.status());
+        gift.dryRunThroughBDI();
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, gift.status());
     }
 
     private class GiftSelectorMock implements StubProvider {

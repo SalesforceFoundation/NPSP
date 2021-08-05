@@ -67,6 +67,10 @@ public with sharing class Gift {
         return this.dataImport.Id;
     }
 
+    public String status() {
+        return this.dataImport.Status__c;
+    }
+
     public Id giftBatchId() {
         return this.dataImport.NPSP_Data_Import_Batch__c;
     }
@@ -111,13 +115,14 @@ public with sharing class Gift {
         return this.dataImport;
     }
 
-    public String additionalObjectJSON() {
+    public String additionalObjectString() {
         return this.dataImport.Additional_Object_JSON__c;
     }
 
     private void convertAdditionalObjectMembers() {
         System.debug(this.softCredits);
-        AdditionalObjectJSON additionalObjectJSONHelper = new AdditionalObjectJSON(additionalObjectJSON());
+        AdditionalObjectJSON additionalObjectJSONHelper =
+            new AdditionalObjectJSON(additionalObjectString());
 
         additionalObjectJSONHelper.add(this.softCredits);
 

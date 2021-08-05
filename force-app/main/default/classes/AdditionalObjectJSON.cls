@@ -61,6 +61,9 @@ public inherited sharing class AdditionalObjectJSON {
         }
     }
 
+    // Remove after allocations type is available and can be included in this class
+    // Currently need to clear and re-add soft credits so we can preserve allocations
+    // in the additional object json
     public void clearSoftCreditsFromDynamicSourceGroup() {
         List<String> softCreditObjectMappingNames =
             objectMappingNamesFor(SObjectType.OpportunityContactRole.getName());
