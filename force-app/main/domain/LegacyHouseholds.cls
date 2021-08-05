@@ -89,6 +89,17 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private static ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     public LegacyHouseholds(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
@@ -307,7 +318,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
 
         List<Id> householdIdsToUpdate =
-                ContactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
+                contactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
         householdService.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         Households.updateNameAndMemberCount(
                 contactsInstance.getHouseholdIdsToRename());
@@ -494,7 +505,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     public static void handleContactsBeforeUpdate(Contacts contacts) {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
-        Households.createOneToOneAndHouseholdAccountsFor(
+        contactService.createOneToOneAndHouseholdAccountsFor(
                 contactsWithoutAccounts(contacts));
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {

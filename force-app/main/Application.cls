@@ -48,6 +48,17 @@ public inherited sharing class Application {
     }
 
     @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
+    @TestVisible
     private HouseholdAccountSelector householdAccountRepository {
         get {
             if (householdAccountRepository == null) {
@@ -141,7 +152,7 @@ public inherited sharing class Application {
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
-        Households.createOneToOneAndHouseholdAccountsFor(
+        contactService.createOneToOneAndHouseholdAccountsFor(
                 //todo: pull out settings check
                 (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
