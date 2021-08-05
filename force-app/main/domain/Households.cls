@@ -190,6 +190,33 @@ public inherited sharing class Households extends fflib_SObjects {
         rollupAccounts(accountIds);
     }
 
+    private void updateHouseholds(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        resetPrimaryContact(dmlWrapper);
+        updateNameAndMemberCount(ids());
+        rollupAccounts(ids());
+    }
+
+    private void resetPrimaryContact(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        // now go thru each account and update their primary contact if the current one isn't valid
+        List<Account> accounts = new List<Account>();
+        for (Account accountRecord : (List<Account>) getRecords()) {
+            // Households domain always has its Contacts
+            Set<Id> contactIds = new Set<Id>(accountRecord.Contacts);
+            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
+                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
+                accounts.add(accountRecord);
+            }
+        }
+
+        if (accounts != null && !accounts.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll(accounts);
+        }
+    }
+
+    private List<Id> ids() {
+        return (List<Id>) getIdFieldValues(Account.Id);
+    }
+
     /*******************************************************************************************************
     * @description for the list of Household or Account Ids, update their Household Names
     * @param accountIds the list of Household or Account Ids that need updating.
