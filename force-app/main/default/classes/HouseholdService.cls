@@ -88,7 +88,7 @@ public inherited sharing class HouseholdService {
     public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         LegacyHouseholds oldHouseholds = new LegacyHouseholds(
                 new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
-                new HouseholdSelector());
+                new LegacyHouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
     }
 
@@ -126,7 +126,7 @@ public inherited sharing class HouseholdService {
         LegacyHouseholds householdsWithMembershipChanges =
                 new LegacyHouseholds(
                         contactsInLegacyHouseholds.householdsWithMembershipChanges(),
-                        new HouseholdSelector());
+                        new LegacyHouseholdSelector());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
 
@@ -134,7 +134,7 @@ public inherited sharing class HouseholdService {
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         LegacyHouseholds oldHouseholds =
                 new LegacyHouseholds(contactsInLegacyHouseholds.householdIds(),
-                        new HouseholdSelector());
+                        new LegacyHouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
     }

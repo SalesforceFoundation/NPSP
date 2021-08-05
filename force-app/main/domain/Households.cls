@@ -275,7 +275,6 @@ public inherited sharing class Households extends fflib_SObjects {
         new RLLP_OppRollup().rollupAccounts(new Set<Id>(accountIds));
     }
 
-
     /*******************************************************************************************************
     * @description returns the default name for a new HH Account. Custom household naming will update this
     * account later if enabled, but we still need one if not enabled.

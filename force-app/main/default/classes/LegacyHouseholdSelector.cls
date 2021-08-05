@@ -32,7 +32,7 @@
 * @date 2021
 * @description Selector class for Households in NPSP.
 */
-public inherited sharing class HouseholdSelector {
+public inherited sharing class LegacyHouseholdSelector {
 
     public List<npo02__Household__c> getHouseholdsWithMembersById(Set<Id> ids) {
         return [

@@ -100,7 +100,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         set;
     }
 
-    public LegacyHouseholds(Set<Id> ids, HouseholdSelector selector) {
+    public LegacyHouseholds(Set<Id> ids, LegacyHouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
 
