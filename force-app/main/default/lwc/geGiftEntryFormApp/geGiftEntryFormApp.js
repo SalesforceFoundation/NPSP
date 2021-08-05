@@ -179,7 +179,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 if (giftForSubmit.Id) {
                     this.giftBatchState = await this.giftBatch.updateMember(this.gift);
                 } else {
-                    this.giftBatchState = await this.giftBatch.addMember(giftForSubmit);
+                    this.giftBatchState = await this.giftBatch.addMember(this.gift);
                 }
 
                 event.detail.success();
