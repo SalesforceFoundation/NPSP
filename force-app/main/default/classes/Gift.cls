@@ -35,6 +35,7 @@
 
 public with sharing class Gift {
     
+    @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
     private List<String> availableFields;
     private SoftCredits softCredits;
@@ -66,6 +67,10 @@ public with sharing class Gift {
         return this.dataImport.Id;
     }
 
+    public Id giftBatchId() {
+        return this.dataImport.NPSP_Data_Import_Batch__c;
+    }
+
     public Boolean requiresReauthorizationBeforeChange() {
         if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
             return false; 
@@ -91,6 +96,11 @@ public with sharing class Gift {
         convertAdditionalObjectMembers();
         unitOfWork.registerDirty(new List<sObject> { this.dataImport });
         unitOfWork.save();
+    }
+
+    public void dryRunThroughBDI() {
+        loadDataImportSettings();
+        runBdiDryRun();
     }
 
     public void assignSoftCredits(SoftCredits incomingSoftCredits) {
@@ -145,6 +155,21 @@ public with sharing class Gift {
         }
 
         return false;
+    }
+
+    private void loadDataImportSettings() {
+        if (giftBatchId() != null) {
+            dataImportSettings = BDI_DataImportService.loadSettings(giftBatchId());
+        } else {
+            dataImportSettings = BDI_DataImportService.loadSettings(null);
+        }
+    }
+
+    private void runBdiDryRun() {
+        BDI_DataImport_API.processDataImportRecords(
+            dataImportSettings,
+            new List<DataImport__c> { this.dataImport },
+            true);
     }
 
     @TestVisible
