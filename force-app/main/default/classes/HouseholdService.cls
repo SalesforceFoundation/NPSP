@@ -279,4 +279,13 @@ public inherited sharing class HouseholdService {
         set;
     }
 
+    public void updateHouseholds(List<Id> ids, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        if (ids.isEmpty()) {
+            return;
+        }
+
+        Households households = new Households(new Set<Id>(ids));
+        households.updateHouseholds(dmlWrapper);
+    }
+
 }

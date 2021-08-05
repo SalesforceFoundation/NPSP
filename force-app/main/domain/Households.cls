@@ -203,20 +203,9 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description Updates an HH Account's naming, primary contact, and rollups
-    * @param accountIds the list of Account (Id's) that need updating.
+    * @description Updates the Household's naming, primary contact, and rollups.
     */
-    public static void updateHouseholds(List<Id> accountIds, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        if (accountIds.isEmpty()) {
-            return;
-        }
-
-        resetPrimaryContactForAccount(accountIds, dmlWrapper);
-        updateNameAndMemberCount(accountIds);
-        rollupAccounts(accountIds);
-    }
-
-    private void updateHouseholds(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void updateHouseholds(TDTM_Runnable.DmlWrapper dmlWrapper) {
         resetPrimaryContact(dmlWrapper);
         updateNameAndMemberCount(ids());
         rollupAccounts(ids());

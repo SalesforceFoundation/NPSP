@@ -78,6 +78,17 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private static HouseholdService householdService {
+        get {
+            if (householdService == null) {
+                householdService = new HouseholdService();
+            }
+            return householdService;
+        }
+        set;
+    }
+
     public LegacyHouseholds(Set<Id> ids, HouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
@@ -297,7 +308,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
 
         List<Id> householdIdsToUpdate =
                 ContactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
-        Households.updateHouseholds(householdIdsToUpdate, dmlWrapper);
+        householdService.updateHouseholds(householdIdsToUpdate, dmlWrapper);
         Households.updateNameAndMemberCount(
                 contactsInstance.getHouseholdIdsToRename());
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
