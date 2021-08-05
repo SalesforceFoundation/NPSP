@@ -19,4 +19,12 @@ export default class Rd2ChangeHistory extends LightningElement {
             this.errorMessage = ex.message;
         }
     }
+
+    get serializedChangeHistory() {
+        if(this.changeHistory !== null && this.changeHistory !== undefined) {
+            return JSON.stringify(this.changeHistory, null, 2);
+        } else {
+            return 'Loading...'
+        }
+    }
 }
