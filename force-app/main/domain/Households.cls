@@ -255,49 +255,6 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description sets the Primary Account for each Account in the list of Accounts
-    * @param accountIds the list of Account (Id's) that need updating.
-    */
-    private static void resetPrimaryContactForAccount(List<Id>
-            accountIds, TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        // for each account, we need a set of their contacts.
-        Map<Id, Set<Id>> contactIdsByAccountId = getContactIdsByAccountId(accountIds);
-
-        // now go thru each account and update their primary contact if the current one isn't valid
-        List<Account> accounts = new List<Account>();
-        for (Account accountRecord : [SELECT Id, npe01__One2OneContact__c FROM Account WHERE Id IN :accountIds]) {
-            Set<Id> contactIds = contactIdsByAccountId.get(accountRecord.Id);
-            if (contactIds != null && !contactIds.contains(accountRecord.npe01__One2OneContact__c)) {
-                accountRecord.npe01__One2OneContact__c = extractFirstId(contactIds);
-                accounts.add(accountRecord);
-            }
-        }
-
-        if (accounts != null && !accounts.isEmpty()) {
-            dmlWrapper.objectsToUpdate.addAll(accounts);
-        }
-    }
-
-    private static Map<Id, Set<Id>> getContactIdsByAccountId(List<Id> accountIds) {
-        Map<Id, Set<Id>> contactIdsByAccountId = new Map<Id, Set<Id>>();
-
-        for (Contact contactRecord : [
-                SELECT Id, AccountId, Account.npe01__One2OneContact__c
-                FROM Contact
-                WHERE AccountId IN :accountIds
-        ]) {
-            Set<Id> contactIds = contactIdsByAccountId.get(contactRecord.AccountId);
-            if (contactIds == null) {
-                contactIds = new Set<Id>();
-                contactIdsByAccountId.put(contactRecord.AccountId, contactIds);
-            }
-            contactIds.add(contactRecord.Id);
-        }
-        return contactIdsByAccountId;
-    }
-
-    /*******************************************************************************************************
     * @description returns the first Id from the specified set
     * @param ids a set of Id's
     * @return Id.  null if the set is empty.
