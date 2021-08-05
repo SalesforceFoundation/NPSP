@@ -24,8 +24,6 @@ class ElevateBatch {
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
 
-            console.log(`elevate batch id = ${this.elevateBatchId}`);
-
             return authorizedGift;
         } catch (exception) {
             if (retryOnFailure) {

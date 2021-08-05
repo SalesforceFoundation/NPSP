@@ -334,8 +334,6 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
-        System.debug('HERE = ');
-        System.debug(authorizedGift);
         try {
            elevateBatchService.removeFromElevateBatch(authorizedGift);
         } catch (AuraHandledException ex) {

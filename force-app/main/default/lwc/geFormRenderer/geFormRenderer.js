@@ -737,6 +737,7 @@ export default class GeFormRenderer extends LightningElement{
         if (gift && gift.id() && gift.isAuthorized() && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
             try {
                 await this.currentElevateBatch.remove(gift.asDataImport());
+                this.handleNullPaymentFieldsInFormState();
             } catch (exception) {
                 console.log(`exception = ${JSON.stringify(exception)}`);
                 this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
