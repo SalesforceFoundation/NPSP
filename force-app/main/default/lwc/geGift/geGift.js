@@ -1,13 +1,14 @@
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import SoftCredits from './geSoftCredits';
 
 class Gift {
-    _softCredits = { all: [] };
+    softCredits = new SoftCredits();
     _fields = {};
 
     constructor(giftView) {
         if (giftView) {
             this._fields = giftView.fields;
-            this._softCredits = giftView.softCredits;
+            this.softCredits = new SoftCredits(giftView.softCredits.all);
         }
     }
 
@@ -26,8 +27,17 @@ class Gift {
         delete this._fields[field];
     }
 
-    softCredits() {
-        return this._softCredits.all;
+    addNewSoftCredit(softCredit) {
+        console.log('addSoftCredit...', softCredit);
+        this.softCredits.addNew();
+    }
+
+    removeSoftCredit(key) {
+        this.softCredits.remove(key);
+    }
+
+    updateSoftCredit(softCredit) {
+        this.softCredits.update(softCredit);
     }
 
     asDataImport() {
@@ -46,14 +56,14 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this.softCredits() ]
+            softCredits: [ ...this.softCredits.all() ]
         }
     }
 
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: { ...this._softCredits }
+            softCredits: [ ...this.softCredits.all() ]
         }
     }
 }

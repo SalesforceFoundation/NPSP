@@ -10,7 +10,7 @@
                          size="x-small"
                          message={alertBanner.message}>
     </c-util-alert-banner>
-    <template for:each={rowList} for:item='row' for:index='index'>
+    <template for:each={giftInView.softCredits} for:item='row' for:index='index'>
         <c-ge-form-widget-soft-credit-row key={row.key}
                                           row={row}
                                           row-index={index}

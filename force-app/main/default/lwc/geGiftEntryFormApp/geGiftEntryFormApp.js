@@ -101,6 +101,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.isElevateCustomer = await checkForElevateCustomer();
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
         registerListener('refreshbatchtable', this.refreshBatchTable, this);
+        registerListener('softcreditwidgetchange', this.handleSoftCreditWidgetChange, this);
 
         if (this.recordId) {
             this.giftBatchState = await this.giftBatch.init(this.recordId);
@@ -110,6 +111,29 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     disconnectedCallback() {
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+    }
+
+    handleSoftCreditWidgetChange(event) {
+        console.log('handleSoftCreditWidgetChange', deepClone(event));
+        switch(event.action) {
+            case 'addSoftCredit':
+                console.log('case addSoftCredit');
+                this.gift.addNewSoftCredit();
+                this.giftInView = this.gift.state();
+                break;
+            case 'removeSoftCredit':
+                console.log('case removeSoftCredit');
+                this.gift.removeSoftCredit(event.detail.key);
+                this.giftInView = this.gift.state();
+                break;
+            case 'updateSoftCredit':
+                console.log('case updateSoftCredit');
+                this.gift.updateSoftCredit(event.detail.softCredit);
+                this.giftInView = this.gift.state();
+                break;
+        }
+
+        console.log('New Gift In View: ', deepClone(this.giftInView));
     }
 
     async refreshBatchTable() {

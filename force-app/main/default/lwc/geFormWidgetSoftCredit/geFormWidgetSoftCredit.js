@@ -1,9 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import { isNotEmpty } from 'c/utilCommon';
-
-import getDummySoftCredits from '@salesforce/apex/GE_GiftEntryController.getDummySoftCredits';
-
 import GeLabelService from 'c/geLabelService';
+
+import { deepClone, isNotEmpty } from 'c/utilCommon';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
@@ -16,34 +15,21 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     @track rowList = [];
 
     connectedCallback() {
-        this.init();
-    }
-
-    async init() {
-        this.giftInView.softCredits.all.forEach(softCredit => {
-            this.addRow(softCredit);
-        });
-    };
-
-    addRow(softCredit) {
-        const record = { ...softCredit };
-        let row = {};
-        row.key = this.rowList.length;
-
-        row = {
-            ...row,
-            record
-        };
-        this.rowList.push(row);
+        console.log('Gift In View: ', deepClone(this.giftInView));
     }
 
     handleAddRow() {
-        this.addRow();
+        console.log('handleAddRow');
+        fireEvent(this, 'softcreditwidgetchange', { action: 'addSoftCredit' });
     }
 
     handleRemove(event) {
-        this.rowList.splice(event.detail.rowIndex, 1);
-        // TODO fire event
+        fireEvent(this, 'softcreditwidgetchange', {
+            action: 'removeSoftCredit',
+            detail: {
+                key: event.detail.rowIndex
+            }
+        });
     }
 
     reset() {

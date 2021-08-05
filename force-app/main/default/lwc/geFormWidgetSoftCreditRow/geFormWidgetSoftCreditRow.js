@@ -1,6 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { apiNameFor, isNotEmpty } from 'c/utilCommon';
+import { apiNameFor, isNotEmpty, deepClone } from 'c/utilCommon';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 import OPP_CONTACT_ROLE_OBJECT from '@salesforce/schema/OpportunityContactRole';
 import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
@@ -13,8 +14,32 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    handleFieldValueChange = (event) => {
-        // do stuff
+    handleContactIdChange(event) {
+        console.log('handleContactIdChange: ', deepClone(event.detail));
+        const newContactId = event.detail.value[0];
+        fireEvent(this, 'softcreditwidgetchange', {
+            action: 'updateSoftCredit',
+            detail: {
+                softCredit: {
+                    ...this.row,
+                    ContactId: newContactId
+                }
+            }
+        });
+    }
+
+    handleRoleChange(event) {
+        console.log('handleRoleChange: ', deepClone(event.detail));
+        const newRole = event.detail.value;
+        fireEvent(this, 'softcreditwidgetchange', {
+            action: 'updateSoftCredit',
+            detail: {
+                softCredit: {
+                    ...this.row,
+                    Role: newRole
+                }
+            }
+        });
     }
 
     remove() {
@@ -23,7 +48,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     hasIdField() {
-        return isNotEmpty(this.row.record.Id);
+        return isNotEmpty(this.row.Id);
     }
 
     get isReadOnly() {
@@ -43,7 +68,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get roleValue() {
-        return this.row.record[apiNameFor(ROLE_FIELD)];
+        return this.row[apiNameFor(ROLE_FIELD)];
     }
 
     get contactFieldApiName() {
@@ -51,7 +76,7 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     }
 
     get contactValue() {
-        return this.row.record[apiNameFor(CONTACT_FIELD)];
+        return this.row[apiNameFor(CONTACT_FIELD)];
     }
 
     get qaLocatorDeleteRow() {
