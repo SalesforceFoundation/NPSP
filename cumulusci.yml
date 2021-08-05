@@ -12,6 +12,7 @@ project:
         repo_url: https://github.com/SalesforceFoundation/NPSP
         prefix_beta: uat/
         prefix_release: rel/
+        default_branch: main
         release_notes:
             parsers:
                 4:
