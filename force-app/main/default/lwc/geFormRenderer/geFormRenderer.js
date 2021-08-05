@@ -734,7 +734,7 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const gift = new Gift(this.giftInView);
-        if (gift && gift.id() && gift.isAuthorized() && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD) {
+        if (gift && gift.id() && gift.isAuthorized() && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD && this.isElevateCustomer) {
             try {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 this.handleNullPaymentFieldsInFormState();

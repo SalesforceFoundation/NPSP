@@ -430,7 +430,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const giftAsDataImport = gift.asDataImport();
             this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
 
-            if (gift && gift.isAuthorized()) {
+            if (gift && gift.isAuthorized() && this.isElevateCustomer) {
                 try {
                     await this.deleteFromElevateBatch(giftAsDataImport);    
                 } catch (exception) {
