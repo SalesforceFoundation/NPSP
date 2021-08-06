@@ -179,7 +179,7 @@ private class Gift_Test {
     }
 
     @isTest
-    static void shouldDryRunGift() {
+    static void shouldProcessGiftThroughBDI() {
         DataImport__c dataImport = new DataImport__c(
             Account1_Name__c = 'testAcct',
             Donation_Donor__c = 'Account1',
@@ -192,6 +192,9 @@ private class Gift_Test {
         System.assertEquals(null, gift.status());
         gift.dryRunThroughBDI();
         System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, gift.status());
+
+        gift.processThroughBDI();
+        System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
     }
 
     private class GiftSelectorMock implements StubProvider {

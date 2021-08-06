@@ -325,27 +325,6 @@ public with sharing class GE_GiftEntryController {
     }
 
     /*******************************************************************************************************
-    * @description Saves the data import record, dry runs the record, and returns updated
-    * totals with the new row.
-    * @param dataImport: the NPSP_Data_Import__c record to update
-    * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
-    * @return String serialized DataImportModel
-    */
-    @AuraEnabled
-    public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
-        dataImport.Additional_Object_JSON__c =
-                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
-
-        // Run the BDI process on this new Data Import
-        processDataImport(dataImport, false, updateGift);
-
-        // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(dataImport.Id);
-
-        return oppId;
-    }
-
-    /*******************************************************************************************************
     * @description Set DataImport Settings that are important to Gift Entry matching
     * @return Data_Import_Settings__c diSettings object used to process gifts
     */

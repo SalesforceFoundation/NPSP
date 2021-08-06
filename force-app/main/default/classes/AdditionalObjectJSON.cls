@@ -188,6 +188,7 @@ public inherited sharing class AdditionalObjectJSON {
             && this.dynamicSourceGroup.dynamicSourceByObjMappingDevName?.keySet()?.size() > 0;
     }
 
+    @TestVisible
     private String convertWidgetDataToObjectJSON(String widgetData) {
 
         if (String.isBlank(widgetData)) {
