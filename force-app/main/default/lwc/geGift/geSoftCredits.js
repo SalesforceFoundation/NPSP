@@ -1,6 +1,7 @@
 
 class SoftCredits {
     _all = [];
+    _processedSoftCredits = [];
 
     constructor(softCredits) {
         this._indexSoftCredits(softCredits);
@@ -8,6 +9,10 @@ class SoftCredits {
 
     all() {
         return this._all;
+    }
+
+    processedSoftCredits() {
+        return this._processedSoftCredits;
     }
 
     addNew() {
@@ -20,6 +25,10 @@ class SoftCredits {
 
     addAll(softCredits) {
         this._indexSoftCredits(softCredits);
+    }
+
+    addProcessedSoftCredits(processedSoftCredits) {
+        this._processedSoftCredits = [ ...processedSoftCredits ];
     }
 
     remove(key) {

@@ -204,6 +204,10 @@ export default class GeFormRenderer extends LightningElement{
         } else {
             throw 'Unsupported selected donation type!';
         }
+
+        const reviewDonationsChangeEvent = new CustomEvent(
+            'reviewdonationschange', { detail: { record: record } });
+        this.dispatchEvent(reviewDonationsChangeEvent);
     }
 
     setSelectedPaymentInFormState(record) {

@@ -109,6 +109,7 @@ public with sharing class DonationSelector {
         String opportunityContactRoleSubqueryString = new UTIL_Query()
             .withFrom('OpportunityContactRoles')
             .withSelectFields(opportunityContactRoleFields)
+            .withWhere('isPrimary = false')
             .build();
 
         return '(' + opportunityContactRoleSubqueryString + ')';

@@ -49,7 +49,7 @@ class Gift {
         delete this._fields[field];
     }
 
-    addNewSoftCredit(softCredit) {
+    addNewSoftCredit() {
         this.softCredits.addNew();
     }
 
@@ -59,6 +59,10 @@ class Gift {
 
     updateSoftCredit(softCredit) {
         this.softCredits.update(softCredit);
+    }
+
+    addProcessedSoftCredits(processedSoftCredits) {
+        this.softCredits.addProcessedSoftCredits(processedSoftCredits);
     }
 
     asDataImport() {
@@ -94,7 +98,8 @@ class Gift {
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: [ ...this.softCredits.all() ]
+            softCredits: [ ...this.softCredits.all() ],
+            processedSoftCredits: [ ...this.softCredits.processedSoftCredits() ]
         }
     }
 }

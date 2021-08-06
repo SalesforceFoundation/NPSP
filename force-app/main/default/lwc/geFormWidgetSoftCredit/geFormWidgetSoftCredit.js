@@ -12,8 +12,6 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
     @api element;
     @track alertBanner = {};
 
-    @track rowList = [];
-
     handleAddRow() {
         fireEvent(this, 'softcreditwidgetchange', { action: 'addSoftCredit' });
     }

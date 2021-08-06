@@ -113,6 +113,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
 
+    handleReviewDonationsChange(event) {
+        // TODO: pull more review donations logic out of form renderer
+        // currently handles populating the Gift's processed soft credits collection
+        const reviewRecord = event.detail.record;
+        const selectedReviewRecordHasProcessedSoftCredits =
+            reviewRecord && reviewRecord.OpportunityContactRoles;
+        if (selectedReviewRecordHasProcessedSoftCredits) {
+            const processedSoftCredits = reviewRecord.OpportunityContactRoles.records;
+            this.gift.addProcessedSoftCredits(processedSoftCredits);
+            this.giftInView = this.gift.state();
+        }
+    }
+
     handleSoftCreditWidgetChange(event) {
         switch(event.action) {
             case 'addSoftCredit':
