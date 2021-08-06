@@ -1,8 +1,8 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
-import { fireEvent, registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, deepClone, getNamespace, showToast, apiNameFor } from 'c/utilCommon';
+import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
+import { validateJSONString, getNamespace, showToast } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsExpectedTotalsMessage

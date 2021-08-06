@@ -80,49 +80,17 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
-    // TODO: Remove this method! Exists only to provide representative soft credit data
-    //       For work in progress
-    @AuraEnabled(cacheable=true)
-    public static List<OpportunityContactRole> getDummySoftCredits() {
-        Integer numRecords = 3;
-        List<String> roles = new List<String> {
-            'Influencer',
-            'Household Member',
-            'Decision Maker'
-        };
-
-        List<OpportunityContactRole> dummySoftCredits = new List<OpportunityContactRole>();
-        
-        try {
-            List<Contact> contacts = [
-                SELECT Id
-                FROM Contact 
-                ORDER BY CreatedDate DESC 
-                LIMIT :numRecords];
-
-            if(!contacts.isEmpty()) {
-                for (Integer i = 0; i < numRecords; i++) {
-                    OpportunityContactRole ocr = new OpportunityContactRole(
-                        Role = roles[Math.mod(i,roles.size())],
-                        ContactId = contacts[Math.mod(i,contacts.size())].Id
-                    );
-                    dummySoftCredits.add(ocr);
-                }
-            }
-
-            return dummySoftCredits;
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
-            GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
-            giftBatchService.add(giftBatchId, inboundGift);
+            // TODO: currency validity check should happen inside the GiftBatch.add(gift) method
+            if (areCurrenciesValid(dataImportBatchId)) {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                giftBatchService.add(giftBatchId, inboundGift);
+            }
         } catch (AuraHandledException e) {
-            throw new AuraHandledException(e.getMessage());
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw buildDmlException(JSONExceptionData);
         }
     }
 
@@ -163,7 +131,8 @@ public with sharing class GE_GiftEntryController {
             Gift gift = inboundGift.asGift();
             giftService.save(gift);
         } catch (AuraHandledException e) {
-            throw new AuraHandledException(e.getMessage());
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw buildDmlException(JSONExceptionData);
         }
     }
 
@@ -299,35 +268,6 @@ public with sharing class GE_GiftEntryController {
         DmlException ex = new DmlException(errorMsg);
         ex.setMessage(errorMsg);
         return ex;
-    }
-
-    /*******************************************************************************************************
-    * @description Saves the data import record, dry runs the record, and returns updated
-    * totals with the new row.
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @param dataImport: the NPSP_Data_Import__c record to update
-    * @return String serialized DataImportModel
-    */
-    @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
-
-        try {
-            if (!areCurrenciesValid(batchId)) {
-                return null;
-            }
-
-            dataImport.Additional_Object_JSON__c =
-                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
-
-            upsertDataImport(dataImport);
-            return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
-
-        } catch (Exception ex) {
-            // create custom lwc exception and throw it
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-
-            throw buildDmlException(JSONExceptionData);
-        }
     }
 
     @AuraEnabled
