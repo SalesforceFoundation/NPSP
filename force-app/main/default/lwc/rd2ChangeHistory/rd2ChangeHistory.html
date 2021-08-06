@@ -9,6 +9,9 @@
                     </div>
                 </template>
             </div>
+            <p slot="footer" if:true={changeHistory.hasMore}>
+                <a href="#" onclick={navigateToRelatedList}>{labels.commonViewMore}</a>
+            </p>
         </lightning-card>
     </template>
 </template>
