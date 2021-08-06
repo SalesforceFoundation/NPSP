@@ -5,15 +5,18 @@ import Rd2ChangeEntry from 'c/rd2ChangeEntry';
 const getChangeEntry = () => {
     return {
         "changeDate": "2021-08-05",
+        "changeType": "Upgrade",
         "fields": [
             {
                 "displayType": "MONEY",
                 "label": "Amount",
+                "newValue": 100,
                 "oldValue": 72
             },
             {
                 "displayType": "MONEY",
                 "label": "Annual Value",
+                "newValue": 100,
                 "oldValue": 72
             },
             {
@@ -45,5 +48,27 @@ describe('c-rd2-change-entry', () => {
 
         const dateTimeComponent = component.shadowRoot.querySelector('lightning-formatted-date-time');
         expect(dateTimeComponent.value).toBe('2021-08-05');
+    });
+
+    it('applies styling to upgrades', () => {
+        const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
+        component.changeEntry = getChangeEntry();
+
+        document.body.appendChild(component);
+
+        const badgeComponent = component.shadowRoot.querySelector('lightning-badge');
+        expect(badgeComponent.classList).toContain('slds-theme_success');
+    });
+
+    it('applies styling to downgrades', () => {
+        const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
+        const changeEntry = getChangeEntry();
+        changeEntry.changeType = 'Downgrade';
+        component.changeEntry = changeEntry;
+
+        document.body.appendChild(component);
+
+        const badgeComponent = component.shadowRoot.querySelector('lightning-badge');
+        expect(badgeComponent.classList).toContain('slds-theme_error');
     });
 })

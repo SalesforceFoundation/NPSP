@@ -1,10 +1,10 @@
 <template>
     <lightning-layout vertical-align="center">
-        <lightning-layout-item size="4" padding="around-small">
+        <lightning-layout-item size="4" class="slds-p-around_x-small">
             <b><lightning-formatted-date-time value={changeEntry.changeDate}></lightning-formatted-date-time></b>
         </lightning-layout-item>
         <lightning-layout-item size="8">
-            <lightning-badge label={changeEntry.changeType}></lightning-badge>
+            <lightning-badge label={changeEntry.changeType} class={badgeClass}></lightning-badge>
         </lightning-layout-item>
     </lightning-layout>
     <template for:each={changeEntry.fields} for:item='item'>
