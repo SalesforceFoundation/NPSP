@@ -8,7 +8,7 @@ import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported
 import SoftCredits from './geSoftCredits';
 
 class Gift {
-    softCredits = new SoftCredits();
+    _softCredits = new SoftCredits();
     _fields = {};
 
     constructor(giftView) {
@@ -19,7 +19,7 @@ class Gift {
 
     _init(giftView) {
         this._fields = giftView.fields;
-        this.softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
+        this._softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
     }
 
     id() {
@@ -50,19 +50,23 @@ class Gift {
     }
 
     addNewSoftCredit() {
-        this.softCredits.addNew();
+        this._softCredits.addNew();
     }
 
     removeSoftCredit(key) {
-        this.softCredits.remove(key);
+        this._softCredits.remove(key);
     }
 
     updateSoftCredit(softCredit) {
-        this.softCredits.update(softCredit);
+        this._softCredits.update(softCredit);
     }
 
     addProcessedSoftCredits(processedSoftCredits) {
-        this.softCredits.addProcessedSoftCredits(processedSoftCredits);
+        this._softCredits.addProcessedSoftCredits(processedSoftCredits);
+    }
+
+    softCredits() {
+        return this._softCredits;
     }
 
     asDataImport() {
@@ -81,7 +85,7 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this.softCredits.all() ]
+            softCredits: [ ...this._softCredits.all() ]
         }
     }
 
@@ -98,8 +102,8 @@ class Gift {
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: [ ...this.softCredits.all() ],
-            processedSoftCredits: [ ...this.softCredits.processedSoftCredits() ]
+            softCredits: [ ...this._softCredits.all() ],
+            processedSoftCredits: [ ...this._softCredits.processedSoftCredits() ]
         }
     }
 }
