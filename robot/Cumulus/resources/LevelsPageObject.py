@@ -46,8 +46,8 @@ class LevelListPage(BaseNPSPPage, ListingPage):
             self.selenium.wait_until_page_contains("Edit")
             self.selenium.click_link("Edit")
 
-        self.npsp.wait_for_locator('frame','Levels')
-        self.npsp.choose_frame('Levels')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
 
     @capture_screenshot_on_error
