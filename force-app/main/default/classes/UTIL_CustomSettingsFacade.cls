@@ -900,6 +900,7 @@ public without sharing class UTIL_CustomSettingsFacade {
 
         recurringDonationsSettings.EnableAutomaticNaming__c = settings.EnableAutomaticNaming__c;
         recurringDonationsSettings.IsRecurringDonations2Enabled__c = settings.IsRecurringDonations2Enabled__c;
+        recurringDonationsSettings.RecurringDonations2MigrationState__c = settings.RecurringDonations2MigrationState__c;
         recurringDonationsSettings.RecurringDonations2EnablementState__c = settings.RecurringDonations2EnablementState__c;
         recurringDonationsSettings.UseFiscalYearForRecurringDonationValue__c = settings.UseFiscalYearForRecurringDonationValue__c;
         recurringDonationsSettings.InstallmentOppStageName__c = settings.InstallmentOppStageName__c;
