@@ -133,6 +133,7 @@ public with sharing class ADDR_Addresses_TEST {
         testAccount.BillingCountry = 'United States';
         testAccount.BillingPostalCode = 'Undeliverable Zip';
         testAccount.BillingState = 'Washington';
+        testAccount.Undeliverable_Address__c = false;
         insert testAccount;
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
@@ -148,8 +149,9 @@ public with sharing class ADDR_Addresses_TEST {
             update accountToUpdate;
         Test.stopTest();
 
-        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Household_Account__c =
-                :testAccount.Id];
+        Address__c updatedAddress = [SELECT Undeliverable__c
+                                     FROM Address__c
+                                     WHERE Household_Account__c = :testAccount.Id];
 
         Account updatedAccount = [SELECT Undeliverable_Address__c,
                                     (SELECT Undeliverable_Address__c FROM Contacts)
@@ -157,42 +159,13 @@ public with sharing class ADDR_Addresses_TEST {
 
         System.assert(updatedAccount.Undeliverable_Address__c, 'The billing address for the account should be ' +
                 'marked undeliverable.');
-        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The new ' +
-                'address undeliverable status should match the new account undeliverable status.');
+        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The ' +
+                'address undeliverable status should match the updated account undeliverable status.');
 
         for (Contact contact : updatedAccount.Contacts) {
             System.assertEquals(updatedAccount.Undeliverable_Address__c, contact.Undeliverable_Address__c, 'The ' +
                     'contact undeliverable address should match the house account undeliverable address.');
         }
-    }
-
-    @IsTest
-    private static void updatedAccountUndeliverableStatusShouldSyncToDefaultAddressAndContacts() {
-        //skip the test if Advancement is installed
-        if (ADV_PackageInfo_SVC.useAdv()) {
-            return;
-        }
-
-        Account testAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
-        testAccount.BillingStreet = 'Undeliverable Street';
-        testAccount.BillingCity = 'Undeliverable City';
-        testAccount.BillingCountry = 'United States';
-        testAccount.BillingPostalCode = 'Undeliverable Zip';
-        testAccount.BillingState = 'Washington';
-        testAccount.Undeliverable_Address__c = true;
-
-        Test.startTest();
-        insert testAccount;
-        Test.stopTest();
-
-        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Household_Account__c =
-                :testAccount.Id];
-        Account updatedAccount = [SELECT Undeliverable_Address__c FROM Account WHERE Id = :testAccount.Id];
-
-        System.assert(updatedAccount.Undeliverable_Address__c, 'The billing address for the account should be ' +
-                'marked undeliverable.');
-        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The new ' +
-                'address undeliverable status should match the new account undeliverable status.');
     }
 
     /*********************************************************************************************************

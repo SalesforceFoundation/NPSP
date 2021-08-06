@@ -664,6 +664,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
             NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
             Address__c existingAddress = existingAddressesByAddress.get(newAddress);
             NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
+            Boolean isAddressUpdated;
+
             if (existingAddress != null) {
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
                 if (!npspNewAddress.isEqualToIncludingAddressType(npspExistingAddress, includeAddressType)) {
@@ -671,10 +673,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     if (npspNewAddress.isDefault()) {
                         npspExistingAddress.setAsDefault();
                     }
-                    dmlWrapper.objectsToUpdate.add(npspExistingAddress.getRecord());
+                    isAddressUpdated = true;
                 } else if (npspNewAddress.isDefault() && !npspExistingAddress.isDefault()) {
                     npspExistingAddress.setAsDefault();
-                    dmlWrapper.objectsToUpdate.add(npspExistingAddress.getRecord());
+                    isAddressUpdated = true;
+                } else if (npspExistingAddress.isUndeliverableStatusChanged()) {
+                    isAddressUpdated = true;
+                }
+                if (isAddressUpdated) {
+                    dmlWrapper.objectsToUpdate.add(existingAddress);
                 }
             } else {
                 dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
