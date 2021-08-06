@@ -12,9 +12,32 @@ describe('c-rd2-change-entry-value', () => {
         component.displayType = 'TEXT';
         document.body.appendChild(component);
 
-        const outputCmp = component.querySelector('lightning-formatted-text');
-        expect(component).toMatchSnapshot();
-        // expect(outputCmp.value).toBe('Some Text');
+        const outputCmp = component.shadowRoot.querySelector('lightning-formatted-text');
+
+        expect(outputCmp.value).toBe('Some Text');
 
     });
+
+    it('renders currency', () => {
+        const component = createElement('c-rd2-change-entry-value', { is: Rd2ChangeEntryValue });
+        component.value = 50;
+        component.displayType = 'MONEY';
+        document.body.appendChild(component);
+
+        const outputCmp = component.shadowRoot.querySelector('lightning-formatted-number');
+
+        expect(outputCmp.value).toBe(50);
+        expect(outputCmp.formatStyle).toBe('currency');
+    });
+
+    it('renders numbers', () => {
+        const component = createElement('c-rd2-change-entry-value', { is: Rd2ChangeEntryValue });
+        component.value = 50;
+        component.displayType = 'NUMERIC';
+        document.body.appendChild(component);
+
+        const outputCmp = component.shadowRoot.querySelector('lightning-formatted-number');
+
+        expect(outputCmp.value).toBe(50);
+    })
 });

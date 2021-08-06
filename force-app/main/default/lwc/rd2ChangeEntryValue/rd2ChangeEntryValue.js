@@ -14,7 +14,7 @@ export default class Rd2ChangeEntryValue extends LightningElement {
     }
 
     get isNumber() {
-        return this.displayType === 'TEXT';
+        return this.displayType === 'NUMERIC';
     }
 
     get isLookup() {

@@ -1,6 +1,8 @@
 <template>
     <template if:true={isText}>
-        <lightning-formatted-text value={value}></lightning-formatted-text>
+        <lightning-formatted-text
+                value={value}
+        ></lightning-formatted-text>
     </template>
     <template if:true={isMoney}>
         <lightning-formatted-number
