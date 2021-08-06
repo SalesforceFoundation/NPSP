@@ -457,6 +457,14 @@ public inherited sharing class RD2_RecurringDonation {
         return changeType;
     }
 
+    /**
+    * @description Return the Currency of the Recurring Donation.
+    * @return String 
+    */
+    public String getCurrencyIsoCode() {
+        return (String)rd.get('CurrencyIsoCode');
+    }
+
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
     }
@@ -576,17 +584,6 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Object getValue(SObjectField rdField){
         return rd.get(rdField);
-    }
-
-    /**
-    * @description Return true if the value of the provided field is different between this
-    * Recurring Donation and the oldRd that was passed in
-    * @param rdField SObjectField to get the value for
-    * @param oldRd RD2_RecurringDonation The Recurring Donation to compare to
-    * @return Boolean
-    */
-    public Boolean isFieldChanged(SObjectField rdField, RD2_RecurringDonation oldRd){
-        return getValue(rdField) != oldRd.getValue(rdField);
     }
 
 }

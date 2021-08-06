@@ -169,7 +169,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Amount
-     * with Change History Enabled does create Change History records
+     * with Change History Enabled does create Change History records with Change Types
      */
     @IsTest
     private static void shouldCreateChangeHistoryDowngradeWhenAmountLowers() {
@@ -441,6 +441,55 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
+     * @description Verifies that creating and updating a Recurring Donation Currency Code
+     * with Change History Enabled does create a Change History record with a Change Type
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryDowngradeWhenExchangeRateIsLower() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        String nonDefaultCurrencyCode = null;
+
+        if (isMultiCurrencyEnabled) {
+            setupISOCodes();
+
+            // If there is no active non-default currency, exit
+            if (nonDefaultCurrencyType == null) {
+                return;
+            }
+
+            nonDefaultCurrencyCode = (String)nonDefaultCurrencyType.get('IsoCode');
+            rdUpdate.put('CurrencyIsoCode', nonDefaultCurrencyCode);
+        }
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+
+        if (isMultiCurrencyEnabled) {
+            System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after RD currency update');
+            RecurringDonationChangeHistory__c rdch = rdchList[0];
+            System.assertEquals(nonDefaultCurrencyCode, rdch.CurrencyIsoCode, 
+                'New currency should be ' + nonDefaultCurrencyCode);
+            System.assertNotEquals(null, rdch.ChangeType__c, 'The Change Type should not be null');
+        } else {
+            System.assertEquals(0, rdchList.size(), 'There should be no Change History since there was no update');
+        }
+    }
+
+    /**
      * @description Verifies that only setting the Change Type on an RD does not create a
      * Change History record
      */
@@ -468,6 +517,28 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     // Helpers
     ///////////////////
+
+    /** @description Non default currency type sObject for this org.*/
+    public static sObject nonDefaultCurrencyType;
+    /** @description Default currency type sObject for this org.*/
+    public static sObject defaultCurrencyType;
+
+    /****
+    * @description Queries currency types and fills class variables for testing currency change
+    */
+    public static void setupISOCodes() {
+        if (nonDefaultCurrencyType !=null || defaultCurrencyType !=null) {
+            return;
+        } else {
+            for (sObject ct : database.query('SELECT IsoCode, ConversionRate, IsCorporate FROM CurrencyType')) {
+                if ((boolean)ct.get('IsCorporate')) {
+                    defaultCurrencyType = ct;
+                } else {
+                    nonDefaultCurrencyType = ct;
+                }
+            }
+        }
+    }
 
     /****
     * @description Returns contact record
