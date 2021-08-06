@@ -70,6 +70,7 @@ import {
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
 import ElevateBatch from './elevateBatch';
+import Gift from 'c/geGift';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -2531,20 +2532,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     processDataImport = async () => {
-        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        const dataImportRecord = this.saveableFormState();
+        const gift = new Gift(this.giftInView);
 
-        submitDataImportToBDI({
-            dataImport: dataImportRecord,
-            updateGift: this.hasSelectedDonationOrPayment()
-        })
-            .then(opportunityId => {
-                this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
-                this.goToRecordDetailPage(opportunityId);
-            })
-            .catch(error => {
-                this.handleBdiProcessingError(error);
-            });
+        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+
+        await gift.save().catch(saveError => this.handleCatchOnSave(saveError));
+
+        await gift.refresh().catch(viewError => this.handleError(viewError));
+
+        if (gift.status() === 'Failed') {
+            this.handleBdiProcessingError(gift.failureInformation());
+        } else {
+            this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
+            this.goToRecordDetailPage(gift.donationId());
+        }
     }
 
     handleBdiProcessingError(error) {

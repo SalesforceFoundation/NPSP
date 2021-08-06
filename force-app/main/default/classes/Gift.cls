@@ -106,6 +106,14 @@ public with sharing class Gift {
         runBdiDryRun();
     }
 
+    public void processThroughBDI() {
+        loadDataImportSettings();
+        BDI_DataImport_API.processDataImportRecords(
+            dataImportSettings,
+            new List<DataImport__c> { this.dataImport },
+            false);
+    }
+
     public void assignSoftCredits(SoftCredits incomingSoftCredits) {
         this.softCredits = incomingSoftCredits;
     }
@@ -163,6 +171,19 @@ public with sharing class Gift {
         } else {
             dataImportSettings = BDI_DataImportService.loadSettings(null);
         }
+
+        if (isMatchingToOpenDonation()) {
+            dataImportSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.ExactMatchOrCreate;
+        } else {
+            dataImportSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.DoNotMatch;
+        }
+    }
+
+    private Boolean isMatchingToOpenDonation() {
+        return this.dataImport.PaymentImported__c != null ||
+            this.dataImport.DonationImported__c != null;
     }
 
     private void runBdiDryRun() {

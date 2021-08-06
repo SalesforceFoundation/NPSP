@@ -1,4 +1,10 @@
+import getGiftView from '@salesforce/apex/GE_GiftEntryController.getGiftView';
+import saveSingleGift from '@salesforce/apex/GE_GiftEntryController.saveSingleGift';
+
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
+import STATUS from '@salesforce/schema/DataImport__c.Status__c';
+import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
 import SoftCredits from './geSoftCredits';
 
 class Gift {
@@ -7,13 +13,29 @@ class Gift {
 
     constructor(giftView) {
         if (giftView) {
-            this._fields = giftView.fields;
-            this.softCredits = new SoftCredits(giftView.softCredits.all);
+            this._init(giftView);
         }
+    }
+
+    _init(giftView) {
+        this._fields = giftView.fields;
+        this.softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
     }
 
     id() {
         return this._fields.Id;
+    }
+
+    status() {
+        return this._fields[STATUS.fieldApiName]
+    }
+
+    failureInformation() {
+        return this._fields[FAILURE_INFORMATION.fieldApiName];
+    }
+
+    donationId() {
+        return this._fields[DONATION_IMPORTED.fieldApiName];
     }
 
     updateFieldsWith(changes) {
@@ -57,6 +79,16 @@ class Gift {
             fields: this.asDataImport(),
             softCredits: [ ...this.softCredits.all() ]
         }
+    }
+
+    async save() {
+        await saveSingleGift({ inboundGift: this.forSave() });
+    }
+
+    async refresh() {
+        const latestGiftView = await getGiftView({ dataImportId: this.id() })
+            .catch(error => { throw error });
+        this._init(latestGiftView);
     }
 
     state() {

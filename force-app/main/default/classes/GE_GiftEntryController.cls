@@ -158,6 +158,16 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void saveSingleGift(InboundGiftDTO inboundGift) {
+        try {
+            Gift gift = inboundGift.asGift();
+            giftService.save(gift);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
