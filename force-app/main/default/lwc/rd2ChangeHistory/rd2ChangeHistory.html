@@ -1,12 +1,14 @@
 <template>
     <template if:true={isReady}>
-        <template for:each={changeHistory.changes} for:item='changeEntry'>
-            <c-rd2-change-entry
-                    key={changeEntry.id}
-                    change-entry={changeEntry}>
-            </c-rd2-change-entry>
-        </template>
+        <lightning-card title="Change History" icon-name="action:defer" variant="narrow">
+            <div class="slds-m-around_medium">
+                <template for:each={changeHistory.changes} for:item='changeEntry'>
+                    <div class="slds-border_top slds-p-vertical_medium" key={changeEntry.id}>
+                        <c-rd2-change-entry change-entry={changeEntry}>
+                        </c-rd2-change-entry>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
     </template>
-
-    <pre>{serializedChangeHistory}</pre>
 </template>

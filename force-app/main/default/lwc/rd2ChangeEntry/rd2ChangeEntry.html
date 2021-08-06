@@ -1,7 +1,10 @@
 <template>
-    <lightning-layout>
-        <lightning-layout-item padding="horizontal-small">
+    <lightning-layout vertical-align="center">
+        <lightning-layout-item size="4" padding="around-small">
             <b><lightning-formatted-date-time value={changeEntry.changeDate}></lightning-formatted-date-time></b>
+        </lightning-layout-item>
+        <lightning-layout-item size="8">
+            <lightning-badge label={changeEntry.changeType}></lightning-badge>
         </lightning-layout-item>
     </lightning-layout>
     <template for:each={changeEntry.fields} for:item='item'>
@@ -16,5 +19,4 @@
         >
         </c-rd2-change-entry-item>
     </template>
-
 </template>

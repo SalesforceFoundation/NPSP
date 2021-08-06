@@ -21,35 +21,4 @@ export default class Rd2ChangeHistory extends LightningElement {
             this.errorMessage = ex.message;
         }
     }
-
-    get serializedChangeHistory() {
-        if(this.changeHistory !== null && this.changeHistory !== undefined) {
-            return JSON.stringify(this.changeHistory, null, 2);
-        }
-        return 'Loading...';
-    }
-
-    get fakeChangeEntry() {
-        return {
-            "changeDate": "2021-08-05",
-            "fields": [
-                {
-                    "displayType": "MONEY",
-                    "label": "Amount",
-                    "oldValue": 72
-                },
-                {
-                    "displayType": "MONEY",
-                    "label": "Annual Value",
-                    "oldValue": 72
-                },
-                {
-                    "displayType": "LOOKUP",
-                    "label": "Campaign",
-                    "newId": "701P0000000a2PHIAY",
-                    "newValue": "First Campaign"
-                }
-            ]
-        }
-    }
 }
