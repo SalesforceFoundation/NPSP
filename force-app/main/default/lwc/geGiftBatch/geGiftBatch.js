@@ -93,7 +93,7 @@ class GiftBatch {
     }
 
     async addMember(gift) {
-        await addGiftTo({ batchId: this._id, dataImport: gift.forSave() });
+        await addGiftTo({ dataImportBatchId: this._id, inboundGift: gift.forSave() });
         return await this.latestState(this._gifts.length + 1);
     }
 
