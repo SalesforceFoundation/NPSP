@@ -77,7 +77,7 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.newValue = this.record.NewInstallmentFrequency__c;
         view.oldValue = this.record.PreviousInstallmentFrequency__c;
-        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.TEXT);
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.NUMERIC);
         view.label = Label.RDCH_Frequency;
 
         return view;
@@ -88,7 +88,7 @@ public with sharing class RD2_ChangeHistory {
         view.newValue = this.record.NewInstallmentPeriod__c;
         view.oldValue = this.record.PreviousInstallmentPeriod__c;
         view.label = Label.pmtWizardIntervalPeriod;
-        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.NUMERIC);
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.TEXT);
         return view;
     }
 
