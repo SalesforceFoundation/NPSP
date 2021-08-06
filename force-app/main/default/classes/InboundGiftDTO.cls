@@ -34,10 +34,8 @@
 */
 public with sharing class InboundGiftDTO {
 
-    @AuraEnabled
-    public DataImport__c fields { get; set; }
-    @AuraEnabled
-    public List<OpportunityContactRole> softCredits { get; set; }
+    @AuraEnabled public DataImport__c fields { get; set; }
+    @AuraEnabled public List<OpportunityContactRole> softCredits { get; set; }
 
     public InboundGiftDTO() {}
 

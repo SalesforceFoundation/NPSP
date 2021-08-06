@@ -28,29 +28,48 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @isTest
-private class GiftDTO_TEST {
+private class InboundGiftDTO_TEST {
+    @isTest
+    static void shouldReturnGift() {
+        InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();
+        dummyGiftDTO.fields = new DataImport__c();
+        dummyGiftDTO.fields.Id = DUMMY_DATA_IMPORT_ID;
+        dummyGiftDTO.fields.Account1Imported__c = DUMMY_ACCOUNT_ID;
+        dummyGiftDTO.fields.Donation_Amount__c = 55.55;
+        Gift dummyGift = dummyGiftDTO.asGift();
+
+        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGift.fields().get('Id'));
+        System.assertEquals(DUMMY_ACCOUNT_ID, dummyGift.fields().get(ACCOUNT1_IMPORTED_FIELD));
+        System.assertEquals(55.55, dummyGift.fields().get(DONATION_AMOUNT_FIELD));
+    }
 
     @isTest
-    static void shouldHaveExpectedPropertiesWhenConstructedWithAGift() {
-        String additionalObjectStringWithSoftCredits =
-            new UTIL_AdditionalObjectData_TEST()
-            .withOpportunityContactRoles(2)
-            .build();
+    static void shouldReturnGiftWith5SoftCredits() {
+        List<OpportunityContactRole> dummyOpportunityContactRoles = buildDummyOCRs(5);
 
-        DataImport__c dummyDataImport = new DataImport__c(
-            Id = DUMMY_DATA_IMPORT_ID,
-            Account1Imported__c = DUMMY_ACCOUNT_ID,
-            Donation_Amount__c = 33.33,
-            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
-        );
-        Gift dummyGift = new Gift(dummyDataImport);
+        InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();
+        dummyGiftDTO.fields = new DataImport__c();
+        dummyGiftDTO.softCredits = dummyOpportunityContactRoles;
 
-        GiftDTO dummyGiftDTO = new GiftDTO(dummyGift);
+        Gift dummyGift = dummyGiftDTO.asGift();
 
-        System.assertEquals(33.33, dummyGiftDTO.fields.get(DONATION_AMOUNT_FIELD));
-        System.assertEquals(DUMMY_ACCOUNT_ID, dummyGiftDTO.fields.get(ACCOUNT1_IMPORTED_FIELD));
-        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGiftDTO.fields.get('Id'));
-        System.assertEquals(2, dummyGiftDTO.softCreditsDTO.softCredits.size());
+        System.debug(dummyGift.softCredits().all());
+        System.assertEquals(5, dummyGift.softCredits().size());
+        System.assertEquals(0, dummyGift.softCredits().unprocessed().size());
+    }
+
+    private static List<OpportunityContactRole> buildDummyOCRs(Integer count) {
+        List<OpportunityContactRole> dummyOpportunityContactRoles = new List<OpportunityContactRole>();
+        for (Integer i = 0; i < count; i++) {
+            OpportunityContactRole dummyOCR = new OpportunityContactRole(
+                Id = UTIL_UnitTestData_TEST.mockId(OpportunityContactRole.sObjectType),
+                Role = 'DUMMY ROLE ' + i,
+                ContactId = UTIL_UnitTestData_TEST.mockId(Contact.sObjectType)
+            );
+
+            dummyOpportunityContactRoles.add(dummyOCR);
+        }
+        return dummyOpportunityContactRoles;
     }
 
     private static final String DONATION_AMOUNT_FIELD = String.valueOf(DataImport__c.Donation_Amount__c);

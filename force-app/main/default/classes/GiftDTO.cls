@@ -37,33 +37,8 @@ public with sharing class GiftDTO {
     public Map<String, Object> fields;
     public SoftCreditsDTO softCreditsDTO;
 
-    public GiftDTO() {}
-
     public GiftDTO(Gift gift) {
         this.fields = gift.fields();
         this.softCreditsDTO = new SoftCreditsDTO(gift.softCredits());
-    }
-
-    public GiftDTO(Map<String, Object> genericObject) {
-        this.fields = (Map<String, Object>) genericObject.get('fields');
-        this.softCreditsDTO = (SoftCreditsDTO) genericObject.get('softCreditsDTO');
-    }
-
-    public Gift asGift() {
-        DataImport__c dataImport = new DataImport__c();
-
-        if (fields != null) {
-            for (String key : fields.keySet()) {
-                dataImport.put(key, fields.get(key));
-            }
-        }
-
-        Gift gift = new Gift(dataImport);
-
-        if (softCreditsDTO != null) {
-            gift.assignSoftCredits(softCreditsDTO.asSoftCredits());
-        }
-
-        return gift;
     }
 }

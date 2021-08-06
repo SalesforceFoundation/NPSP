@@ -136,6 +136,9 @@ public inherited sharing class AdditionalObjectJSON {
     private OpportunityContactRole opportunityContactRoleFrom(BDI_DynamicSource dynamicSource) {
         OpportunityContactRole ocr = new OpportunityContactRole();
         SObject sourceObject = dynamicSource.sourceObj;
+        if (dynamicSource.importedRecordId != null) {
+            ocr.Id = dynamicSource.importedRecordId;
+        }
         ocr.Role = (String) sourceObject.get(String.valueOf(DataImport__c.Opportunity_Contact_Role_1_Role__c));
         ocr.ContactId = (Id) sourceObject.get(String.valueOf(DataImport__c.Contact1Imported__c));
         return ocr;

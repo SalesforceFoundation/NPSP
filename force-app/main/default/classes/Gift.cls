@@ -97,7 +97,11 @@ public with sharing class Gift {
 
     public void saveRecord() {
         convertAdditionalObjectMembers();
-        unitOfWork.registerDirty(new List<sObject> { this.dataImport });
+        if (this.dataImport.Id != null) {
+            unitOfWork.registerDirty(new List<sObject> { this.dataImport });
+        } else {
+            unitOfWork.registerNew(new List<sObject> { this.dataImport });
+        }
         unitOfWork.save();
     }
 
