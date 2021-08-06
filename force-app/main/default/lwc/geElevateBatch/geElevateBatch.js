@@ -20,11 +20,9 @@ class ElevateBatch {
                 this.elevateBatchId = await this.create();
             }
 
-            const authorizedGift = await apexAddToElevateBatch(
+            return await apexAddToElevateBatch(
                 {tokenizedGift: tokenizedGift, elevateBatchId: this.elevateBatchId}
             );
-
-            return authorizedGift;
         } catch (exception) {
             if (retryOnFailure) {
                 this.elevateBatchId = await this.create();
