@@ -335,32 +335,6 @@ public with sharing class GE_GiftEntryController_TEST {
     }
 
     /***
-     * @description Saves the data import record, dry runs the record, and returns updated
-     * totals with the new row.
-     */
-    @isTest
-    private static void testShouldSaveAndDryRunDataImport() {
-
-        // required setting
-        UTIL_CustomSettingsFacade.getDataImportSettings();
-        // aux vars
-        String firstName = 'fooName';
-        String lastName = 'fooLastName';
-        String batchName = 'fooBatch';
-        // test data
-        Id batchId = createDataImportBatch( batchName );
-        DataImport__c di = createDataImport( firstName, lastName, batchId );
-
-        Test.startTest();
-        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
-        Test.stopTest();
-
-        List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
-        System.assertEquals( result.size(), 1 );
-
-    }
-
-    /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
     @isTest
