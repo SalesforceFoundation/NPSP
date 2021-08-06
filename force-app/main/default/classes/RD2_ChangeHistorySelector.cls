@@ -7,8 +7,7 @@ public with sharing class RD2_ChangeHistorySelector {
             String.valueOf(RecurringDonationChangeHistory__c.ChangeType__c),
             String.valueOf(RecurringDonationChangeHistory__c.EffectiveDate__c),
             String.valueOf(RecurringDonationChangeHistory__c.Id),
-            String.valueOf(RecurringDonationChangeHistory__c.LastModifiedById),
-            String.valueOf(RecurringDonationChangeHistory__c.LastModifiedDate),
+            String.valueOf(RecurringDonationChangeHistory__c.CreatedDate),
             String.valueOf(RecurringDonationChangeHistory__c.NewAmount__c),
             String.valueOf(RecurringDonationChangeHistory__c.NewCampaign__c),
             'NewCampaign__r.Name',
@@ -34,7 +33,8 @@ public with sharing class RD2_ChangeHistorySelector {
         UTIL_Query query = new UTIL_Query()
                 .withSelectFields(fields)
                 .withFrom(RecurringDonationChangeHistory__c.SObjectType)
-                .withLimit(this.recordLimit);
+                .withLimit(this.recordLimit)
+                .withOrderBy('CreatedDate DESC');
 
         if(changeTypesFilter != null) {
             query.withWhere(getChangeTypeWhereClause());

@@ -13,7 +13,7 @@ public with sharing class RD2_ChangeHistory {
             view.statusReason = this.record.NewStatusReason__c;
         }
 
-        view.effectiveDate = this.record.EffectiveDate__c;
+        view.changeDate = this.record.CreatedDate.date();
         view.fields = buildFieldChangeViews();
 
         return view;
@@ -30,7 +30,7 @@ public with sharing class RD2_ChangeHistory {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c)
         );
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.LOOKUP;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.LOOKUP);
         return view;
     }
 
@@ -44,7 +44,7 @@ public with sharing class RD2_ChangeHistory {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c)
         );
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.MONEY;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
         return view;
     }
 
@@ -55,7 +55,7 @@ public with sharing class RD2_ChangeHistory {
             view.newValue = this.record.NewAnnualValue__c;
         }
         view.label = Label.RDCH_Annual_Value;
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.MONEY;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
         return view;
     }
 
@@ -67,7 +67,7 @@ public with sharing class RD2_ChangeHistory {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.Status__c)
         );
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.TEXT;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.TEXT);
         return view;
     }
 
@@ -75,7 +75,7 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.newValue = this.record.NewInstallmentFrequency__c;
         view.oldValue = this.record.PreviousInstallmentFrequency__c;
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.TEXT;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.TEXT);
         view.label = Label.RDCH_Frequency;
 
         return view;
@@ -86,7 +86,7 @@ public with sharing class RD2_ChangeHistory {
         view.newValue = this.record.NewInstallmentPeriod__c;
         view.oldValue = this.record.PreviousInstallmentPeriod__c;
         view.label = Label.pmtWizardIntervalPeriod;
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.NUMERIC;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.NUMERIC);
         return view;
     }
 
@@ -99,7 +99,7 @@ public with sharing class RD2_ChangeHistory {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.PaymentMethod__c)
         );
-        view.displayType = RD2_FieldChangeView.DISPLAY_TYPE.TEXT;
+        view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.TEXT);
         return view;
     }
 
