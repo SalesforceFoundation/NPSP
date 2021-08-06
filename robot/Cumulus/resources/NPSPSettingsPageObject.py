@@ -19,8 +19,8 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        self.npsp.wait_for_locator("frame","Nonprofit Success Pack Settings")
-        self.npsp.choose_frame("Nonprofit Success Pack Settings")
+        self.npsp.wait_for_locator("frame","accessibility title")
+        self.npsp.choose_frame("accessibility title")
 
     def open_main_menu(self,title):
         """Waits for the menu item to load and clicks to expand menu"""
@@ -158,7 +158,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 self.builtin.log("Advanced Mapping is not enabled by default")
                 self.click_toggle_button("Advanced Mapping")
                 self.wait_for_message("Advanced Mapping is enabled")
-                self.npsp.choose_frame("Nonprofit Success Pack Settings")
+                self.npsp.choose_frame("accessibility title")
             else:
                 self.builtin.log("Advanced Mapping is already enabled")
 
@@ -200,7 +200,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.click_toggle_button("Gift Entry")
                 self.wait_for_message("Gift Entry Enabled")
-                self.npsp.choose_frame("Nonprofit Success Pack Settings")
+                self.npsp.choose_frame("accessibility title")
 
 
     def check_crlp_not_enabled_by_default(self):
