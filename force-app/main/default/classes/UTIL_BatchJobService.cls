@@ -140,15 +140,30 @@ public without sharing class UTIL_BatchJobService {
     }
 
     /***
-    * @description Determines number of days passed since the batch job has completed
+    * @description Determines number of days passed since the batch job has completed, return -1 when Job does not exist
     * @param className Batch job class name
     * @return Integer
     */
-    public Integer getCompletedDaysBetween(String className) {
+    public Integer getCompletedDaysByClassName(String className) {
         AsyncApexJob batchJob = getAsyncApexJob(className);
 
         if (batchJob == null) {
-            return 0;
+            return -1;
+        }
+
+        return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);
+    }
+
+    /***
+    * @description Determines number of days passed since the batch job has completed, return -1 when Job does not exist
+    * @param batchId Batch job Id
+    * @return Integer
+    */
+    public Integer getCompletedDaysByBatchId(Id batchId) {
+        AsyncApexJob batchJob = getAsyncApexJob(batchId);
+
+        if (batchJob == null) {
+            return -1;
         }
 
         return getCompletedDaysBetween(batchJob.CompletedDate, batchJob.Status);
@@ -225,12 +240,24 @@ public without sharing class UTIL_BatchJobService {
     * @return AsyncApexJob
     */
     public AsyncApexJob getAsyncApexJob(String className) {
+        List<AsyncApexJob> apexJobs = getAsyncApexJobs(className, 1);
+
+        return apexJobs.isEmpty() ? null : apexJobs[0];
+    }
+
+    /***
+    * @description Return the past batch jobs for the specified batch class name
+    * @param className Batch class name
+    * @param jobCounts how many jobs to return
+    * @return List<AsyncApexJob>
+    */
+    public List<AsyncApexJob> getAsyncApexJobs(String className, Integer jobCounts) {
         String namespacePrefix = UTIL_Namespace.getNamespace();
 
         //Remove the namespace from the class name
         className = UTIL_Namespace.removeClassNamespace(className);  
 
-        List<AsyncApexJob> apexJobs = [
+        return [
             SELECT
                 Status, ApexClass.Name,
                 ExtendedStatus, NumberOfErrors,
@@ -241,10 +268,19 @@ public without sharing class UTIL_BatchJobService {
                 AND ApexClass.Name = :className
                 AND ApexClass.NamespacePrefix = :namespacePrefix
             ORDER BY CreatedDate DESC
-            LIMIT 1
+            LIMIT : jobCounts
         ];
+    }
 
-        return apexJobs.isEmpty() ? null : apexJobs[0];
+    /**
+    * @description Check if a job has ran certain time
+    * @param className Batch class name
+    * @param jobCounts how many time the job has ran
+    * @return Boolean
+    */
+    public Boolean asyncJobHasBeenRunAtLeastCertainTimes(String className, Integer jobCounts) {
+        List<AsyncApexJob> apexJobs = getAsyncApexJobs(className, jobCounts);
+        return apexJobs.size() == jobCounts;
     }
 
     /***
