@@ -33,6 +33,7 @@ public with sharing class RD2_ChangeHistorySelector {
         UTIL_Query query = new UTIL_Query()
                 .withSelectFields(fields)
                 .withFrom(RecurringDonationChangeHistory__c.SObjectType)
+                .withWhere('RecurringDonation__c = :recurringDonationId')
                 .withLimit(this.recordLimit)
                 .withOrderBy('CreatedDate DESC');
 
