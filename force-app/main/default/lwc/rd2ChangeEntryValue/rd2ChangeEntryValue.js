@@ -5,6 +5,10 @@ export default class Rd2ChangeEntryValue extends LightningElement {
     @api idValue;
     @api displayType;
 
+    navigateToRecord() {
+
+    }
+
     get isMoney() {
         return this.displayType === 'MONEY';
     }

@@ -39,5 +39,17 @@ describe('c-rd2-change-entry-value', () => {
         const outputCmp = component.shadowRoot.querySelector('lightning-formatted-number');
 
         expect(outputCmp.value).toBe(50);
-    })
+    });
+
+    it('renders a lookup field', () => {
+        const component = createElement('c-rd2-change-entry-value', { is: Rd2ChangeEntryValue });
+        component.value = 'Some Record Name';
+        component.idValue = 'fake_record_id';
+        component.displayType = 'LOOKUP';
+        document.body.appendChild(component);
+
+        const outputCmp = component.shadowRoot.querySelector('a');
+
+        expect(outputCmp.textContent).toBe('Some Record Name');
+    });
 });
