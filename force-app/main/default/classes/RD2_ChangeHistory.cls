@@ -9,6 +9,8 @@ public with sharing class RD2_ChangeHistory {
     public RD2_ChangeView getChangeView() {
         RD2_ChangeView view = new RD2_ChangeView();
         view.changeType = this.record.ChangeType__c;
+        view.id = this.record.Id;
+
         if (this.record.NewStatusReason__c != null) {
             view.statusReason = this.record.NewStatusReason__c;
         }
