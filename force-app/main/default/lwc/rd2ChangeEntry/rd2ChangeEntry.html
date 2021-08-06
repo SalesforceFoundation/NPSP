@@ -1,0 +1,20 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item padding="horizontal-small">
+            <b><lightning-formatted-date-time value={changeEntry.changeDate}></lightning-formatted-date-time></b>
+        </lightning-layout-item>
+    </lightning-layout>
+    <template for:each={changeEntry.fields} for:item='item'>
+        <c-rd2-change-entry-item
+                key={item.label}
+                label={item.label}
+                old-value={item.oldValue}
+                new-value={item.newValue}
+                display-type={item.displayType}
+                old-id={item.oldId}
+                new-id={item.newId}
+        >
+        </c-rd2-change-entry-item>
+    </template>
+
+</template>
