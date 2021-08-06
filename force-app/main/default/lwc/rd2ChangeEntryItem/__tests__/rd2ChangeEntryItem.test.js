@@ -16,7 +16,7 @@ describe('c-rd2-change-entry-item', () => {
    });
 
    it('renders a value change', () => {
-      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem});
+      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem });
 
       component.newValue = 'New Value';
       component.oldValue = 'Old Value';
@@ -27,17 +27,27 @@ describe('c-rd2-change-entry-item', () => {
 
       const oldValueNode = selectOldValue(component);
       const newValueNode = selectNewValue(component);
-      const labelNode = component.shadowRoot.querySelector('lightning-layout-item[data-id="label"]');
-
 
       expect(oldValueNode.value).toBe('Old Value');
       expect(newValueNode.value).toBe('New Value');
-      expect(labelNode.textContent).toBe('A Label');
 
    });
 
+   it('renders a given label', () => {
+      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem });
+
+      component.newValue = 'New Value';
+      component.oldValue = 'Old Value';
+      component.displayType = 'TEXT';
+      component.label = 'A Label';
+      document.body.appendChild(component);
+
+      const labelNode = component.shadowRoot.querySelector('lightning-layout-item[data-id="label"]');
+      expect(labelNode.textContent).toBe('A Label');
+   });
+
    it('when value unchanged renders old value only', () => {
-      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem});
+      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem });
 
       component.oldValue = 'Old Value';
       component.displayType = 'TEXT';
@@ -52,8 +62,8 @@ describe('c-rd2-change-entry-item', () => {
       expect(oldValueNode.value).toBe('Old Value');
    });
 
-   it('formats currency changes', () => {
-      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem});
+   it('handles currency changes', () => {
+      const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeEntryItem });
 
       component.oldValue = 5;
       component.newValue = 10;
@@ -67,6 +77,8 @@ describe('c-rd2-change-entry-item', () => {
 
       expect(newValueNode).toBeTruthy();
       expect(oldValueNode.value).toBe(5);
+      expect(newValueNode.value).toBe(10);
+
    });
 });
 
