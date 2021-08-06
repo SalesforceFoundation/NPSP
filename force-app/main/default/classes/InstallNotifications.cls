@@ -69,22 +69,22 @@ public inherited sharing class InstallNotifications {
       set;
    }
 
-   public InstallNotifications withBody(String body) {
+   private InstallNotifications withBody(String body) {
       this.body = body;
       return this;
    }
 
-   public InstallNotifications withNotificationTypeId(Id notificationTypeId) {
+   private InstallNotifications withNotificationTypeId(Id notificationTypeId) {
       this.notificationTypeId = notificationTypeId;
       return this;
    }
 
-   public InstallNotifications withTitle(String title) {
+   private InstallNotifications withTitle(String title) {
       this.title = title;
       return this;
    }
 
-   public InstallNotifications withAudience(Set<String> audience) {
+   private InstallNotifications withAudience(Set<String> audience) {
       this.audience = audience;
       return this;
    }
@@ -109,8 +109,8 @@ public inherited sharing class InstallNotifications {
       Type classType = String.isNotBlank(namespace)
           ? Type.forName(namespace, audienceImpl)
           : Type.forName(audienceImpl);
-      USElevateCustomers elevateCustomers = (USElevateCustomers)classType.newInstance();
-      return elevateCustomers.audience();
+      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)classType.newInstance();
+      return nonElevateCustomers.audience();
    }
 
    private void publish() {
