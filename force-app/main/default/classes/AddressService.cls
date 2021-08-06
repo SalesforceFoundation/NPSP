@@ -97,6 +97,20 @@ public inherited sharing class AddressService {
         );
     }
 
+    public static Boolean isAddressManagementEnabled() {
+        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
+            return true;
+        }
+        return false;
+    }
+
+    public static Boolean isOrgAccountAddressesEnabled() {
+        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
+            return true;
+        }
+        return false;
+    }
+
     /*******************************************************************************************************
     * @description Returns whether two strings are equal, using a case sensitve comparison
     * @param str1 The first string

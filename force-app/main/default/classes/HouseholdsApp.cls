@@ -58,10 +58,10 @@ public inherited sharing class HouseholdsApp {
     }
 
     public void onBeforeInsertOf(Accounts accounts) {
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(accounts.householdAccounts());
         }
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(accounts.orgAccounts());
         }
     }
@@ -79,10 +79,10 @@ public inherited sharing class HouseholdsApp {
 
     private List<Account> getNewAccountsWithAddressesToCreate(Accounts accounts) {
         List<Account> addressesToCreate = new List<Account>();
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             addressesToCreate.addAll(accounts.withAddresses().householdAccounts());
         }
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             addressesToCreate.addAll(accounts.withAddresses().orgAccounts());
         }
         return addressesToCreate;
@@ -110,12 +110,12 @@ public inherited sharing class HouseholdsApp {
     }
 
     public void onBeforeUpdateOf(Accounts accounts) {
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
                     accounts.withAddressChanges().householdAccounts()
             );
         }
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(
                     accounts.withAddressChanges().orgAccounts()
             );
@@ -142,11 +142,11 @@ public inherited sharing class HouseholdsApp {
     private List<Account> getUpdatedAccountsWithAddressesToCreate(Accounts accounts) {
         List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
 
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             updatedAccountsWithAddressesToCreate.addAll(accounts.withAddressChanges().householdAccounts());
         }
 
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             updatedAccountsWithAddressesToCreate.addAll(accounts.withAddressChanges().orgAccounts());
         }
         return updatedAccountsWithAddressesToCreate;
@@ -214,20 +214,6 @@ public inherited sharing class HouseholdsApp {
 
     private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
         return householdAccountRepository.findByIdWithOneContactAndGift(ids);
-    }
-
-    private Boolean isAddressManagementEnabled() {
-        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-            return true;
-        }
-        return false;
-    }
-
-    private Boolean isOrgAccountAddressesEnabled() {
-        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
-            return true;
-        }
-        return false;
     }
 
     private void normalizeLineBreaksFor(List<SObject> listNew) {
