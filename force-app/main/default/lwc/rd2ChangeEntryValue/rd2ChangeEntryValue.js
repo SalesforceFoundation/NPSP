@@ -1,12 +1,19 @@
 import { LightningElement, api } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class Rd2ChangeEntryValue extends LightningElement {
+export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElement) {
     @api value;
     @api idValue;
     @api displayType;
 
     navigateToRecord() {
-
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: this.idValue,
+                actionName: 'view'
+            }
+        });
     }
 
     get isMoney() {
