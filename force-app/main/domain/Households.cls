@@ -39,8 +39,23 @@ public inherited sharing class Households extends fflib_SObjects {
     */
     private Set<Id> queryAccountIds;
 
+    private Map<HouseholdId, Contacts> membersByHouseholdId {
+        get {
+            if (membersByHouseholdId == null) {
+                for (Account account : (List<Account>) getRecords()) {
+                    membersByHouseholdId.put(
+                            new HouseholdId(account.Id),
+                            new Contacts(account.Contacts)
+                    );
+                }
+            }
+            return membersByHouseholdId;
+        }
+        private set;
+    }
+
     @TestVisible
-    private HouseholdSelector householdSelector {
+    private static HouseholdSelector householdSelector {
         get {
             if (householdSelector == null) {
                 householdSelector = new HouseholdSelector();
@@ -111,18 +126,6 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description Contains list of retrieved Contacts by an Account Id
-    */
-    private Map<Id, Contact[]> contactsByAccountId {
-        get {
-            return contactsByAccountId = contactsByAccountId == null
-                    ? getContactsByAccountId()
-                    : contactsByAccountId;
-        }
-        set;
-    }
-
-    /*******************************************************************************************************
     * @description Constructor
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
@@ -139,42 +142,8 @@ public inherited sharing class Households extends fflib_SObjects {
         super(accounts);
     }
 
-    /*******************************************************************************************************
-    * @description Returns Contacts for the specified Account
-    * @param accountId The Id of an Account to retrieve Contacts for
-    * @return Contact[] List of Contacts for the specified Account. Empty list if the Account has no Contacts.
-    */
-    public Contact[] membersOf(Id accountId) {
-        if (!queryAccountIds.contains(accountId)) {
-            queryAccountIds.add(accountId);
-
-            //reset Contacts repo so the next reference to the variable retrieves data from DB
-            contactsByAccountId = null;
-        }
-
-        Contact[] contacts = contactsByAccountId.get(accountId);
-        return contacts == null ? new Contact[0] : contacts;
-    }
-
-    /*******************************************************************************************************
-    * @description Queries DB for specified ContactRepository Account Ids
-    * @return Map<Id, Contact[]> Map of Contacts by an Account Id
-    */
-    private Map<Id, Contact[]> getContactsByAccountId() {
-        Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
-
-        if (queryAccountIds.isEmpty()) {
-            return contactsByAccountId;
-        }
-
-        for (Contact c : [SELECT Id, AccountId, Current_Address__c FROM Contact WHERE AccountId IN :queryAccountIds]) {
-            if (!contactsByAccountId.containsKey(c.AccountId)) {
-                contactsByAccountId.put(c.AccountId, new Contact[0]);
-            }
-            contactsByAccountId.get(c.AccountId).add(c);
-        }
-
-        return contactsByAccountId;
+    public Contacts membersOf(HouseholdId aHouseholdId) {
+        return membersByHouseholdId.get(aHouseholdId);
     }
 
     /*******************************************************************************************************

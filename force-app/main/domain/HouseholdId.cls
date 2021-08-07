@@ -30,30 +30,32 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household Selector class in NPSP.
+* @description HouseholdId value object.
 */
-public inherited sharing class HouseholdSelector {
+public inherited sharing class HouseholdId {
 
-    private List<Account> getAccounts(Set<Id> accountIds) {
-        List<Account> accounts = [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, (
-                        SELECT Id, AccountId,
-                                Account.npe01__One2OneContact__c,
-                                Current_Address__c
-                        FROM Contacts
-                ), (
-                        SELECT Id
-                        FROM Opportunities
-                        LIMIT 1
-                )
-                FROM Account
-                WHERE Id IN :accountIds
-        ];
-        return accounts;
+    private Id id;
+    public HouseholdId(Id householdId) {
+        if (householdId.getSobjectType() != Account.SObjectType) {
+            throw (Exception) new HouseholdIdException('Must be an Account Id.');
+        }
+        this.id = householdId;
     }
 
-    public List<Account> findByIds(Set<Id> ids){
-        return getAccounts(ids);
+    public Boolean equals(Object obj) {
+        if (obj instanceof Id) {
+            Id typedVal = (Id) obj;
+            return typedVal.getSobjectType() == Account.SObjectType
+                    && typedVal == id;
+        } else {
+            return false;
+        }
     }
 
+    public Id value(){
+        return id;
+    }
+
+    private inherited sharing class HouseholdIdException extends Exception {
+    }
 }

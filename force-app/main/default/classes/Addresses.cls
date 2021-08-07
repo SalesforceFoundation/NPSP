@@ -794,7 +794,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     for (Integer i = 1, size = listAddr.size(); i < size; i++) {
                         Address__c addrDupe = listAddr[i];
 
-                        replaceAddress(addrDupe, listAddr[0], households.membersOf(accId), dmlWrapper);
+                        replaceAddress(
+                                addrDupe,
+                                listAddr[0],
+                                households.membersOf(new HouseholdId(accId)),
+                                dmlWrapper);
+
                         dmlWrapper.objectsToDelete.add(addrDupe);
                     }
                 }
@@ -1042,14 +1047,16 @@ public inherited sharing class Addresses extends fflib_SObjects {
     * @param listCon the list of Contacts to evaluate
     * @param dmlWrapper to hold any Contacts that need updating
     */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        replaceAddress(listCon, addrLoser, addrWinner, dmlWrapper);
+    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner,
+            Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        replaceAddress(contacts, addrLoser, addrWinner, dmlWrapper);
     }
 
-    private static void replaceAddress(List<Contact> listCon, Address__c addrLoser, Address__c addrWinner, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private static void replaceAddress(Contacts contacts, Address__c addrLoser, Address__c
+            addrWinner,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsToUpdate = new List<Contact>();
-        for (Contact con : listCon) {
+        for (Contact con : (List<Contact>) Contacts.getRecords()) {
             if (con.Current_Address__c == addrLoser.Id) {
                 con.Current_Address__c = addrWinner.Id;
                 contactsToUpdate.add(con);

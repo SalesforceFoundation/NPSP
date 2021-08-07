@@ -209,7 +209,7 @@ public inherited sharing class Application {
     }
 
     private Households getHouseholdsFor(Set<Id> ids) {
-        return householdSelector.findByIds(ids);
+        return new Households(householdSelector.findByIds(ids));
     }
 
     private Boolean isAddressManagementEnabled() {
