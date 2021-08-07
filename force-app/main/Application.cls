@@ -59,13 +59,13 @@ public inherited sharing class Application {
     }
 
     @TestVisible
-    private HouseholdSelector householdAccountRepository {
+    private HouseholdSelector householdSelector {
         get {
-            if (householdAccountRepository == null) {
-                householdAccountRepository =
+            if (householdSelector == null) {
+                householdSelector =
                         new HouseholdSelector();
             }
-            return householdAccountRepository;
+            return householdSelector;
         }
         set;
     }
@@ -210,7 +210,7 @@ public inherited sharing class Application {
     }
 
     private Households getHouseholdsFor(Set<Id> ids) {
-        return householdAccountRepository.findByIds(ids);
+        return householdSelector.findByIds(ids);
     }
 
     private Boolean isAddressManagementEnabled() {
