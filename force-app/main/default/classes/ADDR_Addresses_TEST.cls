@@ -2109,7 +2109,9 @@ public with sharing class ADDR_Addresses_TEST {
                 account.Id
         });
 
-        Contact[] contacts = householdAccounts.membersOf(account.Id);
+        Contact[] contacts = householdAccounts.membersOf(
+                new HouseholdId(account.Id)).getRecords();
+
         System.assertEquals(0, contacts.size());
     }
 
@@ -2170,7 +2172,8 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Account account : accounts) {
             Contact[] expectedContacts = contactsByAccountId.get(account.Id);
-            Contact[] actualContacts = contactRepo.membersOf(account.Id);
+            Contact[] actualContacts = contactRepo.membersOf(
+                new HouseholdId(account.Id)).getRecords();
 
             System.assertEquals(UTIL_SObject.extractIds(expectedContacts), UTIL_SObject.extractIds(actualContacts));
         }
