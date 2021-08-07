@@ -1044,12 +1044,18 @@ public inherited sharing class Addresses extends fflib_SObjects {
     */
     private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
+        replaceAddress(listCon, addrLoser, addrWinner, dmlWrapper);
+    }
+
+    private static void replaceAddress(List<Contact> listCon, Address__c addrLoser, Address__c addrWinner, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsToUpdate = new List<Contact>();
         for (Contact con : listCon) {
             if (con.Current_Address__c == addrLoser.Id) {
                 con.Current_Address__c = addrWinner.Id;
-                dmlWrapper.objectsToUpdate.add(con);
+                contactsToUpdate.add(con);
             }
         }
+        dmlWrapper.objectsToUpdate.addAll(contactsToUpdate);
     }
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId,

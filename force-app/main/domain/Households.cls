@@ -40,6 +40,17 @@ public inherited sharing class Households extends fflib_SObjects {
     private Set<Id> queryAccountIds;
 
     @TestVisible
+    private HouseholdSelector householdSelector {
+        get {
+            if (householdSelector == null) {
+                householdSelector = new HouseholdSelector();
+            }
+            return householdSelector;
+        }
+        set;
+    }
+
+    @TestVisible
     private ContactService contactService {
         get {
             if (contactService == null) {
@@ -116,10 +127,8 @@ public inherited sharing class Households extends fflib_SObjects {
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
     public Households(Set<Id> accountIds) {
-        super(new List<Account>());
-        queryAccountIds = accountIds == null
-                ? new Set<Id>()
-                : accountIds;
+        //todo: Query for domain records up front, remove unused repo-like behavior.
+        super((List<Object>) householdSelector.findByIds(accountIds));
     }
 
     /*******************************************************************************************************
