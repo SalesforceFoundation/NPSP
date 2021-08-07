@@ -130,7 +130,6 @@ public inherited sharing class Households extends fflib_SObjects {
     * @param accountIds Account Ids to initialize the Contact Repository with
     */
     public Households(Set<Id> accountIds) {
-        //todo: Query for domain records up front, remove unused repo-like behavior.
         super((List<Object>) householdSelector.findByIds(accountIds));
     }
 
