@@ -794,10 +794,13 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     for (Integer i = 1, size = listAddr.size(); i < size; i++) {
                         Address__c addrDupe = listAddr[i];
 
-                        replaceAddress(
+                        Contacts householdMembers =
+                                households.membersOf(
+                                        new HouseholdId(accId));
+
+                        householdMembers.replaceAddress(
                                 addrDupe,
                                 listAddr[0],
-                                households.membersOf(new HouseholdId(accId)),
                                 dmlWrapper);
 
                         dmlWrapper.objectsToDelete.add(addrDupe);
@@ -1038,31 +1041,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         addr.MailingCountry__c == Null);
     }
 
-    /*******************************************************************************************************
-    * @description replaces the losing address with the winning address in any contacts referring to the
-    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
-    * Any Contacts that are modified are put on dmlWrapper for later updating.
-    * @param addrLoser the Address to look for
-    * @param addrWinner the Address to replace with
-    * @param listCon the list of Contacts to evaluate
-    * @param dmlWrapper to hold any Contacts that need updating
-    */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner,
+    public static void replaceAddress(Address__c addrLoser, Address__c addrWinner,
             Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        replaceAddress(contacts, addrLoser, addrWinner, dmlWrapper);
-    }
-
-    private static void replaceAddress(Contacts contacts, Address__c addrLoser, Address__c
-            addrWinner,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Contact> contactsToUpdate = new List<Contact>();
-        for (Contact con : (List<Contact>) Contacts.getRecords()) {
-            if (con.Current_Address__c == addrLoser.Id) {
-                con.Current_Address__c = addrWinner.Id;
-                contactsToUpdate.add(con);
-            }
-        }
-        dmlWrapper.objectsToUpdate.addAll(contactsToUpdate);
+        contacts.replaceAddress(addrLoser, addrWinner, dmlWrapper);
     }
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId,

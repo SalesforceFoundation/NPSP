@@ -359,6 +359,26 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
+    * @description replaces the losing address with the winning address in any contacts referring to the
+    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
+    * Any Contacts that are modified are put on dmlWrapper for later updating.
+    * @param addrLoser the Address to look for
+    * @param addrWinner the Address to replace with
+    * @param dmlWrapper to hold any Contacts that need updating
+    */
+    public void replaceAddress(Address__c addrLoser, Address__c addrWinner,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsToUpdate = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (con.Current_Address__c == addrLoser.Id) {
+                con.Current_Address__c = addrWinner.Id;
+                contactsToUpdate.add(con);
+            }
+        }
+        dmlWrapper.objectsToUpdate.addAll(contactsToUpdate);
+    }
+
+    /*******************************************************************************************************
     * @description Creates a new address or matches an existing one, for each Contact.
     * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
     * when pushing a new default address, we need to do it in the AfterInsert/Update.
