@@ -62,8 +62,7 @@ public inherited sharing class Application {
     private HouseholdSelector householdSelector {
         get {
             if (householdSelector == null) {
-                householdSelector =
-                        new HouseholdSelector();
+                householdSelector = new HouseholdSelector();
             }
             return householdSelector;
         }
