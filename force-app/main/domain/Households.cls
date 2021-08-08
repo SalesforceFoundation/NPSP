@@ -37,6 +37,7 @@ public inherited sharing class Households extends fflib_SObjects {
     private Map<HouseholdId, Contacts> membersByHouseholdId {
         get {
             if (membersByHouseholdId == null) {
+                membersByHouseholdId = new Map<HouseholdId, Contacts>();
                 for (Account account : (List<Account>) getRecords()) {
                     membersByHouseholdId.put(
                             new HouseholdId(account.Id),
