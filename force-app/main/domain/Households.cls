@@ -34,11 +34,6 @@
 */
 public inherited sharing class Households extends fflib_SObjects {
 
-    /*******************************************************************************************************
-    * @description Account filter when querying Contacts
-    */
-    private Set<Id> queryAccountIds;
-
     private Map<HouseholdId, Contacts> membersByHouseholdId {
         get {
             if (membersByHouseholdId == null) {
