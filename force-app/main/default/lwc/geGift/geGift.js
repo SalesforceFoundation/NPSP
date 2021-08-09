@@ -1,3 +1,5 @@
+import getGiftView from '@salesforce/apex/GE_GiftEntryController.getGiftView';
+
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 
@@ -10,6 +12,10 @@ class Gift {
             this._fields = giftView.fields;
             this._softCredits = giftView.softCredits;
         }
+    }
+
+    _init(giftView) {
+        this._fields = giftView.fields;
     }
 
     id() {
@@ -43,6 +49,17 @@ class Gift {
         }
         return dataImportRecord;
     }
+
+    async refresh() {
+        const latestGiftView = await getGiftView({ dataImportId: this.id() })
+            .catch(error => { 
+                console.log(error);
+                throw error 
+            });
+        this._init(latestGiftView);
+        console.log(`latest gift view = ${JSON.stringify(latestGiftView)}`);
+    }
+
 
     state() {
         return {

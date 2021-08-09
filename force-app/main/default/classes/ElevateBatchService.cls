@@ -61,7 +61,7 @@ public virtual with sharing class ElevateBatchService {
                 (response.body, ElevateAuthorizedGiftResponse.class);
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
-        return null;
+        return new ElevateAuthorizedGift(null, authorizedGiftResponse);
     }
 
     public ElevateBatch getElevateBatch() {

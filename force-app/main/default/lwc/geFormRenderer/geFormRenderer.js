@@ -735,15 +735,14 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const gift = new Gift(this.giftInView);
-        if (this.shouldRemoveFromElevateBatch(gift)) {
-            try {
+        try {
+            if (await this.shouldRemoveFromElevateBatch(gift)) {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 this.handleNullPaymentFieldsInFormState();
-            } catch (exception) {
-                console.log(`exception = ${JSON.stringify(exception)}`);
-                this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
-                return;
-            }
+            } 
+        } catch (exception) {
+            this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
+            return;
         }
 
         const hasSaved = await this.saveDataImport(this.saveableFormState());
@@ -756,9 +755,20 @@ export default class GeFormRenderer extends LightningElement{
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
     }
 
-    shouldRemoveFromElevateBatch(gift) {
-        return gift && 
-               gift.isAuthorized() && 
+    async shouldRemoveFromElevateBatch(gift) {
+        if (!gift.id()) {
+            return false;
+        }
+
+        const refreshedGift = new Gift(gift.state());        
+        try {
+            await refreshedGift.refresh();
+        } catch (exception) {
+            return false;
+        }
+
+        return refreshedGift &&
+               refreshedGift.isAuthorized() && 
                this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD && 
                this.isElevateCustomer;
     }
