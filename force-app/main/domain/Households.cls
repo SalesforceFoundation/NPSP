@@ -62,28 +62,6 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     @TestVisible
-    private ContactService contactService {
-        get {
-            if (contactService == null) {
-                contactService = new ContactService();
-            }
-            return contactService;
-        }
-        set;
-    }
-
-    @TestVisible
-    private static AddressService addressService {
-        get {
-            if (addressService == null) {
-                addressService = new AddressService();
-            }
-            return addressService;
-        }
-        set;
-    }
-
-    @TestVisible
     private static HouseholdNamingService householdNamingService {
         get {
             if (householdNamingService == null) {
