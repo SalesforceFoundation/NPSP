@@ -52,14 +52,9 @@ class Gift {
 
     async refresh() {
         const latestGiftView = await getGiftView({ dataImportId: this.id() })
-            .catch(error => { 
-                console.log(error);
-                throw error 
-            });
+            .catch(error => { throw error });
         this._init(latestGiftView);
-        console.log(`latest gift view = ${JSON.stringify(latestGiftView)}`);
     }
-
 
     state() {
         return {
@@ -70,6 +65,10 @@ class Gift {
 
     isAuthorized() {
         return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED';
+    }
+
+    isPending() {
+        return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING';
     }
 }
 
