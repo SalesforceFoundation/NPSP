@@ -734,16 +734,16 @@ export default class GeFormRenderer extends LightningElement{
             if (!canUpdate) { return; }
         }
 
-        const gift = new Gift(this.giftInView);
-        try {
-            if (await this.shouldRemoveFromElevateBatch(gift, false)) {
-                await this.currentElevateBatch.remove(gift.asDataImport());
-                this.handleNullPaymentFieldsInFormState();
-            } 
-        } catch (exception) {
-            // Update DI with failure
-            this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
-            return;
+        const performRemoveFromElevateBatch = await this.handleRemoveFromElevateBatch(
+            false, true
+        );
+        if (!performRemoveFromElevateBatch) { return; }
+
+        if (tokenizedGift) {
+            const performRemoveFromElevateBatch1 = await this.handleRemoveFromElevateBatch(
+                true, false
+            );
+            if (!performRemoveFromElevateBatch1) { return; }
         }
 
         const hasSaved = await this.saveDataImport(this.saveableFormState());
@@ -768,7 +768,7 @@ export default class GeFormRenderer extends LightningElement{
             return false;
         }
 
-        return gift.isAuthorized() || gift.isPending();
+        return gift.isAuthorized();
     }
 
     shouldNullPaymentRelatedFields() {
@@ -776,22 +776,28 @@ export default class GeFormRenderer extends LightningElement{
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
     }
 
+    async handleRemoveFromElevateBatch(shouldPaymentMethodBeCreditCard, nullPaymentFields) {
+        const gift = new Gift(this.giftInView);
+        try {
+            if (await this.shouldRemoveFromElevateBatch(gift, shouldPaymentMethodBeCreditCard)) {
+                console.log('should be removing from batch');
+                await this.currentElevateBatch.remove(gift.asDataImport());
+                if (nullPaymentFields) { this.handleNullPaymentFieldsInFormState(); }
+            }
+        } catch (exception) {
+            // Update DI with failure
+            this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
+            return false;
+        }
+
+        return true;
+    }
+
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
         if (tokenizedGift) {
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const gift = new Gift(this.giftInView);
-                try {
-                    if (await this.shouldRemoveFromElevateBatch(gift, true)) {
-                        await this.currentElevateBatch.remove(dataImportFromFormState);
-                    }
-                } catch (exception) {
-                    // Update DI with failure
-                    this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
-                    return;
-                }
-
                 const authorizedGift = await this.currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;

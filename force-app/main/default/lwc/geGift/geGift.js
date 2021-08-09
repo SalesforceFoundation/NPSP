@@ -64,11 +64,8 @@ class Gift {
     }
 
     isAuthorized() {
-        return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED';
-    }
-
-    isPending() {
-        return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING';
+        return this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED' ||
+               this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING';
     }
 }
 
