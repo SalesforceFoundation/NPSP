@@ -141,11 +141,15 @@ public with sharing class BDI_ObjectWrapper {
         if (dynamicSource == null) {
             value = dataImport.get(sourceFieldAPIName);
         } else {
-            //If the values are being drawn from a dynamic source then return the value from the DI
-            //for imported fields, otherwise return it from the dynamic source object.
+            // If the values are being drawn from a dynamic source and is an object mapping import field and the
+            // value is populated on the dynamic source, then return the value from the dynamic source,
+            // otherwise return the value from the Data Import.
             BDI_MappingServiceAdvanced bdiMSAdv = BDI_MappingServiceAdvanced.getInstance();
-            if (bdiMSAdv.importedRecordFieldNames.contains(sourceFieldAPIName.toLowerCase())) {
-                value = dataImport.get(sourceFieldAPIName);
+            Boolean isAnObjectMappingImportField = bdiMSAdv.importedRecordFieldNames.contains(sourceFieldAPIName.toLowerCase());
+            if (isAnObjectMappingImportField) {
+                Object valueFromDynamicSource = dynamicSource.sourceObj.get(sourceFieldAPIName);
+                Object valueFromDataImport = dataImport.get(sourceFieldAPIName);
+                value = valueFromDynamicSource != null ? valueFromDynamicSource : valueFromDataImport;
             } else {
                 value = dynamicSource.sourceObj.get(sourceFieldAPIName);
             }
