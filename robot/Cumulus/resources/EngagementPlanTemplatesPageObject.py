@@ -12,8 +12,8 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
         """
         Waits for the current page to be a Engagement Plan list view page
         """
-        self.npsp.wait_for_locator('frame','Manage Engagement Plan Template')
-        self.npsp.choose_frame('Manage Engagement Plan Template')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
     def click_eng_plan_dropdown(self, title):
         locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
@@ -96,7 +96,7 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
             self.salesforce.wait_until_loading_is_complete()
             self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")
 
-        self.npsp.wait_for_locator("frame","Manage Engagement Plan Template")
+        self.npsp.wait_for_locator("frame","accessibility title")
 
 
 @pageobject("Details", "Engagement_Plan_Template__c")
