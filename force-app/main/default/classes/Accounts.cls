@@ -34,7 +34,7 @@
 */
 public inherited sharing class Accounts extends fflib_SObjects {
 
-    private Map<Id, Account> oldMap = new Map<Id, Account>();
+    public Map<Id, Account> oldMap = new Map<Id, Account>();
 
     @TestVisible
     private HouseholdNamingService householdNamingService {
@@ -194,6 +194,44 @@ public inherited sharing class Accounts extends fflib_SObjects {
                 && !isHouseholdAccount(acc)
                 && !isOneToOneAccount(acc)
                 && !isBucketAccount(acc);
+    }
+
+    public Accounts updatedAccountsWithAddressesToCreateOrUpdate() {
+        List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
+
+        if (AddressService.isAddressManagementEnabled()) {
+            updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().householdAccounts());
+        }
+
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().orgAccounts());
+        }
+
+        return new Accounts(updatedAccountsWithAddressesToCreate, oldMap.values());
+    }
+
+    public Accounts newAccountsWithAddressesToCreate() {
+        List<Account> addressesToCreate = new List<Account>();
+
+        if (AddressService.isAddressManagementEnabled()) {
+            addressesToCreate.addAll(withAddresses().householdAccounts());
+        }
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            addressesToCreate.addAll(withAddresses().orgAccounts());
+        }
+
+        return new Accounts(addressesToCreate);
+    }
+
+    public List<Address__c> allAddresses() {
+        List<Address__c> accountAddresses = new List<Address__c>();
+        for (Account account : (List<Account>)getRecords()) {
+            NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(account);
+            NPSP_Address npspAddress = new NPSP_Address(npspHouseholdAccount);
+
+            accountAddresses.add(npspAddress.getRecord());
+        }
+        return accountAddresses;
     }
 
     private Boolean isRecordTypeIdChanged(Account acc) {

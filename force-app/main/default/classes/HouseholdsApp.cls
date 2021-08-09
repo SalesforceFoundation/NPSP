@@ -71,9 +71,9 @@ public inherited sharing class HouseholdsApp {
     }
 
     private void createAddressesFromNewAccounts(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Account> accountsWithNewAddressesToCreate = getNewAccountsWithAddressesToCreate(accounts);
-        if (accountsWithNewAddressesToCreate.size() > 0) {
-            createOrUpdateAddresses(accountsWithNewAddressesToCreate, dmlWrapper);
+        Accounts accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
+        if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
         }
     }
 
@@ -86,27 +86,6 @@ public inherited sharing class HouseholdsApp {
             addressesToCreate.addAll(accounts.withAddresses().orgAccounts());
         }
         return addressesToCreate;
-    }
-
-    /*******************************************************************************************************
-    * @description for each Account, create a new default address and add it to dmlWrapper
-    * @param accounts a list of Accounts
-    * @param dmlWrapper to hold the Addresses that need creating
-    ********************************************************************************************************/
-    private void createOrUpdateAddresses(List<Account> accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Address__c> addressesToCreate = new List<Address__c>();
-        for (Account account : accounts) {
-            NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(account);
-            NPSP_Address npspAddress = new NPSP_Address(npspHouseholdAccount);
-
-            if (npspHouseholdAccount.isUndeliverableStatusChanged()) {
-                npspAddress.setUndeliverable(npspHouseholdAccount.undeliverableAddressStatus());
-            }
-            addressesToCreate.add(npspAddress.getRecord());
-        }
-
-        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
-        Addresses.createNonDuplicateAddresses(addressesToCreate, dmlWrapper, false);
     }
 
     public void onBeforeUpdateOf(Accounts accounts) {
@@ -132,24 +111,11 @@ public inherited sharing class HouseholdsApp {
             return;
         }
 
-        List<Account> updatedAccountsWithAddressesToCreate = getUpdatedAccountsWithAddressesToCreate(accounts);
+        Accounts updatedAccountsWithAddressesToCreateOrUpdate = accounts.updatedAccountsWithAddressesToCreateOrUpdate();
 
-        if (updatedAccountsWithAddressesToCreate.size() > 0) {
-            createOrUpdateAddresses(updatedAccountsWithAddressesToCreate, dmlWrapper);
+        if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(updatedAccountsWithAddressesToCreateOrUpdate, dmlWrapper, false);
         }
-    }
-
-    private List<Account> getUpdatedAccountsWithAddressesToCreate(Accounts accounts) {
-        List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
-
-        if (AddressService.isAddressManagementEnabled()) {
-            updatedAccountsWithAddressesToCreate.addAll(accounts.withAddressChanges().householdAccounts());
-        }
-
-        if (AddressService.isOrgAccountAddressesEnabled()) {
-            updatedAccountsWithAddressesToCreate.addAll(accounts.withAddressChanges().orgAccounts());
-        }
-        return updatedAccountsWithAddressesToCreate;
     }
 
     public void onBeforeInsertOf(Contacts contacts) {

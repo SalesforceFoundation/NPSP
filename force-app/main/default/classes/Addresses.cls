@@ -649,47 +649,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description For the list of Addresses, sees if there is already an existing Address in the Account that
-    * matches. Creates only unique addresses from their respective household, and mark any existing matches
-    * as Default if the caller specifies it on the new address.
-    * @param addresses a list of Addresses to update
-    * @param dmlWrapper the Addresses to update
-    * @param includeAddressType whether to include comparing the AddressType field
-    */
-    public static void createNonDuplicateAddresses(List<Address__c> addresses,
-            TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
-
-        Map<Address__c, Address__c> existingAddressesByAddress = getExistingAddresses(addresses);
-        for (Address__c newAddress : addresses) {
-            NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
-            Address__c existingAddress = existingAddressesByAddress.get(newAddress);
-            NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
-            Boolean isAddressUpdated;
-
-            if (existingAddress != null) {
-                // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (!npspNewAddress.isEqualToIncludingAddressType(npspExistingAddress, includeAddressType)) {
-                    npspExistingAddress.copyFrom(npspNewAddress);
-                    if (npspNewAddress.isDefault()) {
-                        npspExistingAddress.setAsDefault();
-                    }
-                    isAddressUpdated = true;
-                } else if (npspNewAddress.isDefault() && !npspExistingAddress.isDefault()) {
-                    npspExistingAddress.setAsDefault();
-                    isAddressUpdated = true;
-                } else if (npspExistingAddress.isUndeliverableStatusChanged()) {
-                    isAddressUpdated = true;
-                }
-                if (isAddressUpdated) {
-                    dmlWrapper.objectsToUpdate.add(existingAddress);
-                }
-            } else {
-                dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
-            }
-        }
-    }
-
-    /*******************************************************************************************************
     * @description for the given addresses, find if they have a match, and return a map that
     * has null for no match, and the matching address if there is a match.
     * @param listAddr a list of Addresses to update
