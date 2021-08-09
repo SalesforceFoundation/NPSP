@@ -175,8 +175,9 @@ public with sharing class RD2_ChangeHistory {
     }
 
     private Boolean canReadRDCHFields(Schema.SObjectField newField, Schema.SObjectField oldField) {
-        return UTIL_Permissions.canRead('RecurringDonationChangeHistory__c', String.valueOf(newField))
-                && UTIL_Permissions.canRead('RecurringDonationChangeHistory__c', String.valueOf(oldField));
+        String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
+        return UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(newField))
+                && UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(oldField));
     }
 
     private Boolean isAmountChanged() {
