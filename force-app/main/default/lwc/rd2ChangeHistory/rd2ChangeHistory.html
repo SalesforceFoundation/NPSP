@@ -1,17 +1,44 @@
 <template>
-    <template if:true={isReady}>
-        <lightning-card title="Change History" icon-name="action:defer" variant="narrow">
-            <div class="slds-m-around_medium">
+    <template if:true={hasMoreChanges}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
                 <template for:each={changeHistory.changes} for:item='changeEntry'>
-                    <div class="slds-border_top slds-p-vertical_medium" key={changeEntry.id}>
+                    <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
                         <c-rd2-change-entry change-entry={changeEntry}>
                         </c-rd2-change-entry>
                     </div>
                 </template>
             </div>
-            <p slot="footer" if:true={changeHistory.hasMore}>
+            <p slot="footer">
                 <a href="#" onclick={navigateToRelatedList}>{labels.commonViewMore}</a>
             </p>
+        </lightning-card>
+    </template>
+    <template if:true={hasChanges}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <template for:each={changeHistory.changes} for:item='changeEntry'>
+                    <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
+                        <c-rd2-change-entry change-entry={changeEntry}>
+                        </c-rd2-change-entry>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={hasEmptyList}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <c-util-illustration size='small' message={labels.rdchNoRecords}></c-util-illustration>
+        </lightning-card>
+    </template>
+    <template if:true={hasError}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <c-util-illustration size='small' title={labels.commonError} message={errorMessage}></c-util-illustration>
+        </lightning-card>
+    </template>
+    <template if:true={isSettingDisabled}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <c-util-illustration title='Setting is Disabled' size='small' message={labels.rdchDisabled} variant='no-access'></c-util-illustration>
         </lightning-card>
     </template>
 </template>
