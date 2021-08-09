@@ -735,17 +735,10 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         const performRemoveFromElevateBatch = await this.handleRemoveFromElevateBatch(
-            false, true
+            tokenizedGift
         );
         if (!performRemoveFromElevateBatch) { return; }
-
-        if (tokenizedGift) {
-            const performRemoveFromElevateBatch1 = await this.handleRemoveFromElevateBatch(
-                true, false
-            );
-            if (!performRemoveFromElevateBatch1) { return; }
-        }
-
+        
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
             this.disabled = false;
@@ -776,13 +769,13 @@ export default class GeFormRenderer extends LightningElement{
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
     }
 
-    async handleRemoveFromElevateBatch(shouldPaymentMethodBeCreditCard, nullPaymentFields) {
+    async handleRemoveFromElevateBatch(tokenizedGift) {
         const gift = new Gift(this.giftInView);
         try {
-            if (await this.shouldRemoveFromElevateBatch(gift, shouldPaymentMethodBeCreditCard)) {
+            if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
                 console.log('should be removing from batch');
                 await this.currentElevateBatch.remove(gift.asDataImport());
-                if (nullPaymentFields) { this.handleNullPaymentFieldsInFormState(); }
+                if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
             }
         } catch (exception) {
             // Update DI with failure
