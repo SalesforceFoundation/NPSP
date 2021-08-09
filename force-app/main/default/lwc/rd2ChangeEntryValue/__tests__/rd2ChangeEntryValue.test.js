@@ -45,7 +45,7 @@ describe('c-rd2-change-entry-value', () => {
     it('renders lookup fields', () => {
         const component = createElement('c-rd2-change-entry-value', { is: Rd2ChangeEntryValue });
         component.value = 'Some Record Name';
-        component.idValue = 'fake_record_id';
+        component.recordIdValue = 'fake_record_id';
         component.displayType = 'LOOKUP';
         document.body.appendChild(component);
 

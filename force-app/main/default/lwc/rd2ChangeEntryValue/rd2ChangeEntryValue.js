@@ -4,7 +4,7 @@ import stgLabelFieldValueNone from '@salesforce/label/c.stgLabelFieldValueNone';
 
 export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElement) {
     @api value;
-    @api idValue;
+    @api recordIdValue;
     @api displayType;
 
     labelNone = stgLabelFieldValueNone;
@@ -13,7 +13,7 @@ export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElemen
         this[NavigationMixin.Navigate]({
             type: 'standard__recordPage',
             attributes: {
-                recordId: this.idValue,
+                recordId: this.recordIdValue,
                 actionName: 'view'
             }
         });
