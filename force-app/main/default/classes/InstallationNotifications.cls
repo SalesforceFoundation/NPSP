@@ -65,7 +65,7 @@ public inherited sharing class InstallationNotifications {
       set;
    }
 
-   public void publishNotifications() {
+   public void publish() {
       String DUMMY_ID = '000000000000000AAA';
       for (Custom_Notification__mdt activeNotification : activeNotifications) {
          for (CustomNotificationType notificationType : customNotificationTypes) {

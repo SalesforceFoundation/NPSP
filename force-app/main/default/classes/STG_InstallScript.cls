@@ -92,7 +92,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
             // Check for advanced mapping setting then create migrated custom field mappings as needed
             executeAction(InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS, logger);
 
-            executeAction(InstallAction.PUBLISH_PRODUCT_UPDATES, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -106,6 +105,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
+
+        executeAction(InstallAction.PUBLISH_PRODUCT_UPDATES, logger);
 
         logger.log();
     }
@@ -160,7 +161,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
     // This method is public right now so enable testing through anonymous apex, will be private before release
     public void publishProductUpdates () {
-        new InstallationNotifications().publishNotifications();
+        new InstallationNotifications().publish();
     }
 
     /*******************************************************************************************************
