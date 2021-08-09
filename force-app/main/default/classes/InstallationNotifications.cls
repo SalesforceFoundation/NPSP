@@ -73,7 +73,7 @@ public inherited sharing class InstallationNotifications {
                Messaging.CustomNotification notification = new Messaging.CustomNotification();
                notification.setBody(activeNotification.Body__c);
                notification.setTitle(activeNotification.Title__c);
-               notification.setNotificationTypeId(activeNotification.Id);
+               notification.setNotificationTypeId(notificationType.Id);
                notification.setTargetId(DUMMY_ID);
                notification.send(getAudience(activeNotification.Audience_Implementation_Class__c));
             }

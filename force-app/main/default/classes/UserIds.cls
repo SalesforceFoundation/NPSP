@@ -63,7 +63,8 @@ public inherited sharing class UserIds {
 
 
    public Set<String> stringValues() {
-      for (Id userId : userIds) {
+      this.stringUserIds = new Set<String>();
+      for (Id userId : values()) {
          this.stringUserIds.add(userId);
       }
       return this.stringUserIds;
