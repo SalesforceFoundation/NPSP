@@ -53,7 +53,7 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String CLIENTID = 'clientId';
 
     //Determine if Elevate connection is active
-    public static final String isActive = 'isActive';
+    public static final String IS_ACTIVE = 'isActive';
 
     // Elevate record view types
     public enum VIEW_TYPE {
@@ -78,11 +78,11 @@ public with sharing class PS_IntegrationServiceConfig {
     /**
     * @description Determines if the Elevate integration service is configured and enabled.
     * The Elevate Payment Services integration is considered enabled when all required
-    * service records are present with value and isActive record is either missing or true
+    * service records are present with value and Integration is Active
     * @return Boolean
     */
     public Boolean isIntegrationEnabled() {
-        return isIntegrationActive() && hasElevateServiceData();
+        return isIntegrationActive() && ElevateConfigService.hasAllRequiredServiceData();
     }
 
     /**
@@ -100,25 +100,7 @@ public with sharing class PS_IntegrationServiceConfig {
     * @return Boolean
     */
     private Boolean isIntegrationActive() {
-        if (config.keyValueMap.containsKey(isActive)) {
-            return Boolean.valueOf(config.keyValueMap.get(isActive));
-        }
-
-        return true;
-    }
-
-    /**
-    * @description Determine is all required service record exist and has value
-    * @return Boolean 
-    */
-    private Boolean hasElevateServiceData() {
-        for (String requiredConfigKey : REQUIRED_CONFIG_KEYS) {
-            if (String.isBlank(config.keyValueMap.get(requiredConfigKey))) {
-                return false;
-            }
-        }
-
-        return true;
+       return ElevateConfigService.getIsActiveFlag();
     }
 
     /**
@@ -149,6 +131,19 @@ public with sharing class PS_IntegrationServiceConfig {
                 config = new Configuration();
             }
             return config;
+        } set;
+    }
+
+     /**
+    * @description Returns the instance of Elevate Related Configuration Service
+    * @return Service
+    */
+    private static Service ElevateConfigService {
+        get {
+            if (ElevateConfigService == null) {
+                ElevateConfigService = new Service();
+            }
+            return ElevateConfigService;
         } set;
     }
 
@@ -271,12 +266,32 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(API_KEY);
         }
 
+        public Boolean getIsActiveFlag() {
+            return hasIsActiveFlag() 
+                ? Boolean.valueOf(config.get(IS_ACTIVE))
+                : true;
+        }
+
         public String getViewURLPrefix(PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             return getRecordViewURL('', recordType);
         }
 
         public String getRecordViewURL(String elevateId, PS_IntegrationServiceConfig.VIEW_TYPE recordType) {
             return getRecordViewBaseURL() + '/' + getRecordViewTypeSuffix(recordType) + '/' + elevateId;
+        }
+
+        public Boolean hasIsActiveFlag() {
+            return config.containsKey(IS_ACTIVE);
+        }
+
+        public Boolean hasAllRequiredServiceData() {
+            for (String requiredConfigKey : REQUIRED_CONFIG_KEYS) {
+                if (String.isBlank(config.get(requiredConfigKey))) {
+                    return false;
+                }
+            }
+    
+            return true;
         }
 
         private String getRecordViewBaseURL() {

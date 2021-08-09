@@ -60,7 +60,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                     'value' => testBaseUrl
                 },
                 new Map<String, String>{
-                    'key' => PS_IntegrationServiceConfig.isActive,
+                    'key' => PS_IntegrationServiceConfig.IS_ACTIVE,
                     'value' => 'true'
                 }
             }
@@ -99,7 +99,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         setUpConfiguration();
         insert new Payment_Services_Configuration__c(
             Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-            Key__c = PS_IntegrationServiceConfig.isActive,
+            Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
             Value__c = 'false'
         );
 
@@ -117,7 +117,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         serviceRecords.add(
             new Payment_Services_Configuration__c(
                 Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                Key__c = PS_IntegrationServiceConfig.isActive,
+                Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
                 Value__c = 'true'
             )
         );
