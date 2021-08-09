@@ -4,7 +4,7 @@
             <div class='slds-m-around_medium'>
                 <template for:each={changeHistory.changes} for:item='changeEntry'>
                     <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
-                        <c-rd2-change-entry change-entry={changeEntry}>
+                        <c-rd2-change-entry entry-item={changeEntry}>
                         </c-rd2-change-entry>
                     </div>
                 </template>
@@ -19,7 +19,7 @@
             <div class='slds-m-around_medium'>
                 <template for:each={changeHistory.changes} for:item='changeEntry'>
                     <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
-                        <c-rd2-change-entry change-entry={changeEntry}>
+                        <c-rd2-change-entry entry-item={changeEntry}>
                         </c-rd2-change-entry>
                     </div>
                 </template>

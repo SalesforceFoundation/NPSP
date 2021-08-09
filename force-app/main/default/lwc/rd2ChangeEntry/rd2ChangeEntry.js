@@ -1,12 +1,12 @@
 import { LightningElement, api } from 'lwc';
 
 export default class Rd2ChangeEntry extends LightningElement {
-    @api changeEntry;
+    @api entryItem;
 
     get badgeClass() {
-        if(this.changeEntry.changeType === 'Upgrade') {
+        if(this.entryItem.changeType === 'Upgrade') {
             return 'slds-theme_success';
-        } else if(this.changeEntry.changeType === 'Downgrade') {
+        } else if(this.entryItem.changeType === 'Downgrade') {
             return 'slds-theme_error';
         }
         return '';

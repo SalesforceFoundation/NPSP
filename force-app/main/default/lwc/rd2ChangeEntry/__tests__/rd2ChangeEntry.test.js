@@ -32,7 +32,7 @@ const getChangeEntry = () => {
 describe('c-rd2-change-entry', () => {
     it('renders three change entry items', () => {
        const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
-       component.changeEntry = getChangeEntry();
+       component.entryItem = getChangeEntry();
 
        document.body.appendChild(component);
 
@@ -42,7 +42,7 @@ describe('c-rd2-change-entry', () => {
 
     it('renders date from change entry', () => {
         const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
-        component.changeEntry = getChangeEntry();
+        component.entryItem = getChangeEntry();
 
         document.body.appendChild(component);
 
@@ -52,7 +52,7 @@ describe('c-rd2-change-entry', () => {
 
     it('applies styling to upgrades', () => {
         const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
-        component.changeEntry = getChangeEntry();
+        component.entryItem = getChangeEntry();
 
         document.body.appendChild(component);
 
@@ -64,7 +64,7 @@ describe('c-rd2-change-entry', () => {
         const component = createElement('c-rd2-change-entry', { is: Rd2ChangeEntry });
         const changeEntry = getChangeEntry();
         changeEntry.changeType = 'Downgrade';
-        component.changeEntry = changeEntry;
+        component.entryItem = changeEntry;
 
         document.body.appendChild(component);
 
