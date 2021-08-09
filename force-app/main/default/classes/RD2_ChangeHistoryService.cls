@@ -72,7 +72,6 @@ public inherited sharing class RD2_ChangeHistoryService {
         }
 
         List<RecurringDonationChangeHistory__c> changes = changeHistorySelector.getChangeHistories(recurringDonationId);
-        System.debug(JSON.serializePretty(changes));
         RD2_ChangeHistoryView changeHistoryView = buildView(changes, recordLimit);
 
         return changeHistoryView;
