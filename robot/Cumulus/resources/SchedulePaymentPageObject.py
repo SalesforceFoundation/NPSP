@@ -13,8 +13,8 @@ class SchedulePaymentPage(BaseNPSPPage, BasePage):
         """
         Waits for the Schedule Payments iframe to load in the edit mode
         """
-        self.npsp.wait_for_locator('frame','Create one or more Payments for this Opportunity')
-        self.npsp.choose_frame('Create one or more Payments for this Opportunity')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
     def enter_textfield_value(self, inputvalue):
         locator = self.npsp.get_npsp_locator('id', 'inputX')
