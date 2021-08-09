@@ -81,9 +81,10 @@ public class TDTM_TriggerHandler {
         // If there are no records, insert the defaults.
         if (!defaultRecordsInserted && dao.isEmpty()) {
             // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
-            if (describeObj == Schema.SObjectType.User) {
+            if (describeObj.getsObjectType() == User.sObjectType) {
                 return;
             }
+            
             List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
             // Rather than insert the records in unit tests, just populate the static list
             // However to prevent any conflicts with our customers unit tests, always insert the records
