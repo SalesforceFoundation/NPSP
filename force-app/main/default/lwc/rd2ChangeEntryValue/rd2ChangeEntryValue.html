@@ -15,7 +15,12 @@
                 value={value}
         ></lightning-formatted-number>
     </template>
-    <template if:true={isLookup}>
+    <template if:true={isPopulatedLookup}>
         <a onclick={navigateToRecord}>{value}</a>
+    </template>
+    <template if:true={isEmptyLookup}>
+        <lightning-formatted-text
+                value={labelNone}
+        ></lightning-formatted-text>
     </template>
 </template>

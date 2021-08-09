@@ -1,10 +1,13 @@
 import { LightningElement, api } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
+import stgLabelFieldValueNone from '@salesforce/label/c.stgLabelFieldValueNone';
 
 export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElement) {
     @api value;
     @api idValue;
     @api displayType;
+
+    labelNone = stgLabelFieldValueNone;
 
     navigateToRecord() {
         this[NavigationMixin.Navigate]({
@@ -28,7 +31,11 @@ export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElemen
         return this.displayType === 'NUMERIC';
     }
 
-    get isLookup() {
-        return this.displayType === 'LOOKUP';
+    get isEmptyLookup() {
+        return this.displayType === 'LOOKUP' && (this.value === null || this.value === undefined);
+    }
+
+    get isPopulatedLookup() {
+        return this.displayType === 'LOOKUP' && this.value !== null && this.value !== undefined;
     }
 }
