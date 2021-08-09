@@ -138,12 +138,12 @@ Batch Template Default values Setting
     ...                              Opportunity: Close Date=
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
-    ...                              Opportunity: Record Type=NPSP Default
+    ...                              Opportunity: Record Type=Donation
     Click Gift Entry Button          Wizard Save
     Verify Field Default Value
     ...                              Opportunity: Close Date=
     ...                              Payment: Payment Method=--None--
     ...                              Opportunity: custom_text=
-    ...                              Opportunity: Record Type=NPSP Default
+    ...                              Opportunity: Record Type=Donation
 
     Query And Store Records To Delete    ${NS}DataImport__c   ${NS}NPSP_Data_Import_Batch__c=${batch_id}
