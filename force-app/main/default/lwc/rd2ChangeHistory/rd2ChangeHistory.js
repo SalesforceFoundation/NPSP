@@ -41,7 +41,7 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
             this.displayState = this.changeHistory.settingEnabled ? STATES.READY : STATES.SETTING_DISABLED;
         } catch (ex) {
             this.displayState = STATES.ERROR;
-            this.errorMessage = ex.message;
+            this.errorMessage = ex.body.message;
         }
     }
 

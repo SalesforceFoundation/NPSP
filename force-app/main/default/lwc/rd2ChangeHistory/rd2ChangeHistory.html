@@ -28,17 +28,23 @@
     </template>
     <template if:true={hasEmptyList}>
         <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
-            <c-util-illustration size='small' message={labels.rdchNoRecords}></c-util-illustration>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration size='small' message={labels.rdchNoRecords}></c-util-illustration>
+            </div>
         </lightning-card>
     </template>
     <template if:true={hasError}>
         <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
-            <c-util-illustration size='small' title={labels.commonError} message={errorMessage}></c-util-illustration>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration size='small' title={labels.commonError} message={errorMessage}></c-util-illustration>
+            </div>
         </lightning-card>
     </template>
     <template if:true={isSettingDisabled}>
         <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
-            <c-util-illustration title='Setting is Disabled' size='small' message={labels.rdchDisabled} variant='no-access'></c-util-illustration>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration title='Setting is Disabled' size='small' message={labels.rdchDisabled} variant='no-access'></c-util-illustration>
+            </div>
         </lightning-card>
     </template>
 </template>
