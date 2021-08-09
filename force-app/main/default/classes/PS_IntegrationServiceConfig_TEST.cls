@@ -249,6 +249,9 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     // Helpers
     //////////////
 
+    /**
+    * @description Create all required Payment Services Configuration Records 
+    */
     private static List<Payment_Services_Configuration__c> getConfigurations() {
         List<Payment_Services_Configuration__c> requiredConfigs = new List<Payment_Services_Configuration__c>();
 
