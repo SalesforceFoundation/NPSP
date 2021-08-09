@@ -107,30 +107,76 @@ public with sharing class RD2_ChangeHistory {
 
     private List<RD2_FieldChangeView> buildFieldChangeViews() {
         List<RD2_FieldChangeView> fieldChanges = new List<RD2_FieldChangeView>();
-        fieldChanges.add(getAmountChange());
-        fieldChanges.add(getAnnualValueChange());
 
-        if (this.isCampaignChanged()) {
+        if(this.hasAmountPermissions()) {
+            fieldChanges.add(getAmountChange());
+        }
+
+        if(this.hasAnnualValuePermissions()) {
+            fieldChanges.add(getAnnualValueChange());
+        }
+
+        if (this.isCampaignChanged() && this.hasCampaignPermissions()) {
             fieldChanges.add(getCampaignChange());
         }
 
-        if (this.isStatusChanged()) {
+        if (this.isStatusChanged() && this.hasStatusPermissions()) {
             fieldChanges.add(getStatusChange());
         }
 
-        if (this.isFrequencyChanged()) {
+        if (this.isFrequencyChanged() && this.hasFrequencyPermissions()) {
             fieldChanges.add(getFrequencyChange());
         }
 
-        if (this.isPeriodChanged()) {
+        if (this.isPeriodChanged() && this.hasPeriodPermissions()) {
             fieldChanges.add(getPeriodChange());
         }
 
-        if (this.isPaymentMethodChanged()) {
+        if (this.isPaymentMethodChanged() && this.hasPaymentPermissions()) {
             fieldChanges.add(getPaymentMethodChange());
         }
 
         return fieldChanges;
+    }
+
+    private Boolean hasAnnualValuePermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.NewAnnualValue__c,
+                RecurringDonationChangeHistory__c.PreviousAnnualValue__c);
+    }
+
+    private Boolean hasAmountPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousAmount__c,
+                RecurringDonationChangeHistory__c.NewAmount__c);
+    }
+
+    private Boolean hasPaymentPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousPaymentMethod__c,
+                RecurringDonationChangeHistory__c.NewPaymentMethod__c);
+    }
+
+    private Boolean hasPeriodPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c,
+                RecurringDonationChangeHistory__c.NewInstallmentPeriod__c);
+    }
+
+    private Boolean hasFrequencyPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c,
+                RecurringDonationChangeHistory__c.NewInstallmentFrequency__c);
+    }
+
+    private Boolean hasStatusPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousStatus__c,
+                RecurringDonationChangeHistory__c.NewStatus__c);
+    }
+
+    private Boolean hasCampaignPermissions() {
+        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousCampaign__c,
+                RecurringDonationChangeHistory__c.NewCampaign__c);
+    }
+
+    private Boolean canReadRDCHFields(Schema.SObjectField newField, Schema.SObjectField oldField) {
+        return UTIL_Permissions.canRead('RecurringDonationChangeHistory__c', String.valueOf(newField))
+                && UTIL_Permissions.canRead('RecurringDonationChangeHistory__c', String.valueOf(oldField));
     }
 
     private Boolean isAmountChanged() {
