@@ -37,12 +37,10 @@ public inherited sharing class USNonElevateCustomers implements IAudience{
 
    private static final String US_ISO_CODE = 'US';
 
-   public Set<String> audience() {
-      Set<String> audience = new Set<String>();
+   public UserIds audience() {
+      UserIds audience;
       if (isTargetOrganization()) {
-         for (User user: userSelector.getUsers()) {
-            audience.add(new UserId(user.Id).stringValue());
-         }
+         audience = new UserIds(userSelector.getUsers());
       }
       return audience;
    }

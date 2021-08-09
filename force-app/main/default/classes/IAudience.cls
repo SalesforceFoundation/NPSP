@@ -34,5 +34,5 @@
 */
 
 public interface IAudience {
-   Set<String> audience();
+   UserIds audience();
 }

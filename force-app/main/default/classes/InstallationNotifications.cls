@@ -33,27 +33,23 @@
 * @description Domain for building and publishing install script triggered user notifications.
 */
 
-public inherited sharing class InstallNotifications {
+public inherited sharing class InstallationNotifications {
 
-   private String body;
-   private String title;
-   private Set<String> audience;
-   private Id notificationTypeId;
-   private List<Custom_Notification__mdt> activeCustomNotificationMetadata;
+   private List<Custom_Notification__mdt> activeNotifications;
    private List<CustomNotificationType> customNotificationTypes;
 
-   public InstallNotifications() {
-      this.activeCustomNotificationMetadata = customNotificationMetadataSelector.getActiveCustomNotifications();
+   public InstallationNotifications() {
+      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
       this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
    }
 
    @TestVisible
-   private CustomNotificationMetadataSelector customNotificationMetadataSelector {
+   private InstallationNotificationsSelector installationNotificationsSelector {
       get {
-         if (customNotificationMetadataSelector == null) {
-            customNotificationMetadataSelector = new CustomNotificationMetadataSelector();
+         if (installationNotificationsSelector == null) {
+            installationNotificationsSelector = new InstallationNotificationsSelector();
          }
-         return customNotificationMetadataSelector;
+         return installationNotificationsSelector;
       }
       set;
    }
@@ -69,58 +65,29 @@ public inherited sharing class InstallNotifications {
       set;
    }
 
-   private InstallNotifications withBody(String body) {
-      this.body = body;
-      return this;
-   }
-
-   private InstallNotifications withNotificationTypeId(Id notificationTypeId) {
-      this.notificationTypeId = notificationTypeId;
-      return this;
-   }
-
-   private InstallNotifications withTitle(String title) {
-      this.title = title;
-      return this;
-   }
-
-   private InstallNotifications withAudience(Set<String> audience) {
-      this.audience = audience;
-      return this;
-   }
-
    public void publishNotifications() {
-      for (Custom_Notification__mdt notificationMetaData : activeCustomNotificationMetadata) {
+      String DUMMY_ID = '000000000000000AAA';
+      for (Custom_Notification__mdt activeNotification : activeNotifications) {
          for (CustomNotificationType notificationType : customNotificationTypes) {
-            if (notificationType.CustomNotifTypeName == notificationMetaData.Notification_Channel__c) {
-               new InstallNotifications()
-                   .withNotificationTypeId(notificationType.Id)
-                   .withBody(notificationMetaData.Body__c)
-                   .withTitle(notificationMetaData.Title__c)
-                   .withAudience(getAudience(notificationMetaData.Audience_Implementation_Class__c))
-                   .publish();
+            if (notificationType.CustomNotifTypeName == activeNotification.Notification_Channel__c) {
+               Messaging.CustomNotification notification = new Messaging.CustomNotification();
+               notification.setBody(activeNotification.Body__c);
+               notification.setTitle(activeNotification.Title__c);
+               notification.setNotificationTypeId(activeNotification.Id);
+               notification.setTargetId(DUMMY_ID);
+               notification.send(getAudience(activeNotification.Audience_Implementation_Class__c));
             }
          }
       }
    }
 
-   private Set<String> getAudience (String audienceImpl) {
+   private Set<String> getAudience(String audienceImpl) {
       String namespace = UTIL_Namespace.getNamespace();
       Type classType = String.isNotBlank(namespace)
           ? Type.forName(namespace, audienceImpl)
           : Type.forName(audienceImpl);
       USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)classType.newInstance();
-      return nonElevateCustomers.audience();
-   }
-
-   private void publish() {
-      String DUMMY_ID = '000000000000000AAA';
-      Messaging.CustomNotification notification = new Messaging.CustomNotification();
-      notification.setBody(this.body);
-      notification.setTitle(this.title);
-      notification.setNotificationTypeId(this.notificationTypeId);
-      notification.setTargetId(DUMMY_ID);
-      notification.send(this.audience);
+      return nonElevateCustomers.audience().stringValues();
    }
 
 }

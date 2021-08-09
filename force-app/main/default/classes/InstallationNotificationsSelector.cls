@@ -30,35 +30,17 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Value object class for user Id.
+* @description Selector for Custom Notification Metadata.
 */
 
-public inherited sharing class UserId {
+public with sharing class InstallationNotificationsSelector {
 
-   private Id userId;
-
-   public UserId(Id userId) {
-      if (!isUserId(userId)) {
-         throw new UserIdException('Invalid User Id');
-      }
-      this.userId = userId;
+   public List<Custom_Notification__mdt> getActiveCustomNotifications() {
+      return [
+          SELECT Id, Body__c, Title__c, Redirect_URL__c, Notification_Channel__c, Audience_Implementation_Class__c
+          FROM Custom_Notification__mdt
+          WHERE IsActive__c = TRUE
+      ];
    }
 
-   private Boolean isUserId(Id userId) {
-      SObjectType providedIdSObjectType = userId.getSobjectType();
-      if (providedIdSObjectType == User.getSObjectType()) {
-         return true;
-      }
-      return false;
-   }
-
-   public Id value() {
-      return this.userId;
-   }
-
-   public String stringValue() {
-      return (String)this.userId;
-   }
-
-   public class UserIdException extends Exception {}
 }
