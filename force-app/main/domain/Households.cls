@@ -34,13 +34,13 @@
 */
 public inherited sharing class Households extends fflib_SObjects {
 
-    private Map<HouseholdId, Contacts> membersByHouseholdId {
+    private Map<Id, Contacts> membersByHouseholdId {
         get {
             if (membersByHouseholdId == null) {
-                membersByHouseholdId = new Map<HouseholdId, Contacts>();
+                membersByHouseholdId = new Map<Id, Contacts>();
                 for (Account account : (List<Account>) getRecords()) {
                     membersByHouseholdId.put(
-                            new HouseholdId(account.Id),
+                            account.Id,
                             new Contacts(account.Contacts)
                     );
                 }
@@ -138,7 +138,12 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     public Contacts membersOf(HouseholdId aHouseholdId) {
-        return membersByHouseholdId.get(aHouseholdId);
+        Contacts members = membersByHouseholdId.get(aHouseholdId.value());
+        if (members == null) {
+            return new Contacts(new List<Contact>());
+        } else {
+            return members;
+        }
     }
 
     /*******************************************************************************************************

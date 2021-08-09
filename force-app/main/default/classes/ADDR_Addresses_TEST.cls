@@ -2105,12 +2105,13 @@ public with sharing class ADDR_Addresses_TEST {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
-        Households householdAccounts = new Households(new Set<Id>{
+        Households households = new Households(new Set<Id>{
                 account.Id
         });
 
-        Contact[] contacts = householdAccounts.membersOf(
-                new HouseholdId(account.Id)).getRecords();
+
+        Contacts members = households.membersOf(new HouseholdId(account.Id));
+        Contact[] contacts = members.getRecords();
 
         System.assertEquals(0, contacts.size());
     }
@@ -2127,32 +2128,11 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createTestData(hhSize, contactSize);
 
-        Households contactRepo = new Households(
+        Households testHouseholds = new Households(
                 UTIL_SObject.extractIds(testAccounts)
         );
 
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
-    }
-
-    /*********************************************************************************************************
-    @description
-        Execute ContactRepository.getContacts() for an Account not passed to the ContactRepository constructor
-    verify:
-        Method returns expected Contact list for each Account
-    **********************************************************************************************************/
-    @IsTest
-    private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
-        Integer hhSize = 2;
-        Integer contactSize = 2;
-        createTestData(hhSize, contactSize);
-
-        Households contactRepo = new Households(new Set<Id>());
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
-
-        contactRepo = new Households(new Set<Id>{
-                testAccounts[0].Id
-        });
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
+        testAndAssertContactRepositoryGetContacts(testHouseholds, testAccounts, testContacts);
     }
 
     /*********************************************************************************************************
@@ -2161,7 +2141,7 @@ public with sharing class ADDR_Addresses_TEST {
     verify:
         Method returns expected Contact list for each Account
     **********************************************************************************************************/
-    static void testAndAssertContactRepositoryGetContacts(Households contactRepo, List<Account> accounts, List<Contact> contacts) {
+    static void testAndAssertContactRepositoryGetContacts(Households households, List<Account> accounts, List<Contact> contacts) {
         Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
         for (Contact c : contacts) {
             if (!contactsByAccountId.containsKey(c.AccountId)) {
@@ -2172,8 +2152,8 @@ public with sharing class ADDR_Addresses_TEST {
 
         for (Account account : accounts) {
             Contact[] expectedContacts = contactsByAccountId.get(account.Id);
-            Contact[] actualContacts = contactRepo.membersOf(
-                new HouseholdId(account.Id)).getRecords();
+            Contacts actualMembers = households.membersOf(new HouseholdId(account.Id));
+            Contact[] actualContacts = actualMembers.getRecords();
 
             System.assertEquals(UTIL_SObject.extractIds(expectedContacts), UTIL_SObject.extractIds(actualContacts));
         }
