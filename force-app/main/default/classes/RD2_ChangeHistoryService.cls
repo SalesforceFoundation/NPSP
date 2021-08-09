@@ -64,6 +64,10 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String filter) {
+        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType))) {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
+        }
+
         Integer limitPlusOne = recordLimit + 1;
         changeHistorySelector.withRecordLimit(limitPlusOne);
 
