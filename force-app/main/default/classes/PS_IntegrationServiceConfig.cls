@@ -76,11 +76,13 @@ public with sharing class PS_IntegrationServiceConfig {
     };
 
     /**
-    * @description Returns the Elevate integration service enablement status
+    * @description Determines if the Elevate integration service is configured and enabled.
+    * The Elevate Payment Services integration is considered enabled when all required
+    * service records are present with value and isActive record is either missing or true
     * @return Boolean
     */
     public Boolean isIntegrationEnabled() {
-        return isEnabled;
+        return isIntegrationActive() && hasElevateServiceData();
     }
 
     /**
@@ -92,24 +94,8 @@ public with sharing class PS_IntegrationServiceConfig {
     }
 
     /**
-    * @description Determines if the Elevate integration service is configured and enabled.
-    * The Elevate Payment Services integration is considered enabled when all required
-    * service records are present with value and isActive record is either missing or true
-    * @return Boolean
-    */
-    private Boolean isEnabled {
-        get {
-            if (isEnabled == null) {
-                return isIntegrationActive() && hasElevateServiceData();
-            }
-            return isEnabled;
-        }
-        set;
-    }
-
-    /**
     * @description Determine if isActive service record exist. If the record exist,
-    * using the record to determine if Elevate is regiesterd. Else assume the key
+    * using the record to determine if Elevate is registered. Else assume the key
     * is active
     * @return Boolean
     */
