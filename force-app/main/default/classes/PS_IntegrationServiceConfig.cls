@@ -52,6 +52,9 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String CLIENTID = 'clientId';
 
+    //Determine if Elevate connection is active
+    public static final String isActive = 'isActive';
+
     // Elevate record view types
     public enum VIEW_TYPE {
         COMMITMENT,
@@ -73,15 +76,31 @@ public with sharing class PS_IntegrationServiceConfig {
     };
 
     /**
+    * @description Returns the Elevate integration service enablement status
+    * @return Boolean
+    */
+    public Boolean isIntegrationEnabled() {
+        return isEnabled;
+    }
+
+    /**
+    * @description Determines if the current user has the appropriate permissions to modify Elevate records
+    * @return Boolean
+    */
+    public Boolean hasIntegrationPermissions() {
+        return hasPermissions;
+    }
+
+    /**
     * @description Determines if the Elevate integration service is configured and enabled.
-    * The Elevate Payment Services integration is considered "enabled" (for now) when there
-    * is at least a single record in the protected Payment Services Configuration object
+    * The Elevate Payment Services integration is considered enabled when all required
+    * service records are present with value and isActive record is either missing or true
     * @return Boolean
     */
     private Boolean isEnabled {
         get {
             if (isEnabled == null) {
-                return config.keyValueMap.keySet().containsAll(REQUIRED_CONFIG_KEYS);
+                return isIntegrationActive() && hasElevateServiceData();
             }
             return isEnabled;
         }
@@ -89,11 +108,31 @@ public with sharing class PS_IntegrationServiceConfig {
     }
 
     /**
-    * @description Returns the Elevate integration service enablement status
+    * @description Determine if isActive service record exist. If the record exist,
+    * using the record to determine if Elevate is regiesterd. Else assume the key
+    * is active
     * @return Boolean
     */
-    public Boolean isIntegrationEnabled() {
-        return isEnabled;
+    private Boolean isIntegrationActive() {
+        if (config.keyValueMap.containsKey(isActive)) {
+            return Boolean.valueOf(config.keyValueMap.get(isActive));
+        }
+
+        return true;
+    }
+
+    /**
+    * @description Determine is all required service record exist and has value
+    * @return Boolean 
+    */
+    private Boolean hasElevateServiceData() {
+        for (String requiredConfigKey : REQUIRED_CONFIG_KEYS) {
+            if (String.isBlank(config.keyValueMap.get(requiredConfigKey))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -113,13 +152,6 @@ public with sharing class PS_IntegrationServiceConfig {
         set;
     }
 
-    /**
-    * @description Determines if the current user has the appropriate permissions to modify Elevate records
-    * @return Boolean
-    */
-    public Boolean hasIntegrationPermissions() {
-        return hasPermissions;
-    }
 
     /**
     * @description Returns the same instance of the Configuration inner class
