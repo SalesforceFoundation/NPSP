@@ -734,13 +734,17 @@ export default class GeFormRenderer extends LightningElement{
             if (!canUpdate) { return; }
         }
 
-        const performRemoveFromElevateBatch = await this.handleRemoveFromElevateBatch(
+        const removeResult = await this.handleRemoveFromElevateBatch(
             tokenizedGift
         );
-        if (!performRemoveFromElevateBatch) { return; }
+        if (removeResult.hasError) { return; }
         
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
+            if (removeResult.hasProcessed) {
+                // Log error
+            }
+            
             this.disabled = false;
             this.toggleSpinner();
             return;
@@ -771,19 +775,24 @@ export default class GeFormRenderer extends LightningElement{
 
     async handleRemoveFromElevateBatch(tokenizedGift) {
         const gift = new Gift(this.giftInView);
+        let result = {
+            hasError: false,
+            wasProcessed: false,
+        };
         try {
             if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
                 console.log('should be removing from batch');
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
+                result.wasProcessed = true;
             }
         } catch (exception) {
             // Update DI with failure
             this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
-            return false;
+            result.hasError = true;
         }
 
-        return true;
+        return result;
     }
 
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {

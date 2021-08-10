@@ -427,18 +427,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     async handleDelete(event) {
         try {
             const gift = new Gift({fields: event.detail});
-            const giftAsDataImport = gift.asDataImport();
-            this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
+            const isRemovedFromElevate = await this.removeFromElevateBatch(gift);
 
-            if (this.shouldRemoveFromElevateBatch(gift)) {
-                try {
-                    await this.deleteFromElevateBatch(giftAsDataImport);    
-                } catch (exception) {
-                    this.giftBatchState = await this.giftBatch.undelete(giftAsDataImport);
-                    // Update failure reason on gift
-                    throw new Error('There was an issue removing this donation from Elevate. Not deleted');
-                }
-            }
+            await this.performDelete(gift.asDataImport(), isRemovedFromElevate);
 
             if (this.giftInView?.fields.Id === gift?.id()) {
                 this.handleClearGiftInView();
@@ -453,6 +444,31 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             );
         } catch(error) {
             handleError(error);
+        }
+    }
+
+    async removeFromElevateBatch(gift) {
+        let isRemovedFromElevate = false;
+        if (this.shouldRemoveFromElevateBatch(gift)) {
+            try {
+                await this.deleteFromElevateBatch(gift.asDataImport());
+                isRemovedFromElevate = true;
+            } catch (exception) {
+                throw new Error('There was an issue removing this donation from Elevate. Not deleted');
+            }
+        }
+
+        return isRemovedFromElevate;
+    }
+
+    async performDelete(giftAsDataImport, isRemovedFromElevate) {
+        try {
+            this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
+        } catch (exception) {
+            if (isRemovedFromElevate) {
+                // Log error
+            }
+            throw exception;
         }
     }
 
