@@ -33,7 +33,7 @@
 * @description Notification audience implementation for non-elevate US customers.
 */
 
-public inherited sharing class USNonElevateCustomers implements IAudience{
+public inherited sharing class USNonElevateCustomers implements IAudience {
 
    private static final String US_ISO_CODE = 'US';
 
