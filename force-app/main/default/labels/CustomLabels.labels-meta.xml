@@ -5746,7 +5746,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring-Donations, Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to edit elevate payment information</shortDescription>
+        <shortDescription>Text to edit  payment information</shortDescription>
         <value>Edit payment information.</value>
     </labels>
     <labels>
@@ -6276,6 +6276,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>conMergeSeeDupConDRS</shortDescription>
         <value>See Duplicate Contacts</value>
+    </labels>
+    <labels>
+        <fullName>elevateAdNotificationFor234Body</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Body</shortDescription>
+        <value>With Elevate connected to NPSP, donations from your online forms automatically flow into NPSP. Elevate also processes payments and updates donor records in NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>elevateAdNotificationFor234Title</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Title</shortDescription>
+        <value>Streamline donation processing with Salesforce.org Elevate and NPSP</value>
     </labels>
     <labels>
         <fullName>engagementPlanCantEdit</fullName>
