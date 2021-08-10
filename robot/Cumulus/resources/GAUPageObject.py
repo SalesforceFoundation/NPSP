@@ -37,8 +37,8 @@ class GauAllocationPage(BaseNPSPPage, BasePage):
         Waits for the GAU Allocations iframe to load
         """
         self.selenium.wait_until_location_contains("/one/one.app",timeout=60, message="Manage Allocations page did not load in 1 min")
-        self.npsp.wait_for_locator('frame','Manage Allocations')
-        self.npsp.choose_frame('Manage Allocations')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
     def set_gau_allocation(self,**kwargs):
         """
