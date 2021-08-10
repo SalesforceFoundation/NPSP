@@ -43,7 +43,7 @@
     <template if:true={isSettingDisabled}>
         <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
             <div class='slds-m-around_medium'>
-                <c-util-illustration title='Setting is Disabled' size='small' message={labels.rdchDisabled} variant='no-access'></c-util-illustration>
+                <c-util-illustration title={labels.commonError} size='small' message={labels.rdchDisabled} variant='no-access'></c-util-illustration>
             </div>
         </lightning-card>
     </template>
