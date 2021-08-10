@@ -140,13 +140,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         memberGift.deleteRecord();
     }
 
-    public void undeleteGiftBy(GiftId giftId) {
-        Gift memberGift = new Gift(
-            new DataImport__c(Id = giftId.value())
-        );
-        memberGift.undeleteRecord();
-    }
-
     public Map<String, Integer> totals() {
         return this.totals.toMap();
     }
