@@ -734,9 +734,7 @@ export default class GeFormRenderer extends LightningElement{
             if (!canUpdate) { return; }
         }
 
-        const removeResult = await this.handleRemoveFromElevateBatch(
-            tokenizedGift
-        );
+        const removeResult = await this.handleRemoveFromElevateBatch(tokenizedGift);
         if (removeResult.hasError) { return; }
 
         const hasSaved = await this.saveDataImport(this.saveableFormState());
@@ -784,13 +782,10 @@ export default class GeFormRenderer extends LightningElement{
 
     async handleRemoveFromElevateBatch(tokenizedGift) {
         const gift = new Gift(this.giftInView);
-        let result = {
-            hasError: false,
-            wasProcessed: false,
-        };
+        const result = {hasError: false, wasProcessed: false};
+
         try {
             if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
-                console.log('should be removing from batch');
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
                 result.wasProcessed = true;
