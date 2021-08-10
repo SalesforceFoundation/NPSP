@@ -69,7 +69,7 @@ public inherited sharing class Application {
         set;
     }
 
-    public void onBeforeInsertOf(Accounts accounts) {
+    public void onBeforeInsertOf(AccountsAdapter accounts) {
         if (isAddressManagementEnabled()) {
             normalizeLineBreaksFor(accounts.householdAccounts());
         }
@@ -78,11 +78,11 @@ public inherited sharing class Application {
         }
     }
 
-    public void onAfterInsertOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterInsertOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         createNewAddressesAndAddToDmlWrapperForProcessing(accounts, dmlWrapper);
     }
 
-    private void createNewAddressesAndAddToDmlWrapperForProcessing(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private void createNewAddressesAndAddToDmlWrapperForProcessing(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Account> listAccCreateAddr = new List<Account>();
         if (isAddressManagementEnabled()) {
             listAccCreateAddr.addAll(accounts.withAddresses().householdAccounts());
@@ -112,7 +112,7 @@ public inherited sharing class Application {
         Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 
-    public void onBeforeUpdateOf(Accounts accounts) {
+    public void onBeforeUpdateOf(AccountsAdapter accounts) {
         if (isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
                     accounts.withBillingAddressChanges().householdAccounts()
@@ -125,7 +125,7 @@ public inherited sharing class Application {
         }
     }
 
-    public void onAfterUpdateOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterUpdateOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // note that we detect whether the change is coming from the address trigger,
         // in which case we don't want to create a new address.
         if (TDTM_ProcessControl.isRecursive(

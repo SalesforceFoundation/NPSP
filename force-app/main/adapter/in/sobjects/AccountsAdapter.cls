@@ -30,9 +30,12 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Domain class for Accounts in NPSP.
+* @description The AccountsAdapter's role is to provide clients with a single Type
+* that will handle DML on Accounts and call the appropriate method on Domains. Since many
+* domain objects are persisted on the Accounts standard object (Households,
+* HouseholdAddresses, Organizations, OrganizationAddresses, etc.
 */
-public inherited sharing class Accounts extends fflib_SObjects {
+public inherited sharing class AccountsAdapter extends fflib_SObjects {
 
     private Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -69,11 +72,11 @@ public inherited sharing class Accounts extends fflib_SObjects {
         set;
     }
 
-    public Accounts(List<Account> records) {
+    public AccountsAdapter(List<Account> records) {
         this(records, null);
     }
 
-    public Accounts(List<Account> records, List<Account> oldlist) {
+    public AccountsAdapter(List<Account> records, List<Account> oldlist) {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
@@ -146,7 +149,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         return null;
     }
 
-    public Accounts withBillingAddressChanges() {
+    public AccountsAdapter withBillingAddressChanges() {
         List<Account> accountsWithAddressChanges = new List<Account>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Account newRecord = (Account) getRecords()[i];
@@ -156,7 +159,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
                 accountsWithAddressChanges.add(newRecord);
             }
         }
-        return new Accounts(accountsWithAddressChanges, oldMap.values());
+        return new AccountsAdapter(accountsWithAddressChanges, oldMap.values());
     }
 
     private void setNameAndGreetingsToReplacementText() {
@@ -280,7 +283,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
         return false;
     }
 
-    public Accounts withAddresses() {
+    public AccountsAdapter withAddresses() {
         List<Account> withAddresses = new List<Account>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Account newRecord = (Account) getRecords()[i];
@@ -288,7 +291,7 @@ public inherited sharing class Accounts extends fflib_SObjects {
                 withAddresses.add(newRecord);
             }
         }
-        return new Accounts(withAddresses);
+        return new AccountsAdapter(withAddresses);
     }
 
     /*******************************************************************************************************

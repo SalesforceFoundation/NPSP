@@ -48,24 +48,24 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         Application application = new Application();
-        Accounts accounts;
+        AccountsAdapter accountsAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
             when BeforeInsert {
-                accounts = new Accounts(listNew);
-                application.onBeforeInsertOf(accounts);
+                accountsAdapter = new AccountsAdapter(listNew);
+                application.onBeforeInsertOf(accountsAdapter);
             }
             when BeforeUpdate {
-                accounts = new Accounts(listNew, listOld);
-                application.onBeforeUpdateOf(accounts);
+                accountsAdapter = new AccountsAdapter(listNew, listOld);
+                application.onBeforeUpdateOf(accountsAdapter);
             }
             when AfterInsert {
-                accounts = new Accounts(listNew);
-                application.onAfterInsertOf(accounts, dmlWrapper);
+                accountsAdapter = new AccountsAdapter(listNew);
+                application.onAfterInsertOf(accountsAdapter, dmlWrapper);
             }
             when AfterUpdate {
-                accounts = new Accounts(listNew, listOld);
-                application.onAfterUpdateOf(accounts, dmlWrapper);
+                accountsAdapter = new AccountsAdapter(listNew, listOld);
+                application.onAfterUpdateOf(accountsAdapter, dmlWrapper);
             }
         }
         return dmlWrapper;

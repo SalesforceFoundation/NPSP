@@ -228,7 +228,7 @@ public with sharing class ContactService {
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = Accounts.rtIdForNewAccount();
+        Id individualRecordTypeId = AccountsAdapter.rtIdForNewAccount();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
