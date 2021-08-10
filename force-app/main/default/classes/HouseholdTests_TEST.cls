@@ -49,7 +49,7 @@ private class HouseholdTests_TEST {
     }
 
     @IsTest
-    private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
+    private static void memberContactsAreReturnedWhenHouseholdHasMembers() {
         Integer hhSize = 2;
         Integer contactSize = 2;
         ADDR_Addresses_TEST.createTestData(hhSize, contactSize);
