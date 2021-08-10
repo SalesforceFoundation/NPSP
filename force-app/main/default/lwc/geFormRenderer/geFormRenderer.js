@@ -738,19 +738,28 @@ export default class GeFormRenderer extends LightningElement{
             tokenizedGift
         );
         if (removeResult.hasError) { return; }
-        
+
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
             if (removeResult.hasProcessed) {
-                // Log error
+                this.handleLogError('error', 'save flow');
             }
-            
+
             this.disabled = false;
             this.toggleSpinner();
             return;
         }
 
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
+    }
+
+    handleLogError(error, context) {
+        this.dispatchEvent(new CustomEvent('logerror', { 
+            detail: {
+                error: error,
+                context: context
+            }
+        }));    
     }
 
     async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
@@ -787,7 +796,6 @@ export default class GeFormRenderer extends LightningElement{
                 result.wasProcessed = true;
             }
         } catch (exception) {
-            // Update DI with failure
             this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
             result.hasError = true;
         }

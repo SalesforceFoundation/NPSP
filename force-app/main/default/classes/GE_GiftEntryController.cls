@@ -148,6 +148,15 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void logError(String error, String context) {
+        try {
+            ERR_Handler.processError(error, context);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }

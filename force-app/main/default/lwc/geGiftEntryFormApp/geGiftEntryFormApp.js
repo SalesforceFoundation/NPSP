@@ -12,6 +12,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
+import logError from '@salesforce/apex/GE_GiftEntryController.logError';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
@@ -135,6 +136,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
+    }
+
+    handleLogError(event) {
+        this.processLogError(event.detail.error, event.detail.context);
+    }
+
+    processLogError(error, context) {
+        logError({error: error, context: context});
     }
 
     /*******************************************************************************
@@ -466,7 +475,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
         } catch (exception) {
             if (isRemovedFromElevate) {
-                // Log error
+                this.processLogError(exception.toString(), 'Delete');
             }
             throw exception;
         }
