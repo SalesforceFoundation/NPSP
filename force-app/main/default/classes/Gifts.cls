@@ -39,6 +39,17 @@ public with sharing class Gifts {
     @TestVisible private List<DataImport__c> dataImports;
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
+    @TestVisible
+    private PS_IntegrationServiceConfig paymentIntegrationServiceConfig {
+        get {
+            if (paymentIntegrationServiceConfig == null) {
+                paymentIntegrationServiceConfig = new PS_IntegrationServiceConfig();
+            }
+            return paymentIntegrationServiceConfig;
+        }
+        set;
+    }
+
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setElevateBatchIds(dataImports);
@@ -54,19 +65,10 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void giftsToProcessingStatus() {
+    public void prepareGiftsForProcessing() {
         giftsToUpdate.clear();
-        for (DataImport__c gift : dataImports) {
-            if (isProcessableGift(gift)) {
-                gift.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(gift);
-            }
-        }
+        giftsToProcessingStatus();
         updateRecords();
-    }
-
-    private Boolean isProcessableGift(DataImport__c gift) {
-        return gift.Status__c == BDI_DataImport_API.bdiDryRunValidated;
     }
 
     public void updateRecords() {
@@ -90,6 +92,25 @@ public with sharing class Gifts {
             List<DataImport__c> giftsInElevateBatch = findGiftsByElevateBatchId(elevateBatchId);
             String failReason = failReasonByElevateBatchId.get(elevateBatchId);
             applyFailReasonToGiftsIn(giftsInElevateBatch, failReason);
+        }
+    }
+
+    @TestVisible
+    private void giftsToProcessingStatus() {
+        Boolean paymentIntegrationUnavailable =
+            !paymentIntegrationServiceConfig.isIntegrationEnabled();
+
+        for (DataImport__c gift : dataImports) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.hasAuthorizedPayment() && paymentIntegrationUnavailable) {
+                gift.Status__c = BDI_DataImport_API.bdiFailed;
+                gift.FailureInformation__c = 'Service unavailable';
+                giftsToUpdate.add(gift);
+            } else if (currentGift.isDryRunValidated()) {
+                gift.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.add(gift);
+            }
         }
     }
 
