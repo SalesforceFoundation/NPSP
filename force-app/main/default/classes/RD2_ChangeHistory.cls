@@ -15,7 +15,7 @@ public with sharing class RD2_ChangeHistory {
             view.statusReason = this.record.NewStatusReason__c;
         }
 
-        view.changeDate = this.record.CreatedDate.date();
+        view.changeDate = this.record.EffectiveDate__c;
         view.fields = buildFieldChangeViews();
 
         return view;

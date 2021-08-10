@@ -377,8 +377,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(100, changeView.fields[0].oldValue, 'Unexpected old Amount');
         System.assertEquals(200, changeView.fields[0].newValue, 'Unexpected new Amount');
 
-        System.assertEquals(100, changeView.fields[1].oldValue, 'Unexpected old Annual Value');
-        System.assertEquals(200, changeView.fields[1].newValue, 'Unexpected new Annual Value');
+        System.assertEquals(1200, changeView.fields[1].oldValue, 'Unexpected old Annual Value');
+        System.assertEquals(2400, changeView.fields[1].newValue, 'Unexpected new Annual Value');
 
     }
 

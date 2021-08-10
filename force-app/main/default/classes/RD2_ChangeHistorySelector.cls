@@ -35,7 +35,7 @@ public with sharing class RD2_ChangeHistorySelector {
                 .withFrom(RecurringDonationChangeHistory__c.SObjectType)
                 .withWhere('RecurringDonation__c = :recurringDonationId')
                 .withLimit(this.recordLimit)
-                .withOrderBy('CreatedDate DESC');
+                .withOrderBy('EffectiveDate__c DESC, CreatedDate DESC');
 
         if(changeTypesFilter != null) {
             query.withWhere(getChangeTypeWhereClause());
