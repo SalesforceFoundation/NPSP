@@ -9,8 +9,8 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
-            <property name="recordLimit" label="Record Limit" type="Integer" default="3" min="1"/>
-            <property name="changeTypeFilter" label="Change Type Filter" type="String"/>
+            <property name="recordLimit" description="{!$Label.RDCH_Record_Limit_Description}" label="{!$Label.RDCH_Record_Limit}" type="Integer" default="3" min="1"/>
+            <property name="changeTypeFilter" description="{!$Label.RDCH_Change_Type_Filter_Description}" label="{!$Label.RDCH_Change_Type_Filter}" type="String"/>
             <objects>
                 <object>npe03__Recurring_Donation__c</object>
             </objects>
