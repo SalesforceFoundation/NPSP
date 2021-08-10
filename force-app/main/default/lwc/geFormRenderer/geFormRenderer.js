@@ -740,7 +740,7 @@ export default class GeFormRenderer extends LightningElement{
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
             if (removeResult.hasProcessed) {
-                this.handleLogError('error', 'save flow');
+                this.handleLogError('error', 'save flow'); // PLACEHOLDER
             }
 
             this.disabled = false;
@@ -753,10 +753,7 @@ export default class GeFormRenderer extends LightningElement{
 
     handleLogError(error, context) {
         this.dispatchEvent(new CustomEvent('logerror', { 
-            detail: {
-                error: error,
-                context: context
-            }
+            detail: {error: error, context: context}
         }));    
     }
 
