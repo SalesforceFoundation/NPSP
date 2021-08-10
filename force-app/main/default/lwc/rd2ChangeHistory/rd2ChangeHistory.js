@@ -1,5 +1,6 @@
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import getChangeHistory from '@salesforce/apex/RD2_ChangeHistoryController.getChangeHistory'
+import { getCurrentNamespace } from 'c/utilCommon';
 import { NavigationMixin } from 'lightning/navigation';
 
 import commonViewMore from '@salesforce/label/c.commonViewMore';
@@ -74,12 +75,15 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
     }
 
     navigateToRelatedList() {
+        const namespace = getCurrentNamespace();
+        const relationshipField = 'RDChangeHistory__r';
+        const relationshipApiName = namespace ? `${namespace}__${relationshipField}` : relationshipField;
         this[NavigationMixin.Navigate]({
             type: 'standard__recordRelationshipPage',
             attributes: {
                 recordId: this.recordId,
                 objectApiName: 'npe03__Recurring_Donation__c',
-                relationshipApiName: 'RDChangeHistory__r',
+                relationshipApiName,
                 actionName: 'view'
             }
         });
