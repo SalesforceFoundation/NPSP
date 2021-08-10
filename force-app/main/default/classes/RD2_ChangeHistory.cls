@@ -95,7 +95,18 @@ public with sharing class RD2_ChangeHistory {
     private RD2_FieldChangeView getPaymentMethodChange() {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.newValue = this.record.NewPaymentMethod__c;
-        view.oldValue = this.record.PreviousPaymentMethod__c;
+
+        if (this.record.NewPaymentMethod__c != null) {
+            view.newValue = this.record.NewPaymentMethod__c;
+        } else {
+            view.newValue = Label.stgLabelNone;
+        }
+
+        if (this.record.PreviousPaymentMethod__c != null) {
+            view.oldValue = this.record.PreviousPaymentMethod__c;
+        } else {
+            view.oldValue = Label.stgLabelNone;
+        }
 
         view.label = UTIL_Describe.getFieldLabel(
                 'npe03__Recurring_Donation__c',
@@ -108,31 +119,31 @@ public with sharing class RD2_ChangeHistory {
     private List<RD2_FieldChangeView> buildFieldChangeViews() {
         List<RD2_FieldChangeView> fieldChanges = new List<RD2_FieldChangeView>();
 
-        if(this.hasAmountPermissions()) {
+        if (hasAmountPermissions()) {
             fieldChanges.add(getAmountChange());
         }
 
-        if(this.hasAnnualValuePermissions()) {
+        if (hasAnnualValuePermissions()) {
             fieldChanges.add(getAnnualValueChange());
         }
 
-        if (this.isCampaignChanged() && this.hasCampaignPermissions()) {
+        if (isCampaignChanged() && hasCampaignPermissions()) {
             fieldChanges.add(getCampaignChange());
         }
 
-        if (this.isStatusChanged() && this.hasStatusPermissions()) {
+        if (isStatusChanged() && hasStatusPermissions()) {
             fieldChanges.add(getStatusChange());
         }
 
-        if (this.isFrequencyChanged() && this.hasFrequencyPermissions()) {
+        if (isFrequencyChanged() && hasFrequencyPermissions()) {
             fieldChanges.add(getFrequencyChange());
         }
 
-        if (this.isPeriodChanged() && this.hasPeriodPermissions()) {
+        if (isPeriodChanged() && hasPeriodPermissions()) {
             fieldChanges.add(getPeriodChange());
         }
 
-        if (this.isPaymentMethodChanged() && this.hasPaymentPermissions()) {
+        if (isPaymentMethodChanged() && hasPaymentPermissions()) {
             fieldChanges.add(getPaymentMethodChange());
         }
 
