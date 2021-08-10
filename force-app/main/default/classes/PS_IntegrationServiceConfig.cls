@@ -82,7 +82,7 @@ public with sharing class PS_IntegrationServiceConfig {
     * @return Boolean
     */
     public Boolean isIntegrationEnabled() {
-        return isIntegrationActive() && ElevateConfigService.hasAllRequiredServiceData();
+        return isIntegrationActive() && hasAllRequiredServiceData();
     }
 
     /**
@@ -101,6 +101,14 @@ public with sharing class PS_IntegrationServiceConfig {
     */
     private Boolean isIntegrationActive() {
        return ElevateConfigService.getIsActiveFlag();
+    }
+
+    /**
+    * @description Determine if all required Elevate service records exist and have values stored in it.
+    * @return Boolean
+    */
+    private Boolean hasAllRequiredServiceData() {
+        return ElevateConfigService.hasAllRequiredServiceData();
     }
 
     /**
