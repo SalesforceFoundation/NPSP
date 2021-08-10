@@ -32,8 +32,9 @@
 * @date 2021
 * @description The AccountsAdapter's role is to provide clients with a single Type
 * that will handle DML on Accounts and call the appropriate method on Domains. Since many
-* domain objects are persisted on the Accounts standard object (Households,
-* HouseholdAddresses, Organizations, OrganizationAddresses, etc.
+* domain objects are persisted on the Accounts standard object, (Households,
+* HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
+* domain instances for each of them.
 */
 public inherited sharing class AccountsAdapter extends fflib_SObjects {
 
