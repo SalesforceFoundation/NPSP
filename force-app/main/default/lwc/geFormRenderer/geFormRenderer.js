@@ -779,13 +779,13 @@ export default class GeFormRenderer extends LightningElement{
 
     async handleRemoveFromElevateBatch(tokenizedGift) {
         const gift = new Gift(this.giftInView);
-        const result = {hasError: false, wasProcessed: false};
+        const result = {hasError: false, wasRemoved: false};
 
         try {
             if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
                 await this.currentElevateBatch.remove(gift.asDataImport());
                 if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
-                result.wasProcessed = true;
+                result.wasRemoved = true;
             }
         } catch (exception) {
             this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
