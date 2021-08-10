@@ -32,6 +32,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
 import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
+import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
@@ -835,7 +836,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenizeCard() {
-        return !!(this.showPaymentSaveNotice) && this.hasChargeableTransactionStatus();
+        return Settings.isElevateCustomer()
+            && !!(this.showPaymentSaveNotice)
+            && this.hasChargeableTransactionStatus();
     }
 
     /*******************************************************************************

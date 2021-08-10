@@ -18,6 +18,7 @@ import {
 } from 'c/geConstants';
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
+import Settings from 'c/geSettings';
 
 import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
     from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
@@ -63,8 +64,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     async connectedCallback() {
-        const domainInfo = await GeFormService.getOrgDomain();
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
+        if (!Settings.isElevateCustomer()) {
+            this._showSpinner = false;
+        } else {
+            const domainInfo = await GeFormService.getOrgDomain();
+            tokenHandler.setVisualforceOriginURLs(domainInfo);
+        }
+    }
+
+    get isElevateCustomer() {
+        return Settings.isElevateCustomer();
     }
 
     renderedCallback() {
@@ -210,9 +219,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
-        if (message.isReadyToMount && !this.isMounted) {
+        if (this.isAllowedToMount(message)) {
             this.requestMount();
         }
+    }
+
+    isAllowedToMount(message) {
+        return Settings.isElevateCustomer()
+            && !this.isMounted
+            && message.isReadyToMount;
     }
 
     requestParentNullPaymentFieldsInFormState() {
@@ -225,6 +240,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayState() {
+        if (!Settings.isElevateCustomer()) return;
         if (this.isInBatchGiftEntry()) {
             this.updateDisplayStateWhenInBatchGiftEntry();
         } else {

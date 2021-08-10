@@ -14,8 +14,6 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
-import checkForElevateCustomer 
-    from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 /*******************************************************************************
@@ -33,6 +31,7 @@ import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Bat
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
 
 import BatchTotals from './helpers/batchTotals';
+import Settings from 'c/geSettings';
 
 /*******************************************************************************
 * @description Constants
@@ -77,7 +76,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async connectedCallback() {
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
-        this.isElevateCustomer = await checkForElevateCustomer();
+        await Settings.init();
     }
 
     disconnectedCallback() {
@@ -89,10 +88,34 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
+        if (this.shouldDisplayElevateDeregistrationWarning()) {
+            this.displayElevateDeregistrationWarning();
+        }
         this._isBatchProcessing = this.batchTotals.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
+    }
+
+    shouldDisplayElevateDeregistrationWarning() {
+        return !Settings.isElevateCustomer() && this.batchTotals.authorizedPaymentsCount > 0;
+    }
+
+    displayElevateDeregistrationWarning() {
+        this.displayModalPrompt ({
+            'variant': 'warning',
+            'title': 'Elevate service unavailable',
+            'message': `This Gift Batch has gifts with associated Elevate payments, but we could not connect to Elevate.
+                        Check your connection and contact your System Administrator.
+                        Proceeding to process this Gift Batch may result in Elevate payments not being recorded.`,
+            'buttons':
+                [{
+                    label: this.CUSTOM_LABELS.commonOkay,
+                    variant: 'neutral',
+                    action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                }]
+        });
+    this._hasDisplayedExpiredAuthorizationWarning = true;
     }
 
     /*******************************************************************************
@@ -247,7 +270,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
-        return this.isElevateCustomer
+        return Settings.isElevateCustomer()
             && this.batchTotals.hasPaymentsWithExpiredAuthorizations 
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }

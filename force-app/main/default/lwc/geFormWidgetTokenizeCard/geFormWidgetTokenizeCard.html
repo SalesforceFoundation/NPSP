@@ -19,14 +19,16 @@
                                 <lightning-layout-item size='6'>
                                     <template if:true={isCharge}>
                                         <template if:false={isEdit}>
-                                            <lightning-button variant="base"
-                                                            label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                                            icon-name='utility:close'
-                                                            icon-position="right"
-                                                            onclick={handleUserDoNotCharge}
-                                                            class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                            data-qa-locator={qaLocatorDoNotChargeButton}>
-                                            </lightning-button>
+                                            <template if:true={isElevateCustomer}>
+                                                <lightning-button variant="base"
+                                                                  label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
+                                                                  icon-name='utility:close'
+                                                                  icon-position="right"
+                                                                  onclick={handleUserDoNotCharge}
+                                                                  class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                                  data-qa-locator={qaLocatorDoNotChargeButton}>
+                                                </lightning-button>
+                                            </template>
                                         </template>
                                     </template>
                                     <template if:true={shouldDisplayEditPaymentInformation}>
@@ -77,7 +79,8 @@
                                 <template if:true={showSpinner}>
                                     <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
-                                <iframe class='payment-services-iframe'
+                                <iframe if:true={isElevateCustomer}
+                                        class='payment-services-iframe'
                                         title={CUSTOM_LABELS.commonPaymentServices}
                                         src={tokenizeCardPageUrl}
                                         data-id={CUSTOM_LABELS.commonPaymentServices}>
