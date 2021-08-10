@@ -16,14 +16,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Title__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Body__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Redirect_URL__c</field>
             </layoutItems>
             <layoutItems>
@@ -36,7 +28,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Audience_Implementation_Class__c</field>
+                <field>Audience_Implementation__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Notification_Content_Implementation__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

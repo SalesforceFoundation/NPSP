@@ -37,7 +37,8 @@ public with sharing class InstallationNotificationsSelector {
 
    public List<Custom_Notification__mdt> getActiveCustomNotifications() {
       return [
-          SELECT Id, Body__c, Title__c, Redirect_URL__c, Notification_Channel__c, Audience_Implementation_Class__c
+          SELECT Id, Notification_Content_Implementation__c,
+              Redirect_URL__c, Notification_Channel__c, Audience_Implementation__c
           FROM Custom_Notification__mdt
           WHERE IsActive__c = TRUE
       ];

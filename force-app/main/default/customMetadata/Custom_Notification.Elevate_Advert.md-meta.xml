@@ -3,12 +3,8 @@
     <label>Elevate Advert</label>
     <protected>false</protected>
     <values>
-        <field>Audience_Implementation_Class__c</field>
+        <field>Audience_Implementation__c</field>
         <value xsi:type="xsd:string">USNonElevateCustomers</value>
-    </values>
-    <values>
-        <field>Body__c</field>
-        <value xsi:type="xsd:string">With Elevate connected to NPSP, donations from your online forms automatically flow into NPSP. Elevate also processes payments and updates donor records in NPSP.</value>
     </values>
     <values>
         <field>IsActive__c</field>
@@ -19,11 +15,11 @@
         <value xsi:type="xsd:string">NPSP Product Updates</value>
     </values>
     <values>
-        <field>Redirect_URL__c</field>
-        <value xsi:type="xsd:string">https://www.salesforce.org/elevate/?d=&amp;nc=&amp;utm_source=npsp&amp;utm_medium=referral&amp;utm_campaign=amer_ngocon&amp;utm_content=_us_amer_npsp</value>
+        <field>Notification_Content_Implementation__c</field>
+        <value xsi:type="xsd:string">ElevateAdNotificationContent</value>
     </values>
     <values>
-        <field>Title__c</field>
-        <value xsi:type="xsd:string">Streamline donation processing with Salesforce.org Elevate and NPSP</value>
+        <field>Redirect_URL__c</field>
+        <value xsi:nil="true"/>
     </values>
 </CustomMetadata>

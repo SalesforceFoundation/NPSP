@@ -30,45 +30,16 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Notification audience implementation for non-elevate US customers.
+* @description Notification content implementation for Elevate Advertisement.
 */
 
-public inherited sharing class USNonElevateCustomers implements IAudience{
+public with sharing class ElevateAdNotificationContent implements IInstallationNotificationsContent{
 
-   private static final String US_ISO_CODE = 'US';
-
-   public UserIds audience() {
-      UserIds audience;
-      if (isTargetOrganization()) {
-         audience = new UserIds(userSelector.getUsers());
-      }
-      return audience;
+   public String body() {
+      return Label.elevateAdNotificationFor234Body;
    }
 
-   private Boolean isTargetOrganization() {
-      return !isElevateCustomer() && isUSOrganization();
-   }
-
-   private Boolean isElevateCustomer () {
-      PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
-      return serviceConfig.isIntegrationEnabled();
-   }
-
-   private Boolean isUSOrganization () {
-      return [
-          SELECT SignupCountryIsoCode
-          FROM Organization
-      ].SignupCountryIsoCode == US_ISO_CODE;
-   }
-
-   @TestVisible
-   private UserSelector userSelector {
-      get {
-         if (userSelector == null) {
-            userSelector = new UserSelector();
-         }
-         return userSelector;
-      }
-      set;
+   public String title() {
+      return Label.elevateAdNotificationFor234Title;
    }
 }

@@ -70,24 +70,34 @@ public inherited sharing class InstallationNotifications {
       for (Custom_Notification__mdt activeNotification : activeNotifications) {
          for (CustomNotificationType notificationType : customNotificationTypes) {
             if (notificationType.CustomNotifTypeName == activeNotification.Notification_Channel__c) {
+               ElevateAdNotificationContent content = getNotificationContent(
+                   activeNotification.Notification_Content_Implementation__c);
                Messaging.CustomNotification notification = new Messaging.CustomNotification();
-               notification.setBody(activeNotification.Body__c);
-               notification.setTitle(activeNotification.Title__c);
+               notification.setBody(content.body());
+               notification.setTitle(content.title());
                notification.setNotificationTypeId(notificationType.Id);
                notification.setTargetId(DUMMY_ID);
-               notification.send(getAudience(activeNotification.Audience_Implementation_Class__c));
+               notification.send(getAudience(activeNotification.Audience_Implementation__c));
             }
          }
       }
    }
 
+   private ElevateAdNotificationContent getNotificationContent(String notificationContentImpl) {
+      return (ElevateAdNotificationContent)getClassType(notificationContentImpl).newInstance();
+   }
+
    private Set<String> getAudience(String audienceImpl) {
+      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl).newInstance();
+      return nonElevateCustomers.audience().stringValues();
+   }
+
+   private Type getClassType(String classImpl) {
       String namespace = UTIL_Namespace.getNamespace();
       Type classType = String.isNotBlank(namespace)
-          ? Type.forName(namespace, audienceImpl)
-          : Type.forName(audienceImpl);
-      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)classType.newInstance();
-      return nonElevateCustomers.audience().stringValues();
+          ? Type.forName(namespace, classImpl)
+          : Type.forName(classImpl);
+      return classType;
    }
 
 }

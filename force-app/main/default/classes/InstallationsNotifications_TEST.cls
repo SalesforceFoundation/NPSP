@@ -90,9 +90,8 @@ private class InstallationsNotifications_TEST {
                   List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
                       new Custom_Notification__mdt(
                           Id = DUMMY_CUSTOM_NOTIFICATION_ID,
-                          Audience_Implementation_Class__c = 'MockAudienceImpl',
-                          Title__c = 'Elevate is now Available',
-                          Body__c = 'You can now get Elevate for free!',
+                          Audience_Implementation__c = 'MockAudienceImpl',
+                          Notification_Content_Implementation__c = 'MockNotificationContentImpl',
                           IsActive__c = true
                       )
                   };
