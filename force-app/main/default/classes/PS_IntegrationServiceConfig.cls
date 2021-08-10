@@ -104,7 +104,7 @@ public with sharing class PS_IntegrationServiceConfig {
     }
 
     /**
-    * @description Determine if all required Elevate service record data exist and have values stored in it.
+    * @description Determine if all required Elevate service records exist and have values stored in it.
     * @return Boolean
     */
     private Boolean hasAllRequiredServiceData() {
