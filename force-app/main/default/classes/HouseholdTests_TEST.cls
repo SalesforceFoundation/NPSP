@@ -36,7 +36,7 @@
 private class HouseholdTests_TEST {
 
     @IsTest
-    private static void membersOfShouldReturnEmptyContactsWhenHouseholdHasNoMembers() {
+    private static void emptyContactsAreReturnedWhenHouseholdHasNoMembers() {
         Account account = new Account(Name = 'AccountWithoutContacts');
         insert account;
 
