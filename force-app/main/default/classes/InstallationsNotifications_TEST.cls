@@ -71,8 +71,6 @@ private class InstallationsNotifications_TEST {
          return null;
       }
    }
-
-
    private class InstallationsNotificationsSelectorMock implements StubProvider {
        public Object handleMethodCall(
            Object stubbedObject,
