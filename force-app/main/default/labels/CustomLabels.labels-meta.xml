@@ -5746,7 +5746,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring-Donations, Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to edit  payment information</shortDescription>
+        <shortDescription>Text to edit payment information</shortDescription>
         <value>Edit payment information.</value>
     </labels>
     <labels>
