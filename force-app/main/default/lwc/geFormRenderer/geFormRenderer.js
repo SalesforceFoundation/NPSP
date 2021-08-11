@@ -1738,6 +1738,7 @@ export default class GeFormRenderer extends LightningElement{
             this.reset();
         } else if (gift && gift.fields) {
             this._giftInView = gift;
+            this._openedGiftId = gift.fields.Id;
             this.formState = gift.fields;
             if (gift.softCredits) {
                 this._softCredits = deepClone(gift.softCredits);
