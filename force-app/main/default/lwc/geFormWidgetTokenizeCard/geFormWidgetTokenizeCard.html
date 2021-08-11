@@ -81,7 +81,7 @@
                             </c-util-alert-banner>
                             <div class='iframe-container'>
                                 <template if:true={showSpinner}>
-                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                                    <lightning-spinner if:true={isElevateCustomer} alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
                                 <iframe if:true={isElevateCustomer}
                                         class='payment-services-iframe'
@@ -101,7 +101,7 @@
                             </c-util-alert-banner>
                             <div class='iframe-container'>
                                 <template if:true={showSpinner}>
-                                    <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
+                                    <lightning-spinner if:true={isElevateCustomer} alternative-text={CUSTOM_LABELS.geAssistiveSpinner}></lightning-spinner>
                                 </template>
                                 <iframe class='payment-services-iframe'
                                         title={CUSTOM_LABELS.commonPaymentServices}
