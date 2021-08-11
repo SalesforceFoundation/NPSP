@@ -92,14 +92,8 @@ public inherited sharing class HouseholdService {
         oldHouseholds.deleteEmptyHouseholds();
     }
 
-    /**
-     * @description Static flag used to prevent hitting governor limits when this method
-     * runs multiple times during Contact merges.
-     */
-    private static Integer numberOfTimesUpdateHouseholdNamesHasRun = 0;
     public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0
-                && numberOfTimesUpdateHouseholdNamesHasRun < 2) {
+        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
             if (isFutureEligible()) {
                 HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                         contactsInLegacyHouseholds
@@ -110,7 +104,6 @@ public inherited sharing class HouseholdService {
                         contactsInLegacyHouseholds
                                 .householdsWithMembershipOrNamingFieldChanges());
             }
-            numberOfTimesUpdateHouseholdNamesHasRun++;
         }
     }
 
