@@ -8955,7 +8955,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning about batch when Elevate isn't connected</shortDescription>
-        <value>Disconnected from {0}. {0} won't process payments in this batch.</value>
+        <value>Disconnected from {0}. This batch includes authorized gifts that haven't been charged. To charge authorized gifts, reconnect to {0}. Alternatively, remove payment information.</value>
     </labels>
     <labels>
         <fullName>gePaymentServicesUnavailableFailureMessage</fullName>
