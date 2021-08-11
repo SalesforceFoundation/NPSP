@@ -69,10 +69,11 @@ public inherited sharing class InstallationNotifications {
 
    private Map<String, CustomNotificationType> buildActiveNotificationsByType (
        List<CustomNotificationType> notifications) {
+      Map<String, CustomNotificationType> customNotificationByType = new Map<String, CustomNotificationType>();
       for (CustomNotificationType customNotificationType : notifications) {
-         activeNotificationsByType.put(customNotificationType.CustomNotifTypeName, customNotificationType);
+         customNotificationByType.put(customNotificationType.CustomNotifTypeName, customNotificationType);
       }
-      return activeNotificationsByType;
+      return customNotificationByType;
    }
 
    public void publish() {
