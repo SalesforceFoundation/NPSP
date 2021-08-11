@@ -7095,7 +7095,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when gift deleted in Gift Entry but not deleted from Elevate batch.</shortDescription>
-        <value>Cannot delete gift in {0}. Payment can be charged if you process the batch. Refresh and try again.</value>
+        <value>Cannot delete gift in {0}. We don't recommend processing this batch, as the payment for this gift can still be charged. Refresh and try deleting again.</value>
     </labels>
     <labels>
         <fullName>geErrorElevateUpdate</fullName>
@@ -7103,7 +7103,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error when gift updated in Gift Entry but not fixed in Elevate batch.</shortDescription>
-        <value>Unable to update because cannot update gift in {0}. Refresh and try updating the gift again.</value>
+        <value>Cannot update gift in {0}. Refresh and try updating the gift again.</value>
     </labels>
     <labels>
         <fullName>geErrorRecordFailAfterElevateDelete</fullName>
