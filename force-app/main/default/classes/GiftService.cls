@@ -43,7 +43,7 @@ public with sharing class GiftService {
         return new GiftView(giftDTO);
     }
 
-    public void save(Gift gift) {
+    public void saveSingle(Gift gift) {
         gift.saveRecord();
         gift.processThroughBDI();
     }

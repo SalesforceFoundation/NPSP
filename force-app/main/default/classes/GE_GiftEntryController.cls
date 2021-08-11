@@ -129,7 +129,7 @@ public with sharing class GE_GiftEntryController {
     public static void saveSingleGift(InboundGiftDTO inboundGift) {
         try {
             Gift gift = inboundGift.asGift();
-            giftService.save(gift);
+            giftService.saveSingle(gift);
         } catch (AuraHandledException e) {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
             throw buildDmlException(JSONExceptionData);
