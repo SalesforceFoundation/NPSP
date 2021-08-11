@@ -42,7 +42,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(false);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.giftsToProcessingStatus();
+        gifts.prepareGiftsForProcessing();
         System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;
@@ -67,7 +67,7 @@ private class Gifts_TEST {
     }
 
     @isTest
-    static void shouldReturn5ProcessableGiftsOutOf5TotalWhenElevateDeregistered() {
+    static void shouldReturn5ProcessableGiftsOutOf5TotalWhenElevateRegistered() {
         List<DataImport__c> dummyGifts = buildGifts(3, null, null);
         List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
             2, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
@@ -78,7 +78,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(true);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.giftsToProcessingStatus();
+        gifts.prepareGiftsForProcessing();
         System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;

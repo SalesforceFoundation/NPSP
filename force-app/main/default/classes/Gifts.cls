@@ -67,8 +67,16 @@ public with sharing class Gifts {
 
     public void prepareGiftsForProcessing() {
         giftsToUpdate.clear();
+
+        Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
+        if (paymentIntegrationUnavailable) {
+            String failReason = String.format(
+                Label.gePaymentServicesUnavailableFailureMessage,
+                new List<String> { Label.commonPaymentServices });
+            failGiftsWithAuthorizedPaymentsWith(failReason);
+        }
+
         giftsToProcessingStatus();
-        updateRecords();
     }
 
     public void updateRecords() {
@@ -95,23 +103,23 @@ public with sharing class Gifts {
         }
     }
 
-    @TestVisible
-    private void giftsToProcessingStatus() {
-        Boolean paymentIntegrationUnavailable =
-            !paymentIntegrationServiceConfig.isIntegrationEnabled();
-
+    public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
         for (DataImport__c gift : dataImports) {
             Gift currentGift = new Gift(gift);
 
-            if (currentGift.hasAuthorizedPayment() && paymentIntegrationUnavailable) {
+            if (currentGift.hasAuthorizedPayment()) {
                 gift.Status__c = BDI_DataImport_API.bdiFailed;
-                String failureInformation = String.format(
-                    Label.gePaymentServicesUnavailableFailureMessage,
-                    new List<String> { Label.commonPaymentServices });
-                gift.FailureInformation__c = failureInformation;
+                gift.FailureInformation__c = failReason;
                 giftsToUpdate.add(gift);
+            }
+        }
+    }
 
-            } else if (currentGift.isDryRunValidated()) {
+    private void giftsToProcessingStatus() {
+        for (DataImport__c gift : dataImports) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.isDryRunValidated()) {
                 gift.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(gift);
             }

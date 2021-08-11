@@ -143,6 +143,7 @@ public inherited sharing class GiftBatch {
 
     public void processGifts() {
         gifts.prepareGiftsForProcessing();
+        updateRecords();
         if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
             captureAuthorizedGifts();
         }
