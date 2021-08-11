@@ -99,10 +99,6 @@ public with sharing class ADDR_Contacts_TEST {
             insert testContact;
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Current_Address__c, Undeliverable_Address__c
-                                  FROM Contact
-                                  WHERE Id = :testContact.Id];
-
         Address__c updatedAddress = [SELECT Undeliverable__c, Default_Address__c
                                      FROM Address__c
                                      WHERE Household_Account__c = :testAccount.Id];
@@ -116,8 +112,6 @@ public with sharing class ADDR_Contacts_TEST {
             'should not be overriden by a new contact using the same address.');
         System.assertEquals(true, updatedAccount.Undeliverable_Address__c, 'The account undeliverable address status ' +
             'should not be overriden by a new contact using the same address.');
-        System.assertEquals(true, updatedContact.Undeliverable_Address__c, 'The new household contact undeliverable ' +
-            'status should be true');
     }
 
     @IsTest
