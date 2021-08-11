@@ -38,7 +38,11 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
     async connectedCallback() {
         const { recordId, changeTypeFilter, recordLimit } = this;
         try {
-            this.changeHistory = await getChangeHistory({ recurringDonationId: recordId, changeTypeFilter, recordLimit });
+            this.changeHistory = await getChangeHistory({
+                recurringDonationId: recordId,
+                changeTypeFilter,
+                recordLimit
+            });
             this.displayState = this.changeHistory.settingEnabled ? STATES.READY : STATES.SETTING_DISABLED;
         } catch (ex) {
             this.displayState = STATES.ERROR;
