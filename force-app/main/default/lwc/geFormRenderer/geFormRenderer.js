@@ -740,9 +740,17 @@ export default class GeFormRenderer extends LightningElement{
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
             if (removeResult.hasProcessed) {
-                this.handleLogError('error', 'save flow'); // PLACEHOLDER
+                this.handleLogError(
+                    '',
+                    GeLabelService.format(
+                        this.CUSTOM_LABELS.geElevateUpdateErrorLog,
+                        [this.CUSTOM_LABELS.commonPaymentServices,
+                        this.giftInView.Id,
+                        this.batchId]
+                    )
+                );    
             }
-
+                
             this.disabled = false;
             this.toggleSpinner();
             return;
@@ -788,7 +796,11 @@ export default class GeFormRenderer extends LightningElement{
                 result.wasRemoved = true;
             }
         } catch (exception) {
-            this.handleElevateAPIErrors([{message: 'Could not remove transaction from Elevate'}]);
+            const errorMsg = GeLabelService.format(
+                this.CUSTOM_LABELS.geErrorElevateUpdate, 
+                [this.CUSTOM_LABELS.commonPaymentServices]
+            );
+            this.handleElevateAPIErrors([{message: errorMsg}]);
             result.hasError = true;
         }
 

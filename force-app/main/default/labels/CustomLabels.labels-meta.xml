@@ -7079,7 +7079,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error log entry for gift removed from Elevate by not removed from Gift Entry.</shortDescription>
-        <value>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift&apos;s NPSP Data Import record from the batch in NPSP Data Import Batches.</value>
+        <value>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</value>
     </labels>
     <labels>
         <fullName>geElevateUpdateErrorLog</fullName>
@@ -7087,7 +7087,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error log entry for gift updated in Elevate by not updated in Gift Entry.</shortDescription>
-        <value>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift&apos;s NPSP Data Import record from the batch in NPSP Data Import Batches.</value>
+        <value>Gift updated in {0}, but Gift Entry cannot update the gift. Update the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</value>
     </labels>
     <labels>
         <fullName>geErrorElevateDelete</fullName>

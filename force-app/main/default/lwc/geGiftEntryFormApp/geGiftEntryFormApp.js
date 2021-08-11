@@ -479,7 +479,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
         } catch (exception) {
             if (isRemovedFromElevate) {
-                this.processLogError(exception.toString(), 'Delete');
+                this.logFailureAfterElevateDelete(exception, giftAsDataImport);
                 let errorMsg = GeLabelService.format(
                     this.CUSTOM_LABELS.geErrorRecordFailAfterElevateDelete, 
                     [this.CUSTOM_LABELS.commonPaymentServices]
@@ -488,6 +488,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             }
             throw exception;
         }
+    }
+
+    logFailureAfterElevateDelete(exception, giftAsDataImport) {
+        this.processLogError(
+            exception.toString(),
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geElevateDeleteErrorLog,
+                [this.CUSTOM_LABELS.commonPaymentServices,
+                giftAsDataImport.Id,
+                this.batchId]
+            )
+        );
     }
 
     shouldRemoveFromElevateBatch(gift) {
