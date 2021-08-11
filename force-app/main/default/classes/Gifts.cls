@@ -105,8 +105,12 @@ public with sharing class Gifts {
 
             if (currentGift.hasAuthorizedPayment() && paymentIntegrationUnavailable) {
                 gift.Status__c = BDI_DataImport_API.bdiFailed;
-                gift.FailureInformation__c = 'Service unavailable';
+                String failureInformation = String.format(
+                    Label.gePaymentServicesUnavailableFailureMessage,
+                    new List<String> { Label.commonPaymentServices });
+                gift.FailureInformation__c = failureInformation;
                 giftsToUpdate.add(gift);
+
             } else if (currentGift.isDryRunValidated()) {
                 gift.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(gift);

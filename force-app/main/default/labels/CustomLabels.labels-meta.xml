@@ -8958,6 +8958,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Disconnected from {0}. {0} won't process payments in this batch.</value>
     </labels>
     <labels>
+        <fullName>gePaymentServicesUnavailableFailureMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NPSP Data Import Failure Information for when Elevate not connected</shortDescription>
+        <value>Donation not created because {0} is disconnected and can't charge payment.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

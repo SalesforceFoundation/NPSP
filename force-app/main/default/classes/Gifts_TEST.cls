@@ -47,9 +47,14 @@ private class Gifts_TEST {
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
+        String expectedFailureInformation = String.format(
+            Label.gePaymentServicesUnavailableFailureMessage,
+            new List<String> { Label.commonPaymentServices });
+
         for (DataImport__c dataImport : gifts.giftsToUpdate) {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 numberOfFailedGifts ++;
+                System.assertEquals(expectedFailureInformation, dataImport.FailureInformation__c);
             }
 
             if (dataImport.Status__c == BDI_DataImport_API.bdiProcessing) {
