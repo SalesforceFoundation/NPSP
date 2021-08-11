@@ -77,17 +77,6 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
-    private List<Account> getNewAccountsWithAddressesToCreate(Accounts accounts) {
-        List<Account> addressesToCreate = new List<Account>();
-        if (AddressService.isAddressManagementEnabled()) {
-            addressesToCreate.addAll(accounts.withAddresses().householdAccounts());
-        }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
-            addressesToCreate.addAll(accounts.withAddresses().orgAccounts());
-        }
-        return addressesToCreate;
-    }
-
     public void onBeforeUpdateOf(Accounts accounts) {
         if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
