@@ -53,6 +53,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track batchTotals = {}
 
     _hasDisplayedExpiredAuthorizationWarning = false;
+    _hasDisplayedElevateDisconnectedModal = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -99,7 +100,9 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayElevateDeregistrationWarning() {
-        return !Settings.isElevateCustomer() && this.batchTotals.authorizedPaymentsCount > 0;
+        return !Settings.isElevateCustomer()
+            && this._hasDisplayedElevateDisconnectedModal === false
+            && this.batchTotals.authorizedPaymentsCount > 0;
     }
 
     displayElevateDeregistrationWarning() {
@@ -114,7 +117,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
                 }]
         });
-    this._hasDisplayedExpiredAuthorizationWarning = true;
+        this._hasDisplayedElevateDisconnectedModal = true;
     }
 
     /*******************************************************************************
