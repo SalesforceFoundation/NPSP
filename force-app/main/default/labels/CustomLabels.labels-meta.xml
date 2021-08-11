@@ -8327,7 +8327,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Message within Elevate field bundle when not connected.</shortDescription>
+        <shortDescription>Message within Elevate field bundle when not connected to Elevate.</shortDescription>
         <value>Disconnected from {0}. Payment processing unavailable.</value>
     </labels>
     <labels>
