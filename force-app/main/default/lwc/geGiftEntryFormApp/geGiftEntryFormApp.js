@@ -463,7 +463,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 await this.deleteFromElevateBatch(gift.asDataImport());
                 isRemovedFromElevate = true;
             } catch (exception) {
-                throw new Error('There was an issue removing this donation from Elevate. Not deleted');
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
             }
         }
 
@@ -476,6 +480,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         } catch (exception) {
             if (isRemovedFromElevate) {
                 this.processLogError(exception.toString(), 'Delete');
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorRecordFailAfterElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
             }
             throw exception;
         }
