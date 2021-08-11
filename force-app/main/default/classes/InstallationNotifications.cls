@@ -40,9 +40,14 @@ public inherited sharing class InstallationNotifications {
    private Map<String, CustomNotificationType> activeNotificationsByType;
 
    public InstallationNotifications() {
-      this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
       this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
+      if (!shouldPublishNotifications(this.activeNotifications)) { return; }
+      this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
       this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
+   }
+
+   private Boolean shouldPublishNotifications (List<Custom_Notification__mdt> activeNotifications) {
+      return !activeNotifications.isEmpty() && activeNotifications != null;
    }
 
    @TestVisible
