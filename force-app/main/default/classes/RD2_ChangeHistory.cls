@@ -128,13 +128,13 @@ public with sharing class RD2_ChangeHistory {
         if (this.record.NewPaymentMethod__c != null) {
             view.newValue = this.record.NewPaymentMethod__c;
         } else {
-            view.newValue = Label.stgLabelNone;
+            view.newValue = Label.stgLabelFieldValueNone;
         }
 
         if (this.record.PreviousPaymentMethod__c != null) {
             view.oldValue = this.record.PreviousPaymentMethod__c;
         } else {
-            view.oldValue = Label.stgLabelNone;
+            view.oldValue = Label.stgLabelFieldValueNone;
         }
 
         view.label = UTIL_Describe.getFieldLabel(

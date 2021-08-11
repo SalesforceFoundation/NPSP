@@ -390,7 +390,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_PERIOD, changeView.fields[3].oldValue, 'Unexpected old Installment Period');
         System.assertEquals(RD_NEW_PERIOD, changeView.fields[3].newValue, 'Unexpected new Installment Period');
 
-        System.assertEquals(Label.stgLabelNone, changeView.fields[4].oldValue, 'Unexpected old payment method value.');
+        System.assertEquals(Label.stgLabelFieldValueNone, changeView.fields[4].oldValue, 'Unexpected old payment method value.');
         System.assertEquals(PAYMENT_CREDIT_CARD, changeView.fields[4].newValue, 'Unexpected old payment method value.');
 
     }
