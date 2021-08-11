@@ -3,5 +3,5 @@
     <description>Used for storing notification metadata for informing NPSP users</description>
     <label>Custom Notification</label>
     <pluralLabel>Custom Notifications</pluralLabel>
-    <visibility>PackageProtected</visibility>
+    <visibility>Protected</visibility>
 </CustomObject>
