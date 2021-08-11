@@ -284,7 +284,7 @@ public inherited sharing class RD2_RecurringDonation {
 
             if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
-                rd.ClosedReason__c = '';
+                rd.ClosedReason__c = null;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }

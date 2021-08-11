@@ -52,6 +52,19 @@ public inherited sharing class RD2_ChangeHistoryService {
         set;
     }
 
+    /***
+    * @description Recurring Donation change history service instance
+    */
+    private ChangeHistoryCreator changeHistoryCreator {
+        get {
+            if (changeHistoryCreator == null) {
+                changeHistoryCreator = new ChangeHistoryCreator();
+            }
+            return changeHistoryCreator;
+        }
+        set;
+    }
+
     private List<RecurringDonationChangeHistory__c> changeHistoryList = 
         new List<RecurringDonationChangeHistory__c>();
 
@@ -63,7 +76,7 @@ public inherited sharing class RD2_ChangeHistoryService {
      */
     public void handleHistoryFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
         RecurringDonationChangeHistory__c changeHistory = 
-            new changeHistoryCreator(updatedRd, originalRd).setChangedFields();
+            new ChangeHistoryComparer(updatedRd, originalRd).setChangedFields();
 
         if (changeHistory != null) {
             changeHistoryList.add(changeHistory);
@@ -71,13 +84,13 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     @TestVisible
-    private List<RecurringDonationChangeHistory__c> getChangeHistoryRecords(){
+    private List<RecurringDonationChangeHistory__c> getChangeHistoryRecords() {
         return changeHistoryList;
     }
 
     public void insertChangeHistoryRecords(){
         if (changeHistoryList.size() > 0) {
-            new changeHistoryCreator().insertChangeHistoryRecords(getChangeHistoryRecords());
+            changeHistoryCreator.insertChangeHistoryRecords(getChangeHistoryRecords());
         }
     }
 
@@ -95,10 +108,10 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     /***
-    * @description Class used for DML operations relating to Recurring Donation Change History.
-    * To ensure these operations succeed regardless of User permissions, this Class uses without sharing
+    * @description Class used to compare Recurring Donation fields, and return a Change History record
+    * if relevant changes were made
     */
-    private without sharing class ChangeHistoryCreator {
+    private class ChangeHistoryComparer {
 
         private final SObjectField RD_AMOUNT_FIELD = npe03__Recurring_Donation__c.npe03__Amount__c;
         private final SObjectField RD_INSTALLMENT_PERIOD_FIELD = npe03__Recurring_Donation__c.npe03__Installment_Period__c;
@@ -133,16 +146,11 @@ public inherited sharing class RD2_ChangeHistoryService {
         * @param updatedRd Changed Recurring Donation, used for "New" fields
         * @param originalRd Old Recurring Donation, used for "Previous" fields
         */
-        public ChangeHistoryCreator(RD2_RecurringDonation updatedRd, 
-            RD2_RecurringDonation originalRd){
+        public ChangeHistoryComparer(RD2_RecurringDonation updatedRd, 
+            RD2_RecurringDonation originalRd) {
                 this.updatedRd = updatedRd;
                 this.originalRd = originalRd;
         }
-
-        /***
-        * @description Constructor to execute Change History DML without sharing
-        */
-        public ChangeHistoryCreator(){}
 
         /**
          * @description Returns a Recurring Donation Change History record with Previous and New values 
@@ -180,7 +188,7 @@ public inherited sharing class RD2_ChangeHistoryService {
          * values filled in.
          * @return RecurringDonationChangeHistory__c A new Change History record
          */
-        public RecurringDonationChangeHistory__c initChangeHistoryRecord(){
+        public RecurringDonationChangeHistory__c initChangeHistoryRecord() {
 
             String changeType = calculateChangeType();
 
@@ -208,10 +216,9 @@ public inherited sharing class RD2_ChangeHistoryService {
          * @param originalRd Old Recurring Donation
          * @return String The Change Type for this Change History record
          */
-        private String calculateChangeType(){
+        private String calculateChangeType() {
 
             String changeType = updatedRd.getChangeType();
-            System.debug(changeType); 
             if (changeType != null) {
                 return changeType;
             }
@@ -251,9 +258,17 @@ public inherited sharing class RD2_ChangeHistoryService {
         * @description Return true if the currency of these Recurring Donations does not match
         * @return Boolean
         */
-        private Boolean isCurrencyChanged(){
+        private Boolean isCurrencyChanged() {
             return updatedRd.getCurrencyIsoCode() != originalRd.getCurrencyIsoCode();
         }
+
+    }
+
+    /***
+    * @description Class used for DML operations relating to Recurring Donation Change History.
+    * To ensure these operations succeed regardless of User permissions, this Class uses without sharing
+    */
+    private without sharing class ChangeHistoryCreator {
 
         /**
          * @description Inserts the provided Change History records, without allowing partial success

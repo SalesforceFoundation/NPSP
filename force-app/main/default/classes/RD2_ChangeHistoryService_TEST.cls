@@ -515,6 +515,40 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(0, rdchList.size(), 'There should be 0 Change History after the update');
     }
 
+    /**
+     * @description Verifies that creating and updating a Recurring Donation Status
+     * to Paused without Pausing the schedule does not create a Change History record
+     */
+    @IsTest
+    private static void shouldNotCreateChangeHistoryWhenStatusUpdateIsReverted() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        insert rd;
+
+        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
+        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+        
+        rd.Status__c = RD2_Constants.STATUS_PAUSED;
+        rd.ClosedReason__c = 'Card Expired';
+        
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        Id rdId = rd.Id;
+        rdchList = getRecurringDonationChangeHistory(rdId);
+        System.assertEquals(0, rdchList.size(), 'There should be 1 Change History after the update');
+
+        List<npe03__Recurring_Donation__c>  rdList = 
+            [SELECT Id, Status__c, ClosedReason__c FROM npe03__Recurring_Donation__c WHERE Id = :rdId];
+        System.assertEquals(null, rdList[0].ClosedReason__c, 'The Status Reason should be blank');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdList[0].Status__c, 'The Status should be Active');
+    }
+
     // Helpers
     ///////////////////
 
@@ -527,7 +561,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     * @description Queries currency types and fills class variables for testing currency change
     */
     public static void setupISOCodes() {
-        if (nonDefaultCurrencyType !=null || defaultCurrencyType !=null) {
+        if (nonDefaultCurrencyType != null || defaultCurrencyType != null) {
             return;
         } else {
             for (sObject ct : database.query('SELECT IsoCode, ConversionRate, IsCorporate FROM CurrencyType')) {
