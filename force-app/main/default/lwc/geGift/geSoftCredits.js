@@ -1,6 +1,6 @@
 
 class SoftCredits {
-    _all = [];
+    _unprocessedSoftCredits = [];
     _processedSoftCredits = [];
 
     constructor(softCredits) {
@@ -8,7 +8,7 @@ class SoftCredits {
     }
 
     all() {
-        return this._all;
+        return this._unprocessedSoftCredits;
     }
 
     processedSoftCredits() {
@@ -32,14 +32,14 @@ class SoftCredits {
     }
 
     remove(key) {
-        this._all.splice(key, 1);
-        this._reIndexSoftCredits(this._all);
+        this._unprocessedSoftCredits.splice(key, 1);
+        this._reIndexSoftCredits(this._unprocessedSoftCredits);
     }
 
     update(softCreditWithChange) {
         if (!softCreditWithChange) return;
 
-        this._all.forEach(function(softCredit, index, allSoftCredits) {
+        this._unprocessedSoftCredits.forEach(function(softCredit, index, allSoftCredits) {
             if (softCredit.key === softCreditWithChange.key) {
                 allSoftCredits[index] = softCreditWithChange;
             }
@@ -50,9 +50,9 @@ class SoftCredits {
         if (!softCredits) return;
 
         softCredits.forEach(softCredit => {
-            this._all.push({
+            this._unprocessedSoftCredits.push({
                 ...softCredit,
-                key: this._all.length
+                key: this._unprocessedSoftCredits.length
             });
         });
     }
@@ -60,7 +60,7 @@ class SoftCredits {
     _reIndexSoftCredits(softCredits) {
         if (!softCredits) return;
 
-        this._all = [];
+        this._unprocessedSoftCredits = [];
         this._indexSoftCredits(softCredits);
     }
 }
