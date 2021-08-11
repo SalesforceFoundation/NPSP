@@ -183,6 +183,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void onAfterInsert() {
         createAddressesForContacts();
+
     }
 
     public void onAfterDelete() {
@@ -497,8 +498,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (npspMatchingAddress.getRecord() != null) {
                 // record the match in the contact
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (shouldUpdateAddressUndeliverableStatus(npspContact, npspMatchingAddress)) {
-                    npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
+                if (npspContact.isNewContact()) {
+                    if (shouldUpdateAddressUndeliverableStatusFromContact(npspContact)) {
+                        npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
+                    }
                     addressUpdated = true;
                 }
                 if (!npspAddress.isEqualToIncludingAddressType(npspMatchingAddress, true)) {
@@ -535,13 +538,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
     }
 
-    private Boolean shouldUpdateAddressUndeliverableStatus(NPSP_Contact npspContact, NPSP_Address npspMatchingAddress) {
-        return (isNewContact(npspContact) && npspContact.isUndeliverableMailingAddress()) ||
-                (!isNewContact(npspContact) && npspContact.isUndeliverableStatusChanged());
-    }
-
-    private Boolean isNewContact(NPSP_Contact npspContact) {
-        return npspContact.oldVersion().getRecord() == null;
+    private Boolean shouldUpdateAddressUndeliverableStatusFromContact(NPSP_Contact npspContact) {
+        return npspContact.isUndeliverableStatusChanged();
     }
 
     public void resetAddressUsingHouseholdAddress() {
