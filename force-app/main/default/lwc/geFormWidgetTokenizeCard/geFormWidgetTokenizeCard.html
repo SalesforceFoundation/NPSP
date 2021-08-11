@@ -17,19 +17,15 @@
                                     </h2>
                                 </lightning-layout-item>
                                 <lightning-layout-item size='6'>
-                                    <template if:true={isCharge}>
-                                        <template if:false={isEdit}>
-                                            <template if:true={isElevateCustomer}>
-                                                <lightning-button variant="base"
-                                                                  label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
-                                                                  icon-name='utility:close'
-                                                                  icon-position="right"
-                                                                  onclick={handleUserDoNotCharge}
-                                                                  class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
-                                                                  data-qa-locator={qaLocatorDoNotChargeButton}>
-                                                </lightning-button>
-                                            </template>
-                                        </template>
+                                    <template if:true={shouldDisplayDoNotEnterPaymentInformation}>
+                                        <lightning-button variant="base"
+                                                          label={CUSTOM_LABELS.geButtonPaymentDoNotCharge}
+                                                          icon-name='utility:close'
+                                                          icon-position="right"
+                                                          onclick={handleUserDoNotCharge}
+                                                          class='slds-button slds-button_base slds-float_right do-not-charge-card-button'
+                                                          data-qa-locator={qaLocatorDoNotChargeButton}>
+                                        </lightning-button>
                                     </template>
                                     <template if:true={shouldDisplayEditPaymentInformation}>
                                         <template if:false={isEdit}>
@@ -68,6 +64,10 @@
 
                     <lightning-layout-item size='12'
                                            padding='around-small'>
+                        <template if:false={isElevateCustomer}>
+                            Service unavailable Placeholder
+                        </template>
+
                         <template if:true={isCharge}>
                             <c-util-alert-banner if:true={alert.show}
                                                  theme={alert.theme}
@@ -108,11 +108,13 @@
                         </template>
 
                         <template if:true={isDeactivated}>
-                            <p class='fade-in slds-p-vertical_medium'>
-                                <span class='slds-content-message'>
-                                    {deactivatedMessage}
-                                </span>
-                            </p>
+                            <template if:true={isElevateCustomer}>
+                                <p class='fade-in slds-p-vertical_medium'>
+                                    <span class='slds-content-message'>
+                                        {deactivatedMessage}
+                                    </span>
+                                </p>
+                            </template>
                         </template>
 
                         <template if:true={isReadOnly}>
@@ -148,17 +150,19 @@
                         </template>
 
                         <template if:true={isDoNotCharge}>
-                            <p class='fade-in slds-p-vertical_medium'>
-                                <span class='slds-content-message'>
-                                    {doNotChargeMessage}
-                                </span>
-                                <lightning-button variant='base'
-                                                    label={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                    title={CUSTOM_LABELS.geButtonPaymentAlternate}
-                                                    onclick={handleUserEnterPaymentInformation}
-                                                    class='slds-m-left_xx-small'>
-                                </lightning-button>
-                            </p>
+                            <template if:true={isElevateCustomer}>
+                                <p class='fade-in slds-p-vertical_medium'>
+                                    <span class='slds-content-message'>
+                                        {doNotChargeMessage}
+                                    </span>
+                                    <lightning-button variant='base'
+                                                        label={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                        title={CUSTOM_LABELS.geButtonPaymentAlternate}
+                                                        onclick={handleUserEnterPaymentInformation}
+                                                        class='slds-m-left_xx-small'>
+                                    </lightning-button>
+                                </p>
+                            </template>
                         </template>
 
                         <template if:true={isCriticalError}>

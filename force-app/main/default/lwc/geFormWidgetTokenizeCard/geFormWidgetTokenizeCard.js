@@ -157,8 +157,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnly  
+        return Settings.isElevateCustomer()
+            && this.isReadOnly
             && (this.isExpiredTransaction || this.isPaymentStatusAuthorized());
+    }
+
+    get shouldDisplayDoNotEnterPaymentInformation() {
+        if (!Settings.isElevateCustomer()) {
+            return this.isReadOnly;
+        }
+        return this.isCharge && !this.isEdit;
     }
 
     get isEdit() {
@@ -283,7 +291,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             isElevateWidgetDisabled: true
         });
 
+        this.clearReadOnlyData();
+
         this.display.transitionTo('userOriginatedDoNotCharge');
+    }
+
+    clearReadOnlyData() {
+        [this._cardLast4, this._cardExpirationDate] = [null, null];
     }
 
     handleUserEnterPaymentInformation() {

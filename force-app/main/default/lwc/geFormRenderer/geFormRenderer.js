@@ -1230,11 +1230,7 @@ export default class GeFormRenderer extends LightningElement{
     handleDisableElevateWidgetState (event) {
         this._isElevateWidgetInDisabledState = event.isElevateWidgetDisabled;
         if (this._isElevateWidgetInDisabledState) {
-            this.nullPaymentFieldsInFormState([
-                apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
-                apiNameFor(PAYMENT_DECLINED_REASON),
-                apiNameFor(PAYMENT_STATUS)
-            ]);
+            this.handleNullPaymentFieldsInFormState();
         }
     }
 
