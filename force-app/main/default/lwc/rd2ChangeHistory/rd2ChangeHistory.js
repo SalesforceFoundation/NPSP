@@ -8,12 +8,14 @@ import commonError from '@salesforce/label/c.commonError';
 import rdchDisabled from '@salesforce/label/c.RDCH_Disabled';
 import rdchChangeHistory from '@salesforce/label/c.RDCH_Change_History';
 import rdchNoRecords from '@salesforce/label/c.RDCH_No_Records';
+import rd2DisabledError from '@salesforce/label/c.RD2_ScheduleVisualizerErrorInvalidUsage';
 
 const STATES = {
     LOADING: 'LOADING',
     READY: 'READY',
     ERROR: 'ERROR',
     SETTING_DISABLED: 'SETTING_DISABLED',
+    RD2_DISABLED: 'RD2_DISABLED',
     EMPTY_LIST: 'EMPTY_LIST'
 };
 
@@ -32,7 +34,8 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
         commonViewMore,
         rdchDisabled,
         rdchChangeHistory,
-        rdchNoRecords
+        rdchNoRecords,
+        rd2DisabledError
     };
 
     async connectedCallback() {
@@ -43,7 +46,13 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
                 changeTypeFilter,
                 recordLimit
             });
-            this.displayState = this.changeHistory.settingEnabled ? STATES.READY : STATES.SETTING_DISABLED;
+
+            if (this.changeHistory.rd2Enabled) {
+                this.displayState = this.changeHistory.settingEnabled ? STATES.READY : STATES.SETTING_DISABLED;
+            } else {
+                this.displayState = STATES.RD2_DISABLED;
+            }
+
         } catch (ex) {
             this.displayState = STATES.ERROR;
             this.errorMessage = ex.body.message;
@@ -52,6 +61,10 @@ export default class Rd2ChangeHistory extends NavigationMixin(LightningElement) 
 
     get isSettingDisabled() {
         return this.displayState === STATES.SETTING_DISABLED;
+    }
+
+    get isRd2Disabled() {
+        return this.displayState === STATES.RD2_DISABLED;
     }
 
     get hasChanges() {

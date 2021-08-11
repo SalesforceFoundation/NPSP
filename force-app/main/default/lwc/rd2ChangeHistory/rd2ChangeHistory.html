@@ -47,4 +47,11 @@
             </div>
         </lightning-card>
     </template>
+    <template if:true={isRd2Disabled}>
+        <lightning-card title={labels.rdchChangeHistory} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration title={labels.commonError} size='small' message={labels.rd2DisabledError} variant='no-access'></c-util-illustration>
+            </div>
+        </lightning-card>
+    </template>
 </template>

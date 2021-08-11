@@ -85,6 +85,7 @@ public inherited sharing class RD2_ChangeHistoryService {
         RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
 
         changeHistoryView.settingEnabled = this.isChangeHistoryEnabled;
+        changeHistoryView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
         changeHistoryView.hasMore = changes.size() > recordLimit;
 
         for (Integer i = 0; i < recordLimit && i < changes.size(); i++) {
