@@ -498,10 +498,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (npspMatchingAddress.getRecord() != null) {
                 // record the match in the contact
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (npspContact.isNewContact()) {
-                    if (shouldUpdateAddressUndeliverableStatusFromContact(npspContact)) {
-                        npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
-                    }
+                if (shouldUpdateAddressUndeliverableStatusFromContact(npspContact)) {
+                    npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
                     addressUpdated = true;
                 }
                 if (!npspAddress.isEqualToIncludingAddressType(npspMatchingAddress, true)) {
