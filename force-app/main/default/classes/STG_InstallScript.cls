@@ -148,7 +148,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             } else if (action == InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS) {
                 createMigratedCustomFieldMappings();
             } else if (action == InstallAction.PUBLISH_PRODUCT_UPDATES) {
-                publishProductUpdates();
+                publishInstallationNotifications();
             }
 
 
@@ -160,7 +160,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     // This method is global right now so enable testing through anonymous apex, will be private before release
-    global void publishProductUpdates () {
+    global void publishInstallationNotifications () {
         new InstallationNotifications().publish();
     }
 

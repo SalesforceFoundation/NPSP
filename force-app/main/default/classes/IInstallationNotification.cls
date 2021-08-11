@@ -33,7 +33,7 @@
 * @description Notification content interface for custom notifications.
 */
 
-public interface IInstallationNotificationsContent {
+public interface IInstallationNotification {
     String body();
     String title();
 }

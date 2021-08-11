@@ -33,7 +33,7 @@
 * @description Notification content implementation for Elevate Advertisement.
 */
 
-public with sharing class ElevateAdNotificationContent implements IInstallationNotificationsContent{
+public with sharing class ElevateAdNotificationContent implements IInstallationNotification{
 
    public String body() {
       return Label.elevateAdNotificationFor234Body;

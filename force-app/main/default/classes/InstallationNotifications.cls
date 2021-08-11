@@ -37,10 +37,12 @@ public inherited sharing class InstallationNotifications {
 
    private List<Custom_Notification__mdt> activeNotifications;
    private List<CustomNotificationType> customNotificationTypes;
+   private Map<String, CustomNotificationType> activeNotificationsByType;
 
    public InstallationNotifications() {
-      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
       this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
+      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
+      this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
    }
 
    @TestVisible
@@ -65,20 +67,27 @@ public inherited sharing class InstallationNotifications {
       set;
    }
 
+   private Map<String, CustomNotificationType> buildActiveNotificationsByType (
+       List<CustomNotificationType> notifications) {
+      for (CustomNotificationType customNotificationType : notifications) {
+         activeNotificationsByType.put(customNotificationType.CustomNotifTypeName, customNotificationType);
+      }
+      return activeNotificationsByType;
+   }
+
    public void publish() {
       String DUMMY_ID = '000000000000000AAA';
-      for (Custom_Notification__mdt activeNotification : activeNotifications) {
-         for (CustomNotificationType notificationType : customNotificationTypes) {
-            if (notificationType.CustomNotifTypeName == activeNotification.Notification_Channel__c) {
-               ElevateAdNotificationContent content = getNotificationContent(
-                   activeNotification.Notification_Content_Implementation__c);
-               Messaging.CustomNotification notification = new Messaging.CustomNotification();
-               notification.setBody(content.body());
-               notification.setTitle(content.title());
-               notification.setNotificationTypeId(notificationType.Id);
-               notification.setTargetId(DUMMY_ID);
-               notification.send(getAudience(activeNotification.Audience_Implementation__c));
-            }
+      for (Custom_Notification__mdt notification : this.activeNotifications) {
+         if (activeNotificationsByType.containsKey(notification.Notification_Channel__c)) {
+            ElevateAdNotificationContent content = getNotificationContent(
+                notification.Notification_Content_Implementation__c);
+            Messaging.CustomNotification customNotification = new Messaging.CustomNotification();
+            customNotification.setBody(content.body());
+            customNotification.setTitle(content.title());
+            customNotification.setNotificationTypeId(
+                activeNotificationsByType.get(notification.Notification_Channel__c).Id);
+            customNotification.setTargetId(DUMMY_ID);
+            customNotification.send(getAudience(notification.Audience_Implementation__c));
          }
       }
    }
