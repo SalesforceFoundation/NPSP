@@ -20,15 +20,16 @@ import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFo
 * @description Schema imports
 */
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
-import BATCH_NAME
-    from '@salesforce/schema/DataImportBatch__c.Name';
-import EXPECTED_COUNT_OF_GIFTS
-    from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
-import EXPECTED_TOTAL_BATCH_AMOUNT
-    from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
+import BATCH_NAME from '@salesforce/schema/DataImportBatch__c.Name';
+import EXPECTED_COUNT_OF_GIFTS from '@salesforce/schema/DataImportBatch__c.Expected_Count_of_Gifts__c';
+import EXPECTED_TOTAL_BATCH_AMOUNT from '@salesforce/schema/DataImportBatch__c.Expected_Total_Batch_Amount__c';
 import BATCH_ID_FIELD from '@salesforce/schema/DataImportBatch__c.Id';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import REQUIRE_TOTAL_MATCH from '@salesforce/schema/DataImportBatch__c.RequireTotalMatch__c';
+
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import gePaymentServicesUnavailableHeader from '@salesforce/label/c.gePaymentServicesUnavailableHeader';
+import gePaymentServicesUnavailableBody from '@salesforce/label/c.gePaymentServicesUnavailableBody';
 
 import BatchTotals from './helpers/batchTotals';
 import Settings from 'c/geSettings';
@@ -103,12 +104,10 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     displayElevateDeregistrationWarning() {
         this.displayModalPrompt ({
-            'variant': 'warning',
-            'title': 'Elevate service unavailable',
-            'message': `This Gift Batch has gifts with associated Elevate payments, but we could not connect to Elevate.
-                        Check your connection and contact your System Administrator.
-                        Proceeding to process this Gift Batch may result in Elevate payments not being recorded.`,
-            'buttons':
+            variant: 'warning',
+            title: format(gePaymentServicesUnavailableHeader, [commonPaymentServices]),
+            message: format(gePaymentServicesUnavailableBody, [commonPaymentServices]),
+            buttons:
                 [{
                     label: this.CUSTOM_LABELS.commonOkay,
                     variant: 'neutral',

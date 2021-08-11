@@ -8942,6 +8942,22 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>There was an error processing the transaction.</value>
     </labels>
     <labels>
+        <fullName>gePaymentServicesUnavailableHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for when Elevate not connected.</shortDescription>
+        <value>{0} Can't Charge Payments</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentServicesUnavailableBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about batch when Elevate isn't connected</shortDescription>
+        <value>Disconnected from {0}. {0} won't process payments in this batch.</value>
+    </labels>
+    <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
