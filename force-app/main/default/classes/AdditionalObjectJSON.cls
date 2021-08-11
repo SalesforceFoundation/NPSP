@@ -117,18 +117,18 @@ public inherited sharing class AdditionalObjectJSON {
         BDI_ObjectMapping objectMapping = objectMappingFor(SObjectType.OpportunityContactRole.getName());
         List<BDI_FieldMapping> fieldMappings =
             mappingService.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
-        DataImport__c tempDI = new DataImport__c();
+        DataImport__c dynamicDataImport = new DataImport__c();
 
         for (BDI_FieldMapping fieldMapping : fieldMappings) {
             Object value = opportunityContactRole.get(fieldMapping.Target_Field_API_Name);
-            tempDI.put(fieldMapping.Source_Field_API_Name, value);
+            dynamicDataImport.put(fieldMapping.Source_Field_API_Name, value);
         }
 
         BDI_DynamicSource dynamicSource = new BDI_DynamicSource();
         dynamicSource.objectMappingDevName = objectMapping.DeveloperName + generateRandomString(7);
         dynamicSource.objectMappingTemplateDevName = objectMapping.DeveloperName;
         dynamicSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
-        dynamicSource.sourceObj = tempDI;
+        dynamicSource.sourceObj = dynamicDataImport;
 
         return dynamicSource;
     }
@@ -235,19 +235,19 @@ public inherited sharing class AdditionalObjectJSON {
                     SObject sObj = (SObject) JSON.deserialize(objString, Sobject.class);
 
                     i++;
-                    DataImport__c tempDI = new DataImport__c();
+                    DataImport__c dynamicDataImport = new DataImport__c();
 
-                    //Reverse mapping the fields back onto a tempDI Record that respresents the source obj.
+                    //Reverse mapping the fields back onto a dynamicDataImport Record that respresents the source obj.
                     for (BDI_FieldMapping fieldMapping : fieldMappings) {
                         Object value = sObj.get(fieldMapping.Target_Field_API_Name);
-                        tempDI.put(fieldMapping.Source_Field_API_Name, value);
+                        dynamicDataImport.put(fieldMapping.Source_Field_API_Name, value);
                     }
 
                     BDI_DynamicSource dynSource = new BDI_DynamicSource();
                     dynSource.objectMappingDevName = objMapping.DeveloperName + generateRandomString(7);
                     dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
                     dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
-                    dynSource.sourceObj = tempDI;
+                    dynSource.sourceObj = dynamicDataImport;
 
                     dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName, dynSource);
                 }
