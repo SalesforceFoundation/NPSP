@@ -353,6 +353,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async processBatch() {
+        this.handleClearGiftInView();
         await processBatch({
             batchId: this.batchId
         }).then(() => {
