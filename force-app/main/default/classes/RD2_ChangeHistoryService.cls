@@ -63,7 +63,7 @@ public inherited sharing class RD2_ChangeHistoryService {
         set;
     }
 
-    public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String filter) {
+    public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
         if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType))) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
         }
@@ -71,8 +71,8 @@ public inherited sharing class RD2_ChangeHistoryService {
         Integer limitPlusOne = recordLimit + 1;
         changeHistorySelector.withRecordLimit(limitPlusOne);
 
-        if (filter != null) {
-            changeHistorySelector.withChangeTypeFilter(filter);
+        if (changeTypeFilter != null) {
+            changeHistorySelector.withChangeTypeFilter(changeTypeFilter);
         }
 
         List<RecurringDonationChangeHistory__c> changes = changeHistorySelector.getChangeHistories(recurringDonationId);
