@@ -2829,7 +2829,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text description for Change Type Filter property</shortDescription>
-        <value>Change Types to display, separated with semicolons - ex: Upgrade;Downgrade</value>
+        <value>Select Change Types to display by entering semicolon separated values. For example, Upgrade;Downgrade;Custom Type.</value>
     </labels>
     <labels>
         <fullName>RDCH_Disabled</fullName>
@@ -2869,7 +2869,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text description for Record Limit property</shortDescription>
-        <value>Maximum number of records to display</value>
+        <value>Maximum number of records to display.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
