@@ -20,8 +20,7 @@ import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
-    from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
@@ -34,6 +33,9 @@ import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_C
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import geElevateWidgetPaymentServiceUnavailable from '@salesforce/label/c.geElevateWidgetPaymentServiceUnavailable';
 
 const CONTACT_DONOR_TYPE = 'Contact1';
 
@@ -74,6 +76,12 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
 
     get isElevateCustomer() {
         return Settings.isElevateCustomer();
+    }
+
+    get labelPaymentServiceUnavailable() {
+        const formattedCustomLabel =
+            format(geElevateWidgetPaymentServiceUnavailable, [commonPaymentServices]);
+        return formattedCustomLabel;
     }
 
     renderedCallback() {

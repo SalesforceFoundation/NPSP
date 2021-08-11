@@ -65,7 +65,11 @@
                     <lightning-layout-item size='12'
                                            padding='around-small'>
                         <template if:false={isElevateCustomer}>
-                            Service unavailable Placeholder
+                            <p class='fade-in slds-p-vertical_medium'>
+                                <span class='slds-content-message'>
+                                    {labelPaymentServiceUnavailable}
+                                </span>
+                            </p>
                         </template>
 
                         <template if:true={isCharge}>

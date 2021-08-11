@@ -55,6 +55,17 @@ describe('c-ge-form-widget-tokenize-card', () => {
         });
     });
 
+    it('should display payment service disconnected label', async () => {
+        Settings.isElevateCustomer = jest.fn(() => false);
+        const element = createWidgetElement();
+
+        document.body.appendChild(element);
+
+        return Promise.resolve().then(() => {
+            expect(spanDisabledMessage(element).innerHTML).toBe('c.geElevateWidgetPaymentServiceUnavailable');
+        });
+    });
+
     it('should render default credit card if payment method field is not on the form', async () => {
         const element = createWidgetElement();
         document.body.appendChild(element);
