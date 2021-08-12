@@ -69,7 +69,8 @@ import {
     isEmptyObject
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateBatch from './elevateBatch';
+import ElevateBatch from 'c/geElevateBatch';
+import Gift from 'c/geGift';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -160,6 +161,7 @@ export default class GeFormRenderer extends LightningElement{
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
+    @api isElevateCustomer = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -178,6 +180,7 @@ export default class GeFormRenderer extends LightningElement{
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
+    currentElevateBatch = new ElevateBatch();
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -731,8 +734,23 @@ export default class GeFormRenderer extends LightningElement{
             if (!canUpdate) { return; }
         }
 
+        const removeResult = await this.handleRemoveFromElevateBatch(tokenizedGift);
+        if (removeResult.hasError) { return; }
+
         const hasSaved = await this.saveDataImport(this.saveableFormState());
         if (!hasSaved) {
+            if (removeResult.hasProcessed) {
+                this.handleLogError(
+                    '',
+                    GeLabelService.format(
+                        this.CUSTOM_LABELS.geElevateUpdateErrorLog,
+                        [this.CUSTOM_LABELS.commonPaymentServices,
+                        this._openedGiftId,
+                        this.batchId]
+                    )
+                );    
+            }
+                
             this.disabled = false;
             this.toggleSpinner();
             return;
@@ -741,9 +759,52 @@ export default class GeFormRenderer extends LightningElement{
         await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
     }
 
+    handleLogError(error, context) {
+        this.dispatchEvent(new CustomEvent('logerror', { 
+            detail: {error: error, context: context}
+        }));    
+    }
+
+    async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
+        const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
+        if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
+            return false;
+        }    
+
+        try {
+            await gift.refresh();
+        } catch (exception) {
+            return false;
+        }
+
+        return gift.isAuthorized();
+    }
+
     shouldNullPaymentRelatedFields() {
         return (this.isGiftAuthorized() || this.isGiftExpired())
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
+    }
+
+    async handleRemoveFromElevateBatch(tokenizedGift) {
+        const gift = new Gift(this.giftInView);
+        const result = {hasError: false, wasRemoved: false};
+
+        try {
+            if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
+                await this.currentElevateBatch.remove(gift.asDataImport());
+                if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
+                result.wasRemoved = true;
+            }
+        } catch (exception) {
+            const errorMsg = GeLabelService.format(
+                this.CUSTOM_LABELS.geErrorElevateUpdate, 
+                [this.CUSTOM_LABELS.commonPaymentServices]
+            );
+            this.handleElevateAPIErrors([{message: errorMsg}]);
+            result.hasError = true;
+        }
+
+        return result;
     }
 
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
@@ -751,14 +812,13 @@ export default class GeFormRenderer extends LightningElement{
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
-                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
+                const authorizedGift = await this.currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
                 if (isAuthorized) {
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: currentElevateBatch.elevateBatchId,
+                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
@@ -1690,6 +1750,7 @@ export default class GeFormRenderer extends LightningElement{
             this.reset();
         } else if (gift && gift.fields) {
             this._giftInView = gift;
+            this._openedGiftId = gift.fields.Id;
             this.formState = gift.fields;
             if (gift.softCredits) {
                 this._softCredits = deepClone(gift.softCredits);

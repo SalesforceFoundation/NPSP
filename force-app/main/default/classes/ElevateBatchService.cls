@@ -33,6 +33,10 @@ public virtual with sharing class ElevateBatchService {
         return new ElevateBatch(elevateBatchId).add(tokenizedGift);
     }
 
+    public virtual ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        return new ElevateBatch(authorizedGift.elevateBatchId).remove(authorizedGift.paymentId);
+    }
+
     public virtual ElevateBatch createElevateBatch() {
         return new ElevateBatch().create();
     }
@@ -46,6 +50,18 @@ public virtual with sharing class ElevateBatchService {
         checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
 
         return new ElevateAuthorizedGift(tokenizedGift, authorizedGiftResponse);
+    }
+
+    public ElevateAuthorizedGift sendRemoveRequest(String elevatePaymentId, String elevateBatchId) {
+        UTIL_Http.Response response = new UTIL_Http.RequestService().sendRequest(
+                removeRequest(elevateBatchId, elevatePaymentId)
+        );
+
+        ElevateAuthorizedGiftResponse authorizedGiftResponse = (ElevateAuthorizedGiftResponse)JSON.deserialize
+                (response.body, ElevateAuthorizedGiftResponse.class);
+        checkForAuthorizedGiftErrorsIn(authorizedGiftResponse);
+
+        return new ElevateAuthorizedGift(null, authorizedGiftResponse);
     }
 
     public ElevateBatch getElevateBatch() {
@@ -63,6 +79,15 @@ public virtual with sharing class ElevateBatchService {
                 .withElevateBatchId(elevateBatchId)
                 .withEndpoint(PS_Request.ElevateEndpoint.ADD_TO_ELEVATE_BATCH)
                 .withBody(JSON.serialize(tokenizedGift))
+                .build();
+    }
+
+    private HttpRequest removeRequest(String elevateBatchId, String elevatePaymentId) {
+        return new PS_Request.Builder()
+                .withMethod(UTIL_Http.Method.POST)
+                .withElevateBatchId(elevateBatchId)
+                .withElevatePaymentId(elevatePaymentId)
+                .withEndpoint(PS_Request.ElevateEndpoint.REMOVE_FROM_ELEVATE_BATCH)
                 .build();
     }
 

@@ -126,6 +126,8 @@ import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
+import geElevateDeleteErrorLog from '@salesforce/label/c.geElevateDeleteErrorLog';
+import geElevateUpdateErrorLog from '@salesforce/label/c.geElevateUpdateErrorLog';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geErrorBatchGiftEntryCurrencyMismatch';
 import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
@@ -133,6 +135,8 @@ import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisFie
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
 import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
+import geErrorElevateDelete from '@salesforce/label/c.geErrorElevateDelete';
+import geErrorElevateUpdate from '@salesforce/label/c.geErrorElevateUpdate';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFLSBatchTableColumns from '@salesforce/label/c.geErrorFLSBatchTableColumns';
 import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
@@ -146,6 +150,7 @@ import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLevelFieldPermission2';
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
+import geErrorRecordFailAfterElevateDelete from '@salesforce/label/c.geErrorRecordFailAfterElevateDelete';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertainCardChargePart1';
 import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
@@ -374,6 +379,8 @@ class GeLabelService {
         geButtonTemplatesTabCreateTemplate,
         geDonationColumnLabel,
         geDonorColumnLabel,
+        geElevateDeleteErrorLog,
+        geElevateUpdateErrorLog,
         geErrorAmountDoesNotMatch,
         geErrorBatchGiftEntryCurrencyMismatch,
         geErrorCardChargedBDIFailed,
@@ -381,6 +388,8 @@ class GeLabelService {
         geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,
         geErrorDonorTypeValidationSingle,
+        geErrorElevateDelete,
+        geErrorElevateUpdate,
         geErrorExistingTemplateName,
         geErrorFLSBatchTableColumns,
         geErrorFLSBody,
@@ -394,6 +403,7 @@ class GeLabelService {
         geErrorPageLevelFieldPermission2,
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
+        geErrorRecordFailAfterElevateDelete,
         geErrorRequiredField,
         geErrorUncertainCardChargePart1,
         geErrorUncertainCardChargePart2,
