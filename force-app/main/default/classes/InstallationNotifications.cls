@@ -84,6 +84,7 @@ public inherited sharing class InstallationNotifications {
    public void publish() {
       String DUMMY_ID = '000000000000000AAA';
       for (Custom_Notification__mdt notification : this.activeNotifications) {
+         if (getAudience(notification.Audience_Implementation__c) == null) { continue; }
          if (activeNotificationsByType.containsKey(notification.Notification_Channel__c)) {
             ElevateAdNotificationContent content = getNotificationContent(
                 notification.Notification_Content_Implementation__c);
@@ -93,7 +94,7 @@ public inherited sharing class InstallationNotifications {
             customNotification.setNotificationTypeId(
                 activeNotificationsByType.get(notification.Notification_Channel__c).Id);
             customNotification.setTargetId(DUMMY_ID);
-            customNotification.send(getAudience(notification.Audience_Implementation__c));
+            customNotification.send(getAudience(notification.Audience_Implementation__c).stringValues());
          }
       }
    }
@@ -102,9 +103,9 @@ public inherited sharing class InstallationNotifications {
       return (ElevateAdNotificationContent)getClassType(notificationContentImpl).newInstance();
    }
 
-   private Set<String> getAudience(String audienceImpl) {
+   private UserIds getAudience(String audienceImpl) {
       USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl).newInstance();
-      return nonElevateCustomers.audience().stringValues();
+      return nonElevateCustomers.audience();
    }
 
    private Type getClassType(String classImpl) {
