@@ -15,6 +15,7 @@ import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFo
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
+import PAYMENT_OPPORTUNITY_ID from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
@@ -39,6 +40,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     errorCallback;
     _isBatchProcessing = false;
     isElevateCustomer = false;
+    matchedDonationId;
 
     namespace;
     isLoading = true;
@@ -62,6 +64,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const giftId = event.detail.Id;
             this.gift = this.giftBatch.findGiftBy(giftId);
             this.giftInView = this.gift.state();
+            this.matchedDonationId = this.gift.donationId();
         } catch(error) {
             handleError(error);
         }
@@ -125,15 +128,25 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         // TODO: pull more review donations logic out of form renderer
         // currently handles populating the Gift's processed soft credits collection
         const reviewRecord = event.detail.record;
+        const isMatchedDonation = this.gift.donationId() === this.matchedDonationId;
         const selectedReviewRecordHasProcessedSoftCredits =
             reviewRecord && reviewRecord.softCredits;
-        if (selectedReviewRecordHasProcessedSoftCredits) {
+
+        if (!isMatchedDonation && selectedReviewRecordHasProcessedSoftCredits) {
             const processedSoftCredits = reviewRecord.softCredits;
             this.gift.addProcessedSoftCredits(processedSoftCredits);
             this.giftInView = this.gift.state();
         } else {
             this.gift.clearProcessedSoftCredits();
             this.giftInView = this.gift.state();
+        }
+
+        if (reviewRecord.fields) {
+            this.matchedDonationId =
+                reviewRecord.fields[PAYMENT_OPPORTUNITY_ID.fieldApiName]
+                || reviewRecord.fields.Id;
+        } else {
+            this.matchedDonationId = undefined;
         }
     }
 
