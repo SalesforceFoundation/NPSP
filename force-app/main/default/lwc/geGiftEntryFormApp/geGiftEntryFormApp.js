@@ -102,6 +102,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
         registerListener('refreshbatchtable', this.refreshBatchTable, this);
         registerListener('softcreditwidgetchange', this.handleSoftCreditWidgetChange, this);
+        registerListener('clearprocessedsoftcreditsinview', this.handleClearProcessedSoftCreditsInView, this);
 
         if (this.recordId) {
             this.giftBatchState = await this.giftBatch.init(this.recordId);
@@ -113,15 +114,25 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         unregisterListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
     }
 
+    handleClearProcessedSoftCreditsInView() {
+        if (this.gift.hasProcessedSoftCredits()) {
+            this.gift.clearProcessedSoftCredits();
+            this.giftInView = this.gift.state();
+        }
+    }
+
     handleReviewDonationsChange(event) {
         // TODO: pull more review donations logic out of form renderer
         // currently handles populating the Gift's processed soft credits collection
         const reviewRecord = event.detail.record;
         const selectedReviewRecordHasProcessedSoftCredits =
-            reviewRecord && reviewRecord.OpportunityContactRoles;
+            reviewRecord && reviewRecord.softCredits;
         if (selectedReviewRecordHasProcessedSoftCredits) {
-            const processedSoftCredits = reviewRecord.OpportunityContactRoles.records;
+            const processedSoftCredits = reviewRecord.softCredits;
             this.gift.addProcessedSoftCredits(processedSoftCredits);
+            this.giftInView = this.gift.state();
+        } else {
+            this.gift.clearProcessedSoftCredits();
             this.giftInView = this.gift.state();
         }
     }

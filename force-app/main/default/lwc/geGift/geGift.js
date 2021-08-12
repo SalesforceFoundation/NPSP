@@ -65,6 +65,14 @@ class Gift {
         this._softCredits.addProcessedSoftCredits(processedSoftCredits);
     }
 
+    clearProcessedSoftCredits() {
+        this._softCredits.clearProcessedSoftCredits();
+    }
+
+    hasProcessedSoftCredits() {
+        return this._softCredits.hasProcessedSoftCredits();
+    }
+
     softCredits() {
         return this._softCredits;
     }

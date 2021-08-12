@@ -194,12 +194,12 @@ export default class GeFormRenderer extends LightningElement{
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
-        } else if (this.isAPaymentId(record.Id)) {
-            this.setSelectedPaymentInFormState(record);
-            this.loadPaymentAndParentDonationFieldValues(record);
-        } else if (this.isAnOpportunityId(record.Id)) {
-            this.setSelectedDonationInFormState(record, record.applyPayment);
-            this.loadSelectedDonationFieldValues(record);
+        } else if (this.isAPaymentId(record.fields.Id)) {
+            this.setSelectedPaymentInFormState(record.fields);
+            this.loadPaymentAndParentDonationFieldValues(record.fields);
+        } else if (this.isAnOpportunityId(record.fields.Id)) {
+            this.setSelectedDonationInFormState(record, record.fields.applyPayment);
+            this.loadSelectedDonationFieldValues(record.fields);
         } else {
             throw 'Unsupported selected donation type!';
         }
@@ -1830,11 +1830,13 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         if (isDonationDonor) {
-            this.handleDonationDonorChange(value)
+            this.handleDonationDonorChange(value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
 
         if (isImportedRecordField) {
             this.handleImportedRecordFieldChange(sourceField, value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
     }
 

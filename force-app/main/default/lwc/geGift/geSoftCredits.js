@@ -31,6 +31,14 @@ class SoftCredits {
         this._processedSoftCredits = [ ...processedSoftCredits ];
     }
 
+    clearProcessedSoftCredits() {
+        this._processedSoftCredits = [];
+    }
+
+    hasProcessedSoftCredits() {
+        return this._processedSoftCredits.length > 0;
+    }
+
     remove(key) {
         this._unprocessedSoftCredits.splice(key, 1);
         this._reIndexSoftCredits(this._unprocessedSoftCredits);
