@@ -37,6 +37,7 @@ public inherited sharing class GiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
+    @TestVisible private Data_Import_Settings__c dataImportSettings;
 
     private GE_Template.Template formTemplate {
         get {
@@ -93,6 +94,17 @@ public inherited sharing class GiftBatch {
     }
 
     @TestVisible
+    private PS_IntegrationServiceConfig paymentIntegrationServiceConfig {
+        get {
+            if (paymentIntegrationServiceConfig == null) {
+                paymentIntegrationServiceConfig = new PS_IntegrationServiceConfig();
+            }
+            return paymentIntegrationServiceConfig;
+        }
+        set;
+    }
+
+    @TestVisible
     private GiftBatch(Gifts gifts) {
         this.gifts = gifts;
     }
@@ -130,8 +142,11 @@ public inherited sharing class GiftBatch {
     }
 
     public void processGifts() {
-        gifts.giftsToProcessingStatus();
-        captureAuthorizedGifts();
+        gifts.prepareGiftsForProcessing();
+        updateRecords();
+        if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
+            captureAuthorizedGifts();
+        }
         BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
     }
 
