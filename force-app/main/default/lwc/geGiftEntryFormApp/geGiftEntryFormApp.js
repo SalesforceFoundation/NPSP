@@ -133,16 +133,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                 || reviewRecord.fields.Id;
         }
 
-        if (this.gift.id() && this.gift.donationId() === reviewRecordOpportunityId) {
-            return;
-        }
-
         const reviewRecordHasSoftCredits =
             reviewRecord && reviewRecord.softCredits;
 
-        if (this.openedGiftDonationId === reviewRecordOpportunityId) {
-            // do nothing, the processed soft credits are already loaded
-        } else if (reviewRecordHasSoftCredits) {
+        if (reviewRecordHasSoftCredits) {
+            this.gift.clearProcessedSoftCredits();
             this.gift.addProcessedSoftCredits(reviewRecord.softCredits);
             this.giftInView = this.gift.state();
         } else {

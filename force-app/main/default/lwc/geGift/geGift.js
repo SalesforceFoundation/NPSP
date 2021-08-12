@@ -110,7 +110,7 @@ class Gift {
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: [ ...this._softCredits.all() ],
+            softCredits: [ ...this._softCredits.unprocessedSoftCredits() ],
             processedSoftCredits: [ ...this._softCredits.processedSoftCredits() ]
         }
     }

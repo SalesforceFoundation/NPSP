@@ -7,7 +7,7 @@ class SoftCredits {
         this._indexSoftCredits(softCredits);
     }
 
-    all() {
+    unprocessedSoftCredits() {
         return this._unprocessedSoftCredits;
     }
 
@@ -58,10 +58,16 @@ class SoftCredits {
         if (!softCredits) return;
 
         softCredits.forEach(softCredit => {
-            this._unprocessedSoftCredits.push({
-                ...softCredit,
-                key: this._unprocessedSoftCredits.length
-            });
+            if (softCredit.Id) {
+                this._processedSoftCredits.push({
+                    ...softCredit
+                });
+            } else {
+                this._unprocessedSoftCredits.push({
+                    ...softCredit,
+                    key: this._unprocessedSoftCredits.length
+                });
+            }
         });
     }
 
