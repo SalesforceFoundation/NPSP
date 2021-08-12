@@ -37,7 +37,6 @@ public inherited sharing class GiftBatch {
 
     private Id batchId;
     private DataImportBatch__c batch;
-    @TestVisible private Data_Import_Settings__c dataImportSettings;
 
     private GE_Template.Template formTemplate {
         get {
