@@ -3,6 +3,7 @@ import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import GeFormRenderer from 'c/geFormRenderer';
 import GeLabelService from 'c/geLabelService';
+import Settings from 'c/geSettings';
 
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
 import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryController.retrieveDefaultSGERenderWrapper';
@@ -72,6 +73,8 @@ describe('c-ge-form-renderer', () => {
         getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
 
         const element = createElement('c-ge-form-renderer', {is: GeFormRenderer});
+        Settings.isElevateCustomer = jest.fn(() => true);
+        element.Settings = Settings;
         document.body.appendChild(element);
         await flushPromises();
 

@@ -648,6 +648,14 @@ private class RD2_ApiService_TEST {
 
     @IsTest
     private static void shouldReturnErrorForPauseOfElevateRecurringDonation() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
         npe03__Recurring_Donation__c rd = rdGateway.getRecords()[0];
         rd.CommitmentId__c = 'random';
 

@@ -30,7 +30,8 @@
 
 @IsTest
 private class GiftBatch_TEST {
-    @isTest static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
+    @isTest
+    static void shouldUpdateGiftRecordsFromAuthorizedToPaymentProcessingStatus() {
         final Integer numberOfGifts = 10;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
@@ -48,7 +49,8 @@ private class GiftBatch_TEST {
         }
     }
 
-    @isTest static void shouldUpdateGiftRecordsWithFailReason() {
+    @isTest
+    static void shouldUpdateGiftRecordsWithFailReason() {
         final Integer numberOfGifts = 5;
         Gifts authorizedGifts = new Gifts(buildAuthorizedGifts(numberOfGifts));
         GiftBatch giftBatch = new GiftBatch(authorizedGifts);
@@ -64,6 +66,40 @@ private class GiftBatch_TEST {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }
+    }
+
+    @isTest
+    static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
+        GiftsMock giftsMock = new GiftsMock();
+        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(false);
+        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        giftBatch.processGifts();
+
+        System.assertEquals(false, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+    }
+
+    @isTest
+    static void shouldAttemptToCaptureElevatePaymentsWhenServiceAvailable() {
+        GiftsMock giftsMock = new GiftsMock();
+        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(true);
+        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        giftBatch.processGifts();
+
+        System.assertEquals(true, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
     }
 
     public class ElevateBatchServiceMock implements StubProvider {
@@ -91,6 +127,53 @@ private class GiftBatch_TEST {
             ElevateBatchService.class,
             elevateBatchServiceMock
         );
+    }
+
+    public class PS_IntegrationServiceConfigMock implements StubProvider {
+        public Boolean isIntegrationEnabled = false;
+
+        public PS_IntegrationServiceConfigMock(Boolean isIntegrationEnabled) {
+            this.isIntegrationEnabled = isIntegrationEnabled;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'isIntegrationEnabled' {
+                    return isIntegrationEnabled;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static PS_IntegrationServiceConfig stubFor(PS_IntegrationServiceConfigMock integrationServiceConfigMock) {
+        return (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            integrationServiceConfigMock
+        );
+    }
+
+    public class GiftsMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            return null;
+        }
+    }
+
+    private static Gifts stubFor(GiftsMock giftsMock) {
+        return (Gifts) Test.createStub(Gifts.class, giftsMock);
     }
 
     private static List<DataImport__c> buildAuthorizedGifts(Integer numberOfGifts) {
