@@ -37,9 +37,17 @@ public with sharing class Gift {
 
     @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
-    private Donation matchedDonation;
+    private Donation donation;
     private List<String> availableFields;
-    private SoftCredits softCredits;
+    private SoftCredits softCredits {
+        get {
+            if (softCredits == null) {
+                softCredits = new SoftCredits(new List<OpportunityContactRole>());
+            }
+            return softCredits;
+        }
+        set;
+    }
 
     @TestVisible
     private GiftSelector giftSelector {
@@ -56,14 +64,12 @@ public with sharing class Gift {
     public Gift(GiftId giftId) {
         this.dataImport = giftSelector.getGiftById(giftId.value(), new GiftTemplate());
         this.populateSoftCredits();
-        this.populateMatchedDonation();
     }
 
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
         this.populateAvailableFields();
         this.populateSoftCredits();
-        this.populateMatchedDonation();
     }
 
     public Id id() {
@@ -156,18 +162,25 @@ public with sharing class Gift {
     }
 
     private void populateSoftCredits() {
-        String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
-        this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+        populateSoftCreditsFromDonation();
+        populateSoftCreditsFromAdditionalObjectJSON();
     }
 
-    private void populateMatchedDonation() {
-        if (isMatchedToOpenDonation()) {
-            matchedDonation = new Donation(this.dataImport.DonationImported__c);
-            this.softCredits.addAll(matchedDonation.softCredits().all());
+    private void populateSoftCreditsFromDonation() {
+        if (hasDonation()) {
+            donation = new Donation(this.dataImport.DonationImported__c);
+            this.softCredits.addAll(donation.softCredits().all());
         }
     }
 
-    private Boolean isMatchedToOpenDonation() {
+    private void populateSoftCreditsFromAdditionalObjectJSON() {
+        String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
+        SoftCredits softCreditsFromAdditionalObjectJSON =
+            new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+        this.softCredits.addAll(softCreditsFromAdditionalObjectJSON.unprocessed());
+    }
+
+    private Boolean hasDonation() {
         return this.dataImport.DonationImported__c != null;
     }
 
