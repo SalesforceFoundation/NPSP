@@ -5746,7 +5746,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring-Donations, Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to edit elevate payment information</shortDescription>
+        <shortDescription>Text to edit payment information</shortDescription>
         <value>Edit payment information.</value>
     </labels>
     <labels>
@@ -6278,6 +6278,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>See Duplicate Contacts</value>
     </labels>
     <labels>
+        <fullName>elevateAdNotificationFor234Body</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Body</shortDescription>
+        <value>With Elevate connected to NPSP, donations from your online forms automatically flow into NPSP. Elevate also processes payments and updates donor records in NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>elevateAdNotificationFor234Title</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Title</shortDescription>
+        <value>Streamline donation processing with Salesforce.org Elevate and NPSP</value>
+    </labels>
+    <labels>
         <fullName>engagementPlanCantEdit</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -6404,7 +6418,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
         <value>Add Soft Credit</value>
-    </labels>  
+    </labels>
     <labels>
         <fullName>geAssistiveActiveSection</fullName>
         <categories>Gift Entry</categories>
@@ -7545,7 +7559,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Running Reports in Get Started</shortDescription>
         <value>Run Reports on Constituent Data</value>
     </labels>
-     
+
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>
