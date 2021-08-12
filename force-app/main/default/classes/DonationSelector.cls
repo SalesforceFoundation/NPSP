@@ -41,19 +41,28 @@ public with sharing class DonationSelector {
         return Database.query(openDonationsQueryString(relationshipField, donorId));
     }
 
-    @TestVisible
-    private String openDonationsQueryString(String relationshipField, String donorId) {
-        List<String> opportunityFields = new List<String> {
-            String.valueOf(Opportunity.Id),
-            String.valueOf(Opportunity.Name),
-            String.valueOf(Opportunity.StageName),
-            String.valueOf(Opportunity.CloseDate),
-            String.valueOf(Opportunity.IsClosed),
-            String.valueOf(Opportunity.Amount),
-            String.valueOf(Opportunity.npe01__Number_of_Payments__c),
-            paymentsSubqueryString(),
+    public List<Opportunity> getDonation(Id donationId) {
+        List<String> selectFields = new List<String> {
             opportunityContactRoleSubqueryString()
         };
+        selectFields.addAll(opportunityFields());
+
+        String soql = new UTIL_Query()
+            .withFrom(Opportunity.SObjectType)
+            .withSelectFields(selectFields)
+            .withWhere('Id = :donationId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(soql);
+    }
+
+    @TestVisible
+    private String openDonationsQueryString(String relationshipField, String donorId) {
+        List<String> opportunityFields = new List<String> {};
+        opportunityFields.addAll(opportunityFields());
+        opportunityFields.add(paymentsSubqueryString());
+        opportunityFields.add(opportunityContactRoleSubqueryString());
 
         List<String> whereClause = new List<String> {
             relationshipField +' = :donorId',
@@ -69,6 +78,18 @@ public with sharing class DonationSelector {
             .build();
 
         return soql;
+    }
+
+    private List<String> opportunityFields() {
+        return new List<String> {
+            String.valueOf(Opportunity.Id),
+            String.valueOf(Opportunity.Name),
+            String.valueOf(Opportunity.StageName),
+            String.valueOf(Opportunity.CloseDate),
+            String.valueOf(Opportunity.IsClosed),
+            String.valueOf(Opportunity.Amount),
+            String.valueOf(Opportunity.npe01__Number_of_Payments__c)
+        };
     }
 
     private String paymentsSubqueryString() {

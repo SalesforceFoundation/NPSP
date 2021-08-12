@@ -37,6 +37,7 @@ public with sharing class Gift {
 
     @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
+    private Donation matchedDonation;
     private List<String> availableFields;
     private SoftCredits softCredits;
 
@@ -55,12 +56,14 @@ public with sharing class Gift {
     public Gift(GiftId giftId) {
         this.dataImport = giftSelector.getGiftById(giftId.value(), new GiftTemplate());
         this.populateSoftCredits();
+        this.populateMatchedDonation();
     }
 
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
         this.populateAvailableFields();
         this.populateSoftCredits();
+        this.populateMatchedDonation();
     }
 
     public Id id() {
@@ -155,6 +158,17 @@ public with sharing class Gift {
     private void populateSoftCredits() {
         String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
         this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+    }
+
+    private void populateMatchedDonation() {
+        if (isMatchedToOpenDonation()) {
+            matchedDonation = new Donation(this.dataImport.DonationImported__c);
+            this.softCredits.addAll(matchedDonation.softCredits().all());
+        }
+    }
+
+    private Boolean isMatchedToOpenDonation() {
+        return this.dataImport.DonationImported__c != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
