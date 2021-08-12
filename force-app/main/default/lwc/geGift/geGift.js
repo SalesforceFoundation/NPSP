@@ -20,6 +20,9 @@ class Gift {
     _init(giftView) {
         this._fields = giftView.fields;
         this._softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
+        if (giftView.processedSoftCredits) {
+            this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
+        }
     }
 
     id() {
