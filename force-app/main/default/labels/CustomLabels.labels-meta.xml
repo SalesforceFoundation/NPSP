@@ -8323,6 +8323,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Edit Batch Info</value>
     </labels>
     <labels>
+        <fullName>geElevateWidgetPaymentServiceUnavailable</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message within Elevate field bundle when not connected to Elevate.</shortDescription>
+        <value>Disconnected from {0}. Payment processing unavailable.</value>
+    </labels>
+    <labels>
         <fullName>geErrorExistingTemplateName</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -8932,6 +8940,30 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Field Bundle banner failure message for tokenization or purchase errors</shortDescription>
         <value>There was an error processing the transaction.</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentServicesUnavailableHeader</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for when Elevate not connected.</shortDescription>
+        <value>{0} Can't Charge Payments</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentServicesUnavailableBody</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning about batch when Elevate isn't connected</shortDescription>
+        <value>Disconnected from {0}. This batch includes authorized gifts that haven't been charged. To charge authorized gifts, reconnect to {0}. Alternatively, remove payment information.</value>
+    </labels>
+    <labels>
+        <fullName>gePaymentServicesUnavailableFailureMessage</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>NPSP Data Import Failure Information for when Elevate not connected</shortDescription>
+        <value>Donation not created because {0} is disconnected and can't charge payment.</value>
     </labels>
     <labels>
         <fullName>geLabelCustomTableSelectedFields</fullName>

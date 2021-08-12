@@ -517,7 +517,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @description Checks if the Recurring Donation is originated in Elevate
     */
     public Boolean isElevateRecord() {
-       return String.isNotBlank(rd.CommitmentId__c);
+       return RD2_ElevateIntegrationService.isIntegrationEnabled() && String.isNotBlank(rd.CommitmentId__c);
     }
 
     public Boolean hasValidRecurringDonationPaymentMethod() {
