@@ -30,9 +30,11 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Top-level Application class for Households functionality in NPSP.
+* @description Top-level Application class for NPSP. The Application class creates
+ * Households for new Contacts and passes existing Contacts to either
+ * their Household domain (Households or LegacyHouseholds) or the Organizations domain.
 */
-public inherited sharing class HouseholdsApp {
+public inherited sharing class Application {
 
     @TestVisible
     private ContactSelector contactSelector {
@@ -46,18 +48,28 @@ public inherited sharing class HouseholdsApp {
     }
 
     @TestVisible
-    private HouseholdAccountSelector householdAccountRepository {
+    private ContactService contactService {
         get {
-            if (householdAccountRepository == null) {
-                householdAccountRepository =
-                        new HouseholdAccountSelector();
+            if (contactService == null) {
+                contactService = new ContactService();
             }
-            return householdAccountRepository;
+            return contactService;
         }
         set;
     }
 
-    public void onBeforeInsertOf(Accounts accounts) {
+    @TestVisible
+    private HouseholdSelector householdSelector {
+        get {
+            if (householdSelector == null) {
+                householdSelector = new HouseholdSelector();
+            }
+            return householdSelector;
+        }
+        set;
+    }
+
+    public void onBeforeInsertOf(AccountsAdapter accounts) {
         if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(accounts.householdAccounts());
         }
@@ -66,18 +78,17 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
-    public void onAfterInsertOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterInsertOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         createAddressesFromNewAccounts(accounts, dmlWrapper);
     }
 
-    private void createAddressesFromNewAccounts(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    private void createAddressesFromNewAccounts(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         Accounts accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
         if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
             AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
-        }
     }
 
-    public void onBeforeUpdateOf(Accounts accounts) {
+    public void onBeforeUpdateOf(AccountsAdapter accounts) {
         if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
                     accounts.withAddressChanges().householdAccounts()
@@ -90,7 +101,7 @@ public inherited sharing class HouseholdsApp {
         }
     }
 
-    public void onAfterUpdateOf(Accounts accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void onAfterUpdateOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // note that we detect whether the change is coming from the address trigger,
         // in which case we don't want to create a new address.
         if (TDTM_ProcessControl.isRecursive(
@@ -110,22 +121,22 @@ public inherited sharing class HouseholdsApp {
     public void onBeforeInsertOf(Contacts contacts) {
         contacts.resetDeprecatedFields();
 
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+        contactService.createOneToOneAndHouseholdAccountsFor(
                 //todo: pull out settings check
                 (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
                         .getRecords());
 
-        Households.addToBucketAccount(contacts);
+        LegacyHouseholds.addToBucketAccount(contacts);
     }
 
     public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
 
-        Households.updatePrimaryContactOnAccountsAfterInsert(
+        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+        Households.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
 
@@ -133,31 +144,31 @@ public inherited sharing class HouseholdsApp {
      * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
      */
     public void onBeforeUpdateOf(Contacts contacts) {
-        Households.handleContactsBeforeUpdate(contacts);
+        LegacyHouseholds.handleContactsBeforeUpdate(contacts);
     }
 
     public void onAfterUpdateOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 new ContactSelector().getContactsWithAccountAndAddressFields(
                         contacts.getRecords());
-        Households.handleContactsAfterUpdate(
+        LegacyHouseholds.handleContactsAfterUpdate(
                 new Contacts(contactsWithAccountAndAddressFields, contacts.oldMap.values()),
                 dmlWrapper);
     }
 
     public void onAfterDeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        HouseholdAccounts householdAccounts = getHouseholdsFor(contacts.accountIds());
-        householdAccounts.handleContactDeletion(dmlWrapper);
+        Households households = getHouseholdsFor(contacts.accountIds());
+        households.handleContactDeletion(dmlWrapper);
     }
 
     public void onAfterUndeleteOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
 
-        Households.updatePrimaryContactOnAccountsAfterInsert(
+        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
                 dmlWrapper, contactsWithAccountAndAddressFields);
 
-        HouseholdAccounts.renameHouseholdAccountsAfterInsert(
+        Households.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
 
@@ -167,8 +178,8 @@ public inherited sharing class HouseholdsApp {
         return contactsWithAccountAndAddressFields;
     }
 
-    private HouseholdAccounts getHouseholdsFor(Set<Id> ids) {
-        return householdAccountRepository.findByIdWithOneContactAndGift(ids);
+    private Households getHouseholdsFor(Set<Id> ids) {
+        return new Households(householdSelector.findByIds(ids));
     }
 
     private void normalizeLineBreaksFor(List<SObject> listNew) {

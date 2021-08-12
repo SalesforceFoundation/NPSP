@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Households in NPSP.
 */
-public inherited sharing class Households extends fflib_SObjects {
+public inherited sharing class LegacyHouseholds extends fflib_SObjects {
 
     @TestVisible
     private static ContactAndOrgSettings contactAndOrgSettingsInst {
@@ -78,15 +78,37 @@ public inherited sharing class Households extends fflib_SObjects {
         set;
     }
 
-    public Households(Set<Id> ids, HouseholdSelector selector) {
+    @TestVisible
+    private static HouseholdService householdService {
+        get {
+            if (householdService == null) {
+                householdService = new HouseholdService();
+            }
+            return householdService;
+        }
+        set;
+    }
+
+    @TestVisible
+    private static ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
+    public LegacyHouseholds(Set<Id> ids, LegacyHouseholdSelector selector) {
         this(selector.getHouseholdsWithMembersById(ids), null);
     }
 
-    public Households(List<npo02__Household__c> records) {
+    public LegacyHouseholds(List<npo02__Household__c> records) {
         this(records, null);
     }
 
-    public Households(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
+    public LegacyHouseholds(List<npo02__Household__c> records, List<npo02__Household__c> oldlist) {
         super(records, npo02__Household__c.SObjectType);
         oldMap = oldlist == null ? new Map<Id, npo02__Household__c>() : new Map<Id,
                 npo02__Household__c>(oldlist);
@@ -109,24 +131,24 @@ public inherited sharing class Households extends fflib_SObjects {
         delete emptyHouseholds().getRecords();
     }
 
-    public Households emptyHouseholds() {
+    public LegacyHouseholds emptyHouseholds() {
         List<npo02__Household__c> emptyHouseholds = new List<npo02__Household__c>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
             if (household.npo02__Contacts__r.isEmpty()) {
                 emptyHouseholds.add(household);
             }
         }
-        return new Households(emptyHouseholds);
+        return new LegacyHouseholds(emptyHouseholds);
     }
 
-    public Households nonEmptyHouseholds() {
+    public LegacyHouseholds nonEmptyHouseholds() {
         List<npo02__Household__c> nonEmptyHouseholds = new List<npo02__Household__c>();
         for (npo02__Household__c household : (List<npo02__Household__c>) getRecords()) {
             if (!household.npo02__Contacts__r.isEmpty()) {
                 nonEmptyHouseholds.add(household);
             }
         }
-        return new Households(nonEmptyHouseholds);
+        return new LegacyHouseholds(nonEmptyHouseholds);
     }
 
     public Map<Id, Integer> getHouseholdCountMap() {
@@ -138,7 +160,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     public void calculateLegacyHouseholdRollups() {
-        Households nonEmptyHouseholds =
+        LegacyHouseholds nonEmptyHouseholds =
                 nonEmptyHouseholds();
         if (nonEmptyHouseholds.ids().size() > 0) {
             if (rollupsShouldRunSynchronously(nonEmptyHouseholds.ids())) {
@@ -295,8 +317,10 @@ public inherited sharing class Households extends fflib_SObjects {
         updateOneToOneAccounts(
                 contactsInstance.getOneToOneContactsToUpdate(), dmlWrapper);
 
-        HouseholdAccounts.handleContactsAfterUpdate(contactsInstance, dmlWrapper);
-        HouseholdAccounts.renameHHAccounts(
+        List<Id> householdIdsToUpdate =
+                contactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
+        householdService.updateHouseholds(householdIdsToUpdate, dmlWrapper);
+        Households.updateNameAndMemberCount(
                 contactsInstance.getHouseholdIdsToRename());
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
@@ -372,7 +396,7 @@ public inherited sharing class Households extends fflib_SObjects {
                     'Shipping');
 
             if (accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE) {
-                accountRecord.Name = HouseholdAccounts.strNameOne2OneAccountForContact(contactRecord);
+                accountRecord.Name = Households.strNameOne2OneAccountForContact(contactRecord);
             }
 
             // HH Account naming updates handled seperately to deal with asyncronous naming
@@ -443,7 +467,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private void renameHouseholdAccountsNeedingNameUpdates() {
-        HouseholdAccounts.renameHHAccounts(getHouseholdsNeedingNameUpdates());
+        Households.updateNameAndMemberCount(getHouseholdsNeedingNameUpdates());
     }
 
     private List<Id> getHouseholdsNeedingNameUpdates() {
@@ -481,7 +505,7 @@ public inherited sharing class Households extends fflib_SObjects {
     public static void handleContactsBeforeUpdate(Contacts contacts) {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
-        HouseholdAccounts.createOneToOneAndHouseholdAccountsFor(
+        contactService.createOneToOneAndHouseholdAccountsFor(
                 contactsWithoutAccounts(contacts));
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {

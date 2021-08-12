@@ -724,7 +724,7 @@ public inherited sharing class Addresses extends fflib_SObjects {
         Map<Id, List<Address__c>> mapAccIdListAddrHH = Addresses.getAllAddressesByAccountId(listAccId);
 
         // Construct Contact repository for Accounts having Addresses
-        HouseholdAccounts householdAccounts = new HouseholdAccounts(mapAccIdListAddrHH.keySet());
+        Households households = new Households(mapAccIdListAddrHH.keySet());
 
         for (Id accId : mapAccIdListAddrHH.keySet()) {
             if (mapAccIdListAddrHH.get(accId) != null) {
@@ -760,7 +760,15 @@ public inherited sharing class Addresses extends fflib_SObjects {
                     for (Integer i = 1, size = listAddr.size(); i < size; i++) {
                         Address__c addrDupe = listAddr[i];
 
-                        replaceAddress(addrDupe, listAddr[0], householdAccounts.membersOf(accId), dmlWrapper);
+                        Contacts householdMembers =
+                                households.membersOf(
+                                        new HouseholdId(accId));
+
+                        householdMembers.replaceAddress(
+                                addrDupe,
+                                listAddr[0],
+                                dmlWrapper);
+
                         dmlWrapper.objectsToDelete.add(addrDupe);
                     }
                 }
@@ -999,23 +1007,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
                         addr.MailingCountry__c == Null);
     }
 
-    /*******************************************************************************************************
-    * @description replaces the losing address with the winning address in any contacts referring to the
-    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
-    * Any Contacts that are modified are put on dmlWrapper for later updating.
-    * @param addrLoser the Address to look for
-    * @param addrWinner the Address to replace with
-    * @param listCon the list of Contacts to evaluate
-    * @param dmlWrapper to hold any Contacts that need updating
-    */
-    private static void replaceAddress(Address__c addrLoser, Address__c addrWinner, List<Contact> listCon,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        for (Contact con : listCon) {
-            if (con.Current_Address__c == addrLoser.Id) {
-                con.Current_Address__c = addrWinner.Id;
-                dmlWrapper.objectsToUpdate.add(con);
-            }
-        }
+    public static void replaceAddress(Address__c addrLoser, Address__c addrWinner,
+            Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        contacts.replaceAddress(addrLoser, addrWinner, dmlWrapper);
     }
 
     private void putErrorsOnAddresses(ERR_Handler.Errors errors, Map<Id, Address__c> mapAddressesByAcctId,
