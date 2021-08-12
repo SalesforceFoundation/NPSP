@@ -196,11 +196,13 @@ private class RD2_ChangeHistory_TEST {
     }
 
     static RecurringDonationChangeHistory__c getChangeRecord() {
-        RecurringDonationChangeHistory__c fakeRecord = (RecurringDonationChangeHistory__c)JSON.deserialize(
-                '{"attributes":{"type":"RecurringDonationChangeHistory__c"},"PreviousAmount__c":5,"NewAmount__c":5,"PreviousAnnualValue__c":60,"NewAnnualValue__c":60,"EffectiveDate__c":"2019-12-03","ChangeType__c":"Upgrade","CreatedDate":"2021-08-03T16:21:11.000+0000"}',
-                RecurringDonationChangeHistory__c.class
+        return new RecurringDonationChangeHistory__c(
+                PreviousAmount__c = 5,
+                NewAmount__c = 5,
+                PreviousAnnualValue__c = 60,
+                NewAnnualValue__c = 60,
+                EffectiveDate__c = Date.newInstance(2020, 0, 03),
+                ChangeType__c = 'Upgrade'
         );
-
-        return fakeRecord;
     }
 }
