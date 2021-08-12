@@ -26,12 +26,6 @@ p.critical-error-text {
     z-index: 999;
     top: 55%;
     width: 100%;
-    animation: blinker 1s linear infinite;
-}
-@keyframes blinker {
-    50% {
-        opacity: 0;
-    }
 }
 .fade-in {
     animation: fade 1s;
