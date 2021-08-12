@@ -40,7 +40,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     errorCallback;
     _isBatchProcessing = false;
     isElevateCustomer = false;
-    matchedDonationId;
+    openedGiftDonationId;
 
     namespace;
     isLoading = true;
@@ -64,7 +64,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             const giftId = event.detail.Id;
             this.gift = this.giftBatch.findGiftBy(giftId);
             this.giftInView = this.gift.state();
-            this.matchedDonationId = this.gift.donationId();
+            this.openedGiftDonationId = this.gift.donationId();
         } catch(error) {
             handleError(error);
         }
@@ -125,28 +125,29 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     handleReviewDonationsChange(event) {
-        // TODO: pull more review donations logic out of form renderer
-        // currently handles populating the Gift's processed soft credits collection
         const reviewRecord = event.detail.record;
-        const isMatchedDonation = this.gift.donationId() === this.matchedDonationId;
-        const selectedReviewRecordHasProcessedSoftCredits =
+        let reviewRecordOpportunityId = null;
+        if (reviewRecord.fields) {
+            reviewRecordOpportunityId =
+                reviewRecord.fields[PAYMENT_OPPORTUNITY_ID.fieldApiName]
+                || reviewRecord.fields.Id;
+        }
+
+        if (this.gift.id() && this.gift.donationId() === reviewRecordOpportunityId) {
+            return;
+        }
+
+        const reviewRecordHasSoftCredits =
             reviewRecord && reviewRecord.softCredits;
 
-        if (!isMatchedDonation && selectedReviewRecordHasProcessedSoftCredits) {
-            const processedSoftCredits = reviewRecord.softCredits;
-            this.gift.addProcessedSoftCredits(processedSoftCredits);
+        if (this.openedGiftDonationId === reviewRecordOpportunityId) {
+            // do nothing, the processed soft credits are already loaded
+        } else if (reviewRecordHasSoftCredits) {
+            this.gift.addProcessedSoftCredits(reviewRecord.softCredits);
             this.giftInView = this.gift.state();
         } else {
             this.gift.clearProcessedSoftCredits();
             this.giftInView = this.gift.state();
-        }
-
-        if (reviewRecord.fields) {
-            this.matchedDonationId =
-                reviewRecord.fields[PAYMENT_OPPORTUNITY_ID.fieldApiName]
-                || reviewRecord.fields.Id;
-        } else {
-            this.matchedDonationId = undefined;
         }
     }
 
