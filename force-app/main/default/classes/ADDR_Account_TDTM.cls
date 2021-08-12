@@ -47,25 +47,25 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        HouseholdsApp householdsApp = new HouseholdsApp();
-        Accounts accounts;
+        Application application = new Application();
+        AccountsAdapter accountsAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
             when BeforeInsert {
-                accounts = new Accounts(listNew);
-                householdsApp.onBeforeInsertOf(accounts);
+                accountsAdapter = new AccountsAdapter(listNew);
+                application.onBeforeInsertOf(accountsAdapter);
             }
             when BeforeUpdate {
-                accounts = new Accounts(listNew, listOld);
-                householdsApp.onBeforeUpdateOf(accounts);
+                accountsAdapter = new AccountsAdapter(listNew, listOld);
+                application.onBeforeUpdateOf(accountsAdapter);
             }
             when AfterInsert {
-                accounts = new Accounts(listNew);
-                householdsApp.onAfterInsertOf(accounts, dmlWrapper);
+                accountsAdapter = new AccountsAdapter(listNew);
+                application.onAfterInsertOf(accountsAdapter, dmlWrapper);
             }
             when AfterUpdate {
-                accounts = new Accounts(listNew, listOld);
-                householdsApp.onAfterUpdateOf(accounts, dmlWrapper);
+                accountsAdapter = new AccountsAdapter(listNew, listOld);
+                application.onAfterUpdateOf(accountsAdapter, dmlWrapper);
             }
         }
         return dmlWrapper;
