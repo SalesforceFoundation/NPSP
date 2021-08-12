@@ -15,7 +15,7 @@ import geBatchGiftsExpectedTotalsMessage
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
-import checkForElevateCustomer from '@Salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 /*******************************************************************************
 * @description Schema imports
