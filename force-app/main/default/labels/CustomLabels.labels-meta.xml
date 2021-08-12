@@ -7073,7 +7073,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Failure msg when transaction is processed but record isn&apos;t created in Salesforce</shortDescription>
         <value>Elevate successfully processed the payment, but NPSP didn&apos;t create the record for the transaction in Salesforce. Please correct the errors and resubmit the form to create the Salesforce record.</value>
     </labels>
-        <labels>
+    <labels>
         <fullName>geElevateDeleteErrorLog</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>

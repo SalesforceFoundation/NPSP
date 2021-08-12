@@ -745,7 +745,7 @@ export default class GeFormRenderer extends LightningElement{
                     GeLabelService.format(
                         this.CUSTOM_LABELS.geElevateUpdateErrorLog,
                         [this.CUSTOM_LABELS.commonPaymentServices,
-                        this.giftInView.Id,
+                        this._openedGiftId,
                         this.batchId]
                     )
                 );    
