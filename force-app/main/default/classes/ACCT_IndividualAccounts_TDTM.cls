@@ -47,34 +47,34 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        HouseholdsApp householdsApp = new HouseholdsApp();
+        Application application = new Application();
         Contacts contacts;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
         switch on triggerAction {
             when BeforeInsert {
                 contacts = new Contacts(newSObjects);
-                householdsApp.onBeforeInsertOf(contacts);
+                application.onBeforeInsertOf(contacts);
             }
             when AfterInsert {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                householdsApp.onAfterInsertOf(contacts, dmlWrapper);
+                application.onAfterInsertOf(contacts, dmlWrapper);
             }
             when BeforeUpdate {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                householdsApp.onBeforeUpdateOf(contacts);
+                application.onBeforeUpdateOf(contacts);
             }
             when AfterUpdate {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                householdsApp.onAfterUpdateOf(contacts, dmlWrapper);
+                application.onAfterUpdateOf(contacts, dmlWrapper);
             }
             when AfterDelete {
                 contacts = new Contacts(oldSObjects);
-                householdsApp.onAfterDeleteOf(contacts, dmlWrapper);
+                application.onAfterDeleteOf(contacts, dmlWrapper);
             }
             when AfterUndelete {
                 contacts = new Contacts(newSObjects, oldSObjects);
-                householdsApp.onAfterUndeleteOf(contacts, dmlWrapper);
+                application.onAfterUndeleteOf(contacts, dmlWrapper);
             }
         }
         return dmlWrapper;

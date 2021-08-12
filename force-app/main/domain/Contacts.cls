@@ -212,8 +212,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         if (isOneToOneEnabled()) {
             for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (Households.isWithoutAccount(contactRecord)
-                        || Households.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+                if (LegacyHouseholds.isWithoutAccount(contactRecord)
+                        || LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
                     // Avoid creating a new contact with the 1:1 account of another contact
                     if (contactRecord.AccountId != null) {
                         contactRecord.AccountId = null;
@@ -356,6 +356,26 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         createAddressFromContact(listConCreateAddr);
+    }
+
+    /*******************************************************************************************************
+    * @description replaces the losing address with the winning address in any contacts referring to the
+    * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
+    * Any Contacts that are modified are put on dmlWrapper for later updating.
+    * @param addrLoser the Address to look for
+    * @param addrWinner the Address to replace with
+    * @param dmlWrapper to hold any Contacts that need updating
+    */
+    public void replaceAddress(Address__c addrLoser, Address__c addrWinner,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsToUpdate = new List<Contact>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (con.Current_Address__c == addrLoser.Id) {
+                con.Current_Address__c = addrWinner.Id;
+                contactsToUpdate.add(con);
+            }
+        }
+        dmlWrapper.objectsToUpdate.addAll(contactsToUpdate);
     }
 
     /*******************************************************************************************************
@@ -1276,6 +1296,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 FROM Account
                 WHERE Id IN :accountIds
         ]);
+    }
+
+    public Set<Id> ids() {
+       return getIdFieldValues(Contact.Id);
     }
 
 }

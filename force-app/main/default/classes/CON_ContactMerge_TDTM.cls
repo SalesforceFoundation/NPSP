@@ -49,6 +49,17 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
         set;
     }
 
+    @TestVisible
+    private static ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Trigger Handler on Contact that handles detecting when an Contact Merge 
     * has completed, in order to fixup an assortment of affected information.
@@ -288,13 +299,13 @@ public class CON_ContactMerge_TDTM extends TDTM_Runnable {
                 return;
             }
 
-            HouseholdAccounts.renameHHAccounts(householdIds);
-            HouseholdAccounts.moveOppsToContactAccount(
+            Households.updateNameAndMemberCount(householdIds);
+            contactService.moveOppsToNewContactAccount(
                 newIndividualAcctIdByMasterId,
                 oldIndividualAcctIdByMasterId
             );
             HH_OppContactRoles_TDTM.recreateHouseholdSoftCredits(accountIds);
-            HouseholdAccounts.rollupAccounts(accountIds);
+            Households.rollupAccounts(accountIds);
         }
 
         /*******************************************************************************************************
