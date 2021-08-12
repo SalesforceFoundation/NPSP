@@ -93,7 +93,7 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this._softCredits.all() ]
+            softCredits: [ ...this._softCredits.unprocessedSoftCredits() ]
         }
     }
 

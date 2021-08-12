@@ -70,7 +70,7 @@ describe('ge-gift', () => {
         ]
         gift.addProcessedSoftCredits(processedSoftCredits);
 
-        expect(gift.softCredits().all().length).toEqual(3);
+        expect(gift.softCredits().unprocessedSoftCredits().length).toEqual(3);
         expect(gift.softCredits().processedSoftCredits().length).toEqual(2);
     });
 });
