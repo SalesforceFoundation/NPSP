@@ -183,6 +183,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void onAfterInsert() {
         createAddressesForContacts();
+
     }
 
     public void onAfterDelete() {
@@ -416,7 +417,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
 
             // look for duplicates for our proposed new addresses
-            Map<Address__c, Address__c> mapAddrDupAddr = Addresses.findDuplicateAddresses(mapConAddr
+            Map<Address__c, Address__c> mapAddrDupAddr = Addresses.getExistingAddresses(mapConAddr
                     .values());
 
             // maps & lists to keep track of the addresses we must insert or update
@@ -500,7 +501,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // look for duplicates for our proposed new addresses
-        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.findDuplicateAddresses(
+        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.getExistingAddresses(
                 addressesByContact.values());
 
         // maps & lists to keep track of the addresses we must insert or update
@@ -517,9 +518,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             if (npspMatchingAddress.getRecord() != null) {
                 // record the match in the contact
                 // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (npspContact.isUndeliverableStatusChanged() && npspContact.isUndeliverableMailingAddress() !=
-                        npspMatchingAddress.isUndeliverable()) {
-
+                if (shouldUpdateAddressUndeliverableStatusFromContact(npspContact)) {
                     npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
                     addressUpdated = true;
                 }
@@ -555,6 +554,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (addressesToInsert.size() > 0) {
             dmlWrapper.objectsToInsert.addAll((List<SObject>) addressesToInsert);
         }
+    }
+
+    private Boolean shouldUpdateAddressUndeliverableStatusFromContact(NPSP_Contact npspContact) {
+        return npspContact.isUndeliverableStatusChanged();
     }
 
     public void resetAddressUsingHouseholdAddress() {
