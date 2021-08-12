@@ -4,6 +4,7 @@ import { DISABLE_TOKENIZE_WIDGET_EVENT_NAME } from 'c/geConstants';
 import { fireEvent } from 'c/pubsubNoPageRef';
 import { getRecord } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiRecordApi/uiRecordApi";
 import { getObjectInfo } from "@salesforce/sfdx-lwc-jest/src/lightning-stubs/uiObjectInfoApi/uiObjectInfoApi";
+import Settings from 'c/geSettings';
 
 const mockGetRecord = require('./data/DIMockRecord.json');
 const mockObjectInfo = require('./data/dataImportObjectDescribeInfo.json');
@@ -20,10 +21,12 @@ const DATA_IMPORT_PARENT_BATCH_LOOKUP = 'NPSP_Data_Import_Batch__c';
 const DATA_IMPORT_PAYMENT_STATUS = 'Payment_Status__c';
 
 const createWidgetElement = () => {
-    return createElement(
+    let element = createElement(
         'c-ge-form-widget-tokenize-card',
         {is: GeFormWidgetTokenizeCard}
     );
+    element.Settings = Settings;
+    return element;
 }
 
 const setPaymentMethod = (element, paymentMethod) => {
@@ -36,7 +39,31 @@ const setPaymentMethod = (element, paymentMethod) => {
 describe('c-ge-form-widget-tokenize-card', () => {
 
     afterEach(() => {
+        Settings.isElevateCustomer = jest.fn(() => true);
         clearDOM();
+    });
+
+    it('should not render the iframe and related elements if is not an Elevate customer', async () => {
+        Settings.isElevateCustomer = jest.fn(() => false);
+        const element = createWidgetElement();
+
+        document.body.appendChild(element);
+
+        return Promise.resolve().then(() => {
+            expect(iframe(element)).toBeNull();
+            expect(doNotEnterPaymentButton(element)).toBeNull();
+        });
+    });
+
+    it('should display payment service disconnected label', async () => {
+        Settings.isElevateCustomer = jest.fn(() => false);
+        const element = createWidgetElement();
+
+        document.body.appendChild(element);
+
+        return Promise.resolve().then(() => {
+            expect(spanDisabledMessage(element).innerHTML).toBe('c.geElevateWidgetPaymentServiceUnavailable');
+        });
     });
 
     it('should render default credit card if payment method field is not on the form', async () => {
