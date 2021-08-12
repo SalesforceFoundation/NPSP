@@ -145,9 +145,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 parentKeyField = parentKeyField.split('\\.')[1];
             }
 
-            // If there is any post-query filtering that needs to be applied, do it here
-            detailRecords = applyPostQueryLocatorFilters(detailRecords);
-
             Id firstParentId, lastParentId;
             if (parentObjectField == null) {
                 firstParentId = (Id)detailRecords[0].get(parentKeyField);
@@ -162,6 +159,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
                 (parentObjectField != null ? parentObjectField + '.' : '') + parentKeyField);
+
+            // If there is any post-query filtering that needs to be applied, do it here
+            detailRecords = applyPostQueryLocatorFilters(detailRecords);
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
             // as the primary queryLocator).
