@@ -58,6 +58,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
                 new Map<String, String>{
                     'key' => PS_IntegrationServiceConfig.BASE_URL,
                     'value' => testBaseUrl
+                },
+                new Map<String, String>{
+                    'key' => PS_IntegrationServiceConfig.IS_ACTIVE,
+                    'value' => 'true'
                 }
             }
         };
@@ -88,6 +92,42 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
         System.assert(ps.isIntegrationEnabled(),
             'The org should have Integration Enabled when '
             + 'all required configuration keys are present.');
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationDisabledWhenIsActiveServiceRecordIsFalse() {
+        setUpConfiguration();
+        insert new Payment_Services_Configuration__c(
+            Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+            Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
+            Value__c = 'false'
+        );
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assertEquals(false, ps.isIntegrationEnabled(),
+            'The org should have Integration Disabled when isActive record is false');
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationDisabledWhenRequirdRecordsAreMissingValues() {
+        List<Payment_Services_Configuration__c> serviceRecords = getConfigurations();
+        for (Payment_Services_Configuration__c serviceRecord : serviceRecords) {
+            serviceRecord.Value__c = null;
+        }
+        serviceRecords.add(
+            new Payment_Services_Configuration__c(
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
+                Value__c = 'true'
+            )
+        );
+
+        insert serviceRecords;
+
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assertEquals(false, ps.isIntegrationEnabled(),
+            'The org should have Integration Disabled when required service records do not have values');
+
     }
 
     @IsTest
@@ -167,7 +207,6 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             'Commitment View URL should be ' + testCommitmentViewURL);
     }
 
-
     /***
     * @description Stub for the integration service config instance
     */
@@ -210,10 +249,10 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     // Helpers
     //////////////
 
-    /***
-     * @descriptions Inserts required payments services configuration 
-     */
-    private static void setUpConfiguration() {
+    /**
+    * @description Create all required Payment Services Configuration Records 
+    */
+    private static List<Payment_Services_Configuration__c> getConfigurations() {
         List<Payment_Services_Configuration__c> requiredConfigs = new List<Payment_Services_Configuration__c>();
 
         for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
@@ -224,6 +263,13 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             ));
         }
 
-        insert requiredConfigs;
+        return requiredConfigs;
+    }
+
+    /***
+     * @descriptions Inserts required payments services configuration 
+     */
+    private static void setUpConfiguration() {
+        insert getConfigurations();
     }
 }

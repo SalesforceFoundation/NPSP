@@ -39,6 +39,17 @@ public with sharing class Gifts {
     @TestVisible private List<DataImport__c> dataImports;
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
 
+    @TestVisible
+    private PS_IntegrationServiceConfig paymentIntegrationServiceConfig {
+        get {
+            if (paymentIntegrationServiceConfig == null) {
+                paymentIntegrationServiceConfig = new PS_IntegrationServiceConfig();
+            }
+            return paymentIntegrationServiceConfig;
+        }
+        set;
+    }
+
     public Gifts(List<DataImport__c> dataImports) {
         this.dataImports = dataImports;
         setElevateBatchIds(dataImports);
@@ -54,19 +65,18 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void giftsToProcessingStatus() {
+    public void prepareGiftsForProcessing() {
         giftsToUpdate.clear();
-        for (DataImport__c gift : dataImports) {
-            if (isProcessableGift(gift)) {
-                gift.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(gift);
-            }
-        }
-        updateRecords();
-    }
 
-    private Boolean isProcessableGift(DataImport__c gift) {
-        return gift.Status__c == BDI_DataImport_API.bdiDryRunValidated;
+        Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
+        if (paymentIntegrationUnavailable) {
+            String failReason = String.format(
+                Label.gePaymentServicesUnavailableFailureMessage,
+                new List<String> { Label.commonPaymentServices });
+            failGiftsWithAuthorizedPaymentsWith(failReason);
+        }
+
+        giftsToProcessingStatus();
     }
 
     public void updateRecords() {
@@ -93,6 +103,29 @@ public with sharing class Gifts {
         }
     }
 
+    public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
+        for (DataImport__c gift : dataImports) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.hasAuthorizedPayment()) {
+                gift.Status__c = BDI_DataImport_API.bdiFailed;
+                gift.FailureInformation__c = failReason;
+                giftsToUpdate.add(gift);
+            }
+        }
+    }
+
+    private void giftsToProcessingStatus() {
+        for (DataImport__c gift : dataImports) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.isDryRunValidated()) {
+                gift.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.add(gift);
+            }
+        }
+    }
+
     private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInElevateBatch, String failReason) {
         for (DataImport__c gift : giftsInElevateBatch) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
@@ -114,7 +147,8 @@ public with sharing class Gifts {
     private void setElevateBatchIds(List<DataImport__c> dataImports) {
         elevateBatchIds = new Set<String>();
         for (DataImport__c dataImport : dataImports) {
-            if (dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+            if (dataImport.Status__c == BDI_DataImport_API.bdiDryRunValidated
+                && dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
                 elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
         }
