@@ -198,7 +198,7 @@ export default class GeFormRenderer extends LightningElement{
             this.setSelectedPaymentInFormState(record.fields);
             this.loadPaymentAndParentDonationFieldValues(record.fields);
         } else if (this.isAnOpportunityId(record.fields.Id)) {
-            this.setSelectedDonationInFormState(record, record.fields.applyPayment);
+            this.setSelectedDonationInFormState(record.fields, record.fields.applyPayment);
             this.loadSelectedDonationFieldValues(record.fields);
         } else {
             throw 'Unsupported selected donation type!';
