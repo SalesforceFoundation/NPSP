@@ -200,7 +200,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                 && !isBucketAccount(acc);
     }
 
-    public Accounts updatedAccountsWithAddressesToCreateOrUpdate() {
+    public AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate() {
         List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -211,10 +211,10 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().orgAccounts());
         }
 
-        return new Accounts(updatedAccountsWithAddressesToCreate, oldMap.values());
+        return new AccountsAdapter(updatedAccountsWithAddressesToCreate, oldMap.values());
     }
 
-    public Accounts newAccountsWithAddressesToCreate() {
+    public AccountsAdapter newAccountsWithAddressesToCreate() {
         List<Account> addressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -224,7 +224,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             addressesToCreate.addAll(withAddresses().orgAccounts());
         }
 
-        return new Accounts(addressesToCreate);
+        return new AccountsAdapter(addressesToCreate);
     }
 
     public List<Address__c> allAddresses() {
