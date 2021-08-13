@@ -9,15 +9,23 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
-import checkForElevateCustomer 
-    from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 import logError from '@salesforce/apex/GE_GiftEntryController.logError';
+import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import gePaymentServicesUnavailableHeader from '@salesforce/label/c.gePaymentServicesUnavailableHeader';
+import gePaymentServicesUnavailableBody from '@salesforce/label/c.gePaymentServicesUnavailableBody';
+
+import Settings from 'c/geSettings';
+
+/*******************************************************************************
+* @description Constants
+*/
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
@@ -36,6 +44,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
 
     _hasDisplayedExpiredAuthorizationWarning = false;
+    _hasDisplayedElevateDisconnectedModal = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -109,6 +118,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.init(this.recordId);
             await this.updateAppDisplay();
         }
+
+        await Settings.init();
     }
 
     disconnectedCallback() {
@@ -132,10 +143,34 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
-        this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
+        if (this.shouldDisplayElevateDeregistrationWarning()) {
+            this.displayElevateDeregistrationWarning();
+        }
+        this._isBatchProcessing = this.batchTotals.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
+    }
+
+    shouldDisplayElevateDeregistrationWarning() {
+        return !Settings.isElevateCustomer()
+            && this._hasDisplayedElevateDisconnectedModal === false
+            && this.batchTotals.authorizedPaymentsCount > 0;
+    }
+
+    displayElevateDeregistrationWarning() {
+        this.displayModalPrompt ({
+            variant: 'warning',
+            title: format(gePaymentServicesUnavailableHeader, [commonPaymentServices]),
+            message: format(gePaymentServicesUnavailableBody, [commonPaymentServices]),
+            buttons:
+                [{
+                    label: this.CUSTOM_LABELS.commonOkay,
+                    variant: 'neutral',
+                    action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                }]
+        });
+        this._hasDisplayedElevateDisconnectedModal = true;
     }
 
     handleLogError(event) {
@@ -285,7 +320,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayExpiredAuthorizationWarning() {
-        return this.isElevateCustomer
+        return Settings.isElevateCustomer()
             && this.giftBatchState.hasPaymentsWithExpiredAuthorizations
             && !this._hasDisplayedExpiredAuthorizationWarning;
     }

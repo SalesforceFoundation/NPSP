@@ -105,7 +105,7 @@ public inherited sharing class AddressService {
     * @param dmlWrapper the Addresses to update
     * @param includeAddressType whether to include comparing the AddressType field
     */
-    public static void createAddressesFor(Accounts accounts,
+    public static void createAddressesFor(AccountsAdapter accounts,
             TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
 
         Map<Address__c, Address__c> existingAddressesByAddress = Addresses.getExistingAddresses(
@@ -150,7 +150,7 @@ public inherited sharing class AddressService {
         }
     }
 
-    private static Map<Id, Account> getAccountsById(Accounts accounts) {
+    private static Map<Id, Account> getAccountsById(AccountsAdapter accounts) {
         Map<Id, Account> accountsById = new Map<Id, Account>();
         for (Account account : (List<Account>) accounts.getRecords()) {
             accountsById.put(account.Id, account);
