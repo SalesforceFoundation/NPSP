@@ -86,6 +86,7 @@ public inherited sharing class Application {
         Accounts accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
         if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
             AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
+        }
     }
 
     public void onBeforeUpdateOf(AccountsAdapter accounts) {
