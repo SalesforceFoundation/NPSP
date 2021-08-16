@@ -29,6 +29,74 @@
 */
 @IsTest
 private class Gifts_TEST {
+
+    @isTest
+    static void shouldReturn3ProcessableGiftsOutOf5TotalWhenElevateDeregistered() {
+        List<DataImport__c> dummyGifts = buildGifts(3, null, null);
+        List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
+            2, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
+        dummyGifts.addAll(dummyAuthorizedGiftsGroup1);
+
+        Gifts gifts = new Gifts(dummyGifts);
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(false);
+        gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        gifts.prepareGiftsForProcessing();
+        System.assertEquals(5, gifts.giftsToUpdate.size());
+
+        Integer numberOfFailedGifts = 0;
+        Integer numberOfProcessingGifts = 0;
+        String expectedFailureInformation = String.format(
+            Label.gePaymentServicesUnavailableFailureMessage,
+            new List<String> { Label.commonPaymentServices });
+
+        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+            if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
+                numberOfFailedGifts ++;
+                System.assertEquals(expectedFailureInformation, dataImport.FailureInformation__c);
+            }
+
+            if (dataImport.Status__c == BDI_DataImport_API.bdiProcessing) {
+                numberOfProcessingGifts ++;
+            }
+        }
+
+        System.assertEquals(2, numberOfFailedGifts);
+        System.assertEquals(3, numberOfProcessingGifts);
+    }
+
+    @isTest
+    static void shouldReturn5ProcessableGiftsOutOf5TotalWhenElevateRegistered() {
+        List<DataImport__c> dummyGifts = buildGifts(3, null, null);
+        List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
+            2, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
+        dummyGifts.addAll(dummyAuthorizedGiftsGroup1);
+
+        Gifts gifts = new Gifts(dummyGifts);
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(true);
+        gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        gifts.prepareGiftsForProcessing();
+        System.assertEquals(5, gifts.giftsToUpdate.size());
+
+        Integer numberOfFailedGifts = 0;
+        Integer numberOfProcessingGifts = 0;
+        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+            if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
+                numberOfFailedGifts ++;
+            }
+
+            if (dataImport.Status__c == BDI_DataImport_API.bdiProcessing) {
+                numberOfProcessingGifts ++;
+            }
+        }
+
+        System.assertEquals(0, numberOfFailedGifts);
+        System.assertEquals(5, numberOfProcessingGifts);
+    }
+
     @isTest
     static void shouldReturnCorrectNumberOfGiftCounts() {
         List<DataImport__c> dummyGifts = buildGifts(20, null, null);
@@ -151,7 +219,7 @@ private class Gifts_TEST {
         for (Integer i = 0; i < numberOfGifts; i++) {
             DataImport__c dummyGift = new DataImport__c(
                 Id = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType()),
-                Status__c = null,
+                Status__c = BDI_DataImport_API.bdiDryRunValidated,
                 NPSP_Data_Import_Batch__c = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
                 Account1_Name__c = 'DUMMY ACCOUNT ' +  i,
                 Donation_Amount__c = 1,
@@ -202,6 +270,44 @@ private class Gifts_TEST {
         }
     }
 
+    public class PS_IntegrationServiceConfigMock implements StubProvider {
+        public Boolean isIntegrationEnabled = false;
+
+        public PS_IntegrationServiceConfigMock(Boolean isIntegrationEnabled) {
+            this.isIntegrationEnabled = isIntegrationEnabled;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'isIntegrationEnabled' {
+                    return isIntegrationEnabled;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
+        return (GiftSelector) Test.createStub(
+            GiftSelector.class,
+            giftSelectorMock
+        );
+    }
+
+    private static PS_IntegrationServiceConfig stubFor(PS_IntegrationServiceConfigMock integrationServiceConfigMock) {
+        return (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            integrationServiceConfigMock
+        );
+    }
+
     private final static Id DUMMY_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
     private final static Id DUMMY_GIFT_ID_0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType());
     private final static Id DUMMY_GIFT_ID_1 = UTIL_UnitTestData_TEST.mockId(DataImport__c.getSObjectType());
@@ -239,11 +345,4 @@ private class Gifts_TEST {
                     Donation_Date__c = Date.today()
             )
         };
-
-    private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
-        return (GiftSelector) Test.createStub(
-            GiftSelector.class,
-            giftSelectorMock
-        );
-    }
 }
