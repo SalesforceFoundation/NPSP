@@ -108,7 +108,8 @@ public with sharing class GiftSelector {
         List<String> elevateFieldApiNames = new List<String>{
             String.valueOf(DataImport__c.Elevate_Payment_Status__c),
             String.valueOf(DataImport__c.Payment_Declined_Reason__c),
-            String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c)
+            String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c),
+            String.valueOf(DataImport__c.Payment_Elevate_ID__c)
         };
 
         return elevateFieldApiNames;

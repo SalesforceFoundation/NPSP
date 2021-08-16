@@ -91,13 +91,13 @@ public inherited sharing class NPSP_Address implements IAddress {
         }
     }
 
-    public NPSP_Address(Account acc) {
+    public NPSP_Address(NPSP_HouseholdAccount npspHouseholdAccount) {
         this.address = new Address__c();
-        address.Household_Account__c = acc.Id;
+        address.Household_Account__c = npspHouseholdAccount.getId();
         address.Default_Address__c = true;
         address.Latest_Start_Date__c = System.today();
         address.Latest_End_Date__c = null;
-        copyFromSObject(acc, 'Billing', null);
+        copyFromSObject(npspHouseholdAccount.getRecord(), 'Billing', null);
     }
 
     public NPSP_Address(npo02__Household__c household) {
@@ -492,8 +492,7 @@ public inherited sharing class NPSP_Address implements IAddress {
     public Boolean shouldSyncAddressToHouseholdAccountAndContacts() {
         if (oldAddress == null) {
             return isDefault() ||
-                    isSeasonalAddr() ||
-                    (isUndeliverable() && isDefault());
+                    isSeasonalAddr();
         }
 
         if (isNewDefault() ||

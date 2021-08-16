@@ -70,57 +70,34 @@ public inherited sharing class Application {
     }
 
     public void onBeforeInsertOf(AccountsAdapter accounts) {
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(accounts.householdAccounts());
         }
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(accounts.orgAccounts());
         }
     }
 
     public void onAfterInsertOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        createNewAddressesAndAddToDmlWrapperForProcessing(accounts, dmlWrapper);
+        createAddressesFromNewAccounts(accounts, dmlWrapper);
     }
 
-    private void createNewAddressesAndAddToDmlWrapperForProcessing(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Account> listAccCreateAddr = new List<Account>();
-        if (isAddressManagementEnabled()) {
-            listAccCreateAddr.addAll(accounts.withAddresses().householdAccounts());
+    private void createAddressesFromNewAccounts(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
+        AccountsAdapter accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
+        if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
         }
-        if (isOrgAccountAddressesEnabled()) {
-            listAccCreateAddr.addAll(accounts.withAddresses().orgAccounts());
-        }
-        // create any new Address objects
-        if (listAccCreateAddr.size() > 0) {
-            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description for each Account, create a new default address and add it to dmlWrapper
-    * @param listAcc a list of Accounts
-    * @param dmlWrapper to hold the Addresses that need creating
-    ********************************************************************************************************/
-    private void createAddrFromAcc(List<Account> listAcc,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Address__c> listAddr = new List<Address__c>();
-        for (Account acc : listAcc) {
-            NPSP_Address npspAddress = new NPSP_Address(acc);
-            listAddr.add(npspAddress.getRecord());
-        }
-        // since coming from an account address, there is no Address Type, so exclude it from the match testing.
-        Addresses.createNonDuplicateAddresses(listAddr, dmlWrapper, false);
     }
 
     public void onBeforeUpdateOf(AccountsAdapter accounts) {
-        if (isAddressManagementEnabled()) {
+        if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
-                    accounts.withBillingAddressChanges().householdAccounts()
+                    accounts.withAddressChanges().householdAccounts()
             );
         }
-        if (isOrgAccountAddressesEnabled()) {
+        if (AddressService.isOrgAccountAddressesEnabled()) {
             normalizeLineBreaksFor(
-                    accounts.withBillingAddressChanges().orgAccounts()
+                    accounts.withAddressChanges().orgAccounts()
             );
         }
     }
@@ -135,16 +112,10 @@ public inherited sharing class Application {
             return;
         }
 
-        List<Account> listAccCreateAddr = new List<Account>();
-        if (isAddressManagementEnabled()) {
-            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().householdAccounts());
-        }
-        if (isOrgAccountAddressesEnabled()) {
-            listAccCreateAddr.addAll(accounts.withBillingAddressChanges().orgAccounts());
-        }
-        // create any new Address objects
-        if (listAccCreateAddr.size() > 0) {
-            createAddrFromAcc(listAccCreateAddr, dmlWrapper);
+        AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate = accounts.updatedAccountsWithAddressesToCreateOrUpdate();
+
+        if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(updatedAccountsWithAddressesToCreateOrUpdate, dmlWrapper, false);
         }
     }
 
@@ -210,20 +181,6 @@ public inherited sharing class Application {
 
     private Households getHouseholdsFor(Set<Id> ids) {
         return new Households(householdSelector.findByIds(ids));
-    }
-
-    private Boolean isAddressManagementEnabled() {
-        if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
-            return true;
-        }
-        return false;
-    }
-
-    private Boolean isOrgAccountAddressesEnabled() {
-        if (UTIL_CustomSettingsFacade.getContactsSettings().Organizational_Account_Addresses_Enabled__c) {
-            return true;
-        }
-        return false;
     }
 
     private void normalizeLineBreaksFor(List<SObject> listNew) {

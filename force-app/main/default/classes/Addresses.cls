@@ -649,46 +649,12 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description For the list of Addresses, sees if there is already an existing Address in the Account that
-    * matches. Creates only unique addresses from their respective household, and mark any existing matches
-    * as Default if the caller specifies it on the new address.
-    * @param listAddr a list of Addresses to update
-    * @param dmlWrapper the Addresses to update
-    * @param includeAddressType whether to include comparing the AddressType field
-    */
-    public static void createNonDuplicateAddresses(List<Address__c> listAddr,
-            TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
-
-        Map<Address__c, Address__c> mapAddrDupAddr= findDuplicateAddresses(listAddr);
-        for (Address__c addrNew : listAddr) {
-            NPSP_Address npspAddressNew = new NPSP_Address(addrNew);
-            Address__c addrDup = mapAddrDupAddr.get(addrNew);
-            NPSP_Address npspAddressDup = new NPSP_Address(addrDup);
-            if (addrDup != null) {
-                // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (!npspAddressNew.isEqualToIncludingAddressType(npspAddressDup, includeAddressType)) {
-                    npspAddressDup.copyFrom(npspAddressNew);
-                    if (npspAddressNew.isDefault()) {
-                        npspAddressDup.setAsDefault();
-                    }
-                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
-                } else if (npspAddressNew.isDefault() && !npspAddressDup.isDefault()) {
-                    npspAddressDup.setAsDefault();
-                    dmlWrapper.objectsToUpdate.add(npspAddressDup.getRecord());
-                }
-            } else {
-                dmlWrapper.objectsToInsert.add(npspAddressNew.getRecord());
-            }
-        }
-    }
-
-    /*******************************************************************************************************
     * @description for the given addresses, find if they have a match, and return a map that
     * has null for no match, and the matching address if there is a match.
     * @param listAddr a list of Addresses to update
     * @return map<Address__c, Address__c>
     */
-    public static Map<Address__c, Address__c> findDuplicateAddresses(List<Address__c> listAddr) {
+    public static Map<Address__c, Address__c> getExistingAddresses(List<Address__c> listAddr) {
         // for each address, create a map of HHId to lists of Addresses
         List<Id> listAccId = new List<Id>();
         for (Address__c addr : listAddr) {

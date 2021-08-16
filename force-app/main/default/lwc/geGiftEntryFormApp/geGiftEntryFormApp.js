@@ -12,6 +12,7 @@ import geBatchGiftsExpectedCountOrTotalMessage
 import checkForElevateCustomer 
     from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
+import logError from '@salesforce/apex/GE_GiftEntryController.logError';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
@@ -21,6 +22,7 @@ const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
 import Gift from 'c/geGift';
+import ElevateBatch from 'c/geElevateBatch';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -44,6 +46,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isLoading = true;
 
     giftBatch = new GiftBatch();
+    elevateBatch = new ElevateBatch();
     @track giftBatchState = {};
     gift = new Gift();
     @track giftInView = {};
@@ -133,6 +136,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
+    }
+
+    handleLogError(event) {
+        this.processLogError(event.detail.error, event.detail.context);
+    }
+
+    processLogError(error, context) {
+        logError({error: error, context: context});
     }
 
     /*******************************************************************************
@@ -423,12 +434,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleDelete(event) {
-        // TODO: maybe throw spinner while record is being deleted?
         try {
-            const gift = event.detail;
-            this.giftBatchState = await this.giftBatch.remove(gift);
+            const gift = new Gift({fields: event.detail});
+            const isRemovedFromElevate = await this.removeFromElevateBatch(gift);
 
-            if (this.giftInView?.fields.Id === gift?.Id) {
+            await this.performDelete(gift.asDataImport(), isRemovedFromElevate);
+
+            if (this.giftInView?.fields.Id === gift?.id()) {
                 this.handleClearGiftInView();
             }
 
@@ -441,6 +453,64 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             );
         } catch(error) {
             handleError(error);
+        }
+    }
+
+    async removeFromElevateBatch(gift) {
+        let isRemovedFromElevate = false;
+        if (this.shouldRemoveFromElevateBatch(gift)) {
+            try {
+                await this.deleteFromElevateBatch(gift.asDataImport());
+                isRemovedFromElevate = true;
+            } catch (exception) {
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
+            }
+        }
+
+        return isRemovedFromElevate;
+    }
+
+    async performDelete(giftAsDataImport, isRemovedFromElevate) {
+        try {
+            this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
+        } catch (exception) {
+            if (isRemovedFromElevate) {
+                this.logFailureAfterElevateDelete(exception, giftAsDataImport);
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorRecordFailAfterElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
+            }
+            throw exception;
+        }
+    }
+
+    logFailureAfterElevateDelete(exception, giftAsDataImport) {
+        this.processLogError(
+            exception.toString(),
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geElevateDeleteErrorLog,
+                [this.CUSTOM_LABELS.commonPaymentServices,
+                giftAsDataImport.Id,
+                this.batchId]
+            )
+        );
+    }
+
+    shouldRemoveFromElevateBatch(gift) {
+        return gift && gift.isAuthorized() && this.isElevateCustomer;
+    }
+
+    async deleteFromElevateBatch(gift) {
+        try {
+            return await this.elevateBatch.remove(gift);
+        } catch (exception) {
+            throw exception;
         }
     }
 

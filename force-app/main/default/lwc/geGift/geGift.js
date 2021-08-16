@@ -1,4 +1,8 @@
+import getGiftView from '@salesforce/apex/GE_GiftEntryController.getGiftView';
+
 import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 
 class Gift {
     _softCredits = {};
@@ -9,6 +13,10 @@ class Gift {
             this._fields = giftView.fields;
             this._softCredits = giftView.softCredits;
         }
+    }
+
+    _init(giftView) {
+        this._fields = giftView.fields;
     }
 
     id() {
@@ -26,6 +34,10 @@ class Gift {
         delete this._fields[field];
     }
 
+    getFieldValue(field) {
+        return this._fields[field];
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -39,11 +51,23 @@ class Gift {
         return dataImportRecord;
     }
 
+    async refresh() {
+        const latestGiftView = await getGiftView({ dataImportId: this.id() })
+            .catch(error => { throw error });
+        this._init(latestGiftView);
+    }
+
     state() {
         return {
             fields: { ...this._fields },
             softCredits: { ...this._softCredits }
         }
+    }
+
+    isAuthorized() {
+        return (this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED'
+            || this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING')
+            && this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName);
     }
 }
 

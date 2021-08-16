@@ -29,12 +29,12 @@
  */
 public with sharing class ElevateAuthorizedGift {
     @AuraEnabled public ElevateTokenizedGift tokenizedGift;
-    @AuraEnabled public String paymentId;
+    @AuraEnabled public String paymentId {get; set;}
     @AuraEnabled public DateTime authExpiration;
     @AuraEnabled public String status;
     @AuraEnabled public String paymentMethod;
     @AuraEnabled public String originalTransactionId;
-    @AuraEnabled public String elevateBatchId;
+    @AuraEnabled public String elevateBatchId {get; set;}
     @AuraEnabled public String declineReason;
     @AuraEnabled public String cardLast4;
     @AuraEnabled public String cardNetwork;
@@ -63,6 +63,8 @@ public with sharing class ElevateAuthorizedGift {
         this.gatewayId = authorizedGiftResponse.gatewayId();
         this.gatewayTransactionId = authorizedGiftResponse.gatewayTransactionId();
     }
+
+    public ElevateAuthorizedGift() {}
 
     public String elevateBatchId() {
         return elevateBatchId;
