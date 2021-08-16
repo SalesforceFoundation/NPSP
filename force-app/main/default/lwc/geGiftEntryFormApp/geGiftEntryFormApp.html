@@ -48,9 +48,11 @@
                         onformstatechange={handleFormStateChange}
                         onreviewdonationschange={handleReviewDonationsChange}
 
+                        is-elevate-customer={isElevateCustomer}
                         batch-id={recordId}
                         onclearcurrentgift={handleClearGiftInView}
                         onsubmit={handleSubmit}
+                        onlogerror={handleLogError}
                         onsectionsretrieved={handleSectionsRetrieved}
                         onpermissionerror={handlePermissionErrors}
                         ontogglemodal={handleToggleModal}

@@ -90,6 +90,15 @@ public inherited sharing class NPSP_HouseholdAccount {
         return householdAccount.Undeliverable_Address__c;
     }
 
+    public Boolean isUndeliverableStatusChanged() {
+        return householdAccount.Undeliverable_Address__c != oldVersion?.Undeliverable_Address__c;
+    }
+
+    public void setUndeliverableStatus(Boolean isUndeliverable) {
+        householdAccount.Undeliverable_Address__c = isUndeliverable;
+    }
+
+
     /*******************************************************************************************************
     * @description utility to compare two Accounts' (billing) addresses
     * @return boolean. true if there are any changes between the two accounts.

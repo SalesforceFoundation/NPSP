@@ -87,7 +87,12 @@ public inherited sharing class NPSP_Contact {
     }
 
     public Boolean isUndeliverableStatusChanged() {
-        return contact.Undeliverable_Address__c != oldContact?.Undeliverable_Address__c;
+        return (isNewContact() && contact.Undeliverable_Address__c) || (!isNewContact() &&
+            contact.Undeliverable_Address__c != oldContact.Undeliverable_Address__c);
+    }
+
+    public Boolean isNewContact() {
+        return oldContact == null;
     }
 
     public Id currentAddress() {

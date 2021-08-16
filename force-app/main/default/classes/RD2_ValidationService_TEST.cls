@@ -1218,6 +1218,14 @@ private with sharing class RD2_ValidationService_TEST {
     private static void shouldFailElevateRDUpdateWhenEndDateIsInTheFuture() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
         Date today = START_DATE;
         RD2_ScheduleService.currentDate = today;
 
@@ -1254,6 +1262,15 @@ private with sharing class RD2_ValidationService_TEST {
                         .withCommitmentId('commitmentId')
                         .build()
         };
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
         RD2_ValidationService validationService = new RD2_ValidationService(recurringDonations);
 
         Test.startTest();
@@ -1272,6 +1289,14 @@ private with sharing class RD2_ValidationService_TEST {
 
     @isTest
     private static void shouldFailElevateUpdateWhenPaymentMethodUpdateIsInvalid() {
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(false);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
         TEST_RecurringDonationBuilder builder = getRecurringDonationBuilder();
         List<npe03__Recurring_Donation__c> oldRecurringDonations = new List<npe03__Recurring_Donation__c>{
                 builder.withPaymentMethod('Credit Card')

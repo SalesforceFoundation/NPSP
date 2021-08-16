@@ -9,19 +9,26 @@ import geBatchGiftsExpectedTotalsMessage
     from '@salesforce/label/c.geBatchGiftsExpectedTotalsMessage';
 import geBatchGiftsExpectedCountOrTotalMessage
     from '@salesforce/label/c.geBatchGiftsExpectedCountOrTotalMessage';
-import checkForElevateCustomer 
-    from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import processBatch from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
+import logError from '@salesforce/apex/GE_GiftEntryController.logError';
+import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import PAYMENT_OPPORTUNITY_ID from '@salesforce/schema/npe01__OppPayment__c.npe01__Opportunity__c';
 
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import gePaymentServicesUnavailableHeader from '@salesforce/label/c.gePaymentServicesUnavailableHeader';
+import gePaymentServicesUnavailableBody from '@salesforce/label/c.gePaymentServicesUnavailableBody';
+
+import Settings from 'c/geSettings';
+
 const GIFT_ENTRY_TAB_NAME = 'GE_Gift_Entry';
 
 import GiftBatch from 'c/geGiftBatch';
 import Gift from 'c/geGift';
+import ElevateBatch from 'c/geElevateBatch';
 
 export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement) {
 
@@ -35,6 +42,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     @track loadingText = this.CUSTOM_LABELS.geTextSaving;
 
     _hasDisplayedExpiredAuthorizationWarning = false;
+    _hasDisplayedElevateDisconnectedModal = false;
 
     dataImportRecord = {};
     errorCallback;
@@ -46,6 +54,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     isLoading = true;
 
     giftBatch = new GiftBatch();
+    elevateBatch = new ElevateBatch();
     @track giftBatchState = {};
     gift = new Gift();
     @track giftInView = {};
@@ -112,6 +121,8 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             this.giftBatchState = await this.giftBatch.init(this.recordId);
             await this.updateAppDisplay();
         }
+        registerListener('geBatchGiftEntryTableChangeEvent', this.retrieveBatchTotals, this);
+        await Settings.init();
     }
 
     disconnectedCallback() {
@@ -180,10 +191,42 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         if (this.shouldDisplayExpiredAuthorizationWarning()) {
             this.displayExpiredAuthorizationWarningModalForPageLoad();
         }
+        if (this.shouldDisplayElevateDeregistrationWarning()) {
+            this.displayElevateDeregistrationWarning();
+        }
         this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         this.isLoading = false;
         if (!this._isBatchProcessing) return;
         await this.startPolling();
+    }
+
+    handleLogError(event) {
+        this.processLogError(event.detail.error, event.detail.context);
+    }
+
+    processLogError(error, context) {
+        logError({error: error, context: context});
+    }
+
+    shouldDisplayElevateDeregistrationWarning() {
+        return !this.isElevateCustomer
+            && this._hasDisplayedElevateDisconnectedModal === false
+            && this.giftBatchState.authorizedPaymentsCount > 0;
+    }
+
+    displayElevateDeregistrationWarning() {
+        this.displayModalPrompt ({
+            variant: 'warning',
+            title: format(gePaymentServicesUnavailableHeader, [commonPaymentServices]),
+            message: format(gePaymentServicesUnavailableBody, [commonPaymentServices]),
+            buttons:
+                [{
+                    label: this.CUSTOM_LABELS.commonOkay,
+                    variant: 'neutral',
+                    action: () => { this.dispatchEvent(new CustomEvent('closemodal')); }
+                }]
+        });
+        this._hasDisplayedElevateDisconnectedModal = true;
     }
 
     /*******************************************************************************
@@ -475,12 +518,13 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     async handleDelete(event) {
-        // TODO: maybe throw spinner while record is being deleted?
         try {
-            const gift = event.detail;
-            this.giftBatchState = await this.giftBatch.remove(gift);
+            const gift = new Gift({fields: event.detail});
+            const isRemovedFromElevate = await this.removeFromElevateBatch(gift);
 
-            if (this.giftInView?.fields.Id === gift?.Id) {
+            await this.performDelete(gift.asDataImport(), isRemovedFromElevate);
+
+            if (this.giftInView?.fields.Id === gift?.id()) {
                 this.handleClearGiftInView();
             }
 
@@ -493,6 +537,64 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
             );
         } catch(error) {
             handleError(error);
+        }
+    }
+
+    async removeFromElevateBatch(gift) {
+        let isRemovedFromElevate = false;
+        if (this.shouldRemoveFromElevateBatch(gift)) {
+            try {
+                await this.deleteFromElevateBatch(gift.asDataImport());
+                isRemovedFromElevate = true;
+            } catch (exception) {
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
+            }
+        }
+
+        return isRemovedFromElevate;
+    }
+
+    async performDelete(giftAsDataImport, isRemovedFromElevate) {
+        try {
+            this.giftBatchState = await this.giftBatch.remove(giftAsDataImport);
+        } catch (exception) {
+            if (isRemovedFromElevate) {
+                this.logFailureAfterElevateDelete(exception, giftAsDataImport);
+                let errorMsg = GeLabelService.format(
+                    this.CUSTOM_LABELS.geErrorRecordFailAfterElevateDelete, 
+                    [this.CUSTOM_LABELS.commonPaymentServices]
+                );
+                throw new Error(errorMsg);
+            }
+            throw exception;
+        }
+    }
+
+    logFailureAfterElevateDelete(exception, giftAsDataImport) {
+        this.processLogError(
+            exception.toString(),
+            GeLabelService.format(
+                this.CUSTOM_LABELS.geElevateDeleteErrorLog,
+                [this.CUSTOM_LABELS.commonPaymentServices,
+                giftAsDataImport.Id,
+                this.batchId]
+            )
+        );
+    }
+
+    shouldRemoveFromElevateBatch(gift) {
+        return gift && gift.isAuthorized() && this.isElevateCustomer;
+    }
+
+    async deleteFromElevateBatch(gift) {
+        try {
+            return await this.elevateBatch.remove(gift);
+        } catch (exception) {
+            throw exception;
         }
     }
 

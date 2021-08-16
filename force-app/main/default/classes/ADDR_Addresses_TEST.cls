@@ -74,7 +74,6 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     @IsTest
     private static void newDefaultAddress() {
-
         // this creates a default Address for each HH
         createTestData(totalAccountsToCreate, totalContactsToCreate);
         Test.startTest();
@@ -89,6 +88,83 @@ public with sharing class ADDR_Addresses_TEST {
             System.assertEquals(true, isMatchAddressAccCon(acc, con));
             System.assertEquals(false, con.is_Address_Override__c);
             System.assertNotEquals(null, con.Current_Address__c);
+        }
+    }
+
+    @IsTest
+    private static void newAccountUndeliverableStatusShouldSyncToNewDefaultAddress() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        Account testAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        testAccount.BillingStreet = 'Undeliverable Street';
+        testAccount.BillingCity = 'Undeliverable City';
+        testAccount.BillingCountry = 'United States';
+        testAccount.BillingPostalCode = 'Undeliverable Zip';
+        testAccount.BillingState = 'Washington';
+        testAccount.Undeliverable_Address__c = true;
+
+        Test.startTest();
+            insert testAccount;
+        Test.stopTest();
+
+        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Household_Account__c =
+                :testAccount.Id];
+        Account updatedAccount = [SELECT Undeliverable_Address__c FROM Account WHERE Id = :testAccount.Id];
+
+        System.assert(updatedAccount.Undeliverable_Address__c, 'The billing address for the account should be ' +
+                'marked undeliverable.');
+        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The new ' +
+                'address undeliverable status should match the new account undeliverable status.');
+    }
+
+    @IsTest
+    private static void updatedAccountUndeliverableStatusShouldSyncToExistingDefaultAddressAndContacts() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        Account testAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        testAccount.BillingStreet = 'Undeliverable Street';
+        testAccount.BillingCity = 'Undeliverable City';
+        testAccount.BillingCountry = 'United States';
+        testAccount.BillingPostalCode = 'Undeliverable Zip';
+        testAccount.BillingState = 'Washington';
+        testAccount.Undeliverable_Address__c = false;
+        insert testAccount;
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(3);
+        for (Contact testContact : testContacts) {
+            testContact.AccountId = testAccount.Id;
+        }
+        insert testContacts;
+
+        Test.startTest();
+            Account accountToUpdate = [SELECT Undeliverable_Address__c FROM Account WHERE Id = :testAccount.Id];
+            accountToUpdate.Undeliverable_Address__c = true;
+
+            update accountToUpdate;
+        Test.stopTest();
+
+        Address__c updatedAddress = [SELECT Undeliverable__c
+                                     FROM Address__c
+                                     WHERE Household_Account__c = :testAccount.Id];
+
+        Account updatedAccount = [SELECT Undeliverable_Address__c,
+                                    (SELECT Undeliverable_Address__c FROM Contacts)
+                                  FROM Account WHERE Id = :testAccount.Id];
+
+        System.assert(updatedAccount.Undeliverable_Address__c, 'The billing address for the account should be ' +
+                'marked undeliverable.');
+        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The ' +
+                'address undeliverable status should match the updated account undeliverable status.');
+
+        for (Contact contact : updatedAccount.Contacts) {
+            System.assertEquals(updatedAccount.Undeliverable_Address__c, contact.Undeliverable_Address__c, 'The ' +
+                    'contact undeliverable address should match the house account undeliverable address.');
         }
     }
 
@@ -703,6 +779,11 @@ public with sharing class ADDR_Addresses_TEST {
 
     @isTest
     private static void updatedUndeliverableAddressShouldSyncToAccountAndHouseholdContactOverrides() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
         createTestData(2, 2);
         Address__c overrideAddressToCreate = new Address__c();
             overrideAddressToCreate.Address_Type__c = 'Home';
@@ -2091,88 +2172,6 @@ public with sharing class ADDR_Addresses_TEST {
         for (Address__c addr : listAddr) {
             Boolean fSeasonal = (addr.MailingStreet__c.contains('New Seasonal Street'));
             System.assertEquals(!fSeasonal, addr.Default_Address__c);
-        }
-    }
-
-    /*********************************************************************************************************
-    @description
-        Execute ContactRepository.getContacts() for an Account not having any Contact
-    verify:
-        Method returns empty Contact list
-    **********************************************************************************************************/
-    @IsTest
-    private static void ContactRepository_getContactsShouldReturnEmptyListWhenAccountHasNoContacts() {
-        Account account = new Account(Name = 'AccountWithoutContacts');
-        insert account;
-
-        HouseholdAccounts householdAccounts = new HouseholdAccounts(new Set<Id>{
-                account.Id
-        });
-
-        Contact[] contacts = householdAccounts.membersOf(account.Id);
-        System.assertEquals(0, contacts.size());
-    }
-
-    /*********************************************************************************************************
-    @description
-        Execute ContactRepository.getContacts() for Acconts having Contacts
-    verify:
-        Method returns expected Contact list for each Account
-    **********************************************************************************************************/
-    @IsTest
-    private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasContacts() {
-        Integer hhSize = 2;
-        Integer contactSize = 2;
-        createTestData(hhSize, contactSize);
-
-        HouseholdAccounts contactRepo = new HouseholdAccounts(
-                UTIL_SObject.extractIds(testAccounts)
-        );
-
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
-    }
-
-    /*********************************************************************************************************
-    @description
-        Execute ContactRepository.getContacts() for an Account not passed to the ContactRepository constructor
-    verify:
-        Method returns expected Contact list for each Account
-    **********************************************************************************************************/
-    @IsTest
-    private static void ContactRepository_getContactsShouldReturnContactsWhenAccountHasNotBeenPassedToConstructor() {
-        Integer hhSize = 2;
-        Integer contactSize = 2;
-        createTestData(hhSize, contactSize);
-
-        HouseholdAccounts contactRepo = new HouseholdAccounts(new Set<Id>());
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
-
-        contactRepo = new HouseholdAccounts(new Set<Id>{
-                testAccounts[0].Id
-        });
-        testAndAssertContactRepositoryGetContacts(contactRepo, testAccounts, testContacts);
-    }
-
-    /*********************************************************************************************************
-    @description
-        Execute ContactRepository.getContacts() for each Account in the input argument Account list
-    verify:
-        Method returns expected Contact list for each Account
-    **********************************************************************************************************/
-    static void testAndAssertContactRepositoryGetContacts(HouseholdAccounts contactRepo, List<Account> accounts, List<Contact> contacts) {
-        Map<Id, Contact[]> contactsByAccountId = new Map<Id, Contact[]>();
-        for (Contact c : contacts) {
-            if (!contactsByAccountId.containsKey(c.AccountId)) {
-                contactsByAccountId.put(c.AccountId, new Contact[0]);
-            }
-            contactsByAccountId.get(c.AccountId).add(c);
-        }
-
-        for (Account account : accounts) {
-            Contact[] expectedContacts = contactsByAccountId.get(account.Id);
-            Contact[] actualContacts = contactRepo.membersOf(account.Id);
-
-            System.assertEquals(UTIL_SObject.extractIds(expectedContacts), UTIL_SObject.extractIds(actualContacts));
         }
     }
 

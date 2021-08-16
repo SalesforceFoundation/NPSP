@@ -1,11 +1,15 @@
 import getGiftView from '@salesforce/apex/GE_GiftEntryController.getGiftView';
 import saveSingleGift from '@salesforce/apex/GE_GiftEntryController.saveSingleGift';
 
-import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
 import STATUS from '@salesforce/schema/DataImport__c.Status__c';
 import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
+import PAYMENT_AUTHORIZE_TOKEN from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
+import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
+
 import SoftCredits from './geSoftCredits';
+import { deepClone } from 'c/utilCommon';
 
 class Gift {
     _softCredits = new SoftCredits();
@@ -13,15 +17,11 @@ class Gift {
 
     constructor(giftView) {
         if (giftView) {
-            this._init(giftView);
-        }
-    }
-
-    _init(giftView) {
-        this._fields = giftView.fields;
-        this._softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
-        if (giftView.processedSoftCredits) {
-            this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
+            this._fields = giftView.fields;
+            this._softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
+            if (giftView.processedSoftCredits) {
+                this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
+            }
         }
     }
 
@@ -80,6 +80,10 @@ class Gift {
         return this._softCredits;
     }
 
+    getFieldValue(field) {
+        return this._fields[field];
+    }
+
     asDataImport() {
         let dataImportRecord = { ...this._fields };
         delete dataImportRecord[undefined];
@@ -116,6 +120,12 @@ class Gift {
             softCredits: [ ...this._softCredits.unprocessedSoftCredits() ],
             processedSoftCredits: [ ...this._softCredits.processedSoftCredits() ]
         }
+    }
+
+    isAuthorized() {
+        return (this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED'
+            || this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING')
+            && this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName);
     }
 }
 
