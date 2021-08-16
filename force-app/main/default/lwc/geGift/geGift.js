@@ -18,7 +18,7 @@ class Gift {
     constructor(giftView) {
         if (giftView) {
             this._fields = giftView.fields;
-            this._softCredits = new SoftCredits(giftView.softCredits.all || giftView.softCredits || []);
+            this._softCredits = new SoftCredits(giftView.softCredits?.all || giftView.softCredits || []);
             if (giftView.processedSoftCredits) {
                 this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
             }
