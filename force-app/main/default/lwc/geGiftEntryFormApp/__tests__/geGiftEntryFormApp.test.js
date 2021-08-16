@@ -9,6 +9,7 @@ import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isE
 import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
+import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
@@ -28,6 +29,7 @@ const setupForBatchMode = (giftBatchView) => {
     getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
     getDataImportModel.mockResolvedValue('{"dummyKey":"dummyValue"}');
     getGiftBatchView.mockResolvedValue(giftBatchView);
+    isElevateCustomer.mockResolvedValue(true);
 
     const formApp = createGeGiftEntryFormApp();
     formApp.sObjectName = DATA_IMPORT_BATCH_OBJECT.objectApiName;

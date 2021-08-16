@@ -158,7 +158,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
     }
 
     shouldDisplayElevateDeregistrationWarning() {
-        return !Settings.isElevateCustomer()
+        return !this.isElevateCustomer
             && this._hasDisplayedElevateDisconnectedModal === false
             && this.giftBatchTotals.authorizedPaymentsCount > 0;
     }
