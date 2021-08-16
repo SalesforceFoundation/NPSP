@@ -83,7 +83,7 @@ public inherited sharing class Application {
     }
 
     private void createAddressesFromNewAccounts(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Accounts accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
+        AccountsAdapter accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
         if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
             AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
         }
@@ -112,7 +112,7 @@ public inherited sharing class Application {
             return;
         }
 
-        Accounts updatedAccountsWithAddressesToCreateOrUpdate = accounts.updatedAccountsWithAddressesToCreateOrUpdate();
+        AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate = accounts.updatedAccountsWithAddressesToCreateOrUpdate();
 
         if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
             AddressService.createAddressesFor(updatedAccountsWithAddressesToCreateOrUpdate, dmlWrapper, false);
