@@ -52,6 +52,50 @@ public inherited sharing class RD2_ChangeHistoryService {
         set;
     }
 
+    @TestVisible
+    private RD2_ChangeHistorySelector changeHistorySelector {
+        get {
+            if (changeHistorySelector == null) {
+                changeHistorySelector = new RD2_ChangeHistorySelector();
+            }
+            return changeHistorySelector;
+        }
+        set;
+    }
+
+    public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
+        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType))) {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
+        }
+
+        Integer limitPlusOne = recordLimit + 1;
+        changeHistorySelector.withRecordLimit(limitPlusOne);
+
+        if (changeTypeFilter != null) {
+            changeHistorySelector.withChangeTypeFilter(changeTypeFilter);
+        }
+
+        List<RecurringDonationChangeHistory__c> changes = changeHistorySelector.getChangeHistories(recurringDonationId);
+        RD2_ChangeHistoryView changeHistoryView = buildView(changes, recordLimit);
+
+        return changeHistoryView;
+    }
+
+    private RD2_ChangeHistoryView buildView(List<RecurringDonationChangeHistory__c> changes, Integer recordLimit) {
+        RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
+
+        changeHistoryView.settingEnabled = this.isChangeHistoryEnabled;
+        changeHistoryView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
+        changeHistoryView.hasMore = changes.size() > recordLimit;
+
+        for (Integer i = 0; i < recordLimit && i < changes.size(); i++) {
+            RD2_ChangeHistory change = new RD2_ChangeHistory(changes[i]);
+            changeHistoryView.changes.add(change.getChangeView());
+        }
+
+        return changeHistoryView;
+    }
+
     /***
     * @description Recurring Donation change history service instance
     */

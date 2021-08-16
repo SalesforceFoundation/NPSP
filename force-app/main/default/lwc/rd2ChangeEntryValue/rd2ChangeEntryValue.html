@@ -1,0 +1,26 @@
+<template>
+    <template if:true={isText}>
+        <lightning-formatted-text
+                value={value}
+        ></lightning-formatted-text>
+    </template>
+    <template if:true={isMoney}>
+        <lightning-formatted-number
+                format-style="currency"
+                value={value}
+        ></lightning-formatted-number>
+    </template>
+    <template if:true={isNumber}>
+        <lightning-formatted-number
+                value={value}
+        ></lightning-formatted-number>
+    </template>
+    <template if:true={isPopulatedLookup}>
+        <a onclick={navigateToRecord}>{value}</a>
+    </template>
+    <template if:true={isEmptyLookup}>
+        <lightning-formatted-text
+                value={labelNone}
+        ></lightning-formatted-text>
+    </template>
+</template>

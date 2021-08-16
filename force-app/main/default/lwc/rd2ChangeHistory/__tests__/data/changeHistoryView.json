@@ -1,0 +1,94 @@
+{
+  "rd2Enabled" : true,
+  "settingEnabled" : true,
+  "hasMore" : true,
+  "changes" : [ {
+    "statusReason" : null,
+    "id" : "a0oP0000002XsJPIA0",
+    "fields" : [ {
+      "oldValue" : 72.00,
+      "oldId" : null,
+      "newValue" : null,
+      "newId" : null,
+      "label" : "Amount",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : 72.00,
+      "oldId" : null,
+      "newValue" : null,
+      "newId" : null,
+      "label" : "Annual Value",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : null,
+      "oldId" : null,
+      "newValue" : "First Campaign",
+      "newId" : "701P0000000a2PHIAY",
+      "label" : "Campaign",
+      "displayType" : "LOOKUP"
+    } ],
+    "changeType" : null,
+    "changeDate" : "2021-08-05"
+  }, {
+    "statusReason" : null,
+    "id" : "a0oP0000002lPkRIAU",
+    "fields" : [ {
+      "oldValue" : 6.00,
+      "oldId" : null,
+      "newValue" : 72.00,
+      "newId" : null,
+      "label" : "Amount",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : 36.00,
+      "oldId" : null,
+      "newValue" : 72.00,
+      "newId" : null,
+      "label" : "Annual Value",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : 2,
+      "oldId" : null,
+      "newValue" : 1,
+      "newId" : null,
+      "label" : "Frequency",
+      "displayType" : "NUMERIC"
+    }, {
+      "oldValue" : "Monthly",
+      "oldId" : null,
+      "newValue" : "Yearly",
+      "newId" : null,
+      "label" : "Period",
+      "displayType" : "TEXT"
+    } ],
+    "changeType" : "Upgrade",
+    "changeDate" : "2021-08-03"
+  }, {
+    "statusReason" : null,
+    "id" : "a0oP0000002lPkQIAU",
+    "fields" : [ {
+      "oldValue" : 6.00,
+      "oldId" : null,
+      "newValue" : null,
+      "newId" : null,
+      "label" : "Amount",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : 72.00,
+      "oldId" : null,
+      "newValue" : 36.00,
+      "newId" : null,
+      "label" : "Annual Value",
+      "displayType" : "MONEY"
+    }, {
+      "oldValue" : 1,
+      "oldId" : null,
+      "newValue" : 2,
+      "newId" : null,
+      "label" : "Frequency",
+      "displayType" : "NUMERIC"
+    } ],
+    "changeType" : "Downgrade",
+    "changeDate" : "2021-08-03"
+  } ]
+}

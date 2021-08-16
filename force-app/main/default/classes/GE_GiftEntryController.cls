@@ -148,6 +148,15 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void logError(String error, String context) {
+        try {
+            ERR_Handler.processError(error, context);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
@@ -319,6 +328,16 @@ public with sharing class GE_GiftEntryController {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        try {
+           elevateBatchService.removeFromElevateBatch(authorizedGift);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return null;
     }
 
     @AuraEnabled

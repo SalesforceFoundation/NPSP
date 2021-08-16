@@ -549,6 +549,54 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdList[0].Status__c, 'The Status should be Active');
     }
 
+    @IsTest
+    private static void changesAreShownInChangeHistoryView() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+                .withDayOfMonth('20')
+                .withCalculateNextDonationDate()
+                .withPaymentMethod(null)
+                .build();
+
+        insert rd;
+
+        rd.npe03__Amount__c = RD_NEW_AMOUNT;
+        rd.PaymentMethod__c = PAYMENT_CREDIT_CARD;
+        rd.InstallmentFrequency__c = RD_NEW_FREQUENCY;
+        rd.npe03__Installment_Period__c = RD_NEW_PERIOD;
+
+        Test.startTest();
+        update rd;
+        Test.stopTest();
+
+        RD2_ChangeHistoryView historyView = RD2_ChangeHistoryController.getChangeHistory(rd.Id, 3, null);
+
+        System.assertEquals(1, historyView.changes.size(), 'Unexpected number of changes.');
+
+        RD2_ChangeView changeView = historyView.changes[0];
+        System.assertEquals(5, changeView.fields.size(), 'Unexpected number of field changes.');
+
+        // field order is important
+        System.assertEquals(RD_AMOUNT, changeView.fields[0].oldValue, 'Unexpected old Amount');
+        System.assertEquals(RD_NEW_AMOUNT, changeView.fields[0].newValue, 'Unexpected new Amount');
+
+        Decimal newYearlyValue = RD_NEW_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_NEW_PERIOD) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+        System.assertEquals(previousYearlyValue.setScale(2), changeView.fields[1].oldValue, 'Unexpected old Annual Value');
+        System.assertEquals(newYearlyValue.setScale(2), changeView.fields[1].newValue, 'Unexpected new Annual Value');
+
+        System.assertEquals(1, changeView.fields[2].oldValue, 'Unexpected old Installment Frequency');
+        System.assertEquals(RD_NEW_FREQUENCY, changeView.fields[2].newValue, 'Unexpected new Installment Frequency');
+
+        System.assertEquals(RD_PERIOD, changeView.fields[3].oldValue, 'Unexpected old Installment Period');
+        System.assertEquals(RD_NEW_PERIOD, changeView.fields[3].newValue, 'Unexpected new Installment Period');
+
+        System.assertEquals(Label.stgLabelFieldValueNone, changeView.fields[4].oldValue, 'Unexpected old payment method value.');
+        System.assertEquals(PAYMENT_CREDIT_CARD, changeView.fields[4].newValue, 'Unexpected old payment method value.');
+
+    }
+
     // Helpers
     ///////////////////
 
