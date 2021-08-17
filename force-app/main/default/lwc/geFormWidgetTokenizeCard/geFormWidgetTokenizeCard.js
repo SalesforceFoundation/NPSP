@@ -18,9 +18,9 @@ import {
 } from 'c/geConstants';
 import ElevateWidgetDisplay from './helpers/elevateWidgetDisplay';
 import GeFormService from 'c/geFormService';
+import Settings from 'c/geSettings';
 
-import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD
-    from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
+import DATA_IMPORT_PAYMENT_AUTHORIZATION_TOKEN_FIELD from '@salesforce/schema/DataImport__c.Payment_Authorization_Token__c';
 import DATA_IMPORT_PAYMENT_STATUS_FIELD from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import DATA_IMPORT_CONTACT_FIRSTNAME from '@salesforce/schema/DataImport__c.Contact1_Firstname__c';
@@ -33,6 +33,9 @@ import PAYMENT_EXPIRATION_MONTH from '@salesforce/schema/DataImport__c.Payment_C
 import PAYMENT_LAST_4 from '@salesforce/schema/DataImport__c.Payment_Card_Last_4__c';
 import DATA_IMPORT_ID from '@salesforce/schema/DataImport__c.Id';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
+
+import commonPaymentServices from '@salesforce/label/c.commonPaymentServices';
+import geElevateWidgetPaymentServiceUnavailable from '@salesforce/label/c.geElevateWidgetPaymentServiceUnavailable';
 
 const CONTACT_DONOR_TYPE = 'Contact1';
 
@@ -63,8 +66,22 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     async connectedCallback() {
-        const domainInfo = await GeFormService.getOrgDomain();
-        tokenHandler.setVisualforceOriginURLs(domainInfo);
+        if (!Settings.isElevateCustomer()) {
+            this._showSpinner = false;
+        } else {
+            const domainInfo = await GeFormService.getOrgDomain();
+            tokenHandler.setVisualforceOriginURLs(domainInfo);
+        }
+    }
+
+    get isElevateCustomer() {
+        return Settings.isElevateCustomer();
+    }
+
+    get labelPaymentServiceUnavailable() {
+        const formattedCustomLabel =
+            format(geElevateWidgetPaymentServiceUnavailable, [commonPaymentServices]);
+        return formattedCustomLabel;
     }
 
     renderedCallback() {
@@ -148,8 +165,16 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     get shouldDisplayEditPaymentInformation() {
-        return this.isReadOnly  
+        return Settings.isElevateCustomer()
+            && this.isReadOnly
             && (this.isExpiredTransaction || this.isPaymentStatusAuthorized());
+    }
+
+    get shouldDisplayDoNotEnterPaymentInformation() {
+        if (!Settings.isElevateCustomer()) {
+            return this.isReadOnly;
+        }
+        return this.isCharge && !this.isEdit;
     }
 
     get isEdit() {
@@ -210,9 +235,15 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     async handleMessage(message) {
         tokenHandler.handleMessage(message);
 
-        if (message.isReadyToMount && !this.isMounted) {
+        if (this.isAllowedToMount(message)) {
             this.requestMount();
         }
+    }
+
+    isAllowedToMount(message) {
+        return Settings.isElevateCustomer()
+            && !this.isMounted
+            && message.isReadyToMount;
     }
 
     requestParentNullPaymentFieldsInFormState() {
@@ -225,6 +256,7 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
     }
 
     updateDisplayState() {
+        if (!Settings.isElevateCustomer()) return;
         if (this.isInBatchGiftEntry()) {
             this.updateDisplayStateWhenInBatchGiftEntry();
         } else {
@@ -267,7 +299,13 @@ export default class geFormWidgetTokenizeCard extends LightningElement {
             isElevateWidgetDisabled: true
         });
 
+        this.clearReadOnlyData();
+
         this.display.transitionTo('userOriginatedDoNotCharge');
+    }
+
+    clearReadOnlyData() {
+        [this._cardLast4, this._cardExpirationDate] = [null, null];
     }
 
     handleUserEnterPaymentInformation() {

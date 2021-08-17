@@ -32,6 +32,7 @@ import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { convertBDIToWidgetJson } from './geFormRendererHelper';
 import GeFormElementHelper from './geFormElementHelper'
 import GeFormService from 'c/geFormService';
+import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
@@ -898,7 +899,9 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     shouldTokenizeCard() {
-        return !!(this.showPaymentSaveNotice) && this.hasChargeableTransactionStatus();
+        return Settings.isElevateCustomer()
+            && !!(this.showPaymentSaveNotice)
+            && this.hasChargeableTransactionStatus();
     }
 
     /*******************************************************************************
@@ -1293,7 +1296,17 @@ export default class GeFormRenderer extends LightningElement{
             this.nullPaymentFieldsInFormState([
                 apiNameFor(PAYMENT_AUTHORIZE_TOKEN),
                 apiNameFor(PAYMENT_DECLINED_REASON),
-                apiNameFor(PAYMENT_STATUS)
+                apiNameFor(PAYMENT_STATUS),
+                apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID),
+                apiNameFor(PAYMENT_ELEVATE_ID),
+                apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID),
+                apiNameFor(PAYMENT_LAST_4),
+                apiNameFor(PAYMENT_CARD_NETWORK),
+                apiNameFor(PAYMENT_EXPIRATION_MONTH),
+                apiNameFor(PAYMENT_EXPIRATION_YEAR),
+                apiNameFor(PAYMENT_AUTHORIZED_AT),
+                apiNameFor(PAYMENT_GATEWAY_ID),
+                apiNameFor(PAYMENT_GATEWAY_TRANSACTION_ID),
             ]);
         }
     }
