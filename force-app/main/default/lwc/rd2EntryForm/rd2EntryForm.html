@@ -196,6 +196,11 @@
                                         <lightning-input-field field-name={fields.campaign.apiName}>
                                         </lightning-input-field>
                                     </lightning-layout-item>
+
+                                    <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
+                                        <lightning-input-field field-name={fields.changeType.apiName}>
+                                        </lightning-input-field>
+                                    </lightning-layout-item>
                                 </lightning-layout>
                             </div>
                             <template if:true={hasCustomFields}>

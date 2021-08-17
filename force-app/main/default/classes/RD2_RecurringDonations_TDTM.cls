@@ -178,6 +178,7 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
                     .revisePlannedInstallments()
+                    .storeAndClearChangeType()
                     .reviseNextDonationDateBeforeInsert(scheduleService);
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {

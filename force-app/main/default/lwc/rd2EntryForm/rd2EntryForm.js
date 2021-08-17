@@ -27,6 +27,7 @@ import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donati
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
+import FIELD_CHANGE_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -284,6 +285,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
         this.fields.achLastFour = extractFieldInfo(fieldInfos, FIELD_ACH_LAST4.fieldApiName);
+        this.fields.changeType = extractFieldInfo(fieldInfos, FIELD_CHANGE_TYPE.fieldApiName);
     }
 
     /***

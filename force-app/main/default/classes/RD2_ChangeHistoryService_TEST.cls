@@ -63,6 +63,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .build();
+        rd.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
 
         insert rd;
 
@@ -77,6 +78,12 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         rdchList = getRecurringDonationChangeHistory(rd.Id);
         System.assertEquals(0, rdchList.size(), 'There should be no Change History with the Setting not Enabled');
+
+        // Make sure that the Change Type is cleared, even if it wasn't used
+        Id rdId = rd.Id;
+        List<npe03__Recurring_Donation__c> rdList = 
+            [SELECT Id, ChangeType__c FROM npe03__Recurring_Donation__c WHERE Id = :rdId];
+        System.assertEquals(null, rdList[0].ChangeType__c, 'The Change Type should be null');
     }
 
     /**
@@ -441,11 +448,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
-     * @description Verifies that creating and updating a Recurring Donation Currency Code
-     * with Change History Enabled does create a Change History record with a Change Type
+     * @description Verifies that creating and updating a Recurring Donation with a Currency Code
+     * correctly uses that Currency in the Change History record
      */
     @IsTest
-    private static void shouldCreateChangeHistoryDowngradeWhenExchangeRateIsLower() {
+    private static void shouldTrackIsoCodeWhenMultiCurrencyIsEnabled() {
         configureRecurringDonationChangeHistoryEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
@@ -455,6 +462,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
+        rdUpdate.npe03__Amount__c = RD_NEW_AMOUNT;
 
         Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
         String nonDefaultCurrencyCode = null;
@@ -468,6 +476,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             }
 
             nonDefaultCurrencyCode = (String)nonDefaultCurrencyType.get('IsoCode');
+            rd.put('CurrencyIsoCode', nonDefaultCurrencyCode);
             rdUpdate.put('CurrencyIsoCode', nonDefaultCurrencyCode);
         }
 
@@ -478,14 +487,14 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
 
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after RD currency update');
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, 
+                rdch.ChangeType__c, 'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        
         if (isMultiCurrencyEnabled) {
-            System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after RD currency update');
-            RecurringDonationChangeHistory__c rdch = rdchList[0];
-            System.assertEquals(nonDefaultCurrencyCode, rdch.CurrencyIsoCode, 
+            System.assertEquals(nonDefaultCurrencyCode, rdch.get('CurrencyIsoCode'), 
                 'New currency should be ' + nonDefaultCurrencyCode);
-            System.assertNotEquals(null, rdch.ChangeType__c, 'The Change Type should not be null');
-        } else {
-            System.assertEquals(0, rdchList.size(), 'There should be no Change History since there was no update');
         }
     }
 

@@ -205,11 +205,6 @@ public inherited sharing class RD2_ChangeHistoryService {
 
             RecurringDonationChangeHistory__c changeHistory;
 
-            // If the currency was updated, we need to track the change and compare annual values
-            if (UserInfo.isMultiCurrencyOrganization() && isCurrencyChanged()) {
-                changeHistory = initChangeHistoryRecord();
-            }
-
             for (SObjectField rdField : rd2ChangeHistoryFields.keySet()) {
                 if (isFieldChanged(rdField)) {
 
@@ -269,15 +264,6 @@ public inherited sharing class RD2_ChangeHistoryService {
 
             Decimal newAnnualValue = updatedRd.getAnnualValue();
             Decimal previousAnnualValue = originalRd.getAnnualValue();
-            
-            // Make sure we are comparing the same currency
-            if (UserInfo.isMultiCurrencyOrganization() && isCurrencyChanged()) {
-                previousAnnualValue = UTIL_CurrencyConversion.convertAmountUsingStandardRates(
-                    originalRd.getCurrencyIsoCode(), 
-                    updatedRd.getCurrencyIsoCode(), 
-                    previousAnnualValue
-                );
-            }
 
             if (newAnnualValue > previousAnnualValue) {
                 changeType = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
@@ -296,14 +282,6 @@ public inherited sharing class RD2_ChangeHistoryService {
         */
         public Boolean isFieldChanged(SObjectField rdField){
             return updatedRd.getValue(rdField) != originalRd.getValue(rdField);
-        }
-
-        /**
-        * @description Return true if the currency of these Recurring Donations does not match
-        * @return Boolean
-        */
-        private Boolean isCurrencyChanged() {
-            return updatedRd.getCurrencyIsoCode() != originalRd.getCurrencyIsoCode();
         }
 
     }
