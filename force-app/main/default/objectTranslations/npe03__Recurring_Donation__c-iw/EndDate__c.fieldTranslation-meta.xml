@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed. --></help>
+    <help><!-- The date on which this Recurring Donation was closed. --></help>
     <label><!-- End Date --></label>
     <name>EndDate__c</name>
 </CustomFieldTranslation>
