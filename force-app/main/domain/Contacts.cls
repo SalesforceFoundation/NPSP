@@ -206,12 +206,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public Contacts contactsAndOneToOneContacts_insertContext() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         if (CAO_Constants.isHHAccountModel()) {
-            for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (contactRecord.AccountId == null
-                        && contactRecord.npe01__Private__c != true) {
-                    contactsWithoutAccounts.add(contactRecord);
-                }
-            }
+            return new Contacts(contactsWithoutAccounts());
         }
 
         if (CAO_Constants.isOneToOne()) {

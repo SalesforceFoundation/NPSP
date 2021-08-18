@@ -35,6 +35,17 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
      * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
@@ -54,7 +65,19 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         switch on triggerAction {
             when BeforeInsert {
                 contacts = new Contacts(newSObjects);
-                application.onBeforeInsertOf(contacts);
+                contacts.resetDeprecatedFields();
+
+                contactService.createOneToOneAndHouseholdAccountsFor(
+                        //todo: pull out settings check
+                        (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
+                                .getRecords());
+
+                LegacyHouseholds.addToBucketAccount(contacts);
+
+//                IApplicationService applicationService =
+//                        (IApplicationService) new ApplicationService();
+//                applicationService.createHouseholdsFor((List<Contact>) newSObjects);
+//                application.onBeforeInsertOf(contacts);
             }
             when AfterInsert {
                 contacts = new Contacts(newSObjects, oldSObjects);

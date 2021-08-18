@@ -119,17 +119,6 @@ public inherited sharing class Application {
         }
     }
 
-    public void onBeforeInsertOf(Contacts contacts) {
-        contacts.resetDeprecatedFields();
-
-        contactService.createOneToOneAndHouseholdAccountsFor(
-                //todo: pull out settings check
-                (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
-                        .getRecords());
-
-        LegacyHouseholds.addToBucketAccount(contacts);
-    }
-
     public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
