@@ -34,6 +34,7 @@ public with sharing class RD2_FieldChangeView {
     @AuraEnabled public Id oldId;
     @AuraEnabled public String label;
     @AuraEnabled public String displayType;
+    @AuraEnabled public String currencyCode;
 
     public enum DISPLAY_TYPE {
         LOOKUP,

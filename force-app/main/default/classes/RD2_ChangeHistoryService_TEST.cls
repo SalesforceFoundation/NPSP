@@ -468,8 +468,6 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         String nonDefaultCurrencyCode = null;
 
         if (isMultiCurrencyEnabled) {
-            setupISOCodes();
-
             // If there is no active non-default currency, exit
             if (nonDefaultCurrencyType == null) {
                 return;
@@ -610,23 +608,36 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     ///////////////////
 
     /** @description Non default currency type sObject for this org.*/
-    public static sObject nonDefaultCurrencyType;
+    public static sObject nonDefaultCurrencyType {
+        get {
+            if (nonDefaultCurrencyType == null) {
+                setupISOCodes();
+            }
+            return nonDefaultCurrencyType;
+        }
+        set;
+    }
+
     /** @description Default currency type sObject for this org.*/
-    public static sObject defaultCurrencyType;
+    public static sObject defaultCurrencyType {
+        get {
+            if (defaultCurrencyType == null) {
+                setupISOCodes();
+            }
+            return defaultCurrencyType;
+        }
+        set;
+    }
 
     /****
     * @description Queries currency types and fills class variables for testing currency change
     */
     public static void setupISOCodes() {
-        if (nonDefaultCurrencyType != null || defaultCurrencyType != null) {
-            return;
-        } else {
-            for (sObject ct : database.query('SELECT IsoCode, ConversionRate, IsCorporate FROM CurrencyType')) {
-                if ((boolean)ct.get('IsCorporate')) {
-                    defaultCurrencyType = ct;
-                } else {
-                    nonDefaultCurrencyType = ct;
-                }
+        for (sObject ct : database.query('SELECT IsoCode, ConversionRate, IsCorporate FROM CurrencyType')) {
+            if ((boolean)ct.get('IsCorporate')) {
+                defaultCurrencyType = ct;
+            } else {
+                nonDefaultCurrencyType = ct;
             }
         }
     }
