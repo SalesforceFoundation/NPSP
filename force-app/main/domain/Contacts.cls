@@ -206,7 +206,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public Contacts contactsAndOneToOneContacts_insertContext() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (needsHHAccount(contactRecord)) {
+            if (CAO_Constants.isHHAccountModel()
+                && contactRecord.AccountId == null
+                && contactRecord.npe01__Private__c != true) {
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
@@ -668,16 +670,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return newOwnerContactById;
-    }
-
-    /**
-     * @description Determines whether or not the contact requires a household account.
-     * @param  contactRecord The contact to verify.
-     */
-    public Boolean needsHHAccount(Contact contactRecord) {
-        return CAO_Constants.isHHAccountModel()
-                && contactRecord.AccountId == null
-                && contactRecord.npe01__Private__c != true;
     }
 
     /*******************************************************************************************************
