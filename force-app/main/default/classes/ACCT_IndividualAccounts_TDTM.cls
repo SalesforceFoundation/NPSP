@@ -67,10 +67,16 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 contacts = new Contacts(newSObjects);
                 contacts.resetDeprecatedFields();
 
-                contactService.createOneToOneAndHouseholdAccountsFor(
-                        //todo: pull out settings check
-                        (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
-                                .getRecords());
+                if (CAO_Constants.isHHAccountModel()) {
+                    contactService.createOneToOneAndHouseholdAccountsFor(
+                            contacts.contactsWithoutAccounts());
+                }
+
+                if (CAO_Constants.isOneToOne()) {
+                    contactService.createOneToOneAndHouseholdAccountsFor(
+                            (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
+                                    .getRecords());
+                }
 
                 LegacyHouseholds.addToBucketAccount(contacts);
 
