@@ -208,9 +208,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
                 // Avoid creating a new contact with the 1:1 account of another contact
-                if (contactRecord.AccountId != null) {
-                    contactRecord.AccountId = null;
-                }
+                resetAccountIdFor(contactRecord);
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
@@ -218,10 +216,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         List<Contact> organizationContacts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             if (LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
-                // Avoid creating a new contact with the 1:1 account of another contact
-                if (contactRecord.AccountId != null) {
-                    contactRecord.AccountId = null;
-                }
+                resetAccountIdFor(contactRecord);
                 organizationContacts.add(contactRecord);
             }
         }
@@ -229,6 +224,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         contacts.addAll(contactsWithoutAccounts);
         contacts.addAll(organizationContacts);
         return new Contacts(contacts);
+    }
+
+    private void resetAccountIdFor(Contact contactRecord) {
+        if (contactRecord.AccountId != null) {
+            contactRecord.AccountId = null;
+        }
     }
 
     public List<Contact> forHouseholdName() {
