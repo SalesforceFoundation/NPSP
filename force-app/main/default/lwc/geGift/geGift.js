@@ -9,13 +9,17 @@ import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 
 import SoftCredits from './geSoftCredits';
-import { deepClone } from 'c/utilCommon';
+import { GIFT_STATUSES, PAYMENT_STATUSES } from 'c/geConstants';
 
 class Gift {
     _softCredits = new SoftCredits();
     _fields = {};
 
     constructor(giftView) {
+        this._init(giftView);
+    }
+
+    _init(giftView) {
         if (giftView) {
             this._fields = giftView.fields;
             this._softCredits = new SoftCredits(giftView.softCredits?.all || giftView.softCredits || []);
@@ -27,6 +31,11 @@ class Gift {
 
     id() {
         return this._fields.Id;
+    }
+
+    isFailed() {
+        return this._fields[STATUS.fieldApiName] ===
+            GIFT_STATUSES.FAILED;
     }
 
     status() {
@@ -123,8 +132,8 @@ class Gift {
     }
 
     isAuthorized() {
-        return (this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'AUTHORIZED'
-            || this.getFieldValue(PAYMENT_STATUS.fieldApiName) === 'PENDING')
+        return (this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.AUTHORIZED
+            || this.getFieldValue(PAYMENT_STATUS.fieldApiName) === PAYMENT_STATUSES.PENDING)
             && this.getFieldValue(PAYMENT_ELEVATE_ID.fieldApiName);
     }
 }

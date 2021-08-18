@@ -2615,9 +2615,9 @@ export default class GeFormRenderer extends LightningElement{
 
         await gift.save().catch(saveError => this.handleCatchOnSave(saveError));
 
-        await gift.refresh().catch(viewError => this.handleError(viewError));
+        await gift.refresh().catch(viewError => handleError(viewError));
 
-        if (gift.status() === 'Failed') {
+        if (gift.isFailed()) {
             this.handleBdiProcessingError(gift.failureInformation());
         } else {
             this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;

@@ -148,14 +148,11 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         const reviewRecordHasSoftCredits =
             reviewRecord && reviewRecord.softCredits;
 
+        this.gift.clearProcessedSoftCredits();
         if (reviewRecordHasSoftCredits) {
-            this.gift.clearProcessedSoftCredits();
             this.gift.addProcessedSoftCredits(reviewRecord.softCredits);
-            this.giftInView = this.gift.state();
-        } else {
-            this.gift.clearProcessedSoftCredits();
-            this.giftInView = this.gift.state();
         }
+        this.giftInView = this.gift.state();
     }
 
     handleSoftCreditWidgetChange(event) {
