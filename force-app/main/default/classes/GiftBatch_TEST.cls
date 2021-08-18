@@ -140,6 +140,40 @@ private class GiftBatch_TEST {
         }
     }
 
+    @isTest
+    static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
+        GiftsMock giftsMock = new GiftsMock();
+        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(false);
+        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        giftBatch.processGifts();
+
+        System.assertEquals(false, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+    }
+
+    @isTest
+    static void shouldAttemptToCaptureElevatePaymentsWhenServiceAvailable() {
+        GiftsMock giftsMock = new GiftsMock();
+        GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
+
+        PS_IntegrationServiceConfigMock integrationServiceConfigMock =
+            new PS_IntegrationServiceConfigMock(true);
+        giftBatch.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
+
+        ElevateBatchServiceMock elevateBatchServiceMock = new ElevateBatchServiceMock();
+        giftBatch.elevateBatchService = stubFor(elevateBatchServiceMock);
+
+        giftBatch.processGifts();
+
+        System.assertEquals(true, elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
+    }
+
     static String DUMMY_DATA_IMPORT_MODEL = '{"totalRowAmount":300.0,"totalCountOfRows":2}';
 
     private static GiftTemplate createDummyGiftTemplate(Boolean withElevateWidget) {
@@ -188,6 +222,53 @@ private class GiftBatch_TEST {
 
     private static ElevateBatchService stubFor(ElevateBatchServiceMock elevateBatchServiceMock) {
         return (ElevateBatchService) Test.createStub(ElevateBatchService.class, elevateBatchServiceMock);
+    }
+
+    public class PS_IntegrationServiceConfigMock implements StubProvider {
+        public Boolean isIntegrationEnabled = false;
+
+        public PS_IntegrationServiceConfigMock(Boolean isIntegrationEnabled) {
+            this.isIntegrationEnabled = isIntegrationEnabled;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'isIntegrationEnabled' {
+                    return isIntegrationEnabled;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static PS_IntegrationServiceConfig stubFor(PS_IntegrationServiceConfigMock integrationServiceConfigMock) {
+        return (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            integrationServiceConfigMock
+        );
+    }
+
+    public class GiftsMock implements StubProvider {
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            return null;
+        }
+    }
+
+    private static Gifts stubFor(GiftsMock giftsMock) {
+        return (Gifts) Test.createStub(Gifts.class, giftsMock);
     }
 
     private static List<DataImport__c> buildGifts(Integer numberOfGifts, String paymentStatus) {
