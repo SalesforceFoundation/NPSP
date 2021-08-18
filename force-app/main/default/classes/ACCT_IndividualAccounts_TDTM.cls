@@ -74,7 +74,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
                 if (CAO_Constants.isOneToOne()) {
                     contactService.createOneToOneAndHouseholdAccountsFor(
-                            (List<Contact>) contacts.contactsAndOneToOneContacts_insertContext()
+                            (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
                                     .getRecords());
                 }
 

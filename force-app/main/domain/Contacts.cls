@@ -203,20 +203,32 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return new Contacts(contactsWithoutAccounts());
     }
 
-    public Contacts contactsAndOneToOneContacts_insertContext() {
+    public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (LegacyHouseholds.isWithoutAccount(contactRecord)
-                    || LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+            if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
                 // Avoid creating a new contact with the 1:1 account of another contact
                 if (contactRecord.AccountId != null) {
                     contactRecord.AccountId = null;
                 }
-
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
-        return new Contacts(contactsWithoutAccounts);
+
+        List<Contact> organizationContacts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+                // Avoid creating a new contact with the 1:1 account of another contact
+                if (contactRecord.AccountId != null) {
+                    contactRecord.AccountId = null;
+                }
+                organizationContacts.add(contactRecord);
+            }
+        }
+        List<Contact> contacts = new List<Contact>();
+        contacts.addAll(contactsWithoutAccounts);
+        contacts.addAll(organizationContacts);
+        return new Contacts(contacts);
     }
 
     public List<Contact> forHouseholdName() {
