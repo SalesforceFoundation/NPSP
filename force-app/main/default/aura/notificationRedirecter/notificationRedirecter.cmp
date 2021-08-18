@@ -1,0 +1,9 @@
+<!--
+ - Created by voduyemi on 8/17/21.
+ -->
+
+<aura:component description="notificationRedirecter" implements="lightning:isUrlAddressable">
+    <aura:handler name="render" value="{!this}" action="{!c.doNavigate}"/>
+    <aura:attribute name="pageReference" type="Object"/>
+    <lightning:navigation aura:id="navigationService" />
+</aura:component>

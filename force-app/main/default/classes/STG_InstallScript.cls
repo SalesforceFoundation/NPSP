@@ -159,7 +159,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }
     }
 
-    private void publishInstallationNotifications () {
+    public void publishInstallationNotifications () {
         new InstallationNotifications().publish();
     }
 

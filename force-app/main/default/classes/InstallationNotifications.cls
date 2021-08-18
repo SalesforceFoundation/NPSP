@@ -82,7 +82,6 @@ public inherited sharing class InstallationNotifications {
    }
 
    public void publish() {
-      String DUMMY_ID = '000000000000000AAA';
       for (Custom_Notification__mdt notification : this.activeNotifications) {
          if (getAudience(notification.Audience_Implementation__c) == null) { continue; }
          if (activeNotificationsByType.containsKey(notification.Notification_Channel__c)) {
@@ -91,12 +90,27 @@ public inherited sharing class InstallationNotifications {
             Messaging.CustomNotification customNotification = new Messaging.CustomNotification();
             customNotification.setBody(content.body());
             customNotification.setTitle(content.title());
+            customNotification.setTargetPageRef(buildPageReferenceFor(notification));
             customNotification.setNotificationTypeId(
                 activeNotificationsByType.get(notification.Notification_Channel__c).Id);
-            customNotification.setTargetId(DUMMY_ID);
             customNotification.send(getAudience(notification.Audience_Implementation__c).stringValues());
          }
       }
+   }
+
+   private String buildPageReferenceFor(Custom_Notification__mdt notification) {
+      String namespace = getNamespace();
+      String componentName = (String.isNotBlank(namespace) ? namespace : 'c') + '__notificationRedirecter';
+      Map<String, Object> pageRef = new Map<String, Object>{
+          'type' => 'standard__component',
+          'attributes' => new Map<String, Object> {
+              'componentName' => componentName
+          },
+          'state' => new Map<String, Object> {
+              'c__redirectUrl' => notification.Redirect_URL__c
+          }
+      };
+      return JSON.serialize(pageRef);
    }
 
    private ElevateAdNotificationContent getNotificationContent(String notificationContentImpl) {
@@ -109,11 +123,15 @@ public inherited sharing class InstallationNotifications {
    }
 
    private Type getClassType(String classImpl) {
-      String namespace = UTIL_Namespace.getNamespace();
+      String namespace = getNamespace();
       Type classType = String.isNotBlank(namespace)
           ? Type.forName(namespace, classImpl)
           : Type.forName(classImpl);
       return classType;
+   }
+
+   private String getNamespace() {
+      return UTIL_Namespace.getNamespace();
    }
 
 }
