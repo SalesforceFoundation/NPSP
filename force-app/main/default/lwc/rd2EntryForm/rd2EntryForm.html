@@ -113,6 +113,7 @@
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
                                                 data-id="amountField"
+                                                onchange={handleAnnualValueChange}
                                                 required
                                         >
                                         </lightning-input-field>
@@ -141,6 +142,7 @@
                                         ontypechange={handleRecurringTypeChange}
                                         onperiodchange={handleRecurringPeriodChange}
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
+                                        onfrequencychange={handleAnnualValueChange}
                                         if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
@@ -197,10 +199,15 @@
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
-                                    <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
-                                        <lightning-input-field field-name={fields.changeType.apiName}>
-                                        </lightning-input-field>
-                                    </lightning-layout-item>
+                                    <template if:true={showChangeTypeField}>
+                                        <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
+                                            <lightning-input-field 
+                                                field-name={fields.changeType.apiName}
+                                                value={changeType}
+                                            >
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </template>
                                 </lightning-layout>
                             </div>
                             <template if:true={hasCustomFields}>

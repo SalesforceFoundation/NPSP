@@ -467,7 +467,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return void
      */
     private void createChangeHistory(List<RD2_RecurringDonation> rdRecords){
-        if(!changeHistoryService.isChangeHistoryEnabled){
+        if(!RD2_ChangeHistoryService.isChangeHistoryEnabled){
             return;
         }
 

@@ -42,7 +42,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     /***
     * @description Determines if Change History is enabled for the org
     */
-    public Boolean isChangeHistoryEnabled {
+    public static Boolean isChangeHistoryEnabled {
         get {
             if (isChangeHistoryEnabled == null) {
                 isChangeHistoryEnabled = new RD2_Settings().isChangeHistoryEnabled();
@@ -84,7 +84,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     private RD2_ChangeHistoryView buildView(List<RecurringDonationChangeHistory__c> changes, Integer recordLimit) {
         RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
 
-        changeHistoryView.settingEnabled = this.isChangeHistoryEnabled;
+        changeHistoryView.settingEnabled = isChangeHistoryEnabled;
         changeHistoryView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
         changeHistoryView.hasMore = changes.size() > recordLimit;
 
