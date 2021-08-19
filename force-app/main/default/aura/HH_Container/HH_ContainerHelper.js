@@ -23,7 +23,7 @@
         var namespacePrefix = component.get('v.namespacePrefix');
 
         // query for the Household account/object
-        var action = component.get("c.getHH");
+        var action = component.get("c.getHousehold");
         action.setParams({
             hhId: hhId
         });

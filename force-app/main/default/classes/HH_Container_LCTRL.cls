@@ -76,64 +76,79 @@ public with sharing class HH_Container_LCTRL {
 
     /*******************************************************************************************************
     * @description returns the Household object (Account or Custom Object) given the Id
-    * @param hhId The Household's Id
+    * @param householdId The Household's Id
     * @return SObject The Household Account or Custom Object
     */
     @AuraEnabled
-    public static SObject getHH(Id hhId) {
+    public static SObject getHousehold(Id householdId) {
         try {
-            if (hhId == null) {
+            if (householdId == null) {
                 return null;
             }
-            
-            String strSoql = 'select Id, ';
-            String strComma = '';
-            Boolean isHHAccount = UTIL_Describe.isObjectIdThisType(hhId, 'Account');
-            List<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
-            String strObject = isHHAccount ? 'Account' : 'npo02__Household__c';
-            
-            // check field level security and construct our soql            
-            for (String strF : listStrFld) {
-                DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(strObject, strF);
-                if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
-                    throw (new permsException(String.format(Label.flsError, new string[]{
-                            strObject + '.' + strF
-                    })));
-                }
-                
-                strSoql += strComma + strF;
-                strComma = ',';
-            }
-            
-            strSoql += ' from ' + strObject + ' where Id = :hhId';
-            return Database.query(strSoql);
+            Boolean isHousehold = UTIL_Describe.isObjectIdThisType(householdId, 'Account');
+            String soqlFromObject = getHouseholdObjectToUseForQuery(isHousehold);
+
+            UTIL_Query query = new UTIL_Query()
+                .withSelectFields(getHouseholdSelectFields(isHousehold, soqlFromObject))
+                .withFrom(soqlFromObject)
+                .withWhere('Id = :householdId');
+
+            return Database.query(query.build());
+
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
+    private static String getHouseholdObjectToUseForQuery(Boolean isHousehold) {
+        return String.valueOf(isHousehold ? Account.SObjectType : npo02__Household__c.SObjectType);
+    }
+
+    private static Set<String> getHouseholdSelectFields(Boolean isHousehold, String soqlFromObject) {
+        Set<String> householdSelectFields = new Set<String>();
+        if (isHousehold) {
+            householdSelectFields.add(String.valueOf(Account.Undeliverable_Address__c));
+        }
+        householdSelectFields.addAll(getHouseholdFieldsToEdit(isHousehold, soqlFromObject));
+
+        return householdSelectFields;
+    }
+
     /*******************************************************************************************************
     * @description returns a list of Fields (developer name) that must be editable on the Household
-    * @return list<String> the set of Fields
+    * @return Set<String> the set of Fields
     */
-    private static List<String> getUpdateableHouseholdFields(Boolean isHHAccount) {
-        List<String> listFields = new List<String>{
+    private static Set<String> getHouseholdFieldsToEdit(Boolean isHousehold, String soqlFromObject) {
+        Set<String> householdFieldsToEdit = new Set<String>{
             'Name',
             'npo02__SYSTEM_CUSTOM_NAMING__c', 
             'npo02__Formal_Greeting__c', 
             'npo02__Informal_Greeting__c',
             UTIL_Namespace.StrTokenNSPrefix('Number_of_Household_Members__c')};
 
-        if (isHHAccount) {
-            listFields.addAll(new List<String>{
+        if (isHousehold) {
+            householdFieldsToEdit.addAll(new Set<String>{
                 'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode', 
                 'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
         } else {
-            listFields.addAll(new List<String>{
+            householdFieldsToEdit.addAll(new Set<String>{
                 'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c', 
                 'npo02__MailingPostalCode__c', 'npo02__MailingCountry__c'});
         }
-        return listFields;
+        // check field level security and construct our soql
+        checkFieldPermissions(householdFieldsToEdit, soqlFromObject);
+        return householdFieldsToEdit;
+    }
+
+    private static void checkFieldPermissions(Set<String> householdFieldsToEdit, String account) {
+        for (String householdField : householdFieldsToEdit) {
+            DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe(account, householdField);
+            if (dfr == null || !dfr.isAccessible() || !dfr.isUpdateable()) {
+                throw (new permsException(String.format(Label.flsError, new String[]{
+                        account + '.' + householdField
+                })));
+            }
+        }
     }
 
     /*******************************************************************************************************
@@ -403,8 +418,8 @@ public with sharing class HH_Container_LCTRL {
             }
             
             // do FLS and only copy the fields we allow to be touched in our UI
-            List<String> listStrFld = getUpdateableHouseholdFields(isHHAccount);
-            UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, listStrFld);
+            Set<String> householdFieldsToEdit = getHouseholdFieldsToEdit(isHHAccount, strObject);
+            UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, new List<String>(householdFieldsToEdit));
             
             // we've already saved the data for the contacts in the household.
             // now we only need to save the account fields an update, and we don't want
@@ -574,7 +589,7 @@ public with sharing class HH_Container_LCTRL {
             // put in a static cache to avoid requerying if they are already loaded.
             // ie, track a static hh and with hhId it came from, and use it in getHH()
             // if the hhId matches.  Same with listCon.
-            SObject hh = getHH(hhId);
+            SObject hh = getHousehold(hhId);
             List<Contact> listCon = getContacts(hhId);
 
             // copy the household's address
