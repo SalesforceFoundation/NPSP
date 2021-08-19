@@ -35,22 +35,31 @@
 
 public with sharing class Gift {
     
-    @TestVisible
-    private DataImport__c dataImport;
+    @TestVisible private DataImport__c dataImport;
     private List<String> availableFields;
+    private SoftCredits softCredits;
+
+    @TestVisible
     private GiftSelector giftSelector {
         get {
             if (giftSelector == null) {
-                giftSelector = new GiftSelector();
+                GiftTemplate defaultGiftTemplate = new GiftTemplate();
+                giftSelector = new GiftSelector(defaultGiftTemplate);
             }
             return giftSelector;
         }
         set;
     }
-    
+
+    public Gift(GiftId giftId) {
+        this.dataImport = giftSelector.getGiftById(giftId.value(), new GiftTemplate());
+        this.populateSoftCredits();
+    }
+
     public Gift(DataImport__c dataImport) {
         this.dataImport = dataImport;
         this.populateAvailableFields();
+        this.populateSoftCredits();
     }
 
     public Boolean requiresReauthorizationBeforeChange() {
@@ -59,6 +68,18 @@ public with sharing class Gift {
         }
 
         return this.hasPaymentFieldsChanged();
+    }
+
+    public SoftCredits softCredits() {
+        return this.softCredits;
+    }
+
+    public Map<String, Object> fields() {
+        return this.dataImport.getPopulatedFieldsAsMap();
+    }
+
+    public void deleteRecord() {
+        delete this.dataImport;
     }
 
     public Boolean hasAuthorizedPayment() {
@@ -80,6 +101,14 @@ public with sharing class Gift {
         }
 
         this.availableFields = fields;
+    }
+
+    private void populateSoftCredits() {
+        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
+        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
+        // related to the Gift in question
+        String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
+        this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
     }
 
     private Boolean hasPaymentFieldsChanged() {

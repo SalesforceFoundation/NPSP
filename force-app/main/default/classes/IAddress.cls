@@ -35,6 +35,8 @@
 public interface IAddress {
 
     //Todo: refactor until getRecord() is no longer necessary, then remove
+    Id getId();
+
     SObject getRecord();
 
     String getType();
@@ -53,5 +55,8 @@ public interface IAddress {
 
     Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType);
     Boolean isDifferentIncludingLatLong(IAddress other);
-
+    Boolean isUndeliverable();
+    Boolean isUndeliverableStatusChanged();
+    Boolean isNewDefault();
+    Boolean isDefault();
 }

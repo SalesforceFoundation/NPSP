@@ -44,6 +44,7 @@ import commonRequired from '@salesforce/label/c.commonRequired';
 import commonReviewForm from '@salesforce/label/c.commonReviewForm';
 import commonSave from '@salesforce/label/c.commonSave';
 import commonSaveAndClose from '@salesforce/label/c.commonSaveAndClose';
+import commonSoftCredits from '@salesforce/label/c.commonSoftCredits';
 import commonTemplate from '@salesforce/label/c.commonTemplate';
 import commonTemplates from '@salesforce/label/c.commonTemplates';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
@@ -53,6 +54,7 @@ import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonWarning from '@salesforce/label/c.commonWarning';
 import commonYes from '@salesforce/label/c.commonYes';
 import geAddNewAllocation from '@salesforce/label/c.geAddNewAllocation';
+import geAddSoftCredit from '@salesforce/label/c.geAddSoftCredit';
 import geAssistiveActiveSection from '@salesforce/label/c.geAssistiveActiveSection';
 import geAssistiveBatchHeaderRemoveField from '@salesforce/label/c.geAssistiveBatchHeaderRemoveField';
 import geAssistiveDescriptionFieldOptional from '@salesforce/label/c.geAssistiveDescriptionFieldOptional';
@@ -124,6 +126,8 @@ import geButtonSaveNewGift from '@salesforce/label/c.geButtonSaveNewGift';
 import geButtonTemplatesTabCreateTemplate from '@salesforce/label/c.geButtonTemplatesTabCreateTemplate';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
+import geElevateDeleteErrorLog from '@salesforce/label/c.geElevateDeleteErrorLog';
+import geElevateUpdateErrorLog from '@salesforce/label/c.geElevateUpdateErrorLog';
 import geErrorAmountDoesNotMatch from '@salesforce/label/c.geErrorAmountDoesNotMatch';
 import geErrorBatchGiftEntryCurrencyMismatch from '@salesforce/label/c.geErrorBatchGiftEntryCurrencyMismatch';
 import geErrorCardChargedBDIFailed from '@salesforce/label/c.geErrorCardChargedBDIFailed';
@@ -131,6 +135,8 @@ import geErrorCompleteThisField from '@salesforce/label/c.geErrorCompleteThisFie
 import geErrorDonorTypeInvalid from '@salesforce/label/c.geErrorDonorTypeInvalid';
 import geErrorDonorTypeValidation from '@salesforce/label/c.geErrorDonorTypeValidation';
 import geErrorDonorTypeValidationSingle from '@salesforce/label/c.geErrorDonorTypeValidationSingle';
+import geErrorElevateDelete from '@salesforce/label/c.geErrorElevateDelete';
+import geErrorElevateUpdate from '@salesforce/label/c.geErrorElevateUpdate';
 import geErrorExistingTemplateName from '@salesforce/label/c.geErrorExistingTemplateName';
 import geErrorFLSBatchTableColumns from '@salesforce/label/c.geErrorFLSBatchTableColumns';
 import geErrorFLSBody from '@salesforce/label/c.geErrorFLSBody';
@@ -144,6 +150,7 @@ import geErrorPageLevelFieldPermission1 from '@salesforce/label/c.geErrorPageLev
 import geErrorPageLevelFieldPermission2 from '@salesforce/label/c.geErrorPageLevelFieldPermission2';
 import geErrorPageLevelMissingRequiredFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredFields';
 import geErrorPageLevelMissingRequiredGroupFields from '@salesforce/label/c.geErrorPageLevelMissingRequiredGroupFields';
+import geErrorRecordFailAfterElevateDelete from '@salesforce/label/c.geErrorRecordFailAfterElevateDelete';
 import geErrorRequiredField from '@salesforce/label/c.geErrorRequiredField';
 import geErrorUncertainCardChargePart1 from '@salesforce/label/c.geErrorUncertainCardChargePart1';
 import geErrorUncertainCardChargePart2 from '@salesforce/label/c.geErrorUncertainCardChargePart2';
@@ -290,6 +297,7 @@ class GeLabelService {
         commonReviewForm,
         commonSave,
         commonSaveAndClose,
+        commonSoftCredits,
         commonTemplate,
         commonTemplates,
         commonUnknownError,
@@ -299,6 +307,7 @@ class GeLabelService {
         commonWarning,
         commonYes,
         geAddNewAllocation,
+        geAddSoftCredit,
         geAssistiveActiveSection,
         geAssistiveBatchHeaderRemoveField,
         geAssistiveDescriptionFieldOptional,
@@ -370,6 +379,8 @@ class GeLabelService {
         geButtonTemplatesTabCreateTemplate,
         geDonationColumnLabel,
         geDonorColumnLabel,
+        geElevateDeleteErrorLog,
+        geElevateUpdateErrorLog,
         geErrorAmountDoesNotMatch,
         geErrorBatchGiftEntryCurrencyMismatch,
         geErrorCardChargedBDIFailed,
@@ -377,6 +388,8 @@ class GeLabelService {
         geErrorDonorTypeInvalid,
         geErrorDonorTypeValidation,
         geErrorDonorTypeValidationSingle,
+        geErrorElevateDelete,
+        geErrorElevateUpdate,
         geErrorExistingTemplateName,
         geErrorFLSBatchTableColumns,
         geErrorFLSBody,
@@ -390,6 +403,7 @@ class GeLabelService {
         geErrorPageLevelFieldPermission2,
         geErrorPageLevelMissingRequiredFields,
         geErrorPageLevelMissingRequiredGroupFields,
+        geErrorRecordFailAfterElevateDelete,
         geErrorRequiredField,
         geErrorUncertainCardChargePart1,
         geErrorUncertainCardChargePart2,

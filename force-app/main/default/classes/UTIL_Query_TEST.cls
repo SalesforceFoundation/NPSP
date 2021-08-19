@@ -416,4 +416,24 @@ private class UTIL_Query_TEST {
 
         System.assertEquals(expectedSoql, soql, 'SOQL should not include toLabel for Salutation field');
     }
+
+    /**
+     * @description Test SOQL Builder when off set is added
+    */
+    @IsTest
+    private static void shouldIncludeOffsetClause() {
+        String[] selectFields = new String[]{
+            'Id', 'AccountId', 'FirstName', 'LastName'
+        };
+
+        String soql = new UTIL_Query()
+            .withSelectFields(selectFields)
+            .withFrom('Contact')
+            .withOffset(5)
+            .build();
+
+        String expectedSoql = 'SELECT Id, AccountId, FirstName, LastName FROM Contact OFFSET 5';
+
+        System.assertEquals(expectedSoql, soql, 'SOQL should include offset');
+    }
 }

@@ -30,7 +30,7 @@
 
 @isTest
 private class Gift_Test {
-    
+
     @isTest
     static void validateThatGiftNeedsToBeReauthorized() {
         DataImport__c dataImport = new DataImport__c(
@@ -38,18 +38,95 @@ private class Gift_Test {
             Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
             Donation_Amount__c = 3.00
         );
-
-        insert dataImport;
-
-        Test.startTest();
-
-        dataImport.Donation_Amount__c = 5.00;
         Gift authorizedGift = new Gift(dataImport);
+
+        GiftSelector mockedGiftSelector = stubFor(new GiftSelectorMock(5.00));
+        authorizedGift.giftSelector = mockedGiftSelector;
+
         Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
-
-        Test.stopTest();
-
-        System.assertEquals(dataImport.Id, authorizedGift.dataImport.Id);
         System.assert(needsReauthorization);
+    }
+
+    @isTest
+    static void shouldReturnDataImportRecord() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+
+        Gift gift = new Gift(dataImport);
+
+        String donationAmountField = String.valueOf(DataImport__c.Donation_Amount__c);
+        System.assertEquals(10, gift.fields().get(donationAmountField));
+    }
+
+    @isTest
+    static void shouldHave2SoftCreditsFromAdditionalObjectJSON() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today(),
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(2, gift.softCredits().size());
+    }
+
+    @isTest
+    static void shouldHave0SoftCreditsFromAdditionalObjectJSON() {
+        String additionalObjectStringWithGeneralAccountUnits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withGeneralAccountingUnits(5)
+            .build();
+
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today(),
+            Additional_Object_JSON__c = additionalObjectStringWithGeneralAccountUnits
+        );
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(0, gift.softCredits().size());
+    }
+
+    private class GiftSelectorMock implements StubProvider {
+
+        private Decimal newDonationAmount;
+
+        public GiftSelectorMock(Decimal newDonationAmount) {
+            this.newDonationAmount = newDonationAmount;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getGiftById' {
+                    return new DataImport__c(
+                        Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
+                        Payment_Elevate_Batch_ID__c = 'test-valid-group-id',
+                        Donation_Amount__c = newDonationAmount
+                    );
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
+        return (GiftSelector) Test.createStub(
+            GiftSelector.class,
+            giftSelectorMock
+        );
     }
 }

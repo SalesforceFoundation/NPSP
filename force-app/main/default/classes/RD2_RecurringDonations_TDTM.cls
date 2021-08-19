@@ -350,11 +350,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged)
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged, oldRds)
                 .executeOppEvaluationService();
 
         } else {
-            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged);
+            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, oldRds);
         }
     }
 
