@@ -8,27 +8,14 @@
         component.set(strParam, JSON.parse(JSON.stringify(obj)));
     },
     
-    /*******************************************************************************************************
-     * @description called at onInit to load up the Household Object/Account, and its Contacts
-     */
-    loadObjects: function(component) {
-        component.set("v.showSpinner", true);
-        var hhId = component.get('v.hhId');
-        
-        // handle new household object
-        if (hhId === null)
-            return;
-        
-        component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
-        var namespacePrefix = component.get('v.namespacePrefix');
-
+    loadHousehold: function (component, hhId, namespacePrefix) {
         // query for the Household account/object
-        var action = component.get("c.getHousehold");
+        let action = component.get("c.getHousehold");
         action.setParams({
             householdId: hhId
         });
-        var self = this;
-        action.setCallback(this, function(response) {
+        let self = this;
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var hh = response.getReturnValue();
@@ -48,12 +35,15 @@
         });
         $A.enqueueAction(action);
 
+    },
+
+    loadContacts: function (component, hhId, namespacePrefix) {
         // query for the Household Contacts
-        action = component.get("c.getContacts");
+        let action = component.get("c.getContacts");
         action.setParams({
             hhId: hhId
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
@@ -66,10 +56,12 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadSalutations: function (component) {
         // query for the Contact Salutations
-        action = component.get("c.getSalutations");
-        action.setCallback(this, function(response) {
+        let action = component.get("c.getSalutations");
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listSalutation = response.getReturnValue();
@@ -80,17 +72,19 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadHouseholdDeletePermissions: function (component) {
         // query for Household Delete permissions for merge usage
         var strSObject = 'Account';
         if (component.get('v.hhTypePrefix') !== '001') {
             strSObject = 'npo02__Household__c';
         }
-        action = component.get("c.isDeletable");
+        let action = component.get("c.isDeletable");
         action.setParams({
             strSObject: strSObject
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 component.set("v.allowHouseholdMerge", response.getReturnValue());
@@ -100,14 +94,16 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadAddresses: function (component, hhId, namespacePrefix) {
         // query for the Addresses
-        action = component.get("c.getAddresses");
+        let action = component.get("c.getAddresses");
         action.setParams({
             hhId: hhId,
             listAddrExisting: null
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
 
             // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
@@ -127,6 +123,27 @@
             }
         });
         $A.enqueueAction(action);
+    },
+
+    /*******************************************************************************************************
+     * @description called at onInit to load up the Household Object/Account, and its Contacts
+     */
+    loadObjects: function(component) {
+        component.set("v.showSpinner", true);
+        var hhId = component.get('v.hhId');
+        
+        // handle new household object
+        if (hhId === null)
+            return;
+        
+        component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
+        var namespacePrefix = component.get('v.namespacePrefix');
+
+        this.loadHousehold(component, hhId, namespacePrefix);
+        this.loadContacts(component, hhId, namespacePrefix);
+        this.loadSalutations(component);
+        this.loadHouseholdDeletePermissions(component);
+        this.loadAddresses(component, hhId, namespacePrefix);
     },
 
     /*******************************************************************************************************
