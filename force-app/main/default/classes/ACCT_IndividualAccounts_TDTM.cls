@@ -78,7 +78,10 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                                     .getRecords());
                 }
 
-                LegacyHouseholds.addToBucketAccount(contacts);
+                if (CAO_Constants.isBucketModel()) {
+                    LegacyHouseholds.attachToBucketAccount(
+                            contacts.contactsWithoutAccounts());
+                }
 
 //                IApplicationService applicationService =
 //                        (IApplicationService) new ApplicationService();
