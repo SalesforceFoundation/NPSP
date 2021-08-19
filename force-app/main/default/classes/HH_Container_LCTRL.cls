@@ -167,9 +167,9 @@ public with sharing class HH_Container_LCTRL {
             // don't use contact.HHId in one soql since it can't use an index
             // and won't work in LDV orgs.
             if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
-                strSoql += ' where AccountId = :hhId ';
+                strSoql += ' where AccountId = :householdId ';
             } else {
-                strSoql += ' where npo02__Household__c = :hhId WITH SECURITY_ENFORCED ';
+                strSoql += ' where npo02__Household__c = :householdId WITH SECURITY_ENFORCED ';
             }
 
             strSoql += ' order by npo02__Household_Naming_Order__c ASC NULLS LAST, ' +
@@ -231,7 +231,7 @@ public with sharing class HH_Container_LCTRL {
     @TestVisible
     private static Set<String> getContactFields() {
         try {
-            Set<String> setContactFields = new Set<String>{
+            Set<String> contactFields = new Set<String>{
                 'Id', 
                 'npo02__Household_Naming_Order__c', 
                 'FirstName', 
@@ -254,19 +254,20 @@ public with sharing class HH_Container_LCTRL {
                 'MailingCountry', 
                 'MailingLatitude', 
                 'MailingLongitude', 
-                'CreatedDate'
+                'CreatedDate',
+                String.valueOf(Contact.Undeliverable_Address__c)
             };
 
-            addContactMiddleNameField(setContactFields);
+            addContactMiddleNameField(contactFields);
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (OrgSettings.isStateCountryPicklistsEnabled)
                     strSoql += ', MailingCountryCode, MailingStateCode ';
                 ******/
             
-            setContactFields.addAll(new HouseholdNamingService().getHouseholdNamingContactFields());
+            contactFields.addAll(new HouseholdNamingService().getHouseholdNamingContactFields());
 
-            return setContactFields;
+            return contactFields;
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -559,14 +560,14 @@ public with sharing class HH_Container_LCTRL {
     * @description returns the Addresses for the given Household.  note that it returns Address objects,
     * even when dealing with Household Objects (in which case it creates in memory address objects for each
     * contact's mailing address).
-    * @param hhId The Household's Id
-    * @param listAddrExisting the list of existing addresses
+    * @param householdId The Household's Id
+    * @param existingAddresses the list of existing addresses
     * @return list<Address__c> The addresses in the household and contacts
     */
     @AuraEnabled
-    public static List<Address__c> getAddresses(Id hhId, List<Address__c> listAddrExisting) {
+    public static List<Address__c> getAddresses(Id householdId, List<Address__c> existingAddresses) {
         try {
-            if (hhId == null) {
+            if (householdId == null) {
                 return null;
             }
 
@@ -575,70 +576,71 @@ public with sharing class HH_Container_LCTRL {
             Set<String> setAddrKey = new Set<String>();
 
             // if they provide existing addresses, do our initialization
-            if (listAddrExisting != null) {
-                for (Address__c addr : listAddrExisting) {
-                    listAddr.add(addr);
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
+            if (existingAddresses != null) {
+                for (Address__c address : existingAddresses) {
+                    listAddr.add(address);
+                    NPSP_Address npspAddress = new NPSP_Address(address);
                     setAddrKey.add(npspAddress.getAddrKey());
                 }
             }
 
             // load our Household and Contacts
-            // CONSIDER: since the client also loads the hh and contacts, we could
+            // CONSIDER: since the client also loads the household and contacts, we could
             // put in a static cache to avoid requerying if they are already loaded.
-            // ie, track a static hh and with hhId it came from, and use it in getHH()
-            // if the hhId matches.  Same with listCon.
-            SObject hh = getHousehold(hhId);
-            List<Contact> listCon = getContacts(hhId);
+            // ie, track a static household and with householdId it came from, and use it in getHH()
+            // if the householdId matches.  Same with listCon.
+            SObject household = getHousehold(householdId);
+            List<Contact> listCon = getContacts(householdId);
 
             // copy the household's address
-            Address__c addr = new Address__c();
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
-                addr = new Address__c();
+            Address__c address = new Address__c();
+            if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
+                address = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //Addresses.copyAddressStdSObjAddr(hh, 'Billing', addr, null);
-                addr.MailingStreet__c = (String)hh.get('BillingStreet');
-                Addresses.handleMultilineStreet(addr);
-                addr.MailingCity__c = (String)hh.get('BillingCity');
-                addr.MailingState__c = (String)hh.get('BillingState');
-                addr.MailingPostalCode__c = (String)hh.get('BillingPostalCode');
-                addr.MailingCountry__c = (String)hh.get('BillingCountry');
+                //Addresses.copyAddressStdSObjAddr(household, 'Billing', address, null);
+                address.MailingStreet__c = (String)household.get('BillingStreet');
+                Addresses.handleMultilineStreet(address);
+                address.MailingCity__c = (String)household.get('BillingCity');
+                address.MailingState__c = (String)household.get('BillingState');
+                address.MailingPostalCode__c = (String)household.get('BillingPostalCode');
+                address.MailingCountry__c = (String)household.get('BillingCountry');
+                address.Undeliverable__c = (Boolean)household.get('Undeliverable_Address__c');
             } else {
-                addr.MailingStreet__c = (String)hh.get('npo02__MailingStreet__c');
-                addr.MailingCity__c = (String)hh.get('npo02__MailingCity__c');
-                addr.MailingState__c = (String)hh.get('npo02__MailingState__c');
-                addr.MailingPostalCode__c = (String)hh.get('npo02__MailingPostalCode__c');
-                addr.MailingCountry__c = (String)hh.get('npo02__MailingCountry__c');
+                address.MailingStreet__c = (String)household.get('npo02__MailingStreet__c');
+                address.MailingCity__c = (String)household.get('npo02__MailingCity__c');
+                address.MailingState__c = (String)household.get('npo02__MailingState__c');
+                address.MailingPostalCode__c = (String)household.get('npo02__MailingPostalCode__c');
+                address.MailingCountry__c = (String)household.get('npo02__MailingCountry__c');
             }
-            if (listAddrExisting == null || listAddrExisting.size() == 0) {
-                addr.Default_Address__c = true;
+            if (existingAddresses == null || existingAddresses.size() == 0) {
+                address.Default_Address__c = true;
             }  // the HH address is the default.
-            String strKey = new NPSP_Address(addr).getAddrKey();
+            String strKey = new NPSP_Address(address).getAddrKey();
             if (setAddrKey.add(strKey)) {
-                listAddr.add(addr);
+                listAddr.add(address);
             }
 
             // copy the contacts' addresses
             for (Contact con : listCon) {
-                addr = new Address__c();
+                address = new Address__c();
                 // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
                 // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', addr, null);
-                addr.MailingStreet__c = con.MailingStreet;
-                Addresses.handleMultilineStreet(addr);
-                addr.MailingCity__c = con.MailingCity;
-                addr.MailingState__c = con.MailingState;
-                addr.MailingPostalCode__c = con.MailingPostalCode;
-                addr.MailingCountry__c = con.MailingCountry;
-                strKey = new NPSP_Address(addr).getAddrKey();
+                //Addresses.copyAddressStdSObjAddr(con, 'Mailing', address, null);
+                address.MailingStreet__c = con.MailingStreet;
+                Addresses.handleMultilineStreet(address);
+                address.MailingCity__c = con.MailingCity;
+                address.MailingState__c = con.MailingState;
+                address.MailingPostalCode__c = con.MailingPostalCode;
+                address.MailingCountry__c = con.MailingCountry;
+                strKey = new NPSP_Address(address).getAddrKey();
                 if (setAddrKey.add(strKey)) {
-                    listAddr.add(addr);
+                    listAddr.add(address);
                 }
             }
 
             // copy any address objects
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
+            if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
 
                 Set<String> setFields = new Set<String>{'MailingStreet__c', 'MailingStreet2__c',
                     'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 'MailingCountry__c', 'Default_Address__c'};
@@ -657,7 +659,7 @@ public with sharing class HH_Container_LCTRL {
                     strSoql += strComma + strF;
                     strComma = ',';
                 }
-                strSoql += ' from Address__c where Household_Account__c = :hhId';
+                strSoql += ' from Address__c where Household_Account__c = :householdId';
                 List<Address__c> listAddrHH = Database.query(strSoql);
                 for (Address__c addrT : listAddrHH) {
                     // init other values we don't want to query for that the key might use.
