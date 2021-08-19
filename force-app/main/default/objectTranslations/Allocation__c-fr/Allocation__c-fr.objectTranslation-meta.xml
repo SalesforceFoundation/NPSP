@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Allocation UCG</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Allocations UCG</value>
+    </caseValues>
+    <fieldSets>
+        <label><!-- Manage Allocations Additional Fields --></label>
+        <name>ManageAllocationsAdditionalFields</name>
+    </fieldSets>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>Allocation Layout</layout>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nom des Allocations UCG</nameFieldLabel>
+    <startsWith>Vowel</startsWith>
+    <webLinks>
+        <label>Gérer des allocations</label>
+        <name>Manage_Allocations</name>
+    </webLinks>
+</CustomObjectTranslation>

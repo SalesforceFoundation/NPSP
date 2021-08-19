@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>商談にマッチングする潜在的な商談上位 10 件の ID のコンマ区切りリスト。</help>
+    <label>支援見込みマッチ</label>
+    <name>Donation_Possible_Matches__c</name>
+</CustomFieldTranslation>

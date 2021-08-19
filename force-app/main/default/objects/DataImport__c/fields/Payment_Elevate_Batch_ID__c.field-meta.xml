@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Elevate_Batch_ID__c</fullName>
+    <description>The ID of a batch of payments sent to Elevate for processing.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The ID of a batch of payments sent to Elevate for processing.</inlineHelpText>
+    <label>Payment Elevate Batch ID</label>
+    <length>40</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

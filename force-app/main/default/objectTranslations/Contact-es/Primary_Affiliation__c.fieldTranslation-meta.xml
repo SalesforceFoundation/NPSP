@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La cuenta está marcada como principal en la lista de afiliaciones de organizaciones de este contacto.</help>
+    <label>Afiliación principal</label>
+    <name>Primary_Affiliation__c</name>
+    <relationshipLabel>No utilizar. Utilizar las afiliaciones de la organización</relationshipLabel>
+</CustomFieldTranslation>

@@ -15,7 +15,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         Waits for the current page to be a Manage Household page
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
-        self.npsp.wait_for_locator("frame","Manage Household")
+        self.npsp.wait_for_locator("frame","accessibility title")
 
 
     def _go_to_page(self, filter_name=None):
@@ -24,7 +24,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
         Verifies that current page is Manage Household
         """
         self.selenium.wait_until_location_contains("/one",timeout=60, message="Manage Household page did not load in 1 min")
-        self.npsp.wait_for_locator("frame","Manage Household")
+        self.npsp.wait_for_locator("frame","accessibility title")
 
     def change_address_using(self, option, **kwargs):
         """
@@ -45,7 +45,7 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Performs a lookup of the contact provided as parameter and adds the contact to the hold based on the option
          Supported options are (New/Existing)
         """
-        self.npsp.choose_frame("Manage Household")
+        self.npsp.choose_frame("accessibility title")
         xpath = npsp_lex_locators['manage_hh_page']['lookup'].format("Find a Contact or add a new Contact to the Household.")
         field = self.selenium.get_webelement(xpath)
         self.selenium.clear_element_text(field)
@@ -74,13 +74,13 @@ class ManageHouseholdPage(BaseNPSPPage, BasePage):
          Select the option for name display settings for each of the contact in the household
          provided options (Household Name/ Formal Greeting/Informal Greeting)
         """
-        self.npsp.choose_frame("Manage Household")
+        self.npsp.choose_frame("accessibility title")
         loc=self.npsp.validate_checkboxes(contact,option)
         self.selenium.double_click_element(loc)
         self.selenium.unselect_frame()
 
     def save_changes_made_for_manage_household(self):
-        self.npsp.choose_frame("Manage Household")
+        self.npsp.choose_frame("accessibility title")
         self.selenium.click_button("Save")
         self.selenium.unselect_frame()
 

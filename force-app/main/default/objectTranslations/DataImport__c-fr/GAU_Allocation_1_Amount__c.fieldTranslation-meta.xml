@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le montant monétaire attribué à la première Allocation UCG de l&apos;opportunité. Vous devez utiliser le Mappage avancé Importation de données pour ce champ.</help>
+    <label>Allocation UCG 1 : Montant</label>
+    <name>GAU_Allocation_1_Amount__c</name>
+</CustomFieldTranslation>

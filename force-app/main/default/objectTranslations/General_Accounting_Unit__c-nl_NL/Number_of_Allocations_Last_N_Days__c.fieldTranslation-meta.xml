@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Het totale aantal toewijzingen van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden in de instellingen.</help>
+    <label>Aantal Toewijzingen Laatste N Dagen</label>
+    <name>Number_of_Allocations_Last_N_Days__c</name>
+</CustomFieldTranslation>

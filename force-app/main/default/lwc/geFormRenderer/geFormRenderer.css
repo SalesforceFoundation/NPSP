@@ -1,0 +1,51 @@
+.critical-error-container {
+    text-align: left;
+    width: fit-content;
+    margin: 0 auto;
+}
+.critical-error-ul {
+    padding: 0 20.5%;
+}
+p.critical-error-text {
+    padding: 0 21.5%;
+    margin-bottom: 1rem;
+}
+.ge-form-footer {
+    height: 50px;
+}
+.spinner-container {
+    vertical-align: middle;
+    text-align: center;
+}
+.illustration-container {
+    margin: 8rem 0;
+}
+.loading-text {
+    position: absolute;
+    text-align: center;
+    z-index: 999;
+    top: 55%;
+    width: 100%;
+}
+.fade-in {
+    animation: fade 1s;
+}
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.payment-warn {
+    --sds-c-alert-image-background: none;
+    --sds-c-alert-color-background: transparent;
+    --sds-c-alert-text-color: var(--lwc-colorTextDefault);
+    justify-content: start;
+}
+
+.payment-warn h2 {
+    font-weight: 400;
+}

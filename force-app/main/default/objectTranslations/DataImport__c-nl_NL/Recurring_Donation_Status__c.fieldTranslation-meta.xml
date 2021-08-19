@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
+    <label>Status terugkerende donatie(s)</label>
+    <name>Recurring_Donation_Status__c</name>
+</CustomFieldTranslation>

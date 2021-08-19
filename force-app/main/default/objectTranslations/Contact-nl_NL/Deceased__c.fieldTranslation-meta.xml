@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Geeft aan of de Contactpersoon overleden is. Wanneer aangevinkt, sluit NPSP deze Contactpersoon uit van Benoeming van Huishouden (tenzij deze Contactpersoon de enige is in het Huishouden) en van standaarde-mail- en telefoonlijsten.</help>
+    <label>Overleden</label>
+    <name>Deceased__c</name>
+</CustomFieldTranslation>

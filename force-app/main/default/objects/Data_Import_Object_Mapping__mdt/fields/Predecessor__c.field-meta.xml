@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Predecessor__c</fullName>
+    <description>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <inlineHelpText>The Data Import Object Group record that must exist before this record can be created (either Parent or Child).</inlineHelpText>
+    <label>Predecessor</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ACH_Consent__c</fullName>
+    <description>The Elevate Giving Page consent message the donor agreed to.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Elevate Giving Page consent message the donor agreed to.</inlineHelpText>
+    <label>Payment ACH Consent Message</label>
+    <length>2000</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

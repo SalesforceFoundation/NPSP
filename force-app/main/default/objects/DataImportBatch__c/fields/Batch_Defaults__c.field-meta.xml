@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Batch_Defaults__c</fullName>
+    <description>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</inlineHelpText>
+    <label>Batch Defaults</label>
+    <length>50000</length>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>GAU</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>GAU&apos;s</value>
+    </caseValues>
+    <gender>Feminine</gender>
+    <layouts>
+        <layout>General Accounting Unit Layout</layout>
+        <sections>
+            <label>Toewijzingsinformatie</label>
+            <section>Allocation Information</section>
+        </sections>
+        <sections>
+            <label>Toewijzingstotalen</label>
+            <section>Allocation Totals</section>
+        </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Naam GAU</nameFieldLabel>
+    <webLinks>
+        <label>Totaliseringen opnieuw berekenen</label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
+</CustomObjectTranslation>

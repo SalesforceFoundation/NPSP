@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Le montant payé par le donateur en plus du montant du don, souvent utilisé pour couvrir les frais de transaction ou ajouter un pourboire au don.</help>
+    <label>Montant de couverture par le donateur</label>
+    <name>Donor_Cover_Amount__c</name>
+</CustomFieldTranslation>

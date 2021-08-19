@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expected_Total_Batch_Amount__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>The expected total amount of all gifts entered in this Batch.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The expected total amount of all gifts entered in this Batch.</inlineHelpText>
+    <label>Expected Total Batch Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>
