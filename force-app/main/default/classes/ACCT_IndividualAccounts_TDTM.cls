@@ -70,17 +70,17 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 if (CAO_Constants.isHHAccountModel()) {
                     contactService.createOneToOneAndHouseholdAccountsFor(
                             contacts.contactsWithoutAccounts());
-                }
+                } else {
+                    if (CAO_Constants.isOneToOne()) {
+                        contactService.createOneToOneAndHouseholdAccountsFor(
+                                (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
+                                        .getRecords());
+                    }
 
-                if (CAO_Constants.isOneToOne()) {
-                    contactService.createOneToOneAndHouseholdAccountsFor(
-                            (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
-                                    .getRecords());
-                }
-
-                if (CAO_Constants.isBucketModel()) {
-                    LegacyHouseholds.attachToBucketAccount(
-                            contacts.contactsWithoutAccounts());
+                    if (CAO_Constants.isBucketModel()) {
+                        LegacyHouseholds.attachToBucketAccount(
+                                contacts.contactsWithoutAccounts());
+                    }
                 }
 
 //                IApplicationService applicationService =
