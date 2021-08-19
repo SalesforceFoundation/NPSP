@@ -36,6 +36,7 @@
 */
 @IsTest
 public with sharing class RD2_ChangeHistoryService_TEST {
+    private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
     private static final Integer MONTHS_TO_DEC = START_DATE.monthsBetween(Date.newInstance(2019, 12, 15));
@@ -63,7 +64,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .build();
-        rd.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+        rd.ChangeType__c = RD2_Constants.CHANGE_TYPE_UPGRADE;
 
         insert rd;
 
@@ -80,10 +81,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(0, rdchList.size(), 'There should be no Change History with the Setting not Enabled');
 
         // Make sure that the Change Type is cleared, even if it wasn't used
-        Id rdId = rd.Id;
-        List<npe03__Recurring_Donation__c> rdList = 
-            [SELECT Id, ChangeType__c FROM npe03__Recurring_Donation__c WHERE Id = :rdId];
-        System.assertEquals(null, rdList[0].ChangeType__c, 'The Change Type should be null');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.ChangeType__c, 'The Change Type should be null');
     }
 
     /**
@@ -116,8 +115,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
         System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
         System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
@@ -141,7 +140,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         rdList[0].npe03__Amount__c = RD_NEW_AMOUNT;
         rdList[1].Status__c = RD2_Constants.STATUS_LAPSED;
-        rdList[1].ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+        rdList[1].ChangeType__c = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
 
         Test.startTest();
         update rdList;
@@ -155,8 +154,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
         System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
         System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
 
         // Check second change
         Id rd2Id = rd2.Id;
@@ -167,11 +166,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             'New Status should be ' + RD2_Constants.STATUS_LAPSED);
         System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 
             'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE, rdch2.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch2.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
 
-        rdList = [SELECT Id, ChangeType__c FROM npe03__Recurring_Donation__c WHERE Id = :rd2Id];
-        System.assertEquals(null, rdList[0].ChangeType__c, 'The Change Type should be null');
+        rd2 = rdGateway.getRecord(rd2Id);
+        System.assertEquals(null, rd2.ChangeType__c, 'The Change Type should be null');
     }
 
     /**
@@ -207,8 +206,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
         System.assertEquals(lowerAmount * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
         System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
@@ -253,7 +252,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
-        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+        rdUpdate.ChangeType__c = RD2_Constants.CHANGE_TYPE_UPGRADE;
         rdUpdate.PaymentMethod__c = PAYMENT_CREDIT_CARD;
 
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
@@ -267,8 +266,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
         System.assertEquals(PAYMENT_CREDIT_CARD, rdch.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
         System.assertEquals(PAYMENT_CHECK, rdch.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
@@ -314,8 +313,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         System.assertEquals(newYearlyValue.setScale(2), rdch.NewAnnualValue__c, 'New Annual Value should be match' );
         System.assertEquals(previousYearlyValue.setScale(2), rdch.PreviousAnnualValue__c, 'Previous Annual Value should match');
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
@@ -407,8 +406,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
         System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
         System.assertEquals(RD_NEW_PERIOD, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_NEW_PERIOD);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
@@ -427,7 +426,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         
-        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+        rdUpdate.ChangeType__c = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
         rdUpdate.npe03__Amount__c = RD_NEW_AMOUNT;
 
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
@@ -443,8 +442,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
         System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
         System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
-            'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
@@ -487,8 +486,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after RD currency update');
         RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE, 
-                rdch.ChangeType__c, 'The Change Type should be ' + RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, 
+                rdch.ChangeType__c, 'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
         
         if (isMultiCurrencyEnabled) {
             System.assertEquals(nonDefaultCurrencyCode, rdch.get('CurrencyIsoCode'), 
@@ -511,7 +510,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
-        rdUpdate.ChangeType__c = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+        rdUpdate.ChangeType__c = RD2_Constants.CHANGE_TYPE_UPGRADE;
 
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
@@ -550,10 +549,9 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         rdchList = getRecurringDonationChangeHistory(rdId);
         System.assertEquals(0, rdchList.size(), 'There should be 1 Change History after the update');
 
-        List<npe03__Recurring_Donation__c>  rdList = 
-            [SELECT Id, Status__c, ClosedReason__c FROM npe03__Recurring_Donation__c WHERE Id = :rdId];
-        System.assertEquals(null, rdList[0].ClosedReason__c, 'The Status Reason should be blank');
-        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdList[0].Status__c, 'The Status should be Active');
+        rd = rdGateway.getRecord(rd.Id);
+        System.assertEquals(null, rd.ClosedReason__c, 'The Status Reason should be blank');
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rd.Status__c, 'The Status should be Active');
     }
 
     @IsTest

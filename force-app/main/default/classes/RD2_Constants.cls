@@ -102,6 +102,12 @@ public inherited sharing class RD2_Constants {
     public static final String PAYMENT_PICKLIST_VALUE_ACH = 'ACH';
 
     /**
+    * @description Recurring Donation "Change Type" picklist API values
+    */
+    public static final String CHANGE_TYPE_UPGRADE = 'Upgrade';
+    public static final String CHANGE_TYPE_DOWNGRADE = 'Downgrade';
+
+    /**
     * @description Returns all valid Installment Periods
     */
     public static Set<String> allInstallmentPeriods {

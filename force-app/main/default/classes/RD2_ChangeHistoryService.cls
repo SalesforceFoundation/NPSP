@@ -36,9 +36,6 @@
 */
 public inherited sharing class RD2_ChangeHistoryService {
 
-    public static final String CHANGE_TYPE_UPGRADE = 'Upgrade';
-    public static final String CHANGE_TYPE_DOWNGRADE = 'Downgrade';
-
     /***
     * @description Determines if Change History is enabled for the org
     */
@@ -64,7 +61,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
-        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType))) {
+        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType), false)) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
         }
 
@@ -266,9 +263,9 @@ public inherited sharing class RD2_ChangeHistoryService {
             Decimal previousAnnualValue = originalRd.getAnnualValue();
 
             if (newAnnualValue > previousAnnualValue) {
-                changeType = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
+                changeType = RD2_Constants.CHANGE_TYPE_UPGRADE;
             } else if (newAnnualValue < previousAnnualValue) {
-                changeType = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
+                changeType = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
             }
 
             return changeType;
