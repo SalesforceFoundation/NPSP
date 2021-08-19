@@ -463,7 +463,7 @@
       "filteredLookupInfo": null,
       "highScaleNumber": false,
       "htmlFormatted": false,
-      "inlineHelpText": "After this date, NPSP no longer creates installments for this Recurring Donation and updates Status to Closed.",
+      "inlineHelpText": "The date on which this Recurring Donation was closed.",
       "label": "End Date",
       "length": 0,
       "nameField": false,
