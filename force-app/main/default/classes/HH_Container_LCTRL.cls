@@ -92,7 +92,6 @@ public with sharing class HH_Container_LCTRL {
                 .withSelectFields(getHouseholdSelectFields(isHousehold, soqlFromObject))
                 .withFrom(soqlFromObject)
                 .withWhere('Id = :householdId');
-
             return Database.query(query.build());
 
         } catch (Exception ex) {

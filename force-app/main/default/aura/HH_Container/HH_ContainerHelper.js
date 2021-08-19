@@ -25,7 +25,7 @@
         // query for the Household account/object
         var action = component.get("c.getHousehold");
         action.setParams({
-            hhId: hhId
+            householdId: hhId
         });
         var self = this;
         action.setCallback(this, function(response) {
