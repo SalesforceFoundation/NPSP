@@ -61,6 +61,8 @@ public with sharing class UTIL_Query {
     private Boolean isToLabelSalutation = false;
     /** @description Indicates if fls and user profile permissions should be enforced */
     private Boolean isSecurityEnforced = false;
+    /** @description Indicates what offset to use if any */
+    private Integer offset;
 
     /*********************************************************************************************************
     * @description The constructor
@@ -179,6 +181,11 @@ public with sharing class UTIL_Query {
         return this;
     }
 
+    public UTIL_Query withOffset(Integer offset) {
+        this.offset = offset;
+        return this;
+    }
+
     /*********************************************************************************************************
     * @description Validates and builds a SOQL
     * @return String The SOQL
@@ -194,14 +201,15 @@ public with sharing class UTIL_Query {
         }
 
         return String.format(
-            'SELECT {0} FROM {1}{2}{3}{4}{5}',
+            'SELECT {0} FROM {1}{2}{3}{4}{5}{6}',
             new String[] {
                 String.join(uniqueSelectFields, ', '),
                 entity,
                 buildWhereClause(),
                 buildSecurityEnforcedClause(),
                 buildOrderByClause(),
-                buildLimitClause()
+                buildLimitClause(),
+                buildOffsetClause()
             }
         ).trim();
     }
@@ -296,5 +304,17 @@ public with sharing class UTIL_Query {
         }
 
         return ' WITH SECURITY_ENFORCED ';
+    }
+
+    /*********************************************************************************************************
+    * @description Builds the OFFSET clause
+    * @return String the OFFSET clause
+    */
+    private String buildOffsetClause() {
+        if (this.offset == null) {
+            return '';
+        }
+
+        return ' OFFSET ' + String.valueOf(this.offset);
     }
 }

@@ -514,13 +514,13 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 // update the account since it is non-standard
                 if (CAO_Constants.isOneToOne()) {
-                    myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameOne2OneAccountForContact(con);
+                    myAccount.Name = Households.strNameOne2OneAccountForContact(con);
                     myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                 } else if (CAO_Constants.isHHAccountModel()) {
                     // if custom household naming is on, we need to leave the account name untouched,
                     // so on update, it will get its correct name.
                     if (!hs.npo02__Advanced_Household_Naming__c) {
-                        myAccount.Name = ACCT_IndividualAccounts_TDTM.strNameHHAccountForContact(con);
+                        myAccount.Name = Households.strNameHHAccountForContact(con);
                     } else {
                         myAccount.Name = System.Label.npo02.NameReplacementText;
                     }
@@ -529,7 +529,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
-                    Id rtIdAcccount = Accounts.rtIdForNewAccount();
+                    Id rtIdAcccount = AccountsAdapter.rtIdForNewAccount();
                     if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
                     }
@@ -622,7 +622,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
                 NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.billingAddress(npspAddress);
+                npspHousehold.setBillingAddress(npspAddress);
                 UTIL_DMLService.updateRecord(npspHousehold.getRecord());
             }
             // handle the optional Affiliation to a new or existing Account.
@@ -635,7 +635,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 // picklists if enabled
                 NPSP_Address npspAddress = new NPSP_Address(tempAddr);
                 NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.billingAddress(npspAddress);
+                npspHousehold.setBillingAddress(npspAddress);
                 UTIL_DMLService.insertRecord(npspHousehold.getRecord());
                 afflAccId = acc.Id;
             } else if (strAfflAccountId != null && strAfflAccountId != '') {

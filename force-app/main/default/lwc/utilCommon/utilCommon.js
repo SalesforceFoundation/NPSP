@@ -4,6 +4,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import UtilDescribe from './utilDescribe';
 import unknownErrorLabel from '@salesforce/label/c.commonUnknownError';
 import commonLabelNone from '@salesforce/label/c.stgLabelNone';
+import NAMESPACED_OBJECT from '@salesforce/schema/DataImport__c';
 const FUNCTION = 'function';
 const OBJECT = 'object';
 
@@ -432,6 +433,14 @@ const getNamespace = (apiName) => {
     return apiNameParts.length === 3 ? apiNameParts[0] : null;
 }
 
+/**
+ * @description Parses the api name string of the Data Import SObject to determine if a namespace (npsp) is active.
+ * @returns {String} Can be either 'npsp' or null
+ */
+const getCurrentNamespace = () => {
+    return getNamespace(NAMESPACED_OBJECT.objectApiName);
+}
+
 /*******************************************************************************
 * @description Checks to see if provided string is parsable. If true, returns
 * parsed string otherwise returns false.
@@ -628,6 +637,7 @@ export {
     deepClone,
     extractFieldInfo,
     findIndexByProperty,
+    getCurrentNamespace,
     getNamespace,
     getQueryParameters,
     getSubsetObject,

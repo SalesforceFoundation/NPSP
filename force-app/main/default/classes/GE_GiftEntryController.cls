@@ -39,7 +39,35 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
-    private static GiftBatchService giftBatchService = new GiftBatchService();
+    @TestVisible
+    private static GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    @TestVisible
+    private static GiftService giftService {
+        get {
+            if (giftService == null) {
+                giftService = new GiftService();
+            }
+            return giftService;
+        }
+        set;
+    }
+    private static DonationService donationService {
+        get {
+            if (donationService == null) {
+                donationService = new DonationService();
+            }
+            return donationService;
+        }
+        set;
+    }
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -52,9 +80,107 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    // TODO: Remove this method! Exists only to provide representative soft credit data
+    //       For work in progress
+    @AuraEnabled(cacheable=true)
+    public static List<OpportunityContactRole> getDummySoftCredits() {
+        Integer numRecords = 3;
+        List<String> roles = new List<String> {
+            'Influencer',
+            'Household Member',
+            'Decision Maker'
+        };
+
+        List<OpportunityContactRole> dummySoftCredits = new List<OpportunityContactRole>();
+        
+        try {
+            List<Contact> contacts = [
+                SELECT Id
+                FROM Contact 
+                ORDER BY CreatedDate DESC 
+                LIMIT :numRecords];
+
+            if(!contacts.isEmpty()) {
+                for (Integer i = 0; i < numRecords; i++) {
+                    OpportunityContactRole ocr = new OpportunityContactRole(
+                        Role = roles[Math.mod(i,roles.size())],
+                        ContactId = contacts[Math.mod(i,contacts.size())].Id
+                    );
+                    dummySoftCredits.add(ocr);
+                }
+            }
+
+            return dummySoftCredits;
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView getGiftBatchView(Id dataImportBatchId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+            return giftBatchService.viewModelFrom(giftBatchId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView getGiftBatchViewWithLimitsAndOffsets(
+        Id dataImportBatchId, Integer giftsLimit, Integer giftsOffset){
+            try {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                return giftBatchService.viewModelWithLimitsAndOffsets(giftBatchId, giftsLimit, giftsOffset);
+            } catch (AuraHandledException e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+    }
+
+    @AuraEnabled
+    public static GiftView getGiftView(Id dataImportId){
+        try {
+            GiftId giftId = new GiftId(dataImportId);
+            return giftService.viewModelFrom(giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void logError(String error, String context) {
+        try {
+            ERR_Handler.processError(error, context);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
+
+    @AuraEnabled
+    public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
+        try {
+            InboundGiftBatchDTO giftBatchChanges =
+                (InboundGiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, InboundGiftBatchDTO.class);
+            return giftBatchService.store(giftBatchChanges);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView deleteGiftFromGiftBatch(Id batchId, Id dataImportId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(batchId);
+            GiftId giftId = new GiftId(dataImportId);
+            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /*******************************************************************************************************
@@ -205,6 +331,16 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        try {
+           elevateBatchService.removeFromElevateBatch(authorizedGift);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return null;
+    }
+
+    @AuraEnabled
     public static ElevateBatch createElevateBatch() {
         ElevateBatch elevateBatch = elevateBatchService.createElevateBatch();
         return elevateBatch;
@@ -345,6 +481,19 @@ public with sharing class GE_GiftEntryController {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static DonationsView getOpenDonationsView(Id donorId) {
+        try {
+            if (donorId == null) {
+                return null;
+            }
+
+            return donationService.getDonationsView(donorId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 
