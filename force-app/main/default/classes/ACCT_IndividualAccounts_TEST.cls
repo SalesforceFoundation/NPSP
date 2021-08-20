@@ -1050,17 +1050,17 @@ private class ACCT_IndividualAccounts_TEST {
     * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
     */
     public static testMethod void deleteContactNormalAccountOneToOne() {
-    	deleteOrganizationContactWhenHouseholdAccountProcessorEnabled(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    	deleteContactNormalAccountProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
 
     /*********************************************************************************************************
     * @description Delete a Contact from an Org Account and make sure the Account is not deleted.
     */
     public static testMethod void deleteContactNormalAccountHouseholdAcc() {
-        deleteOrganizationContactWhenHouseholdAccountProcessorEnabled(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        deleteContactNormalAccountProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
 
-    public static void deleteOrganizationContactWhenHouseholdAccountProcessorEnabled(string strProcessor) {
+    public static void deleteContactNormalAccountProcessor(string strProcessor) {
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
@@ -1074,27 +1074,27 @@ private class ACCT_IndividualAccounts_TEST {
 
         String newContactMailingStreet = '123 Elm St';
 
-        Contact organizationContact = new Contact(
-                FirstName = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
-                LastName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
-                MailingStreet = newContactMailingStreet,
-                AccountId = orgAccount.id,
-                npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
-                npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
-                npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
-                npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
+        Contact con = new Contact(
+            FirstName=CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS,
+            LastName=CAO_Constants.CONTACT_LASTNAME_FOR_TESTS,
+            MailingStreet = newContactMailingStreet,
+            AccountId=orgAccount.id,
+            npe01__WorkEmail__c = CAO_Constants.CONTACT_EMAIL_FOR_TESTS,
+            npe01__Preferred_Email__c = CAO_Constants.CONTACT_PREFERRED_EMAIL_FOR_TESTS,
+            npe01__WorkPhone__c = CAO_Constants.CONTACT_PHONE_FOR_TESTS,
+            npe01__PreferredPhone__c = CAO_Constants.CONTACT_PREFERRED_PHONE_FOR_TESTS
         );
-        insert organizationContact;
+        insert con;
 
-        Contact[] insertedOrganizationContacts = [Select FirstName, LastName, AccountId  from Contact where id=:organizationContact.id];
+        Contact[] insertedContacts = [Select FirstName, LastName, AccountId  from Contact where id=:con.id];
 
-        Id insertedOrganizationAccountId = insertedOrganizationContacts[0].AccountId;
+        Id createdAccountId = insertedContacts[0].AccountId;
 
         Test.startTest();
-        delete organizationContact;
+        delete con;
         Test.stopTest();
 
-        Account[] missingAccount = [select id from Account where id = :insertedOrganizationAccountId];
+        Account[] missingAccount = [select id from Account where id=:createdAccountId];
         System.assertEquals(1,missingAccount.size());
     }
 
