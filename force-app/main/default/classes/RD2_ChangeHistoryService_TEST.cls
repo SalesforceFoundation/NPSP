@@ -238,6 +238,49 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
+     * @description Verifies that creating and updating a Recurring Donation's Type from
+     * Open to Fixed creates a Change History with the Type change and new Installment number
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryWhenRecurringTypeChanges() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+
+        rdUpdate.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+        Decimal numberOfInstallments = 10;
+        rdUpdate.npe03__Installments__c = numberOfInstallments;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, rdch.NewRecurringType__c, 
+            'New Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_FIXED);
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, rdch.PreviousRecurringType__c, 
+            'Previous Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_OPEN);
+        System.assertEquals(numberOfInstallments, rdch.NewPlannedInstallments__c, 
+            'New Planned Installments should be ' + numberOfInstallments);
+        System.assertEquals(null, rdch.PreviousPlannedInstallments__c, 
+            'Previous Planned Installments should be null');
+        System.assertEquals(null, rdch.NewAnnualValue__c, 'New Annual Value should be null');
+        Decimal previousAnnualValue = RD_AMOUNT * 12;
+        System.assertEquals(previousAnnualValue, rdch.PreviousAnnualValue__c, 
+            'Previous Annual Value should be ' + previousAnnualValue);
+        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+    }
+
+    /**
      * @description Verifies that creating and updating a Recurring Donation Payment Method
      *  with Change History Enabled does create Change History records
      */

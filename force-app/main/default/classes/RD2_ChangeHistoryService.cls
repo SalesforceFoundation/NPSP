@@ -161,6 +161,8 @@ public inherited sharing class RD2_ChangeHistoryService {
         private final SObjectField RD_STATUS_REASON_FIELD = npe03__Recurring_Donation__c.ClosedReason__c;
         private final SObjectField RD_PAYMENT_METHOD_FIELD = npe03__Recurring_Donation__c.PaymentMethod__c;
         private final SObjectField RD_CAMPAIGN_FIELD = npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c;
+        private final SObjectField RD_RECURRING_TYPE_FIELD = npe03__Recurring_Donation__c.RecurringType__c;
+        private final SObjectField RD_PLANNED_INSTALLMENTS_FIELD = npe03__Recurring_Donation__c.npe03__Installments__c;
 
         private final Map<SObjectField, ChangeHistoryFieldSet> rd2ChangeHistoryFields = new Map<SObjectField, ChangeHistoryFieldSet>{
             RD_AMOUNT_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewAmount__c, 
@@ -176,7 +178,11 @@ public inherited sharing class RD2_ChangeHistoryService {
             RD_PAYMENT_METHOD_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPaymentMethod__c, 
                 RecurringDonationChangeHistory__c.PreviousPaymentMethod__c),
             RD_CAMPAIGN_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewCampaign__c, 
-                RecurringDonationChangeHistory__c.PreviousCampaign__c)
+                RecurringDonationChangeHistory__c.PreviousCampaign__c),
+            RD_RECURRING_TYPE_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewRecurringType__c, 
+                RecurringDonationChangeHistory__c.PreviousRecurringType__c),
+            RD_PLANNED_INSTALLMENTS_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPlannedInstallments__c, 
+                RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c)
         };
 
         RD2_RecurringDonation updatedRd;
@@ -227,6 +233,8 @@ public inherited sharing class RD2_ChangeHistoryService {
         public RecurringDonationChangeHistory__c initChangeHistoryRecord() {
 
             String changeType = calculateChangeType();
+
+            // TODO: Add fields for Fixed RDs
 
             RecurringDonationChangeHistory__c rdChangeHistory = new RecurringDonationChangeHistory__c(
                 RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
