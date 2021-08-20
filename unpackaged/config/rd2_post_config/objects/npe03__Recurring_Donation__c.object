@@ -323,6 +323,17 @@
         <type>Date</type>
     </fields>
     <fields>
+        <fullName>%%%NAMESPACE%%%EndDate__c</fullName>
+        <description>The date on which this Recurring Donation was closed.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The date on which this Recurring Donation was closed.</inlineHelpText>
+        <label>End Date</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Date</type>
+    </fields>
+    <fields>
         <fullName>%%%NAMESPACE%%%Status__c</fullName>
         <description>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</description>
         <externalId>false</externalId>
