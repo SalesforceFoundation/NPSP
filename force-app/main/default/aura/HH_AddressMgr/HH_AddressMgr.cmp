@@ -26,7 +26,9 @@
                     <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
                         (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
                     <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
-                    <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />                                     
+                    <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />
+                    <lightning:input type="checkbox" label="Undeliverable" checked="{!v.addrDefault.Undeliverable__c}"
+                                     disabled="true" />
                 </div>
             </div> 
             <div class="slds-card__footer">
