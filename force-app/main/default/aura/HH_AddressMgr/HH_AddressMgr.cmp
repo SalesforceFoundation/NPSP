@@ -86,6 +86,8 @@
                                                             (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
                                                         <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
                                                         <ui:outputText value="{!addr.MailingCountry__c}" />
+                                                        <lightning:input disabled="true" type="checkbox"
+                                                                         label="Undeliverable" checked="{!addr.Undeliverable__c}" />
                                                     </div>
                                                 </div> 
                                             </div>
