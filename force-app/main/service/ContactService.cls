@@ -228,7 +228,6 @@ public with sharing class ContactService {
         }
 
         List<Account> accountInserts = new List<Account>();
-        //todo: unpack and move
         Id individualRecordTypeId =
                 ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
 
