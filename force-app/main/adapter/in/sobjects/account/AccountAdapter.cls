@@ -153,15 +153,6 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
         }
     }
 
-    /******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @return Id. if none is explicitly specified, returns null.
-    */
-    public static Id rtIdForNewAccount() {
-        return ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-    }
-
-
     public AccountAdapter withAddressChanges() {
         List<Account> accountsWithAddressChanges = new List<Account>();
 

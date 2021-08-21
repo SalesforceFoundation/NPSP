@@ -228,7 +228,9 @@ public with sharing class ContactService {
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = AccountAdapter.rtIdForNewAccount();
+        //todo: unpack and move
+        Id individualRecordTypeId =
+                ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it

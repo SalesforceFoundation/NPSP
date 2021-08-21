@@ -529,7 +529,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
-                    Id rtIdAcccount = AccountAdapter.rtIdForNewAccount();
+                    Id rtIdAcccount =
+                            ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
                     if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
                     }
