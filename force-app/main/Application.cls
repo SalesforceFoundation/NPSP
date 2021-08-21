@@ -89,19 +89,6 @@ public inherited sharing class Application {
         }
     }
 
-    public void onBeforeUpdateOf(AccountsAdapter accounts) {
-        if (AddressService.isAddressManagementEnabled()) {
-            normalizeLineBreaksFor(
-                    accounts.withAddressChanges().householdAccounts()
-            );
-        }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
-            normalizeLineBreaksFor(
-                    accounts.withAddressChanges().orgAccounts()
-            );
-        }
-    }
-
     public void onAfterUpdateOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // note that we detect whether the change is coming from the address trigger,
         // in which case we don't want to create a new address.
@@ -170,13 +157,6 @@ public inherited sharing class Application {
 
     private Households getHouseholdsFor(Set<Id> ids) {
         return new Households(householdSelector.findByIds(ids));
-    }
-
-    private void normalizeLineBreaksFor(List<SObject> listNew) {
-        for (Integer i = 0; i < listNew.size(); i++) {
-            Account newRecord = (Account) listNew[i];
-            UTIL_Address.normalizeLineBreak(newRecord);
-        }
     }
 
 }

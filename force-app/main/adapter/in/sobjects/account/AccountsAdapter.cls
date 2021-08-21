@@ -94,6 +94,16 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
+        if (AddressService.isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(
+                    withAddressChanges().householdAccounts()
+            );
+        }
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(
+                    withAddressChanges().orgAccounts()
+            );
+        }
     }
 
     public void onAfterUpdate() {
@@ -164,6 +174,13 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         }
 
         return new AccountsAdapter(accountsWithAddressChanges, oldMap.values());
+    }
+
+    private void normalizeLineBreaksFor(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
     private void setNameAndGreetingsToReplacementText() {
