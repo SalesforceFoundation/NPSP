@@ -36,7 +36,7 @@
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountsAdapter extends fflib_SObjects {
+public inherited sharing class AccountAdapter extends fflib_SObjects {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -73,11 +73,11 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         set;
     }
 
-    public AccountsAdapter(List<Account> records) {
+    public AccountAdapter(List<Account> records) {
         this(records, null);
     }
 
-    public AccountsAdapter(List<Account> records, List<Account> oldlist) {
+    public AccountAdapter(List<Account> records, List<Account> oldlist) {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
@@ -126,7 +126,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             return;
         }
 
-        AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate =
+        AccountAdapter updatedAccountsWithAddressesToCreateOrUpdate =
                 updatedAccountsWithAddressesToCreateOrUpdate();
 
         if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
@@ -185,7 +185,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         return null;
     }
 
-    public AccountsAdapter withAddressChanges() {
+    public AccountAdapter withAddressChanges() {
         List<Account> accountsWithAddressChanges = new List<Account>();
 
         for (Integer i = 0; i < getRecords().size(); i++) {
@@ -198,7 +198,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             }
         }
 
-        return new AccountsAdapter(accountsWithAddressChanges, oldMap.values());
+        return new AccountAdapter(accountsWithAddressChanges, oldMap.values());
     }
 
     private void normalizeLineBreaksFor(List<SObject> listNew) {
@@ -242,7 +242,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                 && !isBucketAccount(acc);
     }
 
-    public AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate() {
+    public AccountAdapter updatedAccountsWithAddressesToCreateOrUpdate() {
         List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -253,10 +253,10 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().orgAccounts());
         }
 
-        return new AccountsAdapter(updatedAccountsWithAddressesToCreate, oldMap.values());
+        return new AccountAdapter(updatedAccountsWithAddressesToCreate, oldMap.values());
     }
 
-    public AccountsAdapter newAccountsWithAddressesToCreate() {
+    public AccountAdapter newAccountsWithAddressesToCreate() {
         List<Account> addressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -266,7 +266,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             addressesToCreate.addAll(withAddresses().orgAccounts());
         }
 
-        return new AccountsAdapter(addressesToCreate);
+        return new AccountAdapter(addressesToCreate);
     }
 
     public List<Address__c> allAddresses() {
@@ -367,7 +367,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         return false;
     }
 
-    public AccountsAdapter withAddresses() {
+    public AccountAdapter withAddresses() {
         List<Account> withAddresses = new List<Account>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Account newRecord = (Account) getRecords()[i];
@@ -375,7 +375,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                 withAddresses.add(newRecord);
             }
         }
-        return new AccountsAdapter(withAddresses);
+        return new AccountAdapter(withAddresses);
     }
 
     /*******************************************************************************************************
@@ -406,7 +406,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
     }
 
     private void createAddressesFromNewAccounts(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        AccountsAdapter accountsWithNewAddressesToCreate = newAccountsWithAddressesToCreate();
+        AccountAdapter accountsWithNewAddressesToCreate = newAccountsWithAddressesToCreate();
         if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
             AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
         }

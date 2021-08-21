@@ -55,17 +55,17 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
-                AccountsAdapter accountsAdapter = new AccountsAdapter(listNew);
+                AccountAdapter accountsAdapter = new AccountAdapter(listNew);
                 accountsAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
                 if (!isContactBeforeInsertContext()) {
-                    AccountsAdapter accountsAdapter = new AccountsAdapter(listNew, listOld);
+                    AccountAdapter accountsAdapter = new AccountAdapter(listNew, listOld);
                     accountsAdapter.onBeforeUpdate();
                 }
             }
             when AfterUpdate {
-                AccountsAdapter accountsAdapter = new AccountsAdapter(listNew, listOld);
+                AccountAdapter accountsAdapter = new AccountAdapter(listNew, listOld);
                 accountsAdapter.onAfterUpdate(new TDTM_Runnable.DmlWrapper());
             }
         }

@@ -65,7 +65,7 @@ public with sharing class HH_ManageHH_CTRL {
                 map<string, string> mapParams = ApexPages.currentPage().getParameters();
                 if (mapParams != null) {
                     string paramRtId = mapParams.get('RecordType');
-                    if (paramRtId != null && paramRtId != AccountsAdapter.rtIdForAccountModel(true)) {
+                    if (paramRtId != null && paramRtId != AccountAdapter.rtIdForAccountModel(true)) {
                         return true;
                     }
                 }
