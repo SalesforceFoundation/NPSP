@@ -66,7 +66,7 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
             }
             when AfterUpdate {
                 AccountsAdapter accountsAdapter = new AccountsAdapter(listNew, listOld);
-                accountsAdapter.onAfterUpdate();
+                accountsAdapter.onAfterUpdate(new TDTM_Runnable.DmlWrapper());
             }
         }
 
