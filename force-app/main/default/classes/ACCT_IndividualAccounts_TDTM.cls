@@ -58,8 +58,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        Application application = new Application();
         Contacts contacts;
+        ContactAdapter contactAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
         switch on triggerAction {
@@ -89,24 +89,24 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 //                application.onBeforeInsertOf(contacts);
             }
             when AfterInsert {
-                contacts = new Contacts(newSObjects, oldSObjects);
-                application.onAfterInsertOf(contacts, dmlWrapper);
+                contactAdapter = new ContactAdapter(newSObjects);
+                contactAdapter.onAfterInsert(dmlWrapper);
             }
             when BeforeUpdate {
-                contacts = new Contacts(newSObjects, oldSObjects);
-                application.onBeforeUpdateOf(contacts);
+                contactAdapter = new ContactAdapter(newSObjects, oldSObjects);
+                contactAdapter.onBeforeUpdate();
             }
             when AfterUpdate {
-                contacts = new Contacts(newSObjects, oldSObjects);
-                application.onAfterUpdateOf(contacts, dmlWrapper);
+                contactAdapter = new ContactAdapter(newSObjects, oldSObjects);
+                contactAdapter.onAfterUpdate(dmlWrapper);
             }
             when AfterDelete {
-                contacts = new Contacts(oldSObjects);
-                application.onAfterDeleteOf(contacts, dmlWrapper);
+                contactAdapter = new ContactAdapter(oldSObjects);
+                contactAdapter.onAfterDelete(dmlWrapper);
             }
             when AfterUndelete {
-                contacts = new Contacts(newSObjects, oldSObjects);
-                application.onAfterUndeleteOf(contacts, dmlWrapper);
+                contactAdapter = new ContactAdapter(newSObjects);
+                contactAdapter.onAfterUndelete(dmlWrapper);
             }
         }
         return dmlWrapper;
