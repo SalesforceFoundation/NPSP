@@ -158,34 +158,9 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
     * @return Id. if none is explicitly specified, returns null.
     */
     public static Id rtIdForNewAccount() {
-        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
+        return ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
     }
 
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @param isHHAccountModel whether we are using the Household Account Model
-    * @return Id. recordtype Id to use, or null if none is specified for the account model.
-    */
-    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
-        npe01__Contacts_And_Orgs_Settings__c contactsSettings =
-                UTIL_CustomSettingsFacade.getContactsSettings();
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        Id individualRecordTypeId = isHHAccountModel
-                ? contactsSettings.npe01__HH_Account_RecordTypeID__c
-                : contactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (individualRecordTypeId != null) {
-            Schema.RecordTypeInfo recordTypeInfo =
-                    UTIL_Describe.getObjectDescribe(Account.SObjectType)
-                            .getRecordTypeInfosById()
-                            .get(individualRecordTypeId);
-            return recordTypeInfo == null
-                    ? null
-                    : recordTypeInfo.getRecordTypeId();
-        }
-
-        return null;
-    }
 
     public AccountAdapter withAddressChanges() {
         List<Account> accountsWithAddressChanges = new List<Account>();
@@ -329,12 +304,12 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
     }
 
     private Boolean isOneToOneAccount(Account acc) {
-        return acc.RecordTypeId == rtIdForAccountModel(false)
+        return acc.RecordTypeId == ContactAndOrgSettings.rtIdForAccountModel(false)
                 && acc.RecordTypeId != null;
     }
 
     private Boolean isHouseholdAccount(Account acc) {
-        return acc.RecordTypeId == rtIdForAccountModel(true)
+        return acc.RecordTypeId == ContactAndOrgSettings.rtIdForAccountModel(true)
                 && acc.RecordTypeId != null;
     }
 

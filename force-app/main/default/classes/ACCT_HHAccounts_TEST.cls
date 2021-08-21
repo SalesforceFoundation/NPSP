@@ -928,7 +928,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        ID rtIdAccountHH = AccountAdapter.rtIdForAccountModel(true);
+        ID rtIdAccountHH = ContactAndOrgSettings.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
             Account acc = new Account(name='test', RecordTypeId = rtIdAccountHH);
             insert acc;
@@ -950,7 +950,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        ID rtIdAccountHH = AccountAdapter.rtIdForAccountModel(true);
+        ID rtIdAccountHH = ContactAndOrgSettings.rtIdForAccountModel(true);
         if (rtIdAccountHH != null) {
             Account acc = new Account(name='test');
             insert acc;
