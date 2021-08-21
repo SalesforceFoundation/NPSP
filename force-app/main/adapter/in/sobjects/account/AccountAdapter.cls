@@ -171,12 +171,14 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
                 UTIL_CustomSettingsFacade.getContactsSettings();
         // check if recordtypes are enabled, and if it matches the existing setting
         // we go thru describe to validate that it is a valid recordType ID.
-        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
+        Id individualRecordTypeId = isHHAccountModel
+                ? contactsSettings.npe01__HH_Account_RecordTypeID__c
+                : contactsSettings.npe01__One_to_One_RecordTypeID__c;
         if (individualRecordTypeId != null) {
-            Schema.RecordTypeInfo recordTypeInfo = null;
-            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
-            Map<Id, Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
-            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
+            Schema.RecordTypeInfo recordTypeInfo =
+                    UTIL_Describe.getObjectDescribe(Account.SObjectType)
+                            .getRecordTypeInfosById()
+                            .get(individualRecordTypeId);
             return recordTypeInfo == null
                     ? null
                     : recordTypeInfo.getRecordTypeId();
