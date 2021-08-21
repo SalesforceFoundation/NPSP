@@ -382,4 +382,15 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         return isSpecified;
     }
 
+    public void onAfterInsert(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        createAddressesFromNewAccounts(dmlWrapper);
+    }
+
+    private void createAddressesFromNewAccounts(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        AccountsAdapter accountsWithNewAddressesToCreate = newAccountsWithAddressesToCreate();
+        if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
+        }
+    }
+
 }

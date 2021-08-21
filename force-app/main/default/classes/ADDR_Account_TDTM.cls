@@ -61,7 +61,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
             }
             when AfterInsert {
                 accountsAdapter = new AccountsAdapter(listNew);
-                application.onAfterInsertOf(accountsAdapter, dmlWrapper);
+                accountsAdapter.onAfterInsert(dmlWrapper);
             }
             when AfterUpdate {
                 accountsAdapter = new AccountsAdapter(listNew, listOld);

@@ -69,17 +69,6 @@ public inherited sharing class Application {
         set;
     }
 
-    public void onAfterInsertOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        createAddressesFromNewAccounts(accounts, dmlWrapper);
-    }
-
-    private void createAddressesFromNewAccounts(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        AccountsAdapter accountsWithNewAddressesToCreate = accounts.newAccountsWithAddressesToCreate();
-        if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
-            AddressService.createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
-        }
-    }
-
     public void onAfterUpdateOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         // note that we detect whether the change is coming from the address trigger,
         // in which case we don't want to create a new address.
