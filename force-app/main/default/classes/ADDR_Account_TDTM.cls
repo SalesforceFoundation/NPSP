@@ -53,7 +53,7 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
         switch on triggerAction {
             when BeforeInsert {
                 accountsAdapter = new AccountsAdapter(listNew);
-                application.onBeforeInsertOf(accountsAdapter);
+                accountsAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
                 accountsAdapter = new AccountsAdapter(listNew, listOld);

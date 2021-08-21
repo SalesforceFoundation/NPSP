@@ -85,6 +85,12 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
 
     public void onBeforeInsert() {
         setAccountTypeAndIndividualFieldValues();
+        if (AddressService.isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(householdAccounts());
+        }
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(orgAccounts());
+        }
     }
 
     public void onBeforeUpdate() {

@@ -69,15 +69,6 @@ public inherited sharing class Application {
         set;
     }
 
-    public void onBeforeInsertOf(AccountsAdapter accounts) {
-        if (AddressService.isAddressManagementEnabled()) {
-            normalizeLineBreaksFor(accounts.householdAccounts());
-        }
-        if (AddressService.isOrgAccountAddressesEnabled()) {
-            normalizeLineBreaksFor(accounts.orgAccounts());
-        }
-    }
-
     public void onAfterInsertOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         createAddressesFromNewAccounts(accounts, dmlWrapper);
     }
