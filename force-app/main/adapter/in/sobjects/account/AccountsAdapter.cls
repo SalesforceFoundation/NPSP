@@ -112,9 +112,28 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         }
     }
 
-    public void onAfterUpdate() {
+    public void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
         if (settings.isAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdate();
+        }
+
+        // note that we detect whether the change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (TDTM_ProcessControl.isRecursive(
+                TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+            UTIL_Debug.debug('**** RECURSION: ' +
+                    'Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return;
+        }
+
+        AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate =
+                updatedAccountsWithAddressesToCreateOrUpdate();
+
+        if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
+            AddressService.createAddressesFor(
+                    updatedAccountsWithAddressesToCreateOrUpdate,
+                    dmlWrapper,
+                    false);
         }
     }
 

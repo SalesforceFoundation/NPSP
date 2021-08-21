@@ -69,23 +69,6 @@ public inherited sharing class Application {
         set;
     }
 
-    public void onAfterUpdateOf(AccountsAdapter accounts, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        // note that we detect whether the change is coming from the address trigger,
-        // in which case we don't want to create a new address.
-        if (TDTM_ProcessControl.isRecursive(
-                TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
-            UTIL_Debug.debug('**** RECURSION: ' +
-                    'Stop Addr Trigger recursion in ADDR_Account_TDTM');
-            return;
-        }
-
-        AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate = accounts.updatedAccountsWithAddressesToCreateOrUpdate();
-
-        if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
-            AddressService.createAddressesFor(updatedAccountsWithAddressesToCreateOrUpdate, dmlWrapper, false);
-        }
-    }
-
     public void onAfterInsertOf(Contacts contacts, TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields(contacts);
