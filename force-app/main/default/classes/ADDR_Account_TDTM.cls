@@ -47,7 +47,6 @@ public class ADDR_Account_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        Application application = new Application();
         AccountAdapter accountsAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
