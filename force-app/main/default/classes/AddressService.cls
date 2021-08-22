@@ -116,7 +116,7 @@ public inherited sharing class AddressService {
             NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
             Address__c existingAddress = existingAddressesByAddress.get(newAddress);
             NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
-            Boolean isAddressUpdated;
+            Boolean isAddressUpdated = false;
 
             if (existingAddress != null) {
                 NPSP_HouseholdAccount npspExistingAddressHousehold = new NPSP_HouseholdAccount(
