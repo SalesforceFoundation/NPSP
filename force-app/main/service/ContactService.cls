@@ -245,9 +245,13 @@ public with sharing class ContactService {
                 accountRecord = new Account();
 
                 // construct the Account name
-                accountRecord.Name = CAO_Constants.isHHAccountModel() ?
-                        Households.strNameHHAccountForContact(contactRecord) :
-                        Households.strNameOne2OneAccountForContact(contactRecord);
+                if (CAO_Constants.isHHAccountModel()) {
+                    accountRecord.Name =
+                            Households.strNameHHAccountForContact(contactRecord);
+                } else {
+                    accountRecord.Name =
+                            Households.strNameOne2OneAccountForContact(contactRecord);
+                }
 
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
