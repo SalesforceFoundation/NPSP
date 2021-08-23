@@ -28,14 +28,11 @@ jobs:
       - name: Check for previously assigned Instrumentation Label
         id: label_check
         run: |
-          echo "${{ toJson(github.event.pull_request.labels.*.name) }}"
-          # if: !contains(github.event.pull_request.labels.*.name, 'Instrumentation')
-          # run: |
-          #   echo "::set-output name=IGNORE_PR::YES"
+          echo "Current PR Labels: ${{ toJson(github.event.pull_request.labels.*.name) }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: steps.label_check.outputs.IGNORE_PR != 'YES'
+        if: !contains(github.event.pull_request.labels.*.name, 'Instrumentation')
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
