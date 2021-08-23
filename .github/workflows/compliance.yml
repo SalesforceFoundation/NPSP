@@ -11,9 +11,9 @@
 name: Instrumentation_Service_Compliance_Checking
 on:
   pull_request:
-    # paths:    
-      # - '**.cls'
-      # - '!unpackaged/**.cls'
+    paths:    
+      - '**.cls'
+      - '!unpackaged/**.cls'
 jobs:
   Instrumentation_Compliance:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
-            github.pulls.addAssignees({
+            github.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
