@@ -28,11 +28,12 @@ jobs:
       - name: Check for previously assigned Instrumentation Label
         id: label_check
         run: |
-          echo "Current PR Labels: ${{ toJson(github.event.pull_request.labels.*.name) }}"
+          echo "::set-output name=pr_labels::${{ toJson(github.event.pull_request.labels.*.name) }}""
+          echo "Current PR Labels: ${{ pr_labels }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: contains(github.event.pull_request.labels.*.name, 'Instrumentation') == ${{false}}
+        if: contains(steps.label_check.outputs.pr_labels, 'Instrumentation') == ${{false}}
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
@@ -45,6 +46,8 @@ jobs:
           # Assign the "git diff-tree" output to an internal workflow var to use latr
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
+
+          echo "Diff Output = ${{ diff }}"
 
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
