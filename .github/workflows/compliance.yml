@@ -5,13 +5,13 @@ on:
       # - '**.cls'
       # - '!unpackaged/**.cls'
 jobs:
-  CoreLoggingCompliance:
+  Instrumentation_Logging_Compliance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Check for References to the SfdoLogging class (not permitted for direct use)
+      - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: diff
         run: |
           if [ $GITHUB_BASE_REF ]; then
@@ -30,10 +30,30 @@ jobs:
 
           # if [ $DIFF ]; then
           #  echo "::error::Invalid direct use of the SfdoLogUtils core class. Splunk Instrumentation MUST use the sfdoInstrumentationService class."
+          ## SET EXIT CODE TO FAIL THE BUILD
           # fi
       
-      - name: assign reviewers when necessary
-        id: assign_reviewers
+      - name: Assign Reviewer if SfdoInstrumentationService is in use
+        id: assign_reviewers_if_instrumentation
+        if: contains(steps.diff.outputs.diff, 'SfdoInstrumentationService')
+        uses: SalesforceFoundation/github-script@v4
+        with:
+          script: |
+            github.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              reviewers: [ "jstvz" ]
+            })
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '@force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner.'
+            })
+
+      - name: Fail Build if SfdoLogUtils core class is directly referenced
+        id: assign_reviewers_if_core_class
         if: contains(steps.diff.outputs.diff, 'SfdoLogUtils')
         uses: SalesforceFoundation/github-script@v4
         with:
@@ -42,5 +62,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: [ "force2b" ]
+              reviewers: [ "jstvz" ]
             })
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should generally not be used'
+            })
+            core.setFailed('This Pull Request references the "SfdoLogUtils" class which should generally not be used')
+
