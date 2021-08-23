@@ -1,18 +1,28 @@
-name: Compliance_Checking
+#####################################################################################################################
+# @author       Michael Smith
+# @date         2021-08-23
+# @description  As SFDO Managed Packages start using the newly introduced Instrumentation Services to 'log' 
+#               usage data to Splunk and Argus, this Compliance Check action does two things:
+#               1. Ensures that Packaged Apex Classes do not make any direct reference to the core SfdoLogUtils class
+#               2. At least in the short term, adds an Instrumentation Reviewer to any PR that in any way references or
+#                  or uses the SfdoInstrumentationService. This is primarily meant as a short term action to aid in
+#                  adoption of the new instrumentation services.
+#####################################################################################################################
+name: Instrumentation_Service_Compliance_Checking
 on:
   pull_request:
     # paths:    
       # - '**.cls'
       # - '!unpackaged/**.cls'
 jobs:
-  Instrumentation_Logging_Compliance:
+  Instrumentation_Compliance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
-        id: diff
+        id: get_pr_diff
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
@@ -22,20 +32,13 @@ jobs:
             export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'Sfdo' )
           fi
 
-          # echo "$DIFF"
+          # Assign the "git diff-tree" output to an internal workflow var to use latr
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
-          echo ${{steps.diff.outputs.diff}}
-
-          # if [ $DIFF ]; then
-          #  echo "::error::Invalid direct use of the SfdoLogUtils core class. Splunk Instrumentation MUST use the sfdoInstrumentationService class."
-          ## SET EXIT CODE TO FAIL THE BUILD
-          # fi
-      
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
-        if: contains(steps.diff.outputs.diff, 'SfdoInstrumentationService')
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationService')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
