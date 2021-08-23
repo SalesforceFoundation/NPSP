@@ -10,7 +10,7 @@
 #####################################################################################################################
 ## TO DO:
 ## - Avoid creating a new comment on every new push. Maybe check for the existence of a label first?
-## - Figure out why it's seeing a reference to SfdoLogUtils that isn't there.
+## - Figure out why it's seeing a reference to SfdoLogUtils that isn't there
 name: Instrumentation_Service_Compliance_Checking
 on:
   pull_request:
