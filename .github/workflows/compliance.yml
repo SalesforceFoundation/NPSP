@@ -35,7 +35,7 @@ jobs:
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: steps.label_check.outputs.IGNORE_PR != "YES"
+        if: steps.label_check.outputs.IGNORE_PR != 'YES'
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
