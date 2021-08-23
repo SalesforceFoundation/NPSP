@@ -47,7 +47,7 @@ jobs:
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
-          echo "Diff Output = ${{ diff }}"
+          echo "Diff Output = ${ diff }"
 
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
