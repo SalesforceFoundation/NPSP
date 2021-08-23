@@ -19,19 +19,17 @@ jobs:
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
 
             # Find references to banned classes
-            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'SfdoLogUtils.log' )
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'Sfdo' )
           fi
 
           # echo "$DIFF"
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
+          echo ${{steps.diff.outputs.diff}}
+
           # if [ $DIFF ]; then
-            echo "::error::Invalid direct use of the SfdoLogUtils core class. Splunk Instrumentation MUST use the sfdoInstrumentationService class."
-            # Labels are probably not supported for PR's natively. Might need to import an external solution (security first!)
-            # labels:
-            #   - "invalid"
-            #   - "Do Not Merge"
+          #  echo "::error::Invalid direct use of the SfdoLogUtils core class. Splunk Instrumentation MUST use the sfdoInstrumentationService class."
           # fi
       
       - name: assign reviewers when necessary
@@ -40,9 +38,9 @@ jobs:
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
+            github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '👋 Hello World!'
+              pull_number: context.issue.number,
+              reviewers: [ "force2b" ]
             })
