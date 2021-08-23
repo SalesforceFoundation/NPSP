@@ -42,6 +42,12 @@ jobs:
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
+            github.pulls.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              assignees: [ "force2b" ]
+            })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -57,7 +63,7 @@ jobs:
 
       - name: Fail Build if SfdoLogUtils core class is directly referenced
         id: assign_reviewers_if_core_class
-        if: contains(steps.diff.outputs.diff, 'SfdoLogUtils')
+        if: contains(steps.get_pr_diff.outputs.diff, 'sfdologutils.log')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
@@ -71,7 +77,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should generally not be used'
+              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
             })
-            core.setFailed('This Pull Request references the "SfdoLogUtils" class which should generally not be used')
+            core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
