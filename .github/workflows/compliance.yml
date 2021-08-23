@@ -25,16 +25,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      - Check for previously assigned Instrumentation Label
+        id: label_check
+        if: !contains(github.event.pull_request.labels.*.name, 'Instrumentation')
+        run: |
+          echo "::set-output name=IGNORE_PR::YES"
+
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
+        if: steps.label_check.outputs.IGNORE_PR != "YES"
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
 
             # Find references to banned classes
-            if: !contains(github.event.pull_request.labels.*.name, 'Instrumentation')
-            run: export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'Sfdo' )
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'Sfdo' )
           fi
 
           # Assign the "git diff-tree" output to an internal workflow var to use latr
