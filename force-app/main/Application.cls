@@ -32,7 +32,7 @@
 * @date 2021
 * @description Top-level Application class for NPSP. Will provide Unit of Work instances
 * and factories for Domains, Selectors, and Services.
-* /
+*/
 public inherited sharing class Application {
 
 }
