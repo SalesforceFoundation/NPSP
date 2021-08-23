@@ -28,7 +28,7 @@ jobs:
       - name: Check for previously assigned Instrumentation Label
         id: label_check
         run: |
-          echo "::set-output name=prlabels::${{ toJson(github.event.pull_request.labels.*.name) }}"
+          echo "::set-output name=prlabels::${{ github.event.pull_request.labels.*.name }}"
           echo "Current PR Labels: ${{ steps.label_check.outputs.prlabels }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
