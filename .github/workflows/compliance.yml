@@ -27,7 +27,7 @@ jobs:
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
           # if [ $DIFF ]; then
-            echo "::error::Invalid direct use of the `SfdoLogUtils` core class. Splunk Instrumentation MUST use the `sfdoInstrumentationService` class."
+            echo "::error::Invalid direct use of the SfdoLogUtils core class. Splunk Instrumentation MUST use the sfdoInstrumentationService class."
             # Labels are probably not supported for PR's natively. Might need to import an external solution (security first!)
             # labels:
             #   - "invalid"
