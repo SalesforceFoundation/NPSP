@@ -42,6 +42,8 @@
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>
                 </aura:if>
+                <lightning:input type="checkbox" disabled="true" label="Undeliverable Mailing Address"
+                                 checked="{!v.contact.Undeliverable_Address__c}" />
             </div>
 
             <form>
