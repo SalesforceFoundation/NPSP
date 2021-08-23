@@ -29,7 +29,7 @@ jobs:
         id: label_check
         run: |
           echo "::set-output name=prlabels::${{ toJson(github.event.pull_request.labels.*.name) }}"
-          echo "Current PR Labels: ${ prlabels }"
+          echo "Current PR Labels: ${{ steps.label_check.outputs.prlabels }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
@@ -47,7 +47,7 @@ jobs:
           # Escape newlines (replace \n with %0A)
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
-          echo "Diff Output = ${ diff }"
+          echo "Diff Output = ${{ steps.get_pr_diff.outputs.diff }}"
 
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
