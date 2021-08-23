@@ -32,7 +32,7 @@ jobs:
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: !contains(github.event.pull_request.labels.*.name, 'Instrumentation')
+        if: !contains(toJson(github.event.pull_request.labels.*.name), 'Instrumentation')
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
