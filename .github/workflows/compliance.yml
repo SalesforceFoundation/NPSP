@@ -35,7 +35,7 @@ jobs:
         id: get_pr_diff
         if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{false}}
         run: |
-          echo "Did not find label"
+          echo "Did not find label ${{steps.label_check.outputs.prlabels}}"
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
