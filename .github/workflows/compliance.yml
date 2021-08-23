@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - Check for previously assigned Instrumentation Label
+      - name: Check for previously assigned Instrumentation Label
         id: label_check
         run: |
           echo "${{ toJson(github.event.pull_request.labels.*.name) }}"
