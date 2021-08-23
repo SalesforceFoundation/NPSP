@@ -25,6 +25,7 @@
     <aura:attribute name="hhMerge" type="Object" access="private" />
     <aura:attribute name="isSaveDisabled" type="Boolean" default="false" access="private" />
     <aura:attribute name="allowHouseholdMerge" type="Boolean" default="false" access="private" />
+    <aura:attribute name="fieldLabels" type="Map" access="private" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactAfterRemoveEvent" type="c:HH_ContactAfterRemoveEvent" />

@@ -513,6 +513,17 @@ public with sharing class HH_Container_LCTRL {
         Addresses.cleanupAccountAddresses(cleanupAccountIds);
     }
 
+    @AuraEnabled
+    public static Map<String, String> getFieldLabels() {
+        Map<String, String> fieldLabelsBySObject = new Map<String, String> {
+            String.valueOf(Contact.Undeliverable_Address__c) => UTIL_Describe.getFieldLabel(
+                    String.valueOf(Contact.SObjectType), String.valueOf(Contact.Undeliverable_Address__c)),
+            String.valueOf(Address__c.Undeliverable__c) => UTIL_Describe.getFieldLabel(
+                    String.valueOf(Address__c.SObjectType), String.valueOf(Address__c.Undeliverable__c))
+        };
+        return fieldLabelsBySObject;
+    }
+
     /*******************************************************************************************************
     * @description Verifies the Account Type
     * @param acc An Account

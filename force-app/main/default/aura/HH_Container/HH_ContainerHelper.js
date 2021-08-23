@@ -10,7 +10,7 @@
     
     loadHousehold: function (component, hhId, namespacePrefix) {
         // query for the Household account/object
-        let action = component.get("c.getHousehold");
+        const action = component.get("c.getHousehold");
         action.setParams({
             householdId: hhId
         });
@@ -34,12 +34,11 @@
             }
         });
         $A.enqueueAction(action);
-
     },
 
     loadContacts: function (component, hhId, namespacePrefix) {
         // query for the Household Contacts
-        let action = component.get("c.getContacts");
+        const action = component.get("c.getContacts");
         action.setParams({
             hhId: hhId
         });
@@ -60,7 +59,7 @@
 
     loadSalutations: function (component) {
         // query for the Contact Salutations
-        let action = component.get("c.getSalutations");
+        const action = component.get("c.getSalutations");
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -76,7 +75,7 @@
 
     loadHouseholdDeletePermissions: function (component) {
         // query for Household Delete permissions for merge usage
-        var strSObject = 'Account';
+        let strSObject = 'Account';
         if (component.get('v.hhTypePrefix') !== '001') {
             strSObject = 'npo02__Household__c';
         }
@@ -98,7 +97,7 @@
 
     loadAddresses: function (component, hhId, namespacePrefix) {
         // query for the Addresses
-        let action = component.get("c.getAddresses");
+        const action = component.get("c.getAddresses");
         action.setParams({
             hhId: hhId,
             listAddrExisting: null
@@ -146,6 +145,17 @@
         this.loadAddresses(component, hhId, namespacePrefix);
     },
 
+    loadFieldLabels: function(component) {
+        const action = component.get("c.getFieldLabels");
+        let self = this;
+        action.setCallback(this, function(response) {
+           let state = response.getState();
+           if (component.isValid() && state === "SUCCESS") {
+               component.set("v.fieldLabels", response.getReturnValue())
+           }
+        });
+    },
+
     /*******************************************************************************************************
      * @description get updated names and greetings from server's custom naming code
      */
@@ -157,7 +167,7 @@
         this.updateNamingExclusions(component, hh);
 
         // get updated Names and Greetings
-        var action = component.get("c.getHHNamesGreetings");
+        const action = component.get("c.getHHNamesGreetings");
         // now we need to fixup namespacing of fields
         var namespacePrefix = component.get('v.namespacePrefix');
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
