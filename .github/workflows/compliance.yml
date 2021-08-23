@@ -29,18 +29,18 @@ jobs:
         id: label_check
         run: |
           echo "::set-output name=prlabels::${{ toJson(github.event.pull_request.labels.*.name) }}"
-          # echo "Current PR Labels: ${{ prlabels }}"
+          # echo "Current PR Labels: ${ prlabels }"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{false}}
+        #if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{false}}
         run: |
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
 
-            # Find references to banned classes
-            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw | grep 'Sfdo' )
+            # Find references to Sfdo* classes in the force-app/main/ folder. Filter for the specific classes in later steps.
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/main/** | grep 'Sfdo' )
           fi
 
           # Assign the "git diff-tree" output to an internal workflow var to use latr
@@ -67,16 +67,16 @@ jobs:
               pull_number: context.issue.number,
               reviewers: [ "jstvz" ]
             })
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '@force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner.'
-            })
+            # github.issues.createComment({
+            #   issue_number: context.issue.number,
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   body: '@force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner.'
+            # })
 
       - name: Fail Build if SfdoLogUtils core class is directly referenced
         id: assign_reviewers_if_core_class
-        if: contains(steps.get_pr_diff.outputs.diff, 'sfdologutils.log')
+        if: contains(steps.get_pr_diff.outputs.diff, 'Sfdologutils.log(')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
@@ -86,11 +86,11 @@ jobs:
               pull_number: context.issue.number,
               reviewers: [ "jstvz" ]
             })
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
-            })
+            # github.issues.createComment({
+            #   issue_number: context.issue.number,
+            #   owner: context.repo.owner,
+            #   repo: context.repo.repo,
+            #   body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
+            # })
             core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
