@@ -12,17 +12,17 @@
 name: Instrumentation_Service_Compliance_Verification
 on:
   pull_request:
-    ## Filter the job to only execute if CLS files are in the PR
-    # paths:    
-    #   - '**.cls'
-    #   - '!unpackaged/**.cls'
+    # Filter the job to only execute if CLS files are in the PR
+    paths:    
+      - '**.cls'
+      - '!unpackaged/**.cls'
 
 jobs:
   Code_Check:
 
     env:
       DEFAULT_REVIEWER: force2b
-      ALTERNATE_REVIEWER: jstvz
+      ALTERNATE_REVIEWER: lparrot
 
     runs-on: ubuntu-latest
     steps:
@@ -55,9 +55,9 @@ jobs:
         id: get_pr_diff
         if: contains(github.event.pull_request.labels.*.name, 'Instrumentation') == false
         run: |
-          echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
-          echo "Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
-          echo "Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
+          echo "- Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
+          echo "- Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
+          echo "- Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
@@ -88,19 +88,19 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              assignees: [ "force2b" ]
+              assignees: [ ${{steps.set_reviewer.outputs.reviewer}} ]
             })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: [ "jstvz" ]
+              reviewers: [ ${{steps.set_reviewer.outputs.reviewer}} ]
             })
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':warning: @force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner. :warning:'
+              body: ':warning: @${{steps.set_reviewer.outputs.reviewer}} This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner. :warning:'
             })
 
       - name: Fail Build if SfdoLogUtils core class is directly referenced
@@ -119,19 +119,19 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              assignees: [ "force2b" ]
+              assignees: [ ${{steps.set_reviewer.outputs.reviewer}} ]
             })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: [ "jstvz" ]
+              reviewers: [ ${{steps.set_reviewer.outputs.reviewer}} ]
             })
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: ':no_entry: @force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code :no_entry:'
+              body: ':no_entry: @${{steps.set_reviewer.outputs.reviewer}} This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code :no_entry:'
             })
             core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
