@@ -213,7 +213,7 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
             .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
             .withTotalRecordsFailed(totalRecordsFailed)
-            .withCompletedDate(System.now());
+            .withCompletedDate(Datetime.now());
 
         new RD2_DataMigrationEnablement.BatchJob().saveSummary(summary, isDryRunMode);
     }
