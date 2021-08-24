@@ -208,12 +208,12 @@ public with sharing class ContactService {
             return;
         }
 
-        List<Id> contactIds = new List<Id>();
         Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
         List<Contact> contacts = new List<Contact>();
 
+        //track which contacts are being inserted vs. updated
+        List<Id> contactIds = new List<Id>();
         for (Contact contactRecord : contactsWithoutAccounts) {
-            //track which contacts are being inserted vs. updated
             if (contactRecord.Id != null) {
                 contactIds.add(contactRecord.Id);
             }
