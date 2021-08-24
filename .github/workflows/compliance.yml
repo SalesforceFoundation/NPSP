@@ -23,7 +23,7 @@ jobs:
     # These should be adjusted per repository
     env:
       DEFAULT_REVIEWER: force2b
-      ALTERNATE_REVIEWER: lparrot
+      ALTERNATE_REVIEWER: lparrott
 
     runs-on: ubuntu-latest
     steps:
