@@ -212,12 +212,8 @@ public with sharing class ContactService {
         List<Contact> contacts = new List<Contact>();
 
         //track which contacts are being inserted vs. updated
-        List<Id> contactIds = new List<Id>();
-        for (Contact contactRecord : contactsWithoutAccounts) {
-            if (contactRecord.Id != null) {
-                contactIds.add(contactRecord.Id);
-            }
-        }
+        List<Id> contactIds = getContactIds(contactsWithoutAccounts);
+
         // get all the Accounts that are connected to the existing Contacts
         for (Account accountRecord : getAccounts(contactIds)) {
             accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
@@ -316,6 +312,16 @@ public with sharing class ContactService {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+    }
+
+    private List<Id> getContactIds(List<Contact> contactsWithoutAccounts) {
+        List<Id> contactIds = new List<Id>();
+        for (Contact contactRecord : contactsWithoutAccounts) {
+            if (contactRecord.Id != null) {
+                contactIds.add(contactRecord.Id);
+            }
+        }
+        return contactIds;
     }
 
     private List<Account> getAccounts(List<Id> contactIds) {
