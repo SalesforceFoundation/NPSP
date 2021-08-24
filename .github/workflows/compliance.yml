@@ -3,19 +3,21 @@
 # @date         2021-08-23
 # @description  As SFDO Managed Packages start using the newly introduced Instrumentation Services to 'log' 
 #               usage data to Splunk and Argus, this Compliance Check action does two things:
-#               1. Ensures that Packaged Apex Classes do not make any direct reference to the core SfdoLogUtils class
-#               2. At least in the short term, adds an Instrumentation Reviewer to any PR that in any way references or
+#               1. Ensures that Packaged Apex Classes do not make any direct reference to the core SfdoLogUtils class.
+#                  Any code references to this class will cause the Compliance build to fail.
+#               2. At least in the short term, adds an Instrumentation reviewer to any PR that in any way references or
 #                  or uses the SfdoInstrumentationService. This is primarily meant as a short term action to aid in
 #                  adoption of the new instrumentation services.
 #####################################################################################################################
-name: Instrumentation_Service_Compliance_Checking
+name: Instrumentation_Service_Compliance_Verification
 on:
   pull_request:
+    ## Filter the job to only execute if CLS files are in the PR
     paths:    
       - '**.cls'
       - '!unpackaged/**.cls'
 jobs:
-  Instrumentation_Compliance:
+  Code_Check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -36,12 +38,12 @@ jobs:
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
 
-            # Find references to Sfdo* classes in the force-app/main/ folder. Filter for the specific classes in later steps.
+            # Find references to "Sfdo" in the force-app/main/ folder. Filters for the specific class references in later steps.
             export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/main/** | grep 'Sfdo' )
           fi
 
-          # Assign the "git diff-tree" output to an internal workflow var to use latr
-          # Escape newlines (replace \n with %0A)
+          # Assign the "git diff-tree" output to an internal workflow var to use later
+          # Escape newlines (replace \n with %0A) so it's a single line of text
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
           # echo "Diff Output = ${{ steps.get_pr_diff.outputs.diff }}"
@@ -79,7 +81,7 @@ jobs:
 
       - name: Fail Build if SfdoLogUtils core class is directly referenced
         id: assign_reviewers_if_core_class
-        if: contains(steps.get_pr_diff.outputs.diff, 'Sfdologutils.log(')
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoLogUtils.log(')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
