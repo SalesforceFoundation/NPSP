@@ -216,7 +216,8 @@ public with sharing class ContactService {
 
         // get all the Accounts that are connected to the existing Contacts
         for (Account accountRecord : getAccounts(contactIds)) {
-            accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
+            accountByPrimaryContactId.put(
+                    accountRecord.npe01__One2OneContact__c, accountRecord);
         }
 
         List<Account> accountInserts = new List<Account>();
@@ -226,8 +227,13 @@ public with sharing class ContactService {
             // is the correct type for the current account processor
             Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
             if (accountRecord != null &&
-                    ((CAO_Constants.isHHAccountModel() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
-                            (CAO_Constants.isOneToOne() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
+                    ((CAO_Constants.isHHAccountModel()
+                            && accountRecord.npe01__SYSTEM_AccountType__c
+                            == CAO_Constants.HH_ACCOUNT_TYPE)
+                            ||
+                            (CAO_Constants.isOneToOne()
+                                    && accountRecord.npe01__SYSTEM_AccountType__c
+                                    == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE))) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
             } else {
@@ -246,14 +252,17 @@ public with sharing class ContactService {
                 }
 
                 if (UserInfo.isMultiCurrencyOrganization()) {
-                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
+                    accountRecord.put('CurrencyIsoCode',
+                            (String) contactRecord.get('CurrencyIsoCode'));
                 }
 
                 // Always copy the Contact's Mailing & Others address to the new Account's
                 // Billing & Shipping address.
                 if (contactRecord.is_Address_Override__c != true) {
-                    addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+                    addressService.copyAddressStdSObj(contactRecord, 'Mailing',
+                            accountRecord, 'Billing');
+                    addressService.copyAddressStdSObj(contactRecord, 'Other',
+                            accountRecord, 'Shipping');
                 }
 
                 if (CAO_Constants.isHHAccountModel()) {
