@@ -20,6 +20,7 @@ on:
 jobs:
   Code_Check:
 
+    # These should be adjusted per repository
     env:
       DEFAULT_REVIEWER: force2b
       ALTERNATE_REVIEWER: lparrot
