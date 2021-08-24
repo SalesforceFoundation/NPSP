@@ -3,7 +3,6 @@ import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
-import { registerSa11yMatcher } from '@sa11y/jest';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
@@ -53,10 +52,6 @@ const ICON_NAME_SUCCESS = 'utility:success';
 
 describe('c-rd2-elevate-information', () => {
     let component;
-
-    beforeAll(() => {
-        registerSa11yMatcher();
-    });
 
     beforeEach(() => {
         component = createElement('c-rd2-elevate-information', {
