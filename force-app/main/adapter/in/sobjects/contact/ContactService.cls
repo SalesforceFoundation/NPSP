@@ -348,9 +348,18 @@ public with sharing class ContactService {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
-        TDTM_ProcessControl.toggleTriggerState('Account',
-                'ADDR_Account_TDTM', false);
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+        List<Account> accountsWithAddresses = [
+                SELECT Id, (
+                        SELECT Id
+                        FROM Addresses__r
+                )
+                FROM Account
+        ];
+        Map<Id, Address__c> addressesByAccountIds = new Map<Id, Address__c>();
+        for (Account account : accountsWithAddresses) {
+            addressesByAccountIds.put(account.Id, account.Addresses__r.get(0));
+        }
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
             if (!insertResult.isSuccess()) {
@@ -363,14 +372,14 @@ public with sharing class ContactService {
         }
 
         // now update each contact's accountId
+        // and set its Current Address
         Integer index = 0;
         for (Contact contactRecord : contacts) {
             contactRecord.AccountId = accountInserts[index].Id;
+            contactRecord.Current_Address__c =
+                    addressesByAccountIds.get(contactRecord.AccountId).Id;
             index++;
         }
-
-        Contacts contacts2 = new Contacts(contacts);
-        contacts2.createAddressFromContact(contacts);
     }
 
     private Boolean isOneToOne(Account accountRecord) {
