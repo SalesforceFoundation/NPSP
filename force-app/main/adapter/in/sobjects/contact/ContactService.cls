@@ -273,11 +273,20 @@ public with sharing class ContactService {
                     addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
 
-                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                if (CAO_Constants.isHHAccountModel()) {
+                    accountRecord.npe01__SYSTEM_AccountType__c =
+                            CAO_Constants.HH_ACCOUNT_TYPE;
+                    accountRecord.Type = CAO_Constants.HH_TYPE;
+                } else {
+                    accountRecord.npe01__SYSTEM_AccountType__c =
+                            CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                    accountRecord.Type = '';
+                }
+
                 if (individualRecordTypeId != null) {
                     accountRecord.put('RecordTypeID', individualRecordTypeId);
                 }
-                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+
                 accountRecord.npe01__SYSTEMIsIndividual__c = true;
                 accountInserts.add(accountRecord);
                 contacts.add(contactRecord);
