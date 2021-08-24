@@ -293,6 +293,19 @@ public with sharing class ContactService {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
+        //todo:
+        // disable both addr triggers, and the current trigger acct ind
+        // name and count on hh acct
+        // current address on contact
+        System.debug(LoggingLevel.ERROR, '*** ##### deactivating the ACCT IndAccts and ADDR Contact trigger handlers ######');
+        TDTM_ProcessControl.toggleTriggerState('Account',
+                'ACCT_IndividualAccounts_TDTM', false);
+//        TDTM_ProcessControl.toggleTriggerState('Account',
+//                'ADDR_Account_TDTM', false);
+//        TDTM_ProcessControl.toggleTriggerState('Contact',
+//                'ADDR_Contact_TDTM', false);
+//        TDTM_ProcessControl.toggleTriggerState('Address__c',
+//                'ADDR_Addresses_TDTM', false);
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
