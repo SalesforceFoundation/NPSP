@@ -3,7 +3,7 @@
  */
 
 ({
-    doNavigate: function(component, event, helper) {
+    navigateToExternalPage: function(component, event, helper) {
         const pageReference =  component.get('v.pageReference');
         const redirectUrl = pageReference.state.c__redirectUrl
 
