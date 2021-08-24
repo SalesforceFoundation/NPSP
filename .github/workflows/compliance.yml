@@ -17,9 +17,6 @@ on:
     #   - '**.cls'
     #   - '!unpackaged/**.cls'
 
-env:
-  HEAD_OWNER: ${{ context.payload.pull_request.user.login }}
-
 jobs:
   Code_Check:
     runs-on: ubuntu-latest
@@ -28,10 +25,15 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Print GitHub context
+        run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
       - name: Get PR Owner
         id: pr_owner
         run: |
-          echo "::set-output name=owner::${{ github.event.pull_request.head.repo.owner.login }}"
+          echo "::set-output name=owner::${{ github.event.issue.user.login }}"
 
       - name: Check for previously assigned Instrumentation Label
         id: label_check
@@ -44,7 +46,7 @@ jobs:
         if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == false
         run: |
           echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
-          echo "Current PR Owner: '${{process.env.HEAD_OWNER}}'"
+          echo "Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
