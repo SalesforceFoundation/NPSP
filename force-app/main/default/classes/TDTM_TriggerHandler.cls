@@ -174,7 +174,7 @@ public class TDTM_TriggerHandler {
             if (classType != null) {
                 Object classInstance = classType.newInstance();
 
-                //The objects we create dynamically need to implement the TDTM_Runnable interface
+                // The objects we create dynamically need to implement the TDTM_Runnable interface
                 if (classInstance instanceof TDTM_Runnable) {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
                     Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
