@@ -220,8 +220,6 @@ public with sharing class ContactService {
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId =
-                ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
@@ -264,16 +262,22 @@ public with sharing class ContactService {
                     accountRecord.npe01__SYSTEM_AccountType__c =
                             CAO_Constants.HH_ACCOUNT_TYPE;
                     accountRecord.Type = CAO_Constants.HH_TYPE;
+
+                    if (ContactAndOrgSettings.rtIdForAccountModel(true) != null) {
+                        accountRecord.put('RecordTypeID',
+                                ContactAndOrgSettings.rtIdForAccountModel(true));
+                    }
                 } else {
                     accountRecord.Name =
                             Households.strNameOne2OneAccountForContact(contactRecord);
                     accountRecord.npe01__SYSTEM_AccountType__c =
                             CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                     accountRecord.Type = '';
-                }
 
-                if (individualRecordTypeId != null) {
-                    accountRecord.put('RecordTypeID', individualRecordTypeId);
+                    if (ContactAndOrgSettings.rtIdForAccountModel(false) != null) {
+                        accountRecord.put('RecordTypeID',
+                                ContactAndOrgSettings.rtIdForAccountModel(false));
+                    }
                 }
 
                 accountRecord.Phone = contactRecord.Phone;
