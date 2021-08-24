@@ -32,7 +32,7 @@ jobs:
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{ true }}
+        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == false
         run: |
           echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
           if [ $GITHUB_BASE_REF ]; then
@@ -51,7 +51,7 @@ jobs:
 
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
-        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationService')
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationServiceX')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
