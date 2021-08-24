@@ -19,21 +19,31 @@ on:
 
 jobs:
   Code_Check:
+
+    env:
+      DEFAULT_REVIEWER: force2b
+      ALTERNATE_REVIEWER: jstvz
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      # - name: Print GitHub context
-      #   run: echo "$GITHUB_CONTEXT"
-      #   env:
-      #     GITHUB_CONTEXT: ${{ toJson(github) }}
-
       - name: Get PR Owner
         id: pr_owner
         run: |
           echo "::set-output name=owner::${{ github.event.pull_request.user.login }}"
+
+      - name: Set Reviewer
+        id: set_reviewer
+        if: steps.pr_owner.outputs.owner != $DEFAULT_REVIEWER
+        run: |
+          echo "::set-output name=reviewer::$DEFAULT_REVIEWER"
+
+        if: steps.pr_owner.outputs.owner == $DEFAULT_REVIEWER
+        run: |
+          echo "::set-output name=reviewer::$ALTERNATE_REVIEWER"
 
       - name: Check for previously assigned Instrumentation Label
         id: label_check
@@ -47,6 +57,7 @@ jobs:
         run: |
           echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
           echo "Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
+          echo "Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
