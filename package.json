@@ -12,7 +12,8 @@
   "scripts": {
     "test:unit": "lwc-jest --skipApiVersionCheck",
     "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
-    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck"
+    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck",
+    "test:unit:a11y": "SA11Y_AUTO=1 SA11Y_CLEANUP=1 lwc-jest --skipApiVersionCheck"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"
