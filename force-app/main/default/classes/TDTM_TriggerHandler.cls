@@ -181,6 +181,8 @@ public class TDTM_TriggerHandler {
                     Boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
                             thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
 
+                    // Sfdologutils.log();
+
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
