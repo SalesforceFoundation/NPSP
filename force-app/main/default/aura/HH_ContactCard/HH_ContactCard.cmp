@@ -1,6 +1,7 @@
 <aura:component >
     <!-- our attributes -->
     <aura:attribute name="contact" type="Object" access="public" />
+    <aura:attribute name="contactUndeliverableLabel" type="String" access="public" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent" />
@@ -42,7 +43,7 @@
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>
                 </aura:if>
-                <lightning:input type="checkbox" disabled="true" label="Undeliverable Mailing Address"
+                <lightning:input type="checkbox" disabled="true" label="{!v.contactUndeliverableLabel}"
                                  checked="{!v.contact.Undeliverable_Address__c}" />
             </div>
 

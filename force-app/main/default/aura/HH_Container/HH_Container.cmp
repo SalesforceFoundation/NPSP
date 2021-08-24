@@ -57,8 +57,10 @@
                         <nav role="navigation" class="slds-p-bottom_x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.c.lblYouAreHere}</p>
                             <ol class="slds-breadcrumb slds-list_horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
-                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading_label">
+                                    <a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading_label">
+                                    <a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>
                         <div class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -108,16 +110,19 @@
                         <div class="slds-col slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdMembers}</div>
                         <div class="slds-col slds-text-align_right slds-p-around_x-small">
                             <!-- the autocomplete component for finding and adding contacts -->
-                            <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
+                            <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}"
+                                               namespacePrefix="{!v.namespacePrefix}"
+                                               listCon="{!v.listCon}" />
                         </div>
                     </div>
-                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
+                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}"
+                                 contactUndeliverableLabel="{!v.fieldLabels.Undeliverable_Address__c}" />
                 </div>
 
                 <!-- the Address section -->
                 <div class="slds-p-bottom_large">
                     <div class="slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" addressUndeliverableLabel="{!v.fieldLabels.Undeliverable__c}"/>
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->

@@ -143,6 +143,7 @@
         this.loadSalutations(component);
         this.loadHouseholdDeletePermissions(component);
         this.loadAddresses(component, hhId, namespacePrefix);
+        this.loadFieldLabels(component, namespacePrefix);
     },
 
     loadFieldLabels: function(component) {
@@ -151,9 +152,13 @@
         action.setCallback(this, function(response) {
            let state = response.getState();
            if (component.isValid() && state === "SUCCESS") {
-               component.set("v.fieldLabels", response.getReturnValue())
+               component.set("v.fieldLabels",
+                   this.removePrefixFromObjectFields(component.get('v.namespacePrefix'), response.getReturnValue()))
+           } else if (component.isValid() && state === 'ERROR') {
+               self.reportError(component, response);
            }
         });
+        $A.enqueueAction(action);
     },
 
     /*******************************************************************************************************
