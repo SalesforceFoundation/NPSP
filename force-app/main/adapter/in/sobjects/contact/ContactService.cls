@@ -224,19 +224,18 @@ public with sharing class ContactService {
 
     /*******************************************************************************************************
     * @description Inserts a new 1:1 or HH Account for an Individual Contact
-    * @param contactsWithoutAccounts the list of Contacts that need updating.
+    * @param contacts the list of Contacts that need updating.
     */
-    public void createOneToOneAndHouseholdAccountsFor(List<Contact>
-            contactsWithoutAccounts){
-        if (contactsWithoutAccounts.isEmpty()) {
+    public void createOneToOneAndHouseholdAccountsFor(List<Contact> contacts){
+        if (contacts.isEmpty()) {
             return;
         }
 
         Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
-        List<Contact> contacts = new List<Contact>();
+        List<Contact> contactRecords = new List<Contact>();
 
         //track which contacts are being inserted vs. updated
-        List<Id> contactIds = getContactIds(contactsWithoutAccounts);
+        List<Id> contactIds = getContactIds(contacts);
 
         // get all the Accounts that are connected to the existing Contacts
         for (Account accountRecord : getAccounts(contactIds)) {
@@ -246,7 +245,7 @@ public with sharing class ContactService {
 
         List<Account> accountInserts = new List<Account>();
 
-        for (Contact contactRecord : contactsWithoutAccounts) {
+        for (Contact contactRecord : contacts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
             Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
@@ -335,7 +334,7 @@ public with sharing class ContactService {
                 accountRecord.OwnerId = contactRecord.OwnerId;
                 accountRecord.npe01__SYSTEMIsIndividual__c = true;
                 accountInserts.add(accountRecord);
-                contacts.add(contactRecord);
+                contactRecords.add(contactRecord);
             }
         }
 
@@ -367,7 +366,7 @@ public with sharing class ContactService {
             if (!insertResult.isSuccess()) {
                 for (Database.Error err : insertResult.getErrors()) {
                     accountInserts[index].addError(err.getMessage());
-                    Contact contactRecord = contacts[index];
+                    Contact contactRecord = contactRecords[index];
                     contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.FirstName, contactRecord.LastName, err.getMessage()}));
                 }
             }
@@ -376,7 +375,7 @@ public with sharing class ContactService {
         // now update each contact's accountId
         // and set its Current Address
         Integer index = 0;
-        for (Contact contactRecord : contacts) {
+        for (Contact contactRecord : contactRecords) {
             contactRecord.AccountId = accountInserts[index].Id;
             Address__c currentAddress = addressesByAccountIds.get(contactRecord.AccountId);
             if (currentAddress != null) {
