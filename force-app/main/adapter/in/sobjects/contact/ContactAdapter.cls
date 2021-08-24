@@ -136,4 +136,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         Households.renameHouseholdAccountsAfterInsert(
                 contactsWithAccountAndAddressFields);
     }
+
+    public void onBeforeInsert() {
+
+    }
 }

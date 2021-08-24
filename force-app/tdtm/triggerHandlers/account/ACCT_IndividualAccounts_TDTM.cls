@@ -64,6 +64,8 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
+                contactAdapter = new ContactAdapter(newSObjects);
+                contactAdapter.onBeforeInsert();
                 onBeforeInsert(contacts, newSObjects);
             }
             when AfterInsert {
