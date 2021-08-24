@@ -264,20 +264,15 @@ public with sharing class ContactService {
                     addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
                 }
 
-                // construct the Account name
                 if (CAO_Constants.isHHAccountModel()) {
                     accountRecord.Name =
                             Households.strNameHHAccountForContact(contactRecord);
-                } else {
-                    accountRecord.Name =
-                            Households.strNameOne2OneAccountForContact(contactRecord);
-                }
-
-                if (CAO_Constants.isHHAccountModel()) {
                     accountRecord.npe01__SYSTEM_AccountType__c =
                             CAO_Constants.HH_ACCOUNT_TYPE;
                     accountRecord.Type = CAO_Constants.HH_TYPE;
                 } else {
+                    accountRecord.Name =
+                            Households.strNameOne2OneAccountForContact(contactRecord);
                     accountRecord.npe01__SYSTEM_AccountType__c =
                             CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
                     accountRecord.Type = '';
