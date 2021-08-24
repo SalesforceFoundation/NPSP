@@ -2,7 +2,7 @@ import { setup } from '@sa11y/jest';
 
 setup();
 
-global.flushPromises = () => new Promise(resolve => setImmediate(resolve));
+global.flushPromises = () => new Promise(resolve => setTimeout(resolve,0));
 
 global.clearDOM = () => {
     // When enabled, SA11Y handles cleaning up the DOM after asserting accessibility.

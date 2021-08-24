@@ -15,11 +15,6 @@ jest.mock('@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 }, {virtual: true}
 );
 
-function flushPromises() {
-    return new Promise(resolve => setImmediate(resolve));
-}
-
-
 // for checking the trial expiration date, 15 days from now are considered.
 
 let dayIn15Days = new Date();

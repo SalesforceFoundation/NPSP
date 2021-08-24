@@ -23,10 +23,6 @@ describe('c-form-widget-soft-credit', () => {
         clearDOM();
     });
 
-    function flushPromises() {
-        return new Promise((resolve) => setImmediate(resolve));
-    }
-
     const setup = () => {
         const element = createElement('c-form-widget-soft-credit', {
             is: GeFormWidgetSoftCredit
