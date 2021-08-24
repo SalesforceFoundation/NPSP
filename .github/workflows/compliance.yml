@@ -51,7 +51,7 @@ jobs:
 
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
-        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationServiceX')
+        if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationService')
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
