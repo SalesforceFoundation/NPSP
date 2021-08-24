@@ -25,15 +25,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Print GitHub context
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+      # - name: Print GitHub context
+      #   run: echo "$GITHUB_CONTEXT"
+      #   env:
+      #     GITHUB_CONTEXT: ${{ toJson(github) }}
 
       - name: Get PR Owner
         id: pr_owner
         run: |
-          echo "::set-output name=owner::${{ github.event.issue.user.login }}"
+          echo "::set-output name=owner::${{ github.event.pull_request.user.login }}"
 
       - name: Check for previously assigned Instrumentation Label
         id: label_check
