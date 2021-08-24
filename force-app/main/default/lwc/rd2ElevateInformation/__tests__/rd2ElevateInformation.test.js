@@ -151,12 +151,6 @@ describe('c-rd2-elevate-information', () => {
 
             expect(updatePaymentButton).toBeTruthy();
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
     describe('on ach payment data load when no errors', () => {
@@ -311,12 +305,6 @@ describe('c-rd2-elevate-information', () => {
                 expect(updatePaymentLink).toBeNull();
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -367,12 +355,6 @@ describe('c-rd2-elevate-information', () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -418,12 +400,6 @@ describe('c-rd2-elevate-information', () => {
         it('should not display any illustration', async () => {
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
@@ -477,12 +453,6 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
@@ -539,12 +509,6 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
