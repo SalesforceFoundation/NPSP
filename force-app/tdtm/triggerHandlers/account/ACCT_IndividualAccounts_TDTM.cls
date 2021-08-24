@@ -82,11 +82,6 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                                 contacts.contactsWithoutAccounts());
                     }
                 }
-
-//                IApplicationService applicationService =
-//                        (IApplicationService) new ApplicationService();
-//                applicationService.createHouseholdsFor((List<Contact>) newSObjects);
-//                application.onBeforeInsertOf(contacts);
             }
             when AfterInsert {
                 contactAdapter = new ContactAdapter(newSObjects);
