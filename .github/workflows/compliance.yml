@@ -88,13 +88,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              assignees: [ ${{steps.set_reviewer.outputs.reviewer}} ]
+              assignees: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
             })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: [ ${{steps.set_reviewer.outputs.reviewer}} ]
+              reviewers: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
             })
             github.issues.createComment({
               issue_number: context.issue.number,
@@ -119,13 +119,13 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              assignees: [ ${{steps.set_reviewer.outputs.reviewer}} ]
+              assignees: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
             })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-              reviewers: [ ${{steps.set_reviewer.outputs.reviewer}} ]
+              reviewers: [ "${{steps.set_reviewer.outputs.reviewer}}" ]
             })
             github.issues.createComment({
               issue_number: context.issue.number,
