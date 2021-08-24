@@ -120,7 +120,9 @@ public without sharing class HouseholdNamingService {
         List<SObject> householdsOrAccounts = householdsOrAccountsFor(householdOrAccountIds);
         Map<Id, List<Contact>> membersByHouseholdId =
                 getHouseholdMembersByHouseholdId(householdOrAccountIds);
-        setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
+        if (settings.isAdvancedHouseholdNaming()) {
+            setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
+        }
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
         unitOfWork.save();
 
@@ -163,12 +165,21 @@ public without sharing class HouseholdNamingService {
                     membersByHouseholdId.get(idFor(household)) == null ?
                             new List<Contact>() :
                             membersByHouseholdId.get(idFor(household));
-            if (settings.isAdvancedHouseholdNaming()) {
+            HouseholdName householdName = new HouseholdName(
+                    new Contacts(householdMembers),
+                    householdNamingImpl);
+            if (household.get('Name') != householdName.asName()
+                    || household.get('npo02__Formal_Greeting__c') !=
+                    householdName.asFormalGreeting()
+                    || household.get('npo02__Informal_Greeting__c') !=
+                    householdName.asInformalGreeting()) {
+
                 setNameFieldValuesOnHousehold(
                         household,
-                        new HouseholdName(
-                                new Contacts(householdMembers),
-                                householdNamingImpl));
+                        householdName
+                );
+            } else {
+                System.debug(LoggingLevel.ERROR, '*** ##### no hh name updates needed! skipping set name values ######');
             }
         }
     }
