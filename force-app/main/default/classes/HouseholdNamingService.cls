@@ -178,8 +178,6 @@ public without sharing class HouseholdNamingService {
                         household,
                         householdName
                 );
-            } else {
-                System.debug(LoggingLevel.ERROR, '*** ##### no hh name updates needed! skipping set name values ######');
             }
         }
     }
