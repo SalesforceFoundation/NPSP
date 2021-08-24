@@ -43,7 +43,7 @@ jobs:
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         # If the Instrumentation label is already assigned to the PR, all checks are skipped to avoid redundant PR comments and alerts
         id: get_pr_diff
-        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == false
+        if: !( contains(github.event.pull_request.labels.*.name, 'Instrumentation') )
         run: |
           echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
           echo "Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
