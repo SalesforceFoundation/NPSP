@@ -228,12 +228,10 @@ public with sharing class ContactService {
             Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
             if (accountRecord != null &&
                     ((CAO_Constants.isHHAccountModel()
-                            && accountRecord.npe01__SYSTEM_AccountType__c
-                            == CAO_Constants.HH_ACCOUNT_TYPE)
+                            && isHousehold(accountRecord))
                             ||
                             (CAO_Constants.isOneToOne()
-                                    && accountRecord.npe01__SYSTEM_AccountType__c
-                                    == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE))) {
+                                    && isOneToOne(accountRecord)))) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
             } else {
@@ -325,6 +323,16 @@ public with sharing class ContactService {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+    }
+
+    private Boolean isOneToOne(Account accountRecord) {
+        return accountRecord.npe01__SYSTEM_AccountType__c
+                == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+    }
+
+    private Boolean isHousehold(Account accountRecord) {
+        return accountRecord.npe01__SYSTEM_AccountType__c
+                == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private List<Id> getContactIds(List<Contact> contactsWithoutAccounts) {
