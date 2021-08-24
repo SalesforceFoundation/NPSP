@@ -348,6 +348,8 @@ public with sharing class ContactService {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
+        TDTM_ProcessControl.toggleTriggerState('Account',
+                'ADDR_Account_TDTM', false);
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
@@ -366,6 +368,9 @@ public with sharing class ContactService {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+
+        Contacts contacts2 = new Contacts(contacts);
+        contacts2.createAddressFromContact(contacts);
     }
 
     private Boolean isOneToOne(Account accountRecord) {
