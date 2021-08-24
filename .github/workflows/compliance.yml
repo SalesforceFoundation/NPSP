@@ -76,7 +76,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '@force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner.'
+              body: ':warning: @force2b This Pull Request references the "SfdoInstrumentationService" class and must be reviewed by an Instrumentation owner. :warning:'
             })
 
       - name: Fail Build if SfdoLogUtils core class is directly referenced
@@ -95,7 +95,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
+              body: ':no_entry: @force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code :no_entry:'
             })
-            core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
+            core.setFailed(':X: This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
