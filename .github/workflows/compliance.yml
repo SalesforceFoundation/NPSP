@@ -29,13 +29,12 @@ jobs:
         id: label_check
         run: |
           echo "::set-output name=prlabels::${{ join(github.event.pull_request.labels.*.name, ',') }}"
-          echo "Current PR Labels: ${{ steps.label_check.outputs.prlabels }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{false}}
+        if: !contains(steps.label_check.outputs.prlabels, 'Instrumentation')
         run: |
-          echo "Did not find label ${{steps.label_check.outputs.prlabels}}"
+          echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
           if [ $GITHUB_BASE_REF ]; then
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
