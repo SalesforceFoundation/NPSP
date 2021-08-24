@@ -24,6 +24,7 @@ jobs:
     env:
       DEFAULT_REVIEWER: force2b
       ALTERNATE_REVIEWER: lparrott
+      ASSIGNED_LABEL: Instrumentation
 
     runs-on: ubuntu-latest
     steps:
@@ -54,9 +55,9 @@ jobs:
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         # If the Instrumentation label is already assigned to the PR, all checks are skipped to avoid redundant PR comments and alerts
         id: get_pr_diff
-        if: contains(github.event.pull_request.labels.*.name, 'Instrumentation') == false
+        if: contains(github.event.pull_request.labels.*.name, env.ASSIGNED_LABEL) == false
         run: |
-          echo "- Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
+          echo "- Did not find label '${{env.ASSIGNED_LABEL}}' in '${{steps.label_check.outputs.prlabels}}'"
           echo "- Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
           echo "- Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
           if [ $GITHUB_BASE_REF ]; then
@@ -83,7 +84,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: [ "Instrumentation" ]
+              labels: [ "${{env.ASSIGNED_LABEL}}" ]
             })
             github.issues.addAssignees({
               owner: context.repo.owner,
@@ -114,7 +115,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              labels: [ "Instrumentation" ]
+              labels: [ "${{env.ASSIGNED_LABEL}}" ]
             })
             github.issues.addAssignees({
               owner: context.repo.owner,
