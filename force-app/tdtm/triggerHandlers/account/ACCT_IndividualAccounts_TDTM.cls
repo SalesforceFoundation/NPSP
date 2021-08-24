@@ -35,17 +35,6 @@
 */
 public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
-    @TestVisible
-    private ContactService contactService {
-        get {
-            if (contactService == null) {
-                contactService = new ContactService();
-            }
-            return contactService;
-        }
-        set;
-    }
-
     /*******************************************************************************************************************
      * @description Trigger Handler on Contact that handles account management.  Depending on the Account
      * Model, creates a Household Account, One-to-One Account, or uses the Individual Bucket Account.
@@ -58,15 +47,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newSObjects, List<SObject> oldSObjects,
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        Contacts contacts;
         ContactAdapter contactAdapter;
         DmlWrapper dmlWrapper = new DmlWrapper();
 
         switch on triggerAction {
             when BeforeInsert {
                 contactAdapter = new ContactAdapter(newSObjects);
-                contactAdapter.onBeforeInsert();
-                onBeforeInsert(contacts, newSObjects);
+                contactAdapter.onBeforeInsert(newSObjects);
             }
             when AfterInsert {
                 contactAdapter = new ContactAdapter(newSObjects);
@@ -91,26 +78,4 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
         }
         return dmlWrapper;
     }
-
-    private void onBeforeInsert(Contacts contacts, List<SObject> newSObjects) {
-        contacts = new Contacts(newSObjects);
-        contacts.resetDeprecatedFields();
-
-        if (CAO_Constants.isHHAccountModel()) {
-            contactService.createOneToOneAndHouseholdAccountsFor(
-                    contacts.contactsWithoutAccounts());
-        } else {
-            if (CAO_Constants.isOneToOne()) {
-                contactService.createOneToOneAndHouseholdAccountsFor(
-                        (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
-                                .getRecords());
-            }
-
-            if (CAO_Constants.isBucketModel()) {
-                LegacyHouseholds.attachToBucketAccount(
-                        contacts.contactsWithoutAccounts());
-            }
-        }
-    }
-
 }

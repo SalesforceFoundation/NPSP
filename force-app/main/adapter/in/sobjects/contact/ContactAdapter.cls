@@ -64,6 +64,17 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         set;
     }
 
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     public ContactAdapter(List<Contact> records) {
         this(records, null);
     }
@@ -137,7 +148,25 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 contactsWithAccountAndAddressFields);
     }
 
-    public void onBeforeInsert() {
+    public void onBeforeInsert(List<Contact> newSObjects) {
+        Contacts contacts = new Contacts(newSObjects);
+        contacts.resetDeprecatedFields();
+
+        if (CAO_Constants.isHHAccountModel()) {
+            contactService.createOneToOneAndHouseholdAccountsFor(
+                    contacts.contactsWithoutAccounts());
+        } else {
+            if (CAO_Constants.isOneToOne()) {
+                contactService.createOneToOneAndHouseholdAccountsFor(
+                        (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
+                                .getRecords());
+            }
+
+            if (CAO_Constants.isBucketModel()) {
+                LegacyHouseholds.attachToBucketAccount(
+                        contacts.contactsWithoutAccounts());
+            }
+        }
 
     }
 }
