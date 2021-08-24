@@ -55,6 +55,12 @@ jobs:
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [ "Instrumentation" ]
+            })
             github.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -86,11 +92,11 @@ jobs:
               pull_number: context.issue.number,
               reviewers: [ "jstvz" ]
             })
-            # github.issues.createComment({
-            #   issue_number: context.issue.number,
-            #   owner: context.repo.owner,
-            #   repo: context.repo.repo,
-            #   body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
-            # })
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '@force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code'
+            })
             core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
