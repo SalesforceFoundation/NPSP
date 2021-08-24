@@ -90,6 +90,7 @@ private class InstallationsNotifications_TEST {
                           Id = DUMMY_CUSTOM_NOTIFICATION_ID,
                           Audience_Implementation__c = 'MockAudienceImpl',
                           Notification_Content_Implementation__c = 'MockNotificationContentImpl',
+                          Redirect_URL__c = '',
                           IsActive__c = true
                       )
                   };

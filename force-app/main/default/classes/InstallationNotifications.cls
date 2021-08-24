@@ -83,8 +83,7 @@ public inherited sharing class InstallationNotifications {
 
    public void publish() {
       for (Custom_Notification__mdt notification : this.activeNotifications) {
-         if (getAudience(notification.Audience_Implementation__c) == null) { continue; }
-         if (activeNotificationsByType.containsKey(notification.Notification_Channel__c)) {
+         if (!canPublish(notification)) { continue; }
             ElevateAdNotificationContent content = getNotificationContent(
                 notification.Notification_Content_Implementation__c);
             Messaging.CustomNotification customNotification = new Messaging.CustomNotification();
@@ -94,9 +93,16 @@ public inherited sharing class InstallationNotifications {
             customNotification.setNotificationTypeId(
                 activeNotificationsByType.get(notification.Notification_Channel__c).Id);
             customNotification.send(getAudience(notification.Audience_Implementation__c).stringValues());
-         }
       }
    }
+
+   @TestVisible
+   private Boolean canPublish(Custom_Notification__mdt notification) {
+      return (getAudience(notification.Audience_Implementation__c) != null
+          || String.isNotBlank(notification.Redirect_URL__c)
+          && activeNotificationsByType.containsKey(notification.Notification_Channel__c));
+   }
+
 
    private String buildPageReferenceFor(Custom_Notification__mdt notification) {
       String namespace = getNamespace();
