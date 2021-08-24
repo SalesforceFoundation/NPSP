@@ -37,13 +37,8 @@ jobs:
 
       - name: Set Reviewer
         id: set_reviewer
-        if: steps.pr_owner.outputs.owner != $DEFAULT_REVIEWER
         run: |
-          echo "::set-output name=reviewer::$DEFAULT_REVIEWER"
-
-        if: steps.pr_owner.outputs.owner == $DEFAULT_REVIEWER
-        run: |
-          echo "::set-output name=reviewer::$ALTERNATE_REVIEWER"
+          echo "::set-output name=reviewer::${{ steps.pr_owner.outputs.owner != $DEFAULT_REVIEWER , $DEFAULT_REVIEWER, $ALTERNATE_REVIEWER }}"
 
       - name: Check for previously assigned Instrumentation Label
         id: label_check
