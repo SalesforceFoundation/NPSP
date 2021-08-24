@@ -1,4 +1,4 @@
-name: Jest
+name: Sa11y
 on: [push]
 jobs:
   sa11y-jest:
