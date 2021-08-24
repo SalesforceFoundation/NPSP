@@ -1,7 +1,7 @@
 import { createElement } from 'lwc';
 import GeFormWidgetSoftCredit from 'c/geFormWidgetSoftCredit';
 
-const DUMMY_SOFT_CREDITS = [
+const mockDummySoftCredits = [
     {
         Role: 'Influencer',
         ContactId: '1',
@@ -11,10 +11,10 @@ const DUMMY_SOFT_CREDITS = [
         Role: 'Honoree',
         ContactId: '2'
     }
-]
+];
 
 jest.mock('@salesforce/apex/GE_GiftEntryController.getDummySoftCredits',
-    () => { return { default: jest.fn(() => DUMMY_SOFT_CREDITS) } },
+    () => { return { default: jest.fn(() => mockDummySoftCredits) } },
     { virtual: true }
 );
 
