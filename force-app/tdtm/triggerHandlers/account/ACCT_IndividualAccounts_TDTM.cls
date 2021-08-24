@@ -64,24 +64,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
 
         switch on triggerAction {
             when BeforeInsert {
-                contacts = new Contacts(newSObjects);
-                contacts.resetDeprecatedFields();
-
-                if (CAO_Constants.isHHAccountModel()) {
-                    contactService.createOneToOneAndHouseholdAccountsFor(
-                            contacts.contactsWithoutAccounts());
-                } else {
-                    if (CAO_Constants.isOneToOne()) {
-                        contactService.createOneToOneAndHouseholdAccountsFor(
-                                (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
-                                        .getRecords());
-                    }
-
-                    if (CAO_Constants.isBucketModel()) {
-                        LegacyHouseholds.attachToBucketAccount(
-                                contacts.contactsWithoutAccounts());
-                    }
-                }
+                onBeforeInsert(contacts, newSObjects);
             }
             when AfterInsert {
                 contactAdapter = new ContactAdapter(newSObjects);
@@ -105,6 +88,27 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
         return dmlWrapper;
+    }
+
+    private void onBeforeInsert(Contacts contacts, List<SObject> newSObjects) {
+        contacts = new Contacts(newSObjects);
+        contacts.resetDeprecatedFields();
+
+        if (CAO_Constants.isHHAccountModel()) {
+            contactService.createOneToOneAndHouseholdAccountsFor(
+                    contacts.contactsWithoutAccounts());
+        } else {
+            if (CAO_Constants.isOneToOne()) {
+                contactService.createOneToOneAndHouseholdAccountsFor(
+                        (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
+                                .getRecords());
+            }
+
+            if (CAO_Constants.isBucketModel()) {
+                LegacyHouseholds.attachToBucketAccount(
+                        contacts.contactsWithoutAccounts());
+            }
+        }
     }
 
 }
