@@ -241,17 +241,19 @@ public with sharing class ContactService {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
             } else {
-                // construct the individul account for the Contact
+                // Construct the Household (Account), or the Individual/One2One Account when
+                // in the Legacy Household model.
                 accountRecord = new Account();
 
+                // ***
+                // This method seems to be called from both before and after insert.
+                // When called after insert, the accounts One2One (aka Primary Contact)
+                // field is set.
+                // ***
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
                     accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
-
-                accountRecord.Phone = contactRecord.Phone;
-                accountRecord.Fax = contactRecord.Fax;
-                accountRecord.OwnerId = contactRecord.OwnerId;
 
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
@@ -282,6 +284,9 @@ public with sharing class ContactService {
                     accountRecord.put('RecordTypeID', individualRecordTypeId);
                 }
 
+                accountRecord.Phone = contactRecord.Phone;
+                accountRecord.Fax = contactRecord.Fax;
+                accountRecord.OwnerId = contactRecord.OwnerId;
                 accountRecord.npe01__SYSTEMIsIndividual__c = true;
                 accountInserts.add(accountRecord);
                 contacts.add(contactRecord);
