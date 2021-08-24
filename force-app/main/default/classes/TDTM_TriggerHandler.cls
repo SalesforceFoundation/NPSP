@@ -181,19 +181,6 @@ public class TDTM_TriggerHandler {
                     Boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
                             thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
 
-                    // Log the trigger handler execution details to Splunk
-                    SfdoInstrumentationService.log(
-                        SfdoInstrumentationEnum.Feature.TDTM, 
-                        describeObj.getSObjectType(),
-                        SfdoInstrumentationService.getActionFromTriggerEvent(thisAction), 
-                        new Map<String,Object>{ 
-                            'Class' => classToRunName, 
-                            'LoadOrder' => classToRunRecord.get('Load_Order__c'),
-                            'ASynch' => async,
-                            'UserManaged' => classToRunRecord.get('User_Managed__c')},
-                        (newList != null ? newList : oldList).size()
-                    );
-
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
