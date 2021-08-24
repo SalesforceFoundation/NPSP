@@ -244,15 +244,6 @@ public with sharing class ContactService {
                 // construct the individul account for the Contact
                 accountRecord = new Account();
 
-                // construct the Account name
-                if (CAO_Constants.isHHAccountModel()) {
-                    accountRecord.Name =
-                            Households.strNameHHAccountForContact(contactRecord);
-                } else {
-                    accountRecord.Name =
-                            Households.strNameOne2OneAccountForContact(contactRecord);
-                }
-
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
                     accountRecord.npe01__One2OneContact__c = contactRecord.Id;
@@ -271,6 +262,15 @@ public with sharing class ContactService {
                 if (contactRecord.is_Address_Override__c != true) {
                     addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
                     addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+                }
+
+                // construct the Account name
+                if (CAO_Constants.isHHAccountModel()) {
+                    accountRecord.Name =
+                            Households.strNameHHAccountForContact(contactRecord);
+                } else {
+                    accountRecord.Name =
+                            Households.strNameOne2OneAccountForContact(contactRecord);
                 }
 
                 if (CAO_Constants.isHHAccountModel()) {
