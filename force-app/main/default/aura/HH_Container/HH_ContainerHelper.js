@@ -40,7 +40,7 @@
         // query for the Household Contacts
         const action = component.get("c.getContacts");
         action.setParams({
-            hhId: hhId
+            householdId: hhId
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -99,7 +99,7 @@
         // query for the Addresses
         const action = component.get("c.getAddresses");
         action.setParams({
-            hhId: hhId,
+            householdId: hhId,
             listAddrExisting: null
         });
         action.setCallback(this, function (response) {
@@ -718,7 +718,7 @@
         // query for the Household Contacts
         var action = component.get("c.getContacts");
         action.setParams({
-            hhId: hhMerge.Id
+            householdId: hhMerge.Id
         });
         var self = this;
         action.setCallback(this, function(response) {
@@ -776,7 +776,7 @@
         
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
-            hhId: hhMerge.Id,
+            householdId: hhMerge.Id,
             listAddrExisting: listAddr
         });
         self = this;

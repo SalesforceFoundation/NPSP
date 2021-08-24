@@ -152,13 +152,13 @@ public with sharing class HH_Container_LCTRL {
 
     /*******************************************************************************************************
     * @description returns the Contacts for the given Household
-    * @param hhId The Household's Id
+    * @param householdId The Household's Id
     * @return list<Contact> The Contacts in the Household
     */
     @AuraEnabled
-    public static List<Contact> getContacts(Id hhId) {
+    public static List<Contact> getContacts(Id householdId) {
         try {
-            if (hhId == null) {
+            if (householdId == null) {
                 return null;
             }
             // conSelect does the FLS check
@@ -166,7 +166,7 @@ public with sharing class HH_Container_LCTRL {
 
             // don't use contact.HHId in one soql since it can't use an index
             // and won't work in LDV orgs.
-            if (UTIL_Describe.isObjectIdThisType(hhId, 'Account')) {
+            if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
                 strSoql += ' where AccountId = :householdId ';
             } else {
                 strSoql += ' where npo02__Household__c = :householdId WITH SECURITY_ENFORCED ';
