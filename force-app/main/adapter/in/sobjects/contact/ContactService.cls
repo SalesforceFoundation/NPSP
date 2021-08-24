@@ -219,11 +219,7 @@ public with sharing class ContactService {
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : [
-                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-                FROM Account
-                WHERE npe01__One2OneContact__c IN :contactIds
-        ]) {
+        for (Account accountRecord : getAccounts(contactIds)) {
             accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
         }
 
@@ -320,5 +316,13 @@ public with sharing class ContactService {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+    }
+
+    private List<Account> getAccounts(List<Id> contactIds) {
+        return [
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE npe01__One2OneContact__c IN :contactIds
+        ];
     }
 }
