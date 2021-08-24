@@ -32,7 +32,7 @@ jobs:
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
         id: get_pr_diff
-        if: !contains(steps.label_check.outputs.prlabels, 'Instrumentation')
+        if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == ${{ true }}
         run: |
           echo "Did not find label 'Instrumentation' in '${{steps.label_check.outputs.prlabels}}'"
           if [ $GITHUB_BASE_REF ]; then
