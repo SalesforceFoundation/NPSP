@@ -358,7 +358,9 @@ public with sharing class ContactService {
         ];
         Map<Id, Address__c> addressesByAccountIds = new Map<Id, Address__c>();
         for (Account account : accountsWithAddresses) {
-            addressesByAccountIds.put(account.Id, account.Addresses__r.get(0));
+            if (!account.Addresses__r.isEmpty()) {
+                addressesByAccountIds.put(account.Id, account.Addresses__r.get(0));
+            }
         }
         for (Integer index = 0; index < insertResults.size(); index++) {
             Database.SaveResult insertResult = insertResults[index];
@@ -376,8 +378,10 @@ public with sharing class ContactService {
         Integer index = 0;
         for (Contact contactRecord : contacts) {
             contactRecord.AccountId = accountInserts[index].Id;
-            contactRecord.Current_Address__c =
-                    addressesByAccountIds.get(contactRecord.AccountId).Id;
+            Address__c currentAddress = addressesByAccountIds.get(contactRecord.AccountId);
+            if (currentAddress != null) {
+                contactRecord.Current_Address__c = currentAddress.Id;
+            }
             index++;
         }
     }
