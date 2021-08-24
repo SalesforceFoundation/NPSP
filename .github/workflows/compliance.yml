@@ -30,6 +30,7 @@ jobs:
           echo "::set-output name=prlabels::${{ join(github.event.pull_request.labels.*.name, ',') }}"
 
       - name: Check for references to the SfdoLogUtils or SfdoInstrumentationServices Apex classes
+        # If the Instrumentation label is already assigned to the PR, all checks are skipped to avoid redundant PR comments and alerts
         id: get_pr_diff
         if: contains(steps.label_check.outputs.prlabels, 'Instrumentation') == false
         run: |
@@ -85,6 +86,18 @@ jobs:
         uses: SalesforceFoundation/github-script@v4
         with:
           script: |
+            github.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [ "Instrumentation" ]
+            })
+            github.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [ "force2b" ]
+            })
             github.pulls.requestReviewers({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -97,5 +110,5 @@ jobs:
               repo: context.repo.repo,
               body: ':no_entry: @force2b This Pull Request references the "SfdoLogUtils" class which should not be called directly by package code :no_entry:'
             })
-            core.setFailed(':X: This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
+            core.setFailed('This Pull Request may be calling an SfdoLogUtils.log() method which should not be called directly by package code')
 
