@@ -115,7 +115,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // create any new Default Address objects
-        createAddressFromContact(
+        createAddressFromContactAndSetCurrentAddressLookupId(
                 new List<Contact>(contactsWithAddressChanges()));
 
         // update the Latest date fields on any address overrides
@@ -171,7 +171,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // create any new Default Address objects
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
-        createAddressFromContact(new List<Contact>(addressCreationQueue));
+        createAddressFromContactAndSetCurrentAddressLookupId(new List<Contact>(addressCreationQueue));
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
@@ -203,6 +203,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return new Contacts(contactsWithoutAccounts());
     }
 
+    //todo: break up further
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
@@ -361,7 +362,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
 
-        createAddressFromContact(listConCreateAddr);
+        createAddressFromContactAndSetCurrentAddressLookupId(listConCreateAddr);
     }
 
     /*******************************************************************************************************
@@ -391,7 +392,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param listConAll the list of Contacts
     ********************************************************************************************************/
-    public void createAddressFromContact(List<Contact> listConAll) {
+    public void createAddressFromContactAndSetCurrentAddressLookupId(List<Contact> listConAll) {
         if (!listConAll.isEmpty()) {
             // Strategy:
             // create a new (unsaved) address for each contact.
