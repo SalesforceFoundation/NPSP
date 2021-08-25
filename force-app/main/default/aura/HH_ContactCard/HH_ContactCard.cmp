@@ -21,7 +21,9 @@
                             <aura:if isTrue="{!v.contact.Id != null}">
                             	<a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.Name}</a>
                             	<aura:set attribute="else">
-                                    <ui:outputText value="{!v.contact.FirstName + ' ' + v.contact.LastName}"/>
+                                    <lightning:formattedText
+                                            value="{!v.contact.FirstName + ' ' + v.contact.LastName}"
+                                            title="{!v.contact.FirstName + ' ' + v.contact.LastName}" />
                                 </aura:set>
                             </aura:if>
                         </div>
@@ -37,9 +39,10 @@
         <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none" id="contactCard">
             <!-- address -->
             <div class="slds-text-body_small slds-m-bottom_small">
-                <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCountry}" />
+                <lightning:formattedText value="{!v.contact.MailingStreet}" title="{!v.contact.MailingStreet}"/>
+                <lightning:formattedText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"
+                                         title="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"/>
+                <lightning:formattedText value="{!v.contact.MailingCountry}" title="{!v.contact.MailingCountry}" />
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>
                 </aura:if>
