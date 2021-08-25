@@ -39,9 +39,12 @@
         <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none" id="contactCard">
             <!-- address -->
             <div class="slds-text-body_small slds-m-bottom_small">
-                <lightning:formattedText value="{!v.contact.MailingStreet}" title="{!v.contact.MailingStreet}"/>
-                <lightning:formattedText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"
-                                         title="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"/>
+                <lightning:formattedText value="{!v.contact.MailingStreet}" title="{!v.contact.MailingStreet}"/><br/>
+                <lightning:formattedText value="{!v.contact.MailingCity +
+                                                (v.contact.MailingState != null ? ', ' : '') +
+                                                v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"
+                                         title="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '')
+                                         + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"/><br/>
                 <lightning:formattedText value="{!v.contact.MailingCountry}" title="{!v.contact.MailingCountry}" />
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>

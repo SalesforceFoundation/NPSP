@@ -24,10 +24,12 @@
             <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none" >
                 <!-- address -->
                 <div class="slds-text-body_small" >
-                    <ui:outputText value="{!v.addrDefault.MailingStreet__c + 
+                    <lightning:formattedText value="{!v.addrDefault.MailingStreet__c +
                         (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
-                    <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
-                    <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />
+                    <lightning:formattedText value="{!v.addrDefault.MailingCity__c +
+                        (v.addrDefault.MailingState__c != null ? ', ' : '') +
+                        v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
+                    <lightning:formattedText value="{!v.addrDefault.MailingCountry__c}" />
                     <aura:if isTrue="{!v.addrDefault.Undeliverable__c}">
                         <lightning:input type="checkbox" label="{!v.addressUndeliverableLabel}" checked="{!v.addrDefault.Undeliverable__c}"
                                          disabled="true" />
@@ -36,11 +38,9 @@
             </div> 
             <div class="slds-card__footer">
                 <div class="slds-grid slds-grid_align-center">
-                    <ui:button class="slds-button slds-button_small slds-button_neutral" 
-                               aura:id="btnChangeAddress" 
-                               buttonTitle="{!$Label.npo02.ChangeAddress}" 
-                               label="{!$Label.npo02.ChangeAddress}" 
-                               press="{!c.openChangeAddress}" />
+                    <lightning:button aura:id="btnChangeAddress"
+                                      label="{!$Label.npo02.ChangeAddress}"
+                                      onclick="{!c.openChangeAddress}" />
                 </div>
             </div>
         </div> <!-- slds-card -->
@@ -77,7 +77,7 @@
                                         ariaExpanded="true"/>
                                 </h2>
                             </div>
-                            <div aura:id="accordionSection">
+                            <div aura:id="accordionSection" aria-expanded="true">
                                 <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions">
                                     <aura:iteration items="{!v.listAddr}" var="addr" indexVar="iAddr" >
                                         <li class="{!iAddr == v.iAddrSelected ? 'slds-item selected' : 'slds-item' }" 
@@ -87,10 +87,14 @@
                                                 <div class="slds-tile__detail" >
                                                     <!-- address -->
                                                     <div class="slds-text-body_small" id="existingAdd">
-                                                        <ui:outputText value="{!addr.MailingStreet__c +
-                                                            (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
-                                                        <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
-                                                        <ui:outputText value="{!addr.MailingCountry__c}" />
+                                                        <lightning:formattedText value="{!addr.MailingStreet__c +
+                                                            (addr.MailingStreet2__c != null ? '\n' +
+                                                            addr.MailingStreet2__c : '')}" /><br/>
+                                                        <lightning:formattedText value="{!addr.MailingCity__c +
+                                                            (addr.MailingState__c != null ? ', ' : '') +
+                                                             addr.MailingState__c + ' ' +
+                                                             addr.MailingPostalCode__c + ' '}" /><br/>
+                                                        <lightning:formattedText value="{!addr.MailingCountry__c}" />
                                                         <aura:if isTrue="{!v.addrDefault.Undeliverable__c}">
                                                             <lightning:input disabled="true" type="checkbox"
                                                                              label="{!v.addressUndeliverableLabel}"

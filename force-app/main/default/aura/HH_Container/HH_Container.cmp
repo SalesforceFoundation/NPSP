@@ -135,7 +135,6 @@
                                                  checked="{!v.isAutoName}"/>
                             </div>
                         </div>
-
                         <lightning:input value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting"
                                          label="{!$Label.c.lblFormalGreeting}"
                                          onchange="{!c.onTextChange}" />
@@ -144,10 +143,9 @@
                                     <lightning:input label="{!$Label.npo02.AutoFormalGreeting}" type="checkbox"
                                                      aura:id="cbxAutoFormalGreeting"
                                                      class="slds-checkbox"
-                                                     onchange="{!c.onCheck}" value="{!v.isAutoFormalGreeting}"/>
+                                                     onchange="{!c.onCheck}" checked="{!v.isAutoFormalGreeting}"/>
                             </div>
                         </div>
-
                         <lightning:input value="{!v.hh.npo02__Informal_Greeting__c}" aura:id="txtInformalGreeting"
                                          label="{!$Label.c.lblInformalGreeting}" onchange="{!c.onTextChange}" />
                         <div class="slds-form-element">
