@@ -28,8 +28,10 @@
                         (v.addrDefault.MailingStreet2__c != null ? '\n' + v.addrDefault.MailingStreet2__c : '')}" /><br/>
                     <ui:outputText value="{!v.addrDefault.MailingCity__c + (v.addrDefault.MailingState__c != null ? ', ' : '') + v.addrDefault.MailingState__c + ' ' + v.addrDefault.MailingPostalCode__c + ' '}" /><br/>
                     <ui:outputText value="{!v.addrDefault.MailingCountry__c}" />
-                    <lightning:input type="checkbox" label="{!v.addressUndeliverableLabel}" checked="{!v.addrDefault.Undeliverable__c}"
-                                     disabled="true" />
+                    <aura:if isTrue="{!v.addrDefault.Undeliverable__c}">
+                        <lightning:input type="checkbox" label="{!v.addressUndeliverableLabel}" checked="{!v.addrDefault.Undeliverable__c}"
+                                         disabled="true" />
+                    </aura:if>
                 </div>
             </div> 
             <div class="slds-card__footer">
@@ -89,9 +91,11 @@
                                                             (addr.MailingStreet2__c != null ? '\n' + addr.MailingStreet2__c : '')}" /><br/>
                                                         <ui:outputText value="{!addr.MailingCity__c + (addr.MailingState__c != null ? ', ' : '') + addr.MailingState__c + ' ' + addr.MailingPostalCode__c + ' '}" /><br/>
                                                         <ui:outputText value="{!addr.MailingCountry__c}" />
-                                                        <lightning:input disabled="true" type="checkbox"
-                                                                         label="{!v.addressUndeliverableLabel}"
-                                                                         checked="{!addr.Undeliverable__c}" />
+                                                        <aura:if isTrue="{!v.addrDefault.Undeliverable__c}">
+                                                            <lightning:input disabled="true" type="checkbox"
+                                                                             label="{!v.addressUndeliverableLabel}"
+                                                                             checked="{!addr.Undeliverable__c}" />
+                                                        </aura:if>
                                                     </div>
                                                 </div> 
                                             </div>

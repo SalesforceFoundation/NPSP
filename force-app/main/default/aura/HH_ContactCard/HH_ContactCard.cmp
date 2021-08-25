@@ -43,8 +43,10 @@
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>
                 </aura:if>
-                <lightning:input type="checkbox" disabled="true" label="{!v.contactUndeliverableLabel}"
-                                 checked="{!v.contact.Undeliverable_Address__c}" />
+                <aura:if isTrue="{!v.contact.Undeliverable_Address__c}">
+                    <lightning:input type="checkbox" disabled="true" label="{!v.contactUndeliverableLabel}"
+                                     checked="{!v.contact.Undeliverable_Address__c}" />
+                </aura:if>
             </div>
 
             <form>
@@ -64,7 +66,7 @@
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
                             <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
+                                <lightning:input type="c" aura:id="Exclude_from_Household_Formal_Greeting__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
                                 <span class="slds-checkbox_faux" id="fauxCBFormal"></span>
