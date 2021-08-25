@@ -504,34 +504,34 @@
      */
     includeLabelReferences: function() {
         try {
-            $A.get("$Label.npsp.lblAddressOverride");
-            $A.get("$Label.npsp.lblCCardExcludeFrom");
-            $A.get("$Label.npsp.lblHouseholdName");
-            $A.get("$Label.npsp.lblFormalGreeting");
-            $A.get("$Label.npsp.lblInformalGreeting");
-            $A.get("$Label.npsp.lblHousehold");
-            $A.get("$Label.npsp.lblDeleteContact");
-            $A.get("$Label.npsp.lblDeleteContactPrompt");
-            $A.get("$Label.npsp.btnRemove");
-            $A.get("$Label.npsp.lblStreet");
-            $A.get("$Label.npsp.lblCity");
-            $A.get("$Label.npsp.lblState");
-            $A.get("$Label.npsp.lblPostalCode");
-            $A.get("$Label.npsp.lblCountry");
-            $A.get("$Label.npsp.lblSalutation");
-            $A.get("$Label.npsp.lblFirstName");
-            $A.get("$Label.npsp.lblLastName");
-            $A.get("$Label.npsp.stgBtnCancel");
-            $A.get("$Label.npsp.stgBtnSave");
-            $A.get("$Label.npsp.bdiBtnClose");
-            $A.get("$Label.npsp.lblMergeHHTitle");
-            $A.get("$Label.npsp.lblMergeHHPrompt");
-            $A.get("$Label.npsp.lblBtnAddContact");
-            $A.get("$Label.npsp.lblBtnAddAllHHMembers");
-            $A.get("$Label.npsp.lblFindOrAddContact");
-            $A.get("$Label.npsp.lblFindInContacts");
-            $A.get("$Label.npsp.lblNoHHMergePermissions");
-            $A.get("$Label.npsp.lblYouAreHere");
+            $A.get("$Label.c.lblAddressOverride");
+            $A.get("$Label.c.lblCCardExcludeFrom");
+            $A.get("$Label.c.lblHouseholdName");
+            $A.get("$Label.c.lblFormalGreeting");
+            $A.get("$Label.c.lblInformalGreeting");
+            $A.get("$Label.c.lblHousehold");
+            $A.get("$Label.c.lblDeleteContact");
+            $A.get("$Label.c.lblDeleteContactPrompt");
+            $A.get("$Label.c.btnRemove");
+            $A.get("$Label.c.lblStreet");
+            $A.get("$Label.c.lblCity");
+            $A.get("$Label.c.lblState");
+            $A.get("$Label.c.lblPostalCode");
+            $A.get("$Label.c.lblCountry");
+            $A.get("$Label.c.lblSalutation");
+            $A.get("$Label.c.lblFirstName");
+            $A.get("$Label.c.lblLastName");
+            $A.get("$Label.c.stgBtnCancel");
+            $A.get("$Label.c.stgBtnSave");
+            $A.get("$Label.c.bdiBtnClose");
+            $A.get("$Label.c.lblMergeHHTitle");
+            $A.get("$Label.c.lblMergeHHPrompt");
+            $A.get("$Label.c.lblBtnAddContact");
+            $A.get("$Label.c.lblBtnAddAllHHMembers");
+            $A.get("$Label.c.lblFindOrAddContact");
+            $A.get("$Label.c.lblFindInContacts");
+            $A.get("$Label.c.lblNoHHMergePermissions");
+            $A.get("$Label.c.lblYouAreHere");
         } catch (e) {}
     },
 

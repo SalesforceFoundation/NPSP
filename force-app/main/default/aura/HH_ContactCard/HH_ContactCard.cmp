@@ -60,35 +60,35 @@
                     <legend class="form-element__legend slds-form-element__label">{!$Label.c.lblCCardExcludeFrom}</legend>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
-                                    class="slds-checkbox" change="{!c.onCheck}"
-                                    value="{!v.contact.Exclude_from_Household_Name__c }" name="Exclude_from_Household_Name__c"/>
-                                <span class="slds-checkbox_faux" id="fauxCBExName"></span>
-                                <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Name__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Name__c}"
+                                label="{!$Label.c.lblHouseholdName}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Name__c"
+                            />
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
-                                    class="slds-checkbox" change="{!c.onCheck}"
-                                    value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux" id="fauxCBFormal"></span>
-                                <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Formal_Greeting__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Formal_Greeting__c}"
+                                label="{!$Label.c.lblFormalGreeting}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Formal_Greeting__c"
+                            />
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Informal_Greeting__c"
-                                class="slds-checkbox" change="{!c.onCheck}"
-                                value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux" id="fauxCBInformal"></span>
-                                <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Informal_Greeting__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Informal_Greeting__c}"
+                                label="{!$Label.c.lblInformalGreeting}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Informal_Greeting__c"
+                            />
                         </div>
                     </div>
                 </fieldset>
