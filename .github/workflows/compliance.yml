@@ -13,7 +13,7 @@ name: "Instrumentation Compliance"
 on:
   pull_request:
     # Filter the job to only execute if CLS files are in the PR
-    paths:    
+    paths:
       - '**.cls'
       - '!unpackaged/**.cls'
 
@@ -29,10 +29,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
       - name: Get PR Owner
         id: pr_owner
         run: |
@@ -62,14 +58,11 @@ jobs:
           echo "- Current PR Owner: '${{steps.pr_owner.outputs.owner}}'"
           echo "- Assigned Reviewer: '${{steps.set_reviewer.outputs.reviewer}}'"
           if [ $GITHUB_BASE_REF ]; then
-            # This changes the context of subseqent commands to get the full change for the PR
-            git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
-
             # Find references to "Sfdo" in the force-app/main/ folder. Filters for the specific class references in later steps.
-            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/main/** | grep 'Sfdo' )
+            export DIFF=$( curl -L ${{ github.event.pull_request.diff_url }} | grep 'force-app/main/.*/Sfdo' )
           fi
 
-          # Assign the "git diff-tree" output to an internal workflow var to use later
+          # Assign the "diff-url" output to an internal workflow var to use later
           # Escape newlines (replace \n with %0A) so it's a single line of text
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
