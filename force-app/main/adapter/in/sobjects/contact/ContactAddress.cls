@@ -33,15 +33,16 @@ public class ContactAddress{
     * @param ca A ContactAddress object
     * @return Boolean
     */
-    public Boolean isSameAddress(ContactAddress ca){
-        if(this.MailingStreet == ca.MailingStreet &&
+    public Boolean isSameAddress(ContactAddress ca) {
+        if (this.MailingStreet == ca.MailingStreet &&
                 this.MailingCity == ca.MailingCity &&
                 this.MailingState == ca.MailingState &&
                 this.MailingZip == ca.MailingZip &&
-                this.MailingCountry == ca.MailingCountry)
+                this.MailingCountry == ca.MailingCountry) {
             return true;
-        else
-                return false;
+        } else {
+            return false;
+        }
     }
 
     /*******************************************************************************************************
@@ -49,29 +50,31 @@ public class ContactAddress{
     * @param ca An Address__c object
     * @return Boolean
     */
-    public Boolean isSameAddress(Address__c add){
+    public Boolean isSameAddress(Address__c add) {
         string strStreet = add.MailingStreet__c;
-        if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0)
+        if (add.MailingStreet2__c != null && add.MailingStreet2__c.length() > 0) {
             strStreet += '\n' + add.MailingStreet2__c;
-        if(this.MailingStreet == strStreet &&
+        }
+
+        if (this.MailingStreet == strStreet &&
                 this.MailingCity == add.MailingCity__c &&
                 this.MailingState == add.MailingState__c &&
                 this.MailingZip == add.MailingPostalCode__c &&
-                this.MailingCountry == add.MailingCountry__c)
+                this.MailingCountry == add.MailingCountry__c) {
             return true;
-        else
-                return false;
+        } else {
+            return false;
+        }
     }
 
     /*******************************************************************************************************
     * @description Gets the MD5 hash of this addresses information. Used for equality comparisons
     * @return String
     */
-    public String getMD5(){
-        if (MD5 != null){
+    public String getMD5() {
+        if (MD5 != null) {
             return MD5;
-        }
-        else{
+        } else {
             Blob MD5Hash;
             MD5Hash = System.Crypto.generateDigest('MD5', AddressBlob);
             MD5 = EncodingUtil.base64Encode(MD5Hash);
@@ -83,15 +86,16 @@ public class ContactAddress{
     * @description Determines of there is an address value passed
     * @return Boolean
     */
-    public Boolean hasAddress(){
-        if(MailingStreet != null ||
+    public Boolean hasAddress() {
+        if (MailingStreet != null ||
                 MailingCity != null ||
                 MailingState != null ||
                 MailingZip != null ||
-                MailingCountry != null)
+                MailingCountry != null) {
             return true;
-        else
-                return false;
+        } else {
+            return false;
+        }
     }
 }
 
