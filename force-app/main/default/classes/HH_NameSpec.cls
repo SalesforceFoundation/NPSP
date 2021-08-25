@@ -338,7 +338,6 @@ public with sharing class HH_NameSpec implements HH_INaming {
 
             //remove the field name itself to only include parent object references
             string fieldName = splitField[splitField.size()-1].trim();
-//            string fieldName = splitField[splitField.size()-1].trim().remove('}');
             splitField.remove(splitField.size()-1);
 
             //use the correct sObject
