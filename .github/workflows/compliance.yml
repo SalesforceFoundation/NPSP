@@ -9,7 +9,7 @@
 #                  or uses the SfdoInstrumentationService. This is primarily meant as a short term action to aid in
 #                  adoption of the new instrumentation services.
 #####################################################################################################################
-name: Instrumentation_Service_Compliance_Verification
+name: "Instrumentation Compliance"
 on:
   pull_request:
     # Filter the job to only execute if CLS files are in the PR
@@ -18,7 +18,7 @@ on:
       - '!unpackaged/**.cls'
 
 jobs:
-  Code_Check:
+  Instrumentation_Service_Compliance_Verification:
 
     # Constant vars
     # These should be adjusted per repository
