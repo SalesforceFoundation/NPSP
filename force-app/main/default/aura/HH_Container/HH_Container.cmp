@@ -252,24 +252,20 @@
                                                      label="{!$Label.c.lblFirstName}" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <ui:inputText value="{!v.conNew.LastName}" aura:id="txtLastName" class="slds-input slds-form-element__control" required="true"
-                                                  label="{!$Label.c.lblLastName}" labelClass="slds-form-element__label" />
+                                    <lightning:input value="{!v.conNew.LastName}" aura:id="txtLastName" required="true"
+                                                     label="{!$Label.c.lblLastName}" />
                                 </div>
                             </div>
                         </div> <!-- /slds-modal__content -->
 
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons_horizontal">
-                                <ui:button class="slds-button slds-button_neutral"
-                                    aura:id="btnCancelNew"
-                                    buttonTitle="{!$Label.c.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel}"
-                                    press="{!c.cancelNewContact}" />
-                                <ui:button class="slds-button slds-button_brand"
-                                    aura:id="btnNew"
-                                    buttonTitle="{!$Label.npo02.NewContact}"
-                                    label="{!$Label.npo02.NewContact}"
-                                    press="{!c.doNewContact}" />
+                                <lightning:button aura:id="btnCancelNew"
+                                                  label="{!$Label.c.stgBtnCancel}"
+                                                  onclick="{!c.cancelNewContact}" />
+                                <lightning:button aura:id="btnNew"
+                                                  label="{!$Label.npo02.NewContact}"
+                                                  onclick="{!c.doNewContact}" />
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->
