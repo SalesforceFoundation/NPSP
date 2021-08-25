@@ -81,4 +81,56 @@ private class HouseholdTests_TEST {
         }
     }
 
+    @IsTest
+    static void simpleContactInsertShouldCreateHouseholdWithAddress() {
+        insert TEST_ContactBuilder.dummyContactWithAddress();
+        List<Contact> contacts = getContacts();
+        System.assert(contacts.get(0).Current_Address__c != null,
+                'The contact should have a current address.');
+        System.assert(Integer.valueOf(contacts.get(0).Account
+                .Number_of_Household_Members__c) > 0,
+                'The number of members should be greater than zero.');
+
+        Contact member2 = new Contact(
+                LastName = 'member2',
+                AccountId = contacts.get(0).AccountId
+        );
+        insert member2;
+
+        List<Account> accounts = [
+                SELECT Id, Name, npo02__Formal_Greeting__c,
+                        npe01__SYSTEM_AccountType__c, npe01__SYSTEMIsIndividual__c, (
+                        SELECT Id, Name, Current_Address__c
+                        FROM Contacts
+                )
+                FROM Account
+        ];
+
+        System.assertEquals('Contact_forTests and member2 Household', accounts.get(0).Name,
+                'Household Name characterization test failed.');
+    }
+
+    private static List<Contact> getContacts() {
+        return [
+                SELECT Id,
+                        Account.Name,
+                        Account.Type,
+                        Account.npe01__SYSTEM_AccountType__c,
+                        Account.npo02__Formal_Greeting__c,
+                        Account.npo02__Informal_Greeting__c,
+                        Account.BillingAddress,
+                        Account.BillingStreet,
+                        Account.ShippingAddress,
+                        Account.ShippingStreet,
+                        Account.npe01__SYSTEMIsIndividual__c,
+                        Account.Number_of_Household_Members__c,
+                        MailingAddress,
+                        OtherAddress,
+                        is_Address_Override__c,
+                        Undeliverable_Address__c,
+                        Current_Address__c
+                FROM Contact
+        ];
+    }
+
 }
