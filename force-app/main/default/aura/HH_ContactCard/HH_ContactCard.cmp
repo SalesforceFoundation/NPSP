@@ -60,7 +60,7 @@
                             <label class="slds-checkbox">
                                 <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
-                                    value="{!v.contact.Exclude_from_Household_Name__c }"/>
+                                    value="{!v.contact.Exclude_from_Household_Name__c }" name="Exclude_from_Household_Name__c"/>
                                 <span class="slds-checkbox_faux" id="fauxCBExName"></span>
                                 <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
                             </label>
@@ -69,7 +69,7 @@
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
                             <label class="slds-checkbox">
-                                <lightning:input type="c" aura:id="Exclude_from_Household_Formal_Greeting__c"
+                                <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
                                     class="slds-checkbox" change="{!c.onCheck}"
                                     value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
                                 <span class="slds-checkbox_faux" id="fauxCBFormal"></span>
