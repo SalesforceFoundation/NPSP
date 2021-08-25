@@ -168,11 +168,15 @@ public without sharing class HouseholdNamingService {
             HouseholdName householdName = new HouseholdName(
                     new Contacts(householdMembers),
                     householdNamingImpl);
-            if (household.get('Name') != householdName.asName()
-                    || household.get('npo02__Formal_Greeting__c') !=
-                    householdName.asFormalGreeting()
-                    || household.get('npo02__Informal_Greeting__c') !=
-                    householdName.asInformalGreeting()) {
+            String formalGreeting = (String) household.get('npo02__Formal_Greeting__c');
+            String informalGreeting = (String) household.get('npo02__Informal_Greeting__c');
+            if (!household.get('Name').equals(householdName.asName())
+                    || formalGreeting != null
+                    && !formalGreeting.equals(String.valueOf(
+                    householdName.asFormalGreeting()))
+                    || informalGreeting != null
+                    && !informalGreeting.equals(String.valueOf(
+                    householdName.asInformalGreeting()))) {
 
                 setNameFieldValuesOnHousehold(
                         household,

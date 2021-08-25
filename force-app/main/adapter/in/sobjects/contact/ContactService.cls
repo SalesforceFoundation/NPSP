@@ -347,6 +347,9 @@ public with sharing class ContactService {
 
         // identify the specific records that had the problem, and don't fail the whole batch
         //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
+        // Set the HH flag to true to prevent the trigger handlers from running again
+        // to update  the name and member count now that they are already set correctly here.
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
         List<Account> accountsWithAddresses = [
                 SELECT Id, (
