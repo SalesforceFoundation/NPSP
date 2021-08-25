@@ -81,6 +81,11 @@ public inherited sharing class CRLP_RollupProcessor {
     private Id lastParentIdProcessed;
 
     /**
+    * @description used to flag a condition that requires us NOT to remove lastParentIdProcessed defs.
+    */
+    private Boolean hasNoDetailsForLastParent = false;
+
+    /**
      * @description Used to return a true to the calling LDV class when the last parent Id was removed from
      * the list of updated SObjects
      */
@@ -182,6 +187,15 @@ public inherited sharing class CRLP_RollupProcessor {
      */
     public CRLP_RollupProcessor withRelatedRecords(Map<Id, List<SObject>> relatedRecords) {
         this.relatedRecordsByDetailId = relatedRecords;
+        return this;
+    }
+
+    /**
+     * @description Inject the value of hasNoDetailsForLastParent - used to prevent removal
+     * of lastParentIdProcessed. Optional.
+     */
+    public CRLP_RollupProcessor withLastParentDetails(Boolean hasNoDetailsForLastParent) {
+        this.hasNoDetailsForLastParent = hasNoDetailsForLastParent;
         return this;
     }
 
@@ -421,8 +435,9 @@ public inherited sharing class CRLP_RollupProcessor {
         // the LDV Batch job.
         lastParentIdRemovedFromUpdatesList = false;
         if (isSkewMode
-                && lastParentIdProcessed != null
-                && recordsToUpdate.containsKey(lastParentIdProcessed)
+            && lastParentIdProcessed != null
+            && recordsToUpdate.containsKey(lastParentIdProcessed)
+            && !hasNoDetailsForLastParent
         ) {
             recordsToUpdate.remove(lastParentIdProcessed);
             lastParentIdRemovedFromUpdatesList = true;

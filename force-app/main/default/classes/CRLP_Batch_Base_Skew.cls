@@ -145,16 +145,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 parentKeyField = parentKeyField.split('\\.')[1];
             }
 
-            Id firstParentId, lastParentId;
-            if (parentObjectField == null) {
-                firstParentId = (Id)detailRecords[0].get(parentKeyField);
-                lastParentId = (Id)detailRecords[detailRecords.size()-1].get(parentKeyField);
-            } else {
-                SObject dtlRecord = detailRecords[0].getSObject(parentObjectField);
-                firstParentId = (Id)dtlRecord.get(parentKeyField);
-                dtlRecord = detailRecords[detailRecords.size()-1].getSObject(parentObjectField);
-                lastParentId = (Id)dtlRecord.get(parentKeyField);
-            }
+            Id firstParentId = getParentId(parentObjectField, detailRecords[0], parentKeyField);
+            Id lastParentId = getParentId(parentObjectField, detailRecords[detailRecords.size() - 1], parentKeyField);
 
             // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
@@ -162,6 +154,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             // If there is any post-query filtering that needs to be applied, do it here
             detailRecords = applyPostQueryLocatorFilters(detailRecords);
+
+            // Check if we need to keep the last processed parent id
+            Boolean hasNoDetailsForLastParentId =
+                hasNoDetailsForLastParentId(lastParentId, parentObjectField, detailRecords, parentKeyField);
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
             // as the primary queryLocator).
@@ -192,7 +188,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 .withRelatedRecords(paymentsByOpp)
                 .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
                 .withRollupDefinitions(this.statefulRollupsById)
-                .withJobOptions(options);
+                .withJobOptions(options)
+                .withLastParentDetails(hasNoDetailsForLastParentId);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -216,6 +213,47 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }
+    }
+
+    /**
+    * @description Check to see if lastParentId has had all detail records removed
+    * @param lastParentId
+    * @param parentObjectField
+    * @param detailRecords
+    * @param parentKeyField
+    * @return Boolean true if lastParentId has no associated detail records in a GAU rollup
+    */
+    @TestVisible
+    private Boolean hasNoDetailsForLastParentId(
+        Id lastParentId,
+        String parentObjectField,
+        List<SObject> detailRecords,
+        String parentKeyField
+    ) {
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU &&
+            lastParentId != getParentId(parentObjectField, detailRecords[detailRecords.size() - 1], parentKeyField)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+    * @description Get the parent Id of the referenced detail record
+    * @param parentObjectField
+    * @param detailRecord
+    * @param parentKeyField
+    * @return Id
+    */
+    @TestVisible
+    private Id getParentId(String parentObjectField, SObject detailRecord, String parentKeyField) {
+        Id parentId;
+        if (parentObjectField == null) {
+            parentId = (Id) detailRecord.get(parentKeyField);
+        } else {
+            parentId = (Id) detailRecord.getSObject(parentObjectField).get(parentKeyField);
+        }
+        return parentId;
     }
 
     /********************************************************************************************************
@@ -262,8 +300,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         // may cause a cpu time out issue.
         String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
 
-        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
         if (!CRLP_Rollup_SVC.hasActiveRollups(jobType)) {
             // If there are no active rollups for the object type, then force the query to return zero records.
             // This is needed because can't return null as a valid iterator.
@@ -294,38 +330,15 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
         // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
         // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
-        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
-                && this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-            whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
-
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
-                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
-        ) {
-            whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-
-        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == true
-                && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
-        ) {
-            whereClauses.add('IsPrimary = False');
+        String householdSettingsFilter = getHouseholdSettingsFilter();
+        if (!String.isEmpty(householdSettingsFilter)) {
+            whereClauses.add(householdSettingsFilter);
         }
 
         // Identify a common filter that can be applied to the main query to reduce the number of records queried
-        String addlFilter;
-        if (detailObjectType == Opportunity.SObjectType) {
-            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
-                    this.statefulCacheOfRollupsToBeProcessed);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
-
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-            addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
-        }
-        if (!String.isEmpty(addlFilter)) {
-            whereClauses.add(addlFilter);
+        String additionalFilter = getAdditionalFilter();
+        if (!String.isEmpty(additionalFilter)) {
+            whereClauses.add(additionalFilter);
         }
 
         if (!whereClauses.isEmpty()) {
@@ -335,6 +348,53 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         query += ' ORDER BY ' + keyFieldOverrideForQuery + ', CreatedDate ASC';
 
         return query;
+    }
+
+    /**
+    * @description Get any additional where clause filter related to household settings
+    * @return String
+    */
+    private String getHouseholdSettingsFilter() {
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+        String householdSettingsFilter;
+
+        if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+            && this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+            householdSettingsFilter = 'Account.npe01__SYSTEMIsIndividual__c = True';
+
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false
+            && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+            ) {
+            householdSettingsFilter = '(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)';
+
+        } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == true
+            && CRLP_Rollup_SVC.isOppContactRoleSoftCreditRollup(this.jobType)
+            ) {
+            householdSettingsFilter = 'IsPrimary = False';
+        }
+        return householdSettingsFilter;
+    }
+
+    /**
+    * @description Get additional where clause filter to narrow retrieval based on rollup type
+    * @return String
+    */
+    private String getAdditionalFilter() {
+        String additionalFilter;
+        if (detailObjectType == Opportunity.SObjectType) {
+            additionalFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
+                this.statefulCacheOfRollupsToBeProcessed);
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            additionalFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            additionalFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            additionalFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
+        }
+        return additionalFilter;
     }
 
     /**
@@ -457,9 +517,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         }
         if (lastParentId != firstParentId && processor.getRollupDefsForParent(lastParentId) != null) {
             updateStatefulCollections(processor, lastParentId);
-        }
-        if (lastParentIdProcessed != lastParentId && lastParentIdProcessed != null && processor.getRollupDefsForParent(lastParentIdProcessed) != null) {
-            updateStatefulCollections(processor, lastParentIdProcessed);
         }
 
         // Remember which batch iteration this parent was last NOT updated
