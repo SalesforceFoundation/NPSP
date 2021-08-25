@@ -13,7 +13,7 @@ import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBat
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import { getRecord } from 'lightning/uiRecordApi';
-import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 
 const pubSub = require('c/pubsubNoPageRef');
 import gift from 'c/geGift';
@@ -30,6 +30,11 @@ const dataImportBatchRecord = require('./data/getDataImportBatchRecord.json');
 const selectedContact = require('./data/getSelectedContact.json');
 const selectedAccount = require('./data/getSelectedAccount.json');
 const selectedDonation = require('./data/selectedDonation.json');
+const opportunityObjectDescribeInfo = require('./data/opportunityObjectDescribeInfo.json');
+const getPicklistValuesDonation = require('./data/getPicklistValuesDonation.json');
+const getPicklistValuesMajorGift = require('./data/getPicklistValuesMajorGift.json');
+const MAJOR_GIFT_RECORDTYPEID = '01211000003GQANAA4';
+const DONATION_RECORDTYPEID = '01211000003GQAKAA4';
 
 const createGeGiftEntryFormApp = () => {
     return createElement('c-ge-gift-entry-form-app',
@@ -408,7 +413,71 @@ describe('c-ge-gift-entry-form-app', () => {
         });
         
         it('when opportunity record type changes, sets picklist values', async () => {
+            const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
+            jest.useFakeTimers();
 
+            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
+            await flushPromises();
+
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === formApp.recordId;
+            });
+
+            getObjectInfo.emit({ keyPrefix: 'a01' }, config => {
+                return config.objectApiName?.objectApiName === OPP_PAYMENT_OBJECT.objectApiName;
+            });
+
+            getObjectInfo.emit(opportunityObjectDescribeInfo, config => {
+                return config.objectApiName?.objectApiName === OPPORTUNITY_OBJECT.objectApiName ||
+                    config.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            pubSub.fireEvent({}, 'geModalCloseEvent', { detail: selectedDonation });
+
+            await flushPromises();
+
+            getObjectInfo.emit(opportunityObjectDescribeInfo, config => {
+                return config.objectApiName?.objectApiName === OPPORTUNITY_OBJECT.objectApiName ||
+                    config.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            getPicklistValues.emit(getPicklistValuesDonation, config => {
+                return config.recordTypeId === DONATION_RECORDTYPEID;
+            });
+
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            expect(getFormRenderWrapper).toHaveBeenCalled();
+            const geFormSections = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
+
+            const [closeDate, amount, recordType, opportunityType, ...rest] = shadowQuerySelectorAll(geFormSections[3], 'c-ge-form-field');
+            const opportunityTypeInput = shadowQuerySelector(opportunityType, 'lightning-combobox');
+
+            expect(opportunityTypeInput.options).toContainOptions(['c.stgLabelNone','Donation Test']);
+
+            const recordTypeInput = shadowQuerySelector(recordType, 'lightning-combobox');
+
+            const detail = {
+                value: MAJOR_GIFT_RECORDTYPEID
+            };
+
+            recordTypeInput.dispatchEvent(new CustomEvent('change', { detail } ));
+            jest.runOnlyPendingTimers();
+
+            await flushPromises();
+
+            getPicklistValues.emit(getPicklistValuesMajorGift, config => {
+                return config.recordTypeId === MAJOR_GIFT_RECORDTYPEID;
+            });
+
+            await flushPromises();
+
+            expect(opportunityTypeInput.options).toContainOptions(['c.stgLabelNone','Donation Test', 'Major Gift Test']);
         });
     });
 

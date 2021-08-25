@@ -1,0 +1,13 @@
+{
+  "controllerValues": {},
+  "defaultValue": null,
+  "url": "/services/data/v52.0/ui-api/object-info/Opportunity/picklist-values/01211000003GQAKAA4/Type",
+  "values": [
+    {
+      "attributes": null,
+      "label": "Donation Test",
+      "validFor": [],
+      "value": "Donation Test"
+    }
+  ]
+}

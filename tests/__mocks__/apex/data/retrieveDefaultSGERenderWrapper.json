@@ -378,6 +378,34 @@
               "componentName": null
             },
             {
+              "customLabel": "Opportunity: Record Type",
+              "dataImportFieldMappingDevNames": [
+                "Donation_Record_Type_Name_f9208f3b0"
+              ],
+              "dataType": "REFERENCE",
+              "elementType": "field",
+              "fieldApiName": "RecordTypeId",
+              "id": "4cadb7ff-13c1-2bc2-f32a-ada5ecf8f205",
+              "label": "Opportunity: Record Type ID",
+              "objectApiName": "Opportunity",
+              "required": false,
+              "sectionId": "349da17f-20fc-de89-ad04-3bcfea525573"
+            },
+            {
+              "customLabel": "Opportunity: Opportunity Type",
+              "dataImportFieldMappingDevNames": [
+                "Donation_Type_010ef008b"
+              ],
+              "dataType": "PICKLIST",
+              "elementType": "field",
+              "fieldApiName": "Type",
+              "id": "03ca5e3a-8be7-f763-605e-220b3b173673",
+              "label": "Opportunity: Opportunity Type",
+              "objectApiName": "Opportunity",
+              "required": false,
+              "sectionId": "349da17f-20fc-de89-ad04-3bcfea525573"
+            },
+            {
               "validationRule": null,
               "sectionId": "349da17f-20fc-de89-ad04-3bcfea525573",
               "required": false,
@@ -1617,6 +1645,35 @@
           "Element_Type": "field",
           "DeveloperName": "Donation_Type_984f48842",
           "Data_Import_Field_Mapping_Set": "Migrated_Custom_Field_Mapping_Set"
+        },
+        {
+          "Data_Import_Field_Mapping_Set": "Migrated_Custom_Field_Mapping_Set",
+          "DeveloperName": "Donation_Type_010ef008b",
+          "Element_Type": "field",
+          "Is_Deleted": false,
+          "Is_Required": false,
+          "isDescribable": true,
+          "MasterLabel": "Donation Type",
+          "Required": "No",
+          "Source_Field_API_Name": "Donation_Type__c",
+          "Source_Field_Data_Type": "STRING",
+          "Source_Field_Display_Type_Label": "Text",
+          "Source_Field_Label": "Donation Type",
+          "Source_Field_Required": false,
+          "Target_Field_API_Name": "Type",
+          "Target_Field_Data_Type": "PICKLIST",
+          "Target_Field_Display_Type_Label": "Picklist",
+          "Target_Field_Label": "Opportunity Type",
+          "Target_Field_Picklist_Values": {
+            "Existing Customer - Upgrade": "Existing Customer - Upgrade",
+            "Existing Customer - Replacement": "Existing Customer - Replacement",
+            "Existing Customer - Downgrade": "Existing Customer - Downgrade",
+            "New Customer": "New Customer",
+            "Major Gift Test": "Major Gift Test"
+          },
+          "Target_Field_Required": false,
+          "Target_Object_API_Name": "Opportunity",
+          "Target_Object_Mapping_Dev_Name": "Opportunity_5813b05af"
         },
         {
           "Widget_Object_Mapping_Developer_Name": null,
@@ -6469,6 +6526,35 @@
         "Element_Type": "field",
         "DeveloperName": "Donation_Membership_Origin_5bcaa297e",
         "Data_Import_Field_Mapping_Set": "Migrated_Custom_Field_Mapping_Set"
+      },
+      "Donation_Type_010ef008b": {
+        "Data_Import_Field_Mapping_Set": "Migrated_Custom_Field_Mapping_Set",
+        "DeveloperName": "Donation_Type_010ef008b",
+        "Element_Type": "field",
+        "Is_Deleted": false,
+        "Is_Required": false,
+        "isDescribable": true,
+        "MasterLabel": "Donation Type",
+        "Required": "No",
+        "Source_Field_API_Name": "Donation_Type__c",
+        "Source_Field_Data_Type": "STRING",
+        "Source_Field_Display_Type_Label": "Text",
+        "Source_Field_Label": "Donation Type",
+        "Source_Field_Required": false,
+        "Target_Field_API_Name": "Type",
+        "Target_Field_Data_Type": "PICKLIST",
+        "Target_Field_Display_Type_Label": "Picklist",
+        "Target_Field_Label": "Opportunity Type",
+        "Target_Field_Picklist_Values": {
+          "Existing Customer - Upgrade": "Existing Customer - Upgrade",
+          "Existing Customer - Replacement": "Existing Customer - Replacement",
+          "Existing Customer - Downgrade": "Existing Customer - Downgrade",
+          "New Customer": "New Customer",
+          "Major Gift Test": "Major Gift Test"
+        },
+        "Target_Field_Required": false,
+        "Target_Object_API_Name": "Opportunity",
+        "Target_Object_Mapping_Dev_Name": "Opportunity_5813b05af"
       },
       "Donation_Description_a77b840ae": {
         "Widget_Object_Mapping_Developer_Name": null,
