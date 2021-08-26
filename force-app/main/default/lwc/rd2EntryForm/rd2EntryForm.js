@@ -439,10 +439,10 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Checks if Change History is Enabled, then checks the Annual Value
     */
-    handleAnnualValueChange() { 
+    handleAnnualValueChange() {
         if (this.isChangeHistoryEnabled) {
             if(!this.annualValue){
-                this.annualValue = this.getAnnualValue();
+                this.annualValue = this.getAnnualValue(true);
             }
             this.showChangeTypeField = this.isEdit;
             this.checkForAnnualValueChange();
@@ -452,14 +452,13 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Get the Annual Value based on the current Amount and Schedule
     */
-    getAnnualValue(){
+    getAnnualValue(duringInit) {
         const allFields = this.getAllFields();
         const amount = allFields[FIELD_AMOUNT.fieldApiName];
-        const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
-        const rdFrequency = getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY);
-        let frequency = (formFrequency != undefined) ? formFrequency : rdFrequency;
-        const period = allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-
+        const frequency = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) 
+            : allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
+        const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD) 
+            : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
         const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
         return amount * (yearlyFrequency / frequency);
     }
