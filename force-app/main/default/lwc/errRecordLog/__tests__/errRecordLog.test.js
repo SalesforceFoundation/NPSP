@@ -2,7 +2,6 @@ import { createElement } from 'lwc';
 import errRecordLog from 'c/errRecordLog';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
-import { registerSa11yMatcher } from '@sa11y/jest';
 
 import getData from '@salesforce/apex/ERR_Log_CTRL.getData';
 jest.mock(
@@ -32,10 +31,6 @@ const QA_LOCATOR_NO_ACCESS_ILLUSTRATION = "illustration NoAccess";
 describe('c-err-record-log', () => {
     let component;
 
-    beforeAll(() => {
-        registerSa11yMatcher();
-    });
-
     beforeEach(() => {
         component = createElement('c-err-record-log', {
             is: errRecordLog,
@@ -46,7 +41,6 @@ describe('c-err-record-log', () => {
 
     afterEach(() => {
         clearDOM();
-        jest.clearAllMocks();
     });
 
     /***
@@ -133,12 +127,6 @@ describe('c-err-record-log', () => {
                 expect(illustration).toBeNull();
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -213,11 +201,6 @@ describe('c-err-record-log', () => {
                 });
         });
 
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -257,12 +240,6 @@ describe('c-err-record-log', () => {
                     const recordSObjectBreadcrumb = getElement(component, QA_LOCATOR_RECORD_SOBJECT_PAGE);
                     expect(recordSObjectBreadcrumb).toBeNull();
                 });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
         });
     });
 
