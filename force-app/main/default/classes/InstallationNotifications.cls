@@ -39,32 +39,25 @@ public inherited sharing class InstallationNotifications {
    @TestVisible private List<CustomNotificationType> customNotificationTypes;
    @TestVisible private Map<String, CustomNotificationType> activeNotificationsByType;
 
-   private static InstallationNotifications installationNotifications;
-
-   public static InstallationNotifications getInstance(){
-      if (installationNotifications == null) {
-         installationNotifications = new InstallationNotifications();
+   public InstallationNotifications() {
+      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
+      if (!activeNotifications.isEmpty()) {
+         this.customNotificationTypes =
+             notificationTypeSelector.getCustomNotificationTypesFor(activeNotificationChannels());
+         this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
       }
-      return installationNotifications;
+   }
+
+   private List<String> activeNotificationChannels() {
+      List<String> activeNotificationChannels = new List<String>();
+      for (Custom_Notification__mdt notification : this.activeNotifications) {
+         activeNotificationChannels.add(notification.Notification_Channel__c);
+      }
+      return activeNotificationChannels;
    }
 
    @TestVisible
-   private static void setInstance(InstallationNotifications instance){
-      installationNotifications = instance;
-   }
-
-   public InstallationNotifications() {
-      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
-      if (!shouldPublishNotifications(this.activeNotifications)) { return; }
-      this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
-      this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
-   }
-
-   private Boolean shouldPublishNotifications (List<Custom_Notification__mdt> activeNotifications) {
-      return !activeNotifications.isEmpty() && activeNotifications != null;
-   }
-
-   private InstallationNotificationsSelector installationNotificationsSelector {
+   private static InstallationNotificationsSelector installationNotificationsSelector {
       get {
          if (installationNotificationsSelector == null) {
             installationNotificationsSelector = new InstallationNotificationsSelector();
@@ -74,7 +67,8 @@ public inherited sharing class InstallationNotifications {
       set;
    }
 
-   private CustomNotificationTypeSelector notificationTypeSelector {
+   @TestVisible
+   private static CustomNotificationTypeSelector notificationTypeSelector {
       get {
          if (notificationTypeSelector == null) {
             notificationTypeSelector = new CustomNotificationTypeSelector();
@@ -96,7 +90,7 @@ public inherited sharing class InstallationNotifications {
    public void publish() {
       for (Custom_Notification__mdt notification : this.activeNotifications) {
          if (!canPublish(notification)) { continue; }
-            ElevateAdNotificationContent content = getNotificationContent(
+         IInstallationNotification content = getNotificationContent(
                 notification.Notification_Content_Implementation__c);
             Messaging.CustomNotification customNotification = new Messaging.CustomNotification();
             customNotification.setBody(content.body());
@@ -131,14 +125,13 @@ public inherited sharing class InstallationNotifications {
       return JSON.serialize(pageRef);
    }
 
-   private ElevateAdNotificationContent getNotificationContent(String notificationContentImpl) {
-      return (ElevateAdNotificationContent)getClassType(notificationContentImpl).newInstance();
+   private IInstallationNotification getNotificationContent(String notificationContentImpl) {
+      return (IInstallationNotification)getClassType(notificationContentImpl).newInstance();
    }
 
    @TestVisible
    private UserIds getAudience(String audienceImpl) {
-      System.debug('Audience Impl '+ audienceImpl);
-      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl)?.newInstance();
+      IAudience nonElevateCustomers = (IAudience)getClassType(audienceImpl)?.newInstance();
       return nonElevateCustomers?.audience();
    }
 

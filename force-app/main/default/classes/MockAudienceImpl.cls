@@ -30,46 +30,14 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Notification audience implementation for non-elevate US customers.
+* @description Mock Audience Implementation class for Notification Framework
 */
 
-public inherited sharing class USNonElevateCustomers implements IAudience {
+public inherited sharing class MockAudienceImpl implements IAudience {
 
-   private static final String US_ISO_CODE = 'US';
-
+   @TestVisible private static Id userId;
    public UserIds audience() {
-      UserIds audience;
-
-      if (isTargetOrganization()) {
-         audience = new UserIds(new Map<Id, User>(userSelector.getUsers()).keySet());
-      }
-      return audience;
-   }
-
-   private Boolean isTargetOrganization() {
-      return !isElevateCustomer() && isUSOrganization();
-   }
-
-   private Boolean isElevateCustomer () {
-      PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
-      return serviceConfig.isIntegrationEnabled();
-   }
-
-   private Boolean isUSOrganization () {
-      return [
-          SELECT SignupCountryIsoCode
-          FROM Organization
-      ].SignupCountryIsoCode == US_ISO_CODE;
-   }
-
-   @TestVisible
-   private UserSelector userSelector {
-      get {
-         if (userSelector == null) {
-            userSelector = new UserSelector();
-         }
-         return userSelector;
-      }
-      set;
+      userId = UTIL_UnitTestData_TEST.mockId(User.SObjectType);
+      return new UserIds(new Set<Id>{userId});
    }
 }

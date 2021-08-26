@@ -33,64 +33,81 @@
 * @description Installation Notification tests.
 */
 
-@IsTest
-private class InstallationsNotifications_TEST {
-   @IsTest
-   static void shouldNotPublishNotificationWithoutRedirectURL() {
-
+@isTest
+private class InstallationNotifications_TEST {
+   @isTest
+   static void shouldNotPublishNotificationWithoutAudience() {
       Test.startTest();
-      InstallationsNotificationsSelectorMock installationsNotificationsSelectorMock =
-          new InstallationsNotificationsSelectorMock().withRedirectURL(false);
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock().withAudience(false);
       CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
           new CustomNotificationTypeSelectorMock();
 
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
       InstallationNotifications notifications = new InstallationNotifications();
-
-
-      notifications.activeNotifications =
-          stubFor(installationsNotificationsSelectorMock).getActiveCustomNotifications();
-      notifications.customNotificationTypes =
-          stubFor(customNotificationTypeSelectorMock).getCustomNotificationTypes();
-
-      notifications.activeNotificationsByType =
-          new Map<String, CustomNotificationType>{
-              notifications.customNotificationTypes[0].CustomNotifTypeName => notifications.customNotificationTypes[0]
-      };
-      System.assert(!notifications.canPublish(notifications.activeNotifications[0]));
       Test.stopTest();
+      System.assert(!notifications.canPublish(notifications?.activeNotifications[0]));
+      System.assert(MockAudienceImpl.userId == null);
    }
 
-   @IsTest
-   static void shouldPublishNotificationWithRedirectURL() {
+   @isTest
+   static void shouldPublishNotificationWithAudience() {
 
       Test.startTest();
-      InstallationsNotificationsSelectorMock installationsNotificationsSelectorMock =
-          new InstallationsNotificationsSelectorMock().withRedirectURL(true);
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock().withAudience(true);
       CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
           new CustomNotificationTypeSelectorMock();
 
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
+
       InstallationNotifications notifications = new InstallationNotifications();
-
-      notifications.activeNotifications =
-          stubFor(installationsNotificationsSelectorMock).getActiveCustomNotifications();
-      notifications.customNotificationTypes =
-          stubFor(customNotificationTypeSelectorMock).getCustomNotificationTypes();
-
-      notifications.activeNotificationsByType =
-          new Map<String, CustomNotificationType>{
-              notifications.customNotificationTypes[0].CustomNotifTypeName => notifications.customNotificationTypes[0]
-          };
-
-      System.assert(notifications.canPublish(notifications.activeNotifications[0]));
       Test.stopTest();
+
+      System.assert(notifications.canPublish(notifications?.activeNotifications[0]));
+      System.assert(MockAudienceImpl.userId != null);
    }
 
-   private class InstallationsNotificationsSelectorMock implements StubProvider {
+   @isTest
+   static void shouldNotPublishInActiveNotification() {
 
-      private Boolean withRedirectURL;
+      Test.startTest();
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock().withIsActive(false);
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
 
-      public InstallationsNotificationsSelectorMock withRedirectURL (Boolean withRedirectURL) {
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
+
+      InstallationNotifications notifications = new InstallationNotifications();
+      Test.stopTest();
+
+      System.assertEquals(notifications.customNotificationTypes, null);
+      System.assertEquals(notifications.activeNotificationsByType, null);
+
+   }
+
+   private class InstallationNotificationsSelectorMock implements StubProvider {
+
+      private Boolean withRedirectURL = true;
+      private Boolean isActive = true;
+      private Boolean withAudience = true;
+
+      public InstallationNotificationsSelectorMock withRedirectURL (Boolean withRedirectURL) {
          this.withRedirectURL = withRedirectURL;
+         return this;
+      }
+
+      public InstallationNotificationsSelectorMock withIsActive (Boolean isActive) {
+         this.isActive = isActive;
+         return this;
+      }
+
+      public InstallationNotificationsSelectorMock withAudience (Boolean withAudience) {
+         this.withAudience = withAudience;
          return this;
       }
 
@@ -104,17 +121,21 @@ private class InstallationsNotifications_TEST {
 
            switch on (stubbedMethodName) {
                when 'getActiveCustomNotifications' {
+                  if(!isActive) {
+                     return new List<Custom_Notification__mdt>();
+                  }
+
                   Id DUMMY_CUSTOM_NOTIFICATION_ID =
                       UTIL_UnitTestData_TEST.mockId(Custom_Notification__mdt.getSObjectType());
 
                   List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
                       new Custom_Notification__mdt(
                           Id = DUMMY_CUSTOM_NOTIFICATION_ID,
-                          Notification_Channel__c = 'Fake Notification',
-                          Audience_Implementation__c = 'MockAudienceImpl',
+                          Notification_Channel__c = 'Fake Notificationuu',
+                          Audience_Implementation__c = withAudience ? 'MockAudienceImpl': '',
                           Notification_Content_Implementation__c = 'MockNotificationContentImpl',
                           Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
-                          IsActive__c = true
+                          IsActive__c = isActive
                       )
                   };
                   return notifications;
@@ -134,7 +155,7 @@ private class InstallationsNotifications_TEST {
           List<Object> listOfArgs) {
 
          switch on (stubbedMethodName) {
-            when 'getCustomNotificationTypes' {
+            when 'getCustomNotificationTypesFor' {
                Id DUMMY_CUSTOM_NOTIFICATION_ID = UTIL_UnitTestData_TEST.mockId(CustomNotificationType.getSObjectType());
 
                List<CustomNotificationType> customNotificationTypes = new List<CustomNotificationType>{
@@ -157,7 +178,7 @@ private class InstallationsNotifications_TEST {
    }
 
    private static InstallationNotificationsSelector stubFor(
-       InstallationsNotificationsSelectorMock installationsNotificationsSelectorMock) {
+       InstallationNotificationsSelectorMock installationsNotificationsSelectorMock) {
       return (InstallationNotificationsSelector) Test.createStub(
           InstallationNotificationsSelector.class, installationsNotificationsSelectorMock);
    }
