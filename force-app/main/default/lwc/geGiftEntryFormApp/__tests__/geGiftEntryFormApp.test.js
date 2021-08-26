@@ -95,7 +95,6 @@ describe('c-ge-gift-entry-form-app', () => {
 
     afterEach(() => {
         clearDOM();
-        jest.clearAllMocks();
     });
 
     describe('rendering behavior', () => {
@@ -282,7 +281,6 @@ describe('c-ge-gift-entry-form-app', () => {
     describe('field change behavior', () => {
         it('populates related fields for a contact when contact lookup changes', async () => {
             const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
-            jest.useFakeTimers();
 
             const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
@@ -304,8 +302,10 @@ describe('c-ge-gift-entry-form-app', () => {
                 value: [ '003_fake_contact_id' ]
             };
 
-            contactInput.dispatchEvent(new CustomEvent('change', { detail } ));
-            jest.runOnlyPendingTimers();
+
+            runWithFakeTimer(() => {
+                contactInput.dispatchEvent(new CustomEvent('change', { detail } ));
+            });
 
             await flushPromises();
 
@@ -328,7 +328,6 @@ describe('c-ge-gift-entry-form-app', () => {
 
         it('populates related fields for an account when account lookup is changed', async () => {
             const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
-            jest.useFakeTimers();
 
             const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
@@ -350,8 +349,9 @@ describe('c-ge-gift-entry-form-app', () => {
                 value: [ '001_fake_account_id' ]
             };
 
-            accountInput.dispatchEvent(new CustomEvent('change', { detail } ));
-            jest.runOnlyPendingTimers();
+            runWithFakeTimer(() => {
+                accountInput.dispatchEvent(new CustomEvent('change', { detail } ));
+            });
 
             await flushPromises();
 
@@ -376,7 +376,6 @@ describe('c-ge-gift-entry-form-app', () => {
 
         it('when donor type changes, clears donation imported fields', async () => {
             const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
-            jest.useFakeTimers();
 
             const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
@@ -411,8 +410,9 @@ describe('c-ge-gift-entry-form-app', () => {
                 value: 'Account1'
             };
 
-            donorInput.dispatchEvent(new CustomEvent('change', { detail } ));
-            jest.runOnlyPendingTimers();
+            runWithFakeTimer(() => {
+                donorInput.dispatchEvent(new CustomEvent('change', { detail } ));
+            });
 
             await flushPromises();
 
@@ -424,8 +424,6 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('when opportunity record type changes, sets picklist values', async () => {
-            const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
-            jest.useFakeTimers();
 
             const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
@@ -477,8 +475,9 @@ describe('c-ge-gift-entry-form-app', () => {
                 value: MAJOR_GIFT_RECORDTYPEID
             };
 
-            recordTypeInput.dispatchEvent(new CustomEvent('change', { detail } ));
-            jest.runOnlyPendingTimers();
+            runWithFakeTimer(() => {
+                recordTypeInput.dispatchEvent(new CustomEvent('change', { detail } ));
+            });
 
             await flushPromises();
 
@@ -589,4 +588,11 @@ const shadowQuerySelectorAll = (element, selector) => {
 const getLastCall = (mockedFn) => {
     const callCount = mockedFn.mock.calls.length;
     return mockedFn.mock.calls[callCount-1];
+}
+
+const runWithFakeTimer = (someFn) => {
+    jest.useFakeTimers();
+    someFn();
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
 }
