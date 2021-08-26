@@ -3,7 +3,6 @@ import rd2ElevateInformation from 'c/rd2ElevateInformation';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { getNavigateCalledWith } from "lightning/navigation";
-import { registerSa11yMatcher } from '@sa11y/jest';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import getData from '@salesforce/apex/RD2_ElevateInformation_CTRL.getAppConfigurationData';
 import getError from '@salesforce/apex/RD2_ElevateInformation_CTRL.getLatestErrorMessage';
@@ -53,10 +52,6 @@ const ICON_NAME_SUCCESS = 'utility:success';
 
 describe('c-rd2-elevate-information', () => {
     let component;
-
-    beforeAll(() => {
-        registerSa11yMatcher();
-    });
 
     beforeEach(() => {
         component = createElement('c-rd2-elevate-information', {
@@ -150,12 +145,6 @@ describe('c-rd2-elevate-information', () => {
             expect(getData).toHaveBeenCalled();
 
             expect(updatePaymentButton).toBeTruthy();
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
         });
     });
 
@@ -311,12 +300,6 @@ describe('c-rd2-elevate-information', () => {
                 expect(updatePaymentLink).toBeNull();
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -367,12 +350,6 @@ describe('c-rd2-elevate-information', () => {
                 assertNoIllustrationIsDisplayed(component);
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
     });
 
 
@@ -418,12 +395,6 @@ describe('c-rd2-elevate-information', () => {
         it('should not display any illustration', async () => {
             return global.flushPromises().then(async () => {
                 assertNoIllustrationIsDisplayed(component);
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
@@ -477,12 +448,6 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
@@ -539,12 +504,6 @@ describe('c-rd2-elevate-information', () => {
 
                 const messageDiv = component.shadowRoot.querySelector('div.slds-text-longform');
                 expect(messageDiv).toBeDefined();
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
