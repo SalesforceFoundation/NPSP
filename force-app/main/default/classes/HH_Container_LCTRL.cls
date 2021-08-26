@@ -105,9 +105,6 @@ public with sharing class HH_Container_LCTRL {
 
     private static Set<String> getHouseholdSelectFields(Boolean isHousehold, String soqlFromObject) {
         Set<String> householdSelectFields = new Set<String>();
-        if (isHousehold) {
-            householdSelectFields.add(String.valueOf(Account.Undeliverable_Address__c));
-        }
         householdSelectFields.addAll(getHouseholdFieldsToEdit(isHousehold, soqlFromObject));
 
         return householdSelectFields;
@@ -127,8 +124,9 @@ public with sharing class HH_Container_LCTRL {
 
         if (isHousehold) {
             householdFieldsToEdit.addAll(new Set<String>{
-                'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode', 
-                'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
+                'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode',
+                 String.valueOf(Account.Undeliverable_Address__c), 'BillingCountry',
+                'BillingLatitude', 'BillingLongitude'});
         } else {
             householdFieldsToEdit.addAll(new Set<String>{
                 'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c', 
@@ -295,7 +293,8 @@ public with sharing class HH_Container_LCTRL {
             'MailingPostalCode', 
             'MailingCountry', 
             'MailingLatitude', 
-            'MailingLongitude'};
+            'MailingLongitude',
+            String.valueOf(Contact.Undeliverable_Address__c)};
 
         addContactMiddleNameField(setContactFields);
 

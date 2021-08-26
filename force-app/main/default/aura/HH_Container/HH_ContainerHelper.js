@@ -431,7 +431,6 @@
     updateDefaultAddress: function(component, addr) {
         var hh = component.get('v.hh');
         var isAccount = component.get('v.hhTypePrefix') === '001';
-
         // update the household
         if (isAccount) {
             hh.BillingStreet = addr.MailingStreet__c;
@@ -441,6 +440,7 @@
             hh.BillingState = addr.MailingState__c;
             hh.BillingPostalCode = addr.MailingPostalCode__c;
             hh.BillingCountry = addr.MailingCountry__c;
+            hh.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
         } else {
             hh.npo02__MailingStreet__c = addr.MailingStreet__c;
             if (addr.MailingStreet2__c)
@@ -474,6 +474,7 @@
         con.MailingState = addr.MailingState__c;
         con.MailingPostalCode = addr.MailingPostalCode__c;
         con.MailingCountry = addr.MailingCountry__c;
+        con.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
     },
 
     /*******************************************************************************************************
