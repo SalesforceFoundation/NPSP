@@ -1,10 +1,8 @@
 import { createElement } from 'lwc';
-import { registerSa11yMatcher } from '@sa11y/jest'
 
 import GsApplicationStatus from 'c/gsApplicationStatus'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 
-registerSa11yMatcher();
 
 /**
  * @description Unit testing for gsApplicationStatus components.
@@ -16,11 +14,6 @@ jest.mock('@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
     };
 }, {virtual: true}
 );
-
-function flushPromises() {
-    return new Promise(resolve => setImmediate(resolve));
-}
-
 
 // for checking the trial expiration date, 15 days from now are considered.
 
@@ -42,9 +35,7 @@ const APPLIED_EXPIRATION_DATE_15_DAYS = {
 
 describe('c-application-status', () => {
     afterEach(() => {
-        while(document.body.firstChild) {
-            document.body.removeChild(document.body.firstChild);
-        }
+        clearDOM();
     });
 
     /**
@@ -62,7 +53,6 @@ describe('c-application-status', () => {
         then(() => {
             const button = element.shadowRoot.querySelector('.slds-button');
             expect(button.innerHTML).toBe('c.gsApplyForFreeLicenses');
-            expect(button).toBeAccessible();
             const daysLeft = element.shadowRoot.querySelector(".daysLeft");
             expect(daysLeft.innerHTML).toContain('15');
             const img = element.shadowRoot.querySelector('img').getAttribute('src');
@@ -87,7 +77,6 @@ describe('c-application-status', () => {
         then(() => {
             const button = element.shadowRoot.querySelector('.slds-button');
             expect(button.innerHTML).toBe('c.gsCheckStatus');
-            expect(button).toBeAccessible();
             const daysLeft = element.shadowRoot.querySelector(".daysLeft");
             expect(daysLeft.innerHTML).toContain('15');
             const img = element.shadowRoot.querySelector('img').getAttribute('src');

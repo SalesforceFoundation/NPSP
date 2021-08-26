@@ -6,10 +6,6 @@ describe('c-ge-modal-prompt', () => {
         clearDOM();
     });
 
-    function flushPromises() {
-        return new Promise((resolve) => setImmediate(resolve));
-    }
-
     const setup = (variant='warning') => {
         const element = createElement('c-ge-modal-prompt', {
             is: GeModalPrompt
