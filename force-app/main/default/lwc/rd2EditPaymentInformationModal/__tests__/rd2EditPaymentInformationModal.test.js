@@ -1,6 +1,5 @@
 import { createElement } from 'lwc';
 import rd2EditPaymentInformationModal from 'c/rd2EditPaymentInformationModal';
-import { registerSa11yMatcher } from '@sa11y/jest';
 import { updateRecord } from 'lightning/uiRecordApi';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 
@@ -29,10 +28,6 @@ const paymentMethodPicklistValues = require('./data/paymentMethodPicklistValues.
 describe('c-rd2-edit-payment-information-modal', () => {
     let component;
 
-    beforeAll(() => {
-        registerSa11yMatcher();
-    });
-
     beforeEach(() => {
         component = createElement('c-rd2-edit-payment-information-modal', {
             is: rd2EditPaymentInformationModal,
@@ -41,7 +36,6 @@ describe('c-rd2-edit-payment-information-modal', () => {
 
     afterEach(() => {
         clearDOM();
-        jest.clearAllMocks();
     });
 
     /***
@@ -110,12 +104,6 @@ describe('c-rd2-edit-payment-information-modal', () => {
             })
             .then(async () => {
                 expect(closeEventHandler).toBeCalled();
-            });
-        });
-
-        it("the modal should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
