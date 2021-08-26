@@ -11,6 +11,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import processGiftsFor from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
@@ -72,6 +73,16 @@ jest.mock(
 
 jest.mock(
     '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy',
+    () => {
+        return {
+            default: jest.fn(),
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    '@salesforce/apex/GE_GiftEntryController.processGiftsFor',
     () => {
         return {
             default: jest.fn(),
@@ -411,7 +422,7 @@ describe('c-ge-gift-entry-form-app', () => {
                 "PaymentImported__r": null
             });
         });
-        
+
         it('when opportunity record type changes, sets picklist values', async () => {
             const updateFieldsWithSpy = jest.spyOn(gift.prototype, 'updateFieldsWith');
             jest.useFakeTimers();
@@ -531,6 +542,8 @@ describe('c-ge-gift-entry-form-app', () => {
                 totals: { TOTAL: 5 },
                 totalDonationsAmount: 100
             });
+            processGiftsFor.mockResolvedValue({});
+
             await flushPromises();
 
             const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
