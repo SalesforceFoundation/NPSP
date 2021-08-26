@@ -615,7 +615,8 @@ public with sharing class HH_Container_LCTRL {
                 address.MailingState__c = (String)household.get('BillingState');
                 address.MailingPostalCode__c = (String)household.get('BillingPostalCode');
                 address.MailingCountry__c = (String)household.get('BillingCountry');
-                address.Undeliverable__c = (Boolean)household.get('Undeliverable_Address__c');
+                address.Undeliverable__c = (Boolean)household.get(
+                    UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'));
             } else {
                 address.MailingStreet__c = (String)household.get('npo02__MailingStreet__c');
                 address.MailingCity__c = (String)household.get('npo02__MailingCity__c');
