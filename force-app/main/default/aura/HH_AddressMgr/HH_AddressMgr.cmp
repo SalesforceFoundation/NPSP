@@ -3,7 +3,7 @@
     <!-- note we kept our addresses typed as Object, to avoid namespace prefixing issues when we used Address__c -->
     <aura:attribute name="listAddr" type="Object[]" access="public"/>
     <aura:attribute name="addrDefault" type="Object" access="public" />
-    <aura:attribute name="addressUndeliverableLabel" type="Map" access="public" />
+    <aura:attribute name="addressUndeliverableLabel" type="String" access="public" />
 
     <!-- private attributes -->
     <aura:attribute name="addrNew" type="Object" access="private"/>
