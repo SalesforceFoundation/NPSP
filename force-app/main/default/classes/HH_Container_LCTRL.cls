@@ -653,7 +653,7 @@ public with sharing class HH_Container_LCTRL {
             if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
 
                 Set<String> setFields = new Set<String>{'MailingStreet__c', 'MailingStreet2__c',
-                        String.valueOf(Address__c.Undeliverable__c), 'MailingCity__c', 'MailingState__c',
+                        'Undeliverable__c', 'MailingCity__c', 'MailingState__c',
                         'MailingPostalCode__c', 'MailingCountry__c', 'Default_Address__c'};
                 String strSoql = 'select ';
                 String strComma = '';
