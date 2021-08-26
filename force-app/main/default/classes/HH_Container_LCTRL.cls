@@ -644,6 +644,7 @@ public with sharing class HH_Container_LCTRL {
                 address.MailingState__c = con.MailingState;
                 address.MailingPostalCode__c = con.MailingPostalCode;
                 address.MailingCountry__c = con.MailingCountry;
+                address.Undeliverable__c = con.Undeliverable_Address__c;
                 strKey = new NPSP_Address(address).getAddrKey();
                 if (setAddrKey.add(strKey)) {
                     listAddr.add(address);
