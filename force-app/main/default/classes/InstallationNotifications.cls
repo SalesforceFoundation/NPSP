@@ -35,9 +35,23 @@
 
 public inherited sharing class InstallationNotifications {
 
-   private List<Custom_Notification__mdt> activeNotifications;
-   private List<CustomNotificationType> customNotificationTypes;
-   private Map<String, CustomNotificationType> activeNotificationsByType;
+   @TestVisible private List<Custom_Notification__mdt> activeNotifications;
+   @TestVisible private List<CustomNotificationType> customNotificationTypes;
+   @TestVisible private Map<String, CustomNotificationType> activeNotificationsByType;
+
+   private static InstallationNotifications installationNotifications;
+
+   public static InstallationNotifications getInstance(){
+      if (installationNotifications == null) {
+         installationNotifications = new InstallationNotifications();
+      }
+      return installationNotifications;
+   }
+
+   @TestVisible
+   private static void setInstance(InstallationNotifications instance){
+      installationNotifications = instance;
+   }
 
    public InstallationNotifications() {
       this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
@@ -50,7 +64,6 @@ public inherited sharing class InstallationNotifications {
       return !activeNotifications.isEmpty() && activeNotifications != null;
    }
 
-   @TestVisible
    private InstallationNotificationsSelector installationNotificationsSelector {
       get {
          if (installationNotificationsSelector == null) {
@@ -61,7 +74,6 @@ public inherited sharing class InstallationNotifications {
       set;
    }
 
-   @TestVisible
    private CustomNotificationTypeSelector notificationTypeSelector {
       get {
          if (notificationTypeSelector == null) {
@@ -100,7 +112,7 @@ public inherited sharing class InstallationNotifications {
    private Boolean canPublish(Custom_Notification__mdt notification) {
       return (getAudience(notification.Audience_Implementation__c) != null
           || String.isNotBlank(notification.Redirect_URL__c)
-          && activeNotificationsByType.containsKey(notification.Notification_Channel__c));
+          && this.activeNotificationsByType.containsKey(notification.Notification_Channel__c));
    }
 
 
@@ -123,9 +135,11 @@ public inherited sharing class InstallationNotifications {
       return (ElevateAdNotificationContent)getClassType(notificationContentImpl).newInstance();
    }
 
+   @TestVisible
    private UserIds getAudience(String audienceImpl) {
-      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl).newInstance();
-      return nonElevateCustomers.audience();
+      System.debug('Audience Impl '+ audienceImpl);
+      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl)?.newInstance();
+      return nonElevateCustomers?.audience();
    }
 
    private Type getClassType(String classImpl) {

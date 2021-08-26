@@ -36,42 +36,64 @@
 @IsTest
 private class InstallationsNotifications_TEST {
    @IsTest
-   static void shouldPublishNotification() {
+   static void shouldNotPublishNotificationWithoutRedirectURL() {
 
-      InstallationNotificationsMock installationNotificationsMock = new InstallationNotificationsMock();
+      Test.startTest();
       InstallationsNotificationsSelectorMock installationsNotificationsSelectorMock =
-          new InstallationsNotificationsSelectorMock();
-      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock = new CustomNotificationTypeSelectorMock();
-      InstallationNotifications notifications = stubFor(installationNotificationsMock);
-      notifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
-      notifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
-      notifications.publish();
-      System.assert(installationNotificationsMock.hasPublishBeenCalled);
+          new InstallationsNotificationsSelectorMock().withRedirectURL(false);
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
+
+      InstallationNotifications notifications = new InstallationNotifications();
+
+
+      notifications.activeNotifications =
+          stubFor(installationsNotificationsSelectorMock).getActiveCustomNotifications();
+      notifications.customNotificationTypes =
+          stubFor(customNotificationTypeSelectorMock).getCustomNotificationTypes();
+
+      notifications.activeNotificationsByType =
+          new Map<String, CustomNotificationType>{
+              notifications.customNotificationTypes[0].CustomNotifTypeName => notifications.customNotificationTypes[0]
+      };
+      System.assert(!notifications.canPublish(notifications.activeNotifications[0]));
+      Test.stopTest();
    }
 
-   private class InstallationNotificationsMock implements StubProvider {
-      public Boolean hasPublishBeenCalled = false;
-      public Object handleMethodCall(
-          Object stubbedObject,
-          String stubbedMethodName,
-          Type returnType,
-          List<Type> listOfParamTypes,
-          List<String> listOfParamNames,
-          List<Object> listOfArgs) {
+   @IsTest
+   static void shouldPublishNotificationWithRedirectURL() {
 
-          switch on (stubbedMethodName) {
-             when 'getAudience' {
-                Id DUMMY_USER_ID = UTIL_UnitTestData_TEST.mockId(User.getSObjectType());
-                return new Set<String>{DUMMY_USER_ID};
-             }
-             when 'publish' {
-                hasPublishBeenCalled = true;
-             }
-          }
-         return null;
-      }
+      Test.startTest();
+      InstallationsNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationsNotificationsSelectorMock().withRedirectURL(true);
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
+
+      InstallationNotifications notifications = new InstallationNotifications();
+
+      notifications.activeNotifications =
+          stubFor(installationsNotificationsSelectorMock).getActiveCustomNotifications();
+      notifications.customNotificationTypes =
+          stubFor(customNotificationTypeSelectorMock).getCustomNotificationTypes();
+
+      notifications.activeNotificationsByType =
+          new Map<String, CustomNotificationType>{
+              notifications.customNotificationTypes[0].CustomNotifTypeName => notifications.customNotificationTypes[0]
+          };
+
+      System.assert(notifications.canPublish(notifications.activeNotifications[0]));
+      Test.stopTest();
    }
+
    private class InstallationsNotificationsSelectorMock implements StubProvider {
+
+      private Boolean withRedirectURL;
+
+      public InstallationsNotificationsSelectorMock withRedirectURL (Boolean withRedirectURL) {
+         this.withRedirectURL = withRedirectURL;
+         return this;
+      }
+
        public Object handleMethodCall(
            Object stubbedObject,
            String stubbedMethodName,
@@ -88,9 +110,10 @@ private class InstallationsNotifications_TEST {
                   List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
                       new Custom_Notification__mdt(
                           Id = DUMMY_CUSTOM_NOTIFICATION_ID,
+                          Notification_Channel__c = 'Fake Notification',
                           Audience_Implementation__c = 'MockAudienceImpl',
                           Notification_Content_Implementation__c = 'MockNotificationContentImpl',
-                          Redirect_URL__c = '',
+                          Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
                           IsActive__c = true
                       )
                   };
@@ -139,9 +162,4 @@ private class InstallationsNotifications_TEST {
           InstallationNotificationsSelector.class, installationsNotificationsSelectorMock);
    }
 
-   private static InstallationNotifications stubFor(
-       InstallationNotificationsMock installationNotificationsMock) {
-      return (InstallationNotifications) Test.createStub(
-          InstallationNotifications.class, installationNotificationsMock);
-   }
 }
