@@ -10,6 +10,7 @@ import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.sav
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import processGiftsFor from '@salesforce/apex/GE_GiftEntryController.processGiftsFor';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
@@ -42,6 +43,16 @@ const setupForBatchMode = (giftBatchView) => {
 
 jest.mock(
     '@salesforce/apex/GE_GiftEntryController.getGiftBatchTotalsBy',
+    () => {
+        return {
+            default: jest.fn(),
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    '@salesforce/apex/GE_GiftEntryController.processGiftsFor',
     () => {
         return {
             default: jest.fn(),
@@ -288,6 +299,8 @@ describe('c-ge-gift-entry-form-app', () => {
                 totals: { TOTAL: 5 },
                 totalDonationsAmount: 100
             });
+            processGiftsFor.mockResolvedValue({});
+
             await flushPromises();
 
             const geBatchGiftEntryHeader = shadowQuerySelector(formApp, 'c-ge-batch-gift-entry-header');
