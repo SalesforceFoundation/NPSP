@@ -1,7 +1,6 @@
 import { createElement } from 'lwc';
 import rdActiveSchedule from 'c/rdActiveSchedule';
 import { getRecord } from 'lightning/uiRecordApi';
-import { registerSa11yMatcher } from '@sa11y/jest';
 
 import getSchedules from '@salesforce/apex/RD2_VisualizeScheduleController.getSchedules';
 jest.mock(
@@ -14,9 +13,6 @@ jest.mock(
     { virtual: true }
 );
 
-import { registerLdsTestWireAdapter } from '@salesforce/sfdx-lwc-jest';
-import SystemModstamp from '@salesforce/schema/AcceptedEventRelation.SystemModstamp';
-
 
 const mockGetRecord = require('./data/getRecord.json');
 const mockGetSchedule = require('./data/getSchedule.json');
@@ -24,10 +20,6 @@ const mockGetSchedules = require('./data/getSchedules.json');
 
 describe('c-rd-active-schedule', () => {
     let component;
-
-    beforeAll(() => {
-        registerSa11yMatcher();
-    });
 
     beforeEach(() => {
         component = createElement('c-rd-active-schedule', {
@@ -81,13 +73,6 @@ describe('c-rd-active-schedule', () => {
                 assertAllFieldsAreDisplayed(displayedFields);
             });
         });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
-            });
-        });
-
     });
 
     describe('on data load with 2 scehdule records', () => {
@@ -114,12 +99,6 @@ describe('c-rd-active-schedule', () => {
                 const displayedFields = getScheduleRecordDisplayFields(component);
                 expect(displayedFields.length).toBe(16);
                 assertAllFieldsAreDisplayed(displayedFields);
-            });
-        });
-
-        it("should be accessible", async () => {
-            return global.flushPromises().then(async () => {
-                await expect(component).toBeAccessible();
             });
         });
     });
