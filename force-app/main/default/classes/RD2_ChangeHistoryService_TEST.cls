@@ -45,9 +45,9 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
     private static final Decimal RD_NEW_AMOUNT = 200;
-    private static final String RD_PERIOD = RD_Constants.INSTALLMENT_PERIOD_MONTHLY;
-    private static final String RD_PERIOD_WEEKLY = RD_Constants.INSTALLMENT_PERIOD_WEEKLY;
-    private static final String RD_PERIOD_FIRST_AND_FIFTEENTH = RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+    private static final String RD_PERIOD = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+    private static final String RD_PERIOD_WEEKLY = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+    private static final String RD_PERIOD_FIRST_AND_FIFTEENTH = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     private static final Decimal RD_NEW_FREQUENCY = 3;
     private static final String CHANGE_TYPE_CUSTOM = 'Custom Change Type';
 
@@ -421,12 +421,12 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
         System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
         System.assertEquals(RD_PERIOD_WEEKLY, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
-        System.assertEquals(RD_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
         System.assertEquals(campaign.Id, rdch.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
         System.assertEquals(null, rdch.PreviousCampaign__c, 'Previous Campaign should be ' + null);
 
-        Decimal newYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
-        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+        Decimal newYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
 
         System.assertEquals(newYearlyValue.setScale(2), rdch.NewAnnualValue__c, 'New Annual Value should be match' );
         System.assertEquals(previousYearlyValue.setScale(2), rdch.PreviousAnnualValue__c, 'Previous Annual Value should match');
@@ -703,8 +703,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, changeView.fields[0].oldValue, 'Unexpected old Amount');
         System.assertEquals(RD_NEW_AMOUNT, changeView.fields[0].newValue, 'Unexpected new Amount');
 
-        Decimal newYearlyValue = RD_NEW_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
-        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+        Decimal newYearlyValue = RD_NEW_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
         System.assertEquals(previousYearlyValue.setScale(2), changeView.fields[1].oldValue, 'Unexpected old Annual Value');
         System.assertEquals(newYearlyValue.setScale(2), changeView.fields[1].newValue, 'Unexpected new Annual Value');
 

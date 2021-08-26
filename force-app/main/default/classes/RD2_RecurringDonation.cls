@@ -194,7 +194,7 @@ public inherited sharing class RD2_RecurringDonation {
         if(!isOpenEnded()){
             return null;
         }
-        Decimal yearlyFrequency = RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
+        Decimal yearlyFrequency = RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
         Decimal annualValue = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
         return annualValue.setScale(2);
     }
