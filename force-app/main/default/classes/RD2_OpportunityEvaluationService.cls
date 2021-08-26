@@ -351,7 +351,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.Status__c != oldRd.Status__c ||
             rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
             rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c ||
-            rd.EndDate__c != rd.EndDate__c;
+            rd.EndDate__c != oldRd.EndDate__c;
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);

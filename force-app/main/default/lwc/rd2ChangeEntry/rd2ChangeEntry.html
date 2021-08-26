@@ -7,6 +7,16 @@
             <lightning-badge label={entryItem.changeType} class={badgeClass}></lightning-badge>
         </lightning-layout-item>
     </lightning-layout>
+    <template if:true={hasStatusChange}>
+        <lightning-layout vertical-align="center">
+            <lightning-layout-item size="4" class="slds-p-horizontal_x-small slds-m-top_medium">
+                {entryItem.statusLabel}
+            </lightning-layout-item>
+            <lightning-layout-item size="8" class="slds-p-horizontal_x-small slds-m-top_medium">
+                {entryItem.statusReason}
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
     <template for:each={entryItem.fields} for:item='item'>
         <c-rd2-change-entry-item
                 key={item.label}
