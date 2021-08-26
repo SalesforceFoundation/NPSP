@@ -33,4 +33,11 @@ public with sharing class RD2_ChangeView {
     @AuraEnabled public Date changeDate;
     @AuraEnabled public String changeType;
     @AuraEnabled public String statusReason;
+    @AuraEnabled public String statusLabel;
+
+    public RD2_ChangeView() {
+        this.statusLabel = UTIL_Describe.getFieldLabel(
+          'npe03__Recurring_Donation__c',
+          String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c));
+    }
 }
