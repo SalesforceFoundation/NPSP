@@ -2071,7 +2071,7 @@ private with sharing class STG_SettingsManager_TEST {
     * the RD2 Upgrade page should be hidden
     */
     @isTest
-    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {
+    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAndMoreThan7NightlyBatchJobHasRan() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         for (Integer i = 0; i < 7; i++) {
