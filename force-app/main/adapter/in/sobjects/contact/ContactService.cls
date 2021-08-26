@@ -351,6 +351,7 @@ public with sharing class ContactService {
         // to update  the name and member count now that they are already set correctly here.
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
         List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
         List<Account> accountsWithAddresses = [
                 SELECT Id, (
                         SELECT Id
