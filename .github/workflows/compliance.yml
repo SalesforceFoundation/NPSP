@@ -12,7 +12,7 @@
 name: "Instrumentation Compliance"
 on:
   pull_request:
-    # Filter the job to only execute if CLS files are in the PR
+    # Filter the job to only execute if CLS files (not in the unpackaged folder) are in the PR
     paths:    
       - '**.cls'
       - '!unpackaged/**.cls'
@@ -65,8 +65,8 @@ jobs:
             # This changes the context of subseqent commands to get the full change for the PR
             git fetch origin $GITHUB_HEAD_REF:$GITHUB_HEAD_REF
 
-            # Find references to "Sfdo" in the force-app/main/ folder. Filters for the specific class references in later steps.
-            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/main/** | grep 'Sfdo' )
+            # Find references to "Sfdo" in the force-app/ folder structure. Filters for the specific class references in later steps.
+            export DIFF=$( git diff-tree origin/$GITHUB_BASE_REF..$GITHUB_HEAD_REF --patch-with-raw -- force-app/** | grep 'Sfdo' )
           fi
 
           # Assign the "git diff-tree" output to an internal workflow var to use later
