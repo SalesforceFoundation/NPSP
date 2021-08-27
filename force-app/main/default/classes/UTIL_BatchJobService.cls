@@ -465,6 +465,7 @@ public without sharing class UTIL_BatchJobService {
         public Integer total = 0;
         public Integer processed = 0;
         public Integer failed = 0;
+        public Datetime completedDate;
 
         /**
         * @description Contructor
@@ -501,6 +502,11 @@ public without sharing class UTIL_BatchJobService {
         */
         public JobSummary withTotalRecordsFailed(Integer failed) {
             this.failed = failed;
+            return this;
+        }
+
+        public JobSummary withCompletedDate(Datetime completedDate) {
+            this.completedDate = completedDate;
             return this;
         }
     }

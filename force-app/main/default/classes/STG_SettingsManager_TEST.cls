@@ -1953,11 +1953,39 @@ private with sharing class STG_SettingsManager_TEST {
     }
 
     /**
+    * @description Verifies when RD2 is enabled, dry run has ran but Migration hasn't ran yet, the RD2 Upgrade page shuold be displayed
+    */
+    @isTest
+    private static void shouldDisplayRD2UpgradePageIfRD2DryRunHasRanButMigrationHasnotRan() {
+        Integer MigrationJobRanDay = 5;
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+            .withTotalRecords(2)
+            .withTotalRecordsProcessed(2);
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
+            'dryRun' => summary
+        };
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            )
+        );
+
+        STG_Panel panel = new STG_Panel();
+
+        System.assertEquals(true, panel.isDisplayingRD2UpgradePage,
+            'Should display RD2 Upgrade page if user has ran Migration job in the past 7 days');
+    }
+
+    /**
     * @description Verifies when RD2 is enabled and migration async job is completed less than 7 days ago,
     * the RD2 Upgrade page should be displayed 
     */
     @isTest
-    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasRunMoreLessThan7DaysAgo() {
+    private static void shouldDisplayRD2UpgradePageIfRD2MigrationHasRunLessThan7DaysAgo() {
         Integer MigrationJobRanDay = 5;
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
@@ -2071,7 +2099,7 @@ private with sharing class STG_SettingsManager_TEST {
     * the RD2 Upgrade page should be hidden
     */
     @isTest
-    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAnd7NightlyBatchJobHasRan() {
+    private static void shouldNotDisplaySimpleRD2UpgradePageAfterUpgradeCompleteAndMoreThan7NightlyBatchJobHasRan() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         for (Integer i = 0; i < 7; i++) {
