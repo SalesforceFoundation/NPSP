@@ -74,7 +74,8 @@ private class DonationSelector_TEST {
                 '(SELECT Id, ' +
                     'Role, ' +
                     'ContactId ' +
-                'FROM OpportunityContactRoles) ' +
+                'FROM OpportunityContactRoles ' +
+                'WHERE isPrimary = false) ' +
             'FROM Opportunity ' +
             'WHERE ' + getRelationshipFieldFor(String.valueOf(donorType)) + ' = :donorId ' +
             'AND IsClosed = false ' +

@@ -10,7 +10,7 @@ module.exports = {
         "^@salesforce/apex/GE_GiftEntryController.upsertDataImport": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.upsertDataImport",
         "^@salesforce/apex/GE_GiftEntryController.getAllocationsSettings": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getAllocationsSettings",
         "^@salesforce/apex/GE_GiftEntryController.isElevateCustomer": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.isElevateCustomer",
-        "^@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.saveAndDryRunDataImport",
+        "^@salesforce/apex/GE_GiftEntryController.addGiftTo": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.addGiftTo",
         "^@salesforce/apex/GE_GiftEntryController.getGiftBatchView": "<rootDir>/tests/__mocks__/apex/GE_GiftEntryController.getGiftBatchView",
         "^@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel": "<rootDir>/tests/__mocks__/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel",
         "^@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues": "<rootDir>/tests/__mocks__/apex/GE_PaymentServices.getPaymentTransactionStatusValues",

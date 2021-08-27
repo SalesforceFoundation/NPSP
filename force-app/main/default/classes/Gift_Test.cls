@@ -40,7 +40,11 @@ private class Gift_Test {
         );
         Gift authorizedGift = new Gift(dataImport);
 
-        GiftSelector mockedGiftSelector = stubFor(new GiftSelectorMock(5.00));
+        GiftSelector mockedGiftSelector = stubFor(new GiftSelectorMock(3.00));
+        authorizedGift.giftSelector = mockedGiftSelector;
+        System.assertEquals(false, authorizedGift.requiresReauthorizationBeforeChange());
+
+        mockedGiftSelector = stubFor(new GiftSelectorMock(5.00));
         authorizedGift.giftSelector = mockedGiftSelector;
 
         Boolean needsReauthorization = authorizedGift.requiresReauthorizationBeforeChange();
@@ -94,6 +98,105 @@ private class Gift_Test {
         System.assertEquals(0, gift.softCredits().size());
     }
 
+    @isTest
+    static void shouldAdd3SoftCreditsToGift() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(),
+            new OpportunityContactRole(),
+            new OpportunityContactRole()
+        };
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+
+        gift.assignSoftCredits(dummySoftCredits);
+
+        System.assertEquals(3, gift.softCredits().size());
+    }
+
+    @isTest
+    static void shouldReturnAsDataImport() {
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(dataImport.Id, gift.id());
+        System.assertEquals(dataImport, gift.asDataImport());
+    }
+
+    @isTest
+    static void shouldCallMethodsInUnitOfWorkWhenSaved() {
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        gift.unitOfWork = stubFor(unitOfWorkMock);
+        gift.saveRecord();
+
+        System.assertEquals(true, unitOfWorkMock.registerDirtyCalled);
+        System.assertEquals(true, unitOfWorkMock.saveCalled);
+    }
+
+    @isTest
+    static void shouldConvertSoftCreditsToAdditionalObjectJSONWhenSaved() {
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift gift = new Gift(dataImport);
+
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        gift.unitOfWork = stubFor(unitOfWorkMock);
+
+        Id dummyContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(Role = 'Influencer', ContactId = dummyContactId)
+        };
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+        gift.assignSoftCredits(dummySoftCredits);
+
+        System.assertEquals(1, gift.softCredits().size());
+        System.assertEquals(null, gift.additionalObjectString());
+
+        gift.saveRecord();
+
+        System.assert(gift.additionalObjectString().contains(dummyContactId));
+        System.assert(gift.additionalObjectString().contains('Influencer'));
+    }
+
+    @isTest
+    static void shouldProcessGiftThroughBDI() {
+        DataImport__c dataImport = new DataImport__c(
+            Account1_Name__c = 'testAcct',
+            Donation_Donor__c = 'Account1',
+            Donation_Amount__c = 100,
+            Donation_Date__c = Date.today()
+        );
+        insert dataImport;
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(null, gift.status());
+        gift.dryRunThroughBDI();
+        System.assertEquals(BDI_DataImport_API.bdiDryRunValidated, gift.status());
+
+        gift.processThroughBDI();
+        System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
@@ -128,5 +231,33 @@ private class Gift_Test {
             GiftSelector.class,
             giftSelectorMock
         );
+    }
+
+    private class UnitOfWorkMock implements StubProvider {
+        public Boolean registerDirtyCalled = false;
+        public Boolean saveCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'registerDirty' {
+                    registerDirtyCalled = true;
+                }
+                when 'save' {
+                    saveCalled = true;
+                    return new List<Database.SaveResult>();
+                }
+            }
+            return null;
+        }
+    }
+
+    private static UnitOfWork stubFor(UnitOfWorkMock unitOfWorkMock) {
+        return (UnitOfWork) Test.createStub( UnitOfWork.class, unitOfWorkMock );
     }
 }
