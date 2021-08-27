@@ -11,4 +11,8 @@ export default class Rd2ChangeEntry extends LightningElement {
         }
         return '';
     }
+
+    get hasStatusChange() {
+        return this.entryItem.statusReason != null;
+    }
 }

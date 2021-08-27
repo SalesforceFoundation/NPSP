@@ -145,7 +145,12 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     * @param {object} event: Custom Event object containing payment data.
     */
     handleUpdatePayment(event) {
-        this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail: event.detail }));
+        this.dispatchEvent(new CustomEvent('updateselecteddonation', {
+            detail: {
+                ...event.detail,
+                softCredits: this.retrieveSoftCredits()
+            }
+        }));
     }
 
     /*******************************************************************************
@@ -157,7 +162,8 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     handleUpdateOpportunity() {
         const detail = {
             objectApiName: OPPORTUNITY_OBJECT.objectApiName,
-            fields: deepClone(this.opportunity)
+            fields: deepClone(this.opportunity),
+            softCredits: this.retrieveSoftCredits()
         };
         this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail }));
     }
@@ -171,10 +177,19 @@ export default class geDonationMatchingOpportunityCard extends LightningElement 
     handleNewPayment() {
         const detail = {
             objectApiName: OPPORTUNITY_OBJECT.objectApiName,
-            fields: deepClone(this.opportunity)
+            fields: deepClone(this.opportunity),
+            softCredits: this.retrieveSoftCredits()
         };
         detail.fields.applyPayment = true;
         this.dispatchEvent(new CustomEvent('updateselecteddonation', { detail }));
+    }
+
+    retrieveSoftCredits() {
+        let softCredits = [];
+        if (this.opportunityWrapper?.softCredits?.all) {
+            softCredits = [ ...this.opportunityWrapper.softCredits.all ];
+        }
+        return softCredits;
     }
 
     // ================================================================================
