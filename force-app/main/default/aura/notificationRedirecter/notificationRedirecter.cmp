@@ -30,7 +30,6 @@
 <!--
   @author Salesforce.org
   @date 2021
-  @group BGE
   @group-content ../../ApexDocContent/NotificationRedirecter.htm
   @description Component used to redirect users from the bell notification.
 -->

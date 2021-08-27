@@ -38,6 +38,7 @@ public inherited sharing class InstallationNotifications {
    @TestVisible private List<Custom_Notification__mdt> activeNotifications;
    @TestVisible private List<CustomNotificationType> customNotificationTypes;
    @TestVisible private Map<String, CustomNotificationType> activeNotificationsByType;
+   private static String namespace = UTIL_Namespace.getNamespace();
 
    public InstallationNotifications() {
       this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
@@ -111,7 +112,6 @@ public inherited sharing class InstallationNotifications {
 
 
    private String buildPageReferenceFor(Custom_Notification__mdt notification) {
-      String namespace = getNamespace();
       String componentName = (String.isNotBlank(namespace) ? namespace : 'c') + '__notificationRedirecter';
       Map<String, Object> pageRef = new Map<String, Object>{
           'type' => 'standard__component',
@@ -136,15 +136,10 @@ public inherited sharing class InstallationNotifications {
    }
 
    private Type getClassType(String classImpl) {
-      String namespace = getNamespace();
       Type classType = String.isNotBlank(namespace)
           ? Type.forName(namespace, classImpl)
           : Type.forName(classImpl);
       return classType;
-   }
-
-   private String getNamespace() {
-      return UTIL_Namespace.getNamespace();
    }
 
 }
