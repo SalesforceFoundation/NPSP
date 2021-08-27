@@ -88,6 +88,7 @@ public inherited sharing class RD2_QueryService {
         'npe03__Paid_Amount__c',
         'npe03__Recurring_Donation_Campaign__c',
         'npe03__Total_Paid_Installments__c',
+        String.valueOf(npe03__Recurring_Donation__c.ChangeType__c),
         String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c),
         String.valueOf(npe03__Recurring_Donation__c.CommitmentId__c),
         String.valueOf(npe03__Recurring_Donation__c.CurrentYearValue__c),

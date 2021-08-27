@@ -33,9 +33,9 @@ export default class geDonationMatching extends LightningElement {
     */
     handleUpdateSelectedDonation(event) {
         if (event.detail.objectApiName === PAYMENT_OBJECT.objectApiName) {
-            this.handlePayment(event.detail.fields);
+            this.handlePayment(event.detail);
         } else if (event.detail.objectApiName === OPPORTUNITY_OBJECT.objectApiName) {
-            this.handleOpportunity(event.detail.fields);
+            this.handleOpportunity(event.detail);
         }
     }
 

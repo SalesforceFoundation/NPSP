@@ -337,6 +337,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
+     * @description When the frequency changes, we need to check if the Annual Value changed
+     * @param event
+     */
+     onHandleRecurringFrequencyChange(event) {
+        this.dispatchEvent(new CustomEvent('frequencychange'));
+    }
+
+    /**
      * @description Set the various properties to control field visibility, how many fields appear in each row
      * and other rules based on the selected InstallmentPeriod value.
      * @param customPeriod Monthly or Advanced

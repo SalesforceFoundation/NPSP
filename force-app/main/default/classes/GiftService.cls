@@ -42,4 +42,9 @@ public with sharing class GiftService {
         GiftDTO giftDTO = new GiftDTO(gift);
         return new GiftView(giftDTO);
     }
+
+    public void saveSingle(Gift gift) {
+        gift.saveRecord();
+        gift.processThroughBDI();
+    }
 }

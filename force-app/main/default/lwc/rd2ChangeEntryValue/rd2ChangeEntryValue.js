@@ -6,6 +6,7 @@ export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElemen
     @api value;
     @api recordIdValue;
     @api displayType;
+    @api currencyCode;
 
     labelNone = stgLabelFieldValueNone;
 
@@ -37,5 +38,9 @@ export default class Rd2ChangeEntryValue extends NavigationMixin(LightningElemen
 
     get isPopulatedLookup() {
         return this.displayType === 'LOOKUP' && this.value !== null && this.value !== undefined;
+    }
+
+    get isMultiCurrency() {
+        return this.currencyCode != null;
     }
 }

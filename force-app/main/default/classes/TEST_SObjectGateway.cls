@@ -115,7 +115,8 @@ public class TEST_SObjectGateway {
                     CommitmentId__c,
                     CardExpirationMonth__c,
                     CardExpirationYear__c,
-                    CardLast4__c
+                    CardLast4__c,
+                    ChangeType__c
                 FROM npe03__Recurring_Donation__c
             ];
         }
