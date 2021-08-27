@@ -203,17 +203,20 @@ public with sharing class UTIL_BatchJobService_TEST {
         Integer total = 100;
         Integer processed = 80;
         Integer failed = 20;
+        Datetime completedTime = Datetime.newInstance(2021, 2, 2);
 
         UTIL_BatchJobService.JobSummary summary =
             new UTIL_BatchJobService.JobSummary(MOCK_BATCH_ID)
             .withTotalRecords(total)
             .withTotalRecordsProcessed(processed)
-            .withTotalRecordsFailed(failed);
+            .withTotalRecordsFailed(failed)
+            .withCompletedDate(completedTime);
 
         System.assertEquals(MOCK_BATCH_ID, summary.batchId, 'Batch Id should match');
         System.assertEquals(total, summary.total, 'Total Records should match');
         System.assertEquals(processed, summary.processed, 'Total Records Processed should match');
         System.assertEquals(failed, summary.failed, 'Total Records Failed should match');
+        System.assertEquals(completedTime, summary.completedDate, 'Completed Date should match');
     }
 
     /**
@@ -266,6 +269,7 @@ public with sharing class UTIL_BatchJobService_TEST {
         System.assertEquals(1, batchJob.summary.total, 'Total Records should match: ' + batchJob.summary);
         System.assertEquals(1, batchJob.summary.processed, 'Total Records Processed should match: ' + batchJob.summary);
         System.assertEquals(0, batchJob.summary.failed, 'Total Records Failed should match: ' + batchJob.summary);
+        System.assertNotEquals(null, batchJob.summary.completedDate, 'The completed time should be stored');
     }
 
 
