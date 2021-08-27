@@ -1,6 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
 import {apiNameFor, getSubsetObject, isEmptyObject, isUndefined} from 'c/utilCommon';
-import { fireEvent } from 'c/pubsubNoPageRef';
 import DATA_IMPORT_ADDITIONAL_OBJECT_JSON_FIELD from '@salesforce/schema/DataImport__c.Additional_Object_JSON__c';
 import DATA_IMPORT_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DATA_IMPORT_PAYMENT_METHOD from '@salesforce/schema/DataImport__c.Payment_Method__c';

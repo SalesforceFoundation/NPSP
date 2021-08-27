@@ -416,10 +416,21 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             expect(updateFieldsWithSpy).toHaveBeenCalledWith({
+                "Donation_Donor__c": 'Account1'
+            });
+            
+            expect(updateFieldsWithSpy).toHaveBeenCalledWith({
                 "PaymentImported__c": null,
                 "PaymentImportStatus__c": null,
                 "PaymentImported__r": null
             });
+
+            expect(updateFieldsWithSpy).toHaveBeenCalledWith({
+                "DonationImported__c": null,
+                "DonationImportStatus__c": null,
+                "DonationImported__r": null
+            });
+
         });
 
         it('when opportunity record type changes, sets picklist values', async () => {
