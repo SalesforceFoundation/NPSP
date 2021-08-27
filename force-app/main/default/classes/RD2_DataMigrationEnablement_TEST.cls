@@ -41,6 +41,7 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
     private static final String DRY_RUN_MIGRATION_BATCH_CLASS = batchJob.DRY_RUN_MIGRATION_BATCH_CLASS;
     private static final String MIGRATION_BATCH_CLASS = batchJob.MIGRATION_BATCH_CLASS;
     private static final Id BATCH_ID = UTIL_BatchJobService_TEST.MOCK_BATCH_ID;
+    private static final Datetime MIGRATION_TIME = Datetime.newInstance(2021, 2, 2);
 
     /**
      * @description Verifies Enhanced Recurring Donations migration batch job summary is returned
@@ -73,7 +74,8 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         UTIL_BatchJobService.JobSummary summary =
             new UTIL_BatchJobService.JobSummary(BATCH_ID)
             .withTotalRecords(2)
-            .withTotalRecordsProcessed(2);
+            .withTotalRecordsProcessed(2)
+            .withCompletedDate(MIGRATION_TIME);
         
         batchJob.saveSummary(summary, isDryRunMode);
 
@@ -81,6 +83,7 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
         System.assertEquals(2, summary.total, 'Total records should match: ' + summary);
+        System.assertEquals(MIGRATION_TIME, summary.completedDate, 'Completed time shhould match: ' + summary);
 
         summary = batchJob.getSummary(BATCH_ID, MIGRATION_BATCH_CLASS);
         System.assertEquals(null, summary, 'Summary should not exist for migration');
