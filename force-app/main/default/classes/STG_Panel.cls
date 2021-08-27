@@ -141,10 +141,15 @@ public with sharing virtual class STG_Panel {
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType =
             new RD2_DataMigrationEnablement.BatchJob().getSummaryByType(rdSettings);
         
-        return isMigrationCompleteInThePast7Days(summaryByType)
-            || isSimpleEnablementComplete(summaryByType);
+        return isSimpleEnablementCompleteInThePast7Days(summaryByType)
+            || isMigrationNotFullyCompleted(summaryByType)
+            || isMigrationCompleteInThePast7Days(summaryByType)
+            ;
     }
 
+    public Boolean isMigrationNotFullyCompleted(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+        return summaryByType.get('dryRun') != null && summaryByType.get('run') == null;
+    }
     /**
     * @description Check if RD2 Data Migration Jobs has been completed in the past 7 days
     * @param summaryByType RD2 Data Migration Summary
@@ -154,7 +159,7 @@ public with sharing virtual class STG_Panel {
         UTIL_BatchJobService.JobSummary migrationSummary = summaryByType.get('run');
         Integer lastRunDayDifference = batchJobService.getCompletedDaysByBatchId(migrationSummary?.batchId);
     
-        if (migrationSummary == null || lastRunDayDifference == -1) {
+        if (lastRunDayDifference == -1) {
             return false;
         }
 
@@ -163,11 +168,11 @@ public with sharing virtual class STG_Panel {
 
     /**
     * @description Check if RD Enhancement is completed in simple version
-    * and RD2 Nightly Batch jobs has ran at least 7 times
+    * and RD2 Nightly Batch jobs has ran less than 7 times
     * @param summaryByType RD2 Data Migration Summary
     * @return Boolean 
     */
-    public Boolean isSimpleEnablementComplete(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
+    public Boolean isSimpleEnablementCompleteInThePast7Days(Map<String, UTIL_BatchJobService.JobSummary> summaryByType) {
         Boolean isSimpleRecurringDonationEnablement = summaryByType.keySet().size() == 0;
 
         return isSimpleRecurringDonationEnablement
