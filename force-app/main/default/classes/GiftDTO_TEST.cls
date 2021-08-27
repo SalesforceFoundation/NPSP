@@ -27,17 +27,35 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class RD2_ChangeView {
-    @AuraEnabled public List<RD2_FieldChangeView> fields;
-    @AuraEnabled public Id id;
-    @AuraEnabled public Date changeDate;
-    @AuraEnabled public String changeType;
-    @AuraEnabled public String statusReason;
-    @AuraEnabled public String statusLabel;
+@isTest
+private class GiftDTO_TEST {
 
-    public RD2_ChangeView() {
-        this.statusLabel = UTIL_Describe.getFieldLabel(
-          'npe03__Recurring_Donation__c',
-          String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c));
+    @isTest
+    static void shouldHaveExpectedPropertiesWhenConstructedWithAGift() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+
+        DataImport__c dummyDataImport = new DataImport__c(
+            Id = DUMMY_DATA_IMPORT_ID,
+            Account1Imported__c = DUMMY_ACCOUNT_ID,
+            Donation_Amount__c = 33.33,
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift dummyGift = new Gift(dummyDataImport);
+
+        GiftDTO dummyGiftDTO = new GiftDTO(dummyGift);
+
+        System.assertEquals(33.33, dummyGiftDTO.fields.get(DONATION_AMOUNT_FIELD));
+        System.assertEquals(DUMMY_ACCOUNT_ID, dummyGiftDTO.fields.get(ACCOUNT1_IMPORTED_FIELD));
+        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGiftDTO.fields.get('Id'));
+        System.assertEquals(2, dummyGiftDTO.softCreditsDTO.softCredits.size());
     }
+
+    private static final String DONATION_AMOUNT_FIELD = String.valueOf(DataImport__c.Donation_Amount__c);
+    private static final String ACCOUNT1_IMPORTED_FIELD = String.valueOf(DataImport__c.Account1Imported__c);
+    private static final String ADDITIONAL_OBJECT_JSON_FIELD = String.valueOf(DataImport__c.Additional_Object_JSON__c);
+    private static final String DUMMY_DATA_IMPORT_ID = UTIL_UnitTestData_TEST.mockId(DataImport__c.sObjectType);
+    private static final String DUMMY_ACCOUNT_ID = UTIL_UnitTestData_TEST.mockId(Account.sObjectType);
 }

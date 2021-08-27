@@ -136,6 +136,39 @@ private class RD2_ChangeHistory_TEST {
         System.assertEquals(60, view.fields[1].oldValue);
     }
 
+    @IsTest
+    static void amountContainsIsoCodeWhenMulticurrencyIsEnabled() {
+        RecurringDonationChangeHistory__c record = getChangeRecord();
+        record.NewAmount__c = 10;
+        record.NewAnnualValue__c = 120;
+
+        Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        String nonDefaultCurrencyCode = null;
+
+        if (isMultiCurrencyEnabled) {
+            // If there is no active non-default currency, exit
+            if (RD2_ChangeHistoryService_TEST.nonDefaultCurrencyType == null) {
+                return;
+            }
+
+            nonDefaultCurrencyCode = 
+                (String)RD2_ChangeHistoryService_TEST.nonDefaultCurrencyType.get('IsoCode');
+            
+            record.put('CurrencyIsoCode', nonDefaultCurrencyCode);
+        }
+
+        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+
+        System.assertEquals(2, view.fields.size());
+        System.assertEquals(10, view.fields[0].newValue);
+        System.assertEquals(120, view.fields[1].newValue);
+        System.assertEquals(5, view.fields[0].oldValue);
+        System.assertEquals(60, view.fields[1].oldValue);
+        if (isMultiCurrencyEnabled) {
+            System.assertEquals(nonDefaultCurrencyCode, view.fields[0].currencyCode);
+            System.assertEquals(nonDefaultCurrencyCode, view.fields[1].currencyCode);
+        }
+    }
 
     private class RD2_ChangeHistorySelectorMock implements StubProvider {
         List<RecurringDonationChangeHistory__c> records;
