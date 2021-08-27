@@ -39,8 +39,13 @@ public inherited sharing class InstallationNotifications {
    @TestVisible private List<CustomNotificationType> customNotificationTypes;
    @TestVisible private Map<String, CustomNotificationType> activeNotificationsByType;
    private static String namespace = UTIL_Namespace.getNamespace();
+   private InstallContext context;
 
-   public InstallationNotifications() {
+   @TestVisible
+   private InstallationNotifications() {}
+
+   public InstallationNotifications(InstallContext context) {
+      this.context = context;
       this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
       if (!activeNotifications.isEmpty()) {
          this.customNotificationTypes =
