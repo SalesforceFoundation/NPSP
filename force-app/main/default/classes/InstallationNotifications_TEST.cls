@@ -109,11 +109,49 @@ private class InstallationNotifications_TEST {
 
    }
 
+   @isTest
+   static void shouldNotPublishNotificationWithoutValidAudience() {
+      Test.startTest();
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock()
+              .withAudience(false)
+              .withAudienceImpl('FakeImpl');
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
+
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
+      InstallationNotifications notifications = new InstallationNotifications();
+      Test.stopTest();
+      System.assert(!notifications.canPublish(notifications.activeNotifications[0]));
+      System.assert(MockAudienceImpl.userId == null);
+   }
+
+   @isTest
+   static void shouldPublishNotificationsWithDifferentAudiencesCorrectly() {
+      Test.startTest();
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock()
+              .withAudience(true);
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
+
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
+      InstallationNotifications notifications = new InstallationNotifications();
+      Test.stopTest();
+      System.assert(notifications.canPublish(notifications.activeNotifications[0]));
+      System.assert(MockAudienceImpl.userId != null);
+      System.assert(!notifications.canPublish(notifications.activeNotifications[1]));
+
+   }
+
    private class InstallationNotificationsSelectorMock implements StubProvider {
 
       private Boolean withRedirectURL = true;
       private Boolean isActive = true;
       private Boolean withAudience = true;
+      private String audience = '';
 
       public InstallationNotificationsSelectorMock withRedirectURL (Boolean withRedirectURL) {
          this.withRedirectURL = withRedirectURL;
@@ -130,6 +168,11 @@ private class InstallationNotifications_TEST {
          return this;
       }
 
+      public InstallationNotificationsSelectorMock withAudienceImpl (String audience) {
+         this.audience = audience;
+         return this;
+      }
+
        public Object handleMethodCall(
            Object stubbedObject,
            String stubbedMethodName,
@@ -143,26 +186,38 @@ private class InstallationNotifications_TEST {
                   if(!isActive) {
                      return new List<Custom_Notification__mdt>();
                   }
-
-                  Id DUMMY_CUSTOM_NOTIFICATION_ID =
-                      UTIL_UnitTestData_TEST.mockId(Custom_Notification__mdt.getSObjectType());
-
-                  List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
-                      new Custom_Notification__mdt(
-                          Id = DUMMY_CUSTOM_NOTIFICATION_ID,
-                          Notification_Channel__c = 'Fake Notification',
-                          Audience_Implementation__c = withAudience ? 'MockAudienceImpl': '',
-                          Notification_Content_Implementation__c = 'MockNotificationContentImpl',
-                          Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
-                          IsActive__c = isActive
-                      )
-                  };
-                  return notifications;
+                  return buildCustomNotifications();
                }
            }
           return null;
        }
+
+      private List<Custom_Notification__mdt> buildCustomNotifications() {
+         Id DUMMY_CUSTOM_NOTIFICATION_ID =
+             UTIL_UnitTestData_TEST.mockId(Custom_Notification__mdt.getSObjectType());
+         List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
+             new Custom_Notification__mdt(
+                 Id = DUMMY_CUSTOM_NOTIFICATION_ID,
+                 Notification_Channel__c = 'Fake Notification',
+                 Audience_Implementation__c = withAudience ? 'MockAudienceImpl' : audience,
+                 Notification_Content_Implementation__c = 'MockNotificationContentImpl',
+                 Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
+                 IsActive__c = isActive
+             ),
+             new Custom_Notification__mdt(
+                 Id = DUMMY_CUSTOM_NOTIFICATION_ID,
+                 Notification_Channel__c = 'Fake Notification',
+                 Audience_Implementation__c = 'FakeImpl',
+                 Notification_Content_Implementation__c = 'MockNotificationContentImpl',
+                 Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
+                 IsActive__c = isActive
+             )
+         };
+         return notifications;
+      }
    }
+
+
 
    private class CustomNotificationTypeSelectorMock implements StubProvider {
       public Object handleMethodCall(

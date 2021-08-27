@@ -41,11 +41,18 @@ public inherited sharing class InstallationNotifications {
    private static String namespace = UTIL_Namespace.getNamespace();
    private InstallContext context;
 
+   // Private Constructor for testing purposes
    @TestVisible
-   private InstallationNotifications() {}
+   private InstallationNotifications() {
+      initializeNotifications();
+   }
 
    public InstallationNotifications(InstallContext context) {
       this.context = context;
+      initializeNotifications();
+   }
+
+   private void initializeNotifications () {
       this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
       if (!activeNotifications.isEmpty()) {
          this.customNotificationTypes =
@@ -111,7 +118,6 @@ public inherited sharing class InstallationNotifications {
    @TestVisible
    private Boolean canPublish(Custom_Notification__mdt notification) {
       return (getAudience(notification.Audience_Implementation__c) != null
-          || String.isNotBlank(notification.Redirect_URL__c)
           && this.activeNotificationsByType.containsKey(notification.Notification_Channel__c));
    }
 
