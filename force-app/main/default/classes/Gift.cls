@@ -34,10 +34,20 @@
 */
 
 public with sharing class Gift {
-    
+
+    @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
+    private Donation donation;
     private List<String> availableFields;
-    private SoftCredits softCredits;
+    private SoftCredits softCredits {
+        get {
+            if (softCredits == null) {
+                softCredits = new SoftCredits(new List<OpportunityContactRole>());
+            }
+            return softCredits;
+        }
+        set;
+    }
 
     @TestVisible
     private GiftSelector giftSelector {
@@ -62,6 +72,18 @@ public with sharing class Gift {
         this.populateSoftCredits();
     }
 
+    public Id id() {
+        return this.dataImport.Id;
+    }
+
+    public String status() {
+        return this.dataImport.Status__c;
+    }
+
+    public Id giftBatchId() {
+        return this.dataImport.NPSP_Data_Import_Batch__c;
+    }
+
     public Boolean requiresReauthorizationBeforeChange() {
         if (dataImport.Payment_Status__c != ElevateTransactionStatus.AUTHORIZED.name()) { 
             return false; 
@@ -80,6 +102,50 @@ public with sharing class Gift {
 
     public void deleteRecord() {
         delete this.dataImport;
+    }
+
+    public void saveRecord() {
+        convertAdditionalObjectMembers();
+        if (this.dataImport.Id != null) {
+            unitOfWork.registerDirty(new List<sObject> { this.dataImport });
+        } else {
+            unitOfWork.registerNew(new List<sObject> { this.dataImport });
+        }
+        unitOfWork.save();
+    }
+
+    public void dryRunThroughBDI() {
+        loadDataImportSettings();
+        runBdiDryRun();
+    }
+
+    public void processThroughBDI() {
+        loadDataImportSettings();
+        BDI_DataImport_API.processDataImportRecords(
+            dataImportSettings,
+            new List<DataImport__c> { this.dataImport },
+            false);
+    }
+
+    public void assignSoftCredits(SoftCredits incomingSoftCredits) {
+        this.softCredits = incomingSoftCredits;
+    }
+
+    public DataImport__c asDataImport() {
+        return this.dataImport;
+    }
+
+    public String additionalObjectString() {
+        return this.dataImport.Additional_Object_JSON__c;
+    }
+
+    private void convertAdditionalObjectMembers() {
+        AdditionalObjectJSON additionalObjectJSONHelper =
+            new AdditionalObjectJSON(additionalObjectString());
+
+        additionalObjectJSONHelper.add(this.softCredits);
+
+        this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
     public Boolean hasAuthorizedPayment() {
@@ -104,11 +170,26 @@ public with sharing class Gift {
     }
 
     private void populateSoftCredits() {
-        // TODO: update existingSoftCredits to be populated with existing soft credits related to the dataImport
-        // this actually likely going come from a Donation (domain) when the Donor and an Opportunity is
-        // related to the Gift in question
+        populateSoftCreditsFromDonation();
+        populateSoftCreditsFromAdditionalObjectJSON();
+    }
+
+    private void populateSoftCreditsFromDonation() {
+        if (hasDonation()) {
+            donation = new Donation(this.dataImport.DonationImported__c);
+            this.softCredits.addAll(donation.softCredits().all());
+        }
+    }
+
+    private void populateSoftCreditsFromAdditionalObjectJSON() {
         String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
-        this.softCredits = new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+        SoftCredits softCreditsFromAdditionalObjectJSON =
+            new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+        this.softCredits.addAll(softCreditsFromAdditionalObjectJSON.unprocessed());
+    }
+
+    private Boolean hasDonation() {
+        return this.dataImport.DonationImported__c != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
@@ -121,6 +202,45 @@ public with sharing class Gift {
         }
 
         return false;
+    }
+
+    private void loadDataImportSettings() {
+        if (giftBatchId() != null) {
+            dataImportSettings = BDI_DataImportService.loadSettings(giftBatchId());
+        } else {
+            dataImportSettings = BDI_DataImportService.loadSettings(null);
+        }
+
+        if (isMatchingToOpenDonation()) {
+            dataImportSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.ExactMatchOrCreate;
+        } else {
+            dataImportSettings.Donation_Matching_Behavior__c =
+                BDI_DataImport_API.DoNotMatch;
+        }
+    }
+
+    private Boolean isMatchingToOpenDonation() {
+        return this.dataImport.PaymentImported__c != null ||
+            this.dataImport.DonationImported__c != null;
+    }
+
+    private void runBdiDryRun() {
+        BDI_DataImport_API.processDataImportRecords(
+            dataImportSettings,
+            new List<DataImport__c> { this.dataImport },
+            true);
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
     }
 
 }

@@ -142,6 +142,12 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
     }
 
+    public void add(Gift gift) {
+        gift.saveRecord();
+        gift.dryRunThroughBDI();
+        this.gifts.add(gift);
+    }
+
     public Id id() {
         if (this.giftBatchId != null) {
             return this.giftBatchId.value();
