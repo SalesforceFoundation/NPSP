@@ -36,13 +36,10 @@
 */
 public inherited sharing class RD2_ChangeHistoryService {
 
-    public static final String CHANGE_TYPE_UPGRADE = 'Upgrade';
-    public static final String CHANGE_TYPE_DOWNGRADE = 'Downgrade';
-
     /***
     * @description Determines if Change History is enabled for the org
     */
-    public Boolean isChangeHistoryEnabled {
+    public static Boolean isChangeHistoryEnabled {
         get {
             if (isChangeHistoryEnabled == null) {
                 isChangeHistoryEnabled = new RD2_Settings().isChangeHistoryEnabled();
@@ -64,7 +61,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
-        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType))) {
+        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType), false)) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
         }
 
@@ -84,7 +81,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     private RD2_ChangeHistoryView buildView(List<RecurringDonationChangeHistory__c> changes, Integer recordLimit) {
         RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
 
-        changeHistoryView.settingEnabled = this.isChangeHistoryEnabled;
+        changeHistoryView.settingEnabled = isChangeHistoryEnabled;
         changeHistoryView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
         changeHistoryView.hasMore = changes.size() > recordLimit;
 
@@ -97,7 +94,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     /***
-    * @description Instance of ChangeHistoryCreator to create Change History without sharing
+    * @description Recurring Donation change history service instance
     */
     private ChangeHistoryCreator changeHistoryCreator {
         get {
@@ -120,7 +117,7 @@ public inherited sharing class RD2_ChangeHistoryService {
      */
     public void handleHistoryFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
         RecurringDonationChangeHistory__c changeHistory = 
-            changeHistoryCreator.setChangedFields(updatedRd, originalRd);
+            new ChangeHistoryComparer(updatedRd, originalRd).setChangedFields();
 
         if (changeHistory != null) {
             changeHistoryList.add(changeHistory);
@@ -128,7 +125,7 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     @TestVisible
-    private List<RecurringDonationChangeHistory__c> getChangeHistoryRecords(){
+    private List<RecurringDonationChangeHistory__c> getChangeHistoryRecords() {
         return changeHistoryList;
     }
 
@@ -138,6 +135,9 @@ public inherited sharing class RD2_ChangeHistoryService {
         }
     }
 
+    /***
+    * @description Class used to group New and Previous field names for Recurring Donation Change History
+    */
     private class ChangeHistoryFieldSet {
         ChangeHistoryFieldSet(SObjectField newField, SObjectField previousField) {
             this.newField = newField;
@@ -149,10 +149,10 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     /***
-    * @description Class used for DML operations relating to Recurring Donation Change History.
-    * To ensure these operations succeed regardless of User permissions, this Class uses without sharing
+    * @description Class used to compare Recurring Donation fields, and return a Change History record
+    * if relevant changes were made
     */
-    private without sharing class ChangeHistoryCreator {
+    private class ChangeHistoryComparer {
 
         private final SObjectField RD_AMOUNT_FIELD = npe03__Recurring_Donation__c.npe03__Amount__c;
         private final SObjectField RD_INSTALLMENT_PERIOD_FIELD = npe03__Recurring_Donation__c.npe03__Installment_Period__c;
@@ -179,64 +179,115 @@ public inherited sharing class RD2_ChangeHistoryService {
                 RecurringDonationChangeHistory__c.PreviousCampaign__c)
         };
 
+        RD2_RecurringDonation updatedRd;
+        RD2_RecurringDonation originalRd;
+
+        /***
+        * @description Constructor to store the Recurring Donations being compared
+        * @param updatedRd Changed Recurring Donation, used for "New" fields
+        * @param originalRd Old Recurring Donation, used for "Previous" fields
+        */
+        public ChangeHistoryComparer(RD2_RecurringDonation updatedRd, 
+            RD2_RecurringDonation originalRd) {
+                this.updatedRd = updatedRd;
+                this.originalRd = originalRd;
+        }
+
         /**
          * @description Returns a Recurring Donation Change History record with Previous and New values 
          * filled in based on the Recurring Donations provided.
-         * @param updatedRd Changed Recurring Donation, used for "New" fields
-         * @param originalRd Old Recurring Donation, used for "Previous" fields
          * @return RecurringDonationChangeHistory__c The Change History record to represent this change
          */
-        public RecurringDonationChangeHistory__c setChangedFields(RD2_RecurringDonation updatedRd, 
-            RD2_RecurringDonation originalRd) {
+        public RecurringDonationChangeHistory__c setChangedFields() {
 
-                RecurringDonationChangeHistory__c changeHistory;
+            RecurringDonationChangeHistory__c changeHistory;
 
-                for (SObjectField rdField : rd2ChangeHistoryFields.keySet()) {
-                    if (updatedRd.isFieldChanged(rdField, originalRd)) {
-                        
-                        if (changeHistory == null) {
-                            changeHistory = initChangeHistoryRecord(updatedRd, originalRd);
-                        }
+            for (SObjectField rdField : rd2ChangeHistoryFields.keySet()) {
+                if (isFieldChanged(rdField)) {
 
-                        changeHistory.put(rd2ChangeHistoryFields.get(rdField).newField, 
-                            updatedRd.getValue(rdField));
-                        changeHistory.put(rd2ChangeHistoryFields.get(rdField).previousField, 
-                            originalRd.getValue(rdField));
+                    if (changeHistory == null) {
+                        changeHistory = initChangeHistoryRecord();
                     }
-                }
 
-                return changeHistory;
+                    changeHistory.put(rd2ChangeHistoryFields.get(rdField).previousField, 
+                        originalRd.getValue(rdField));
+                    changeHistory.put(rd2ChangeHistoryFields.get(rdField).newField, 
+                        updatedRd.getValue(rdField));
+                }
+            }
+
+            return changeHistory;
         }
 
         /**
          * @description Returns a Recurring Donation Change History record with required and default
          * values filled in.
-         * @param updatedRd Changed Recurring Donation, used for "New" fields
-         * @param originalRd Old Recurring Donation, used for "Previous" fields
          * @return RecurringDonationChangeHistory__c A new Change History record
          */
-        public RecurringDonationChangeHistory__c initChangeHistoryRecord(RD2_RecurringDonation updatedRd, 
-            RD2_RecurringDonation originalRd){
+        public RecurringDonationChangeHistory__c initChangeHistoryRecord() {
 
-                Decimal newAnnualValue = updatedRd.getAnnualValue();
-                Decimal previousAnnualValue = originalRd.getAnnualValue();
-                String changeType = null;
-                if(newAnnualValue > previousAnnualValue){
-                    changeType = RD2_ChangeHistoryService.CHANGE_TYPE_UPGRADE;
-                } else if(newAnnualValue < previousAnnualValue){
-                    changeType = RD2_ChangeHistoryService.CHANGE_TYPE_DOWNGRADE;
-                }
+            String changeType = calculateChangeType();
 
-                return new RecurringDonationChangeHistory__c(
-                    RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
-                    EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
-                    NewAmount__c = (Decimal)updatedRd.getValue(RD_AMOUNT_FIELD),
-                    PreviousAmount__c = (Decimal)originalRd.getValue(RD_AMOUNT_FIELD),
-                    NewAnnualValue__c = newAnnualValue,
-                    PreviousAnnualValue__c = previousAnnualValue,
-                    ChangeType__c = changeType
-                );
+            RecurringDonationChangeHistory__c rdChangeHistory = new RecurringDonationChangeHistory__c(
+                RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
+                EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
+                NewAmount__c = (Decimal)updatedRd.getValue(RD_AMOUNT_FIELD),
+                PreviousAmount__c = (Decimal)originalRd.getValue(RD_AMOUNT_FIELD),
+                NewAnnualValue__c = updatedRd.getAnnualValue(),
+                PreviousAnnualValue__c = originalRd.getAnnualValue(),
+                ChangeType__c = changeType
+            );
+
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                rdChangeHistory.put('CurrencyIsoCode', updatedRd.getCurrencyIsoCode());
+            }
+
+            return rdChangeHistory;
         }
+
+        /**
+         * @description Returns a Change Type, based on a User entered value, or calculated from
+         * an change in the Annual Value of the Recurring Donation.
+         * @param updatedRd Changed Recurring Donation
+         * @param originalRd Old Recurring Donation
+         * @return String The Change Type for this Change History record
+         */
+        private String calculateChangeType() {
+
+            String changeType = updatedRd.getChangeType();
+            if (changeType != null) {
+                return changeType;
+            }
+
+            Decimal newAnnualValue = updatedRd.getAnnualValue();
+            Decimal previousAnnualValue = originalRd.getAnnualValue();
+
+            if (newAnnualValue > previousAnnualValue) {
+                changeType = RD2_Constants.CHANGE_TYPE_UPGRADE;
+            } else if (newAnnualValue < previousAnnualValue) {
+                changeType = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
+            }
+
+            return changeType;
+        }
+
+        /**
+        * @description Return true if the value of the provided field is different between these
+        * Recurring Donations
+        * @param rdField SObjectField to get the value for
+        * @return Boolean
+        */
+        public Boolean isFieldChanged(SObjectField rdField){
+            return updatedRd.getValue(rdField) != originalRd.getValue(rdField);
+        }
+
+    }
+
+    /***
+    * @description Class used for DML operations relating to Recurring Donation Change History.
+    * To ensure these operations succeed regardless of User permissions, this Class uses without sharing
+    */
+    private without sharing class ChangeHistoryCreator {
 
         /**
          * @description Inserts the provided Change History records, without allowing partial success

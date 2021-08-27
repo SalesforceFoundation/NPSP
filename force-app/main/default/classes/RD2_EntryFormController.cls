@@ -86,7 +86,9 @@ public with sharing class RD2_EntryFormController {
             'InstallmentPeriodPermissions' => getFieldPermissionsMap('npe03__Installment_Period__c'),
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
-            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled()
+            'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+            'isChangeHistoryEnabled' => RD2_ChangeHistoryService.isChangeHistoryEnabled,
+            'periodToYearlyFrequencyMap' => RD_Constants.PERIOD_TO_YEARLY_FREQUENCY
         };
     }
 

@@ -27,6 +27,7 @@ import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donati
 import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c';
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
+import FIELD_CHANGE_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -64,7 +65,8 @@ import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
 import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
 import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01__One2OneContact__r.LastName';
 
-
+const CHANGE_TYPE_UPGRADE = 'Upgrade';
+const CHANGE_TYPE_DOWNGRADE = 'Downgrade';
 const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
@@ -125,6 +127,11 @@ export default class rd2EntryForm extends LightningElement {
     isRecordReady = false;
     @track isSettingReady = false;
     @track isSaveButtonDisabled = true;
+    @track changeType;
+    @track showChangeTypeField = false;
+    isChangeHistoryEnabled = false;
+    periodToYearlyFrequencyMap;
+    annualValue;
 
     @track isElevateWidgetEnabled = false;
     @track isElevateEditWidgetEnabled = false;
@@ -206,6 +213,8 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.isChangeHistoryEnabled = response.isChangeHistoryEnabled;
+                this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -213,6 +222,7 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
                 this.evaluateElevateEditWidget();
+                this.handleAnnualValueChange();
             });
 
         /*
@@ -284,6 +294,7 @@ export default class rd2EntryForm extends LightningElement {
         this.fields.cardLastFour = extractFieldInfo(fieldInfos, FIELD_CARD_LAST4.fieldApiName);
         this.fields.currency = { label: currencyFieldLabel, apiName: 'CurrencyIsoCode' };
         this.fields.achLastFour = extractFieldInfo(fieldInfos, FIELD_ACH_LAST4.fieldApiName);
+        this.fields.changeType = extractFieldInfo(fieldInfos, FIELD_CHANGE_TYPE.fieldApiName);
     }
 
     /***
@@ -309,6 +320,7 @@ export default class rd2EntryForm extends LightningElement {
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
+            this.handleAnnualValueChange();
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -390,16 +402,19 @@ export default class rd2EntryForm extends LightningElement {
     */
     handleRecurringTypeChange(event) {
         this.handleElevateWidgetDisplay();
+        this.handleAnnualValueChange();
     }
 
     handleRecurringPeriodChange(event) {
         this.recurringPeriod = event.detail.period;
         this.handleElevateWidgetDisplay();
+        this.handleAnnualValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
         this.periodType = event.detail.periodType;
         this.handleElevateWidgetDisplay();
+        this.handleAnnualValueChange();
     }
 
 
@@ -409,6 +424,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleCurrencyChange(event) {
         this.handleElevateWidgetDisplay();
+        this.handleAnnualValueChange();
     }
 
     /***
@@ -418,6 +434,49 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isElevateCustomer) {
             this.evaluateElevateWidget();
         }
+    }
+
+    /***
+    * @description Checks if Change History is Enabled, then checks the Annual Value
+    */
+    handleAnnualValueChange() {
+        if (this.isChangeHistoryEnabled) {
+            if(!this.annualValue){
+                this.annualValue = this.getAnnualValue(true);
+            }
+            this.showChangeTypeField = this.isEdit;
+            this.checkForAnnualValueChange();
+        }
+    }
+
+    /***
+    * @description Get the Annual Value based on the current Amount and Schedule
+    */
+    getAnnualValue(duringInit) {
+        const allFields = this.getAllFields();
+        const amount = allFields[FIELD_AMOUNT.fieldApiName];
+        const frequency = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) 
+            : allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
+        const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD) 
+            : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
+        const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
+        return amount * (yearlyFrequency / frequency);
+    }
+
+    /***
+    * @description Checks if the Annual Value changed, which will update the Change Type
+    */
+    checkForAnnualValueChange() {
+        let newAnnualValue = this.getAnnualValue();
+        let newChangeType = '';
+
+        if (newAnnualValue > this.annualValue) {
+            newChangeType = CHANGE_TYPE_UPGRADE;
+        } else if (newAnnualValue < this.annualValue) {
+            newChangeType = CHANGE_TYPE_DOWNGRADE;
+        }
+
+        this.changeType = newChangeType;
     }
 
     /***

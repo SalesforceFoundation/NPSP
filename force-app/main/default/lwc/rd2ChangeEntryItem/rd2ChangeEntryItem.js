@@ -7,6 +7,7 @@ export default class Rd2ChangeEntryItem extends LightningElement {
     @api newId;
     @api label;
     @api displayType;
+    @api currencyCode;
 
     get hasNewValue() {
         return this.newValue !== null && this.newValue !== undefined;
