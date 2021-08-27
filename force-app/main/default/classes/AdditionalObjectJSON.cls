@@ -35,17 +35,50 @@
 */
 public inherited sharing class AdditionalObjectJSON {
 
+    @TestVisible
     private BDI_DynamicSourceGroup dynamicSourceGroup;
+    private BDI_MappingServiceAdvanced mappingService;
 
     public AdditionalObjectJSON(String additionalObjectString) {
-        if (additionalObjectString != null) {
-            this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
-                JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
+        this.mappingService = BDI_MappingServiceAdvanced.getInstance();
+        instantiateDynamicSourceGroup(additionalObjectString);
+    }
+
+    public String asJSON() {
+        if (hasAdditionalObjects()) {
+            return JSON.serialize(dynamicSourceGroup);
+        }
+        return null;
+    }
+
+    public void add(SoftCredits softCredits) {
+        clearSoftCreditsFromDynamicSourceGroup();
+        for (OpportunityContactRole softCredit : softCredits.unprocessed()) {
+            BDI_DynamicSource dynamicSource = dynamicSourceFrom(softCredit);
+            dynamicSourceGroup.dynamicSourceByObjMappingDevName.put(
+                dynamicSource.objectMappingDevName,
+                dynamicSource);
+        }
+    }
+
+    // Remove after allocations type is available and can be included in this class
+    // Currently need to clear and re-add soft credits so we can preserve allocations
+    // in the additional object json
+    public void clearSoftCreditsFromDynamicSourceGroup() {
+        List<String> softCreditObjectMappingNames =
+            objectMappingNamesFor(SObjectType.OpportunityContactRole.getName());
+        for (String key : this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.keySet()) {
+            BDI_DynamicSource dynamicSource =
+                this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.get(key);
+
+            if (softCreditObjectMappingNames.contains(dynamicSource.objectMappingTemplateDevName)) {
+                this.dynamicSourceGroup.dynamicSourceByObjMappingDevName.remove(key);
+            }
         }
     }
 
     public SoftCredits asSoftCredits() {
-        if (dynamicSourceGroup == null) {
+        if (dynamicSourceGroup.dynamicSourceByObjMappingDevName == null) {
             return new SoftCredits(new List<OpportunityContactRole>());
         }
 
@@ -63,9 +96,49 @@ public inherited sharing class AdditionalObjectJSON {
         return new SoftCredits(opportunityContactRoles);
     }
 
+    private void instantiateDynamicSourceGroup(String additionalObjectString) {
+        this.dynamicSourceGroup = new BDI_DynamicSourceGroup();
+        if (additionalObjectString != null) {
+            this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
+                JSON.deserialize(additionalObjectString, BDI_DynamicSourceGroup.class);
+
+            if (this.dynamicSourceGroup.name == null) {
+                String asAdditionalObjectJSON = convertWidgetDataToObjectJSON(additionalObjectString);
+                this.dynamicSourceGroup = (BDI_DynamicSourceGroup)
+                    JSON.deserialize(asAdditionalObjectJSON, BDI_DynamicSourceGroup.class);
+            }
+        } else {
+            this.dynamicSourceGroup.dynamicSourceByObjMappingDevName = new Map<String,BDI_DynamicSource>();
+            this.dynamicSourceGroup.name = String.valueOf(DataImport__c.Additional_Object_JSON__c);
+        }
+    }
+
+    private BDI_DynamicSource dynamicSourceFrom(OpportunityContactRole opportunityContactRole) {
+        BDI_ObjectMapping objectMapping = objectMappingFor(SObjectType.OpportunityContactRole.getName());
+        List<BDI_FieldMapping> fieldMappings =
+            mappingService.fieldMappingsByObjMappingDevName.get(objectMapping.DeveloperName);
+        DataImport__c dynamicDataImport = new DataImport__c();
+
+        for (BDI_FieldMapping fieldMapping : fieldMappings) {
+            Object value = opportunityContactRole.get(fieldMapping.Target_Field_API_Name);
+            dynamicDataImport.put(fieldMapping.Source_Field_API_Name, value);
+        }
+
+        BDI_DynamicSource dynamicSource = new BDI_DynamicSource();
+        dynamicSource.objectMappingDevName = objectMapping.DeveloperName + generateRandomString(7);
+        dynamicSource.objectMappingTemplateDevName = objectMapping.DeveloperName;
+        dynamicSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+        dynamicSource.sourceObj = dynamicDataImport;
+
+        return dynamicSource;
+    }
+
     private OpportunityContactRole opportunityContactRoleFrom(BDI_DynamicSource dynamicSource) {
         OpportunityContactRole ocr = new OpportunityContactRole();
         SObject sourceObject = dynamicSource.sourceObj;
+        if (dynamicSource.importedRecordId != null) {
+            ocr.Id = dynamicSource.importedRecordId;
+        }
         ocr.Role = (String) sourceObject.get(String.valueOf(DataImport__c.Opportunity_Contact_Role_1_Role__c));
         ocr.ContactId = (Id) sourceObject.get(String.valueOf(DataImport__c.Contact1Imported__c));
         return ocr;
@@ -87,18 +160,104 @@ public inherited sharing class AdditionalObjectJSON {
     }
 
     private List<String> objectMappingNamesFor(String objectApiName) {
-        List<Data_import_Object_Mapping__mdt> objectMappings = [
-            SELECT DeveloperName
-            FROM Data_Import_Object_Mapping__mdt
-            WHERE Object_API_Name__c = :objectApiName
-                AND Is_Deleted__c = false
-        ];
-
+        List<BDI_ObjectMapping> objectMappings = mappingService.objectMappingByDevName.values();
         List<String> objectMappingNames = new List<String>();
-        for (Data_Import_Object_Mapping__mdt objectMapping : objectMappings) {
-            objectMappingNames.add(objectMapping.DeveloperName);
+        for (BDI_ObjectMapping objectMapping : objectMappings) {
+            if (objectMapping.Object_API_Name == objectApiName) {
+                objectMappingNames.add(objectMapping.DeveloperName);
+            }
         }
 
         return objectMappingNames;
+    }
+
+    private BDI_ObjectMapping objectMappingFor(String objectAPIName) {
+        for (BDI_ObjectMapping objectMapping : mappingService.objectMappingByDevName.values()) {
+            if (objectMapping.Object_API_Name == objectAPIName) {
+                return objectMapping;
+            }
+        }
+        return null;
+    }
+
+    private String generateRandomString(Integer length) {
+        Blob blob128 = Crypto.GenerateAESKey(128);
+        String hex = EncodingUtil.ConvertToHex(blob128);
+        return hex.left(length);
+    }
+
+    private Boolean hasAdditionalObjects() {
+        return this.dynamicSourceGroup != null
+            && this.dynamicSourceGroup.dynamicSourceByObjMappingDevName?.keySet()?.size() > 0;
+    }
+
+    @TestVisible
+    private String convertWidgetDataToObjectJSON(String widgetData) {
+
+        if (String.isBlank(widgetData)) {
+            return null;
+        }
+
+        Map<String, BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String, BDI_DynamicSource>();
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+
+        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
+        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
+
+        Map<String, Object> objMappingDevNameToObjList;
+
+        try {
+            objMappingDevNameToObjList = (Map<String, Object>) JSON.deserializeUntyped(widgetData);
+        } catch (Exception e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+
+        // Create a map of sobject type to sobject list for processing
+        for (String objMappingDevName : objMappingDevNameToObjList.keySet()) {
+            BDI_ObjectMapping objMapping = mappingService.objectMappingByDevName.get(objMappingDevName);
+
+            BDI_FieldMapping[] fieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(objMappingDevName);
+
+            List<String> serializedSObjects = new List<String>();
+
+            //Reserializing the object strings to resolve platform issue with deserializing SObjects
+            for (Object obj : (List<Object>) objMappingDevNameToObjList.get(objMappingDevName)) {
+                serializedSObjects.add(JSON.serialize(obj));
+            }
+
+            if (serializedSObjects != null && serializedSObjects.size() > 0) {
+
+                Integer i = 0;
+                //Loop through the sObjects and construct DI records to hold the data in the expected fields
+                for (String objString : serializedSObjects) {
+
+                    SObject sObj = (SObject) JSON.deserialize(objString, Sobject.class);
+
+                    i++;
+                    DataImport__c dynamicDataImport = new DataImport__c();
+
+                    //Reverse mapping the fields back onto a dynamicDataImport Record that respresents the source obj.
+                    for (BDI_FieldMapping fieldMapping : fieldMappings) {
+                        Object value = sObj.get(fieldMapping.Target_Field_API_Name);
+                        dynamicDataImport.put(fieldMapping.Source_Field_API_Name, value);
+                    }
+
+                    BDI_DynamicSource dynSource = new BDI_DynamicSource();
+                    dynSource.objectMappingDevName = objMapping.DeveloperName + generateRandomString(7);
+                    dynSource.objectMappingTemplateDevName = objMapping.DeveloperName;
+                    dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
+                    dynSource.sourceObj = dynamicDataImport;
+
+                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName, dynSource);
+                }
+            }
+        }
+
+        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
+            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
+            return dynSourceGroupString;
+        }
+        return null;
     }
 }

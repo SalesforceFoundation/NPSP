@@ -61,6 +61,7 @@ public with sharing class RD2_ChangeHistorySelector {
     public List<RecurringDonationChangeHistory__c> getChangeHistories(Id recurringDonationId) {
         UTIL_Query query = new UTIL_Query()
                 .withSelectFields(fields)
+                .withMultiCurrencyField()
                 .withFrom(RecurringDonationChangeHistory__c.SObjectType)
                 .withWhere('RecurringDonation__c = :recurringDonationId')
                 .withLimit(this.recordLimit)

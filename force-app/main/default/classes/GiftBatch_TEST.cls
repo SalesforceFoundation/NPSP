@@ -141,6 +141,27 @@ private class GiftBatch_TEST {
     }
 
     @isTest
+    static void shouldAddProvidedGiftToGiftBatchGifts() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(3)
+            .build();
+        DataImport__c dummyDataImport = new DataImport__c(
+            Donation_Amount__c = 33.33,
+            Additional_Object_JSON__C = additionalObjectStringWithSoftCredits
+        );
+        Gift dummyGift = new Gift(dummyDataImport);
+        GiftBatch dummyGiftBatch = new GiftBatch();
+
+        System.assertEquals(0, dummyGiftBatch.gifts().size());
+
+        dummyGiftBatch.add(dummyGift);
+
+        System.assertEquals(1, dummyGiftBatch.gifts().size());
+        System.assertEquals(3, dummyGiftBatch.gifts().findBy(new GiftId(dummyGift.id())).softCredits().size());
+    }
+
+    @isTest
     static void shouldNotAttemptToCaptureElevatePaymentsWhenServiceUnavailable() {
         GiftsMock giftsMock = new GiftsMock();
         GiftBatch giftBatch = new GiftBatch(stubFor(giftsMock));
