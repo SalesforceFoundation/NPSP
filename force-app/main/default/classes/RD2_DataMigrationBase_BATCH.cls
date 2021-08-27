@@ -212,7 +212,8 @@ public abstract class RD2_DataMigrationBase_BATCH implements Database.Batchable<
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(batchJobId)
             .withTotalRecords(totalRecords)
             .withTotalRecordsProcessed(totalRecords - totalRecordsFailed)
-            .withTotalRecordsFailed(totalRecordsFailed);
+            .withTotalRecordsFailed(totalRecordsFailed)
+            .withCompletedDate(Datetime.now());
 
         new RD2_DataMigrationEnablement.BatchJob().saveSummary(summary, isDryRunMode);
     }
