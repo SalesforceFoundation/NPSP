@@ -100,7 +100,7 @@
         const action = component.get("c.getAddresses");
         action.setParams({
             householdId: hhId,
-            listAddrExisting: null
+            existingAddresses: null
         });
         action.setCallback(this, function (response) {
 
@@ -783,7 +783,7 @@
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
             householdId: hhMerge.Id,
-            listAddrExisting: listAddr
+            existingAddresses: listAddr
         });
         self = this;
         action.setCallback(this, function(response) {
