@@ -457,7 +457,7 @@
         for (var i = 0; i < listCon.length; i++) {
             var con = listCon[i];
             if (!con.is_Address_Override__c) {
-                this.copyAddrToContact(addr, con);
+                this.copyAddressToContact(addr, con);
             }
         }
         this.componentSetObjFix(component, 'v.listCon', listCon);
@@ -466,7 +466,7 @@
     /*******************************************************************************************************
      * @description copy the address object to the appropriate contact fields
      */
-    copyAddrToContact: function(addr, con) {
+    copyAddressToContact: function(addr, con) {
         con.MailingStreet = addr.MailingStreet__c;
         if (addr.MailingStreet2__c)
             con.MailingStreet += '\n' + addr.MailingStreet2__c;
@@ -582,7 +582,7 @@
 
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
         if (addrDefault)
-            this.copyAddrToContact(addrDefault, conNew);
+            this.copyAddressToContact(addrDefault, conNew);
         conNew.npo02__Household_Naming_Order__c = listCon.length;
         listCon.push(conNew);
         this.componentSetObjFix(component, 'v.listCon', listCon);
