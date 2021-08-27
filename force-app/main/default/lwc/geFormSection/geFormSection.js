@@ -7,6 +7,7 @@ export default class GeFormSection extends LightningElement {
     @api section;
     @api widgetConfig;
     @api formState;
+    @api giftInView;
     _hasPaymentWidget = false;
 
     renderedCallback() {

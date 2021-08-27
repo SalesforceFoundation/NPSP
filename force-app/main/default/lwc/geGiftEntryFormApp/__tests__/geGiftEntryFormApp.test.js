@@ -7,7 +7,7 @@ import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryContro
 import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationsSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
-import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
+import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
 import isElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
@@ -26,7 +26,6 @@ const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
-const legacyDataImportModel = require('../../../../../../tests/__mocks__/apex/data/legacyDataImportModel.json');
 const dataImportBatchRecord = require('./data/getDataImportBatchRecord.json');
 const selectedContact = require('./data/getSelectedContact.json');
 const selectedAccount = require('./data/getSelectedAccount.json');
@@ -236,8 +235,8 @@ describe('c-ge-gift-entry-form-app', () => {
     });
 
     describe('save, update, and delete behavior', () => {
-        it('should call saveAndDryRunDataImport with expected arguments when a gift is saved in batch mode', async () => {
-            saveAndDryRunDataImport.mockResolvedValue(JSON.stringify(legacyDataImportModel));
+        it('should call addGiftTo with expected arguments when a gift is saved in batch mode', async () => {
+            addGiftTo.mockResolvedValue({});
             const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
             await flushPromises();
 
@@ -252,12 +251,12 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             expect(submitEvent.detail.success).toHaveBeenCalled();
-            expect(saveAndDryRunDataImport).toHaveBeenCalled();
-            expect(saveAndDryRunDataImport.mock.calls[0][0].batchId).toEqual('DUMMY_BATCH_ID');
+            expect(addGiftTo).toHaveBeenCalled();
+            expect(addGiftTo.mock.calls[0][0].dataImportBatchId).toEqual('DUMMY_BATCH_ID');
         });
 
         it('should call expected methods when a gift save fails in batch mode', async () => {
-            saveAndDryRunDataImport.mockImplementation(() => {
+            addGiftTo.mockImplementation(() => {
                 throw new Error();
             });
             const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});

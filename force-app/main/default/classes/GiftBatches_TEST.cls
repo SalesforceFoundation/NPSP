@@ -40,7 +40,7 @@ private class GiftBatches_TEST {
 
         GiftBatchGroupedTotals groupedTotals = giftBatches.getGroupedTotals();
         Map<String, Integer> totalsForGiftBatch = groupedTotals.totalsFor(DUMMY_BATCH_ID_0);
-        System.debug(totalsForGiftBatch);
+
         System.assertEquals(1, totalsForGiftBatch.get(GiftBatchAggregateGroupName.PROCESSED.name()));
         System.assertEquals(2 + 4, totalsForGiftBatch.get(GiftBatchAggregateGroupName.FAILED.name()));
         System.assertEquals(4, totalsForGiftBatch.get(GiftBatchAggregateGroupName.FAILED_PAYMENT.name()));

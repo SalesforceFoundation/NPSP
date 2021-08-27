@@ -351,7 +351,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.Status__c != oldRd.Status__c ||
             rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
             rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c ||
-            rd.EndDate__c != rd.EndDate__c;
+            rd.EndDate__c != oldRd.EndDate__c;
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
@@ -449,6 +449,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             //when Opportunities were evaluated so no need to redo the work
             if (rdRecord
                 .reviseYearValues(yearValueProcessor)
+                .storeAndClearChangeType()
                 .isOutdated()//checks all changed values on the RD
             ) {
                 outdatedRDs.add(rdRecord.getUpdate());
@@ -466,7 +467,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
      * @return void
      */
     private void createChangeHistory(List<RD2_RecurringDonation> rdRecords){
-        if(!changeHistoryService.isChangeHistoryEnabled){
+        if(!RD2_ChangeHistoryService.isChangeHistoryEnabled){
             return;
         }
 

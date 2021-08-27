@@ -27,17 +27,25 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class RD2_ChangeView {
-    @AuraEnabled public List<RD2_FieldChangeView> fields;
-    @AuraEnabled public Id id;
-    @AuraEnabled public Date changeDate;
-    @AuraEnabled public String changeType;
-    @AuraEnabled public String statusReason;
-    @AuraEnabled public String statusLabel;
+/**
+* @author Salesforce.org
+* @date 2021
+* @description Gift DTO class for inbound changes from the Gift Entry.
+*/
+public with sharing class InboundGiftDTO {
 
-    public RD2_ChangeView() {
-        this.statusLabel = UTIL_Describe.getFieldLabel(
-          'npe03__Recurring_Donation__c',
-          String.valueOf(npe03__Recurring_Donation__c.ClosedReason__c));
+    @AuraEnabled public DataImport__c fields { get; set; }
+    @AuraEnabled public List<OpportunityContactRole> softCredits { get; set; }
+
+    public InboundGiftDTO() {}
+
+    public Gift asGift() {
+        Gift gift = new Gift(fields);
+
+        if (softCredits != null) {
+            gift.assignSoftCredits(new SoftCredits(softCredits));
+        }
+
+        return gift;
     }
 }

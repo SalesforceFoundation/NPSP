@@ -76,6 +76,9 @@ public with sharing class RD2_ChangeHistory {
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Amount__c)
         );
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            view.currencyCode = (String)this.record.get('CurrencyIsoCode');
+        }
         return view;
     }
 
@@ -87,6 +90,9 @@ public with sharing class RD2_ChangeHistory {
         }
         view.label = Label.RDCH_Annual_Value;
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            view.currencyCode = (String)this.record.get('CurrencyIsoCode');
+        }
         return view;
     }
 

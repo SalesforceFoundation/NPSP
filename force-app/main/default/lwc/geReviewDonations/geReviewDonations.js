@@ -51,15 +51,18 @@ export default class geReviewDonations extends NavigationMixin(LightningElement)
     }
 
     set selectedDonation(donation) {
-        this._selectedDonation = donation;
-
-        const hasNestedTypeProperty = hasNestedProperty(donation, 'attributes', 'type');
-        if (hasNestedTypeProperty && donation.attributes.type === PAYMENT.objectApiName) {
-            this._donationType = PAYMENT.objectApiName;
-        } else if (hasNestedTypeProperty && donation.attributes.type === OPPORTUNITY.objectApiName) {
-            this._donationType = OPPORTUNITY.objectApiName;
-        } else {
+        if (!donation) {
             this._donationType = null;
+            return;
+        };
+
+        this._selectedDonation = donation.fields || donation;
+        const objectType = donation?.attributes?.type || donation?.fields?.attributes?.type;
+
+        if (objectType === PAYMENT.objectApiName) {
+            this._donationType = PAYMENT.objectApiName;
+        } else if (objectType === OPPORTUNITY.objectApiName) {
+            this._donationType = OPPORTUNITY.objectApiName;
         }
     }
 

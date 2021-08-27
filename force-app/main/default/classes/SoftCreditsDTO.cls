@@ -39,4 +39,10 @@ public with sharing class SoftCreditsDTO {
     public SoftCreditsDTO(SoftCredits softCredits) {
         this.softCredits = softCredits.all();
     }
+
+    public SoftCredits asSoftCredits() {
+        List<OpportunityContactRole> softCredits =
+            (List<OpportunityContactRole>) softCredits;
+        return new SoftCredits(softCredits);
+    }
 }

@@ -46,6 +46,11 @@ public inherited sharing class RD2_RecurringDonation {
     private Boolean isNew;
 
     /**
+    * @description Stores the Change Type for this Update, so we can clear the Recurring Donation field
+    */
+    private String changeType;
+
+    /**
     * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
     */
     private String state {
@@ -141,6 +146,20 @@ public inherited sharing class RD2_RecurringDonation {
             changedFields.add(npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c);
         }
 
+        return this;
+    }
+
+    /**
+    * @description Stores the Change Type in the object, then sets it to null on the Recurring Donation
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation storeAndClearChangeType() {
+        if(rd.ChangeType__c != null){
+            changeType = rd.ChangeType__c;
+            rd.ChangeType__c = null;
+            changedFields.add(npe03__Recurring_Donation__c.ChangeType__c);
+        }
+        
         return this;
     }
 
@@ -265,7 +284,7 @@ public inherited sharing class RD2_RecurringDonation {
 
             if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
-                rd.ClosedReason__c = '';
+                rd.ClosedReason__c = null;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }
@@ -430,6 +449,21 @@ public inherited sharing class RD2_RecurringDonation {
         return state;
     }
 
+    /**
+    * @description Return the Change Type of the Recurring Donation.
+    * @return String 
+    */
+    public String getChangeType() {
+        return changeType;
+    }
+
+    /**
+    * @description Return the Currency of the Recurring Donation.
+    * @return String 
+    */
+    public String getCurrencyIsoCode() {
+        return (String)rd.get('CurrencyIsoCode');
+    }
 
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
@@ -550,17 +584,6 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Object getValue(SObjectField rdField){
         return rd.get(rdField);
-    }
-
-    /**
-    * @description Return true if the value of the provided field is different between this
-    * Recurring Donation and the oldRd that was passed in
-    * @param rdField SObjectField to get the value for
-    * @param oldRd RD2_RecurringDonation The Recurring Donation to compare to
-    * @return Boolean
-    */
-    public Boolean isFieldChanged(SObjectField rdField, RD2_RecurringDonation oldRd){
-        return getValue(rdField) != oldRd.getValue(rdField);
     }
 
 }

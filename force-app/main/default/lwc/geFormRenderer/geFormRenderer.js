@@ -2,7 +2,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
-import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import validateAuthorizedGiftEdit from '@salesforce/apex/GE_GiftEntryController.validateAuthorizedGiftEdit';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -198,15 +197,19 @@ export default class GeFormRenderer extends LightningElement{
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
-        } else if (this.isAPaymentId(record.Id)) {
-            this.setSelectedPaymentInFormState(record);
-            this.loadPaymentAndParentDonationFieldValues(record);
-        } else if (this.isAnOpportunityId(record.Id)) {
-            this.setSelectedDonationInFormState(record, record.applyPayment);
-            this.loadSelectedDonationFieldValues(record);
+        } else if (this.isAPaymentId(record.fields.Id)) {
+            this.setSelectedPaymentInFormState(record.fields);
+            this.loadPaymentAndParentDonationFieldValues(record.fields);
+        } else if (this.isAnOpportunityId(record.fields.Id)) {
+            this.setSelectedDonationInFormState(record.fields, record.fields.applyPayment);
+            this.loadSelectedDonationFieldValues(record.fields);
         } else {
             throw 'Unsupported selected donation type!';
         }
+
+        const reviewDonationsChangeEvent = new CustomEvent(
+            'reviewdonationschange', { detail: { record: record } });
+        this.dispatchEvent(reviewDonationsChangeEvent);
     }
 
     setSelectedPaymentInFormState(record) {
@@ -1148,24 +1151,6 @@ export default class GeFormRenderer extends LightningElement{
         this.erroredFields = [];
     }
 
-    @api
-    loadDataImportRecord(dataImport) {
-        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
-        if (isAlreadyOpen) {
-            return;
-        }
-
-        this.expandForm();
-        const dataImportWithNullValuesAppended =
-            this.appendNullValuesForMissingFields(dataImport);
-
-        dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
-            convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-        this.reset();
-        this.updateFormState(dataImportWithNullValuesAppended);
-        this._openedGiftId = dataImport.Id;
-    }
-
     reset() {
         this.clearErrors();
         this.resetFormState();
@@ -1764,12 +1749,17 @@ export default class GeFormRenderer extends LightningElement{
         if (gift && isEmptyObject(gift.fields)) {
             this.reset();
         } else if (gift && gift.fields) {
-            this._giftInView = gift;
-            this._openedGiftId = gift.fields.Id;
-            this.formState = gift.fields;
-            if (gift.softCredits) {
-                this._softCredits = deepClone(gift.softCredits);
+            let giftLocalCopy = deepClone(gift);
+
+            if (giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
+                giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
+                    convertBDIToWidgetJson(giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)])
             }
+
+            this._giftInView = giftLocalCopy;
+            this._openedGiftId = giftLocalCopy.fields.Id || null;
+            this.formState = giftLocalCopy.fields;
+            this.expandForm();
         }
     }
 
@@ -1914,11 +1904,13 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         if (isDonationDonor) {
-            this.handleDonationDonorChange(value)
+            this.handleDonationDonorChange(value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
 
         if (isImportedRecordField) {
             this.handleImportedRecordFieldChange(sourceField, value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
     }
 
@@ -2619,20 +2611,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     processDataImport = async () => {
-        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        const dataImportRecord = this.saveableFormState();
+        const gift = new Gift(this.giftInView);
 
-        submitDataImportToBDI({
-            dataImport: dataImportRecord,
-            updateGift: this.hasSelectedDonationOrPayment()
-        })
-            .then(opportunityId => {
-                this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
-                this.goToRecordDetailPage(opportunityId);
-            })
-            .catch(error => {
-                this.handleBdiProcessingError(error);
-            });
+        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+
+        await gift.save().catch(saveError => this.handleCatchOnSave(saveError));
+
+        await gift.refresh().catch(viewError => handleError(viewError));
+
+        if (gift.isFailed()) {
+            this.handleBdiProcessingError(gift.failureInformation());
+        } else {
+            this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
+            this.goToRecordDetailPage(gift.donationId());
+        }
     }
 
     handleBdiProcessingError(error) {
