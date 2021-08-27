@@ -234,8 +234,6 @@ public inherited sharing class RD2_ChangeHistoryService {
 
             String changeType = calculateChangeType();
 
-            // TODO: Add fields for Fixed RDs
-
             RecurringDonationChangeHistory__c rdChangeHistory = new RecurringDonationChangeHistory__c(
                 RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
                 EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
@@ -243,6 +241,8 @@ public inherited sharing class RD2_ChangeHistoryService {
                 PreviousAmount__c = (Decimal)originalRd.getValue(RD_AMOUNT_FIELD),
                 NewAnnualValue__c = updatedRd.getAnnualValue(),
                 PreviousAnnualValue__c = originalRd.getAnnualValue(),
+                NewExpectedTotalValue__c = updatedRd.getExpectedTotalValue(),
+                PreviousExpectedTotalValue__c = originalRd.getExpectedTotalValue(),
                 ChangeType__c = changeType
             );
 
@@ -267,12 +267,14 @@ public inherited sharing class RD2_ChangeHistoryService {
                 return changeType;
             }
 
-            Decimal newAnnualValue = updatedRd.getAnnualValue();
-            Decimal previousAnnualValue = originalRd.getAnnualValue();
+            Decimal newValue = updatedRd.isOpenEnded() ? updatedRd.getAnnualValue() 
+                : updatedRd.getExpectedTotalValue();
+            Decimal previousValue = originalRd.isOpenEnded() ? originalRd.getAnnualValue()
+                : originalRd.getExpectedTotalValue();
 
-            if (newAnnualValue > previousAnnualValue) {
+            if (newValue > previousValue) {
                 changeType = RD2_Constants.CHANGE_TYPE_UPGRADE;
-            } else if (newAnnualValue < previousAnnualValue) {
+            } else if (newValue < previousValue) {
                 changeType = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
             }
 

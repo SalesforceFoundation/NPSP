@@ -25,6 +25,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>PreviousExpectedTotalValue__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>PreviousCampaign__c</field>
             </layoutItems>
             <layoutItems>
@@ -64,6 +68,10 @@
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>NewAnnualValue__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>NewExpectedTotalValue__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>

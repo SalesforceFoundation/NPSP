@@ -200,6 +200,20 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule.
+    * Used to determine if the value of a donation increased or decreased based on changes that were made.
+    * @return Decimal The annual value of this Recurring Donation
+    */
+    public Decimal getExpectedTotalValue(){
+        if(isOpenEnded()){
+            return null;
+        }
+        Decimal remainingInstallments = rd.npe03__Installments__c - getPaidInstallments();
+        Decimal expectedValue = getPaidAmount() + remainingInstallments * rd.npe03__Amount__c;
+        return expectedValue.setScale(2);
+    }
+
+    /**
     * @description Revises and modifies the Recurring Donation status
     * @param currentDate Used to determined current date
     * @param scheduleService RD Schedule Service
@@ -424,6 +438,16 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    /**
+    * @description Return paid amount on the Recurring Donation, default to 0 when null
+    * @return Decimal
+    */
+    public Decimal getPaidAmount() {
+        return rd.npe03__Paid_Amount__c == null
+            ? 0
+            : rd.npe03__Paid_Amount__c;
     }
 
     public RecurringDonationSchedule__c getPauseSchedule() {
