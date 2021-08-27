@@ -39,7 +39,7 @@ private class InstallationNotifications_TEST {
    static void shouldNotPublishNotificationWithoutAudience() {
       Test.startTest();
       InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
-          new InstallationNotificationsSelectorMock().withAudience(false);
+          new InstallationNotificationsSelectorMock().withAudience(false).withRedirectURL(false);
       CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
           new CustomNotificationTypeSelectorMock();
 
@@ -47,7 +47,7 @@ private class InstallationNotifications_TEST {
       InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
       InstallationNotifications notifications = new InstallationNotifications();
       Test.stopTest();
-      System.assert(!notifications.canPublish(notifications?.activeNotifications[0]));
+      System.assert(!notifications.canPublish(notifications.activeNotifications[0]));
       System.assert(MockAudienceImpl.userId == null);
    }
 
@@ -57,6 +57,25 @@ private class InstallationNotifications_TEST {
       Test.startTest();
       InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
           new InstallationNotificationsSelectorMock().withAudience(true);
+      CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
+          new CustomNotificationTypeSelectorMock();
+
+      InstallationNotifications.installationNotificationsSelector = stubFor(installationsNotificationsSelectorMock);
+      InstallationNotifications.notificationTypeSelector = stubFor(customNotificationTypeSelectorMock);
+
+      InstallationNotifications notifications = new InstallationNotifications();
+      Test.stopTest();
+
+      System.assert(notifications.canPublish(notifications?.activeNotifications[0]));
+      System.assert(MockAudienceImpl.userId != null);
+   }
+
+   @isTest
+   static void shouldPublishNotificationWithoutRedirectURL() {
+
+      Test.startTest();
+      InstallationNotificationsSelectorMock installationsNotificationsSelectorMock =
+          new InstallationNotificationsSelectorMock().withAudience(true).withRedirectURL(false);
       CustomNotificationTypeSelectorMock customNotificationTypeSelectorMock =
           new CustomNotificationTypeSelectorMock();
 
@@ -131,7 +150,7 @@ private class InstallationNotifications_TEST {
                   List<Custom_Notification__mdt> notifications = new List<Custom_Notification__mdt>{
                       new Custom_Notification__mdt(
                           Id = DUMMY_CUSTOM_NOTIFICATION_ID,
-                          Notification_Channel__c = 'Fake Notificationuu',
+                          Notification_Channel__c = 'Fake Notification',
                           Audience_Implementation__c = withAudience ? 'MockAudienceImpl': '',
                           Notification_Content_Implementation__c = 'MockNotificationContentImpl',
                           Redirect_URL__c = withRedirectURL ? 'https://test.org' : '',
