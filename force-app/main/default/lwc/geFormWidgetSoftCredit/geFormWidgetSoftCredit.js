@@ -1,50 +1,28 @@
 import { LightningElement, api, track } from 'lwc';
-import { isNotEmpty } from 'c/utilCommon';
-
-import getDummySoftCredits from '@salesforce/apex/GE_GiftEntryController.getDummySoftCredits';
-
 import GeLabelService from 'c/geLabelService';
+
+import { isNotEmpty } from 'c/utilCommon';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
-    @api gift;
+    @api giftInView;
     @api element;
     @track alertBanner = {};
 
-    @track rowList = [];
-
-    connectedCallback() {
-        this.init();
-    }
-
-    async init() {
-        const softCreditOppContactRoles = await getDummySoftCredits();
-        softCreditOppContactRoles.forEach(softCredit => {
-            this.addRow(softCredit);
-        });        
-    };
-
-    addRow(softCredit) {
-        const record = { ...softCredit };
-        let row = {};
-        row.key = this.rowList.length;
-
-        row = {
-            ...row,
-            record
-        };
-        this.rowList.push(row);
-    }
-
     handleAddRow() {
-        this.addRow();
+        fireEvent(this, 'softcreditwidgetchange', { action: 'addSoftCredit' });
     }
 
     handleRemove(event) {
-        this.rowList.splice(event.detail.rowIndex, 1);
-        // TODO fire event
+        fireEvent(this, 'softcreditwidgetchange', {
+            action: 'removeSoftCredit',
+            detail: {
+                key: event.detail.rowIndex
+            }
+        });
     }
 
     reset() {

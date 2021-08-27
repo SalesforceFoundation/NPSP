@@ -30,21 +30,22 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Service class for Gifts in NPSP.
+* @description Gift DTO class for inbound changes from the Gift Entry.
 */
-public with sharing class GiftService {
+public with sharing class InboundGiftDTO {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        GiftTemplate defaultGiftTemplate = new GiftTemplate();
-        GiftSelector selector = new GiftSelector(defaultGiftTemplate);
+    @AuraEnabled public DataImport__c fields { get; set; }
+    @AuraEnabled public List<OpportunityContactRole> softCredits { get; set; }
 
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
-    }
+    public InboundGiftDTO() {}
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
+    public Gift asGift() {
+        Gift gift = new Gift(fields);
+
+        if (softCredits != null) {
+            gift.assignSoftCredits(new SoftCredits(softCredits));
+        }
+
+        return gift;
     }
 }

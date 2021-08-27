@@ -27,24 +27,35 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-/**
-* @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
-*/
-public with sharing class GiftService {
+@isTest
+private class GiftDTO_TEST {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        GiftTemplate defaultGiftTemplate = new GiftTemplate();
-        GiftSelector selector = new GiftSelector(defaultGiftTemplate);
+    @isTest
+    static void shouldHaveExpectedPropertiesWhenConstructedWithAGift() {
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
 
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
+        DataImport__c dummyDataImport = new DataImport__c(
+            Id = DUMMY_DATA_IMPORT_ID,
+            Account1Imported__c = DUMMY_ACCOUNT_ID,
+            Donation_Amount__c = 33.33,
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        Gift dummyGift = new Gift(dummyDataImport);
+
+        GiftDTO dummyGiftDTO = new GiftDTO(dummyGift);
+
+        System.assertEquals(33.33, dummyGiftDTO.fields.get(DONATION_AMOUNT_FIELD));
+        System.assertEquals(DUMMY_ACCOUNT_ID, dummyGiftDTO.fields.get(ACCOUNT1_IMPORTED_FIELD));
+        System.assertEquals(DUMMY_DATA_IMPORT_ID, dummyGiftDTO.fields.get('Id'));
+        System.assertEquals(2, dummyGiftDTO.softCreditsDTO.softCredits.size());
     }
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
-    }
+    private static final String DONATION_AMOUNT_FIELD = String.valueOf(DataImport__c.Donation_Amount__c);
+    private static final String ACCOUNT1_IMPORTED_FIELD = String.valueOf(DataImport__c.Account1Imported__c);
+    private static final String ADDITIONAL_OBJECT_JSON_FIELD = String.valueOf(DataImport__c.Additional_Object_JSON__c);
+    private static final String DUMMY_DATA_IMPORT_ID = UTIL_UnitTestData_TEST.mockId(DataImport__c.sObjectType);
+    private static final String DUMMY_ACCOUNT_ID = UTIL_UnitTestData_TEST.mockId(Account.sObjectType);
 }
