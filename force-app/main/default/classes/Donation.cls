@@ -38,9 +38,31 @@ public inherited sharing class Donation {
     private Opportunity opportunity;
     private SoftCredits softCredits;
 
+    @TestVisible
+    private DonationSelector donationSelector {
+        get {
+            if (donationSelector == null) {
+                donationSelector = new DonationSelector();
+            }
+            return donationSelector;
+        }
+        set;
+    }
+
     public Donation(Opportunity opportunity) {
         this.opportunity = opportunity;
         initialize();
+    }
+
+    public Donation(Id opportunityId) {
+        List<Opportunity> foundOpportunities =
+            donationSelector.getDonation(opportunityId);
+        if (foundOpportunities != null) {
+            this.opportunity = foundOpportunities[0];
+            initialize();
+        } else {
+            throw new DonationException('No opportunity found.');
+        }
     }
 
     public Opportunity opportunity() {
@@ -96,4 +118,6 @@ public inherited sharing class Donation {
             return true;
         }
     }
+
+    public class DonationException extends Exception{}
 }
