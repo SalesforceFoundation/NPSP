@@ -329,6 +329,34 @@ public with sharing class ContactService {
                     }
                 }
 
+                // ***
+                // This method seems to be called from both before and after insert.
+                // When called after insert, the accounts One2One (aka Primary Contact)
+                // field is set.
+                // ***
+                // connect the Account to the Contact for 1:1 and HHAccount
+                if (contactRecord.Id != null) {
+                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
+                }
+
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    accountRecord.put('CurrencyIsoCode',
+                            (String) contactRecord.get('CurrencyIsoCode'));
+                }
+
+                // Always copy the Contact's Mailing & Others address to the new Account's
+                // Billing & Shipping address.
+                // NOTE: This does NOT map the Contact's Primary Address Type, since there
+                // is no equivalent field on the Household/Account.  This results in
+                // Addresses that are created during the new Contact flow not getting the
+                // correct Address Type.
+                if (contactRecord.is_Address_Override__c != true) {
+                    addressService.copyAddressStdSObj(contactRecord, 'Mailing',
+                            accountRecord, 'Billing');
+                    addressService.copyAddressStdSObj(contactRecord, 'Other',
+                            accountRecord, 'Shipping');
+                }
+
                 accountRecord.Phone = contactRecord.Phone;
                 accountRecord.Fax = contactRecord.Fax;
                 accountRecord.OwnerId = contactRecord.OwnerId;
