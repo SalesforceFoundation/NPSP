@@ -235,10 +235,10 @@ public with sharing class ContactService {
         List<Contact> contactRecords = new List<Contact>();
 
         //track which contacts are being inserted vs. updated
-        List<Id> contactIds = getContactIds(contacts);
+        List<Id> existingContactIds = getContactIds(contacts);
 
         // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : getAccounts(contactIds)) {
+        for (Account accountRecord : getAccounts(existingContactIds)) {
             accountByPrimaryContactId.put(
                     accountRecord.npe01__One2OneContact__c, accountRecord);
         }
