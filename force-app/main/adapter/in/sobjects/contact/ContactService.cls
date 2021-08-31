@@ -260,13 +260,7 @@ public with sharing class ContactService {
             } else {
                 // Construct the Household (Account), or the Individual/One2One Account when
                 // in the Legacy Household model.
-                accountRecord = new Account();
-
-                if (CAO_Constants.isHHAccountModel()) {
-                    configureHouseholdAccount(contactRecord, accountRecord);
-                } else {
-                    configureOneToOneAccount(accountRecord, contactRecord);
-                }
+                accountRecord = getBaseOneToOneOrHouseholdAccountFor(contactRecord);
 
                 // ***
                 // This method seems to be called from both before and after insert.
@@ -278,7 +272,11 @@ public with sharing class ContactService {
                     accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
 
-                configureBaseOneToOneOrHouseholdAccount(accountRecord, contactRecord);
+                if (CAO_Constants.isHHAccountModel()) {
+                    configureHouseholdAccount(contactRecord, accountRecord);
+                } else {
+                    configureOneToOneAccount(accountRecord, contactRecord);
+                }
 
                 accountInserts.add(accountRecord);
                 contactRecords.add(contactRecord);
@@ -336,7 +334,8 @@ public with sharing class ContactService {
         }
     }
 
-    private void configureBaseOneToOneOrHouseholdAccount(Account accountRecord, Contact contactRecord) {
+    private Account getBaseOneToOneOrHouseholdAccountFor(Contact contactRecord) {
+        Account accountRecord = new Account();
         if (UserInfo.isMultiCurrencyOrganization()) {
             accountRecord.put('CurrencyIsoCode',
                     (String) contactRecord.get('CurrencyIsoCode'));
@@ -359,6 +358,7 @@ public with sharing class ContactService {
         accountRecord.Fax = contactRecord.Fax;
         accountRecord.OwnerId = contactRecord.OwnerId;
         accountRecord.npe01__SYSTEMIsIndividual__c = true;
+        return accountRecord;
     }
 
     private void configureOneToOneAccount(Account accountRecord, Contact contactRecord) {
