@@ -262,30 +262,6 @@ public with sharing class ContactService {
                 // in the Legacy Household model.
                 accountRecord = new Account();
 
-                // ***
-                // This method seems to be called from both before and after insert.
-                // When called after insert, the accounts One2One (aka Primary Contact)
-                // field is set.
-                // ***
-                // connect the Account to the Contact for 1:1 and HHAccount
-                if (contactRecord.Id != null) {
-                    accountRecord.npe01__One2OneContact__c = contactRecord.Id;
-                }
-
-                if (UserInfo.isMultiCurrencyOrganization()) {
-                    accountRecord.put('CurrencyIsoCode',
-                            (String) contactRecord.get('CurrencyIsoCode'));
-                }
-
-                // Always copy the Contact's Mailing & Others address to the new Account's
-                // Billing & Shipping address.
-                if (contactRecord.is_Address_Override__c != true) {
-                    addressService.copyAddressStdSObj(contactRecord, 'Mailing',
-                            accountRecord, 'Billing');
-                    addressService.copyAddressStdSObj(contactRecord, 'Other',
-                            accountRecord, 'Shipping');
-                }
-
                 if (CAO_Constants.isHHAccountModel()) {
                     configureHouseholdAccount(contactRecord, accountRecord);
                 } else {
