@@ -287,46 +287,9 @@ public with sharing class ContactService {
                 }
 
                 if (CAO_Constants.isHHAccountModel()) {
-                    if (householdSettings.isAdvancedHouseholdNaming()) {
-                        // Generate and set the Name + Greetings
-                        HouseholdName householdName =
-                                new HouseholdName(new Contacts(new List<Contact>{
-                                        contactRecord
-                                }));
-                        accountRecord.Name = householdName.asName();
-                        accountRecord.npo02__Formal_Greeting__c =
-                                householdName.asFormalGreeting();
-                        accountRecord.npo02__Informal_Greeting__c =
-                                householdName.asInformalGreeting();
-                    } else {
-                        accountRecord.Name =
-                                Households.strNameHHAccountForContact(contactRecord);
-                    }
-
-                    // Set the member count
-                    accountRecord.Number_of_Household_Members__c = 1;
-
-                    // Set the account Type fields
-                    accountRecord.npe01__SYSTEM_AccountType__c =
-                            CAO_Constants.HH_ACCOUNT_TYPE;
-                    accountRecord.Type = CAO_Constants.HH_TYPE;
-
-                    // Set the Record Type
-                    if (ContactAndOrgSettings.rtIdForAccountModel(true) != null) {
-                        accountRecord.put('RecordTypeID',
-                                ContactAndOrgSettings.rtIdForAccountModel(true));
-                    }
+                    configureHouseholdAccount(contactRecord, accountRecord);
                 } else {
-                    accountRecord.Name =
-                            Households.strNameOne2OneAccountForContact(contactRecord);
-                    accountRecord.npe01__SYSTEM_AccountType__c =
-                            CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                    accountRecord.Type = '';
-
-                    if (ContactAndOrgSettings.rtIdForAccountModel(false) != null) {
-                        accountRecord.put('RecordTypeID',
-                                ContactAndOrgSettings.rtIdForAccountModel(false));
-                    }
+                    configureOneToOneAccount(accountRecord, contactRecord);
                 }
 
                 // ***
@@ -414,6 +377,51 @@ public with sharing class ContactService {
                 contactRecord.Current_Address__c = currentAddress.Id;
             }
             index++;
+        }
+    }
+
+    private void configureOneToOneAccount(Account accountRecord, Contact contactRecord) {
+        accountRecord.Name =
+                Households.strNameOne2OneAccountForContact(contactRecord);
+        accountRecord.npe01__SYSTEM_AccountType__c =
+                CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        accountRecord.Type = '';
+
+        if (ContactAndOrgSettings.rtIdForAccountModel(false) != null) {
+            accountRecord.put('RecordTypeID',
+                    ContactAndOrgSettings.rtIdForAccountModel(false));
+        }
+    }
+
+    private void configureHouseholdAccount(Contact contactRecord, Account accountRecord) {
+        if (householdSettings.isAdvancedHouseholdNaming()) {
+            // Generate and set the Name + Greetings
+            HouseholdName householdName =
+                    new HouseholdName(new Contacts(new List<Contact>{
+                            contactRecord
+                    }));
+            accountRecord.Name = householdName.asName();
+            accountRecord.npo02__Formal_Greeting__c =
+                    householdName.asFormalGreeting();
+            accountRecord.npo02__Informal_Greeting__c =
+                    householdName.asInformalGreeting();
+        } else {
+            accountRecord.Name =
+                    Households.strNameHHAccountForContact(contactRecord);
+        }
+
+        // Set the member count
+        accountRecord.Number_of_Household_Members__c = 1;
+
+        // Set the account Type fields
+        accountRecord.npe01__SYSTEM_AccountType__c =
+                CAO_Constants.HH_ACCOUNT_TYPE;
+        accountRecord.Type = CAO_Constants.HH_TYPE;
+
+        // Set the Record Type
+        if (ContactAndOrgSettings.rtIdForAccountModel(true) != null) {
+            accountRecord.put('RecordTypeID',
+                    ContactAndOrgSettings.rtIdForAccountModel(true));
         }
     }
 
