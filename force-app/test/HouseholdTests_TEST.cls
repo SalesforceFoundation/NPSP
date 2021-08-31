@@ -80,7 +80,6 @@ private class HouseholdTests_TEST {
                     UTIL_SObject.extractIds(actualMembers.getRecords()));
         }
     }
-
     @IsTest
     static void simpleContactInsertShouldCreateHouseholdWithAddress() {
         insert TEST_ContactBuilder.dummyContactWithAddress();
@@ -90,7 +89,13 @@ private class HouseholdTests_TEST {
         System.assert(Integer.valueOf(contacts.get(0).Account
                 .Number_of_Household_Members__c) > 0,
                 'The number of members should be greater than zero.');
+    }
 
+    @IsTest
+    static void addingAContactShouldRenameTheHousehold() {
+        insert TEST_ContactBuilder.dummyContactWithAddress();
+
+        List<Contact> contacts = getContacts();
         Contact member2 = new Contact(
                 LastName = 'member2',
                 AccountId = contacts.get(0).AccountId
