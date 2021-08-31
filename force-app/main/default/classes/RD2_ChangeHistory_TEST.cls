@@ -170,6 +170,33 @@ private class RD2_ChangeHistory_TEST {
         }
     }
 
+    @IsTest
+    static void rdWithTypeChangeFromOpenToFixedHasCorrectValues() {
+        RecurringDonationChangeHistory__c record = getChangeRecord();
+        record.NewExpectedTotalValue__c = 100;
+        record.PreviousExpectedTotalValue__c = null;
+        record.NewAnnualValue__c = null;
+
+        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+
+        String field1Label = UTIL_Describe.getFieldLabel(
+            'RecurringDonationChangeHistory__c',
+            'PreviousAnnualValue__c'
+        );
+        String field2Label = UTIL_Describe.getFieldLabel(
+            'RecurringDonationChangeHistory__c',
+            'NewExpectedTotalValue__c'
+        );
+
+        System.assertEquals(3, view.fields.size());
+        System.assertEquals(field1Label, view.fields[1].label);
+        System.assertEquals(null, view.fields[1].newValue);
+        System.assertEquals(60, view.fields[1].oldValue);
+        System.assertEquals(field2Label, view.fields[2].label);
+        System.assertEquals(null, view.fields[2].newValue);
+        System.assertEquals(100, view.fields[2].oldValue);
+    }
+
     private class RD2_ChangeHistorySelectorMock implements StubProvider {
         List<RecurringDonationChangeHistory__c> records;
 

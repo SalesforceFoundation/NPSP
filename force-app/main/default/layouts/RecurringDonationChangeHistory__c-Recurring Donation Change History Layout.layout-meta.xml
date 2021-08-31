@@ -45,11 +45,19 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>PreviousPlannedInstallments__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>PreviousStatus__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>PreviousStatusReason__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>PreviousRecurringType__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -91,11 +99,19 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>NewPlannedInstallments__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>NewStatus__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>NewStatusReason__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>NewRecurringType__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
