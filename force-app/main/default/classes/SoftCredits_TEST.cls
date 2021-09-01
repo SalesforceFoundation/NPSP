@@ -93,4 +93,36 @@ private class SoftCredits_TEST {
 
         System.assertEquals(4, softCredits.size());
     }
+
+    @isTest
+    static void shouldNotAddDuplicateOpportunityContactRoles() {
+        Id dummyContactId0 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id dummyContactId1 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id dummyContactId2 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        Id dummyContactId3 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+
+        List<OpportunityContactRole> dummyOpportunityContactRoles =
+            new List<OpportunityContactRole> {
+                new OpportunityContactRole(Role='Soft Credit', ContactId=dummyContactId0),
+                new OpportunityContactRole(Role='Household Member', ContactId=dummyContactId0),
+                new OpportunityContactRole(Role='Influencer', ContactId=dummyContactId1),
+                new OpportunityContactRole(Role='Soft Credit', ContactId=dummyContactId2)
+            };
+
+        SoftCredits softCredits = new SoftCredits(dummyOpportunityContactRoles);
+        softCredits.addAll(dummyOpportunityContactRoles);
+        softCredits.addAll(dummyOpportunityContactRoles);
+        softCredits.addAll(dummyOpportunityContactRoles);
+        softCredits.addAll(dummyOpportunityContactRoles);
+        softCredits.addAll(dummyOpportunityContactRoles);
+
+        System.assertNotEquals(24, softCredits.size());
+        System.assertEquals(4, softCredits.size());
+
+        Id ocrId0 = UTIL_UnitTestData_TEST.mockId(OpportunityContactRole.SObjectType);
+        softCredits.add(new OpportunityContactRole(Role='Soft Credit', ContactId=dummyContactId3));
+        softCredits.add(new OpportunityContactRole(Id=ocrId0, Role='Soft Credit', ContactId=dummyContactId3));
+
+        System.assertEquals(6, softCredits.size());
+    }
 }
