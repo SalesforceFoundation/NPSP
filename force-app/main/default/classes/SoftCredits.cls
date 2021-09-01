@@ -65,4 +65,19 @@ public with sharing class SoftCredits {
         }
         return unprocessed;
     }
+
+    private List<OpportunityContactRole> deduplicate(List<OpportunityContactRole> newOpportunityContactRoles) {
+        List<OpportunityContactRole> combinedList = new List<OpportunityContactRole>();
+        combinedList.addAll(opportunityContactRoles);
+        combinedList.addAll(newOpportunityContactRoles);
+
+        Map<Integer, OpportunityContactRole> hashCodeByRecord = new Map<Integer, OpportunityContactRole>();
+
+        for (OpportunityContactRole ocr : combinedList) {
+            SoftCredit softCredit = new SoftCredit(ocr);
+            hashCodeByRecord.put(softCredit.idContactRoleHashcode(), ocr);
+        }
+
+        return hashCodeByRecord.values();
+    }
 }
