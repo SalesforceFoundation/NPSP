@@ -1,0 +1,49 @@
+{
+  "apiName": "Account",
+  "childRelationships": {},
+  "fields": {
+    "BillingCity": {
+      "displayValue": null,
+      "value": "Some City"
+    },
+    "BillingCountry": {
+      "displayValue": null,
+      "value": null
+    },
+    "BillingPostalCode": {
+      "displayValue": null,
+      "value": "53203"
+    },
+    "BillingState": {
+      "displayValue": null,
+      "value": "WI"
+    },
+    "BillingStreet": {
+      "displayValue": null,
+      "value": "123 Billing Street"
+    },
+    "Name": {
+      "displayValue": null,
+      "value": "Test Organization"
+    },
+    "Phone": {
+      "displayValue": null,
+      "value": null
+    },
+    "Website": {
+      "displayValue": null,
+      "value": null
+    }
+  },
+  "id": "001_fake_account_id",
+  "lastModifiedById": "00555000008rK25AAE",
+  "lastModifiedDate": "2021-08-18T17:49:27.000Z",
+  "recordTypeId": "01255000002KYIvAAO",
+  "recordTypeInfo": {
+    "available": true,
+    "defaultRecordTypeMapping": true,
+    "master": false,
+    "name": "Organization",
+    "recordTypeId": "01255000002KYIvAAO"
+  }
+}

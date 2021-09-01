@@ -191,15 +191,4 @@ const traverse = (element, ...selectors) => {
     return traverse(nextElement, ...rest);
 }
 
-const dispatchFormFieldChange = (element, value, fieldMappingDevName) => {
-    const changeEvent = new CustomEvent('formfieldchange', {
-        detail: {
-            value,
-            "label": value,
-            fieldMappingDevName
-        }
-    });
-    element.dispatchEvent(changeEvent);
-};
-
 
