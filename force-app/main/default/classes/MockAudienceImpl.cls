@@ -33,6 +33,7 @@
 * @description Mock Audience Implementation class for Notification Framework
 */
 
+@isTest
 public inherited sharing class MockAudienceImpl implements IAudience {
 
    @TestVisible private static Id userId;
