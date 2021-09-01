@@ -97,68 +97,6 @@ public inherited sharing class AddressService {
         );
     }
 
-    /*******************************************************************************************************
-    * @description For the list of Addresses, sees if there is already an existing Address in the Account that
-    * matches. Creates only unique addresses from their respective household, and mark any existing matches
-    * as Default if the caller specifies it on the new address.
-    * @param addresses a list of Addresses to update
-    * @param dmlWrapper the Addresses to update
-    * @param includeAddressType whether to include comparing the AddressType field
-    */
-    public static void createAddressesFor(AccountsAdapter accounts,
-            TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
-
-        Map<Address__c, Address__c> existingAddressesByAddress = Addresses.getExistingAddresses(
-                accounts.allAddresses());
-        Map<Id, Account> accountsById = getAccountsById(accounts);
-
-        for (Address__c newAddress : accounts.allAddresses()) {
-            NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
-            Address__c existingAddress = existingAddressesByAddress.get(newAddress);
-            NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
-            Boolean isAddressUpdated;
-
-            if (existingAddress != null) {
-                NPSP_HouseholdAccount npspExistingAddressHousehold = new NPSP_HouseholdAccount(
-                        accountsById.get(npspExistingAddress.householdId()),
-                        accounts.oldMap.get(npspExistingAddress.householdId())
-                );
-                // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (!npspNewAddress.isEqualToIncludingAddressType(npspExistingAddress, includeAddressType)) {
-                    npspExistingAddress.copyFrom(npspNewAddress);
-                    if (npspNewAddress.isDefault()) {
-                        npspExistingAddress.setAsDefault();
-                    }
-                    isAddressUpdated = true;
-                } else if (npspNewAddress.isDefault() && !npspExistingAddress.isDefault()) {
-                    npspExistingAddress.setAsDefault();
-                    isAddressUpdated = true;
-                } else if (npspExistingAddressHousehold.isUndeliverableStatusChanged()) {
-                    npspExistingAddress.setUndeliverable(npspExistingAddressHousehold.undeliverableAddressStatus());
-                    isAddressUpdated = true;
-                }
-                if (isAddressUpdated) {
-                    dmlWrapper.objectsToUpdate.add(existingAddress);
-                }
-            } else {
-                NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(
-                    accountsById.get(npspNewAddress.householdId())
-                );
-                npspNewAddress.setUndeliverable(npspHouseholdAccount.undeliverableAddressStatus());
-                dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
-            }
-        }
-    }
-
-    private static Map<Id, Account> getAccountsById(AccountsAdapter accounts) {
-        Map<Id, Account> accountsById = new Map<Id, Account>();
-        for (Account account : (List<Account>) accounts.getRecords()) {
-            accountsById.put(account.Id, account);
-        }
-
-        return accountsById;
-    }
-
     public static Boolean isAddressManagementEnabled() {
         if (!UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
             return true;
