@@ -46,12 +46,12 @@ public with sharing class ContactService {
     }
 
     @TestVisible
-    private AddressService addressService {
+    private AddressService addressServiceInstance {
         get {
-            if (addressService == null) {
-                addressService = new AddressService();
+            if (addressServiceInstance == null) {
+                addressServiceInstance = new AddressService();
             }
-            return addressService;
+            return addressServiceInstance;
         }
         set;
     }
@@ -103,26 +103,26 @@ public with sharing class ContactService {
 
         // both provided, so look for at least one change between address fields
         Boolean isChanged =
-                !addressService.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
-                        !addressService.equalsCaseSensitive(con1.MailingCity, con2
+                !addressServiceInstance.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
+                        !addressServiceInstance.equalsCaseSensitive(con1.MailingCity, con2
                                 .MailingCity) ||
-                        !addressService.equalsCaseSensitive(con1.MailingState, con2
+                        !addressServiceInstance.equalsCaseSensitive(con1.MailingState, con2
                                 .MailingState) ||
-                        !addressService.equalsCaseSensitive(con1.MailingPostalCode, con2
+                        !addressServiceInstance.equalsCaseSensitive(con1.MailingPostalCode, con2
                                 .MailingPostalCode) ||
-                        !addressService.equalsCaseSensitive(con1.MailingCountry, con2
+                        !addressServiceInstance.equalsCaseSensitive(con1.MailingCountry, con2
                                 .MailingCountry) ||
-                        !addressService.equalsCaseSensitive(con1
+                        !addressServiceInstance.equalsCaseSensitive(con1
                                 .npe01__Primary_Address_Type__c,
                                 con2
                                 .npe01__Primary_Address_Type__c);
 
         if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
             isChanged =
-                    !addressService.equalsCaseSensitive(String.valueOf(con1.get
+                    !addressServiceInstance.equalsCaseSensitive(String.valueOf(con1.get
                             ('MailingStateCode')),
                             String.valueOf(con2.get('MailingStateCode'))) ||
-                            !addressService.equalsCaseSensitive(String.valueOf(con1.get
+                            !addressServiceInstance.equalsCaseSensitive(String.valueOf(con1.get
                                     ('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
         }
         return isChanged;
@@ -245,18 +245,35 @@ public with sharing class ContactService {
 
         List<Account> accountInserts = new List<Account>();
 
+        List<Contact> contactsForAddressCreation = new List<Contact>();
+        List<Account> acctsToUpdate = new List<Account>();
         for (Contact contactRecord : contacts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
             Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
-            if (accountRecord != null &&
-                    ((CAO_Constants.isHHAccountModel()
-                            && isHousehold(accountRecord))
-                            ||
-                            (CAO_Constants.isOneToOne()
-                                    && isOneToOne(accountRecord)))) {
+            if (accountRecord != null && CAO_Constants.isHHAccountModel() && isHousehold(accountRecord)
+                    || accountRecord != null && CAO_Constants.isOneToOne() && isOneToOne(accountRecord)) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
+                if (CAO_Constants.isHHAccountModel() && AddressService.isAddressManagementEnabled()) {
+                    ContactAddress contactAddress = new ContactAddress(contactRecord);
+                    if (contactAddress.hasAddress()) { // todo: should check for changes on
+                        // before update
+                        contactsForAddressCreation.add(contactRecord);
+                    }
+                }
+                if (accountRecord.Number_of_Household_Members__c == null) {
+                    accountRecord.Number_of_Household_Members__c = 1;
+                } else {
+                    accountRecord.Number_of_Household_Members__c =
+                            accountRecord.Contacts.size();
+                }
+                acctsToUpdate.add(accountRecord);
+
+                if (CAO_Constants.isHHAccountModel()
+                        && householdSettings.isAdvancedHouseholdNaming()) {
+                    contactsForAddressCreation.add(contactRecord);
+                }
             } else {
                 // Construct the Household (Account), or the Individual/One2One Account when
                 // in the Legacy Household model.
@@ -274,6 +291,9 @@ public with sharing class ContactService {
 
                 if (CAO_Constants.isHHAccountModel()) {
                     configureHouseholdAccount(contactRecord, accountRecord);
+                    if (householdSettings.isAdvancedHouseholdNaming()) {
+                        contactsForAddressCreation.add(contactRecord);
+                    }
                 } else {
                     configureOneToOneAccount(accountRecord, contactRecord);
                 }
@@ -283,54 +303,58 @@ public with sharing class ContactService {
             }
         }
 
-        if (accountInserts.isEmpty()) {
-            return;
+        if (!acctsToUpdate.isEmpty()) {
+            update acctsToUpdate; // Update member count
+            Households.updateNameAndMemberCount( // Update name and greetings
+                    new List<Id>(new Map<Id, Account>(acctsToUpdate).keySet()));
         }
 
-        // with current TDTM design, we can't use dmlWrapper
-        // because we need to get the new AccountID's into the Contacts.
+        if (!accountInserts.isEmpty()) {
+            // with current TDTM design, we can't use dmlWrapper
+            // because we need to get the new AccountID's into the Contacts.
 
-        // identify the specific records that had the problem, and don't fail the whole batch
-        //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
-        // Set the HH flag to true to prevent the trigger handlers from running again
-        // to update  the name and member count now that they are already set correctly here.
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
-        List<Account> accountsWithAddresses = [
-                SELECT Id, (
-                        SELECT Id
-                        FROM Addresses__r
-                )
-                FROM Account
-        ];
-        Map<Id, Address__c> addressesByAccountIds = new Map<Id, Address__c>();
-        for (Account account : accountsWithAddresses) {
-            if (!account.Addresses__r.isEmpty()) {
-                addressesByAccountIds.put(account.Id, account.Addresses__r.get(0));
-            }
-        }
-        for (Integer index = 0; index < insertResults.size(); index++) {
-            Database.SaveResult insertResult = insertResults[index];
-            if (!insertResult.isSuccess()) {
-                for (Database.Error err : insertResult.getErrors()) {
-                    accountInserts[index].addError(err.getMessage());
-                    Contact contactRecord = contactRecords[index];
-                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{contactRecord.FirstName, contactRecord.LastName, err.getMessage()}));
+            // identify the specific records that had the problem, and don't fail the whole batch
+            //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
+            // Set the HH flag to true to prevent the trigger handlers from running again
+            // to update  the name and member count now that they are already set correctly here.
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+            // Suppress the trigger handler that creates Addresses from Accounts, as
+            // the Addresses will be inserted using the Contact info below
+            TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
+            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+            TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', true);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+
+            for (Integer index = 0; index < insertResults.size(); index++) {
+                Database.SaveResult insertResult = insertResults[index];
+                if (!insertResult.isSuccess()) {
+                    for (Database.Error err : insertResult.getErrors()) {
+                        accountInserts[index].addError(err.getMessage());
+                        Contact contactRecord = contactRecords[index];
+                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
+                                contactRecord.FirstName, contactRecord.LastName, err.getMessage()
+                        }));
+                    }
                 }
             }
+
+            // now update each contact's accountId
+            // and set its Current Address
+            Integer index = 0;
+            for (Contact contactRecord : contactRecords) {
+                contactRecord.AccountId = accountInserts[index].Id;
+                index++;
+            }
         }
 
-        // now update each contact's accountId
-        // and set its Current Address
-        Integer index = 0;
-        for (Contact contactRecord : contactRecords) {
-            contactRecord.AccountId = accountInserts[index].Id;
-            Address__c currentAddress = addressesByAccountIds.get(contactRecord.AccountId);
-            if (currentAddress != null) {
-                contactRecord.Current_Address__c = currentAddress.Id;
+        if (!contactsForAddressCreation.isEmpty()) {
+            if (AddressService.isAddressManagementEnabled()) {
+                //Create household addresses from Contacts instead of from
+                // the Account to include mapping of the Primary Address Type
+                Contacts c = new Contacts(contactsForAddressCreation);
+                c.createAddressFromContactAndSetCurrentAddressLookupId(contactsForAddressCreation,
+                        true);
             }
-            index++;
         }
     }
 
@@ -348,9 +372,9 @@ public with sharing class ContactService {
         // Addresses that are created during the new Contact flow not getting the
         // correct Address Type.
         if (contactRecord.is_Address_Override__c != true) {
-            addressService.copyAddressStdSObj(contactRecord, 'Mailing',
+            addressServiceInstance.copyAddressStdSObj(contactRecord, 'Mailing',
                     accountRecord, 'Billing');
-            addressService.copyAddressStdSObj(contactRecord, 'Other',
+            addressServiceInstance.copyAddressStdSObj(contactRecord, 'Other',
                     accountRecord, 'Shipping');
         }
 
@@ -428,7 +452,10 @@ public with sharing class ContactService {
 
     private List<Account> getAccounts(List<Id> contactIds) {
         return [
-                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                SELECT Id, npe01__One2OneContact__c,
+                        npe01__SYSTEM_AccountType__c,
+                        Number_of_Household_Members__c,
+                (SELECT Id FROM Contacts)
                 FROM Account
                 WHERE npe01__One2OneContact__c IN :contactIds
         ];
