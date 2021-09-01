@@ -35,7 +35,18 @@
 @isTest
 private class SoftCredit_TEST {
 
+    private static final String INFLUENCER = 'Influencer';
+
     @isTest
     static void shouldReturnIdContactRoleHashCode() {
+        Id dummyOCRId = UTIL_UnitTestData_TEST.mockId(OpportunityContactRole.sObjectType);
+        Id dummyContactId = UTIL_UnitTestData_TEST.mockId(Contact.sObjectType);
+        OpportunityContactRole dummyOpportunityContactRoleInfluencer =
+            new OpportunityContactRole(id=dummyOCRId, Role=INFLUENCER, ContactId=dummyContactId);
+        Integer expectedHashCode = (dummyOCRId + INFLUENCER + dummyContactId).hashCode();
+
+        // TODO: Instantiate softCredit
+        // TODO: call softCredit.idContactRoleHashCode()
+        System.assertEquals(expectedHashCode, 1);
     }
 }
