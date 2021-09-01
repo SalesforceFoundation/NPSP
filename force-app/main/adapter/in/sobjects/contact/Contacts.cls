@@ -203,28 +203,33 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return new Contacts(contactsWithoutAccounts());
     }
 
-    public Contacts contactsAndOneToOneContacts_insertContext() {
+    public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (needsHHAccount(contactRecord)) {
+            if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
+                // Avoid creating a new contact with the 1:1 account of another contact
+                resetAccountIdFor(contactRecord);
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
 
-        if (isOneToOneEnabled()) {
-            for (Contact contactRecord : (List<Contact>) getRecords()) {
-                if (LegacyHouseholds.isWithoutAccount(contactRecord)
-                        || LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
-                    // Avoid creating a new contact with the 1:1 account of another contact
-                    if (contactRecord.AccountId != null) {
-                        contactRecord.AccountId = null;
-                    }
-
-                    contactsWithoutAccounts.add(contactRecord);
-                }
+        List<Contact> organizationContacts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+                resetAccountIdFor(contactRecord);
+                organizationContacts.add(contactRecord);
             }
         }
-        return new Contacts(contactsWithoutAccounts);
+        List<Contact> contacts = new List<Contact>();
+        contacts.addAll(contactsWithoutAccounts);
+        contacts.addAll(organizationContacts);
+        return new Contacts(contacts);
+    }
+
+    private void resetAccountIdFor(Contact contactRecord) {
+        if (contactRecord.AccountId != null) {
+            contactRecord.AccountId = null;
+        }
     }
 
     public List<Contact> forHouseholdName() {
@@ -668,16 +673,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return newOwnerContactById;
-    }
-
-    /**
-     * @description Determines whether or not the contact requires a household account.
-     * @param  contactRecord The contact to verify.
-     */
-    public Boolean needsHHAccount(Contact contactRecord) {
-        return CAO_Constants.isHHAccountModel()
-                && contactRecord.AccountId == null
-                && contactRecord.npe01__Private__c != true;
     }
 
     /*******************************************************************************************************
@@ -1274,10 +1269,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
-    }
-
-    private Boolean isOneToOneEnabled() {
-        return CAO_Constants.isOneToOne();
     }
 
     private Boolean isMissingAccount(Contact contactRecord) {
