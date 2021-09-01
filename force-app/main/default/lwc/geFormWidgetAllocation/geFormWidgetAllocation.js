@@ -5,9 +5,9 @@ import {
     isEmpty,
     apiNameFor
 } from 'c/utilCommon';
-
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 
@@ -211,12 +211,8 @@ export default class GeFormWidgetAllocation extends LightningElement {
         });
     }
 
-    fireFormWidgetChange(fieldAndValue) {
-        this.dispatchEvent(new CustomEvent('formwidgetchange', {
-           detail: {
-               ...fieldAndValue
-           }
-        }));
+    fireFormWidgetChange(detail) {
+        fireEvent({}, 'formwidgetchange', { detail });
     }
 
     convertRowListToSObjectJSON() {
