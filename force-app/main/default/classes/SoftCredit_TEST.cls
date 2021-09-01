@@ -45,8 +45,8 @@ private class SoftCredit_TEST {
             new OpportunityContactRole(id=dummyOCRId, Role=INFLUENCER, ContactId=dummyContactId);
         Integer expectedHashCode = (dummyOCRId + INFLUENCER + dummyContactId).hashCode();
 
-        // TODO: Instantiate softCredit
-        // TODO: call softCredit.idContactRoleHashCode()
-        System.assertEquals(expectedHashCode, 1);
+        SoftCredit softCredit = new SoftCredit(dummyOpportunityContactRoleInfluencer);
+
+        System.assertEquals(expectedHashCode, softCredit.idContactRoleHashcode());
     }
 }
