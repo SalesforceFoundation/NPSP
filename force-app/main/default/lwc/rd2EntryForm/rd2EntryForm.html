@@ -113,7 +113,7 @@
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
                                                 data-id="amountField"
-                                                onchange={handleAnnualValueChange}
+                                                onchange={handleDonationValueChange}
                                                 required
                                         >
                                         </lightning-input-field>
@@ -142,7 +142,8 @@
                                         ontypechange={handleRecurringTypeChange}
                                         onperiodchange={handleRecurringPeriodChange}
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
-                                        onfrequencychange={handleAnnualValueChange}
+                                        onfrequencychange={handleDonationValueChange}
+                                        oninstallmentschange={handleDonationValueChange}
                                         if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 

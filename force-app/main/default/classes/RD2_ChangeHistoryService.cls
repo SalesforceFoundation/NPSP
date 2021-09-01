@@ -255,7 +255,8 @@ public inherited sharing class RD2_ChangeHistoryService {
 
         /**
          * @description Returns a Change Type, based on a User entered value, or calculated from
-         * an change in the Annual Value of the Recurring Donation.
+         * a change in the Annual or Total Expected Value of the Recurring Donation.
+         * Automatic calculation is ignored if the Recurring Type was changed.
          * @param updatedRd Changed Recurring Donation
          * @param originalRd Old Recurring Donation
          * @return String The Change Type for this Change History record
@@ -265,6 +266,8 @@ public inherited sharing class RD2_ChangeHistoryService {
             String changeType = updatedRd.getChangeType();
             if (changeType != null) {
                 return changeType;
+            } else if (isFieldChanged(RD_RECURRING_TYPE_FIELD)) {
+                return null;
             }
 
             Decimal newValue = updatedRd.isOpenEnded() ? updatedRd.getAnnualValue() 

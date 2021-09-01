@@ -28,6 +28,9 @@ import FIELD_NEXT_DONATION_DATE from '@salesforce/schema/npe03__Recurring_Donati
 import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
 import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
 import FIELD_CHANGE_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c';
+import FIELD_PAID_AMOUNT from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Paid_Amount__c';
+import FIELD_PAID_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c';
+import FIELD_INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 
 import currencyFieldLabel from '@salesforce/label/c.lblCurrency';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
@@ -69,6 +72,7 @@ const CHANGE_TYPE_UPGRADE = 'Upgrade';
 const CHANGE_TYPE_DOWNGRADE = 'Downgrade';
 const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
+const RECURRING_TYPE_FIXED = 'Fixed';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 
@@ -131,7 +135,8 @@ export default class rd2EntryForm extends LightningElement {
     @track showChangeTypeField = false;
     isChangeHistoryEnabled = false;
     periodToYearlyFrequencyMap;
-    annualValue;
+    donationValue;
+    recurringType;
 
     @track isElevateWidgetEnabled = false;
     @track isElevateEditWidgetEnabled = false;
@@ -222,7 +227,7 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
                 this.evaluateElevateEditWidget();
-                this.handleAnnualValueChange();
+                this.handleDonationValueChange();
             });
 
         /*
@@ -320,7 +325,7 @@ export default class rd2EntryForm extends LightningElement {
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
-            this.handleAnnualValueChange();
+            this.handleDonationValueChange();
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -402,19 +407,19 @@ export default class rd2EntryForm extends LightningElement {
     */
     handleRecurringTypeChange(event) {
         this.handleElevateWidgetDisplay();
-        this.handleAnnualValueChange();
+        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodChange(event) {
         this.recurringPeriod = event.detail.period;
         this.handleElevateWidgetDisplay();
-        this.handleAnnualValueChange();
+        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
         this.periodType = event.detail.periodType;
         this.handleElevateWidgetDisplay();
-        this.handleAnnualValueChange();
+        this.handleDonationValueChange();
     }
 
 
@@ -424,7 +429,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleCurrencyChange(event) {
         this.handleElevateWidgetDisplay();
-        this.handleAnnualValueChange();
+        this.handleDonationValueChange();
     }
 
     /***
@@ -439,13 +444,14 @@ export default class rd2EntryForm extends LightningElement {
     /***
     * @description Checks if Change History is Enabled, then checks the Annual Value
     */
-    handleAnnualValueChange() {
+    handleDonationValueChange() {
         if (this.isChangeHistoryEnabled) {
-            if(!this.annualValue){
-                this.annualValue = this.getAnnualValue(true);
+            if (!this.donationValue) {
+                this.donationValue = this.returnDonationValue(true);
+                this.recurringType = this.getRecurringType();
             }
             this.showChangeTypeField = this.isEdit;
-            this.checkForAnnualValueChange();
+            this.checkForDonationValueChange();
         }
     }
 
@@ -455,8 +461,9 @@ export default class rd2EntryForm extends LightningElement {
     getAnnualValue(duringInit) {
         const allFields = this.getAllFields();
         const amount = allFields[FIELD_AMOUNT.fieldApiName];
-        const frequency = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) 
-            : allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
+        const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
+        const frequency = (duringInit || !formFrequency)
+            ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) : formFrequency;
         const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD) 
             : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
         const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
@@ -464,15 +471,51 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if the Annual Value changed, which will update the Change Type
+    * @description Get the Expected Value based on the current Amount, Paid Amount and Installment Number
     */
-    checkForAnnualValueChange() {
-        let newAnnualValue = this.getAnnualValue();
-        let newChangeType = '';
+    getExpectedTotalValue(duringInit) {
+        const allFields = this.getAllFields();
+        const amount = allFields[FIELD_AMOUNT.fieldApiName];
+        const paidAmount = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_AMOUNT));
+        const paidInstallments = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_INSTALLMENTS));
+        const numberOfInstallments = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENTS) 
+            : allFields[FIELD_INSTALLMENTS.fieldApiName];
+        const remainingInstallments = numberOfInstallments - paidInstallments;
+        const expectedValue = paidAmount + remainingInstallments * amount;
+        return expectedValue;
+    }
 
-        if (newAnnualValue > this.annualValue) {
+    /***
+    * @description Returns 0 if the provided value is null
+    */
+    returnZeroIfNull(numberField) {
+        return numberField != null ? numberField : 0;
+    }
+
+    /***
+    * @description Returns the Annual Value for Open Donations and Expected Value for Fixed
+    */
+    returnDonationValue(duringInit) {
+        if (this.getRecurringType() === RECURRING_TYPE_OPEN) {
+            return this.getAnnualValue(duringInit);
+        } else if (this.getRecurringType() === RECURRING_TYPE_FIXED) {
+            return this.getExpectedTotalValue(duringInit);
+        }
+    }
+
+    /***
+    * @description Checks if the Annual or Expected Total Value changed, which will update the Change Type
+    */
+    checkForDonationValueChange() {
+        let newChangeType = '';
+        let newdonationValue = this.returnDonationValue();
+
+        if (this.recurringType != this.getRecurringType()) {
+            newChangeType = '';
+        }
+        else if (newdonationValue > this.donationValue) {
             newChangeType = CHANGE_TYPE_UPGRADE;
-        } else if (newAnnualValue < this.annualValue) {
+        } else if (newdonationValue < this.donationValue) {
             newChangeType = CHANGE_TYPE_DOWNGRADE;
         }
 
