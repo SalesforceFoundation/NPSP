@@ -208,71 +208,88 @@ public with sharing class ContactService {
             return;
         }
 
-        List<Id> contactIds = new List<Id>();
         Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
         List<Contact> contacts = new List<Contact>();
 
-        for (Contact contactRecord : contactsWithoutAccounts) {
-            //track which contacts are being inserted vs. updated
-            if (contactRecord.Id != null) {
-                contactIds.add(contactRecord.Id);
-            }
-        }
+        //track which contacts are being inserted vs. updated
+        List<Id> contactIds = getContactIds(contactsWithoutAccounts);
+
         // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : [
-                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
-                FROM Account
-                WHERE npe01__One2OneContact__c IN :contactIds
-        ]) {
-            accountByPrimaryContactId.put(accountRecord.npe01__One2OneContact__c, accountRecord);
+        for (Account accountRecord : getAccounts(contactIds)) {
+            accountByPrimaryContactId.put(
+                    accountRecord.npe01__One2OneContact__c, accountRecord);
         }
 
         List<Account> accountInserts = new List<Account>();
-        Id individualRecordTypeId = AccountsAdapter.rtIdForNewAccount();
 
         for (Contact contactRecord : contactsWithoutAccounts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
             Account accountRecord = accountByPrimaryContactId.get(contactRecord.Id);
             if (accountRecord != null &&
-                    ((CAO_Constants.isHHAccountModel() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) ||
-                            (CAO_Constants.isOneToOne() && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE)) ) {
+                    ((CAO_Constants.isHHAccountModel()
+                            && isHousehold(accountRecord))
+                            ||
+                            (CAO_Constants.isOneToOne()
+                                    && isOneToOne(accountRecord)))) {
                 // if a user has blanked out the Account for a Contact, this will put it right back
                 contactRecord.AccountId = accountRecord.Id;
             } else {
-                // construct the individul account for the Contact
+                // Construct the Household (Account), or the Individual/One2One Account when
+                // in the Legacy Household model.
                 accountRecord = new Account();
 
-                // construct the Account name
-                accountRecord.Name = CAO_Constants.isHHAccountModel() ?
-                        Households.strNameHHAccountForContact(contactRecord) :
-                        Households.strNameOne2OneAccountForContact(contactRecord);
-
+                // ***
+                // This method seems to be called from both before and after insert.
+                // When called after insert, the accounts One2One (aka Primary Contact)
+                // field is set.
+                // ***
                 // connect the Account to the Contact for 1:1 and HHAccount
                 if (contactRecord.Id != null) {
                     accountRecord.npe01__One2OneContact__c = contactRecord.Id;
                 }
 
-                accountRecord.Phone = contactRecord.Phone;
-                accountRecord.Fax = contactRecord.Fax;
-                accountRecord.OwnerId = contactRecord.OwnerId;
-
                 if (UserInfo.isMultiCurrencyOrganization()) {
-                    accountRecord.put('CurrencyIsoCode', (String) contactRecord.get('CurrencyIsoCode'));
+                    accountRecord.put('CurrencyIsoCode',
+                            (String) contactRecord.get('CurrencyIsoCode'));
                 }
 
                 // Always copy the Contact's Mailing & Others address to the new Account's
                 // Billing & Shipping address.
                 if (contactRecord.is_Address_Override__c != true) {
-                    addressService.copyAddressStdSObj(contactRecord, 'Mailing', accountRecord, 'Billing');
-                    addressService.copyAddressStdSObj(contactRecord, 'Other', accountRecord, 'Shipping');
+                    addressService.copyAddressStdSObj(contactRecord, 'Mailing',
+                            accountRecord, 'Billing');
+                    addressService.copyAddressStdSObj(contactRecord, 'Other',
+                            accountRecord, 'Shipping');
                 }
 
-                accountRecord.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                if (individualRecordTypeId != null) {
-                    accountRecord.put('RecordTypeID', individualRecordTypeId);
+                if (CAO_Constants.isHHAccountModel()) {
+                    accountRecord.Name =
+                            Households.strNameHHAccountForContact(contactRecord);
+                    accountRecord.npe01__SYSTEM_AccountType__c =
+                            CAO_Constants.HH_ACCOUNT_TYPE;
+                    accountRecord.Type = CAO_Constants.HH_TYPE;
+
+                    if (ContactAndOrgSettings.rtIdForAccountModel(true) != null) {
+                        accountRecord.put('RecordTypeID',
+                                ContactAndOrgSettings.rtIdForAccountModel(true));
+                    }
+                } else {
+                    accountRecord.Name =
+                            Households.strNameOne2OneAccountForContact(contactRecord);
+                    accountRecord.npe01__SYSTEM_AccountType__c =
+                            CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+                    accountRecord.Type = '';
+
+                    if (ContactAndOrgSettings.rtIdForAccountModel(false) != null) {
+                        accountRecord.put('RecordTypeID',
+                                ContactAndOrgSettings.rtIdForAccountModel(false));
+                    }
                 }
-                accountRecord.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
+
+                accountRecord.Phone = contactRecord.Phone;
+                accountRecord.Fax = contactRecord.Fax;
+                accountRecord.OwnerId = contactRecord.OwnerId;
                 accountRecord.npe01__SYSTEMIsIndividual__c = true;
                 accountInserts.add(accountRecord);
                 contacts.add(contactRecord);
@@ -306,5 +323,33 @@ public with sharing class ContactService {
             contactRecord.AccountId = accountInserts[index].Id;
             index++;
         }
+    }
+
+    private Boolean isOneToOne(Account accountRecord) {
+        return accountRecord.npe01__SYSTEM_AccountType__c
+                == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+    }
+
+    private Boolean isHousehold(Account accountRecord) {
+        return accountRecord.npe01__SYSTEM_AccountType__c
+                == CAO_Constants.HH_ACCOUNT_TYPE;
+    }
+
+    private List<Id> getContactIds(List<Contact> contactsWithoutAccounts) {
+        List<Id> contactIds = new List<Id>();
+        for (Contact contactRecord : contactsWithoutAccounts) {
+            if (contactRecord.Id != null) {
+                contactIds.add(contactRecord.Id);
+            }
+        }
+        return contactIds;
+    }
+
+    private List<Account> getAccounts(List<Id> contactIds) {
+        return [
+                SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE npe01__One2OneContact__c IN :contactIds
+        ];
     }
 }
