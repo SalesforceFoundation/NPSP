@@ -1,0 +1,20 @@
+{
+  "apiName": "DataImportBatch__c",
+  "childRelationships": {},
+  "fields": {
+    "Batch_Defaults__c": {
+      "displayValue": null,
+      "value": "{\"Donation_Donor__c\":{\"objectApiName\":\"DataImport__c\",\"fieldApiName\":\"Donation_Donor__c\"},\"Account1Imported__c\":{\"objectApiName\":\"DataImport__c\",\"fieldApiName\":\"Account1Imported__c\"},\"Contact1Imported__c\":{\"objectApiName\":\"DataImport__c\",\"fieldApiName\":\"Contact1Imported__c\"},\"Name\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"Name\"},\"BillingStreet\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"BillingStreet\"},\"BillingCity\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"BillingCity\"},\"BillingState\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"BillingState\"},\"BillingPostalCode\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"BillingPostalCode\"},\"BillingCountry\":{\"objectApiName\":\"Account\",\"fieldApiName\":\"BillingCountry\"},\"FirstName\":{\"objectApiName\":\"Contact\",\"fieldApiName\":\"FirstName\"},\"LastName\":{\"objectApiName\":\"Contact\",\"fieldApiName\":\"LastName\"},\"npe01__HomeEmail__c\":{\"objectApiName\":\"Contact\",\"fieldApiName\":\"npe01__HomeEmail__c\"},\"npe01__Preferred_Email__c\":{\"objectApiName\":\"Contact\",\"fieldApiName\":\"npe01__Preferred_Email__c\"},\"MailingStreet__c\":{\"objectApiName\":\"Address__c\",\"fieldApiName\":\"MailingStreet__c\"},\"MailingCity__c\":{\"objectApiName\":\"Address__c\",\"fieldApiName\":\"MailingCity__c\"},\"MailingState__c\":{\"objectApiName\":\"Address__c\",\"fieldApiName\":\"MailingState__c\"},\"MailingPostalCode__c\":{\"objectApiName\":\"Address__c\",\"fieldApiName\":\"MailingPostalCode__c\"},\"MailingCountry__c\":{\"objectApiName\":\"Address__c\",\"fieldApiName\":\"MailingCountry__c\"},\"CloseDate\":{\"objectApiName\":\"Opportunity\",\"fieldApiName\":\"CloseDate\"},\"Amount\":{\"objectApiName\":\"Opportunity\",\"fieldApiName\":\"Amount\"},\"CampaignId\":{\"objectApiName\":\"Opportunity\",\"fieldApiName\":\"CampaignId\"},\"npe01__Payment_Method__c\":{\"objectApiName\":\"npe01__OppPayment__c\",\"fieldApiName\":\"npe01__Payment_Method__c\"},\"npe01__Check_Reference_Number__c\":{\"objectApiName\":\"npe01__OppPayment__c\",\"fieldApiName\":\"npe01__Check_Reference_Number__c\"},\"undefined\":{}}"
+    },
+    "Form_Template__c": {
+      "displayValue": null,
+      "value": "DUMMY_TEMPLATE_ID"
+    }
+  },
+  "id": "DUMMY_RECORD_ID",
+  "lastModifiedById": "005P0000008DY1xIAG",
+  "lastModifiedDate": "2021-08-09T21:31:34.000Z",
+  "recordTypeId": "012000000000000AAA",
+  "recordTypeInfo": null,
+  "systemModstamp": "2021-08-09T21:31:34.000Z"
+}
