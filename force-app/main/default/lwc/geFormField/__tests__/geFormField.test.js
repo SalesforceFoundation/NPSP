@@ -1,6 +1,7 @@
 import { createElement } from 'lwc';
 import GeFormField from 'c/geFormField';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { registerListener } from 'c/pubsubNoPageRef';
 
 // Import mock data
 const mockGetPicklistValues = require('./data/wiredPicklistValues.json');
@@ -75,7 +76,7 @@ describe('c-ge-form-field', () => {
         const element = createStandardPicklistElement();
 
         const picklistChangeHandler = jest.fn();
-        element.addEventListener('formfieldchange', picklistChangeHandler);
+        registerListener('formfieldchange', picklistChangeHandler, this);
 
         document.body.appendChild(element);
 
@@ -168,7 +169,7 @@ describe('c-ge-form-field', () => {
         const picklist = getSubComponentCombobox(element);
 
         const picklistChangeHandler = jest.fn();
-        element.addEventListener('formfieldchange', picklistChangeHandler);
+        registerListener('formfieldchange', picklistChangeHandler, this);
 
         return Promise.resolve()
             .then(() => {
