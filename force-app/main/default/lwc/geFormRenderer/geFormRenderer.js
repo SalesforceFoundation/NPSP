@@ -302,6 +302,8 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
         registerListener('formRendererReset', this.reset, this);
         registerListener('widgetStateChange', this.handleWidgetStateChange, this);
+        registerListener('formfieldchange', this.handleFormFieldChange, this);
+        registerListener('formwidgetchange', this.handleFormWidgetChange, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
