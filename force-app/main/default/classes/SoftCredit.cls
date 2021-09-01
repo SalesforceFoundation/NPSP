@@ -40,10 +40,6 @@ public inherited sharing class SoftCredit {
         this.opportunityContactRole = opportunityContactRole;
     }
 
-    private Id id() {
-        return this.opportunityContactRole.Id;
-    }
-
     private String role() {
         return this.opportunityContactRole.Role;
     }
@@ -52,7 +48,7 @@ public inherited sharing class SoftCredit {
         return this.opportunityContactRole.ContactId;
     }
 
-    public Integer idContactRoleHashcode() {
-        return (id() + role() + contactId()).hashCode();
+    public Integer contactRoleHashCode() {
+        return (role() + contactId()).hashCode();
     }
 }

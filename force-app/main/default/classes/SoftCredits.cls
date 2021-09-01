@@ -67,18 +67,30 @@ public inherited sharing class SoftCredits {
         return unprocessed;
     }
 
-    private List<OpportunityContactRole> deduplicate(List<OpportunityContactRole> newOpportunityContactRoles) {
+    private List<OpportunityContactRole> deduplicate(List<OpportunityContactRole> moreOpportunityContactRoles) {
         List<OpportunityContactRole> combinedList = new List<OpportunityContactRole>();
         combinedList.addAll(opportunityContactRoles);
-        combinedList.addAll(newOpportunityContactRoles);
+        combinedList.addAll(moreOpportunityContactRoles);
 
-        Map<Integer, OpportunityContactRole> hashCodeByRecord = new Map<Integer, OpportunityContactRole>();
+        Map<Integer, OpportunityContactRole> softCreditByContactRoleHashCode = new Map<Integer, OpportunityContactRole>();
 
         for (OpportunityContactRole ocr : combinedList) {
             SoftCredit softCredit = new SoftCredit(ocr);
-            hashCodeByRecord.put(softCredit.idContactRoleHashcode(), ocr);
+
+            Integer contactRoleHashCode = softCredit.contactRoleHashCode();
+            OpportunityContactRole existsInMap = softCreditByContactRoleHashCode.get(contactRoleHashCode);
+
+            if (existsInMap == null) {
+                softCreditByContactRoleHashCode.put(
+                    contactRoleHashCode,
+                    ocr);
+            } else if (existsInMap != null && existsInMap.Id == null) {
+                softCreditByContactRoleHashCode.put(
+                    contactRoleHashCode,
+                    ocr);
+            }
         }
 
-        return hashCodeByRecord.values();
+        return softCreditByContactRoleHashCode.values();
     }
 }
