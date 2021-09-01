@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2014 Salesforce.org
+    Copyright (c) 2014, Salesforce.org
     All rights reserved.
     
     Redistribution and use in source and binary forms, with or without
@@ -30,50 +30,43 @@
 /**
 * @author Salesforce.org
 * @date 2014
-*
-* @group Accounts
-* @group-content ../../ApexDocContent/Accounts.htm
-*
-* @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
-* our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
-* name updating.
+* @group Address Management
+* @description Trigger Handler on Account for Address management 
+* @async_support this trigger handler has been tested with async=true, and appears to not cause problems.
 */
-public class ACCT_Accounts_TDTM extends TDTM_Runnable {
+public class ADDR_Account_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
-    * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
-    * name updating.
+    * @description Trigger Handler on Account that handles Address management.
     * @param listNew the list of Accounts from trigger new. 
     * @param listOld the list of Accounts from trigger old. 
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.). 
     * @param objResult the describe for Accounts 
-    * @return dmlWrapper.  always null.
+    * @return dmlWrapper.  
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
-            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
+        AccountAdapter accountsAdapter;
+        DmlWrapper dmlWrapper = new DmlWrapper();
         switch on triggerAction {
             when BeforeInsert {
-                AccountsAdapter accountsAdapter = new AccountsAdapter(listNew);
+                accountsAdapter = new AccountAdapter(listNew);
                 accountsAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
-                if (!isContactBeforeInsertContext()) {
-                    AccountsAdapter accountsAdapter = new AccountsAdapter(listNew, listOld);
-                    accountsAdapter.onBeforeUpdate();
-                }
+                accountsAdapter = new AccountAdapter(listNew, listOld);
+                accountsAdapter.onBeforeUpdate();
+            }
+            when AfterInsert {
+                accountsAdapter = new AccountAdapter(listNew);
+                accountsAdapter.onAfterInsert(dmlWrapper);
             }
             when AfterUpdate {
-                AccountsAdapter accountsAdapter = new AccountsAdapter(listNew, listOld);
-                accountsAdapter.onAfterUpdate();
+                accountsAdapter = new AccountAdapter(listNew, listOld);
+                accountsAdapter.onAfterUpdate(dmlWrapper);
             }
         }
-
-        return null;
-    }
-
-    private Boolean isContactBeforeInsertContext() {
-        return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert);
+        return dmlWrapper;
     }
 }
