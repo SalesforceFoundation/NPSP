@@ -68,26 +68,23 @@ public inherited sharing class SoftCredits {
     }
 
     private List<OpportunityContactRole> deduplicate(List<OpportunityContactRole> moreOpportunityContactRoles) {
-        List<OpportunityContactRole> combinedList = new List<OpportunityContactRole>();
-        combinedList.addAll(opportunityContactRoles);
-        combinedList.addAll(moreOpportunityContactRoles);
+        List<OpportunityContactRole> allOpportunityContactRoles = new List<OpportunityContactRole>();
+        allOpportunityContactRoles.addAll(opportunityContactRoles);
+        allOpportunityContactRoles.addAll(moreOpportunityContactRoles);
 
-        Map<Integer, OpportunityContactRole> softCreditByContactRoleHashCode = new Map<Integer, OpportunityContactRole>();
+        Map<Integer, OpportunityContactRole> softCreditByContactRoleHashCode =
+            new Map<Integer, OpportunityContactRole>();
 
-        for (OpportunityContactRole ocr : combinedList) {
+        for (OpportunityContactRole ocr : allOpportunityContactRoles) {
             SoftCredit softCredit = new SoftCredit(ocr);
 
             Integer contactRoleHashCode = softCredit.contactRoleHashCode();
-            OpportunityContactRole existsInMap = softCreditByContactRoleHashCode.get(contactRoleHashCode);
+            OpportunityContactRole ocrInMap = softCreditByContactRoleHashCode.get(contactRoleHashCode);
+            Boolean shouldAddToMap = ocrInMap == null;
+            Boolean shouldReplaceInMap = ocrInMap != null && ocrInMap.Id == null;
 
-            if (existsInMap == null) {
-                softCreditByContactRoleHashCode.put(
-                    contactRoleHashCode,
-                    ocr);
-            } else if (existsInMap != null && existsInMap.Id == null) {
-                softCreditByContactRoleHashCode.put(
-                    contactRoleHashCode,
-                    ocr);
+            if (shouldAddToMap || shouldReplaceInMap) {
+                softCreditByContactRoleHashCode.put(contactRoleHashCode, ocr);
             }
         }
 
