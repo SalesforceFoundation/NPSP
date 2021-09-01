@@ -107,9 +107,9 @@ private class Gift_Test {
         Gift gift = new Gift(dataImport);
 
         List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
-            new OpportunityContactRole(),
-            new OpportunityContactRole(),
-            new OpportunityContactRole()
+            new OpportunityContactRole(Role='Influencer'),
+            new OpportunityContactRole(Role='Solicitor'),
+            new OpportunityContactRole(Role='Honoree')
         };
 
         SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);

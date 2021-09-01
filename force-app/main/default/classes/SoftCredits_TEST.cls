@@ -48,6 +48,7 @@ private class SoftCredits_TEST {
 
         System.assertEquals(2, softCredits.size());
         System.assertEquals(2, softCredits.unprocessed().size());
+        System.assertEquals(2, softCredits.all().size());
     }
 
     @isTest
@@ -85,13 +86,14 @@ private class SoftCredits_TEST {
         System.assertEquals(1, softCredits.size());
 
         List<OpportunityContactRole> dummyOpportunityContactRoles = new List<OpportunityContactRole> {
-            new OpportunityContactRole(),
-            new OpportunityContactRole(),
-            new OpportunityContactRole()
+            new OpportunityContactRole(Role='Influencer'),
+            new OpportunityContactRole(Role='Honoree'),
+            new OpportunityContactRole(Role='Household Member')
         };
         softCredits.addAll(dummyOpportunityContactRoles);
 
         System.assertEquals(4, softCredits.size());
+        System.assertEquals(4, softCredits.all().size());
     }
 
     @isTest
