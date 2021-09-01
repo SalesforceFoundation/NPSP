@@ -410,13 +410,6 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         dmlWrapper.objectsToUpdate.addAll(accounts);
     }
 
-    public static void addToBucketAccount(Contacts contacts) {
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            attachToBucketAccount(
-                    contacts.contactsWithoutAccounts());
-        }
-    }
-
     private static Map<Id, Id> getPrimaryContactByAccountId(List<Contact> contacts) {
         Map<Id, Id> primaryContactByAccountId = new Map<Id, Id>();
 

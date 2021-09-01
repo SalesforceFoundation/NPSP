@@ -36,7 +36,7 @@
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountsAdapter extends fflib_SObjects {
+public inherited sharing class AccountAdapter extends fflib_SObjects {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -73,11 +73,11 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         set;
     }
 
-    public AccountsAdapter(List<Account> records) {
+    public AccountAdapter(List<Account> records) {
         this(records, null);
     }
 
-    public AccountsAdapter(List<Account> records, List<Account> oldlist) {
+    public AccountAdapter(List<Account> records, List<Account> oldlist) {
         super(records, Account.SObjectType);
         this.oldMap = oldlist == null ? new Map<Id, Account>() : new Map<Id, Account>
                 (oldlist);
@@ -85,6 +85,12 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
 
     public void onBeforeInsert() {
         setAccountTypeAndIndividualFieldValues();
+        if (AddressService.isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(householdAccounts());
+        }
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(orgAccounts());
+        }
     }
 
     public void onBeforeUpdate() {
@@ -94,12 +100,103 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
+        if (AddressService.isAddressManagementEnabled()) {
+            normalizeLineBreaksFor(
+                    withAddressChanges().householdAccounts()
+            );
+        }
+        if (AddressService.isOrgAccountAddressesEnabled()) {
+            normalizeLineBreaksFor(
+                    withAddressChanges().orgAccounts()
+            );
+        }
     }
 
-    public void onAfterUpdate() {
+    public void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
         if (settings.isAdvancedHouseholdNaming()) {
             renameHouseholdsNeedingNameUpdate();
         }
+
+        // note that we detect whether the change is coming from the address trigger,
+        // in which case we don't want to create a new address.
+        if (TDTM_ProcessControl.isRecursive(
+                TDTM_ProcessControl.flag.ADDR_hasRunTrigger)) {
+            UTIL_Debug.debug('**** RECURSION: ' +
+                    'Stop Addr Trigger recursion in ADDR_Account_TDTM');
+            return;
+        }
+
+        AccountAdapter updatedAccountsWithAddressesToCreateOrUpdate =
+                updatedAccountsWithAddressesToCreateOrUpdate();
+
+        if (updatedAccountsWithAddressesToCreateOrUpdate.getRecords().size() > 0) {
+            createAddressesFor(
+                    updatedAccountsWithAddressesToCreateOrUpdate,
+                    dmlWrapper,
+                    false);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description For the list of Addresses, sees if there is already an existing Address in the Account that
+    * matches. Creates only unique addresses from their respective household, and mark any existing matches
+    * as Default if the caller specifies it on the new address.
+    * @param addresses a list of Addresses to update
+    * @param dmlWrapper the Addresses to update
+    * @param includeAddressType whether to include comparing the AddressType field
+    */
+    private static void createAddressesFor(AccountAdapter accounts,
+            TDTM_Runnable.DmlWrapper dmlWrapper, Boolean includeAddressType) {
+
+        Map<Address__c, Address__c> existingAddressesByAddress = Addresses.getExistingAddresses(
+                accounts.allAddresses());
+        Map<Id, Account> accountsById = getAccountsById(accounts);
+
+        for (Address__c newAddress : accounts.allAddresses()) {
+            NPSP_Address npspNewAddress = new NPSP_Address(newAddress);
+            Address__c existingAddress = existingAddressesByAddress.get(newAddress);
+            NPSP_Address npspExistingAddress = new NPSP_Address(existingAddress);
+            Boolean isAddressUpdated = false;
+
+            if (existingAddress != null) {
+                NPSP_HouseholdAccount npspExistingAddressHousehold = new NPSP_HouseholdAccount(
+                        accountsById.get(npspExistingAddress.householdId()),
+                        accounts.oldMap.get(npspExistingAddress.householdId())
+                );
+                // if it is a fuzzy match, not exact, then we want to update the existing address.
+                if (!npspNewAddress.isEqualToIncludingAddressType(npspExistingAddress, includeAddressType)) {
+                    npspExistingAddress.copyFrom(npspNewAddress);
+                    if (npspNewAddress.isDefault()) {
+                        npspExistingAddress.setAsDefault();
+                    }
+                    isAddressUpdated = true;
+                } else if (npspNewAddress.isDefault() && !npspExistingAddress.isDefault()) {
+                    npspExistingAddress.setAsDefault();
+                    isAddressUpdated = true;
+                } else if (npspExistingAddressHousehold.isUndeliverableStatusChanged()) {
+                    npspExistingAddress.setUndeliverable(npspExistingAddressHousehold.undeliverableAddressStatus());
+                    isAddressUpdated = true;
+                }
+                if (isAddressUpdated) {
+                    dmlWrapper.objectsToUpdate.add(existingAddress);
+                }
+            } else {
+                NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(
+                        accountsById.get(npspNewAddress.householdId())
+                );
+                npspNewAddress.setUndeliverable(npspHouseholdAccount.undeliverableAddressStatus());
+                dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
+            }
+        }
+    }
+
+    private static Map<Id, Account> getAccountsById(AccountAdapter accounts) {
+        Map<Id, Account> accountsById = new Map<Id, Account>();
+        for (Account account : (List<Account>) accounts.getRecords()) {
+            accountsById.put(account.Id, account);
+        }
+
+        return accountsById;
     }
 
     public void setAccountTypeAndIndividualFieldValues() {
@@ -118,39 +215,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         }
     }
 
-    /******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @return Id. if none is explicitly specified, returns null.
-    */
-    public static Id rtIdForNewAccount() {
-        return rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return the recordtypeId for a new account, given the account model.
-    * @param isHHAccountModel whether we are using the Household Account Model
-    * @return Id. recordtype Id to use, or null if none is specified for the account model.
-    */
-    public static Id rtIdForAccountModel(Boolean isHHAccountModel) {
-        npe01__Contacts_And_Orgs_Settings__c contactsSettings =
-                UTIL_CustomSettingsFacade.getContactsSettings();
-        // check if recordtypes are enabled, and if it matches the existing setting
-        // we go thru describe to validate that it is a valid recordType ID.
-        Id individualRecordTypeId = isHHAccountModel ? contactsSettings.npe01__HH_Account_RecordTypeID__c : contactsSettings.npe01__One_to_One_RecordTypeID__c;
-        if (individualRecordTypeId != null) {
-            Schema.RecordTypeInfo recordTypeInfo = null;
-            Schema.DescribeSObjectResult describeResult = Account.SObjectType.getDescribe();
-            Map<Id, Schema.RecordTypeInfo> recordTypeInfoById = describeResult.getRecordTypeInfosById();
-            recordTypeInfo = recordTypeInfoById.get(individualRecordTypeId);
-            return recordTypeInfo == null
-                    ? null
-                    : recordTypeInfo.getRecordTypeId();
-        }
-
-        return null;
-    }
-
-    public AccountsAdapter withAddressChanges() {
+    public AccountAdapter withAddressChanges() {
         List<Account> accountsWithAddressChanges = new List<Account>();
 
         for (Integer i = 0; i < getRecords().size(); i++) {
@@ -163,7 +228,14 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             }
         }
 
-        return new AccountsAdapter(accountsWithAddressChanges, oldMap.values());
+        return new AccountAdapter(accountsWithAddressChanges, oldMap.values());
+    }
+
+    private void normalizeLineBreaksFor(List<SObject> listNew) {
+        for (Integer i = 0; i < listNew.size(); i++) {
+            Account newRecord = (Account) listNew[i];
+            UTIL_Address.normalizeLineBreak(newRecord);
+        }
     }
 
     private void setNameAndGreetingsToReplacementText() {
@@ -200,7 +272,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                 && !isBucketAccount(acc);
     }
 
-    public AccountsAdapter updatedAccountsWithAddressesToCreateOrUpdate() {
+    public AccountAdapter updatedAccountsWithAddressesToCreateOrUpdate() {
         List<Account> updatedAccountsWithAddressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -211,10 +283,10 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             updatedAccountsWithAddressesToCreate.addAll(withAddressChanges().orgAccounts());
         }
 
-        return new AccountsAdapter(updatedAccountsWithAddressesToCreate, oldMap.values());
+        return new AccountAdapter(updatedAccountsWithAddressesToCreate, oldMap.values());
     }
 
-    public AccountsAdapter newAccountsWithAddressesToCreate() {
+    public AccountAdapter newAccountsWithAddressesToCreate() {
         List<Account> addressesToCreate = new List<Account>();
 
         if (AddressService.isAddressManagementEnabled()) {
@@ -224,7 +296,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
             addressesToCreate.addAll(withAddresses().orgAccounts());
         }
 
-        return new AccountsAdapter(addressesToCreate);
+        return new AccountAdapter(addressesToCreate);
     }
 
     public List<Address__c> allAddresses() {
@@ -285,12 +357,12 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
     }
 
     private Boolean isOneToOneAccount(Account acc) {
-        return acc.RecordTypeId == rtIdForAccountModel(false)
+        return acc.RecordTypeId == ContactAndOrgSettings.rtIdForAccountModel(false)
                 && acc.RecordTypeId != null;
     }
 
     private Boolean isHouseholdAccount(Account acc) {
-        return acc.RecordTypeId == rtIdForAccountModel(true)
+        return acc.RecordTypeId == ContactAndOrgSettings.rtIdForAccountModel(true)
                 && acc.RecordTypeId != null;
     }
 
@@ -325,7 +397,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
         return false;
     }
 
-    public AccountsAdapter withAddresses() {
+    public AccountAdapter withAddresses() {
         List<Account> withAddresses = new List<Account>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Account newRecord = (Account) getRecords()[i];
@@ -333,7 +405,7 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                 withAddresses.add(newRecord);
             }
         }
-        return new AccountsAdapter(withAddresses);
+        return new AccountAdapter(withAddresses);
     }
 
     /*******************************************************************************************************
@@ -357,6 +429,17 @@ public inherited sharing class AccountsAdapter extends fflib_SObjects {
                         (orgConfig.isStateCountryPicklistsEnabled() && acc1.get('BillingStateCode') != null);
 
         return isSpecified;
+    }
+
+    public void onAfterInsert(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        createAddressesFromNewAccounts(dmlWrapper);
+    }
+
+    private void createAddressesFromNewAccounts(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        AccountAdapter accountsWithNewAddressesToCreate = newAccountsWithAddressesToCreate();
+        if (accountsWithNewAddressesToCreate.getRecords().size() > 0) {
+            createAddressesFor(accountsWithNewAddressesToCreate, dmlWrapper, false);
+        }
     }
 
 }
