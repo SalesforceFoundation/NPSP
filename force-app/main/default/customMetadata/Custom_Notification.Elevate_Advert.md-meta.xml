@@ -20,6 +20,6 @@
     </values>
     <values>
         <field>Redirect_URL__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">https://www.salesforce.org/elevate/?d=&amp;nc=&amp;utm_source=npsp&amp;utm_medium=referral&amp;utm_campaign=amer_ngocon&amp;utm_content=npsp-product_us_amer_npsp</value>
     </values>
 </CustomMetadata>

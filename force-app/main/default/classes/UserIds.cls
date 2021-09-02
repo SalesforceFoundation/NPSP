@@ -36,15 +36,14 @@
 public inherited sharing class UserIds {
 
    private Set<String> stringUserIds;
-   private Set<Id> userIds;
+   private Set<Id> userIds = new Set<Id>();
 
-   public UserIds(List<User> users) {
-      userIds = new Set<Id>();
-      for (User user: users) {
-         if (!isUserId(user.Id)) {
+   public UserIds(Set<Id> ids) {
+      for (Id userId: ids) {
+         if (!isUserId(userId)) {
             throw new UserIdException('Invalid User Id');
          }
-         userIds.add(user.Id);
+         userIds.add(userId);
       }
       this.userIds = userIds;
    }
