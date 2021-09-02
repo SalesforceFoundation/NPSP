@@ -639,12 +639,57 @@ describe('c-rd2-entry-form', () => {
     });
 
     describe('fixed recurring donation upgrade/downgrade picklist', () => {
-        it('fixed donation, when amount increased, sets change type to upgrade', async () => {
 
+        let element;
+        let controller;
+
+        beforeEach(async () => {
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Fixed"
+            });
+            element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            controller = new RD2FormController(element);
+            await flushPromises();
+
+            const fields = {
+                ...rd2WithoutCommitmentCard.fields,
+                "RecurringType__c": { value: "Fixed" },
+                "npe03__Installments__c": { value: 12 }
+            };
+            controller.installments
+
+            getRecord.emit({...rd2WithoutCommitmentCard, fields}, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit('Fixed');
+
+            await flushPromises();
+        });
+
+        it('fixed donation, when amount increased, sets change type to upgrade', async () => {
+            controller.amount().changeValue(5);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+
+            expect(changeTypePicklist.value).toBe('Upgrade');
         });
 
         it('fixed donation, when number of planned installments decreased, sets change type to downgrade', async () => {
+            controller.plannedInstallments().changeValue(6);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
 
+            expect(changeTypePicklist.value).toBe('Downgrade');
         });
     });
 });
@@ -765,18 +810,21 @@ class RD2FormController {
         element.submit = mockRecordEditFormSubmit;
     }
 
-    setDefaultInputFieldValues() {
-        this.recurringType().setValue('Open');
+    setDefaultInputFieldValues(recurringType = 'Open') {
+        this.recurringType().setValue(recurringType);
+        if(recurringType === 'Fixed') {
+            this.plannedInstallments().setValue(12);
+        }
         this.recurringPeriod().changeValue('Monthly');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
         this.dayOfMonth().setValue('6');
     }
 
-    setDefaultInputFieldValuesEdit() {
+    setDefaultInputFieldValuesEdit(recurringType = 'Open') {
         this.status().setValue('Active');
         this.amount().setValue(0.50);
-        this.setDefaultInputFieldValues();
+        this.setDefaultInputFieldValues(recurringType);
         this.contactLookup().setValue('001fakeContactId');
     }
 
@@ -863,6 +911,12 @@ class RD2FormController {
     installmentFrequency() {
         const scheduleSection = this.scheduleSection();
         const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="installmentFrequency"]');
+        return new RD2FormField(field);
+    }
+
+    plannedInstallments() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="plannedInstallments"]');
         return new RD2FormField(field);
     }
 
