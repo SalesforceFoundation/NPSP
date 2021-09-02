@@ -43,8 +43,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS_FOR_UPGRADE,
         CREATE_DEFAULT_SETTINGS_FOR_NEW_INSTALL,
         CREATE_OPP_STAGE_TO_STATE_RECORDS,
-        CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS,
-        PUBLISH_PRODUCT_UPDATES
+        CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS
     }
 
     public STG_InstallScript() {
@@ -106,7 +105,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
 
-        executeAction(InstallAction.PUBLISH_PRODUCT_UPDATES, logger);
+        new InstallationNotifications(context).publish();
 
         logger.log();
     }
@@ -147,20 +146,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
                 createOppStageToStateRecordsIfNecessary();
             } else if (action == InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS) {
                 createMigratedCustomFieldMappings();
-            } else if (action == InstallAction.PUBLISH_PRODUCT_UPDATES) {
-                publishInstallationNotifications();
             }
-
 
         } catch(Exception e) {
             Database.rollback(sp);
 
             logger.add(e);
         }
-    }
-
-    private void publishInstallationNotifications () {
-        new InstallationNotifications().publish();
     }
 
     /*******************************************************************************************************

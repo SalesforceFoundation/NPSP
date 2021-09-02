@@ -28,66 +28,21 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /**
-* @author Salesforce.org
-* @date 2021
-* @description Notification audience implementation for non-elevate US customers.
-*/
+ * @author Salesforce.org
+ * @date 2021
+ * @description Controller for navigating to external URL from bell notifications.
+ */
 
-public inherited sharing class USNonElevateCustomers implements IAudience {
+({
+    navigateToExternalPage: function(component, event, helper) {
+        const pageReference =  component.get('v.pageReference');
+        const redirectUrl = pageReference.state.c__redirectUrl
 
-   private static final String US_ISO_CODE = 'US';
-
-   public UserIds audience() {
-      UserIds audience;
-
-      if (isTargetOrganization()) {
-         audience = new UserIds(new Map<Id, User>(userSelector.getUsers()).keySet());
-      }
-      return audience;
-   }
-
-   private Boolean isTargetOrganization() {
-      return !isElevateCustomer() && isUSOrganization();
-   }
-
-   private Boolean isElevateCustomer () {
-      return serviceConfig.isIntegrationEnabled();
-   }
-
-   private Boolean isUSOrganization () {
-      return organizationSelector.isUSOrganization();
-   }
-
-   @TestVisible
-   private PS_IntegrationServiceConfig serviceConfig {
-      get {
-         if (serviceConfig == null) {
-            serviceConfig = new PS_IntegrationServiceConfig();
-         }
-         return serviceConfig;
-      }
-      set;
-   }
-
-   @TestVisible
-   private UserSelector userSelector {
-      get {
-         if (userSelector == null) {
-            userSelector = new UserSelector();
-         }
-         return userSelector;
-      }
-      set;
-   }
-
-   @TestVisible
-   private OrganizationSelector organizationSelector {
-      get {
-         if (organizationSelector == null) {
-            organizationSelector = new OrganizationSelector();
-         }
-         return organizationSelector;
-      }
-      set;
-   }
-}
+        component.find("navigationService").navigate({
+            type: "standard__webPage",
+            attributes: {
+                url: redirectUrl
+            }
+        }, true);
+    }
+});
