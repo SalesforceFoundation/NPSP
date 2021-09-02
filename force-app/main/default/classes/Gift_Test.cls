@@ -52,6 +52,14 @@ private class Gift_Test {
     }
 
     @isTest
+    static void shouldNotRequireReauthorization() {
+        DataImport__c dataImport = new DataImport__c(Payment_Status__c = null);
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(false, gift.requiresReauthorizationBeforeChange());
+    }
+
+    @isTest
     static void shouldReturnDataImportRecord() {
         DataImport__c dataImport = new DataImport__c(
             Donation_Amount__c = 10,
@@ -62,6 +70,8 @@ private class Gift_Test {
 
         String donationAmountField = String.valueOf(DataImport__c.Donation_Amount__c);
         System.assertEquals(10, gift.fields().get(donationAmountField));
+        System.assertEquals(dataImport.Id, gift.id());
+        System.assertEquals(dataImport, gift.asDataImport());
     }
 
     @isTest
@@ -120,20 +130,6 @@ private class Gift_Test {
     }
 
     @isTest
-    static void shouldReturnAsDataImport() {
-        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
-        DataImport__c dataImport = new DataImport__c(
-            Id = dummyDataImportId,
-            Donation_Amount__c = 10,
-            Donation_Date__c = Date.today()
-        );
-        Gift gift = new Gift(dataImport);
-
-        System.assertEquals(dataImport.Id, gift.id());
-        System.assertEquals(dataImport, gift.asDataImport());
-    }
-
-    @isTest
     static void shouldCallMethodsInUnitOfWorkWhenSaved() {
         Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
         DataImport__c dataImport = new DataImport__c(
@@ -148,6 +144,38 @@ private class Gift_Test {
 
         System.assertEquals(true, unitOfWorkMock.registerDirtyCalled);
         System.assertEquals(true, unitOfWorkMock.saveCalled);
+    }
+
+    @isTest
+    static void shouldReturnTrueForAuthorizedGift() {
+        DataImport__c dataImport = new DataImport__c(Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name());
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(true, gift.hasAuthorizedPayment());
+    }
+
+    @isTest
+    static void shouldReturnFalseForNonAuthorizedGift() {
+        DataImport__c dataImport = new DataImport__c(Payment_Status__c = null);
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(false, gift.hasAuthorizedPayment());
+    }
+
+    @isTest
+    static void shouldReturnTrueForDryRunValidatedGift() {
+        DataImport__c dataImport = new DataImport__c(Status__c = BDI_DataImport_API.bdiDryRunValidated);
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(true, gift.isDryRunValidated());
+    }
+
+    @isTest
+    static void shouldReturnFalseForImportedGift() {
+        DataImport__c dataImport = new DataImport__c(Status__c = BDI_DataImport_API.bdiImported);
+        Gift gift = new Gift(dataImport);
+
+        System.assertEquals(false, gift.isDryRunValidated());
     }
 
     @isTest
