@@ -64,8 +64,6 @@ import CONTACT_LAST_NAME from '@salesforce/schema/Contact.LastName';
 import ACCOUNT_NAME from '@salesforce/schema/Account.Name';
 import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01__One2OneContact__r.LastName';
 
-
-const STATUS_CLOSED = 'Closed';
 const RECURRING_TYPE_OPEN = 'Open';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
@@ -140,6 +138,7 @@ export default class rd2EntryForm extends LightningElement {
     accountHolderType;
     recurringPeriod;
     periodType;
+    closedStatusValues;
 
     contact = {
         MailingCountry: null
@@ -206,6 +205,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
+                this.closedStatusValues = response.closedStatusValues;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -426,7 +426,7 @@ export default class rd2EntryForm extends LightningElement {
     evaluateElevateEditWidget() {
         const statusField = getFieldValue(this.record, FIELD_STATUS);
 
-        if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
+        if (this.isElevateCustomer && this.isEdit && !this.closedStatusValues.includes(statusField)) {
             const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
@@ -653,7 +653,8 @@ export default class rd2EntryForm extends LightningElement {
         return this.isElevateWidgetDisplayed()
             || (this.hasElevateFieldsChange(allFields) 
                 && !isEmpty(this.getCommitmentId())
-                && getFieldValue(this.record, FIELD_STATUS) !== STATUS_CLOSED);
+                && !this.closedStatusValues.includes(getFieldValue(this.record, FIELD_STATUS))
+            );
     }
 
     /***
