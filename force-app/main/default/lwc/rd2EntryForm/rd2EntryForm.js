@@ -643,15 +643,17 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Determines if new or existing Recurring Donation is an Elevate recurring commitment
+    * @description Determines if new or existing Recurring Donation update should send to Elevate
     */
     shouldSendToElevate(allFields) {
         if (!this.isElevateCustomer) {
             return false;
         }
-
+    
         return this.isElevateWidgetDisplayed()
-            || (this.hasElevateFieldsChange(allFields) && !isEmpty(this.getCommitmentId()));
+            || (this.hasElevateFieldsChange(allFields) 
+                && !isEmpty(this.getCommitmentId())
+                && getFieldValue(this.record, FIELD_STATUS) !== STATUS_CLOSED);
     }
 
     /***
