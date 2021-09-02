@@ -30,64 +30,17 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Notification audience implementation for non-elevate US customers.
+* @description Selector class for the Organization object.
 */
 
-public inherited sharing class USNonElevateCustomers implements IAudience {
+public with sharing class OrganizationSelector {
 
    private static final String US_ISO_CODE = 'US';
 
-   public UserIds audience() {
-      UserIds audience;
-
-      if (isTargetOrganization()) {
-         audience = new UserIds(new Map<Id, User>(userSelector.getUsers()).keySet());
-      }
-      return audience;
-   }
-
-   private Boolean isTargetOrganization() {
-      return !isElevateCustomer() && isUSOrganization();
-   }
-
-   private Boolean isElevateCustomer () {
-      return serviceConfig.isIntegrationEnabled();
-   }
-
-   private Boolean isUSOrganization () {
-      return organizationSelector.isUSOrganization();
-   }
-
-   @TestVisible
-   private PS_IntegrationServiceConfig serviceConfig {
-      get {
-         if (serviceConfig == null) {
-            serviceConfig = new PS_IntegrationServiceConfig();
-         }
-         return serviceConfig;
-      }
-      set;
-   }
-
-   @TestVisible
-   private UserSelector userSelector {
-      get {
-         if (userSelector == null) {
-            userSelector = new UserSelector();
-         }
-         return userSelector;
-      }
-      set;
-   }
-
-   @TestVisible
-   private OrganizationSelector organizationSelector {
-      get {
-         if (organizationSelector == null) {
-            organizationSelector = new OrganizationSelector();
-         }
-         return organizationSelector;
-      }
-      set;
+   public Boolean isUSOrganization () {
+      return [
+          SELECT SignupCountryIsoCode
+          FROM Organization
+      ][0].SignupCountryIsoCode == US_ISO_CODE;
    }
 }
