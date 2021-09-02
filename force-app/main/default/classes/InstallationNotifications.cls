@@ -35,23 +35,42 @@
 
 public inherited sharing class InstallationNotifications {
 
-   private List<Custom_Notification__mdt> activeNotifications;
-   private List<CustomNotificationType> customNotificationTypes;
-   private Map<String, CustomNotificationType> activeNotificationsByType;
+   @TestVisible private List<Custom_Notification__mdt> activeNotifications;
+   @TestVisible private List<CustomNotificationType> customNotificationTypes;
+   @TestVisible private Map<String, CustomNotificationType> activeNotificationsByType;
+   private static String namespace = UTIL_Namespace.getNamespace();
+   private InstallContext context;
 
-   public InstallationNotifications() {
-      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
-      if (!shouldPublishNotifications(this.activeNotifications)) { return; }
-      this.customNotificationTypes = notificationTypeSelector.getCustomNotificationTypes();
-      this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
+   // Private Constructor for testing purposes
+   @TestVisible
+   private InstallationNotifications() {
+      initializeNotifications();
    }
 
-   private Boolean shouldPublishNotifications (List<Custom_Notification__mdt> activeNotifications) {
-      return !activeNotifications.isEmpty() && activeNotifications != null;
+   public InstallationNotifications(InstallContext context) {
+      this.context = context;
+      initializeNotifications();
+   }
+
+   private void initializeNotifications () {
+      this.activeNotifications = installationNotificationsSelector.getActiveCustomNotifications();
+      if (!activeNotifications.isEmpty()) {
+         this.customNotificationTypes =
+             notificationTypeSelector.getCustomNotificationTypesFor(activeNotificationChannels());
+         this.activeNotificationsByType = buildActiveNotificationsByType(this.customNotificationTypes);
+      }
+   }
+
+   private List<String> activeNotificationChannels() {
+      List<String> activeNotificationChannels = new List<String>();
+      for (Custom_Notification__mdt notification : this.activeNotifications) {
+         activeNotificationChannels.add(notification.Notification_Channel__c);
+      }
+      return activeNotificationChannels;
    }
 
    @TestVisible
-   private InstallationNotificationsSelector installationNotificationsSelector {
+   private static InstallationNotificationsSelector installationNotificationsSelector {
       get {
          if (installationNotificationsSelector == null) {
             installationNotificationsSelector = new InstallationNotificationsSelector();
@@ -62,7 +81,7 @@ public inherited sharing class InstallationNotifications {
    }
 
    @TestVisible
-   private CustomNotificationTypeSelector notificationTypeSelector {
+   private static CustomNotificationTypeSelector notificationTypeSelector {
       get {
          if (notificationTypeSelector == null) {
             notificationTypeSelector = new CustomNotificationTypeSelector();
@@ -82,34 +101,52 @@ public inherited sharing class InstallationNotifications {
    }
 
    public void publish() {
-      String DUMMY_ID = '000000000000000AAA';
       for (Custom_Notification__mdt notification : this.activeNotifications) {
-         if (getAudience(notification.Audience_Implementation__c) == null) { continue; }
-         if (activeNotificationsByType.containsKey(notification.Notification_Channel__c)) {
-            ElevateAdNotificationContent content = getNotificationContent(
+         if (!canPublish(notification)) { continue; }
+         IInstallationNotification content = getNotificationContent(
                 notification.Notification_Content_Implementation__c);
             Messaging.CustomNotification customNotification = new Messaging.CustomNotification();
             customNotification.setBody(content.body());
             customNotification.setTitle(content.title());
+            customNotification.setTargetPageRef(buildPageReferenceFor(notification));
             customNotification.setNotificationTypeId(
                 activeNotificationsByType.get(notification.Notification_Channel__c).Id);
-            customNotification.setTargetId(DUMMY_ID);
             customNotification.send(getAudience(notification.Audience_Implementation__c).stringValues());
-         }
       }
    }
 
-   private ElevateAdNotificationContent getNotificationContent(String notificationContentImpl) {
-      return (ElevateAdNotificationContent)getClassType(notificationContentImpl).newInstance();
+   @TestVisible
+   private Boolean canPublish(Custom_Notification__mdt notification) {
+      return (getAudience(notification.Audience_Implementation__c) != null
+          && this.activeNotificationsByType.containsKey(notification.Notification_Channel__c));
    }
 
+
+   private String buildPageReferenceFor(Custom_Notification__mdt notification) {
+      String componentName = (String.isNotBlank(namespace) ? namespace : 'c') + '__notificationRedirecter';
+      Map<String, Object> pageRef = new Map<String, Object>{
+          'type' => 'standard__component',
+          'attributes' => new Map<String, Object> {
+              'componentName' => componentName
+          },
+          'state' => new Map<String, Object> {
+              'c__redirectUrl' => notification.Redirect_URL__c
+          }
+      };
+      return JSON.serialize(pageRef);
+   }
+
+   private IInstallationNotification getNotificationContent(String notificationContentImpl) {
+      return (IInstallationNotification)getClassType(notificationContentImpl).newInstance();
+   }
+
+   @TestVisible
    private UserIds getAudience(String audienceImpl) {
-      USNonElevateCustomers nonElevateCustomers = (USNonElevateCustomers)getClassType(audienceImpl).newInstance();
-      return nonElevateCustomers.audience();
+      IAudience nonElevateCustomers = (IAudience)getClassType(audienceImpl)?.newInstance();
+      return nonElevateCustomers?.audience();
    }
 
    private Type getClassType(String classImpl) {
-      String namespace = UTIL_Namespace.getNamespace();
       Type classType = String.isNotBlank(namespace)
           ? Type.forName(namespace, classImpl)
           : Type.forName(classImpl);
