@@ -196,13 +196,16 @@
                                     </template>
 
                                     <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
-                                        <lightning-input-field field-name={fields.campaign.apiName}>
+                                        <lightning-input-field
+                                                data-id="campaignLookup"
+                                                field-name={fields.campaign.apiName}>
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
                                     <template if:true={showChangeTypeField}>
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
-                                            <lightning-input-field 
+                                            <lightning-input-field
+                                                data-id="changeType"
                                                 field-name={fields.changeType.apiName}
                                                 value={changeType}
                                             >

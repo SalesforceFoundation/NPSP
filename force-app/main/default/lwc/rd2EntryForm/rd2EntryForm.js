@@ -1048,11 +1048,11 @@ export default class rd2EntryForm extends LightningElement {
      */
     returnValues() {
         let data = {};
+        const inputFields = this.template.querySelectorAll('lightning-input-field');
 
-        this.template.querySelectorAll('lightning-input-field')
-            .forEach(field => {
-                data[field.fieldName] = field.value;
-            });
+        inputFields.forEach(field => {
+            data[field.fieldName] = field.value;
+        });
 
         return data;
     }
