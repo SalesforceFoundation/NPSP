@@ -68,8 +68,6 @@ public with sharing class ContactService {
         set;
     }
 
-    private Map<Id, Contact> oldMap;
-
     /*******************************************************************************************************
     * @description compares two contacts' addresses
     * @param con1 a Contact

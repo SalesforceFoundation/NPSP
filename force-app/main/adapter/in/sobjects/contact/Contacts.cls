@@ -203,7 +203,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return new Contacts(contactsWithoutAccounts());
     }
 
-    //todo: break up further
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
