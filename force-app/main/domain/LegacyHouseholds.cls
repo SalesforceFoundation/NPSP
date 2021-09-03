@@ -498,7 +498,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     public static void handleContactsBeforeUpdate(Contacts contacts) {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
-        contactService.createOneToOneAndHouseholdAccountsFor(
+        householdService.createOneToOneAndHouseholdAccountsFor(
                 contactsWithoutAccounts(contacts));
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
