@@ -145,8 +145,12 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 parentKeyField = parentKeyField.split('\\.')[1];
             }
 
-            Id firstParentId = getParentId(parentObjectField, detailRecords[0], parentKeyField);
-            Id lastParentId = getParentId(parentObjectField, detailRecords[detailRecords.size() - 1], parentKeyField);
+            Id firstParentId =
+                CRLP_Rollup_SVC.getParentIdFromRecord(detailRecords[0], parentKeyField, parentObjectField);
+            Id lastParentId =
+                CRLP_Rollup_SVC.getParentIdFromRecord(
+                    detailRecords[detailRecords.size() - 1], parentKeyField, parentObjectField
+                );
 
             // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
@@ -231,29 +235,13 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         String parentKeyField
     ) {
         if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU &&
-            lastParentId != getParentId(parentObjectField, detailRecords[detailRecords.size() - 1], parentKeyField)
+            lastParentId != CRLP_Rollup_SVC.getParentIdFromRecord(
+                detailRecords[detailRecords.size() - 1], parentKeyField, parentObjectField
+            )
         ) {
             return true;
         }
         return false;
-    }
-
-    /**
-    * @description Get the parent Id of the referenced detail record
-    * @param parentObjectField
-    * @param detailRecord
-    * @param parentKeyField
-    * @return Id
-    */
-    @TestVisible
-    private Id getParentId(String parentObjectField, SObject detailRecord, String parentKeyField) {
-        Id parentId;
-        if (parentObjectField == null) {
-            parentId = (Id) detailRecord.get(parentKeyField);
-        } else {
-            parentId = (Id) detailRecord.getSObject(parentObjectField).get(parentKeyField);
-        }
-        return parentId;
     }
 
     /********************************************************************************************************
