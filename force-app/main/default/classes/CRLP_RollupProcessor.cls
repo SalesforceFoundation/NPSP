@@ -83,12 +83,14 @@ public inherited sharing class CRLP_RollupProcessor {
     /**
     * @description used to flag a condition that requires us NOT to remove lastParentIdProcessed defs.
     */
+    @TestVisible
     private Boolean hasNoDetailsForLastParent = false;
 
     /**
      * @description Used to return a true to the calling LDV class when the last parent Id was removed from
      * the list of updated SObjects
      */
+    @TestVisible
     private Boolean lastParentIdRemovedFromUpdatesList = false;
 
     /**
