@@ -413,10 +413,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
             //
 
             Map<Contact, Address__c> addressesByContact = new Map<Contact, Address__c>();
-            List<Contact> listCon = new List<Contact>();
 
             for (Contact contact : contacts) {
-                listCon.add(contact);
                 NPSP_Address npspAddressFromContact = new NPSP_Address(contact);
                 addressesByContact.put(contact, npspAddressFromContact.getRecord());
             }
