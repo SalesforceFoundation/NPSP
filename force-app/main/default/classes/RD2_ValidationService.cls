@@ -241,7 +241,7 @@ public with sharing class RD2_ValidationService {
             validateStatus(rd, errorCollection);
             validateDayOfMonthChange(rd, oldRd, errorCollection);
             validateElevateRDCampaignCannotUpdateToEmpty(rd, oldRd, errorCollection);
-            validateCloseElevateReucrringDonation(rd, oldRd, errorCollection);
+            validateClosedElevateRecurringDonation(rd, oldRd, errorCollection);
 
             Boolean isValid = validateDonorChange(rd, oldRd, errorCollection);
             if (isValid) {
@@ -258,13 +258,17 @@ public with sharing class RD2_ValidationService {
         return errorRecords;
     }
 
-    private void validateCloseElevateReucrringDonation(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
+    private void validateClosedElevateRecurringDonation(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, ErrorRecord errorCollection) {
         RD2_RecurringDonation recurringDonation = new RD2_RecurringDonation(rd);
-        if (!recurringDonation.isElevateRecord() || !recurringDonation.isClosed()) {
-            return;
+        if (recurringDonation.isClosed()
+            && recurringDonation.isElevateRecord()
+            && isElevateFieldChanged(rd, oldRd)) {
+                errorCollection.addError(System.Label.RD2_ElevateRDCannotChangeElevateFields);
         }
+    }
 
-        Boolean isElevateFieldChange = rd.npe03__Contact__c != oldRd.npe03__Contact__c
+    private Boolean isElevateFieldChanged(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
+        return rd.npe03__Contact__c != oldRd.npe03__Contact__c
         || rd.npe03__Organization__c != oldRd.npe03__Organization__c
         || rd.PaymentMethod__c != oldRd.PaymentMethod__c
         || rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c
@@ -274,11 +278,6 @@ public with sharing class RD2_ValidationService {
         || rd.StartDate__c != oldRd.StartDate__c
         || rd.npe03__Date_Established__c != oldRd.npe03__Date_Established__c
         || rd.Day_of_Month__c != oldRd.Day_of_Month__c;
-
-        if (isElevateFieldChange) {
-            errorCollection.addError(System.Label.RD2_ElevateRDCannotChangeElevateFields);
-        }
-        
     }
 
     private void validatePaymentMethod(RD2_RecurringDonation recurringDonation, ErrorRecord errorCollection) {
