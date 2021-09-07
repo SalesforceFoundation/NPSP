@@ -179,13 +179,16 @@ private class RD2_ChangeHistory_TEST {
 
         RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
 
+        String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
+
         String field1Label = UTIL_Describe.getFieldLabel(
-            'RecurringDonationChangeHistory__c',
-            'PreviousAnnualValue__c'
+            rdChangeHistorySObject,
+            String.valueOf(RecurringDonationChangeHistory__c.PreviousAnnualValue__c)
         );
+
         String field2Label = UTIL_Describe.getFieldLabel(
-            'RecurringDonationChangeHistory__c',
-            'NewExpectedTotalValue__c'
+            rdChangeHistorySObject,
+            String.valueOf(RecurringDonationChangeHistory__c.NewExpectedTotalValue__c)
         );
 
         System.assertEquals(3, view.fields.size());
@@ -210,8 +213,6 @@ private class RD2_ChangeHistory_TEST {
                 List<Type> listOfParamTypes,
                 List<String> listOfParamNames,
                 List<Object> listOfArgs) {
-            System.debug(stubbedMethodName);
-            System.debug(JSON.serializePretty(listOfArgs));
             if(stubbedMethodName == 'getChangeHistories') {
                 return records;
             }
