@@ -392,55 +392,57 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * @param contacts the list of Contacts
     ********************************************************************************************************/
     public void createOrUpdateContactAddress(List<Contact> contacts) {
-        if (!contacts.isEmpty()) {
-            // Strategy:
-            // create a new (unsaved) address for each contact.
-            // see if there is an existing address that matches each new address.
-            //
-            // for existing addresses we match
-            //     process during BeforeInsert/Update
-            //     update appropriate fields on contact
-            //
-            // for new addresses that won't be a default (ie, the contact has override set)
-            //     process during BeforeInsert/Update
-            //     create the address now
-            //     update appropriate fields on contact
-            //
-            // for new addresses that will be a default address
-            //     process during AfterInsert/Update
-            //     mark the new address as default
-            //     put it on dmlWrapper
-            //
-
-            Map<Contact, Address__c> contactAddressesByContact = getContactAddressesByContact(contacts);
-
-            // look for duplicates for our proposed new addresses
-            Map<Address__c, Address__c> existingAddressesByAddress =
-                    Addresses.getExistingAddresses(contactAddressesByContact.values());
-
-            // maps & lists to keep track of the addresses we must insert or update
-            Map<Contact, Address__c> contactAddressesToInsertByContact = new Map<Contact, Address__c>();
-
-            for (Contact contact : contacts) {
-                Address__c newAddressFromContact = contactAddressesByContact.get(contact);
-                Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
-
-                // if found a match
-                if (contactAddressHasAddressMatch(existingAddressFromContact)) {
-                    updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
-
-                    // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
-                    // a second time by the AfterInsert trigger.
-                }
-
-                // no match found, and its an override just for this contact
-                else if (contact.is_Address_Override__c) {
-                    // put it on the list of addresss to create now
-                    contactAddressesToInsertByContact.put(contact, newAddressFromContact);
-                }
-            }
-            insertContactAddresses(contactAddressesToInsertByContact);
+        if (contacts.isEmpty()) {
+            return;
         }
+        // Strategy:
+        // create a new (unsaved) address for each contact.
+        // see if there is an existing address that matches each new address.
+        //
+        // for existing addresses we match
+        //     process during BeforeInsert/Update
+        //     update appropriate fields on contact
+        //
+        // for new addresses that won't be a default (ie, the contact has override set)
+        //     process during BeforeInsert/Update
+        //     create the address now
+        //     update appropriate fields on contact
+        //
+        // for new addresses that will be a default address
+        //     process during AfterInsert/Update
+        //     mark the new address as default
+        //     put it on dmlWrapper
+        //
+
+        Map<Contact, Address__c> contactAddressesByContact = getContactAddressesByContact(contacts);
+
+        // look for duplicates for our proposed new addresses
+        Map<Address__c, Address__c> existingAddressesByAddress =
+                Addresses.getExistingAddresses(contactAddressesByContact.values());
+
+        // maps & lists to keep track of the addresses we must insert or update
+        Map<Contact, Address__c> contactAddressesToInsertByContact = new Map<Contact, Address__c>();
+
+        for (Contact contact : contacts) {
+            Address__c newAddressFromContact = contactAddressesByContact.get(contact);
+            Address__c existingAddressFromContact = existingAddressesByAddress.get(newAddressFromContact);
+
+            // if found a match
+            if (contactAddressHasAddressMatch(existingAddressFromContact)) {
+                updateContactAddressFromExistingAddress(contact, existingAddressFromContact);
+
+                // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
+                // a second time by the AfterInsert trigger.
+            }
+
+            // no match found, and its an override just for this contact
+            else if (contact.is_Address_Override__c) {
+                // put it on the list of addresss to create now
+                contactAddressesToInsertByContact.put(contact, newAddressFromContact);
+            }
+        }
+
+        insertContactAddresses(contactAddressesToInsertByContact);
     }
 
     private void insertContactAddresses(Map<Contact, Address__c> contactAddressesToInsertByContact) {
@@ -449,6 +451,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
             // prevent the After Insert/Update Contact logic from executing when it's eventually called.
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+
             for (Contact contact : contactAddressesToInsertByContact.keySet()) {
                 Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
                 contact.Current_Address__c = contactAddress.Id;
@@ -458,6 +461,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private void updateContactAddressFromExistingAddress(Contact contact, Address__c existingAddressFromContact) {
         contact.Current_Address__c = existingAddressFromContact.Id;
+        contact.Undeliverable_Address__c = existingAddressFromContact.Undeliverable__c;
 
         //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
         resetContactPrimaryAddressType(contact, existingAddressFromContact);
