@@ -89,6 +89,9 @@ private class HouseholdTests_TEST {
         System.assert(Integer.valueOf(contacts.get(0).Account
                 .Number_of_Household_Members__c) > 0,
                 'The number of members should be greater than zero.');
+        System.assertEquals(null, contacts.get(0).npe01__Primary_Address_Type__c,
+                'A Contact inserted without an Address Type should result in a blank' +
+                        'Primary Address Type on the Contact record.');
     }
 
     @IsTest
@@ -133,7 +136,8 @@ private class HouseholdTests_TEST {
                         OtherAddress,
                         is_Address_Override__c,
                         Undeliverable_Address__c,
-                        Current_Address__c
+                        Current_Address__c,
+                        npe01__Primary_Address_Type__c
                 FROM Contact
         ];
     }

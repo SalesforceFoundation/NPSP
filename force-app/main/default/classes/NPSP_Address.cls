@@ -87,7 +87,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         )) {
             copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
         } else {
-            copyFromSObject(con, 'Mailing', 'Mailing');
+            copyFromSObject(con, 'Mailing', null);
         }
     }
 
@@ -346,11 +346,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         // if specified, also include Address Type
         if (addrType != null) {
             address.Address_Type__c = addrType;
-        } else {
-            // A null value will force a newly created Address record to use its defined default value for
-            // the picklist, which if not reflected here could cause isAddressChanged() to return true
-            // in cases when it should not.
-            address.Address_Type__c = Addresses.defaultAddressType;
         }
     }
 
