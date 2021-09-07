@@ -389,10 +389,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
     * when pushing a new default address, we need to do it in the AfterInsert/Update.
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
-    * @param listConAll the list of Contacts
+    * @param contacts the list of Contacts
     ********************************************************************************************************/
-    public void createAddressFromContact(List<Contact> listConAll) {
-        if (!listConAll.isEmpty()) {
+    public void createAddressFromContact(List<Contact> contacts) {
+        if (!contacts.isEmpty()) {
             // Strategy:
             // create a new (unsaved) address for each contact.
             // see if there is an existing address that matches each new address.
@@ -412,54 +412,54 @@ public inherited sharing class Contacts extends fflib_SObjects {
             //     put it on dmlWrapper
             //
 
-            Map<Contact, Address__c> mapConAddr = new Map<Contact, Address__c>();
+            Map<Contact, Address__c> addressesByContact = new Map<Contact, Address__c>();
             List<Contact> listCon = new List<Contact>();
 
-            for (Contact con : listConAll) {
-                listCon.add(con);
-                NPSP_Address npspAddressFromContact = new NPSP_Address(con);
-                mapConAddr.put(con, npspAddressFromContact.getRecord());
+            for (Contact contact : contacts) {
+                listCon.add(contact);
+                NPSP_Address npspAddressFromContact = new NPSP_Address(contact);
+                addressesByContact.put(contact, npspAddressFromContact.getRecord());
             }
 
             // look for duplicates for our proposed new addresses
-            Map<Address__c, Address__c> mapAddrDupAddr = Addresses.getExistingAddresses(mapConAddr
+            Map<Address__c, Address__c> existingAddressesByAddress = Addresses.getExistingAddresses(addressesByContact
                     .values());
 
             // maps & lists to keep track of the addresses we must insert or update
-            Map<Contact, Address__c> mapConAddrInsertNow = new Map<Contact, Address__c>();
+            Map<Contact, Address__c> addressesToInsertByContact = new Map<Contact, Address__c>();
 
-            for (Contact con : listCon) {
-                Address__c addrNew = mapConAddr.get(con);
-                Address__c addrDup = mapAddrDupAddr.get(addrNew);
+            for (Contact contact : contacts) {
+                Address__c newContactAddress = addressesByContact.get(contact);
+                Address__c existingContactAddress = existingAddressesByAddress.get(newContactAddress);
 
                 // if found a match
-                if (addrDup != null) {
+                if (existingContactAddress != null) {
                     // record the match in the contact
-                    con.Current_Address__c = addrDup.Id;
+                    contact.Current_Address__c = existingContactAddress.Id;
 
                     //reset the Primary Address Type only; resetting other fields on Contact will create a new Address
-                    con.npe01__Primary_Address_Type__c = con.npe01__Primary_Address_Type__c == null
-                            ? addrDup.Address_Type__c
-                            : con.npe01__Primary_Address_Type__c;
+                    contact.npe01__Primary_Address_Type__c = contact.npe01__Primary_Address_Type__c == null
+                            ? existingContactAddress.Address_Type__c
+                            : contact.npe01__Primary_Address_Type__c;
 
                     // Prevent an address that was just inserted by the BeforeInsert trigger from being udpated
                     // a second time by the AfterInsert trigger.
                 }
 
                 // no match found, and its an override just for this contact
-                else if (con.is_Address_Override__c) {
+                else if (contact.is_Address_Override__c) {
                     // put it on the list of addresss to create now
-                    mapConAddrInsertNow.put(con, addrNew);
+                    addressesToInsertByContact.put(contact, newContactAddress);
                 }
             }
 
-            if (mapConAddrInsertNow.size() > 0) {
-                UTIL_DMLService.insertRecords(mapConAddrInsertNow.values());
+            if (addressesToInsertByContact.size() > 0) {
+                UTIL_DMLService.insertRecords(addressesToInsertByContact.values());
                 // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
                 // prevent the After Insert/Update Contact logic from executing when it's eventually called.
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
-                for (Contact con : mapConAddrInsertNow.keySet()) {
-                    Address__c addr = mapConAddrInsertNow.get(con);
+                for (Contact con : addressesToInsertByContact.keySet()) {
+                    Address__c addr = addressesToInsertByContact.get(con);
                     con.Current_Address__c = addr.Id;
                 }
             }
