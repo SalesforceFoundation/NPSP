@@ -1363,7 +1363,7 @@ private with sharing class RD2_ValidationService_TEST {
     }
 
     @isTest
-    private static void test123test34() {
+    private static void shouldAllowClosedElevateRDUpdateWhenNotElevateRelatedFieldIsChanged() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
