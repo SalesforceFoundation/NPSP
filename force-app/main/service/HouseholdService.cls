@@ -372,7 +372,7 @@ public inherited sharing class HouseholdService {
 
                 if (CAO_Constants.isHHAccountModel()) {
                     configureHouseholdAccount(contactRecord, accountRecord);
-                    if (householdSettings.isAdvancedHouseholdNaming()) {
+                    if (AddressService.isAddressManagementEnabled()) {
                         contactsForAddressCreation.add(contactRecord);
                     }
                 } else {
