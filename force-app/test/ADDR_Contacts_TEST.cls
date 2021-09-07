@@ -37,7 +37,7 @@
 public with sharing class ADDR_Contacts_TEST {
 
     @IsTest
-    private static void newAddressCreatedFromContactGetsContactUndeliverableStatus() {
+    private static void newOverrideAddressCreatedFromContactUpdateGetsContactUndeliverableStatus() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
@@ -47,19 +47,24 @@ public with sharing class ADDR_Contacts_TEST {
 
         NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
         npspContact.getRecord().AccountId = testAccountWithBillingAddress[0].Id;
-        npspContact.setCurrentAddress(new NPSP_Address(buildAddresses(1, false)[0]));
+        npspContact.getRecord().is_Address_Override__c = true;
         npspContact.setUndeliverableMailingAddress(true);
+        insert npspContact.getRecord();
 
         Test.startTest();
-            insert npspContact.getRecord();
+            Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
+            NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
+            npspContactToUpdate.setCurrentAddress(
+                    new NPSP_Address(buildAddresses(1, false)[0]));
+
+            update npspContactToUpdate.getRecord();
         Test.stopTest();
 
-        Contact updatedContact = [SELECT Undeliverable_Address__c, Current_Address__c
+        Contact updatedContact = [SELECT AccountId, Undeliverable_Address__c, Current_Address__c
                                   FROM Contact
-                                  WHERE Id = :npspContact.getRecord().Id];
+                                  WHERE Id = :npspContactToUpdate.getRecord().Id];
 
-        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Id = :updatedContact
-                .Current_Address__c];
+        Address__c updatedAddress = [SELECT Undeliverable__c FROM Address__c WHERE Id = :updatedContact.Current_Address__c];
 
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c, 'The newly ' +
                 'created address from the contact should have the same undeliverable status as the contact it was ' +
@@ -89,20 +94,17 @@ public with sharing class ADDR_Contacts_TEST {
             Contact contactToUpdate = [SELECT MailingStreet, Current_Address__c
                                    FROM Contact
                                    WHERE Id = :testContact.Id];
-            contactToUpdate.MailingStreet = 'Washington Street0';
-            contactToUpdate.MailingCity = 'Washington City0';
-            contactToUpdate.MailingState = 'Washington';
-            contactToUpdate.MailingPostalCode = 'Zip0';
-            contactToUpdate.MailingCountry = 'United States';
+            NPSP_Contact npspContact = new NPSP_Contact(contactToUpdate);
+            npspContact.setCurrentAddress(new NPSP_Address(undeliverableAddresses[0]));
 
-            update contactToUpdate;
+            update npspContact.getRecord();
         Test.stopTest();
 
         Contact updatedContact = [SELECT Undeliverable_Address__c, Current_Address__c
                                   FROM Contact WHERE Id = :contactToUpdate.Id];
 
-        System.assertNotEquals(contactToUpdate.Current_Address__c, updatedContact.Current_Address__c, 'The contact ' +
-                'address should have changed.');
+        System.assertNotEquals(testContact.Current_Address__c, updatedContact.Current_Address__c, 'The ' +
+                'contact address should have changed.');
         System.assertEquals(updatedContact.Current_Address__c, undeliverableAddresses[0].Id, 'The contact should get ' +
                 'the newly updated address.');
         System.assert(updatedContact.Undeliverable_Address__c, 'The updated contact mailing address should ' +
