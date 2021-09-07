@@ -138,6 +138,7 @@ export default class rd2EntryForm extends LightningElement {
     accountHolderType;
     recurringPeriod;
     periodType;
+    recurringDonationStatus;
     closedStatusValues;
 
     contact = {
@@ -306,6 +307,7 @@ export default class rd2EntryForm extends LightningElement {
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
             this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
+            this.recurringDonationStatus = getFieldValue(this.record, FIELD_STATUS);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
@@ -383,6 +385,11 @@ export default class rd2EntryForm extends LightningElement {
         this.evaluateElevateWidget();
     }
 
+    handleStatusChange(event) {
+        this.recurringDonationStatus = event.detail.value;
+        this.evaluateElevateEditWidget();
+    }
+
     /***
     * @description Handle schedule form fields:
     * - Recurring Type change might hide or display the credit card widget.
@@ -424,9 +431,8 @@ export default class rd2EntryForm extends LightningElement {
     * @description Checks if the Elevate Widget should be displayed on Edit
     */
     evaluateElevateEditWidget() {
-        const statusField = getFieldValue(this.record, FIELD_STATUS);
 
-        if (this.isElevateCustomer && this.isEdit && !this.closedStatusValues.includes(statusField)) {
+        if (this.isElevateCustomer && this.isEdit) {
             const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
@@ -436,7 +442,8 @@ export default class rd2EntryForm extends LightningElement {
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isScheduleSupported()
                 && this.isCurrencySupported()
-                && this.isCountrySupported();
+                && this.isCountrySupported()
+                && this.isValidStatusForElevate();
 
             this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
         }
@@ -452,12 +459,14 @@ export default class rd2EntryForm extends LightningElement {
         const isValidPaymentMethod = this.isElevatePaymentMethod();
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
+        const statusSupported = this.isValidStatusForElevate();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && isValidPaymentMethod
             && isScheduleSupported
             && currencySupported
-            && countrySupported);
+            && countrySupported
+            && statusSupported);
 
         this.populateCardHolderName();
     }
@@ -560,6 +569,20 @@ export default class rd2EntryForm extends LightningElement {
 
         return isNull(country)
             || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
+    }
+
+    isValidStatusForElevate() {
+        if(this.isEdit) {
+            const originalStatus = getFieldValue(this.record, FIELD_STATUS);
+            if(this.isClosedStatus(originalStatus)) {
+                return false;
+            }
+        }
+        return !this.isClosedStatus(this.recurringDonationStatus);
+    }
+
+    isClosedStatus(status) {
+        return !!this.closedStatusValues?.includes(status);
     }
 
     /***
