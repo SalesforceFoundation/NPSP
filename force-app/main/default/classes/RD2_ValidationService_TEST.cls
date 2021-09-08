@@ -1327,6 +1327,76 @@ private with sharing class RD2_ValidationService_TEST {
         }
     }
 
+    @isTest
+    private static void shouldNotAllowClosedElevateRDUpdateWhenElevateRelatedFieldIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusClosed()
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.npe03__Amount__c = oldRd.npe03__Amount__c + 1;
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(System.Label.RD2_ElevateRDCannotChangeElevateFields, errorRecords[0].getFirstError(),
+            System.Label.RD2_ElevateRDCannotChangeElevateFields);
+    }
+
+    @isTest
+    private static void shouldAllowClosedElevateRDUpdateWhenNotElevateRelatedFieldIsChanged() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        PS_IntegrationServiceConfig_TEST.Stub configStub = new PS_IntegrationServiceConfig_TEST.Stub()
+            .withIsIntegrationEnabled(true)
+            .withHasIntegrationPermissions(true);
+        RD2_ElevateIntegrationService.config = (PS_IntegrationServiceConfig) Test.createStub(
+            PS_IntegrationServiceConfig.class,
+            configStub
+        );
+
+        npe03__Recurring_Donation__c oldRd = getRecurringDonationBuilder()
+            .withContact(getContact().Id)
+            .withStatusClosed()
+            .withPaymentMethod(RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD)
+            .withCommitmentId(RD2_ElevateIntegrationService_TEST.COMMITMENT_ID)
+            .build();
+        
+        npe03__Recurring_Donation__c rd = oldRd.clone();
+        rd.Name = 'random text';
+
+        RD2_ValidationService validationService = new RD2_ValidationService(
+            new List<npe03__Recurring_Donation__c>{rd},
+            new List<npe03__Recurring_Donation__c>{oldRd}
+        );
+
+        Test.startTest();
+        List<RD2_ValidationService.ErrorRecord> errorRecords = validationService.validate();
+        Test.stopTest();
+
+        System.assertEquals(0, errorRecords.size(),
+            'There should be no error when updating Closed Elevate RD non-elevate related fields');
+    }
+
     // Helper Methods
     /////////////////////
 
