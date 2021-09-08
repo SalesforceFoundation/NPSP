@@ -21,5 +21,6 @@
     "1st and 15th": 24,
     "Weekly": 52,
     "Daily": 365
-  }
+  },
+  "closedStatusValues": ["Closed"]
 }
