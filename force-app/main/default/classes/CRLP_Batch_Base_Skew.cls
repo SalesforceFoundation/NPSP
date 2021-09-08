@@ -160,8 +160,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             detailRecords = applyPostQueryLocatorFilters(detailRecords);
 
             // Check if we need to keep the last processed parent id
-            Boolean hasNoDetailsForLastParentId =
-                hasNoDetailsForLastParentId(lastParentId, parentObjectField, detailRecords, parentKeyField);
+            Boolean hasLastParentDetails =
+                hasLastParentDetails(lastParentId, parentObjectField, detailRecords, parentKeyField);
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
             // as the primary queryLocator).
@@ -193,7 +193,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 .withPreviouslyProcessedOppIdsMap(this.statefulMapOfOppIdsByParentId)
                 .withRollupDefinitions(this.statefulRollupsById)
                 .withJobOptions(options)
-                .withLastParentDetails(hasNoDetailsForLastParentId);
+                .withLastParentDetails(hasLastParentDetails);
 
             List<SObject> updatedRecords = processor.startRollupProcessing();
 
@@ -228,7 +228,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * @return Boolean true if lastParentId has no associated detail records in a GAU rollup
     */
     @TestVisible
-    private Boolean hasNoDetailsForLastParentId(
+    private Boolean hasLastParentDetails(
         Id lastParentId,
         String parentObjectField,
         List<SObject> detailRecords,
@@ -239,9 +239,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 detailRecords[detailRecords.size() - 1], parentKeyField, parentObjectField
             )
         ) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /********************************************************************************************************

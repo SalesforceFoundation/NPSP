@@ -655,8 +655,10 @@ private class CRLP_RollupProcessor_TEST {
             Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
         General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
             Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
 
-        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2};
+        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2, gau3};
 
         List<Allocation__c> allocRecords = new List<Allocation__c>{
             buildMockAllocation(gau, opp, null, opp.Amount),
@@ -673,7 +675,7 @@ private class CRLP_RollupProcessor_TEST {
             .withRollupType(CRLP_RollupProcessingOptions.RollupType.GAU)
             .withSummaryRecords(gauRecords)
             .withDetailRecords(allocRecords)
-            .withLastParentDetails(false)
+            .withLastParentDetails(true)
             .withJobOptions(options);
 
         System.assertEquals(Allocation__c.SObjectType, processor.detailObjectType);
@@ -706,17 +708,21 @@ private class CRLP_RollupProcessor_TEST {
 
         Opportunity opp = buildMockOpportunity(account.Id, 100);
         Opportunity opp2 = buildMockOpportunity(account.Id, 200);
+        Opportunity opp3 = buildMockOpportunity(account.Id, 300);
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(
             Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
         General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
             Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
 
-        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2};
+        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2, gau3};
 
         List<Allocation__c> allocRecords = new List<Allocation__c>{
             buildMockAllocation(gau, opp, null, opp.Amount),
-            buildMockAllocation(gau2, opp2, null, opp2.Amount)
+            buildMockAllocation(gau2, opp2, null, opp2.Amount),
+            buildMockAllocation(gau3, opp3, null, opp3.Amount)
         };
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
@@ -729,7 +735,7 @@ private class CRLP_RollupProcessor_TEST {
             .withRollupType(CRLP_RollupProcessingOptions.RollupType.GAU)
             .withSummaryRecords(gauRecords)
             .withDetailRecords(allocRecords)
-            .withLastParentDetails(true)
+            .withLastParentDetails(false)
             .withJobOptions(options);
 
         System.assertEquals(Allocation__c.SObjectType, processor.detailObjectType);

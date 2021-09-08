@@ -54,8 +54,8 @@ private with sharing class CRLP_GAU_BATCH_TEST {
 
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All);
         Id lastParentId = gau2.Id;
-        System.assertEquals(true,
-            gauBatch.hasNoDetailsForLastParentId(lastParentId, null, detailRecords, parentKeyField));
+        System.assertEquals(false,
+            gauBatch.hasLastParentDetails(lastParentId, null, detailRecords, parentKeyField));
     }
 
     @IsTest
@@ -80,7 +80,7 @@ private with sharing class CRLP_GAU_BATCH_TEST {
 
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH();
         Id lastParentId = gau2.Id;
-        System.assertEquals(false,
-            gauBatch.hasNoDetailsForLastParentId(lastParentId, null, detailRecords, parentKeyField));
+        System.assertEquals(true,
+            gauBatch.hasLastParentDetails(lastParentId, null, detailRecords, parentKeyField));
     }
 }
