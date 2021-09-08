@@ -629,14 +629,7 @@ public with sharing class CON_ContactMerge_CTRL {
         List<String> customFieldList = new List<String>();
         String undeliverableFieldName = String.valueOf(Contact.Undeliverable_Address__c).toLowerCase();
 
-        for (String fieldName : customFieldMap.keySet()) {
-            if (fieldName == undeliverableFieldName) {
-                continue;
-            }
-            customFieldList.add(fieldName);
-        }
-        customFieldList.sort();
-        customFieldList.add(0, undeliverableFieldName);
+        buildSortedCustomFieldList(customFieldMap, undeliverableFieldName, customFieldList);
 
         // Add the first row of type header with contact names as titles
         FieldRow temp = new FieldRow('', '', false, 'header');
@@ -718,6 +711,17 @@ public with sharing class CON_ContactMerge_CTRL {
         // If everything looks good go to "choose winning contact" step
         this.step = 3;
 
+    }
+
+    private void buildSortedCustomFieldList(Map<String, DescribeFieldResult> customFieldMap, String undeliverableFieldName, List<String> customFieldList) {
+        for (String fieldName : customFieldMap.keySet()) {
+            if (fieldName == undeliverableFieldName) {
+                continue;
+            }
+            customFieldList.add(fieldName);
+        }
+        customFieldList.sort();
+        customFieldList.add(0, undeliverableFieldName);
     }
 
     /***********************************************************************************************

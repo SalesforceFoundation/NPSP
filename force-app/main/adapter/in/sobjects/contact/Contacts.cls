@@ -447,16 +447,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private void insertContactAddresses(Map<Contact, Address__c> contactAddressesToInsertByContact) {
-        if (contactAddressesToInsertByContact.size() > 0) {
-            UTIL_DMLService.insertRecords(contactAddressesToInsertByContact.values());
-            // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
-            // prevent the After Insert/Update Contact logic from executing when it's eventually called.
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
+        if (contactAddressesToInsertByContact.size() == 0) {
+            return;
+        }
+        UTIL_DMLService.insertRecords(contactAddressesToInsertByContact.values());
+        // Since we're inserting new Addresses in a Before Insert/Update scenario, set the flag to
+        // prevent the After Insert/Update Contact logic from executing when it's eventually called.
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, true);
 
-            for (Contact contact : contactAddressesToInsertByContact.keySet()) {
-                Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
-                contact.Current_Address__c = contactAddress.Id;
-            }
+        for (Contact contact : contactAddressesToInsertByContact.keySet()) {
+            Address__c contactAddress = contactAddressesToInsertByContact.get(contact);
+            contact.Current_Address__c = contactAddress.Id;
         }
     }
 
