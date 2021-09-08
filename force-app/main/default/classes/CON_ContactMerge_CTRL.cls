@@ -627,8 +627,16 @@ public with sharing class CON_ContactMerge_CTRL {
 
         // Sort the custom fields list by name before creating the list of FieldRow for merge UI
         List<String> customFieldList = new List<String>();
-        customFieldList.addAll(customFieldMap.keySet());
+        String undeliverableFieldName = String.valueOf(Contact.Undeliverable_Address__c).toLowerCase();
+
+        for (String fieldName : customFieldMap.keySet()) {
+            if (fieldName == undeliverableFieldName) {
+                continue;
+            }
+            customFieldList.add(fieldName);
+        }
         customFieldList.sort();
+        customFieldList.add(0, undeliverableFieldName);
 
         // Add the first row of type header with contact names as titles
         FieldRow temp = new FieldRow('', '', false, 'header');
