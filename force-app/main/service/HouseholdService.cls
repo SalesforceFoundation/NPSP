@@ -431,9 +431,15 @@ public inherited sharing class HouseholdService {
         if (!contactsForAddressCreation.isEmpty()) {
             if (AddressService.isAddressManagementEnabled()) {
                 //Create household addresses from Contacts instead of from
-                // the Account to include mapping of the Primary Address Type
+                // the Account to include mapping of the Primary Address Type.
+                //Deactivate the Trigger that syncs Addresses to Accounts anc Contacts,
+                // since the Household Account and Contact are already configured correctly.
+                TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
+                        false);
                 Households.createAddressFromContactAndSetCurrentAddressLookupId
                         (contactsForAddressCreation, true);
+                TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
+                        true);
             }
         }
     }
