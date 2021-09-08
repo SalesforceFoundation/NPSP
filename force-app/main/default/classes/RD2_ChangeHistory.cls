@@ -31,6 +31,8 @@ public with sharing class RD2_ChangeHistory {
 
     private RecurringDonationChangeHistory__c record;
 
+    private static final String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
+
     public RD2_ChangeHistory(RecurringDonationChangeHistory__c record) {
         this.record = record;
     }
@@ -86,8 +88,8 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
 
-        handleDisplayWhenRecurringTypeChanges(view, 'NewAnnualValue__c', 
-            'PreviousAnnualValue__c', Label.RDCH_Annual_Value);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewAnnualValue__c),
+                String.valueOf(RecurringDonationChangeHistory__c.PreviousAnnualValue__c), Label.RDCH_Annual_Value);
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             view.currencyCode = (String)this.record.get('CurrencyIsoCode');
@@ -99,8 +101,8 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
 
-        handleDisplayWhenRecurringTypeChanges(view, 'NewExpectedTotalValue__c', 
-            'PreviousExpectedTotalValue__c', Label.RDCH_Expected_Total_Value);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewExpectedTotalValue__c),
+                String.valueOf(RecurringDonationChangeHistory__c.PreviousExpectedTotalValue__c), Label.RDCH_Expected_Total_Value);
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             view.currencyCode = (String)this.record.get('CurrencyIsoCode');
@@ -147,8 +149,8 @@ public with sharing class RD2_ChangeHistory {
             String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c)
         );
 
-        handleDisplayWhenRecurringTypeChanges(view, 'NewPlannedInstallments__c', 
-            'PreviousPlannedInstallments__c', plannedInstallmentsLabel);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewPlannedInstallments__c),
+            String.valueOf(RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c), plannedInstallmentsLabel);
 
         return view;
     }
@@ -198,16 +200,10 @@ public with sharing class RD2_ChangeHistory {
 
         if (this.record.get(newField) == null) {
             view.oldValue = this.record.get(previousField);
-            view.label = UTIL_Describe.getFieldLabel(
-                'RecurringDonationChangeHistory__c',
-                previousField
-            );
+            view.label = UTIL_Describe.getFieldLabel(rdChangeHistorySObject, previousField);
         } else if (this.record.get(previousField) == null) {
             view.oldValue = this.record.get(newField);
-            view.label = UTIL_Describe.getFieldLabel(
-                'RecurringDonationChangeHistory__c',
-                newField
-            );
+            view.label = UTIL_Describe.getFieldLabel(rdChangeHistorySObject, newField);
         } else {
             view.oldValue = this.record.get(previousField);
             if (this.record.get(newField) != this.record.get(previousField)) {
@@ -324,7 +320,6 @@ public with sharing class RD2_ChangeHistory {
     }
 
     private Boolean canReadRDCHFields(Schema.SObjectField newField, Schema.SObjectField oldField) {
-        String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
         return UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(newField))
                 && UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(oldField));
     }
