@@ -382,55 +382,63 @@ public inherited sharing class HouseholdService {
         }
 
         if (!accountsToInsert.isEmpty()) {
-            // with current TDTM design, we can't use dmlWrapper
-            // because we need to get the new AccountID's into the Contacts.
-
-            // identify the specific records that had the problem, and don't fail the whole batch
-            //Note: this insert inserts both Accounts and Addresses (in the Acct triggers)
-            // Set the HH flag to true to prevent the trigger handlers from running again
-            // to update  the name and member count now that they are already set correctly here.
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
-            // Suppress the trigger handler that creates Addresses from Accounts, as
-            // the Addresses will be inserted using the Contact info below
-            TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
-            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountsToInsert, false);
-            TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', true);
-            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
-
-            for (Integer index = 0; index < insertResults.size(); index++) {
-                Database.SaveResult insertResult = insertResults[index];
-                if (!insertResult.isSuccess()) {
-                    for (Database.Error err : insertResult.getErrors()) {
-                        accountsToInsert[index].addError(err.getMessage());
-                        Contact contactRecord = contactRecords[index];
-                        contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
-                                contactRecord.FirstName, contactRecord.LastName, err.getMessage()
-                        }));
-                    }
-                }
-            }
-
-            // now update each contact's accountId
-            // and set its Current Address
-            Integer index = 0;
-            for (Contact contactRecord : contactRecords) {
-                contactRecord.AccountId = accountsToInsert[index].Id;
-                index++;
-            }
+            insertNewHouseholds(accountsToInsert, contactRecords);
         }
 
         if (!contactsNeedingAddressesCreated.isEmpty()) {
-            if (AddressService.isAddressManagementEnabled()) {
-                //Create household addresses from Contacts instead of from
-                // the Account to include mapping of the Primary Address Type.
-                //Deactivate the Trigger that syncs Addresses to Accounts anc Contacts,
-                // since the Household Account and Contact are already configured correctly.
-                TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
-                        false);
-                Households.createAddressFromContactAndSetCurrentAddressLookupId
-                        (contactsNeedingAddressesCreated, true);
-                TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
-                        true);
+            insertHouseholdAddressesFor(contactsNeedingAddressesCreated);
+        }
+    }
+
+    private void insertHouseholdAddressesFor(List<Contact> contactsNeedingAddressesCreated) {
+        //Create household addresses from Contacts instead of from
+        // the Account to include mapping of the Primary Address Type.
+        //Deactivate the Trigger that syncs Addresses to Accounts anc Contacts,
+        // since the Household Account and Contact are already configured correctly.
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
+                false);
+        Households.createAddressFromContactAndSetCurrentAddressLookupId
+                (contactsNeedingAddressesCreated, true);
+        TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
+                true);
+    }
+
+    private void insertNewHouseholds(List<Account> accountsToInsert, List<Contact> contactRecords) {
+        // Set the HH flag to true to prevent the trigger handlers from running again
+        // to update the name and member count now that they are already set correctly here.
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, true);
+        // Suppress the trigger handler that creates Addresses from Accounts, as
+        // the Addresses will be inserted using the Contact info as a next step.
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
+        List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountsToInsert, false);
+        TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', true);
+        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+
+        applyErrorsToContactRecords(insertResults, accountsToInsert, contactRecords);
+
+        // now update each contact's accountId
+        applyAccountIdsToContactRecords(contactRecords, accountsToInsert);
+    }
+
+    private void applyAccountIdsToContactRecords(List<Contact> contactRecords, List<Account> accountsToInsert) {
+        Integer index = 0;
+        for (Contact contactRecord : contactRecords) {
+            contactRecord.AccountId = accountsToInsert[index].Id;
+            index++;
+        }
+    }
+
+    private void applyErrorsToContactRecords(List<Database.SaveResult> insertResults, List<Account> accountsToInsert, List<Contact> contactRecords) {
+        for (Integer index = 0; index < insertResults.size(); index++) {
+            Database.SaveResult insertResult = insertResults[index];
+            if (!insertResult.isSuccess()) {
+                for (Database.Error err : insertResult.getErrors()) {
+                    accountsToInsert[index].addError(err.getMessage());
+                    Contact contactRecord = contactRecords[index];
+                    contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
+                            contactRecord.FirstName, contactRecord.LastName, err.getMessage()
+                    }));
+                }
             }
         }
     }
