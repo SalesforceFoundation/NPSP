@@ -350,11 +350,6 @@ public inherited sharing class HouseholdService {
                             accountRecord.Contacts.size();
                 }
                 acctsToUpdate.add(accountRecord);
-
-                if (CAO_Constants.isHHAccountModel()
-                        && householdSettings.isAdvancedHouseholdNaming()) {
-                    contactsForAddressCreation.add(contactRecord);
-                }
             } else {
                 // Construct the Household (Account), or the Individual/One2One Account when
                 // in the Legacy Household model.
