@@ -65,12 +65,23 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     @TestVisible
-    private HouseholdService householdService {
+    private HouseholdService householdServiceInstance {
         get {
-            if (householdService == null) {
-                householdService = new HouseholdService();
+            if (householdServiceInstance == null) {
+                householdServiceInstance = new HouseholdService();
             }
-            return householdService;
+            return householdServiceInstance;
+        }
+        set;
+    }
+
+    @TestVisible
+    private static ContactAndOrgSettings contactAndOrgSettingsInst {
+        get {
+            if (contactAndOrgSettingsInst == null) {
+                contactAndOrgSettingsInst = new ContactAndOrgSettings();
+            }
+            return contactAndOrgSettingsInst;
         }
         set;
     }
@@ -103,8 +114,96 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onBeforeUpdate() {
-        LegacyHouseholds.handleContactsBeforeUpdate(
+        handleContactsBeforeUpdate(
                 new Contacts(getRecords(), oldMap.values()));
+    }
+
+    private static List<Contact> contactsWithoutAccounts(Contacts contacts) {
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
+
+        if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
+            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
+        }
+
+        if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
+            contactsWithoutAccounts.addAll(
+                    contactsWithoutAccountsAndOrganizationContacts(contacts));
+        }
+        return contactsWithoutAccounts;
+    }
+
+    private static List<Contact> contactsWithoutAccountsAndOrganizationContacts(Contacts contactsInstance) {
+        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
+        Map<Id, Account> accountsByIds = contactsInstance.accountById;
+        for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
+            Account account = accountsByIds.get(contactRecord.AccountId);
+            if (isWithoutAccount(contactRecord)
+                    || isOrganizationContact(contactRecord, account)) {
+
+                Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
+
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
+                        account)) {
+                    contactRecord.AccountId = null;
+                }
+
+                if (contactRecord.AccountId == null) {
+                    contactsWithoutAccounts2.add(contactRecord);
+                }
+
+            }
+        }
+        return contactsWithoutAccounts2;
+    }
+
+    public static Boolean isWithoutAccount(Contact contactRecord) {
+        return contactRecord.npe01__Private__c != true
+                && contactRecord.AccountId == null;
+    }
+
+    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
+        return contactRecord.npe01__Private__c != true
+                &&
+                (accountRecord != null
+                        && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                );
+    }
+
+    /**
+     * @description - Determine whether the account belongs to another contact and is not
+     * an deleted during an account merge.
+     */
+    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact
+            oldContact, Account accountRecord) {
+        Boolean isExistingOneToOne = contactRecord.AccountId != null
+            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
+            && accountRecord.npe01__One2OneContact__c != null
+            && contactRecord.AccountId != oldContact.AccountId;
+
+        if (!isExistingOneToOne) {
+            return false;
+        }
+
+        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
+
+        return !isDeletedOldAccount;
+
+    }
+
+    /**
+     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
+     */
+    private void handleContactsBeforeUpdate(Contacts contacts) {
+        contacts.resetDeprecatedFields();
+        contacts.keepPrivateContactsPrivate();
+        householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
+                contactsWithoutAccounts(contacts));
+
+        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
+            LegacyHouseholds.attachToBucketAccount(
+                    contacts.contactsWithoutAccounts()
+            );
+        }
     }
 
     public void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
@@ -153,11 +252,11 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         contacts.resetDeprecatedFields();
 
         if (CAO_Constants.isHHAccountModel()) {
-            householdService.createOneToOneAndHouseholdAccountsFor(
+            householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
                     contacts.contactsWithoutAccounts());
         } else {
             if (CAO_Constants.isOneToOne()) {
-                householdService.createOneToOneAndHouseholdAccountsFor(
+                householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
                         (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
                                 .getRecords());
             }
