@@ -115,7 +115,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
 
         // create any new Default Address objects
-        createOrUpdateContactAddress(
+        createAddressFromContactAndSetCurrentAddressLookupId(
                 new List<Contact>(contactsWithAddressChanges()));
 
         // update the Latest date fields on any address overrides
@@ -171,7 +171,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // create any new Default Address objects
         Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
-        createOrUpdateContactAddress(new List<Contact>(addressCreationQueue));
+        createAddressFromContactAndSetCurrentAddressLookupId(new List<Contact>(addressCreationQueue));
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(isOverrideByAddressId);
@@ -339,7 +339,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
 
-        Map<Id, Address__c> mapAddrIdAddr = new Map<Id, Address__c>([SELECT Id, Address_Type__c,
+        Map<Id, Address__c> currentAddressRecordsById = new Map<Id, Address__c>([SELECT Id, Address_Type__c,
                 Household_Account__c, MailingStreet__c, MailingStreet2__c, MailingCity__c,
                 MailingState__c, Geolocation__Latitude__s, Geolocation__Longitude__s,
                 MailingPostalCode__c, MailingCountry__c
@@ -348,20 +348,22 @@ public inherited sharing class Contacts extends fflib_SObjects {
         );
 
         for (Contact con : listCon) {
-            Address__c addr = mapAddrIdAddr.get(con.Current_Address__c);
-            NPSP_Address npspAddress = new NPSP_Address(addr);
+            Address__c currentAddressRecord = currentAddressRecordsById.get(con.Current_Address__c);
+            NPSP_Address currentAddressAsNpspAddress = new NPSP_Address(currentAddressRecord);
             NPSP_Contact npspContact = new NPSP_Contact(con);
-            if (npspContact.mailingAddressIsDifferentFrom(npspAddress)) {
-                npspContact.mailingAddress(npspAddress);
+            ContactAddress contactAddress = new ContactAddress(con);
+            if (contactAddress.hasAddress() // Shoutout: K. Bromer
+                && npspContact.mailingAddressIsDifferentFrom(currentAddressAsNpspAddress)) {
+                npspContact.mailingAddress(currentAddressAsNpspAddress);
                 // deal with any address coming from a different account,
                 // which we need to treat as a creation instead.
-                if (npspAddress.householdId() != npspContact.accountId()) {
+                if (currentAddressAsNpspAddress.householdId() != npspContact.accountId()) {
                     listConCreateAddr.add(npspContact.getRecord());
                 }
             }
         }
 
-        createOrUpdateContactAddress(listConCreateAddr);
+        createAddressFromContactAndSetCurrentAddressLookupId(listConCreateAddr);
     }
 
     /*******************************************************************************************************
@@ -391,7 +393,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
     * @param contacts the list of Contacts
     ********************************************************************************************************/
-    public void createOrUpdateContactAddress(List<Contact> contacts) {
+    public void createAddressFromContactAndSetCurrentAddressLookupId(List<Contact> contacts) {
         if (contacts.isEmpty()) {
             return;
         }
@@ -1032,6 +1034,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
         if (contactRecord.npo02__Household_Naming_Order__c != oldContact.npo02__Household_Naming_Order__c ||
             contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
             return true;
+        }
+        if (contactRecord.AccountId != null && contactRecord.AccountId != oldContact.AccountId) {
+return true;
         }
         return false;
     }
