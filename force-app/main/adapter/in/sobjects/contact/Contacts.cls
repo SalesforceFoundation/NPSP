@@ -440,7 +440,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             // no match found, and its an override just for this contact
             else if (contact.is_Address_Override__c) {
                 // put it on the list of addresss to create now
-                newAddressFromContact.Undeliverable__c = contact.Undeliverable_Address__c;
                 contactAddressesToInsertByContact.put(contact, newAddressFromContact);
             }
         }
