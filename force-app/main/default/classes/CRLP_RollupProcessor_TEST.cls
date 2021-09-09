@@ -638,6 +638,124 @@ private class CRLP_RollupProcessor_TEST {
             'CustomizableRollups_UseSkewMode__c should be true if at threshold and running in nonskew mode.');
     }
 
+    /**
+     * @description Verify that lastParentIdProcessed is not removed from recordsToUpdate when detail records do not
+     * exist for lastParentId.
+     */
+    @IsTest
+    private static void shouldRemoveLastParentIdFromRecordsToUpdate() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        Opportunity opp2 = buildMockOpportunity(account.Id, 200);
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+
+        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2, gau3};
+
+        List<Allocation__c> allocRecords = new List<Allocation__c>{
+            buildMockAllocation(gau, opp, null, opp.Amount),
+            buildMockAllocation(gau2, opp2, null, opp2.Amount)
+        };
+
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
+
+        Test.startTest();
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.GAU)
+            .withSummaryRecords(gauRecords)
+            .withDetailRecords(allocRecords)
+            .withLastParentDetails(true)
+            .withJobOptions(options);
+
+        System.assertEquals(Allocation__c.SObjectType, processor.detailObjectType);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c'), processor.parentKeyField);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c'), processor.parentRelationshipField);
+        System.assertEquals(null, processor.parentRelationshipObject);
+
+        System.assertEquals(true, processor.isSkewMode);
+
+        // Run the Account through the Skew Mode processor.
+        List<SObject> updatedRecords = processor.startRollupProcessing();
+
+        Test.stopTest();
+
+        System.assert(!updatedRecords.isEmpty());
+        System.assertNotEquals(null, processor.getLastParentIdProcessed());
+        System.assertEquals(true, processor.hasLastParentIdCompleted());
+        System.assertEquals(true, processor.lastParentIdRemovedFromUpdatesList);
+    }
+
+    /**
+     * @description Verify that lastParentIdProcessed is removed from recordsToUpdate when detail records
+     * exist for lastParentId.
+     */
+    @IsTest
+    private static void shouldNotRemoveLastParentIdFromRecordsToUpdate() {
+        CMT_UnitTestData_TEST.mockFullSetOfRollupDefinitions();
+
+        Account account = buildMockAccount();
+
+        Opportunity opp = buildMockOpportunity(account.Id, 100);
+        Opportunity opp2 = buildMockOpportunity(account.Id, 200);
+        Opportunity opp3 = buildMockOpportunity(account.Id, 300);
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+        General_Accounting_Unit__c gau3 = new General_Accounting_Unit__c(
+            Id = UTIL_UnitTestData_TEST.mockId(General_Accounting_Unit__c.SObjectType));
+
+        List<General_Accounting_Unit__c> gauRecords = new List<General_Accounting_Unit__c>{gau, gau2, gau3};
+
+        List<Allocation__c> allocRecords = new List<Allocation__c>{
+            buildMockAllocation(gau, opp, null, opp.Amount),
+            buildMockAllocation(gau2, opp2, null, opp2.Amount),
+            buildMockAllocation(gau3, opp3, null, opp3.Amount)
+        };
+
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.useRollupDefsByParentIdMap = true;
+
+        Test.startTest();
+
+        CRLP_RollupProcessor processor = new CRLP_RollupProcessor()
+            .withBatchJobMode(CRLP_RollupProcessingOptions.BatchJobMode.SkewMode)
+            .withRollupType(CRLP_RollupProcessingOptions.RollupType.GAU)
+            .withSummaryRecords(gauRecords)
+            .withDetailRecords(allocRecords)
+            .withLastParentDetails(false)
+            .withJobOptions(options);
+
+        System.assertEquals(Allocation__c.SObjectType, processor.detailObjectType);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c'), processor.parentKeyField);
+        System.assertEquals(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c'), processor.parentRelationshipField);
+        System.assertEquals(null, processor.parentRelationshipObject);
+
+        System.assertEquals(true, processor.isSkewMode);
+
+        // Run the Account through the Skew Mode processor.
+        List<SObject> updatedRecords = processor.startRollupProcessing();
+
+        Test.stopTest();
+
+        System.assert(!updatedRecords.isEmpty());
+        System.assertNotEquals(null, processor.getLastParentIdProcessed());
+        System.assertEquals(false, processor.hasLastParentIdCompleted());
+        System.assertEquals(false, processor.lastParentIdRemovedFromUpdatesList);
+    }
+
     // **************************** HELPER METHODS ****************************
 
     /**
@@ -738,6 +856,22 @@ private class CRLP_RollupProcessor_TEST {
             Contact__r = con,
             Role_Name__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR,
             Contact_Role_Id__c = ocr.Id,
+            Amount__c = amt
+        );
+    }
+
+    /**
+     * @description Instantiate a mock Allocation__c record
+     */
+    private static Allocation__c buildMockAllocation(General_Accounting_Unit__c gau,
+        Opportunity opp, Campaign cam, Decimal amt
+    ) {
+        return new Allocation__c(
+            Id = UTIL_UnitTestData_TEST.mockId(Allocation__c.SObjectType),
+            General_Accounting_Unit__c = gau.Id,
+            General_Accounting_Unit__r = gau,
+            Opportunity__c = opp.Id,
+            Opportunity__r = opp,
             Amount__c = amt
         );
     }
