@@ -183,9 +183,11 @@ public with sharing class Gift {
 
     private void populateSoftCreditsFromAdditionalObjectJSON() {
         String additionalObjectString = this.dataImport.Additional_Object_JSON__c;
-        SoftCredits softCreditsFromAdditionalObjectJSON =
-            new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
-        this.softCredits.addAll(softCreditsFromAdditionalObjectJSON.unprocessed());
+        if (additionalObjectString != null) {
+            SoftCredits softCreditsFromAdditionalObjectJSON =
+                new AdditionalObjectJSON(additionalObjectString)?.asSoftCredits();
+            this.softCredits.addAll(softCreditsFromAdditionalObjectJSON.unprocessed());
+        }
     }
 
     private Boolean hasDonation() {
