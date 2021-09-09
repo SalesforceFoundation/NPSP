@@ -312,22 +312,18 @@ public inherited sharing class HouseholdService {
             return;
         }
 
-        Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
         List<Contact> contactRecords = new List<Contact>();
 
         //track which contacts are being inserted vs. updated
         List<Id> existingContactIds = getContactIds(contacts);
 
         // get all the Accounts that are connected to the existing Contacts
-        for (Account accountRecord : getAccounts(existingContactIds)) {
-            accountByPrimaryContactId.put(
-                    accountRecord.npe01__One2OneContact__c, accountRecord);
-        }
+        Map<Id, Account> accountByPrimaryContactId =
+                getAccountByPrimaryContactId(existingContactIds);
 
-        List<Account> accountInserts = new List<Account>();
-
-        List<Contact> contactsForAddressCreation = new List<Contact>();
-        List<Account> acctsToUpdate = new List<Account>();
+        List<Account> accountsToInsert = new List<Account>();
+        List<Account> accountsToUpdate = new List<Account>();
+        List<Contact> contactsNeedingAddressesCreated = new List<Contact>();
         for (Contact contactRecord : contacts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
             // is the correct type for the current account processor
@@ -340,7 +336,7 @@ public inherited sharing class HouseholdService {
                     ContactAddress contactAddress = new ContactAddress(contactRecord);
                     if (contactAddress.hasAddress()) { // todo: should check for changes on
                         // before update
-                        contactsForAddressCreation.add(contactRecord);
+                        contactsNeedingAddressesCreated.add(contactRecord);
                     }
                 }
                 if (accountRecord.Number_of_Household_Members__c == null) {
@@ -349,7 +345,7 @@ public inherited sharing class HouseholdService {
                     accountRecord.Number_of_Household_Members__c =
                             accountRecord.Contacts.size();
                 }
-                acctsToUpdate.add(accountRecord);
+                accountsToUpdate.add(accountRecord);
             } else {
                 // Construct the Household (Account), or the Individual/One2One Account when
                 // in the Legacy Household model.
@@ -368,24 +364,24 @@ public inherited sharing class HouseholdService {
                 if (CAO_Constants.isHHAccountModel()) {
                     configureHouseholdAccount(contactRecord, accountRecord);
                     if (AddressService.isAddressManagementEnabled()) {
-                        contactsForAddressCreation.add(contactRecord);
+                        contactsNeedingAddressesCreated.add(contactRecord);
                     }
                 } else {
                     configureOneToOneAccount(accountRecord, contactRecord);
                 }
 
-                accountInserts.add(accountRecord);
+                accountsToInsert.add(accountRecord);
                 contactRecords.add(contactRecord);
             }
         }
 
-        if (!acctsToUpdate.isEmpty()) {
-            update acctsToUpdate; // Update member count
+        if (!accountsToUpdate.isEmpty()) {
+            update accountsToUpdate; // Update member count
             Households.updateNameAndMemberCount( // Update name and greetings
-                    new List<Id>(new Map<Id, Account>(acctsToUpdate).keySet()));
+                    new List<Id>(new Map<Id, Account>(accountsToUpdate).keySet()));
         }
 
-        if (!accountInserts.isEmpty()) {
+        if (!accountsToInsert.isEmpty()) {
             // with current TDTM design, we can't use dmlWrapper
             // because we need to get the new AccountID's into the Contacts.
 
@@ -397,7 +393,7 @@ public inherited sharing class HouseholdService {
             // Suppress the trigger handler that creates Addresses from Accounts, as
             // the Addresses will be inserted using the Contact info below
             TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', false);
-            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountInserts, false);
+            List<Database.SaveResult> insertResults = UTIL_DMLService.insertRecords(accountsToInsert, false);
             TDTM_ProcessControl.toggleTriggerState('Account', 'ADDR_Account_TDTM', true);
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
 
@@ -405,7 +401,7 @@ public inherited sharing class HouseholdService {
                 Database.SaveResult insertResult = insertResults[index];
                 if (!insertResult.isSuccess()) {
                     for (Database.Error err : insertResult.getErrors()) {
-                        accountInserts[index].addError(err.getMessage());
+                        accountsToInsert[index].addError(err.getMessage());
                         Contact contactRecord = contactRecords[index];
                         contactRecord.addError(String.format(System.Label.conFailedAccountCreate, new String[]{
                                 contactRecord.FirstName, contactRecord.LastName, err.getMessage()
@@ -418,12 +414,12 @@ public inherited sharing class HouseholdService {
             // and set its Current Address
             Integer index = 0;
             for (Contact contactRecord : contactRecords) {
-                contactRecord.AccountId = accountInserts[index].Id;
+                contactRecord.AccountId = accountsToInsert[index].Id;
                 index++;
             }
         }
 
-        if (!contactsForAddressCreation.isEmpty()) {
+        if (!contactsNeedingAddressesCreated.isEmpty()) {
             if (AddressService.isAddressManagementEnabled()) {
                 //Create household addresses from Contacts instead of from
                 // the Account to include mapping of the Primary Address Type.
@@ -432,11 +428,20 @@ public inherited sharing class HouseholdService {
                 TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
                         false);
                 Households.createAddressFromContactAndSetCurrentAddressLookupId
-                        (contactsForAddressCreation, true);
+                        (contactsNeedingAddressesCreated, true);
                 TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
                         true);
             }
         }
+    }
+
+    private Map<Id, Account> getAccountByPrimaryContactId(List<Id> existingContactIds) {
+        Map<Id, Account> accountByPrimaryContactId = new Map<Id, Account>();
+        for (Account accountRecord : getAccounts(existingContactIds)) {
+            accountByPrimaryContactId.put(
+                    accountRecord.npe01__One2OneContact__c, accountRecord);
+        }
+        return accountByPrimaryContactId;
     }
 
     private Account getBaseOneToOneOrHouseholdAccountFor(Contact contactRecord) {
