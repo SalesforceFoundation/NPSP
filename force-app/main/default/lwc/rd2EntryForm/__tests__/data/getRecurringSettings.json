@@ -12,5 +12,6 @@
     "Visible": true
   },
   "customFieldSets": [],
-  "isElevateCustomer": true
+  "isElevateCustomer": true,
+  "closedStatusValues": ["Closed"]
 }
