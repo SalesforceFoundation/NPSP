@@ -129,13 +129,13 @@ Validate Data
 ## INDIVIDUAL TEST CASES
 ## =============================================================================================
 
-BDI - Advanced Mapping with Full Match to Existing Contact
+BDI - Advanced Mapping with Full Match to Existing Contact 10K
     [Setup]        Setup For Test    Full-Match
     [Teardown]     Validate Data
     [Tags]         bdi   medium     advanced-mapping     full-contact-match
     Batch Data Import   ${DataImportBatchSize}
 
-BDI - Advanced Mapping with No Match to Existing Contact
+BDI - Advanced Mapping with No Match to Existing Contact 10K
     [Setup]        Setup For Test    No-Match
     [Teardown]     Validate Data
     [Tags]         bdi   medium     advanced-mapping     no-contact-match
