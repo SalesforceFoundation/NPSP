@@ -1203,7 +1203,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             return;
         }
 
-        dmlWrapper = (dmlWrapper == null) ? new DMLWrapper() : dmlWrapper;
+        DmlWrapper paDMLWrapper =  new DMLWrapper();
 
         // Payment with Payment Allocations Query for Scheduled Payments related to Opportunities
         // whose Allocations were recreated because the Recurring Donations Allocations changed
@@ -1220,13 +1220,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         for (SObject pmtSObj : pmtsRequiringAllocationReview) {
             npe01__OppPayment__c pmt = (npe01__OppPayment__c) pmtSObj;
             if (pmt.Allocations__r != null && !pmt.Allocations__r.isEmpty()) {
-                dmlWrapper.objectsToDelete.addAll((List<SObject>)pmt.Allocations__r);
+                paDMLWrapper.objectsToDelete.addAll((List<SObject>)pmt.Allocations__r);
             }
         }
 
         // Delete the existing Payment Allocations
-        TDTM_TriggerHandler.processDML(dmlWrapper);
-        dmlWrapper = null;
+        TDTM_TriggerHandler.processDML(paDMLWrapper);
 
         // Leverage the Allocations Service class to recreate the Payment Allocations
         // Let it log the errors, if any occur.
