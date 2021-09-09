@@ -50,6 +50,35 @@ describe('ge-gift', () => {
         expect(inboundGiftDTO.softCredits.length).toEqual(0);
     });
 
+    it('should add 2 soft credits to the gift', async () => {
+        const gift = new Gift(deepClone(mockGiftView));
+        gift.addNewSoftCredit();
+        gift.addNewSoftCredit();
+        gift.addNewSoftCredit();
+
+        gift.updateSoftCredit({
+            key: 0,
+            Role: 'Influencer',
+            ContactId: 'DUMMY_CONTACT_ID_0'
+        });
+
+        gift.updateSoftCredit({
+            key: 1,
+            Role: '',
+            ContactId: ''
+        });
+
+        gift.updateSoftCredit({
+            key: 2,
+            Role: 'Honoree',
+            ContactId: 'DUMMY_CONTACT_ID_1'
+        });
+
+        const inboundGiftDTO = gift.forSave();
+        expect(Object.keys(inboundGiftDTO)).toContain('softCredits');
+        expect(inboundGiftDTO.softCredits.length).toEqual(2);
+    });
+
     it('should return list of 3 soft credits and 2 processed soft credits', async () => {
         const gift = new Gift({
             fields: {
