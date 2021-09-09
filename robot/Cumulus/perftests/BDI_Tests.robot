@@ -45,9 +45,9 @@ Generate Data
     ${count} =  Convert To Integer      ${DataImportRecordCount}
 
     ${recipe} =     Set Variable if    '${data-matching}'=='Full-Match'       ${RecipeWithMatches}
-    ...                ${RecipeWithNoMatches}
+    ...             ELSE                                                      ${RecipeWithNoMatches}
 
-    Output      Generating ${count} Records for Test Using '${recipe}'
+    Output      Generating ${count} Records for '${data-matching}' Test Using '${recipe}'
 
     Run Task   generate_and_load_from_yaml
     ...                 num_records=${count}
