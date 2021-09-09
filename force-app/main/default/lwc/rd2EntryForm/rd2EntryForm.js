@@ -67,7 +67,7 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01_
 
 const CHANGE_TYPE_UPGRADE = 'Upgrade';
 const CHANGE_TYPE_DOWNGRADE = 'Downgrade';
-const STATUS_CLOSED = 'Closed';
+
 const RECURRING_TYPE_OPEN = 'Open';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
@@ -147,6 +147,8 @@ export default class rd2EntryForm extends LightningElement {
     accountHolderType;
     recurringPeriod;
     periodType;
+    recurringDonationStatus;
+    closedStatusValues;
 
     contact = {
         MailingCountry: null
@@ -215,6 +217,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.isElevateCustomer = response.isElevateCustomer;
                 this.isChangeHistoryEnabled = response.isChangeHistoryEnabled;
                 this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
+                this.closedStatusValues = response.closedStatusValues;
             })
             .catch((error) => {
                 this.handleError(error);
@@ -317,6 +320,7 @@ export default class rd2EntryForm extends LightningElement {
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
             this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
+            this.recurringDonationStatus = getFieldValue(this.record, FIELD_STATUS);
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
@@ -393,6 +397,11 @@ export default class rd2EntryForm extends LightningElement {
         this._paymentMethod = event.detail.value;
         this.isElevateEditWidgetEnabled = false;
         this.evaluateElevateWidget();
+    }
+
+    handleStatusChange(event) {
+        this.recurringDonationStatus = event.detail.value;
+        this.evaluateElevateEditWidget();
     }
 
     /***
@@ -483,9 +492,8 @@ export default class rd2EntryForm extends LightningElement {
     * @description Checks if the Elevate Widget should be displayed on Edit
     */
     evaluateElevateEditWidget() {
-        const statusField = getFieldValue(this.record, FIELD_STATUS);
 
-        if (this.isElevateCustomer && this.isEdit && statusField !== STATUS_CLOSED) {
+        if (this.isElevateCustomer && this.isEdit) {
             const recurringType = this.getRecurringType();
 
             // Since the widget requires interaction to Edit, this should start as true
@@ -495,7 +503,8 @@ export default class rd2EntryForm extends LightningElement {
                 && recurringType === RECURRING_TYPE_OPEN
                 && this.isScheduleSupported()
                 && this.isCurrencySupported()
-                && this.isCountrySupported();
+                && this.isCountrySupported()
+                && this.isValidStatusForElevate();
 
             this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled;
         }
@@ -511,12 +520,14 @@ export default class rd2EntryForm extends LightningElement {
         const isValidPaymentMethod = this.isElevatePaymentMethod();
         const currencySupported = this.isCurrencySupported();
         const countrySupported = this.isCountrySupported();
+        const statusSupported = this.isValidStatusForElevate();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
             && isValidPaymentMethod
             && isScheduleSupported
             && currencySupported
-            && countrySupported);
+            && countrySupported
+            && statusSupported);
 
         this.populateCardHolderName();
     }
@@ -621,6 +632,20 @@ export default class rd2EntryForm extends LightningElement {
             || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
     }
 
+    isValidStatusForElevate() {
+        if(this.isEdit) {
+            const originalStatus = getFieldValue(this.record, FIELD_STATUS);
+            if(this.isClosedStatus(originalStatus)) {
+                return false;
+            }
+        }
+        return !this.isClosedStatus(this.recurringDonationStatus);
+    }
+
+    isClosedStatus(status) {
+        return !!this.closedStatusValues?.includes(status);
+    }
+
     /***
     * @description Overrides the standard submit.
     * Collects and validates fields displayed on the form and any integrated LWC
@@ -702,15 +727,18 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Determines if new or existing Recurring Donation is an Elevate recurring commitment
+    * @description Determines if new or existing Recurring Donation update should send to Elevate
     */
     shouldSendToElevate(allFields) {
         if (!this.isElevateCustomer) {
             return false;
         }
-
+    
         return this.isElevateWidgetDisplayed()
-            || (this.hasElevateFieldsChange(allFields) && !isEmpty(this.getCommitmentId()));
+            || (this.hasElevateFieldsChange(allFields) 
+                && !isEmpty(this.getCommitmentId())
+                && !this.closedStatusValues.includes(getFieldValue(this.record, FIELD_STATUS))
+            );
     }
 
     /***

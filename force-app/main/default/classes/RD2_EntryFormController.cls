@@ -88,7 +88,8 @@ public with sharing class RD2_EntryFormController {
             'customFieldSets' => getCustomFieldSectionFields(),
             'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
             'isChangeHistoryEnabled' => RD2_ChangeHistoryService.isChangeHistoryEnabled,
-            'periodToYearlyFrequencyMap' => RD_Constants.PERIOD_TO_YEARLY_FREQUENCY
+            'periodToYearlyFrequencyMap' => RD_Constants.PERIOD_TO_YEARLY_FREQUENCY,
+            'closedStatusValues' => RD2_StatusMapper.getInstance().getClosedStatusValues()
         };
     }
 
