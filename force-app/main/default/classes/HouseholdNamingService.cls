@@ -152,18 +152,19 @@ public without sharing class HouseholdNamingService {
 
     private Boolean numberOfHouseholdMembersIsIncorrect(SObject household, List<Contact> householdMembers) {
         Object currentNumberOfHouseholdMembersValue = household.get('Number_of_Household_Members__c');
-        if (householdMembers == null
-                && currentNumberOfHouseholdMembersValue != null
-                && currentNumberOfHouseholdMembersValue != 0) {
-            return true;
-        } else if (householdMembers != null
-                && currentNumberOfHouseholdMembersValue != null) {
-            return currentNumberOfHouseholdMembersValue != householdMembers.size();
-        } else if (householdMembers != null
-                && currentNumberOfHouseholdMembersValue == null) {
-            return true;
+        if (householdMembers == null) {
+            if (currentNumberOfHouseholdMembersValue != null
+                    && currentNumberOfHouseholdMembersValue != 0) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            if (currentNumberOfHouseholdMembersValue != null) {
+                return currentNumberOfHouseholdMembersValue != householdMembers.size();
+            } else {
+                return true;
+            }
         }
     }
 
