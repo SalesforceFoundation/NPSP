@@ -1762,6 +1762,14 @@
         <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donation cannot be in the future.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotChangeElevateFields</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Closed Elevate Recurring Donation&apos;s Elevate fields have been modified</shortDescription>
+        <value>You can&apos;t edit the donor, amount, schedule, or campaign fields on a Closed Elevate-connected Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDCampaignCannotUpdateToNull</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
