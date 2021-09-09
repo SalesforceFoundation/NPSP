@@ -32,12 +32,13 @@
 * @date 2021
 * @description Aggregate class for soft credits.
 */
-public with sharing class SoftCredits {
+public inherited sharing class SoftCredits {
 
-    private List<OpportunityContactRole> opportunityContactRoles;
+    private List<OpportunityContactRole> opportunityContactRoles =
+        new List<OpportunityContactRole>();
 
     public SoftCredits(List<OpportunityContactRole> opportunityContactRoles) {
-        this.opportunityContactRoles = opportunityContactRoles;
+        this.opportunityContactRoles = deduplicate(opportunityContactRoles);
     }
 
     public List<OpportunityContactRole> all() {
@@ -49,11 +50,11 @@ public with sharing class SoftCredits {
     }
 
     public void add(OpportunityContactRole opportunityContactRole) {
-        this.opportunityContactRoles.add(opportunityContactRole);
+        addAll(new List<OpportunityContactRole> { opportunityContactRole });
     }
 
     public void addAll(List<OpportunityContactRole> moreOpportunityContacRoles) {
-        this.opportunityContactRoles.addAll(moreOpportunityContacRoles);
+        this.opportunityContactRoles = deduplicate(moreOpportunityContacRoles);
     }
 
     public List<OpportunityContactRole> unprocessed() {
@@ -64,5 +65,29 @@ public with sharing class SoftCredits {
             }
         }
         return unprocessed;
+    }
+
+    private List<OpportunityContactRole> deduplicate(List<OpportunityContactRole> moreOpportunityContactRoles) {
+        List<OpportunityContactRole> allOpportunityContactRoles = new List<OpportunityContactRole>();
+        allOpportunityContactRoles.addAll(opportunityContactRoles);
+        allOpportunityContactRoles.addAll(moreOpportunityContactRoles);
+
+        Map<Integer, OpportunityContactRole> softCreditByContactRoleHashCode =
+            new Map<Integer, OpportunityContactRole>();
+
+        for (OpportunityContactRole ocr : allOpportunityContactRoles) {
+            SoftCredit softCredit = new SoftCredit(ocr);
+
+            Integer contactRoleHashCode = softCredit.contactRoleHashCode();
+            OpportunityContactRole ocrInMap = softCreditByContactRoleHashCode.get(contactRoleHashCode);
+            Boolean shouldAddToMap = ocrInMap == null;
+            Boolean shouldReplaceInMap = ocrInMap != null && ocrInMap.Id == null;
+
+            if (shouldAddToMap || shouldReplaceInMap) {
+                softCreditByContactRoleHashCode.put(contactRoleHashCode, ocr);
+            }
+        }
+
+        return softCreditByContactRoleHashCode.values();
     }
 }
