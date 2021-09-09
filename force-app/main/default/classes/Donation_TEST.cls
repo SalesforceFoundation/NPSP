@@ -116,6 +116,17 @@ private class Donation_TEST {
         System.assertEquals(0, donation.softCredits().size());
     }
 
+    @isTest
+    static void shouldThrowExceptionWhenNoOpportunityFound() {
+        Id dummyOpportunityId = UTIL_UnitTestData_TEST.mockId(Opportunity.sObjectType);
+
+        try {
+            Donation dummyDonation = new Donation(dummyOpportunityId);
+        } catch(Exception ex) {
+            System.assertEquals('No opportunity found.', ex.getMessage());
+        }
+    }
+
     private static final Id DUMMY_OPPORTUNITY_ID = UTIL_UnitTestData_TEST.mockId(Opportunity.getSObjectType());
 
     private static Opportunity mockRelationshipFor(
