@@ -40,7 +40,6 @@ public with sharing class UTIL_AdditionalObjectData_TEST {
     private BDI_MappingServiceAdvanced mappingService;
     private BDI_FieldMapping[] ocrFieldMappings;
     private BDI_FIeldMapping[] gauFieldMappings;
-    private sObject ocrSourceObject;
     private sObject gauSourceObject;
     private DataImport__c sampleDataImport = new DataImport__c();
 
@@ -57,9 +56,6 @@ public with sharing class UTIL_AdditionalObjectData_TEST {
         ocrFieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(ocrMappingTemplateName);
         gauFieldMappings = mappingService.fieldMappingsByObjMappingDevName.get(gauMappingTemplateName);
 
-        ocrSourceObject = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
-        ocrSourceObject.put(DataImport__c.Opportunity_Contact_Role_1_Role__c.getDescribe().getName(), 'Soft Credit');
-
         gauSourceObject = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
         gauSourceObject.put(DataImport__c.GAU_Allocation_1_Amount__c.getDescribe().getName(),
                     sampleDataImport.GAU_Allocation_1_Amount__c);
@@ -71,10 +67,17 @@ public with sharing class UTIL_AdditionalObjectData_TEST {
 
     public UTIL_AdditionalObjectData_TEST withOpportunityContactRoles(Integer count) {
         for (Integer i = 0; i < count; i++) {
+            sObject ocrSourceObject;
+            ocrSourceObject = UTIL_Describe.getPrototypeObject(SObjectType.DataImport__c.getName());
+            ocrSourceObject.put(DataImport__c.Opportunity_Contact_Role_1_Role__c.getDescribe().getName(), 'Soft Credit');
+
             BDI_DynamicSource ocrDynamicSource = new BDI_DynamicSource();
             ocrDynamicSource.objectMappingDevName = ocrMappingTemplateName + '0' + i;
             ocrDynamicSource.objectMappingTemplateDevName = ocrMappingTemplateName;
             ocrDynamicSource.fieldMappingSetDevName = ocrFieldMappings[0].Data_Import_Field_Mapping_Set;
+            ocrSourceObject.put(
+                DataImport__c.Contact1Imported__c.getDescribe().getName(),
+                UTIL_UnitTestData_TEST.mockId(Contact.sObjectType));
             ocrDynamicSource.sourceObj = ocrSourceObject;
 
             dynamicSourceByObjMappingDevName.put(ocrDynamicSource.objectMappingDevName, ocrDynamicSource);
