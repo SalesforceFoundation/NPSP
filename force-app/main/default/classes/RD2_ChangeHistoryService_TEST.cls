@@ -45,9 +45,9 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     private static final String PAYMENT_CHECK = 'Check';
     private static final Decimal RD_AMOUNT = 100;
     private static final Decimal RD_NEW_AMOUNT = 200;
-    private static final String RD_PERIOD = RD_Constants.INSTALLMENT_PERIOD_MONTHLY;
-    private static final String RD_PERIOD_WEEKLY = RD_Constants.INSTALLMENT_PERIOD_WEEKLY;
-    private static final String RD_PERIOD_FIRST_AND_FIFTEENTH = RD_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
+    private static final String RD_PERIOD = RD2_Constants.INSTALLMENT_PERIOD_MONTHLY;
+    private static final String RD_PERIOD_WEEKLY = RD2_Constants.INSTALLMENT_PERIOD_WEEKLY;
+    private static final String RD_PERIOD_FIRST_AND_FIFTEENTH = RD2_Constants.INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH;
     private static final Decimal RD_NEW_FREQUENCY = 3;
     private static final String CHANGE_TYPE_CUSTOM = 'Custom Change Type';
 
@@ -312,6 +312,106 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
+     * @description Verifies that creating and updating a Recurring Donation's Type from
+     * Open to Fixed creates a Change History with the Type change and new Installment number
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryWhenRecurringTypeChanges() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withCalculateNextDonationDate()
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+
+        rdUpdate.RecurringType__c = RD2_Constants.RECURRING_TYPE_FIXED;
+        Decimal numberOfInstallments = 10;
+        rdUpdate.npe03__Installments__c = numberOfInstallments;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, rdch.NewRecurringType__c, 
+            'New Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_FIXED);
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, rdch.PreviousRecurringType__c, 
+            'Previous Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_OPEN);
+        System.assertEquals(numberOfInstallments, rdch.NewPlannedInstallments__c, 
+            'New Planned Installments should be ' + numberOfInstallments);
+        System.assertEquals(null, rdch.PreviousPlannedInstallments__c, 
+            'Previous Planned Installments should be null');
+        System.assertEquals(null, rdch.NewAnnualValue__c, 'New Annual Value should be null');
+        Decimal previousAnnualValue = RD_AMOUNT * 12;
+        System.assertEquals(previousAnnualValue, rdch.PreviousAnnualValue__c, 
+            'Previous Annual Value should be ' + previousAnnualValue);
+        Decimal newTotalValue = RD_AMOUNT * 10;
+        System.assertEquals(newTotalValue, rdch.NewExpectedTotalValue__c, 
+            'New Total Value should be ' + newTotalValue);
+        System.assertEquals(null, rdch.PreviousExpectedTotalValue__c, 'Previous Total Value should be null');
+        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+    }
+
+    /**
+     * @description Verifies that creating and updating a Fixed Recurring Donation's Amount
+     * after Opportunities have been closed creates a Change History with the correct Total Value
+     */
+    @IsTest
+    private static void shouldCreateChangeHistoryWhenFixedAmountChangesAfterPayments() {
+        configureRecurringDonationChangeHistoryEnabled();
+
+        Integer originalInstallmentNumber = 10;
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+            .withRecurringTypeFixed()
+            .withPlannedInstallments(originalInstallmentNumber)
+            .build();
+
+        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+
+        npe03__Recurring_Donation__c rdUpdate = rd.clone();
+
+        rdUpdate.npe03__Amount__c = RD_NEW_AMOUNT;
+        Integer paidInstallments = 2;
+        rdUpdate.npe03__Total_Paid_Installments__c = paidInstallments;
+        rdUpdate.npe03__Paid_Amount__c = paidInstallments * RD_AMOUNT;
+        Decimal newInstallmentNumber = 5;
+        rdUpdate.npe03__Installments__c = newInstallmentNumber;
+
+        RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
+        RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
+
+        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+
+        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        RecurringDonationChangeHistory__c rdch = rdchList[0];
+
+        System.assertEquals(newInstallmentNumber, rdch.NewPlannedInstallments__c, 
+            'New Planned Installments should be ' + newInstallmentNumber);
+        System.assertEquals(originalInstallmentNumber, rdch.PreviousPlannedInstallments__c, 
+            'Previous Planned Installments should be ' + originalInstallmentNumber);
+
+        System.assertEquals(null, rdch.NewAnnualValue__c, 'New Annual Value should be null');        
+        System.assertEquals(null, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be null');
+        
+        Decimal newTotalValue = (RD_AMOUNT * paidInstallments) 
+            + (RD_NEW_AMOUNT * (newInstallmentNumber - paidInstallments));
+        Decimal previousTotalValue = RD_AMOUNT * originalInstallmentNumber;
+        System.assertEquals(previousTotalValue, rdch.PreviousExpectedTotalValue__c, 
+            'Previous Total Value should be ' + previousTotalValue);
+        System.assertEquals(newTotalValue, rdch.NewExpectedTotalValue__c, 
+            'New Total Value should be ' + newTotalValue);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+            'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
+    }
+
+    /**
      * @description Verifies that creating and updating a Recurring Donation Payment Method
      *  with Change History Enabled does create Change History records
      */
@@ -378,12 +478,12 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
         System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
         System.assertEquals(RD_PERIOD_WEEKLY, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
-        System.assertEquals(RD_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD_Constants.INSTALLMENT_PERIOD_MONTHLY);
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
         System.assertEquals(campaign.Id, rdch.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
         System.assertEquals(null, rdch.PreviousCampaign__c, 'Previous Campaign should be ' + null);
 
-        Decimal newYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
-        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+        Decimal newYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
 
         System.assertEquals(newYearlyValue.setScale(2), rdch.NewAnnualValue__c, 'New Annual Value should be match' );
         System.assertEquals(previousYearlyValue.setScale(2), rdch.PreviousAnnualValue__c, 'Previous Annual Value should match');
@@ -660,8 +760,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         System.assertEquals(RD_AMOUNT, changeView.fields[0].oldValue, 'Unexpected old Amount');
         System.assertEquals(RD_NEW_AMOUNT, changeView.fields[0].newValue, 'Unexpected new Amount');
 
-        Decimal newYearlyValue = RD_NEW_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
-        Decimal previousYearlyValue = RD_AMOUNT * (RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
+        Decimal newYearlyValue = RD_NEW_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
+        Decimal previousYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
         System.assertEquals(previousYearlyValue.setScale(2), changeView.fields[1].oldValue, 'Unexpected old Annual Value');
         System.assertEquals(newYearlyValue.setScale(2), changeView.fields[1].newValue, 'Unexpected new Annual Value');
 
@@ -760,10 +860,12 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         return [
             SELECT Id, EffectiveDate__c, ChangeType__c, RecurringDonation__c, NewAmount__c, 
                 NewCampaign__c, NewInstallmentFrequency__c, NewInstallmentPeriod__c, NewPaymentMethod__c, 
-                NewStatus__c, NewStatusReason__c, NewAnnualValue__c,
+                NewStatus__c, NewStatusReason__c, NewAnnualValue__c, NewExpectedTotalValue__c,
+                NewPlannedInstallments__c,
                 PreviousAmount__c, PreviousCampaign__c, PreviousInstallmentFrequency__c, 
                 PreviousInstallmentPeriod__c, PreviousPaymentMethod__c, PreviousStatus__c, 
-                PreviousStatusReason__c, PreviousAnnualValue__c
+                PreviousStatusReason__c, PreviousAnnualValue__c, PreviousExpectedTotalValue__c,
+                PreviousPlannedInstallments__c
             FROM RecurringDonationChangeHistory__c
             WHERE RecurringDonation__c =: rdId
             ORDER BY CreatedDate ASC

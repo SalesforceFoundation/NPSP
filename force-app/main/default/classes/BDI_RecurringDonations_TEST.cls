@@ -512,6 +512,7 @@ private class BDI_RecurringDonations_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         Account testAccount = new Account(name = 'testAcct');
         insert testAccount;
+        Date testDate = Date.newInstance(2021, 1, 15);
 
         // Insert recurring donation with commitmentId to test dupe suppression for accounts.
         npe03__Recurring_Donation__c testExistingRD = new npe03__Recurring_Donation__c(
@@ -519,7 +520,7 @@ private class BDI_RecurringDonations_TEST {
                 npe03__Amount__c = 200,
                 InstallmentFrequency__c = 1,
                 npe03__Installment_Period__c = 'Monthly',
-                Day_of_Month__c = String.valueOf(System.date.today().day()),
+                Day_of_Month__c = String.valueOf(testDate.day()),
                 RecurringType__c = 'Open',
                 Status__c = 'Active',
                 StartDate__c = System.date.today());
@@ -531,7 +532,7 @@ private class BDI_RecurringDonations_TEST {
                                                     RecurringDonationImported__c = testExistingRD.Id,
                                                     Donation_Donor__c = 'Account1',
                                                     Donation_Amount__c = 100,
-                                                    Donation_Date__c = System.Date.Today().addDays(10),
+                                                    Donation_Date__c = testDate.addDays(10),
                                                     Payment_Check_Reference_Number__c = '501',
                                                     Payment_Method__c = 'Check');
         insert testDI1;
