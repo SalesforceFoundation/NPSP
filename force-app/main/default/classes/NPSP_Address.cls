@@ -87,7 +87,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         )) {
             copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
         } else {
-            copyFromSObject(con, 'Mailing', 'Mailing');
+            copyFromSObject(con, 'Mailing', null);
         }
     }
 
@@ -346,11 +346,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         // if specified, also include Address Type
         if (addrType != null) {
             address.Address_Type__c = addrType;
-        } else {
-            // A null value will force a newly created Address record to use its defined default value for
-            // the picklist, which if not reflected here could cause isAddressChanged() to return true
-            // in cases when it should not.
-            address.Address_Type__c = Addresses.defaultAddressType;
         }
     }
 
@@ -514,43 +509,43 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     public String street() {
-        return address.MailingStreet__c;
+        return address?.MailingStreet__c;
     }
 
     public String street2() {
-        return address.MailingStreet2__c;
+        return address?.MailingStreet2__c;
     }
 
     public String city() {
-        return address.MailingCity__c;
+        return address?.MailingCity__c;
     }
 
     public String state() {
-        return address.MailingState__c;
+        return address?.MailingState__c;
     }
 
     public String postalCode() {
-        return address.MailingPostalCode__c;
+        return address?.MailingPostalCode__c;
     }
 
     public String country() {
-        return address.MailingCountry__c;
+        return address?.MailingCountry__c;
     }
 
     public Decimal longitude() {
-        return address.Geolocation__Longitude__s;
+        return address?.Geolocation__Longitude__s;
     }
 
     public Decimal latitude() {
-        return address.Geolocation__Latitude__s;
+        return address?.Geolocation__Latitude__s;
     }
 
     public Boolean isUndeliverable() {
-        return address.Undeliverable__c;
+        return address?.Undeliverable__c;
     }
 
     public Boolean isUndeliverableStatusChanged() {
-        return address.Undeliverable__c != oldAddress.Undeliverable__c;
+        return address?.Undeliverable__c != oldAddress.Undeliverable__c;
     }
 
     public void setUndeliverable(Boolean isUndeliverable) {
