@@ -161,6 +161,8 @@ public inherited sharing class RD2_ChangeHistoryService {
         private final SObjectField RD_STATUS_REASON_FIELD = npe03__Recurring_Donation__c.ClosedReason__c;
         private final SObjectField RD_PAYMENT_METHOD_FIELD = npe03__Recurring_Donation__c.PaymentMethod__c;
         private final SObjectField RD_CAMPAIGN_FIELD = npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c;
+        private final SObjectField RD_RECURRING_TYPE_FIELD = npe03__Recurring_Donation__c.RecurringType__c;
+        private final SObjectField RD_PLANNED_INSTALLMENTS_FIELD = npe03__Recurring_Donation__c.npe03__Installments__c;
 
         private final Map<SObjectField, ChangeHistoryFieldSet> rd2ChangeHistoryFields = new Map<SObjectField, ChangeHistoryFieldSet>{
             RD_AMOUNT_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewAmount__c, 
@@ -176,7 +178,11 @@ public inherited sharing class RD2_ChangeHistoryService {
             RD_PAYMENT_METHOD_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPaymentMethod__c, 
                 RecurringDonationChangeHistory__c.PreviousPaymentMethod__c),
             RD_CAMPAIGN_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewCampaign__c, 
-                RecurringDonationChangeHistory__c.PreviousCampaign__c)
+                RecurringDonationChangeHistory__c.PreviousCampaign__c),
+            RD_RECURRING_TYPE_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewRecurringType__c, 
+                RecurringDonationChangeHistory__c.PreviousRecurringType__c),
+            RD_PLANNED_INSTALLMENTS_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPlannedInstallments__c, 
+                RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c)
         };
 
         RD2_RecurringDonation updatedRd;
@@ -235,6 +241,8 @@ public inherited sharing class RD2_ChangeHistoryService {
                 PreviousAmount__c = (Decimal)originalRd.getValue(RD_AMOUNT_FIELD),
                 NewAnnualValue__c = updatedRd.getAnnualValue(),
                 PreviousAnnualValue__c = originalRd.getAnnualValue(),
+                NewExpectedTotalValue__c = updatedRd.getExpectedTotalValue(),
+                PreviousExpectedTotalValue__c = originalRd.getExpectedTotalValue(),
                 ChangeType__c = changeType
             );
 
@@ -247,7 +255,8 @@ public inherited sharing class RD2_ChangeHistoryService {
 
         /**
          * @description Returns a Change Type, based on a User entered value, or calculated from
-         * an change in the Annual Value of the Recurring Donation.
+         * a change in the Annual or Total Expected Value of the Recurring Donation.
+         * Automatic calculation is ignored if the Recurring Type was changed.
          * @param updatedRd Changed Recurring Donation
          * @param originalRd Old Recurring Donation
          * @return String The Change Type for this Change History record
@@ -257,14 +266,18 @@ public inherited sharing class RD2_ChangeHistoryService {
             String changeType = updatedRd.getChangeType();
             if (changeType != null) {
                 return changeType;
+            } else if (isFieldChanged(RD_RECURRING_TYPE_FIELD)) {
+                return null;
             }
 
-            Decimal newAnnualValue = updatedRd.getAnnualValue();
-            Decimal previousAnnualValue = originalRd.getAnnualValue();
+            Decimal newValue = updatedRd.isOpenEnded() ? updatedRd.getAnnualValue() 
+                : updatedRd.getExpectedTotalValue();
+            Decimal previousValue = originalRd.isOpenEnded() ? originalRd.getAnnualValue()
+                : originalRd.getExpectedTotalValue();
 
-            if (newAnnualValue > previousAnnualValue) {
+            if (newValue > previousValue) {
                 changeType = RD2_Constants.CHANGE_TYPE_UPGRADE;
-            } else if (newAnnualValue < previousAnnualValue) {
+            } else if (newValue < previousValue) {
                 changeType = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
             }
 
