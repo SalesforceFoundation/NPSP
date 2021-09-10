@@ -2824,22 +2824,6 @@
         <value>Change History</value>
     </labels>
     <labels>
-        <fullName>RDCH_Change_Type_Filter</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Change Type Filter label for RDCH in Lightning App Builder</shortDescription>
-        <value>Change Type Filter</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Change_Type_Filter_Description</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text description for Change Type Filter property</shortDescription>
-        <value>Select Change Types to display by entering semicolon separated values. For example, Upgrade;Downgrade;Custom Type.</value>
-    </labels>
-    <labels>
         <fullName>RDCH_Disabled</fullName>
         <categories>RD2_ChangeHistory</categories>
         <language>en_US</language>
@@ -2870,22 +2854,6 @@
         <protected>true</protected>
         <shortDescription>Displayed when no changes are available for a recurring donation</shortDescription>
         <value>There is no change history for this Recurring Donation.</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Record_Limit</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Record Limit property label for RDCH in Lightning App Builder</shortDescription>
-        <value>Record Limit</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Record_Limit_Description</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text description for Record Limit property</shortDescription>
-        <value>Maximum number of records to display.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
