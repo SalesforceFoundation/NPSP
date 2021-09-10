@@ -7,8 +7,8 @@ ${persistent_org} =         ${False}
 ${AdvMappingConfigValue} =  Data Import Field Mapping
 ${DataImportBatchSize} =    250
 ${DataImportRecordCount} =  10000
-${RecipeWithNoMatches} =    datasets/bdi_benchmark/BDI-with-matching.recipe.yml
-${RecipeWithMatches} =      datasets/bdi_benchmark/BDI-without-matching.recipe.yml
+${RecipeWithNoMatches} =    datasets/bdi_benchmark/BDI-without-matching.recipe.yml
+${RecipeWithMatches} =      datasets/bdi_benchmark/BDI-with-matching.recipe.yml
 
 *** Settings ***
 
@@ -24,11 +24,11 @@ Suite Setup     Configure Org
 ## =============================================================================================
 
 Setup For Test
-    [Arguments]             ${data-matching}
+    [Arguments]             ${BdiMatchingMode}
     Output      \n
     Output      Preparing Data for Test
     Clear Test Data
-    Generate Data           ${data-matching}
+    Generate Data           ${BdiMatchingMode}
     Output      Executing Data Import Batch Job
 
 Configure Org
@@ -41,13 +41,14 @@ Configure Org
 ## Data Creation Keywords:
 ## =============================================================================================
 Generate Data
-    [Arguments]    ${data-matching}
+    [Arguments]    ${BdiMatchingMode}
     ${count} =  Convert To Integer      ${DataImportRecordCount}
 
-    ${recipe} =     Set Variable if    '${data-matching}'=='Full-Match'       ${RecipeWithMatches}
-    ...             ELSE                                                      ${RecipeWithNoMatches}
+    ${recipe} =     Set Variable if    '${BdiMatchingMode}'=='FullMatch'       
+    ...             ${RecipeWithMatches}
+    ...             ${RecipeWithNoMatches}
 
-    Output      Generating ${count} Records for '${data-matching}' Test Using '${recipe}'
+    Output      Generating ${count} Records for '${BdiMatchingMode}' Test Using '${recipe}'
 
     Run Task   generate_and_load_from_yaml
     ...                 num_records=${count}
@@ -59,7 +60,7 @@ Generate Data
 Clear Test Data
     Output  Clear Pre-Existing Test Data
     Disable NPSP Triggers
-    Bulk Delete     DataImport__c
+    Bulk Delete     DataImport__c,DataImportBatch__c
     Bulk Delete     Account_Soft_Credit__c, Allocation__c, npe01__OppPayment__c, Opportunity
     Bulk Delete     Account                    where=Name Like '%BDITEST%'
     Bulk Delete     Contact                    where=LastName Like '%BDITEST%'
@@ -120,8 +121,17 @@ Report BDI
 
 Validate Data
     Output      Validating Test Results
+
     ${result} =    Check Row Count    ${DataImportRecordCount}     DataImport__c       Status__c=Imported
     Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
+    Should be Equal     ${result}      PASS
+
+    ${result} =    Check Row Count    ${DataImportRecordCount}     Account
+    Run Keyword Unless   "${result}"=="PASS"      Log to Console  Account Record Count is not ${DataImportRecordCount}
+    Should be Equal     ${result}      PASS
+
+    ${result} =    Check Row Count    ${DataImportRecordCount}     Opportunity
+    Run Keyword Unless   "${result}"=="PASS"      Log to Console  Opportunity Record Count is not ${DataImportRecordCount}
     Should be Equal     ${result}      PASS
 
 *** Test Cases ***
@@ -130,13 +140,13 @@ Validate Data
 ## =============================================================================================
 
 BDI - Advanced Mapping with Full Match to Existing Contact 10K
-    [Setup]        Setup For Test    Full-Match
+    [Setup]        Setup For Test    FullMatch
     [Teardown]     Validate Data
     [Tags]         bdi   medium     advanced-mapping     full-contact-match
     Batch Data Import   ${DataImportBatchSize}
 
 BDI - Advanced Mapping with No Match to Existing Contact 10K
-    [Setup]        Setup For Test    No-Match
+    [Setup]        Setup For Test    NoMatch
     [Teardown]     Validate Data
     [Tags]         bdi   medium     advanced-mapping     no-contact-match
     Batch Data Import   ${DataImportBatchSize}

@@ -13,7 +13,11 @@
 
 - object:  DataImport__c      # Match Existing Contact and Account
   fields:
-      Contact1_Lastname__c: BDITEST ${{batchnum}} ${{id}}
+      Contact1_LastName__c: BDITEST ${{batchnum}} ${{id}}
+      Contact1_FirstName__c:
+        fake: first_name
+      Contact1_Personal_Email__c:
+        fake: free_email
       Account1_Country__c: Tuvalu
       Account1_Street__c: Cordova Street
       Donation_Donor__c: Contact1
@@ -32,11 +36,9 @@
   friends:
       - object: Contact  # Contact for matching
         fields:
-            FirstName:
-              fake: first_name
-            Email:
-              fake: free_email
             Phone:
               fake: phone_number
-            LastName: ${{DataImport__c.Contact1_Lastname__c}}
+            LastName: ${{DataImport__c.Contact1_LastName__c}}
+            FirstName: ${{DataImport__c.Contact1_FirstName__c}}
+            Email: ${{DataImport__c.Contact1_Personal_Email__c}}
             description: Contact for Exact Match to DI record
