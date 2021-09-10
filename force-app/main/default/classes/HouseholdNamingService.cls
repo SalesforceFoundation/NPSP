@@ -197,10 +197,10 @@ public without sharing class HouseholdNamingService {
     }
 
     private List<Contact> getHouseholdMembers(Map<Id, List<Contact>> membersByHouseholdId, SObject household) {
-        List<Contact> householdMembers =
-                membersByHouseholdId.get(idFor(household)) == null ?
-                        new List<Contact>() :
-                        membersByHouseholdId.get(idFor(household));
+        List<Contact> householdMembers = membersByHouseholdId.get(idFor(household));
+        if (householdMembers == null) {
+            householdMembers = new List<Contact>();
+        }
         return householdMembers;
     }
 
