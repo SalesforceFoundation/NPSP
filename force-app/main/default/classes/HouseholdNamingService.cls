@@ -171,29 +171,37 @@ public without sharing class HouseholdNamingService {
     private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts,
             Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
-            List<Contact> householdMembers =
-                    membersByHouseholdId.get(idFor(household)) == null ?
-                            new List<Contact>() :
-                            membersByHouseholdId.get(idFor(household));
+            List<Contact> householdMembers = getHouseholdMembers(membersByHouseholdId, household);
             HouseholdName householdName = new HouseholdName(
                     new Contacts(householdMembers),
                     householdNamingImpl);
             String formalGreeting = (String) household.get('npo02__Formal_Greeting__c');
             String informalGreeting = (String) household.get('npo02__Informal_Greeting__c');
-            if (!household.get('Name').equals(householdName.asName())
-                    || formalGreeting != null
-                    && !formalGreeting.equals(String.valueOf(
-                    householdName.asFormalGreeting()))
-                    || informalGreeting != null
-                    && !informalGreeting.equals(String.valueOf(
-                    householdName.asInformalGreeting()))) {
-
+            if (qualifiesForHouseholdRenaming(household, householdName, formalGreeting, informalGreeting)) {
                 setNameFieldValuesOnHousehold(
                         household,
                         householdName
                 );
             }
         }
+    }
+
+    private Boolean qualifiesForHouseholdRenaming(SObject household, HouseholdName householdName, String formalGreeting, String informalGreeting) {
+        return !household.get('Name').equals(householdName.asName())
+                || formalGreeting != null
+                && !formalGreeting.equals(String.valueOf(
+                householdName.asFormalGreeting()))
+                || informalGreeting != null
+                && !informalGreeting.equals(String.valueOf(
+                householdName.asInformalGreeting()));
+    }
+
+    private List<Contact> getHouseholdMembers(Map<Id, List<Contact>> membersByHouseholdId, SObject household) {
+        List<Contact> householdMembers =
+                membersByHouseholdId.get(idFor(household)) == null ?
+                        new List<Contact>() :
+                        membersByHouseholdId.get(idFor(household));
+        return householdMembers;
     }
 
     private Map<Id, List<Contact>> getHouseholdMembersByHouseholdId(List<Id> householdOrAccountIds) {
