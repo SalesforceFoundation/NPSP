@@ -7,6 +7,13 @@ class SoftCredits {
         this._indexSoftCredits(softCredits);
     }
 
+    forSave() {
+        return this._unprocessedSoftCredits
+            .filter(softCredit => {
+                return softCredit.Role != '' && softCredit.ContactId != ''
+            });
+    }
+
     unprocessedSoftCredits() {
         return this._unprocessedSoftCredits;
     }
