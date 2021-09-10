@@ -2848,6 +2848,14 @@
         <value>Recurring Donation Change History is currently disabled.</value>
     </labels>
     <labels>
+        <fullName>RDCH_Expected_Total_Value</fullName>
+        <categories>RD2_ChangeHistory</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Expected Total Value change field label</shortDescription>
+        <value>Expected Total Value</value>
+    </labels>
+    <labels>
         <fullName>RDCH_Frequency</fullName>
         <categories>RD2_ChangeHistory</categories>
         <language>en_US</language>
