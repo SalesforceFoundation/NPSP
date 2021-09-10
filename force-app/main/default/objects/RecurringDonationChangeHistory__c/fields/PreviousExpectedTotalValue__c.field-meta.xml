@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PreviousExpectedTotalValue__c</fullName>
+    <description>The previous expected total value for this Fixed Recurring Donation, based on the amount and schedule.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The previous expected total value for this Fixed Recurring Donation, based on the amount and schedule.</inlineHelpText>
+    <label>Previous Expected Total Value</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

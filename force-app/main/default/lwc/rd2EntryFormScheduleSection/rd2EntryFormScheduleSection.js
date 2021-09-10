@@ -345,6 +345,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
+     * @description When the installments change, we need to check if the Annual Value changed
+     * @param event
+     */
+     onHandlePlannedInstallmentsChange(event) {
+        this.dispatchEvent(new CustomEvent('installmentschange'));
+    }
+
+    /**
      * @description Set the various properties to control field visibility, how many fields appear in each row
      * and other rules based on the selected InstallmentPeriod value.
      * @param customPeriod Monthly or Advanced

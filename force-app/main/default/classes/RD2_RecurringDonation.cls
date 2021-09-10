@@ -191,9 +191,26 @@ public inherited sharing class RD2_RecurringDonation {
     * @return Decimal The annual value of this Recurring Donation
     */
     public Decimal getAnnualValue(){
-        Decimal yearlyFrequency = RD_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
+        if(!isOpenEnded()){
+            return null;
+        }
+        Decimal yearlyFrequency = RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
         Decimal annualValue = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
         return annualValue.setScale(2);
+    }
+
+    /**
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule.
+    * Used to determine if the value of a donation increased or decreased based on changes that were made.
+    * @return Decimal The annual value of this Recurring Donation
+    */
+    public Decimal getExpectedTotalValue(){
+        if(isOpenEnded()){
+            return null;
+        }
+        Decimal remainingInstallments = rd.npe03__Installments__c - getPaidInstallments();
+        Decimal expectedValue = getPaidAmount() + remainingInstallments * rd.npe03__Amount__c;
+        return expectedValue.setScale(2);
     }
 
     /**
@@ -421,6 +438,16 @@ public inherited sharing class RD2_RecurringDonation {
         return rd.npe03__Total_Paid_Installments__c == null
             ? 0
             : rd.npe03__Total_Paid_Installments__c.intValue();
+    }
+
+    /**
+    * @description Return paid amount on the Recurring Donation, default to 0 when null
+    * @return Decimal
+    */
+    public Decimal getPaidAmount() {
+        return rd.npe03__Paid_Amount__c == null
+            ? 0
+            : rd.npe03__Paid_Amount__c;
     }
 
     public RecurringDonationSchedule__c getPauseSchedule() {
