@@ -3,6 +3,7 @@
     <!-- our attributes -->
     <aura:attribute name="hh" type="Object" access="public" />
     <aura:attribute name="listCon" type="Object[]" access="public" />
+    <aura:attribute name="contactUndeliverableLabel" type="String" access="public" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactReorderEvent" type="c:HH_ContactReorderEvent" />
@@ -20,7 +21,7 @@
         <ul id="SortCanvas" class="slds-list_horizontal slds-has-dividers_around-space slds-wrap">
             <aura:iteration items="{!v.listCon}" var="con" indexVar="icon">
                 <li class="slds-item" style="margin: 0; border: 0; vertical-align: top" data-icontact="{!icon}">
-                    <c:HH_ContactCard contact="{!con}" />
+                    <c:HH_ContactCard contact="{!con}" contactUndeliverableLabel="{!v.contactUndeliverableLabel}" />
                 </li>
             </aura:iteration> 
         </ul>
