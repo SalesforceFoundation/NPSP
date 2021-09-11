@@ -34,17 +34,6 @@
 */
 public inherited sharing class LegacyHouseholds extends fflib_SObjects {
 
-    @TestVisible
-    private static ContactAndOrgSettings contactAndOrgSettingsInst {
-        get {
-            if (contactAndOrgSettingsInst == null) {
-                contactAndOrgSettingsInst = new ContactAndOrgSettings();
-            }
-            return contactAndOrgSettingsInst;
-        }
-        set;
-    }
-
     private Map<Id, npo02__Household__c> oldMap;
     @TestVisible
     private HouseholdNamingService householdNamingServiceInst {
@@ -231,29 +220,6 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
                 );
     }
 
-    private static List<Contact> contactsWithoutAccountsAndOrganizationContacts(Contacts contactsInstance) {
-        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
-        for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
-            Account account = accountsByIds.get(contactRecord.AccountId);
-            if (isWithoutAccount(contactRecord)
-                    || isOrganizationContact(contactRecord, account)) {
-
-                Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
-
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                        account)) {
-                    contactRecord.AccountId = null;
-                }
-
-                if (contactRecord.AccountId == null) {
-                    contactsWithoutAccounts2.add(contactRecord);
-                }
-
-            }
-        }
-        return contactsWithoutAccounts2;
-    }
 
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
@@ -325,25 +291,6 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
        updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }
 
-    /**
-     * @description - Determine whether the account belongs to another contact and is not an deleted during an account merge.
-     */
-    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact
-            oldContact, Account accountRecord) {
-        Boolean isExistingOneToOne = contactRecord.AccountId != null
-            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
-            && accountRecord.npe01__One2OneContact__c != null
-            && contactRecord.AccountId != oldContact.AccountId;
-
-        if (!isExistingOneToOne) {
-            return false;
-        }
-
-        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
-
-        return !isDeletedOldAccount;
-
-    }
 
     /**
      * @description Sets the primary contact on the account when needed and renames the household.
@@ -491,35 +438,4 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
     private Boolean rollupsShouldRunSynchronously(Set<Id> householdIds) {
         return System.isFuture() || System.isBatch() || householdIds.size() <= 2;
     }
-
-    /**
-     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
-     */
-    public static void handleContactsBeforeUpdate(Contacts contacts) {
-        contacts.resetDeprecatedFields();
-        contacts.keepPrivateContactsPrivate();
-        contactService.createOneToOneAndHouseholdAccountsFor(
-                contactsWithoutAccounts(contacts));
-
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
-            );
-        }
-    }
-
-    private static List<Contact> contactsWithoutAccounts(Contacts contacts) {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
-
-        if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
-        }
-
-        if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
-            contactsWithoutAccounts.addAll(
-                    contactsWithoutAccountsAndOrganizationContacts(contacts));
-        }
-        return contactsWithoutAccounts;
-    }
-
 }

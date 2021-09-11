@@ -61,7 +61,7 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
             when BeforeUpdate {
                 if (!isContactBeforeInsertContext()) {
                     AccountAdapter accountsAdapter = new AccountAdapter(listNew, listOld);
-                    accountsAdapter.onBeforeUpdate();
+                    accountsAdapter.onBeforeUpdate_ACCT_Accounts_TDTM();
                 }
             }
             when AfterUpdate {
