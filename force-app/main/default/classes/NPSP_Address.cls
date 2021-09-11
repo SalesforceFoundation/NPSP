@@ -80,6 +80,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         )) {
             address.Default_Address__c = !con.is_Address_Override__c;
         }
+        address.Undeliverable__c = con.Undeliverable_Address__c;
         address.Latest_Start_Date__c = System.today();
         address.Latest_End_Date__c = null;
         if (con.getPopulatedFieldsAsMap().keySet().contains(
