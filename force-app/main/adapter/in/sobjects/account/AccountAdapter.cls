@@ -93,13 +93,16 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
         }
     }
 
-    public void onBeforeUpdate() {
+    public void onBeforeUpdate_ACCT_Accounts_TDTM() {
         setAccountTypeAndIndividualFieldValues();
         setSystemAccountTypeAndIndividualFieldValues();
         if (shouldSetCustomNamingFieldAndReplaceGreetings()) {
             setCustomNamingField();
             setNameAndGreetingsToReplacementText();
         }
+    }
+
+    public void onBeforeUpdate_ADDR_Account_TDTM() {
         if (AddressService.isAddressManagementEnabled()) {
             normalizeLineBreaksFor(
                     withAddressChanges().householdAccounts()

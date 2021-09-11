@@ -146,25 +146,6 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
     }
 
-    /********************************************************************************************************
-    * @description Retreive the defined default address type picklist value to use when creating a new
-    * Address record.
-    */
-    public static String defaultAddressType {
-        get {
-            if (defaultAddressType == null) {
-                for (Schema.PicklistEntry pv: Address__c.Address_Type__c.getDescribe().getPicklistValues()) {
-                    if (pv.isDefaultValue()) {
-                        defaultAddressType = pv.getValue();
-                        break;
-                    }
-                }
-            }
-            return defaultAddressType;
-        } private set;
-    }
-
-
     /*******************************************************************************************************
     * @description The main routine for finding the appropriate address to currently use for the
     * household and its contacts.  Prioritizes the Optional mapped Address as the Default

@@ -354,8 +354,14 @@ private with sharing class ACCT_HHAccounts_TEST {
         update listCon;
         test.stopTest();    // to flush any future calls.
 
-        listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c,
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account where Number_of_Household_Members__c>0];
+         listAcc = [
+                 select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c,
+                         npe01__SYSTEMIsIndividual__c, npe01__One2OneContact__c,
+                         npo02__Formal_Greeting__c, npo02__Informal_Greeting__c,
+                         Number_of_Household_Members__c
+                 from Account
+                 where Number_of_Household_Members__c > 0
+         ];
         system.assertEquals(3, listAcc.size());
 
         for (Account acc : listAcc) {
