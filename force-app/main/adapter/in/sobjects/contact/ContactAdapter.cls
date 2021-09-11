@@ -134,16 +134,20 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     private static List<Contact> contactsWithoutAccountsAndOrganizationContacts(Contacts contactsInstance) {
         List<Contact> contactsWithoutAccounts2 = new List<Contact>();
-        Map<Id, Account> accountsByIds = contactsInstance.accountById;
+        Map<Id, Account> oldAccounts = new Map<Id, Account>([
+                SELECT Id
+                FROM Account
+                WHERE Id = :contactsInstance.oldAccountIds()
+        ]);
+
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
-            Account account = accountsByIds.get(contactRecord.AccountId);
+            Account account = contactsInstance.accountById.get(contactRecord.AccountId);
             if (isWithoutAccount(contactRecord)
                     || isOrganizationContact(contactRecord, account)) {
 
                 Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
 
-                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact,
-                        account)) {
+                if (shouldClearExistingOneToOneAccount(contactRecord, oldContact, account, oldAccounts)) {
                     contactRecord.AccountId = null;
                 }
 
@@ -173,18 +177,18 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
      * @description - Determine whether the account belongs to another contact and is not
      * an deleted during an account merge.
      */
-    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord, Contact
-            oldContact, Account accountRecord) {
+    private static Boolean shouldClearExistingOneToOneAccount(Contact contactRecord,
+            Contact oldContact, Account accountRecord, Map<Id, Account> oldAccountsByIds) {
         Boolean isExistingOneToOne = contactRecord.AccountId != null
-            && accountRecord.npe01__One2OneContact__c != contactRecord.Id
-            && accountRecord.npe01__One2OneContact__c != null
-            && contactRecord.AccountId != oldContact.AccountId;
+                && accountRecord.npe01__One2OneContact__c != contactRecord.Id
+                && accountRecord.npe01__One2OneContact__c != null
+                && contactRecord.AccountId != oldContact.AccountId;
 
         if (!isExistingOneToOne) {
             return false;
         }
 
-        Boolean isDeletedOldAccount = [SELECT COUNT() FROM Account WHERE Id =: oldContact.AccountId] == 0;
+        Boolean isDeletedOldAccount = oldAccountsByIds.get(oldContact.AccountId) == null;
 
         return !isDeletedOldAccount;
 

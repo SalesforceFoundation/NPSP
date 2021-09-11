@@ -999,12 +999,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         contactRecord.LastName = contactRecord.LastName == null ? '' : contactRecord.LastName;
 
         // check all household naming fields for changes
-        for(String fieldName : new HouseholdNamingService().getHouseholdNamingContactFields()) {
+        for (String fieldName : new HouseholdNamingService().getHouseholdNamingContactFields()) {
             String currentName;
             String oldName;
 
             //separate cross object references, i.e. account.name
-            List<String> splitFields = (fieldName.split('\\.',0));
+            List<String> splitFields = (fieldName.split('\\.', 0));
             if (splitFields.size() > 1) {
                 SObject sObj = contactRecord.getSObject(splitFields[0]);
                 if (sObj != null) {
@@ -1031,11 +1031,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         if (contactRecord.npo02__Household_Naming_Order__c != oldContact.npo02__Household_Naming_Order__c ||
-            contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
+                contactRecord.npo02__Naming_Exclusions__c != oldContact.npo02__Naming_Exclusions__c) {
             return true;
         }
         if (contactRecord.AccountId != null && contactRecord.AccountId != oldContact.AccountId) {
-return true;
+            return true;
         }
         return false;
     }

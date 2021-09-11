@@ -95,6 +95,17 @@ private class HouseholdTests_TEST {
     }
 
     @IsTest
+    static void simpleContactInsertShouldCreateHouseholdWithCorrectAddressType() {
+        Contact c = TEST_ContactBuilder.dummyContactWithAddress();
+        c.npe01__Primary_Address_Type__c = 'Other';
+        insert c;
+        List<Contact> contacts = getContacts();
+        System.assertEquals('Other', contacts.get(0).npe01__Primary_Address_Type__c,
+                'A Contact inserted with a Primary Address Type should persist the' +
+                        ' original value on the Contact record.');
+    }
+
+    @IsTest
     static void addingAContactShouldRenameTheHousehold() {
         insert TEST_ContactBuilder.dummyContactWithAddress();
 
