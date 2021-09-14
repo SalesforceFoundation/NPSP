@@ -48,6 +48,7 @@ public inherited sharing class NPSP_Address implements IAddress {
         set;
     }
 
+    //todo: move equalsCaseSensitive internal and remove service
     @TestVisible
     private AddressService addressService {
         get {
