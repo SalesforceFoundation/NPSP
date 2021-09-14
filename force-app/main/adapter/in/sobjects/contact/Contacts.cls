@@ -287,13 +287,22 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void normalizeLineBreaksForContactsWithChangedAddresses() {
+        List<Contact> contactsWAddressChanges = getContactsWithAddressChanges();
+        for (Contact contact : contactsWAddressChanges) {
+            UTIL_Address.normalizeLineBreak(contact);
+        }
+    }
+
+    //todo: extracting uncovered dupe logic.  See if we can merge
+    private List<Contact> getContactsWithAddressChanges() {
+        List<Contact> contactsWAddressChanges = new List<Contact>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
-
             if (contactService.isContactAddressChanged(newRecord, oldVersionOf(newRecord))) {
-                UTIL_Address.normalizeLineBreak(newRecord);
+                contactsWAddressChanges.add(newRecord);
             }
         }
+        return contactsWAddressChanges;
     }
 
     public void normalizeLineBreaks() {
@@ -750,6 +759,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
+    //todo: rename? not only HH ncontacts
     private List<NPSP_Contact> householdAccountContacts;
     public List<NPSP_Contact> householdAccountContacts() {
         if (householdAccountContacts == null) {
@@ -1145,6 +1155,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return consMovingToANewHousehold;
     }
 
+    //todo: are we duplicating this logic? Can it be merged?
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
