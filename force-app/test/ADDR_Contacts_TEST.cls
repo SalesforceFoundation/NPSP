@@ -202,23 +202,6 @@ public with sharing class ADDR_Contacts_TEST {
                 'be undeliverable.');
     }
 
-    private static List<Account> createTestAccountsWithBillingAddress(Integer numberOfAccountsToCreate) {
-        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(
-                numberOfAccountsToCreate, CAO_Constants.HH_ACCOUNT_TYPE);
-
-        for (Account account : testAccounts) {
-            account.BillingStreet = '123 Household Street';
-            account.BillingCity = 'Household City';
-            account.BillingPostalCode = '12345';
-            account.BillingState = 'Household State';
-            account.BillingCountry = 'Household Country';
-        }
-
-        insert testAccounts;
-
-        return testAccounts;
-    }
-
     @IsTest
     private static void newContactUndeliverableStatusShouldSyncToNewAddressAndAccount() {
         //skip the test if Advancement is installed
@@ -442,11 +425,76 @@ public with sharing class ADDR_Contacts_TEST {
                                   FROM Account
                                   WHERE Id = :UTIL_UnitTestData_TEST.listAccT[0].Id];
 
-        System.assertEquals(updatedContact.Current_Address__c, testAddress.Id);
+        System.assertEquals(testAddress.Id, updatedContact.Current_Address__c, 'The contact current address should be' +
+                ' the newly created address record id.');
+        System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAccount.Undeliverable_Address__c,
+                'new contact address undeliverable status should match the household address undeliverable status.');
+        System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c,
+                'new contact address undeliverable status should match the address undeliverable status.');
+    }
+
+    @IsTest
+    private static void existingHouseholdAddressUndeliverableStatusSyncsToNewContact() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 0, 0);
+
+        Address__c testAddress = new Address__c();
+        testAddress.MailingStreet__c = '123 Existing Address';
+        testAddress.MailingCity__c = 'Washington';
+        testAddress.MailingPostalCode__c = 'ExistingZip';
+        testAddress.MailingCountry__c = 'United States';
+        testAddress.MailingState__c = 'Seattle';
+        testAddress.Household_Account__c = UTIL_UnitTestData_TEST.listAccT[0].Id;
+        testAddress.Default_Address__c = true;
+        testAddress.Undeliverable__c = true;
+        insert testAddress;
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        testContact.AccountId = UTIL_UnitTestData_TEST.listAccT[0].Id;
+
+        Test.startTest();
+            insert testContact;
+        Test.stopTest();
+
+        Contact updatedContact = [SELECT Current_Address__c, Undeliverable_Address__c
+                                  FROM Contact
+                                  WHERE Id = :testContact.Id];
+        Address__c updatedAddress = [SELECT Undeliverable__c
+                                     FROM Address__c
+                                     WHERE Id = :testAddress.Id];
+        Account updatedAccount = [SELECT Undeliverable_Address__c
+                                  FROM Account
+                                  WHERE Id = :UTIL_UnitTestData_TEST.listAccT[0].Id];
+
+        System.assertEquals(testAddress.Id, updatedContact.Current_Address__c, 'The contact current address should be' +
+                ' the newly created address record id.');
+        System.assertEquals(true, updatedAddress.Undeliverable__c, 'The updated address should be marked ' +
+                'undeliverable.');
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAddress.Undeliverable__c,
                 'Contact address undeliverable status should match address undeliverable status.');
         System.assertEquals(updatedContact.Undeliverable_Address__c, updatedAccount.Undeliverable_Address__c,
                 'Contact address undeliverable status should match account undeliverable status.');
+    }
+
+    private static List<Account> createTestAccountsWithBillingAddress(Integer numberOfAccountsToCreate) {
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(
+                numberOfAccountsToCreate, CAO_Constants.HH_ACCOUNT_TYPE);
+
+        for (Account account : testAccounts) {
+            account.BillingStreet = '123 Household Street';
+            account.BillingCity = 'Household City';
+            account.BillingPostalCode = '12345';
+            account.BillingState = 'Household State';
+            account.BillingCountry = 'Household Country';
+        }
+
+        insert testAccounts;
+
+        return testAccounts;
     }
 
     private static List<Address__c> buildAddresses(Integer numberOfAddressesToCreate, Boolean isUndeliverable) {
