@@ -109,7 +109,7 @@ public with sharing class ADDR_Contacts_TEST {
     }
 
     @IsTest
-    private static void updatedExistingDefaultContactAddressUndeliverableStatusToContact() {
+    private static void updatedExistingDefaultContactAddressSyncsUndeliverableStatusToContact() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
