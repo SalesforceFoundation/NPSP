@@ -48,18 +48,6 @@ public inherited sharing class NPSP_Address implements IAddress {
         set;
     }
 
-    //todo: move equalsCaseSensitive internal and remove service
-    @TestVisible
-    private AddressService addressService {
-        get {
-            if (addressService == null) {
-                addressService = new AddressService();
-            }
-            return addressService;
-        }
-        set;
-    }
-
     public NPSP_Address(Address__c address) {
         this.address = address;
     }
@@ -259,20 +247,36 @@ public inherited sharing class NPSP_Address implements IAddress {
             return false;
         }
         if (includeAddressType) {
-            if (!addressService.equalsCaseSensitive(getType(), other.getType())) {
+            if (!equalsCaseSensitive(getType(), other.getType())) {
                 return false;
             }
         }
         return isEqualTo(other);
     }
 
+    /*******************************************************************************************************
+    * @description Returns whether two strings are equal, using a case sensitve comparison
+    * @param str1 The first string
+    * @param str2 The second string
+    * @return boolean
+    ********************************************************************************************************/
+    public Boolean equalsCaseSensitive(String str1, String str2) {
+        if (str1 == null) {
+            return str2 == null;
+        }
+        if (str2 == null) {
+            return false;
+        }
+        return str1.equals(str2);
+    }
+
     private Boolean isEqualTo(IAddress other) {
-        return (addressService.equalsCaseSensitive(street(), other.street()) &&
-                addressService.equalsCaseSensitive(street2(), other.street2()) &&
-                addressService.equalsCaseSensitive(city(), other.city()) &&
-                addressService.equalsCaseSensitive(state(), other.state()) &&
-                addressService.equalsCaseSensitive(postalCode(), other.postalCode()) &&
-                addressService.equalsCaseSensitive(country(), other.country())
+        return (equalsCaseSensitive(street(), other.street()) &&
+                equalsCaseSensitive(street2(), other.street2()) &&
+                equalsCaseSensitive(city(), other.city()) &&
+                equalsCaseSensitive(state(), other.state()) &&
+                equalsCaseSensitive(postalCode(), other.postalCode()) &&
+                equalsCaseSensitive(country(), other.country())
         );
     }
 
