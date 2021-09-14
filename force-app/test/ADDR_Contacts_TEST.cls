@@ -84,7 +84,6 @@ public with sharing class ADDR_Contacts_TEST {
         npspContact.getRecord().AccountId = testAccountWithBillingAddress[0].Id;
         npspContact.getRecord().is_Address_Override__c = true;
         npspContact.setUndeliverableMailingAddress(true);
-        System.debug(npspContact);
         insert npspContact.getRecord();
 
         Test.startTest();
