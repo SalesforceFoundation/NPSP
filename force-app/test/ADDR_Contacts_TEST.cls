@@ -344,7 +344,61 @@ public with sharing class ADDR_Contacts_TEST {
     }
 
     @IsTest
-    private static void updatedContactUndeliverableStatusShouldSyncToExistingAddressAndAccount() {
+    private static void updatedFalseContactUndeliverableStatusShouldSyncToExistingAddressAndAccount() {
+        //skip the test if Advancement is installed
+        if (ADV_PackageInfo_SVC.useAdv()) {
+            return;
+        }
+
+        UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.HH_ACCOUNT_TYPE, 1, 1, 0);
+
+        Address__c testAddress = new Address__c();
+        testAddress.MailingStreet__c = '123 Existing Address';
+        testAddress.MailingCity__c = 'Washington';
+        testAddress.MailingPostalCode__c = 'ExistingZip';
+        testAddress.MailingCountry__c = 'United States';
+        testAddress.MailingState__c = 'Seattle';
+        testAddress.Household_Account__c = UTIL_UnitTestData_TEST.listAccT[0].Id;
+        testAddress.Undeliverable__c = true;
+        insert testAddress;
+
+        Contact testContact = UTIL_UnitTestData_TEST.getContact();
+        testContact.AccountId = UTIL_UnitTestData_TEST.listAccT[0].Id;
+        testContact.MailingState = testAddress.MailingState__c;
+        testContact.MailingCountry = testAddress.MailingCountry__c;
+        testContact.MailingPostalCode = testAddress.MailingPostalCode__c;
+        testContact.MailingCity = testAddress.MailingCity__c;
+        testContact.MailingStreet = testAddress.MailingStreet__c;
+
+        insert testContact;
+
+        Test.startTest();
+            Contact contactToUpdate = [SELECT Undeliverable_Address__c FROM Contact WHERE Id = :testContact.Id];
+            contactToUpdate.Undeliverable_Address__c = false;
+
+            update contactToUpdate;
+        Test.stopTest();
+
+        Contact updatedContact = [SELECT Current_Address__c, Undeliverable_Address__c
+                                  FROM Contact
+                                  WHERE Id = :testContact.Id];
+        Address__c updatedAddress = [SELECT Undeliverable__c
+                                     FROM Address__c
+                                     WHERE Id = :testAddress.Id];
+        Account updatedAccount = [SELECT Undeliverable_Address__c
+                                  FROM Account
+                                  WHERE Id = :UTIL_UnitTestData_TEST.listAccT[0].Id];
+
+        System.assertEquals(updatedContact.Current_Address__c, testAddress.Id, 'The contact should have the expected ' +
+                'current address lookup assigned.');
+        System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c,
+                'address undeliverable status should match contact address undeliverable status.');
+        System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedContact.Undeliverable_Address__c,
+                'account address undeliverable status should match contact undeliverable status.');
+    }
+
+    @IsTest
+    private static void updatedTrueContactUndeliverableStatusShouldSyncToExistingAddressAndAccount() {
         //skip the test if Advancement is installed
         if (ADV_PackageInfo_SVC.useAdv()) {
             return;
