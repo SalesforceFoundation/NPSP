@@ -116,6 +116,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return householdsNeedingNamesUpdated;
     }
 
+    //todo: bulk filter on Contacts
     public List<Contact> contactsInIndividualAccounts(List<Contact> contacts) {
         Map<Id, Account> contactAccountMap = getContactAccountMap(contacts);
         List<Contact> contactsInIndividualAccounts = new List<Contact>();
@@ -132,6 +133,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return contactsInIndividualAccounts;
     }
 
+    //todo: move to Contacts
     public List<Contact> contactsInIndividualAccountsWithoutHouseholds() {
         return contactsInIndividualAccounts(contactsWithoutHouseholds());
     }
@@ -152,6 +154,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return oldHouseholdIds;
     }
 
+    //todo: a Household Service for handling members changing households/moving?
     private List<Contact> contactsThatChangedHouseholds() {
         List<Contact> contactsThatChangedHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
@@ -166,6 +169,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         return con.npo02__Household__c;
     }
 
+    //todo: feature envy and duplicates below
     private Boolean hasAccount(Contact con) {
         return con.AccountId != null;
     }

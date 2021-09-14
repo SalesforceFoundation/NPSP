@@ -588,6 +588,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return npspContact.isUndeliverableStatusChanged();
     }
 
+    //todo: move to household level
     public void resetAddressUsingHouseholdAddress() {
         Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
         for (Contact con : (List<Contact>) getRecords()) {
@@ -677,6 +678,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         set;
     }
 
+    //todo: return Contacts
     public List<Contact> contactsWithoutAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
@@ -735,6 +737,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 contactRecord.Fax != oldContact.Fax);
     }
 
+    //todo: assess repeated generation of collection of Contacts in HouseholdAccounts
     private List<NPSP_Contact> npspContactsInHouseholdAccounts() {
         List<NPSP_Contact> contactsInHouseholdAccounts = new List<NPSP_Contact>();
         for (SObject so : getRecords()) {
@@ -787,10 +790,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return accountsById;
     }
 
+    //todo: recursion stuff should be at adapter layer not inside contacts
     private void deactivateAddrRecursionFlag() {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunTrigger, false);
     }
 
+    //todo: move to adapter
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
@@ -821,6 +826,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Contacts contactsNeedingHouseholdAddressApplied() {
         List<Contact> addressRefreshQueue = new List<Contact>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
+            //todo: this is too low - move up
             if (shouldUseAccountAddress(npspContact)) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 addressRefreshQueue.add(npspContact.getRecord());
@@ -855,10 +861,12 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
     }
 
+    //todo: bulk filter
     private Boolean hasCurrentAddress(NPSP_Contact npspContact) {
         return npspContact.currentAddress() != null;
     }
 
+    //todo: need to abstract out further naming stuff
     private Boolean isIncludedInHouseholdName(Contact con) {
         HouseholdNamingExclusionsString exclusionsAsString = new
                 HouseholdNamingExclusionsString(con);
@@ -980,6 +988,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return con.MasterRecordId != null;
     }
 
+    //todo: bulk filter, contacts with naming field changes
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
     * @param contactRecord the new version of the Contact
@@ -1180,6 +1189,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressCreationQueue;
     }
 
+    //todo: move recursive stuff to adapter layer
     private Boolean isRecursiveFromContact() {
         return TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore);
     }
@@ -1229,6 +1239,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
+    //todo: move: a Contact address "change" is basically adding a new one
+    // implement "treat simple as update" within the add behavior
     private List<Contact> consWhoseAddressChanged() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
