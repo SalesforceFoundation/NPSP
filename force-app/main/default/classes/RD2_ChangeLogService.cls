@@ -31,115 +31,115 @@
 * @author Salesforce.org
 * @date 2021
 * @group Recurring Donations
-* @description All services specific to Recurring Donation Change History
+* @description All services specific to Recurring Donation Change Logs
 *
 */
-public inherited sharing class RD2_ChangeHistoryService {
+public inherited sharing class RD2_ChangeLogService {
 
     /***
-    * @description Determines if Change History is enabled for the org
+    * @description Determines if Recurring Donation Change Log is enabled for the org
     */
-    public static Boolean isChangeHistoryEnabled {
+    public static Boolean isChangeLogEnabled {
         get {
-            if (isChangeHistoryEnabled == null) {
-                isChangeHistoryEnabled = new RD2_Settings().isChangeHistoryEnabled();
+            if (isChangeLogEnabled == null) {
+                isChangeLogEnabled = new RD2_Settings().isChangeLogEnabled();
             }
-            return isChangeHistoryEnabled;
+            return isChangeLogEnabled;
         }
         set;
     }
 
     @TestVisible
-    private RD2_ChangeHistorySelector changeHistorySelector {
+    private RD2_ChangeLogSelector changeLogSelector {
         get {
-            if (changeHistorySelector == null) {
-                changeHistorySelector = new RD2_ChangeHistorySelector();
+            if (changeLogSelector == null) {
+                changeLogSelector = new RD2_ChangeLogSelector();
             }
-            return changeHistorySelector;
+            return changeLogSelector;
         }
         set;
     }
 
-    public RD2_ChangeHistoryView getChangeHistoryView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
-        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeHistory__c.SObjectType), false)) {
+    public RD2_ChangeLogView getChangeLogView(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
+        if(!UTIL_Permissions.canRead(String.valueOf(RecurringDonationChangeLog__c.SObjectType), false)) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonPermissionErrorMessage);
         }
 
         Integer limitPlusOne = recordLimit + 1;
-        changeHistorySelector.withRecordLimit(limitPlusOne);
+        changeLogSelector.withRecordLimit(limitPlusOne);
 
         if (changeTypeFilter != null) {
-            changeHistorySelector.withChangeTypeFilter(changeTypeFilter);
+            changeLogSelector.withChangeTypeFilter(changeTypeFilter);
         }
 
-        List<RecurringDonationChangeHistory__c> changes = changeHistorySelector.getChangeHistories(recurringDonationId);
-        RD2_ChangeHistoryView changeHistoryView = buildView(changes, recordLimit);
+        List<RecurringDonationChangeLog__c> changes = changeLogSelector.getChangeHistories(recurringDonationId);
+        RD2_ChangeLogView changeLogView = buildView(changes, recordLimit);
 
-        return changeHistoryView;
+        return changeLogView;
     }
 
-    private RD2_ChangeHistoryView buildView(List<RecurringDonationChangeHistory__c> changes, Integer recordLimit) {
-        RD2_ChangeHistoryView changeHistoryView = new RD2_ChangeHistoryView();
+    private RD2_ChangeLogView buildView(List<RecurringDonationChangeLog__c> changes, Integer recordLimit) {
+        RD2_ChangeLogView changeLogView = new RD2_ChangeLogView();
 
-        changeHistoryView.settingEnabled = isChangeHistoryEnabled;
-        changeHistoryView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
-        changeHistoryView.hasMore = changes.size() > recordLimit;
+        changeLogView.settingEnabled = isChangeLogEnabled;
+        changeLogView.rd2Enabled = RD2_EnablementService.isRecurringDonations2Enabled;
+        changeLogView.hasMore = changes.size() > recordLimit;
 
         for (Integer i = 0; i < recordLimit && i < changes.size(); i++) {
-            RD2_ChangeHistory change = new RD2_ChangeHistory(changes[i]);
-            changeHistoryView.changes.add(change.getChangeView());
+            RD2_ChangeLog change = new RD2_ChangeLog(changes[i]);
+            changeLogView.changes.add(change.getChangeView());
         }
 
-        return changeHistoryView;
+        return changeLogView;
     }
 
     /***
-    * @description Recurring Donation change history service instance
+    * @description Recurring Donation Change Log service instance
     */
-    private ChangeHistoryCreator changeHistoryCreator {
+    private ChangeLogCreator changeLogCreator {
         get {
-            if (changeHistoryCreator == null) {
-                changeHistoryCreator = new ChangeHistoryCreator();
+            if (changeLogCreator == null) {
+                changeLogCreator = new ChangeLogCreator();
             }
-            return changeHistoryCreator;
+            return changeLogCreator;
         }
         set;
     }
 
-    private List<RecurringDonationChangeHistory__c> changeHistoryList = 
-        new List<RecurringDonationChangeHistory__c>();
+    private List<RecurringDonationChangeLog__c> changeLogList = 
+        new List<RecurringDonationChangeLog__c>();
 
     /**
-     * @description Returns true if any of the key fields used to create Change History has been changed.
+     * @description Returns true if any of the key fields used to create Change Logs have been changed.
      * @param updatedRd Changed Recurring Donation
      * @param originalRd Old Recurring Donation
      * @return Boolean
      */
     public void handleHistoryFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
-        RecurringDonationChangeHistory__c changeHistory = 
-            new ChangeHistoryComparer(updatedRd, originalRd).setChangedFields();
+        RecurringDonationChangeLog__c changeLog = 
+            new ChangeLogComparer(updatedRd, originalRd).setChangedFields();
 
-        if (changeHistory != null) {
-            changeHistoryList.add(changeHistory);
+        if (changeLog != null) {
+            changeLogList.add(changeLog);
         }
     }
 
     @TestVisible
-    private List<RecurringDonationChangeHistory__c> getChangeHistoryRecords() {
-        return changeHistoryList;
+    private List<RecurringDonationChangeLog__c> getChangeLogRecords() {
+        return changeLogList;
     }
 
-    public void insertChangeHistoryRecords(){
-        if (changeHistoryList.size() > 0) {
-            changeHistoryCreator.insertChangeHistoryRecords(getChangeHistoryRecords());
+    public void insertChangeLogRecords(){
+        if (changeLogList.size() > 0) {
+            changeLogCreator.insertChangeLogRecords(getChangeLogRecords());
         }
     }
 
     /***
-    * @description Class used to group New and Previous field names for Recurring Donation Change History
+    * @description Class used to group New and Previous field names for Recurring Donation Change Logs
     */
-    private class ChangeHistoryFieldSet {
-        ChangeHistoryFieldSet(SObjectField newField, SObjectField previousField) {
+    private class ChangeLogFieldSet {
+        ChangeLogFieldSet(SObjectField newField, SObjectField previousField) {
             this.newField = newField;
             this.previousField = previousField;
         }
@@ -149,10 +149,10 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     /***
-    * @description Class used to compare Recurring Donation fields, and return a Change History record
+    * @description Class used to compare Recurring Donation fields, and return a Change Log record
     * if relevant changes were made
     */
-    private class ChangeHistoryComparer {
+    private class ChangeLogComparer {
 
         private final SObjectField RD_AMOUNT_FIELD = npe03__Recurring_Donation__c.npe03__Amount__c;
         private final SObjectField RD_INSTALLMENT_PERIOD_FIELD = npe03__Recurring_Donation__c.npe03__Installment_Period__c;
@@ -164,25 +164,25 @@ public inherited sharing class RD2_ChangeHistoryService {
         private final SObjectField RD_RECURRING_TYPE_FIELD = npe03__Recurring_Donation__c.RecurringType__c;
         private final SObjectField RD_PLANNED_INSTALLMENTS_FIELD = npe03__Recurring_Donation__c.npe03__Installments__c;
 
-        private final Map<SObjectField, ChangeHistoryFieldSet> rd2ChangeHistoryFields = new Map<SObjectField, ChangeHistoryFieldSet>{
-            RD_AMOUNT_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewAmount__c, 
-                RecurringDonationChangeHistory__c.PreviousAmount__c),
-            RD_INSTALLMENT_PERIOD_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentPeriod__c, 
-                RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c),
-            RD_INSTALLMENT_FREQUENCY_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewInstallmentFrequency__c, 
-                RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c),
-            RD_STATUS_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatus__c, 
-                RecurringDonationChangeHistory__c.PreviousStatus__c),
-            RD_STATUS_REASON_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewStatusReason__c, 
-                RecurringDonationChangeHistory__c.PreviousStatusReason__c),
-            RD_PAYMENT_METHOD_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPaymentMethod__c, 
-                RecurringDonationChangeHistory__c.PreviousPaymentMethod__c),
-            RD_CAMPAIGN_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewCampaign__c, 
-                RecurringDonationChangeHistory__c.PreviousCampaign__c),
-            RD_RECURRING_TYPE_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewRecurringType__c, 
-                RecurringDonationChangeHistory__c.PreviousRecurringType__c),
-            RD_PLANNED_INSTALLMENTS_FIELD => new ChangeHistoryFieldSet(RecurringDonationChangeHistory__c.NewPlannedInstallments__c, 
-                RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c)
+        private final Map<SObjectField, ChangeLogFieldSet> rd2ChangeLogFields = new Map<SObjectField, ChangeLogFieldSet>{
+            RD_AMOUNT_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewAmount__c, 
+                RecurringDonationChangeLog__c.PreviousAmount__c),
+            RD_INSTALLMENT_PERIOD_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewInstallmentPeriod__c, 
+                RecurringDonationChangeLog__c.PreviousInstallmentPeriod__c),
+            RD_INSTALLMENT_FREQUENCY_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewInstallmentFrequency__c, 
+                RecurringDonationChangeLog__c.PreviousInstallmentFrequency__c),
+            RD_STATUS_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewStatus__c, 
+                RecurringDonationChangeLog__c.PreviousStatus__c),
+            RD_STATUS_REASON_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewStatusReason__c, 
+                RecurringDonationChangeLog__c.PreviousStatusReason__c),
+            RD_PAYMENT_METHOD_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewPaymentMethod__c, 
+                RecurringDonationChangeLog__c.PreviousPaymentMethod__c),
+            RD_CAMPAIGN_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewCampaign__c, 
+                RecurringDonationChangeLog__c.PreviousCampaign__c),
+            RD_RECURRING_TYPE_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewRecurringType__c, 
+                RecurringDonationChangeLog__c.PreviousRecurringType__c),
+            RD_PLANNED_INSTALLMENTS_FIELD => new ChangeLogFieldSet(RecurringDonationChangeLog__c.NewPlannedInstallments__c, 
+                RecurringDonationChangeLog__c.PreviousPlannedInstallments__c)
         };
 
         RD2_RecurringDonation updatedRd;
@@ -193,48 +193,48 @@ public inherited sharing class RD2_ChangeHistoryService {
         * @param updatedRd Changed Recurring Donation, used for "New" fields
         * @param originalRd Old Recurring Donation, used for "Previous" fields
         */
-        public ChangeHistoryComparer(RD2_RecurringDonation updatedRd, 
+        public ChangeLogComparer(RD2_RecurringDonation updatedRd, 
             RD2_RecurringDonation originalRd) {
                 this.updatedRd = updatedRd;
                 this.originalRd = originalRd;
         }
 
         /**
-         * @description Returns a Recurring Donation Change History record with Previous and New values 
+         * @description Returns a Recurring Donation Change Log record with Previous and New values 
          * filled in based on the Recurring Donations provided.
-         * @return RecurringDonationChangeHistory__c The Change History record to represent this change
+         * @return RecurringDonationChangeLog__c The Change Log record to represent this change
          */
-        public RecurringDonationChangeHistory__c setChangedFields() {
+        public RecurringDonationChangeLog__c setChangedFields() {
 
-            RecurringDonationChangeHistory__c changeHistory;
+            RecurringDonationChangeLog__c changeLog;
 
-            for (SObjectField rdField : rd2ChangeHistoryFields.keySet()) {
+            for (SObjectField rdField : rd2ChangeLogFields.keySet()) {
                 if (isFieldChanged(rdField)) {
 
-                    if (changeHistory == null) {
-                        changeHistory = initChangeHistoryRecord();
+                    if (changeLog == null) {
+                        changeLog = initChangeLogRecord();
                     }
 
-                    changeHistory.put(rd2ChangeHistoryFields.get(rdField).previousField, 
+                    changeLog.put(rd2ChangeLogFields.get(rdField).previousField, 
                         originalRd.getValue(rdField));
-                    changeHistory.put(rd2ChangeHistoryFields.get(rdField).newField, 
+                    changeLog.put(rd2ChangeLogFields.get(rdField).newField, 
                         updatedRd.getValue(rdField));
                 }
             }
 
-            return changeHistory;
+            return changeLog;
         }
 
         /**
-         * @description Returns a Recurring Donation Change History record with required and default
+         * @description Returns a Recurring Donation Change Log record with required and default
          * values filled in.
-         * @return RecurringDonationChangeHistory__c A new Change History record
+         * @return RecurringDonationChangeLog__c A new Change Log record
          */
-        public RecurringDonationChangeHistory__c initChangeHistoryRecord() {
+        public RecurringDonationChangeLog__c initChangeLogRecord() {
 
             String changeType = calculateChangeType();
 
-            RecurringDonationChangeHistory__c rdChangeHistory = new RecurringDonationChangeHistory__c(
+            RecurringDonationChangeLog__c rdChangeLog = new RecurringDonationChangeLog__c(
                 RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
                 EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
                 NewAmount__c = (Decimal)updatedRd.getValue(RD_AMOUNT_FIELD),
@@ -247,10 +247,10 @@ public inherited sharing class RD2_ChangeHistoryService {
             );
 
             if (UserInfo.isMultiCurrencyOrganization()) {
-                rdChangeHistory.put('CurrencyIsoCode', updatedRd.getCurrencyIsoCode());
+                rdChangeLog.put('CurrencyIsoCode', updatedRd.getCurrencyIsoCode());
             }
 
-            return rdChangeHistory;
+            return rdChangeLog;
         }
 
         /**
@@ -259,7 +259,7 @@ public inherited sharing class RD2_ChangeHistoryService {
          * Automatic calculation is ignored if the Recurring Type was changed.
          * @param updatedRd Changed Recurring Donation
          * @param originalRd Old Recurring Donation
-         * @return String The Change Type for this Change History record
+         * @return String The Change Type for this Change Log record
          */
         private String calculateChangeType() {
 
@@ -297,17 +297,17 @@ public inherited sharing class RD2_ChangeHistoryService {
     }
 
     /***
-    * @description Class used for DML operations relating to Recurring Donation Change History.
+    * @description Class used for DML operations relating to Recurring Donation Change Logs.
     * To ensure these operations succeed regardless of User permissions, this Class uses without sharing
     */
-    private without sharing class ChangeHistoryCreator {
+    private without sharing class ChangeLogCreator {
 
         /**
-         * @description Inserts the provided Change History records, without allowing partial success
-         * @param changeHistoryList A List of Change History records to insert, regardless of permissions
+         * @description Inserts the provided Change Log records, without allowing partial success
+         * @param changeLogList A List of Change Log records to insert, regardless of permissions
          */
-        public void insertChangeHistoryRecords(List<RecurringDonationChangeHistory__c> changeHistoryList){
-            UTIL_DMLService.insertRecords(changeHistoryList);
+        public void insertChangeLogRecords(List<RecurringDonationChangeLog__c> changeLogList){
+            UTIL_DMLService.insertRecords(changeLogList);
         }
 
     }

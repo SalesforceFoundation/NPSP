@@ -27,13 +27,13 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class RD2_ChangeHistory {
+public with sharing class RD2_ChangeLog {
 
-    private RecurringDonationChangeHistory__c record;
+    private RecurringDonationChangeLog__c record;
 
-    private static final String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
+    private static final String rdChangeLogSObject = String.valueOf(RecurringDonationChangeLog__c.SObjectType);
 
-    public RD2_ChangeHistory(RecurringDonationChangeHistory__c record) {
+    public RD2_ChangeLog(RecurringDonationChangeLog__c record) {
         this.record = record;
     }
 
@@ -88,8 +88,8 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
 
-        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewAnnualValue__c),
-                String.valueOf(RecurringDonationChangeHistory__c.PreviousAnnualValue__c), Label.RDCH_Annual_Value);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeLog__c.NewAnnualValue__c),
+                String.valueOf(RecurringDonationChangeLog__c.PreviousAnnualValue__c), Label.RDCL_Annual_Value);
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             view.currencyCode = (String)this.record.get('CurrencyIsoCode');
@@ -101,8 +101,8 @@ public with sharing class RD2_ChangeHistory {
         RD2_FieldChangeView view = new RD2_FieldChangeView();
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.MONEY);
 
-        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewExpectedTotalValue__c),
-                String.valueOf(RecurringDonationChangeHistory__c.PreviousExpectedTotalValue__c), Label.RDCH_Expected_Total_Value);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeLog__c.NewExpectedTotalValue__c),
+                String.valueOf(RecurringDonationChangeLog__c.PreviousExpectedTotalValue__c), Label.RDCL_Expected_Total_Value);
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             view.currencyCode = (String)this.record.get('CurrencyIsoCode');
@@ -127,7 +127,7 @@ public with sharing class RD2_ChangeHistory {
         view.newValue = this.record.NewInstallmentFrequency__c;
         view.oldValue = this.record.PreviousInstallmentFrequency__c;
         view.setDisplayType(RD2_FieldChangeView.DISPLAY_TYPE.NUMERIC);
-        view.label = Label.RDCH_Frequency;
+        view.label = Label.RDCL_Frequency;
 
         return view;
     }
@@ -149,8 +149,8 @@ public with sharing class RD2_ChangeHistory {
             String.valueOf(npe03__Recurring_Donation__c.npe03__Installments__c)
         );
 
-        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeHistory__c.NewPlannedInstallments__c),
-            String.valueOf(RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c), plannedInstallmentsLabel);
+        handleDisplayWhenRecurringTypeChanges(view, String.valueOf(RecurringDonationChangeLog__c.NewPlannedInstallments__c),
+            String.valueOf(RecurringDonationChangeLog__c.PreviousPlannedInstallments__c), plannedInstallmentsLabel);
 
         return view;
     }
@@ -200,10 +200,10 @@ public with sharing class RD2_ChangeHistory {
 
         if (this.record.get(newField) == null) {
             view.oldValue = this.record.get(previousField);
-            view.label = UTIL_Describe.getFieldLabel(rdChangeHistorySObject, previousField);
+            view.label = UTIL_Describe.getFieldLabel(rdChangeLogSObject, previousField);
         } else if (this.record.get(previousField) == null) {
             view.oldValue = this.record.get(newField);
-            view.label = UTIL_Describe.getFieldLabel(rdChangeHistorySObject, newField);
+            view.label = UTIL_Describe.getFieldLabel(rdChangeLogSObject, newField);
         } else {
             view.oldValue = this.record.get(previousField);
             if (this.record.get(newField) != this.record.get(previousField)) {
@@ -260,53 +260,53 @@ public with sharing class RD2_ChangeHistory {
     }
 
     private Boolean hasAnnualValuePermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.NewAnnualValue__c,
-                RecurringDonationChangeHistory__c.PreviousAnnualValue__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.NewAnnualValue__c,
+                RecurringDonationChangeLog__c.PreviousAnnualValue__c);
     }
 
     private Boolean hasExpectedTotalValuePermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.NewExpectedTotalValue__c,
-                RecurringDonationChangeHistory__c.PreviousExpectedTotalValue__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.NewExpectedTotalValue__c,
+                RecurringDonationChangeLog__c.PreviousExpectedTotalValue__c);
     }
 
     private Boolean hasAmountPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousAmount__c,
-                RecurringDonationChangeHistory__c.NewAmount__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousAmount__c,
+                RecurringDonationChangeLog__c.NewAmount__c);
     }
 
     private Boolean hasPaymentPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousPaymentMethod__c,
-                RecurringDonationChangeHistory__c.NewPaymentMethod__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousPaymentMethod__c,
+                RecurringDonationChangeLog__c.NewPaymentMethod__c);
     }
 
     private Boolean hasPlannedInstallmentsPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.NewPlannedInstallments__c,
-                RecurringDonationChangeHistory__c.PreviousPlannedInstallments__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.NewPlannedInstallments__c,
+                RecurringDonationChangeLog__c.PreviousPlannedInstallments__c);
     }
 
     private Boolean hasPeriodPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousInstallmentPeriod__c,
-                RecurringDonationChangeHistory__c.NewInstallmentPeriod__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousInstallmentPeriod__c,
+                RecurringDonationChangeLog__c.NewInstallmentPeriod__c);
     }
 
     private Boolean hasFrequencyPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousInstallmentFrequency__c,
-                RecurringDonationChangeHistory__c.NewInstallmentFrequency__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousInstallmentFrequency__c,
+                RecurringDonationChangeLog__c.NewInstallmentFrequency__c);
     }
 
     private Boolean hasStatusPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousStatus__c,
-                RecurringDonationChangeHistory__c.NewStatus__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousStatus__c,
+                RecurringDonationChangeLog__c.NewStatus__c);
     }
 
     private Boolean hasCampaignPermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousCampaign__c,
-                RecurringDonationChangeHistory__c.NewCampaign__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousCampaign__c,
+                RecurringDonationChangeLog__c.NewCampaign__c);
     }
 
     private Boolean hasRecurringTypePermissions() {
-        return canReadRDCHFields(RecurringDonationChangeHistory__c.PreviousRecurringType__c,
-                RecurringDonationChangeHistory__c.NewRecurringType__c);
+        return canReadRDCLFields(RecurringDonationChangeLog__c.PreviousRecurringType__c,
+                RecurringDonationChangeLog__c.NewRecurringType__c);
     }
 
     private Boolean hasExpectedTotalValue() {
@@ -319,9 +319,9 @@ public with sharing class RD2_ChangeHistory {
             || this.record.PreviousAnnualValue__c != null;
     }
 
-    private Boolean canReadRDCHFields(Schema.SObjectField newField, Schema.SObjectField oldField) {
-        return UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(newField))
-                && UTIL_Permissions.canRead(rdChangeHistorySObject, String.valueOf(oldField));
+    private Boolean canReadRDCLFields(Schema.SObjectField newField, Schema.SObjectField oldField) {
+        return UTIL_Permissions.canRead(rdChangeLogSObject, String.valueOf(newField))
+                && UTIL_Permissions.canRead(rdChangeLogSObject, String.valueOf(oldField));
     }
 
     private Boolean isAmountChanged() {

@@ -148,14 +148,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /***
-    * @description Recurring Donation change history service instance
+    * @description Recurring Donation Change Log service instance
     */
-    private RD2_ChangeHistoryService changeHistoryService {
+    private RD2_ChangeLogService changeLogService {
         get {
-            if (changeHistoryService == null) {
-                changeHistoryService = new RD2_ChangeHistoryService();
+            if (changeLogService == null) {
+                changeLogService = new RD2_ChangeLogService();
             }
-            return changeHistoryService;
+            return changeLogService;
         }
         set;
     }
@@ -227,7 +227,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Used as a comparison for creating Change History records
+     * @description Used as a comparison for creating Change Log records
      */
     private List<npe03__Recurring_Donation__c> oldRds;
 
@@ -304,7 +304,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Pass the set of Recurring Donations for comparison when creating Change History
+     * @description Pass the set of Recurring Donations for comparison when creating Change Logs
      * @param oldRds Recurring Donations before fields are updated
      * @return RD2_OpportunityEvaluationService The service instance
      */
@@ -423,7 +423,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .voidOpenOpportunities(closeOppRds);
 
         handleOutdatedRecurringDonations(rdRecords);
-        createChangeHistory(rdRecords);
+        createChangeLog(rdRecords);
 
         toggleTriggerState(true);
 
@@ -462,12 +462,12 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
-     * @description Determine if Recurring Donation Change History records need to be created, then create them.
-     * @param rdRecords The List of RD records to check for Change History
+     * @description Determine if Recurring Donation Change Log records need to be created, then create them.
+     * @param rdRecords The List of RD records to check for Change Log
      * @return void
      */
-    private void createChangeHistory(List<RD2_RecurringDonation> rdRecords){
-        if(!RD2_ChangeHistoryService.isChangeHistoryEnabled){
+    private void createChangeLog(List<RD2_RecurringDonation> rdRecords){
+        if(!RD2_ChangeLogService.isChangeLogEnabled){
             return;
         }
 
@@ -476,10 +476,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (RD2_RecurringDonation rdRecord : rdRecords) {            
             npe03__Recurring_Donation__c oldRd = oldRdsById.get(rdRecord.getSObject().Id);
             RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
-            changeHistoryService.handleHistoryFieldChanged(rdRecord, oldRdEntity);
+            changeLogService.handleHistoryFieldChanged(rdRecord, oldRdEntity);
         }
 
-        changeHistoryService.insertChangeHistoryRecords();
+        changeLogService.insertChangeLogRecords();
     }
 
     /**

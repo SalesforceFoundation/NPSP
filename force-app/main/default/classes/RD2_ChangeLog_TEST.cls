@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 @IsTest
-private class RD2_ChangeHistory_TEST {
+private class RD2_ChangeLog_TEST {
 
     static String FAKE_CAMPAIGN_ID = '701P0000000a2OnIAI';
     static String FAKE_CAMPAIGN_ID_2 = '701P0000000a2OsIAI';
@@ -40,12 +40,12 @@ private class RD2_ChangeHistory_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
                 new npe03__Recurring_Donations_Settings__c(
                         IsRecurringDonations2Enabled__c = true,
-                        EnableChangeHistory__c = false
+                        EnableChangeLog__c = false
                 )
         );
 
-        RD2_ChangeHistoryService service = new RD2_ChangeHistoryService();
-        RD2_ChangeHistoryView view = service.getChangeHistoryView(null, 3, null);
+        RD2_ChangeLogService service = new RD2_ChangeLogService();
+        RD2_ChangeLogView view = service.getChangeLogView(null, 3, null);
         System.assertEquals(false, view.settingEnabled);
     }
 
@@ -54,19 +54,19 @@ private class RD2_ChangeHistory_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
                 new npe03__Recurring_Donations_Settings__c(
                         IsRecurringDonations2Enabled__c = true,
-                        EnableChangeHistory__c = true
+                        EnableChangeLog__c = true
                 )
         );
 
-        RD2_ChangeHistoryService service = new RD2_ChangeHistoryService();
-        RD2_ChangeHistoryView view = service.getChangeHistoryView(null, 3, null);
+        RD2_ChangeLogService service = new RD2_ChangeLogService();
+        RD2_ChangeLogView view = service.getChangeLogView(null, 3, null);
         System.assertEquals(true, view.settingEnabled);
     }
 
     @IsTest
     static void unchangedAmountOnlyHasOldValue() {
 
-        RD2_ChangeView view = new RD2_ChangeHistory(getChangeRecord()).getChangeView();
+        RD2_ChangeView view = new RD2_ChangeLog(getChangeRecord()).getChangeView();
 
         System.assertEquals(2, view.fields.size());
 
@@ -79,12 +79,12 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void rdWithNoChangeRecordsReturnsViewWithEmptyChanges() {
-        RD2_ChangeHistorySelectorMock mock =
-                new RD2_ChangeHistorySelectorMock(new List<RecurringDonationChangeHistory__c>());
-        RD2_ChangeHistoryService service = new RD2_ChangeHistoryService();
-        service.changeHistorySelector = stubSelector(mock);
+        RD2_ChangeLogSelectorMock mock =
+                new RD2_ChangeLogSelectorMock(new List<RecurringDonationChangeLog__c>());
+        RD2_ChangeLogService service = new RD2_ChangeLogService();
+        service.changeLogSelector = stubSelector(mock);
 
-        RD2_ChangeHistoryView view = service.getChangeHistoryView(null, 3, null);
+        RD2_ChangeLogView view = service.getChangeLogView(null, 3, null);
 
         System.assertEquals(0, view.changes.size());
         System.assertEquals(false, view.hasMore);
@@ -92,13 +92,13 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void rdWithRecordsBeyondLimitReturnsHasMoreTrue() {
-        List<RecurringDonationChangeHistory__c> records = getChangeRecords(4);
-        RD2_ChangeHistorySelectorMock mock =
-                new RD2_ChangeHistorySelectorMock(records);
-        RD2_ChangeHistoryService service = new RD2_ChangeHistoryService();
-        service.changeHistorySelector = stubSelector(mock);
+        List<RecurringDonationChangeLog__c> records = getChangeRecords(4);
+        RD2_ChangeLogSelectorMock mock =
+                new RD2_ChangeLogSelectorMock(records);
+        RD2_ChangeLogService service = new RD2_ChangeLogService();
+        service.changeLogSelector = stubSelector(mock);
 
-        RD2_ChangeHistoryView view = service.getChangeHistoryView(null, 3, null);
+        RD2_ChangeLogView view = service.getChangeLogView(null, 3, null);
 
         System.assertEquals(3, view.changes.size());
         System.assertEquals(true, view.hasMore);
@@ -107,9 +107,9 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void rdWithChangedCampaignReturnsFieldChangeWithIdAndValue() {
-        RecurringDonationChangeHistory__c record = getCampaignChangeRecord();
+        RecurringDonationChangeLog__c record = getCampaignChangeRecord();
 
-        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+        RD2_ChangeView view = new RD2_ChangeLog(record).getChangeView();
 
         System.assertEquals(3, view.fields.size());
         RD2_FieldChangeView campaignChangeView = view.fields[2];
@@ -123,11 +123,11 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void rdWithOnlyAmountChangeContainsOnlyAnnualValueAndAmount() {
-        RecurringDonationChangeHistory__c record = getChangeRecord();
+        RecurringDonationChangeLog__c record = getChangeRecord();
         record.NewAmount__c = 10;
         record.NewAnnualValue__c = 120;
 
-        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+        RD2_ChangeView view = new RD2_ChangeLog(record).getChangeView();
 
         System.assertEquals(2, view.fields.size());
         System.assertEquals(10, view.fields[0].newValue);
@@ -138,7 +138,7 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void amountContainsIsoCodeWhenMulticurrencyIsEnabled() {
-        RecurringDonationChangeHistory__c record = getChangeRecord();
+        RecurringDonationChangeLog__c record = getChangeRecord();
         record.NewAmount__c = 10;
         record.NewAnnualValue__c = 120;
 
@@ -147,17 +147,17 @@ private class RD2_ChangeHistory_TEST {
 
         if (isMultiCurrencyEnabled) {
             // If there is no active non-default currency, exit
-            if (RD2_ChangeHistoryService_TEST.nonDefaultCurrencyType == null) {
+            if (RD2_ChangeLogService_TEST.nonDefaultCurrencyType == null) {
                 return;
             }
 
             nonDefaultCurrencyCode = 
-                (String)RD2_ChangeHistoryService_TEST.nonDefaultCurrencyType.get('IsoCode');
+                (String)RD2_ChangeLogService_TEST.nonDefaultCurrencyType.get('IsoCode');
             
             record.put('CurrencyIsoCode', nonDefaultCurrencyCode);
         }
 
-        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+        RD2_ChangeView view = new RD2_ChangeLog(record).getChangeView();
 
         System.assertEquals(2, view.fields.size());
         System.assertEquals(10, view.fields[0].newValue);
@@ -172,23 +172,23 @@ private class RD2_ChangeHistory_TEST {
 
     @IsTest
     static void rdWithTypeChangeFromOpenToFixedHasCorrectValues() {
-        RecurringDonationChangeHistory__c record = getChangeRecord();
+        RecurringDonationChangeLog__c record = getChangeRecord();
         record.NewExpectedTotalValue__c = 100;
         record.PreviousExpectedTotalValue__c = null;
         record.NewAnnualValue__c = null;
 
-        RD2_ChangeView view = new RD2_ChangeHistory(record).getChangeView();
+        RD2_ChangeView view = new RD2_ChangeLog(record).getChangeView();
 
-        String rdChangeHistorySObject = String.valueOf(RecurringDonationChangeHistory__c.SObjectType);
+        String rdChangeLogSObject = String.valueOf(RecurringDonationChangeLog__c.SObjectType);
 
         String field1Label = UTIL_Describe.getFieldLabel(
-            rdChangeHistorySObject,
-            String.valueOf(RecurringDonationChangeHistory__c.PreviousAnnualValue__c)
+            rdChangeLogSObject,
+            String.valueOf(RecurringDonationChangeLog__c.PreviousAnnualValue__c)
         );
 
         String field2Label = UTIL_Describe.getFieldLabel(
-            rdChangeHistorySObject,
-            String.valueOf(RecurringDonationChangeHistory__c.NewExpectedTotalValue__c)
+            rdChangeLogSObject,
+            String.valueOf(RecurringDonationChangeLog__c.NewExpectedTotalValue__c)
         );
 
         System.assertEquals(3, view.fields.size());
@@ -200,10 +200,10 @@ private class RD2_ChangeHistory_TEST {
         System.assertEquals(100, view.fields[2].oldValue);
     }
 
-    private class RD2_ChangeHistorySelectorMock implements StubProvider {
-        List<RecurringDonationChangeHistory__c> records;
+    private class RD2_ChangeLogSelectorMock implements StubProvider {
+        List<RecurringDonationChangeLog__c> records;
 
-        public RD2_ChangeHistorySelectorMock(List<RecurringDonationChangeHistory__c> records) {
+        public RD2_ChangeLogSelectorMock(List<RecurringDonationChangeLog__c> records) {
             this.records = records;
         }
 
@@ -220,23 +220,23 @@ private class RD2_ChangeHistory_TEST {
         }
     }
 
-    static RD2_ChangeHistorySelector stubSelector(RD2_ChangeHistorySelectorMock mock) {
-        return (RD2_ChangeHistorySelector) Test.createStub(
-                RD2_ChangeHistorySelector.class,
+    static RD2_ChangeLogSelector stubSelector(RD2_ChangeLogSelectorMock mock) {
+        return (RD2_ChangeLogSelector) Test.createStub(
+                RD2_ChangeLogSelector.class,
                 mock
         );
     }
 
-    static List<RecurringDonationChangeHistory__c> getChangeRecords(Integer count) {
-        List<RecurringDonationChangeHistory__c> changes = new List<RecurringDonationChangeHistory__c>();
+    static List<RecurringDonationChangeLog__c> getChangeRecords(Integer count) {
+        List<RecurringDonationChangeLog__c> changes = new List<RecurringDonationChangeLog__c>();
         for(Integer i=0; i < count; i++) {
             changes.add(getChangeRecord());
         }
         return changes;
     }
 
-    static RecurringDonationChangeHistory__c getCampaignChangeRecord() {
-        RecurringDonationChangeHistory__c record = getChangeRecord();
+    static RecurringDonationChangeLog__c getCampaignChangeRecord() {
+        RecurringDonationChangeLog__c record = getChangeRecord();
 
         Campaign newCampaign = new Campaign(
                 Id = FAKE_CAMPAIGN_ID_2,
@@ -256,8 +256,8 @@ private class RD2_ChangeHistory_TEST {
         return record;
     }
 
-    static RecurringDonationChangeHistory__c getChangeRecord() {
-        return new RecurringDonationChangeHistory__c(
+    static RecurringDonationChangeLog__c getChangeRecord() {
+        return new RecurringDonationChangeLog__c(
                 PreviousAmount__c = 5,
                 NewAmount__c = 5,
                 PreviousAnnualValue__c = 60,
