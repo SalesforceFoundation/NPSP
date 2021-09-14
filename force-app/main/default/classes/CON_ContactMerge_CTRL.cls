@@ -1008,6 +1008,9 @@ public with sharing class CON_ContactMerge_CTRL {
 
             System.SavePoint sp = Database.setSavepoint();
             try {
+
+                CON_ContactMerge.mergeContacts((Contact)master, losers);
+                // Update the master with the selected values
                 Database.DMLOptions dml = new Database.DMLOptions();
                 dml.DuplicateRuleHeader.AllowSave = true;
                 // We need to turn off Affiliation processing or there will be duplicate affiliates
@@ -1027,8 +1030,6 @@ public with sharing class CON_ContactMerge_CTRL {
 
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
 
-                CON_ContactMerge.mergeContacts((Contact)master, losers);
-                // Update the master with the selected values
                 return new PageReference('/' + master.id);
             } catch (Exception e) {
                 Database.rollback(sp);
