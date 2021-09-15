@@ -160,7 +160,7 @@
         <label>Recurring Donation Change Log Num</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Donation Change Log</pluralLabel>
+    <pluralLabel>Recurring Donation Change Logs</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>
