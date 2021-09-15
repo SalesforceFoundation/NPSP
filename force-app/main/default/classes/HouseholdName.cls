@@ -32,7 +32,7 @@
 * @date 2021
 * @description Household Name value object in NPSP.
 */
-public inherited sharing class HouseholdName {
+public inherited sharing class HouseholdName implements IHouseholdName {
 
     private Contacts contacts;
     private HH_INaming service;
