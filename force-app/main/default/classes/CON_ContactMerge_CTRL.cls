@@ -1026,24 +1026,16 @@ public with sharing class CON_ContactMerge_CTRL {
         return losingerContacts;
     }
 
+    // Update the field values of master record based on the selected value for each field.
     private void populateSelectedValuesFor(Contact winningContact) {
-        // Update the field values of master record based on the selected value for each field.
         for (FieldRow row : fieldRows) {
             if (row.showRadio
                 && !row.fieldName.equals(MASTER_KEY) 
-                && row.selectedValue != winningContact.id) {
+                && row.selectedValue != winningContact.Id) {
                 SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
-
-                // Sobject.put is not happy when sobject.get returns null. It throws an 
-                // exception System.SObjectException: Illegal assignment from Object to String.
-                // But instead when you pass a null directly to put, it works fine. 
-                // And hence, this if statement.
-                if (selectedRecord.get(row.fieldName) == null) {
-                    winningContact.put(row.fieldName, null);
-                } else {
-                    Object val = selectedRecord.get(row.fieldName);
-                    winningContact.put(row.fieldName, val);
-                }
+                Object val = selectedRecord.get(row.fieldName);
+                winningContact.put(row.fieldName, val);
+                
             }
         }
     }
