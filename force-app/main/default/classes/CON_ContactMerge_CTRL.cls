@@ -950,7 +950,7 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
-        SObject winningContact = getWinningContact();
+        Contact winningContact = getWinningContact();
         
         if (winningContact == null) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_No_Master));
@@ -977,7 +977,6 @@ public with sharing class CON_ContactMerge_CTRL {
 
         System.SavePoint sp = Database.setSavepoint();
 
-
         Database.SaveResult sr = updateWinningContactWithSelectedFields(winningContact);
         if (!sr.isSuccess()) {
             String strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
@@ -990,7 +989,7 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         try {
-            CON_ContactMerge.mergeContacts((Contact)winningContact, losingContacts);
+            CON_ContactMerge.mergeContacts(winningContact, losingContacts);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1005,7 +1004,7 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     // Find the winningContact record based the selected value of the winningContact FieldRow
-    private SObject getWinningContact() {
+    private Contact getWinningContact() {
         for (FieldRow row : fieldRows) {
             if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
                 return new Contact(Id = row.selectedValue);
@@ -1016,7 +1015,7 @@ public with sharing class CON_ContactMerge_CTRL {
     }
     
 
-    private List<Contact> groupLosingContacts(SObject winningContact) {
+    private List<Contact> groupLosingContacts(Contact winningContact) {
         List<Contact> losingerContacts = new List<Contact>();
         for (Contact c : this.selectedRecords.values()) {
             if (c.Id != winningContact.Id) {
@@ -1027,7 +1026,7 @@ public with sharing class CON_ContactMerge_CTRL {
         return losingerContacts;
     }
 
-    private void populateSelectedValuesFor(SObject winningContact) {
+    private void populateSelectedValuesFor(Contact winningContact) {
         // Update the field values of master record based on the selected value for each field.
         for (FieldRow row : fieldRows) {
             if (row.showRadio
@@ -1056,7 +1055,7 @@ public with sharing class CON_ContactMerge_CTRL {
             WHERE Id IN :toLock FOR UPDATE];
     }
 
-    private Database.SaveResult updateWinningContactWithSelectedFields(SObject winningContact) {
+    private Database.SaveResult updateWinningContactWithSelectedFields(Contact winningContact) {
         // Update the master with the selected values
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
