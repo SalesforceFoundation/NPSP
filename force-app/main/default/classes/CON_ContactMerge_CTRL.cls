@@ -950,21 +950,21 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
-        SObject master = getWinningContact();
+        SObject winningContact = getWinningContact();
         
-        if (master == null) {
+        if (winningContact == null) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_No_Master));
             return null;
         }
 
-       populateSelectedValuesFor(master);
+       populateSelectedValuesFor(winningContact);
 
-        List<Contact> losers = groupLosingContacts(master);
+        List<Contact> losingContacts = groupLosingContacts(winningContact);
         
         // before proceeding further first lock the records for change
         List<Contact> allContacts = new List<Contact>();
-        allContacts.add((Contact)master);
-        allContacts.addAll(losers);
+        allContacts.add((Contact)winningContact);
+        allContacts.addAll(losingContacts);
 
         List<Contact> lockedContacts = lockAllContacts(allContacts);
 
@@ -978,7 +978,7 @@ public with sharing class CON_ContactMerge_CTRL {
         System.SavePoint sp = Database.setSavepoint();
 
 
-        Database.SaveResult sr = updateWinningContactWithSelectedFields(master);
+        Database.SaveResult sr = updateWinningContactWithSelectedFields(winningContact);
         if (!sr.isSuccess()) {
             String strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
             for (Database.Error err : sr.getErrors()) {
@@ -990,7 +990,7 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         try {
-            CON_ContactMerge.mergeContacts((Contact)master, losers);
+            CON_ContactMerge.mergeContacts((Contact)winningContact, losingContacts);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1001,10 +1001,10 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
 
-        return new PageReference('/' + master.id);
+        return new PageReference('/' + winningContact.id);
     }
 
-    // Find the master record based the selected value of the Master FieldRow
+    // Find the winningContact record based the selected value of the winningContact FieldRow
     private SObject getWinningContact() {
         for (FieldRow row : fieldRows) {
             if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
