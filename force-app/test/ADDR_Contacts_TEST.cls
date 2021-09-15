@@ -374,6 +374,8 @@ public with sharing class ADDR_Contacts_TEST {
 
         System.assertEquals(updatedContact.Current_Address__c, testAddress.Id, 'The contact should have the expected ' +
                 'current address lookup assigned.');
+        System.assertEquals(true, updatedContact.Undeliverable_Address__c,
+                'contact undeliverable status should be true.');
         System.assertEquals(updatedAddress.Undeliverable__c, updatedContact.Undeliverable_Address__c,
                 'address undeliverable status should match contact address undeliverable status.');
         System.assertEquals(updatedAccount.Undeliverable_Address__c, updatedContact.Undeliverable_Address__c,
