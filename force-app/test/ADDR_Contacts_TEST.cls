@@ -47,12 +47,12 @@ public with sharing class ADDR_Contacts_TEST {
 
         NPSP_Contact npspContact = new NPSP_Contact(UTIL_UnitTestData_TEST.getContact());
         npspContact.getRecord().AccountId = testAccountWithBillingAddress[0].Id;
-        npspContact.setUndeliverableMailingAddress(true);
         insert npspContact.getRecord();
 
         Test.startTest();
             Contact contactToUpdate = [SELECT Current_Address__c FROM Contact WHERE Id = :npspContact.getRecord().Id];
             NPSP_Contact npspContactToUpdate = new NPSP_Contact(contactToUpdate);
+            npspContactToUpdate.setUndeliverableMailingAddress(true);
             npspContactToUpdate.setCurrentAddress(
                     new NPSP_Address(buildAddresses(1, false)[0]));
 
