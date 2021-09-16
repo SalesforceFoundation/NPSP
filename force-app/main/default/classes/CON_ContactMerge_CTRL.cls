@@ -957,7 +957,7 @@ public with sharing class CON_ContactMerge_CTRL {
             return null;
         }
 
-       populateSelectedValuesFor(winningContact);
+       populateNonUniqueSelectedValuesFor(winningContact);
 
         List<Contact> losingContacts = groupLosingContacts(winningContact);
         
@@ -999,6 +999,8 @@ public with sharing class CON_ContactMerge_CTRL {
             return null;
         }
 
+        addUniqueValuesToWinningContact(winningContact);
+        update winningContact;
 
         return new PageReference('/' + winningContact.id);
     }
@@ -1013,7 +1015,6 @@ public with sharing class CON_ContactMerge_CTRL {
         
         return null;
     }
-    
 
     private List<Contact> groupLosingContacts(Contact winningContact) {
         List<Contact> losingerContacts = new List<Contact>();
@@ -1027,15 +1028,30 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     // Update the field values of master record based on the selected value for each field.
-    private void populateSelectedValuesFor(Contact winningContact) {
+    private void populateNonUniqueSelectedValuesFor(Contact winningContact) {
         for (FieldRow row : fieldRows) {
             if (row.showRadio
-                && !row.fieldName.equals(MASTER_KEY) 
-                && row.selectedValue != winningContact.Id) {
+                && !row.fieldName.equals(MASTER_KEY)
+                && row.selectedValue != winningContact.Id
+                && !UTIL_Describe.isFieldUnique('Contact', row.fieldName))
+            {
                 SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
                 Object val = selectedRecord.get(row.fieldName);
-                winningContact.put(row.fieldName, val);
-                
+                winningContact.put(row.fieldName, val);     
+            }
+        }
+    }
+
+    private void addUniqueValuesToWinningContact(Contact winningContact) {
+        for (FieldRow row : fieldRows) {
+            if (row.showRadio
+                && !row.fieldName.equals(MASTER_KEY)
+                && row.selectedValue != winningContact.Id
+                && UTIL_Describe.isFieldUnique('Contact', row.fieldName))
+            {
+                SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
+                Object val = selectedRecord.get(row.fieldName);
+                winningContact.put(row.fieldName, val);     
             }
         }
     }
