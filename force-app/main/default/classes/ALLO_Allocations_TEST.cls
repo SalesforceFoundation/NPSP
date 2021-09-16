@@ -742,6 +742,116 @@ private with sharing class ALLO_Allocations_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Recurring Donation Allocations test:
+    * Create recurring donation. Pledged opportunity is generated automatically with a default allocation.
+    * Scheduled Payment created with a default allocation.
+    * Create allocations for the recurring donation, verify opp allocations are created, default opp
+    * allocation is deleted.  verify payment allocations are created, default opp allocation is deleted.
+    * Set Payment to Written Off.  modify recurring donation allocations: Opportunity's allocations are
+    * updated, but Written Off Payment's Allocations are left unchanged/
+    ********************************************************************************************************/
+    static testMethod void recurringDonationsPaymentAllocationValidation() {
+        General_Accounting_Unit__c defaultgau = new General_Accounting_Unit__c(Name='General');
+        insert defaultgau;
+
+        setupSettings(new Allocations_Settings__c(
+                        Default_Allocations_Enabled__c = true,
+                        Payment_Allocations_Enabled__c = true,
+                        Default__c = defaultGau.Id
+        ));
+
+        Account acc = new Account(Name='foo');
+        insert acc;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'rdGAU1');
+        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'rdGAU2');
+        List<General_Accounting_Unit__c> gaus = new List<General_Accounting_Unit__c> {gau, gau2};
+
+        insert gaus;
+
+
+        npe03__Recurring_Donation__c rd = new TEST_RecurringDonationBuilder()
+            .withInstallmentPeriodYearly()
+            .withDateEstablished(System.today())
+            .withAccount(acc.id)
+            .withAmount(20)
+            .withScheduleTypeMultiplyValue()
+            .withOpenEndedStatusOpen()
+            .build();
+
+        // this initial creation of the RD with default allocations set up, which get copied to the opp
+        // will be what we soql limit profile in this test (and thus the startTest/stopTest).
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        //query for the opportunity automatically created by the schedule
+        list<Opportunity> queryOpp = [SELECT Id, npe03__Recurring_Donation__c, Amount, CloseDate, StageName FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.Id];
+        System.assertEquals(1,queryOpp.size(),'A single opportunity should be created.');
+
+        list<Allocation__c> queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(1,queryAllo.size(),'A single default allocation should be created.');
+        System.assertEquals(defaultgau.Id,queryAllo[0].General_Accounting_Unit__c,'The allocation should be assigned to the default General Accounting Unit.');
+        System.assertEquals(20,queryAllo[0].Amount__c,'The default allocation should be for the total amount of the Opportunity.');
+
+        List<npe01__OppPayment__c> pmts = [SELECT   Id,
+                                                    npe01__Paid__c,
+                                                    npe01__Written_Off__c
+                                           FROM npe01__OppPayment__c
+                                           where npe01__Opportunity__c = :queryOpp[0].Id];
+        System.assertEquals(1, pmts.size(), 'A single payment should be created.');
+
+        Map<Id, Allocation__c> pmtAllocsByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+        System.assertEquals(1,pmtAllocsByGAU.size(),'A single default payment allocation should be created.');
+        System.assertEquals(true, pmtAllocsByGAU.containsKey(defaultgau.Id),'The Payment allocation should be assigned to the default General Accounting Unit.');
+        System.assertEquals(20, pmtAllocsByGAU.get(defaultgau.Id).Amount__c,'The default Payment allocation should be for the total amount of the Payment.');
+
+        list<Allocation__c> alloForInsert = new list<Allocation__c>();
+        Allocation__c percentAllo = new Allocation__c(Recurring_Donation__c = rd.Id, Percent__c = 50, General_Accounting_Unit__c = gau.Id);
+        alloForInsert.add(percentAllo);
+        Allocation__c amountAllo = new Allocation__c(Recurring_Donation__c = rd.Id, Amount__c = 10, General_Accounting_Unit__c = gau2.Id);
+        alloForInsert.add(amountAllo);
+        insert alloForInsert;
+
+        // Confirm Opportunity Allocations were updated to match the Recurring Donation Allocations
+        queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(2,queryAllo.size(), 'Allocations for the open Recurring Donation Opportunity should be created automatically after they are created for the Recurring Donation.');
+        System.assertEquals(gau2.Id,queryAllo[0].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
+        System.assertEquals(gau.Id,queryAllo[1].General_Accounting_Unit__c, 'Allocations should be to the non-default GAU.');
+        System.assertEquals(10,queryAllo[0].Amount__c, 'The allocation amount should be set to a fixed amount.');
+        System.assertEquals(10,queryAllo[1].Amount__c, 'The percentage based allocation amount should be set based on the opportunity amount.');
+
+        // Confirm Payment Allocations were updated to match the Opportunity Allocations updates
+        pmtAllocsByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+        System.assertEquals(2, pmtAllocsByGAU.size(), 'Allocations for the scheduled Payment should be created automatically after they are updated for the Opportunity as a result of the Recurring Donation change.');
+        System.assertEquals(true, pmtAllocsByGAU.containsKey(gau.Id),'Allocations should be to the non-default GAU.');
+        System.assertEquals(true, pmtAllocsByGAU.containsKey(gau2.Id),'Allocations should be to the non-default GAU 2.');
+
+        System.assertEquals(10, pmtAllocsByGAU.get(gau.Id).Amount__c,'The amount of the allocation.');
+        System.assertEquals(10, pmtAllocsByGAU.get(gau2.Id).Amount__c,'The amount of the allocation.');
+
+        // Make Payment Written Off
+        pmts[0].npe01__Written_Off__c = true;
+        update pmts;
+
+        // Adjust the Recurring Donation Percent Allocation to 20%
+        percentAllo.Percent__c = 20;
+        update percentAllo;
+
+        // Confirm Opportunity Allocations were updated
+        queryAllo = getAllocationsOrderByPercent(queryOpp[0].Id);
+        System.assertEquals(3,queryAllo.size(), 'Allocations updated for the percentage change.');
+
+        // Confirm Payment Allocations were not updated since Payment is now Written Off
+        pmtAllocsByGAU = getPaymentAllocationsByGAU(pmts[0].Id);
+        System.assertEquals(2, pmtAllocsByGAU.size(), 'Allocations for the scheduled Payment should be created automatically after they are updated for the Opportunity as a result of the Recurring Donation change.');
+        System.assertEquals(true, pmtAllocsByGAU.containsKey(gau.Id),'Allocations should be to the non-default GAU.');
+        System.assertEquals(true, pmtAllocsByGAU.containsKey(gau2.Id),'Allocations should be to the non-default GAU 2.');
+
+        System.assertEquals(10, pmtAllocsByGAU.get(gau.Id).Amount__c,'The amount of the allocation.');
+        System.assertEquals(10, pmtAllocsByGAU.get(gau2.Id).Amount__c,'The amount of the allocation.');
+    }
+
+    /*******************************************************************************************************
     * @description Create a campaign with an allocation, and 100 opportunities, half of which are attributed
     * to the campaign. Verifies that default allocations and campaign allocations are created.
     * Updates all opportunity amounts to be equal to the campaign allocation amount, verifies that default
@@ -1354,6 +1464,23 @@ private with sharing class ALLO_Allocations_TEST {
      */
     private static Map<Id, Allocation__c> getPaymentAllocationsByGAU(Id paymentId) {
         List<Allocation__c> allocs = Database.query(getPaymentAllocationsQuery(paymentId).build());
+        Map<Id, Allocation__c> allocsByGAU = new Map<Id, Allocation__c>();
+
+        for (Allocation__c alloc : allocs) {
+            allocsByGAU.put(alloc.General_Accounting_Unit__c, alloc);
+        }
+        return allocsByGAU;
+    }
+
+        /**
+     * @description Gets a List of Allocations associated with a particular Opportunity
+     *              and builds a map by GAU of them.  Assumes only one allocation per
+     *              Opportunity and GAU, since it is a test
+     * @param  opportunityId Opportunity Id to retrieve Allocations for
+     * @return Allocations By GAU Id
+     */
+    private static Map<Id, Allocation__c> getOpportunityAllocationsByGAU(Id opportunityId) {
+        List<Allocation__c> allocs = Database.query(getAllocationsQuery(opportunityId).build());
         Map<Id, Allocation__c> allocsByGAU = new Map<Id, Allocation__c>();
 
         for (Allocation__c alloc : allocs) {
