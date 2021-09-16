@@ -200,7 +200,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * Contacts are being inserted.
      */
     public Contacts bucketContacts_insertContext() {
-        return new Contacts(contactsWithoutAccounts());
+        return contactsWithoutAccounts();
     }
 
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
@@ -687,15 +687,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
         set;
     }
 
-    //todo: return Contacts
-    public List<Contact> contactsWithoutAccounts() {
+    public Contacts contactsWithoutAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (isMissingAccount(contactRecord)) {
+            if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
-        return contactsWithoutAccounts;
+        return new Contacts(contactsWithoutAccounts);
     }
 
     public Map<Id, Contact> getNewOwnerContactById() {
@@ -1309,10 +1308,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
-    }
-
-    private Boolean isMissingAccount(Contact contactRecord) {
-        return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
     }
 
     private Account accountFor(Contact contactRecord) {
