@@ -64,7 +64,7 @@ public with sharing class RD2_ChangeLogSelector {
             String.valueOf(RecurringDonationChangeLog__c.RecurringDonation__c)
     };
 
-    public List<RecurringDonationChangeLog__c> getChangeHistories(Id recurringDonationId) {
+    public List<RecurringDonationChangeLog__c> getChangeLogEntries(Id recurringDonationId) {
         UTIL_Query query = new UTIL_Query()
                 .withSelectFields(fields)
                 .withMultiCurrencyField()

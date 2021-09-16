@@ -476,7 +476,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         for (RD2_RecurringDonation rdRecord : rdRecords) {            
             npe03__Recurring_Donation__c oldRd = oldRdsById.get(rdRecord.getSObject().Id);
             RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
-            changeLogService.handleHistoryFieldChanged(rdRecord, oldRdEntity);
+            changeLogService.handleLogFieldChanged(rdRecord, oldRdEntity);
         }
 
         changeLogService.insertChangeLogRecords();

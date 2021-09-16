@@ -179,15 +179,15 @@ private class RD2_ChangeLog_TEST {
 
         RD2_ChangeView view = new RD2_ChangeLog(record).getChangeView();
 
-        String rdChangeLogSObject = String.valueOf(RecurringDonationChangeLog__c.SObjectType);
+        String changeLogSObjectName = String.valueOf(RecurringDonationChangeLog__c.SObjectType);
 
         String field1Label = UTIL_Describe.getFieldLabel(
-            rdChangeLogSObject,
+            changeLogSObjectName,
             String.valueOf(RecurringDonationChangeLog__c.PreviousAnnualValue__c)
         );
 
         String field2Label = UTIL_Describe.getFieldLabel(
-            rdChangeLogSObject,
+            changeLogSObjectName,
             String.valueOf(RecurringDonationChangeLog__c.NewExpectedTotalValue__c)
         );
 
@@ -213,7 +213,7 @@ private class RD2_ChangeLog_TEST {
                 List<Type> listOfParamTypes,
                 List<String> listOfParamNames,
                 List<Object> listOfArgs) {
-            if(stubbedMethodName == 'getChangeHistories') {
+            if(stubbedMethodName == 'getChangeLogEntries') {
                 return records;
             }
             return null;

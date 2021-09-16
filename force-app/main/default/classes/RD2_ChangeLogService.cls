@@ -72,7 +72,7 @@ public inherited sharing class RD2_ChangeLogService {
             changeLogSelector.withChangeTypeFilter(changeTypeFilter);
         }
 
-        List<RecurringDonationChangeLog__c> changes = changeLogSelector.getChangeHistories(recurringDonationId);
+        List<RecurringDonationChangeLog__c> changes = changeLogSelector.getChangeLogEntries(recurringDonationId);
         RD2_ChangeLogView changeLogView = buildView(changes, recordLimit);
 
         return changeLogView;
@@ -106,7 +106,7 @@ public inherited sharing class RD2_ChangeLogService {
         set;
     }
 
-    private List<RecurringDonationChangeLog__c> changeLogList = 
+    private List<RecurringDonationChangeLog__c> changeLogs = 
         new List<RecurringDonationChangeLog__c>();
 
     /**
@@ -115,22 +115,22 @@ public inherited sharing class RD2_ChangeLogService {
      * @param originalRd Old Recurring Donation
      * @return Boolean
      */
-    public void handleHistoryFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
+    public void handleLogFieldChanged(RD2_RecurringDonation updatedRd, RD2_RecurringDonation originalRd) {
         RecurringDonationChangeLog__c changeLog = 
             new ChangeLogComparer(updatedRd, originalRd).setChangedFields();
 
         if (changeLog != null) {
-            changeLogList.add(changeLog);
+            changeLogs.add(changeLog);
         }
     }
 
     @TestVisible
     private List<RecurringDonationChangeLog__c> getChangeLogRecords() {
-        return changeLogList;
+        return changeLogs;
     }
 
     public void insertChangeLogRecords(){
-        if (changeLogList.size() > 0) {
+        if (changeLogs.size() > 0) {
             changeLogCreator.insertChangeLogRecords(getChangeLogRecords());
         }
     }
@@ -234,7 +234,7 @@ public inherited sharing class RD2_ChangeLogService {
 
             String changeType = calculateChangeType();
 
-            RecurringDonationChangeLog__c rdChangeLog = new RecurringDonationChangeLog__c(
+            RecurringDonationChangeLog__c changeLog = new RecurringDonationChangeLog__c(
                 RecurringDonation__c = (Id)updatedRd.getValue(npe03__Recurring_Donation__c.Id),
                 EffectiveDate__c = (Date)updatedRd.getValue(npe03__Recurring_Donation__c.StartDate__c),
                 NewAmount__c = (Decimal)updatedRd.getValue(RD_AMOUNT_FIELD),
@@ -247,10 +247,10 @@ public inherited sharing class RD2_ChangeLogService {
             );
 
             if (UserInfo.isMultiCurrencyOrganization()) {
-                rdChangeLog.put('CurrencyIsoCode', updatedRd.getCurrencyIsoCode());
+                changeLog.put('CurrencyIsoCode', updatedRd.getCurrencyIsoCode());
             }
 
-            return rdChangeLog;
+            return changeLog;
         }
 
         /**
@@ -304,10 +304,10 @@ public inherited sharing class RD2_ChangeLogService {
 
         /**
          * @description Inserts the provided Change Log records, without allowing partial success
-         * @param changeLogList A List of Change Log records to insert, regardless of permissions
+         * @param changeLogs A List of Change Log records to insert, regardless of permissions
          */
-        public void insertChangeLogRecords(List<RecurringDonationChangeLog__c> changeLogList){
-            UTIL_DMLService.insertRecords(changeLogList);
+        public void insertChangeLogRecords(List<RecurringDonationChangeLog__c> changeLogs){
+            UTIL_DMLService.insertRecords(changeLogs);
         }
 
     }

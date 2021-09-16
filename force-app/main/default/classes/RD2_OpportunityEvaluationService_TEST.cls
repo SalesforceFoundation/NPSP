@@ -1968,19 +1968,19 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
 
-        List<RecurringDonationChangeLog__c> rdclList = 
+        List<RecurringDonationChangeLog__c> changeLogs = 
             RD2_ChangeLogService_TEST.getRecurringDonationChangeLog(rd.Id);
-        System.assertEquals(1, rdclList.size(), 'There should be 1 Change Log after the update');
-        RecurringDonationChangeLog__c rdcl = rdclList[0];
-        System.assertEquals(RD2_Constants.STATUS_PAUSED, rdcl.NewStatus__c, 
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, changeLog.NewStatus__c, 
             'New Status should be ' + RD2_Constants.STATUS_PAUSED);
-        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdcl.PreviousStatus__c, 
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, changeLog.PreviousStatus__c, 
             'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rdcl.NewStatusReason__c, 
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, changeLog.NewStatusReason__c, 
             'New Status Reason should be ' + RD2_ScheduleService_TEST.PAUSE_REASON);
-        System.assertEquals(null, rdcl.PreviousStatusReason__c, 
+        System.assertEquals(null, changeLog.PreviousStatusReason__c, 
             'Previous Status should be null');
-        System.assertEquals(null, rdcl.ChangeType__c, 'The Change Type should be null');
+        System.assertEquals(null, changeLog.ChangeType__c, 'The Change Type should be null');
     }
 
     /**
