@@ -836,15 +836,28 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
-        List<Contact> addressRefreshQueue = new List<Contact>();
+        List<Contact> consWithoutAddresses = contactsWithoutAddresses();
+
+        List<Contact> hasHouseholdAddresses = new List<Contact>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
             //todo: this is too low - move up
-            if (shouldUseAccountAddress(npspContact)) {
+            if (accountHasAddresses(npspContact.getRecord())) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
-                addressRefreshQueue.add(npspContact.getRecord());
+                hasHouseholdAddresses.add(npspContact.getRecord());
             }
         }
-        return new Contacts(addressRefreshQueue);
+        return new Contacts(consWithoutAddresses);
+    }
+
+    private List<Contact> contactsWithoutAddresses() {
+        List<Contact> consWithoutAddresses = new List<Contact>();
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
+            if (npspContact.isAddressEmpty()) {
+                // if the contact has no address specified and the household has a default address, pick up the hh default.
+                consWithoutAddresses.add(npspContact.getRecord());
+            }
+        }
+        return consWithoutAddresses;
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
@@ -867,10 +880,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return useCurrentAddressQueue;
-    }
-
-    private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
-        return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
     }
 
     //todo: bulk filter
