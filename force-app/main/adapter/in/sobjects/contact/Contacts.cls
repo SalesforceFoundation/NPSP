@@ -836,17 +836,22 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
-        List<Contact> consWithoutAddresses = contactsWithoutAddresses();
+        List<Contact> hasHouseholdAddresses = inHouseholdAccountsThatHaveAddresses();
+        List<Contact> applyHouseholdAddress = new List<Contact>();
+        applyHouseholdAddress.addAll(contactsWithoutAddresses());
+        applyHouseholdAddress.addAll(hasHouseholdAddresses);
+        return new Contacts(applyHouseholdAddress);
+    }
 
+    private List<Contact> inHouseholdAccountsThatHaveAddresses() {
         List<Contact> hasHouseholdAddresses = new List<Contact>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
-            //todo: this is too low - move up
             if (accountHasAddresses(npspContact.getRecord())) {
                 // if the contact has no address specified and the household has a default address, pick up the hh default.
                 hasHouseholdAddresses.add(npspContact.getRecord());
             }
         }
-        return new Contacts(consWithoutAddresses);
+        return hasHouseholdAddresses;
     }
 
     private List<Contact> contactsWithoutAddresses() {
