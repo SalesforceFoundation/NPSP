@@ -122,7 +122,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
         if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
+            contactsWithoutAccounts.addAll((List<Contact>) contacts.contactsWithoutAccounts().getRecords());
         }
 
         if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
@@ -201,11 +201,11 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
         householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                contactsWithoutAccounts(contacts));
+            (List<Contact>) contacts.contactsWithoutAccounts().getRecords());
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             LegacyHouseholds.attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
+                (List<Contact>) contacts.contactsWithoutAccounts().getRecords()
             );
         }
     }
@@ -257,7 +257,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                    contacts.contactsWithoutAccounts());
+                (List<Contact>) contacts.contactsWithoutAccounts().getRecords());
         } else {
             if (CAO_Constants.isOneToOne()) {
                 householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -267,7 +267,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
             if (CAO_Constants.isBucketModel()) {
                 LegacyHouseholds.attachToBucketAccount(
-                        contacts.contactsWithoutAccounts());
+                    (List<Contact>) contacts.contactsWithoutAccounts().getRecords());
             }
         }
 
