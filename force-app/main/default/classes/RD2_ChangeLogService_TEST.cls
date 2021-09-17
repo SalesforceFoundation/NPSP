@@ -31,11 +31,11 @@
 * @author Salesforce.org
 * @date 2021
 * @group Recurring Donations
-* @description All logic specific to Enhanced Recurring Donation Change History
+* @description All logic specific to Enhanced Recurring Donation Change Logs
 *
 */
 @IsTest
-public with sharing class RD2_ChangeHistoryService_TEST {
+public with sharing class RD2_ChangeLogService_TEST {
     private static final TEST_SObjectGateway.RecurringDonationGateway rdGateway = new TEST_SObjectGateway.RecurringDonationGateway();
 
     private static final Date START_DATE = Date.newInstance(2019, 9, 15);
@@ -57,11 +57,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
-     * @description Verifies that creating and updating a Recurring Donation without Enabling Change History 
-     * does not create any Change History records
+     * @description Verifies that creating and updating a Recurring Donation without Enabling Change Log 
+     * does not create any Change Log records
      */
     @IsTest
-    private static void shouldNotCreateChangeHistoryWhenSettingIsNotEnabled() {
+    private static void shouldNotCreateChangeLogWhenSettingIsNotEnabled() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
@@ -70,8 +70,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         insert rd;
 
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log after RD insert');
 
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         rd.ChangeType__c = RD2_Constants.CHANGE_TYPE_DOWNGRADE;
@@ -80,8 +80,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         update rd;
         Test.stopTest();
 
-        rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History with the Setting not Enabled');
+        changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log with the Setting not Enabled');
 
         // Make sure that the Change Type is cleared, even if it wasn't used
         rd = rdGateway.getRecord(rd.Id);
@@ -90,19 +90,19 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     /**
      * @description Verifies that creating and updating a Recurring Donation's Change Type after
-     *  Enabling Change History does not create any Change History records, and the Change Type is reset
+     *  Enabling Change Log does not create any Change Log records, and the Change Type is reset
      */
     @IsTest
-    private static void shouldClearChangeTypeAndNotCreateChangeHistoryWhenSettingIsEnabled() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldClearChangeTypeAndNotCreateChangeLogWhenSettingIsEnabled() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .build();
 
         insert rd;
 
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log after RD insert');
 
         rd.ChangeType__c = CHANGE_TYPE_CUSTOM;
 
@@ -110,8 +110,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         update rd;
         Test.stopTest();
 
-        rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History with the Setting not Enabled');
+        changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log with the Setting not Enabled');
 
         // Make sure that the Change Type is cleared, even if it wasn't used
         rd = rdGateway.getRecord(rd.Id);
@@ -120,11 +120,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Amount
-     * with Change History Enabled does create Change History records
+     * with Change Log Enabled does create Change Log records
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWhenAmountChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWhenAmountChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
@@ -132,8 +132,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         insert rd;
 
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log after RD insert');
         
         rd.npe03__Amount__c = RD_NEW_AMOUNT;
         
@@ -141,24 +141,24 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         update rd;
         Test.stopTest();
 
-        rdchList = getRecurringDonationChangeHistory(rd.Id);
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
-        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
-        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
-        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+        changeLogs = getRecurringDonationChangeLog(rd.Id);
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_NEW_AMOUNT, changeLog.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, changeLog.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, changeLog.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
      * @description Verifies that creating and updating multiple Recurring Donations
-     * with Change History Enabled does create Change History records
+     * with Change Log Enabled does create Change Log records
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWhenMultipleRdsAreUpdated() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWhenMultipleRdsAreUpdated() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
@@ -180,26 +180,26 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         Test.stopTest();
 
         // Check first change
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
-        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
-        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
-        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(rd.Id);
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_NEW_AMOUNT, changeLog.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, changeLog.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, changeLog.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
 
         // Check second change
         Id rd2Id = rd2.Id;
-        rdchList = getRecurringDonationChangeHistory(rd2Id);
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        RecurringDonationChangeHistory__c rdch2 = rdchList[0];
-        System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 
+        changeLogs = getRecurringDonationChangeLog(rd2Id);
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog2 = changeLogs[0];
+        System.assertEquals(RD2_Constants.STATUS_LAPSED, changeLog2.NewStatus__c, 
             'New Status should be ' + RD2_Constants.STATUS_LAPSED);
-        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, changeLog2.PreviousStatus__c, 
             'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch2.ChangeType__c, 
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, changeLog2.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
 
         rd2 = rdGateway.getRecord(rd2Id);
@@ -208,18 +208,18 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Period
-     * with Change History Enabled does create Change History records with Change Types
+     * with Change Log Enabled does create Change Log records with Change Types
      */
     @IsTest
-    private static void shouldCreateChangeHistoryDowngradeWhenPeriodDecreases() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogDowngradeWhenPeriodDecreases() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .withInstallmentPeriodWeekly()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -228,38 +228,38 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be no Change Log after RD insert');
 
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(RD_PERIOD_FIRST_AND_FIFTEENTH, rdch.NewInstallmentPeriod__c, 
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_PERIOD_FIRST_AND_FIFTEENTH, changeLog.NewInstallmentPeriod__c, 
             'New Period should be ' + RD_PERIOD_FIRST_AND_FIFTEENTH);
-        System.assertEquals(RD_PERIOD_WEEKLY, rdch.PreviousInstallmentPeriod__c, 
+        System.assertEquals(RD_PERIOD_WEEKLY, changeLog.PreviousInstallmentPeriod__c, 
             'Previous Period should be ' + RD_PERIOD);
-        System.assertEquals(RD_AMOUNT * 24, rdch.NewAnnualValue__c, 
+        System.assertEquals(RD_AMOUNT * 24, changeLog.NewAnnualValue__c, 
             'New Annual Value should be ' + RD_NEW_AMOUNT * 24);
-        System.assertEquals(RD_AMOUNT * 52, rdch.PreviousAnnualValue__c, 
+        System.assertEquals(RD_AMOUNT * 52, changeLog.PreviousAnnualValue__c, 
             'Previous Annual Value should be ' + RD_AMOUNT * 52);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Amount
-     * with Change History Enabled does create Change History records with Change Types
+     * with Change Log Enabled does create Change Log records with Change Types
      */
     @IsTest
-    private static void shouldCreateChangeHistoryDowngradeWhenAmountLowers() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogDowngradeWhenAmountLowers() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -269,34 +269,34 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be no Change Log after RD insert');
 
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(lowerAmount, rdch.NewAmount__c, 'New Amount should be ' + lowerAmount);
-        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
-        System.assertEquals(lowerAmount * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
-        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(lowerAmount, changeLog.NewAmount__c, 'New Amount should be ' + lowerAmount);
+        System.assertEquals(RD_AMOUNT, changeLog.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(lowerAmount * 12, changeLog.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation's Day of Month
-     *  with Change History Enabled does not create Change History records
+     *  with Change Log Enabled does not create Change Log records
      */
     @IsTest
-    private static void shouldNotCreateChangeHistoryWhenDayOfMonthChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldNotCreateChangeLogWhenDayOfMonthChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -305,25 +305,25 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(0, rdchList.size(), 'There should be 0 Change History after the update');
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(0, changeLogs.size(), 'There should be 0 Change Logs after the update');
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation's Type from
-     * Open to Fixed creates a Change History with the Type change and new Installment number
+     * Open to Fixed creates a Change Log with the Type change and new Installment number
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWhenRecurringTypeChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWhenRecurringTypeChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -334,37 +334,37 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, rdch.NewRecurringType__c, 
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_FIXED, changeLog.NewRecurringType__c, 
             'New Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_FIXED);
-        System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, rdch.PreviousRecurringType__c, 
+        System.assertEquals(RD2_Constants.RECURRING_TYPE_OPEN, changeLog.PreviousRecurringType__c, 
             'Previous Recurring Type should be ' + RD2_Constants.RECURRING_TYPE_OPEN);
-        System.assertEquals(numberOfInstallments, rdch.NewPlannedInstallments__c, 
+        System.assertEquals(numberOfInstallments, changeLog.NewPlannedInstallments__c, 
             'New Planned Installments should be ' + numberOfInstallments);
-        System.assertEquals(null, rdch.PreviousPlannedInstallments__c, 
+        System.assertEquals(null, changeLog.PreviousPlannedInstallments__c, 
             'Previous Planned Installments should be null');
-        System.assertEquals(null, rdch.NewAnnualValue__c, 'New Annual Value should be null');
+        System.assertEquals(null, changeLog.NewAnnualValue__c, 'New Annual Value should be null');
         Decimal previousAnnualValue = RD_AMOUNT * 12;
-        System.assertEquals(previousAnnualValue, rdch.PreviousAnnualValue__c, 
+        System.assertEquals(previousAnnualValue, changeLog.PreviousAnnualValue__c, 
             'Previous Annual Value should be ' + previousAnnualValue);
         Decimal newTotalValue = RD_AMOUNT * 10;
-        System.assertEquals(newTotalValue, rdch.NewExpectedTotalValue__c, 
+        System.assertEquals(newTotalValue, changeLog.NewExpectedTotalValue__c, 
             'New Total Value should be ' + newTotalValue);
-        System.assertEquals(null, rdch.PreviousExpectedTotalValue__c, 'Previous Total Value should be null');
-        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+        System.assertEquals(null, changeLog.PreviousExpectedTotalValue__c, 'Previous Total Value should be null');
+        System.assertEquals(null, changeLog.ChangeType__c, 'The Change Type should be null');
     }
 
     /**
      * @description Verifies that creating and updating a Fixed Recurring Donation's Amount
-     * after Opportunities have been closed creates a Change History with the correct Total Value
+     * after Opportunities have been closed creates a Change Log with the correct Total Value
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWhenFixedAmountChangesAfterPayments() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWhenFixedAmountChangesAfterPayments() {
+        configureRecurringDonationChangeLogEnabled();
 
         Integer originalInstallmentNumber = 10;
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
@@ -372,7 +372,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             .withPlannedInstallments(originalInstallmentNumber)
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -386,44 +386,44 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
 
-        System.assertEquals(newInstallmentNumber, rdch.NewPlannedInstallments__c, 
+        System.assertEquals(newInstallmentNumber, changeLog.NewPlannedInstallments__c, 
             'New Planned Installments should be ' + newInstallmentNumber);
-        System.assertEquals(originalInstallmentNumber, rdch.PreviousPlannedInstallments__c, 
+        System.assertEquals(originalInstallmentNumber, changeLog.PreviousPlannedInstallments__c, 
             'Previous Planned Installments should be ' + originalInstallmentNumber);
 
-        System.assertEquals(null, rdch.NewAnnualValue__c, 'New Annual Value should be null');        
-        System.assertEquals(null, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be null');
+        System.assertEquals(null, changeLog.NewAnnualValue__c, 'New Annual Value should be null');        
+        System.assertEquals(null, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be null');
         
         Decimal newTotalValue = (RD_AMOUNT * paidInstallments) 
             + (RD_NEW_AMOUNT * (newInstallmentNumber - paidInstallments));
         Decimal previousTotalValue = RD_AMOUNT * originalInstallmentNumber;
-        System.assertEquals(previousTotalValue, rdch.PreviousExpectedTotalValue__c, 
+        System.assertEquals(previousTotalValue, changeLog.PreviousExpectedTotalValue__c, 
             'Previous Total Value should be ' + previousTotalValue);
-        System.assertEquals(newTotalValue, rdch.NewExpectedTotalValue__c, 
+        System.assertEquals(newTotalValue, changeLog.NewExpectedTotalValue__c, 
             'New Total Value should be ' + newTotalValue);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Payment Method
-     *  with Change History Enabled does create Change History records
+     *  with Change Log Enabled does create Change Log records
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWhenPaymentMethodChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWhenPaymentMethodChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         rdUpdate.ChangeType__c = CHANGE_TYPE_CUSTOM;
@@ -433,24 +433,24 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
         rdEntity.storeAndClearChangeType();
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(PAYMENT_CREDIT_CARD, rdch.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
-        System.assertEquals(PAYMENT_CHECK, rdch.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
-        System.assertEquals(CHANGE_TYPE_CUSTOM, rdch.ChangeType__c, 'The Change Type should be ' + CHANGE_TYPE_CUSTOM);
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(PAYMENT_CREDIT_CARD, changeLog.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
+        System.assertEquals(PAYMENT_CHECK, changeLog.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
+        System.assertEquals(CHANGE_TYPE_CUSTOM, changeLog.ChangeType__c, 'The Change Type should be ' + CHANGE_TYPE_CUSTOM);
         System.assertEquals(null, rd.ChangeType__c, 'The RD Change Type should be null');
     }
 
     /**
-     * @description Verifies that creating and updating a Recurring Donation with Change History Enabled
-     * creates a single Change History record when multiple fields are changed
+     * @description Verifies that creating and updating a Recurring Donation with Change Log Enabled
+     * creates a single Change Log record when multiple fields are changed
      */
     @IsTest
-    private static void shouldCreateSingleChangeHistoryWhenMultipleFieldsChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateSingleChangeLogWhenMultipleFieldsChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         Campaign campaign = new Campaign(Name = 'UpgradeCampaign', IsActive = true);
         insert campaign;
@@ -459,7 +459,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
 
@@ -470,35 +470,35 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
-        System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
-        System.assertEquals(RD_PERIOD_WEEKLY, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
-        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, rdch.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
-        System.assertEquals(campaign.Id, rdch.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
-        System.assertEquals(null, rdch.PreviousCampaign__c, 'Previous Campaign should be ' + null);
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_NEW_FREQUENCY, changeLog.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
+        System.assertEquals(1, changeLog.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
+        System.assertEquals(RD_PERIOD_WEEKLY, changeLog.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
+        System.assertEquals(RD2_Constants.INSTALLMENT_PERIOD_MONTHLY, changeLog.PreviousInstallmentPeriod__c, 'Previous Installment Period should be ' + RD2_Constants.INSTALLMENT_PERIOD_MONTHLY);
+        System.assertEquals(campaign.Id, changeLog.NewCampaign__c, 'New Campaign should be ' + campaign.Id);
+        System.assertEquals(null, changeLog.PreviousCampaign__c, 'Previous Campaign should be ' + null);
 
         Decimal newYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD_WEEKLY) / RD_NEW_FREQUENCY);
         Decimal previousYearlyValue = RD_AMOUNT * (RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(RD_PERIOD) / 1);
 
-        System.assertEquals(newYearlyValue.setScale(2), rdch.NewAnnualValue__c, 'New Annual Value should be match' );
-        System.assertEquals(previousYearlyValue.setScale(2), rdch.PreviousAnnualValue__c, 'Previous Annual Value should match');
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+        System.assertEquals(newYearlyValue.setScale(2), changeLog.NewAnnualValue__c, 'New Annual Value should be match' );
+        System.assertEquals(previousYearlyValue.setScale(2), changeLog.PreviousAnnualValue__c, 'Previous Annual Value should match');
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
     /**
-     * @description Verifies that creating and updating a Recurring Donation with Change History Enabled
-     * creates a Change History record for each update.
+     * @description Verifies that creating and updating a Recurring Donation with Change Log Enabled
+     * creates a Change Log record for each update.
      * Using DML to test 2 separate Update calls does not work since they are both async
      */
     @IsTest
-    private static void shouldCreateChangeHistoryForEachUpdateWhereFieldsChange() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogForEachUpdateWhereFieldsChange() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
@@ -509,18 +509,18 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         
         rdUpdate.PaymentMethod__c = PAYMENT_CREDIT_CARD;
         
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
         
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(PAYMENT_CREDIT_CARD, rdch.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
-        System.assertEquals(PAYMENT_CHECK, rdch.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
-        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(PAYMENT_CREDIT_CARD, changeLog.NewPaymentMethod__c, 'New Payment Method should be ' + PAYMENT_CREDIT_CARD);
+        System.assertEquals(PAYMENT_CHECK, changeLog.PreviousPaymentMethod__c, 'Previous Payment Method should be ' + PAYMENT_CHECK);
+        System.assertEquals(null, changeLog.ChangeType__c, 'The Change Type should be null');
 
         // Second Update
         npe03__Recurring_Donation__c rdUpdate2 = rdUpdate.clone();
@@ -528,23 +528,23 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         rdUpdate2.Status__c = RD2_Constants.STATUS_LAPSED;
 
         RD2_RecurringDonation rdEntity2 = new RD2_RecurringDonation(rdUpdate2);
-        rdchService.handleHistoryFieldChanged(rdEntity2, rdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity2, rdEntity);
 
-        rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(2, rdchList.size(), 'There should be 2 Change Histories after the update');
+        changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(2, changeLogs.size(), 'There should be 2 Change Logs after the update');
 
-        RecurringDonationChangeHistory__c rdch2 = rdchList[1];
-        System.assertEquals(RD2_Constants.STATUS_LAPSED, rdch2.NewStatus__c, 'New Status should be ' + RD2_Constants.STATUS_LAPSED);
-        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch2.PreviousStatus__c, 'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(null, rdch2.ChangeType__c, 'The Change Type should be null');
+        RecurringDonationChangeLog__c changeLog2 = changeLogs[1];
+        System.assertEquals(RD2_Constants.STATUS_LAPSED, changeLog2.NewStatus__c, 'New Status should be ' + RD2_Constants.STATUS_LAPSED);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, changeLog2.PreviousStatus__c, 'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
+        System.assertEquals(null, changeLog2.ChangeType__c, 'The Change Type should be null');
     }
 
     /**
-     * @description Verifies that Change History can be created regardless of User permissions
+     * @description Verifies that Change Log can be created regardless of User permissions
      */
     @IsTest
-    private static void shouldCreateChangeHistoryWithoutPermissionsToObject(){
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldCreateChangeLogWithoutPermissionsToObject(){
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
@@ -558,29 +558,29 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         System.runAs(UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER)) {
-            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeHistory__c.fields
+            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeLog__c.fields
                     .NewInstallmentFrequency__c.isAccessible(),
                     'This Standard User created for the test should not have read access ' +
-                            'to RD Change History New Installment field.');
-            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeHistory__c.fields
+                            'to RD Change Log New Installment field.');
+            System.assertEquals(false, Schema.SObjectType.RecurringDonationChangeLog__c.fields
                     .NewInstallmentFrequency__c.isUpdateable(),
                     'This Standard User created for the test should not have edit access ' +
-                            'to RD Change History New Installment field.');
+                            'to RD Change Log New Installment field.');
 
-            // User without permissions runs the code to generate Change History records
-            rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+            // User without permissions runs the code to generate Change Log records
+            changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
         }
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        System.assertEquals(RD_NEW_FREQUENCY, rdch.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
-        System.assertEquals(1, rdch.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
-        System.assertEquals(RD_PERIOD_WEEKLY, rdch.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, rdch.ChangeType__c, 
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        System.assertEquals(RD_NEW_FREQUENCY, changeLog.NewInstallmentFrequency__c, 'New Installment Frequency should be ' + RD_NEW_FREQUENCY);
+        System.assertEquals(1, changeLog.PreviousInstallmentFrequency__c, 'Previous Installment Frequency should be ' + 1);
+        System.assertEquals(RD_PERIOD_WEEKLY, changeLog.NewInstallmentPeriod__c, 'New Installment Period should be ' + RD_PERIOD_WEEKLY);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
     }
 
@@ -590,13 +590,13 @@ public with sharing class RD2_ChangeHistoryService_TEST {
      */
     @IsTest
     private static void shouldOverrideDefaultChangeTypeWhenValueIsSetOnRD() {
-        configureRecurringDonationChangeHistoryEnabled();
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         
@@ -607,32 +607,32 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
         rdEntity.storeAndClearChangeType();
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(RD_NEW_AMOUNT, rdch.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
-        System.assertEquals(RD_AMOUNT, rdch.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
-        System.assertEquals(RD_NEW_AMOUNT * 12, rdch.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
-        System.assertEquals(RD_AMOUNT * 12, rdch.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
-        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, rdch.ChangeType__c, 
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(RD_NEW_AMOUNT, changeLog.NewAmount__c, 'New Amount should be ' + RD_NEW_AMOUNT);
+        System.assertEquals(RD_AMOUNT, changeLog.PreviousAmount__c, 'Previous Amount should be ' + RD_AMOUNT);
+        System.assertEquals(RD_NEW_AMOUNT * 12, changeLog.NewAnnualValue__c, 'New Annual Value should be ' + RD_NEW_AMOUNT * 12);
+        System.assertEquals(RD_AMOUNT * 12, changeLog.PreviousAnnualValue__c, 'Previous Annual Value should be ' + RD_AMOUNT * 12);
+        System.assertEquals(RD2_Constants.CHANGE_TYPE_DOWNGRADE, changeLog.ChangeType__c, 
             'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_DOWNGRADE);
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation with a Currency Code
-     * correctly uses that Currency in the Change History record
+     * correctly uses that Currency in the Change Log record
      */
     @IsTest
     private static void shouldTrackIsoCodeWhenMultiCurrencyIsEnabled() {
-        configureRecurringDonationChangeHistoryEnabled();
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         rdUpdate.npe03__Amount__c = RD_NEW_AMOUNT;
@@ -654,34 +654,34 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
 
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after RD currency update');
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after RD currency update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
         System.assertEquals(RD2_Constants.CHANGE_TYPE_UPGRADE, 
-                rdch.ChangeType__c, 'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
+                changeLog.ChangeType__c, 'The Change Type should be ' + RD2_Constants.CHANGE_TYPE_UPGRADE);
         
         if (isMultiCurrencyEnabled) {
-            System.assertEquals(nonDefaultCurrencyCode, rdch.get('CurrencyIsoCode'), 
+            System.assertEquals(nonDefaultCurrencyCode, changeLog.get('CurrencyIsoCode'), 
                 'New currency should be ' + nonDefaultCurrencyCode);
         }
     }
 
     /**
      * @description Verifies that only setting the Change Type on an RD does not create a
-     * Change History record
+     * Change Log record
      */
     @IsTest
-    private static void shouldNotCreateChangeHistoryWhenOnlyChangeTypeChanges() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldNotCreateChangeLogWhenOnlyChangeTypeChanges() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
             .build();
 
-        RD2_ChangeHistoryService rdchService = new RD2_ChangeHistoryService();
+        RD2_ChangeLogService changeLogService = new RD2_ChangeLogService();
 
         npe03__Recurring_Donation__c rdUpdate = rd.clone();
         rdUpdate.ChangeType__c = RD2_Constants.CHANGE_TYPE_UPGRADE;
@@ -689,19 +689,19 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         RD2_RecurringDonation rdEntity = new RD2_RecurringDonation(rdUpdate);
         RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(rd);
 
-        rdchService.handleHistoryFieldChanged(rdEntity, oldRdEntity);
+        changeLogService.handleLogFieldChanged(rdEntity, oldRdEntity);
 
-        List<RecurringDonationChangeHistory__c> rdchList = rdchService.getChangeHistoryRecords();
-        System.assertEquals(0, rdchList.size(), 'There should be 0 Change History after the update');
+        List<RecurringDonationChangeLog__c> changeLogs = changeLogService.getChangeLogRecords();
+        System.assertEquals(0, changeLogs.size(), 'There should be 0 Change Logs after the update');
     }
 
     /**
      * @description Verifies that creating and updating a Recurring Donation Status
-     * to Paused without Pausing the schedule does not create a Change History record
+     * to Paused without Pausing the schedule does not create a Change Log record
      */
     @IsTest
-    private static void shouldNotCreateChangeHistoryWhenStatusUpdateIsReverted() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void shouldNotCreateChangeLogWhenStatusUpdateIsReverted() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
             .withCalculateNextDonationDate()
@@ -709,8 +709,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
 
         insert rd;
 
-        List<RecurringDonationChangeHistory__c> rdchList = getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(0, rdchList.size(), 'There should be no Change History after RD insert');
+        List<RecurringDonationChangeLog__c> changeLogs = getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(0, changeLogs.size(), 'There should be no Change Log after RD insert');
         
         rd.Status__c = RD2_Constants.STATUS_PAUSED;
         rd.ClosedReason__c = 'Card Expired';
@@ -720,8 +720,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         Test.stopTest();
 
         Id rdId = rd.Id;
-        rdchList = getRecurringDonationChangeHistory(rdId);
-        System.assertEquals(0, rdchList.size(), 'There should be 1 Change History after the update');
+        changeLogs = getRecurringDonationChangeLog(rdId);
+        System.assertEquals(0, changeLogs.size(), 'There should be 1 Change Log after the update');
 
         rd = rdGateway.getRecord(rd.Id);
         System.assertEquals(null, rd.ClosedReason__c, 'The Status Reason should be blank');
@@ -729,8 +729,8 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     @IsTest
-    private static void changesAreShownInChangeHistoryView() {
-        configureRecurringDonationChangeHistoryEnabled();
+    private static void changesAreShownInChangeLogView() {
+        configureRecurringDonationChangeLogEnabled();
 
         npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
                 .withDayOfMonth('20')
@@ -749,7 +749,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
         update rd;
         Test.stopTest();
 
-        RD2_ChangeHistoryView historyView = RD2_ChangeHistoryController.getChangeHistory(rd.Id, 3, null);
+        RD2_ChangeLogView historyView = RD2_ChangeLogController.getChangeLog(rd.Id, 3, null);
 
         System.assertEquals(1, historyView.changes.size(), 'Unexpected number of changes.');
 
@@ -852,11 +852,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     }
 
     /**
-     * @description Return Change Histories associated with the provided Recurring Donation Id
+     * @description Return Change Logs associated with the provided Recurring Donation Id
      * @param rdId Reuccring Donation Id
-     * @return List<RecurringDonationChangeHistory__c>
+     * @return List<RecurringDonationChangeLog__c>
      */
-    public static List<RecurringDonationChangeHistory__c> getRecurringDonationChangeHistory(Id rdId){
+    public static List<RecurringDonationChangeLog__c> getRecurringDonationChangeLog(Id rdId){
         return [
             SELECT Id, EffectiveDate__c, ChangeType__c, RecurringDonation__c, NewAmount__c, 
                 NewCampaign__c, NewInstallmentFrequency__c, NewInstallmentPeriod__c, NewPaymentMethod__c, 
@@ -866,7 +866,7 @@ public with sharing class RD2_ChangeHistoryService_TEST {
                 PreviousInstallmentPeriod__c, PreviousPaymentMethod__c, PreviousStatus__c, 
                 PreviousStatusReason__c, PreviousAnnualValue__c, PreviousExpectedTotalValue__c,
                 PreviousPlannedInstallments__c
-            FROM RecurringDonationChangeHistory__c
+            FROM RecurringDonationChangeLog__c
             WHERE RecurringDonation__c =: rdId
             ORDER BY CreatedDate ASC
         ];
@@ -876,11 +876,11 @@ public with sharing class RD2_ChangeHistoryService_TEST {
     * @description Stubs custom settings configuration to enable enhanced Recurring Donations
     * @return none
     */
-    private static void configureRecurringDonationChangeHistoryEnabled() {
+    private static void configureRecurringDonationChangeLogEnabled() {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
-                EnableChangeHistory__c = true
+                EnableChangeLog__c = true
             )
         );
 

@@ -13,7 +13,7 @@
   },
   "customFieldSets": [],
   "isElevateCustomer": true,
-  "isChangeHistoryEnabled": true,
+  "isChangeLogEnabled": true,
   "periodToYearlyFrequencyMap": {
     "Yearly": 1,
     "Quarterly": 4,
