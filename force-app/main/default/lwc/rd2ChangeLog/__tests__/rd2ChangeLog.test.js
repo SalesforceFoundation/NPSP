@@ -1,15 +1,15 @@
 import { createElement } from 'lwc';
-import Rd2ChangeHistory from 'c/rd2ChangeHistory';
-import getChangeHistory from '@salesforce/apex/RD2_ChangeHistoryController.getChangeHistory';
+import Rd2ChangeLog from 'c/rd2ChangeLog';
+import getChangeLog from '@salesforce/apex/RD2_ChangeLogController.getChangeLog';
 import commonViewMore from '@salesforce/label/c.commonViewMore';
 import commonError from '@salesforce/label/c.commonError';
-import rdchNoRecords from '@salesforce/label/c.RDCH_No_Records';
+import rdclNoRecords from '@salesforce/label/c.RDCL_No_Records';
 
 import { getNavigateCalledWith } from "lightning/navigation";
 
-const mockChangeHistoryView = require('./data/changeHistoryView.json');
+const mockChangeLogView = require('./data/changeLogView.json');
 
-jest.mock('@salesforce/apex/RD2_ChangeHistoryController.getChangeHistory',
+jest.mock('@salesforce/apex/RD2_ChangeLogController.getChangeLog',
     () => ({ default : jest.fn() }),
     { virtual: true }
 );
@@ -21,8 +21,8 @@ describe('c-rd2-change-entry-item', () => {
     });
 
     it('when additional records present renders view more link', async () => {
-        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeHistory });
-        getChangeHistory.mockResolvedValue(mockChangeHistoryView);
+        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeLog });
+        getChangeLog.mockResolvedValue(mockChangeLogView);
         document.body.appendChild(component);
         await flushPromises();
 
@@ -31,8 +31,8 @@ describe('c-rd2-change-entry-item', () => {
     });
 
     it('view more link onclick navigates to related list', async () => {
-        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeHistory });
-        getChangeHistory.mockResolvedValue(mockChangeHistoryView);
+        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeLog });
+        getChangeLog.mockResolvedValue(mockChangeLogView);
         document.body.appendChild(component);
         await flushPromises();
 
@@ -45,14 +45,14 @@ describe('c-rd2-change-entry-item', () => {
         expect(pageReference.type).toBe('standard__recordRelationshipPage');
         expect(pageReference.attributes.recordId).toBe(component.recordId);
         expect(pageReference.attributes.objectApiName).toBe('npe03__Recurring_Donation__c');
-        expect(pageReference.attributes.relationshipApiName).toBe('RDChangeHistory__r');
+        expect(pageReference.attributes.relationshipApiName).toBe('RDChangeLog__r');
         expect(pageReference.attributes.actionName).toBe('view');
     });
 
-    it('when change history setting is disabled, renders an error state', async () => {
-        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeHistory });
-        mockChangeHistoryView.settingEnabled = false;
-        getChangeHistory.mockResolvedValue(mockChangeHistoryView);
+    it('when change log setting is disabled, renders an error state', async () => {
+        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeLog });
+        mockChangeLogView.settingEnabled = false;
+        getChangeLog.mockResolvedValue(mockChangeLogView);
         document.body.appendChild(component);
         await flushPromises();
 
@@ -61,17 +61,17 @@ describe('c-rd2-change-entry-item', () => {
     });
 
     it('when no records are present, renders empty list state', async () => {
-        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeHistory });
-        mockChangeHistoryView.settingEnabled = true;
-        mockChangeHistoryView.changes = [];
+        const component = createElement('c-rd2-change-entry-item', { is: Rd2ChangeLog });
+        mockChangeLogView.settingEnabled = true;
+        mockChangeLogView.changes = [];
 
-        getChangeHistory.mockResolvedValue(mockChangeHistoryView);
+        getChangeLog.mockResolvedValue(mockChangeLogView);
         document.body.appendChild(component);
         await flushPromises();
 
         const illustration = component.shadowRoot.querySelector('c-util-illustration');
         expect(illustration).toBeTruthy();
-        expect(illustration.message).toBe(rdchNoRecords);
+        expect(illustration.message).toBe(rdclNoRecords);
     });
 
 });
