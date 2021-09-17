@@ -831,11 +831,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
-        List<Contact> householdHasAddresses = contactsInHouseholdsThatHaveAddresses();
-        List<Contact> contactsWithoutAddresses = contactsWithoutAddresses();
         List<Contact> needHouseholdAddressApplied = new List<Contact>();
-        needHouseholdAddressApplied.addAll(householdHasAddresses);
-        needHouseholdAddressApplied.addAll(contactsWithoutAddresses);
+        needHouseholdAddressApplied.addAll(contactsInHouseholdsThatHaveAddresses());
+        needHouseholdAddressApplied.addAll(contactsWithoutAddresses());
         return new Contacts(needHouseholdAddressApplied);
     }
 
