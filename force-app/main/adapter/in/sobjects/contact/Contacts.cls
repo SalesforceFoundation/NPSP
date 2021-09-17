@@ -759,20 +759,17 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
-    //todo: rename? not only HH ncontacts
-    private List<NPSP_Contact> householdAccountContacts;
-    public List<NPSP_Contact> householdAccountContacts() {
-        if (householdAccountContacts == null) {
-            householdAccountContacts = new List<NPSP_Contact>();
+    private List<NPSP_Contact> npspContactsWithAnAccountId;
+    public List<NPSP_Contact> contactsWithAnAccountId() {
+        if (npspContactsWithAnAccountId == null) {
+            npspContactsWithAnAccountId = new List<NPSP_Contact>();
             for (Contact con : (List<Contact>) getRecords()) {
-                NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
-                if (!npspContact.hasAccount()) {
-                    continue;
+                if (contact.AccountId != null) {
+                    npspContactsWithAnAccountId.add(new NPSP_Contact(con));
                 }
-                householdAccountContacts.add(npspContact);
             }
         }
-        return householdAccountContacts;
+        return npspContactsWithAnAccountId;
     }
 
     public Set<Id> accountIds() {
@@ -1127,7 +1124,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getConsMovingToANewHousehold() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
+        for (NPSP_Contact npspContact : contactsWithAnAccountId()) {
 
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -1154,22 +1151,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
-
+        for (NPSP_Contact npspContact : contactsWithAnAccountId()) {
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                 continue;
             }
-            // BEFORE UPDATE & AFTER UPDATE & BEFORE INSERT && AFTER INSERT
-            // our functionality for dealing with contact address changes requires some trickery!
-            // if the contact doesn't have an address override, we create (or match) a default address,
-            // which requires us to do the work in the AfterUpdate (or else we can't propagate the default address).
-            // but if the contact has an address override, we are supposed to create (or match) a non default address override.
-            // in order to update the contact with the new address override's Id, we have to do it in the BeforeUpdate.
-            // note that we detect whether the address change is coming from the address trigger,
-            // in which case we don't want to create a new address.
-
-            // if the contacts address changed or if the contact with an address moves to a new household remember the contact
             if (npspContact.isAddressChanged()) {
                 consWithAddressChanges.add(npspContact.getRecord());
             }
@@ -1179,7 +1165,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
+        for (NPSP_Contact npspContact : contactsWithAnAccountId()) {
 
             if (npspContact.householdAndAccountDiffer()) {
                 continue;
@@ -1245,8 +1231,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
-    //todo: move: a Contact address "change" is basically adding a new one
-    // implement "treat simple as update" within the add behavior
     private List<Contact> consWhoseAddressChanged() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         // we only support address management with HH Accounts being used
