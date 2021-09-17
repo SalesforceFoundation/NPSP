@@ -209,9 +209,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         List<Contact> organizationContacts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             if (isOrganizationContact(contactRecord, accountFor(contactRecord))) {
-                resetAccountIdFor(contactRecord);
                 organizationContacts.add(contactRecord);
             }
+        }
+        for (Contact contactRecord : organizationContacts) {
+            contactRecord.AccountId = null;
         }
         List<Contact> contacts = new List<Contact>();
         contacts.addAll(publicContactsWithoutAccounts);
@@ -244,12 +246,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return publicContacts;
-    }
-
-    private void resetAccountIdFor(Contact contactRecord) {
-        if (contactRecord.AccountId != null) {
-            contactRecord.AccountId = null;
-        }
     }
 
     public List<Contact> forHouseholdName() {
