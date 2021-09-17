@@ -208,7 +208,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         List<Contact> organizationContacts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+            if (isOrganizationContact(contactRecord, accountFor(contactRecord))) {
                 resetAccountIdFor(contactRecord);
                 organizationContacts.add(contactRecord);
             }
@@ -217,6 +217,13 @@ public inherited sharing class Contacts extends fflib_SObjects {
         contacts.addAll(publicContactsWithoutAccounts);
         contacts.addAll(organizationContacts);
         return new Contacts(contacts);
+    }
+
+    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
+        return contactRecord.npe01__Private__c != true
+                && accountRecord != null
+                && accountRecord.npe01__SYSTEM_AccountType__c ==
+                CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
     }
 
     private List<Contact> publicContactsWithoutAccounts() {
