@@ -107,13 +107,6 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        LegacyHouseholds oldHouseholds = new LegacyHouseholds(
-                new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
-                new LegacyHouseholdSelector());
-        oldHouseholds.deleteEmptyHouseholds();
-    }
-
     public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
             if (isFutureEligible()) {
