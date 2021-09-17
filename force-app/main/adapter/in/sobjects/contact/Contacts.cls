@@ -220,7 +220,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return organizationContacts;
     }
 
-    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
+    private Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
         return contactRecord.npe01__Private__c != true
                 && accountRecord != null
                 && accountRecord.npe01__SYSTEM_AccountType__c ==
