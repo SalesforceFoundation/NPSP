@@ -204,9 +204,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
-        List<Contact> publicContacts = publicContacts();
         List<Contact> publicContactsWithoutAccounts = new List<Contact>();
-        for (Contact contactRecord : publicContacts) {
+        for (Contact contactRecord : publicContacts()) {
             if (contactRecord.AccountId == null) {
                 publicContactsWithoutAccounts.add(contactRecord);
             }
