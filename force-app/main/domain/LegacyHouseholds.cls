@@ -207,11 +207,6 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         }
     }
 
-    public static Boolean isWithoutAccount(Contact contactRecord) {
-        return contactRecord.npe01__Private__c != true
-                && contactRecord.AccountId == null;
-    }
-
     public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
         return contactRecord.npe01__Private__c != true
                 &&
