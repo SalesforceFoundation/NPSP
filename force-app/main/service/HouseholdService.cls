@@ -107,21 +107,6 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
-            if (isFutureEligible()) {
-                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
-                        contactsInLegacyHouseholds
-                                .householdsWithMembershipOrNamingFieldChanges());
-            } else {
-                HouseholdNamingService householdNamingService = new HouseholdNamingService();
-                householdNamingService.updateHouseholdNameAndMemberCount(
-                        contactsInLegacyHouseholds
-                                .householdsWithMembershipOrNamingFieldChanges());
-            }
-        }
-    }
-
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
                 && !System.isFuture() && !System.isBatch();

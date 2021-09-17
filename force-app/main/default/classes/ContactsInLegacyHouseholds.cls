@@ -83,11 +83,24 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
             householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
         }
 
-        householdService.updateHouseholdNamesFor(this);
+        refreshHouseholdNamesAndMemberCounts();
 
         LegacyHouseholds oldHouseholds =
                 Application.getLegacyHouseholdsInstance(oldHouseholdIds());
         oldHouseholds.deleteEmptyHouseholds();
+    }
+
+    public void refreshHouseholdNamesAndMemberCounts() {
+        if (householdsWithMembershipOrNamingFieldChanges().size() > 0) {
+            if (settings.isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
+                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                    householdsWithMembershipOrNamingFieldChanges());
+            } else {
+                HouseholdNamingService householdNamingService = new HouseholdNamingService();
+                householdNamingService.updateHouseholdNameAndMemberCount(
+                    householdsWithMembershipOrNamingFieldChanges());
+            }
+        }
     }
 
     public void onAfterDelete() {
