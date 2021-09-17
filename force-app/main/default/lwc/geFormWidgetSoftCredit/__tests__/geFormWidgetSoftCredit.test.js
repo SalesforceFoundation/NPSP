@@ -69,9 +69,47 @@ describe('c-form-widget-soft-credit', () => {
             const rowElements = shadowSelectorAll(element, 'c-ge-form-widget-soft-credit-row');
             expect(rowElements.length).toBe(2);
         });
+
+        it('renders the add button', async () => {
+            let element = createSoftCreditWidget();
+            element.giftInView = {
+                fields: {},
+                softCredits: [],
+                processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS
+            };
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            const buttonElement = shadowSelectorAll(element, 'lightning-button');
+            expect(buttonElement.length).toBe(1);
+        });
+
+        it('does not render the add button', async () => {
+            let element = createSoftCreditWidget();
+            element.giftInView = {
+                fields: {},
+                softCredits: createDummySoftCredits(250),
+                processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS
+            };
+            document.body.appendChild(element);
+
+            await flushPromises();
+
+            const buttonElement = shadowSelectorAll(element, 'lightning-button');
+            expect(buttonElement.length).toBe(0);
+        });
     });
 
     const shadowSelectorAll = (element, selector) => {
         return element.shadowRoot.querySelectorAll(selector);
+    }
+
+    const createDummySoftCredits = (softCreditsCount) => {
+        let dummySoftCredits = [];
+        for (let i = 0; i < softCreditsCount; i++) {
+            dummySoftCredits.push({key: i});
+        }
+        return dummySoftCredits;
     }
 });
