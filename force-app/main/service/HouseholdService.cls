@@ -127,17 +127,6 @@ public inherited sharing class HouseholdService {
                 && !System.isFuture() && !System.isBatch();
     }
 
-    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipChanges().isEmpty()) {
-            return; //No need to fire rollups if no Contacts changed Households
-        }
-        LegacyHouseholds householdsWithMembershipChanges =
-                new LegacyHouseholds(
-                        contactsInLegacyHouseholds.householdsWithMembershipChanges(),
-                        new LegacyHouseholdSelector());
-        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
-    }
-
     public void processOldHouseholdsAfterDeletingContacts(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         LegacyHouseholds oldHouseholds =

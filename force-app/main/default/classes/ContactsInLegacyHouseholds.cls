@@ -75,8 +75,16 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void onAfterUpdate() {
         householdService.createHouseholdsFor(this);
-        householdService.fireHouseholdRollupsFor(this);
+
+        if (!householdsWithMembershipChanges().isEmpty()) {
+            LegacyHouseholds householdsWithMembershipChanges =
+                Application.getLegacyHouseholdsInstance(householdsWithMembershipChanges());
+        
+            householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
+        }
+
         householdService.updateHouseholdNamesFor(this);
+
         LegacyHouseholds oldHouseholds =
                 Application.getLegacyHouseholdsInstance(oldHouseholdIds());
         oldHouseholds.deleteEmptyHouseholds();
