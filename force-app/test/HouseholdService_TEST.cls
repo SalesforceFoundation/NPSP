@@ -63,7 +63,7 @@ private class HouseholdService_TEST {
         service.unitOfWorkInst = stub;
 
         //When
-        service.createHouseholdsFor(
+        service.createLegacyHouseholdsFor(
                 new ContactsInLegacyHouseholds(
                         TEST_ContactBuilder.dummyContactList()));
 

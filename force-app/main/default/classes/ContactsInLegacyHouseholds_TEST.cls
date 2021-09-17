@@ -109,7 +109,7 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
                 List<Object> listOfArgs) {
 
             switch on (stubbedMethodName) {
-                when 'createHouseholdsFor' {
+                when 'createLegacyHouseholdsFor' {
                     createHouseholdsCalled = true;
                     contactsQueuedForHouseholdCreation =
                             (ContactsInLegacyHouseholds) listOfArgs[0];

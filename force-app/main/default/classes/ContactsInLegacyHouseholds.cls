@@ -70,11 +70,11 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private Map<Id, Contact> oldMap;
 
     public void onAfterInsert() {
-        householdService.createHouseholdsFor(this);
+        householdService.createLegacyHouseholdsFor(this);
     }
 
     public void onAfterUpdate() {
-        householdService.createHouseholdsFor(this);
+        householdService.createLegacyHouseholdsFor(this);
 
         if (!householdsWithMembershipChanges().isEmpty()) {
             LegacyHouseholds householdsWithMembershipChanges =

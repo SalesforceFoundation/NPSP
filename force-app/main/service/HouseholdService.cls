@@ -95,7 +95,7 @@ public inherited sharing class HouseholdService {
         return householdNamingServiceInst.getHouseholdNamingContactFields();
     }
 
-    public void createHouseholdsFor(
+    public void createLegacyHouseholdsFor(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContacts(
