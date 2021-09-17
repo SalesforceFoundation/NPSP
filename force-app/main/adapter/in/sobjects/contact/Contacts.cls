@@ -848,7 +848,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
-            if (hasCurrentAddress(npspContact) && npspContact.hasAddressOverride()) {
+            if (npspContact.currentAddress() != null && npspContact.hasAddressOverride()) {
                 // track which address's need their dates updated
                 isOverrideByAddressId.put(npspContact.currentAddress(), true);
             }
@@ -859,7 +859,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private List<Contact> consThatHaveARelatedAddress() {
         List<Contact> useCurrentAddressQueue = new List<Contact>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
-            if (hasCurrentAddress(npspContact)) {
+            if (npspContact.currentAddress() != null) {
                 // remember which contacts will need their address set
                 useCurrentAddressQueue.add(npspContact.getRecord());
             }
@@ -869,11 +869,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
         return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
-    }
-
-    //todo: bulk filter
-    private Boolean hasCurrentAddress(NPSP_Contact npspContact) {
-        return npspContact.currentAddress() != null;
     }
 
     //todo: need to abstract out further naming stuff
