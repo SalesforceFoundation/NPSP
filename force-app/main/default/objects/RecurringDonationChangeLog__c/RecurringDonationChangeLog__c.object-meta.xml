@@ -143,7 +143,7 @@
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
-    <description>When &quot;Enable Recurring Donation Change History&quot; in NPSP Settings is enabled, NPSP creates a Recurring Donation Change History record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+    <description>When &quot;Enable Recurring Donation Change Log&quot; in NPSP Settings is enabled, NPSP creates a Recurring Donation Change Log record each time the amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
     <enableActivities>false</enableActivities>
     <enableBulkApi>true</enableBulkApi>
     <enableFeeds>false</enableFeeds>
@@ -153,14 +153,13 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <externalSharingModel>ControlledByParent</externalSharingModel>
-    <label>Recurring Donation Change History</label>
+    <label>Recurring Donation Change Log</label>
     <nameField>
         <displayFormat>RDCH-{0000000}</displayFormat>
-        <label>Recurring Donation Change History Num</label>
+        <label>Recurring Donation Change Log Num</label>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Recurring Donation Change History</pluralLabel>
+    <pluralLabel>Recurring Donation Change Logs</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
     <visibility>Public</visibility>

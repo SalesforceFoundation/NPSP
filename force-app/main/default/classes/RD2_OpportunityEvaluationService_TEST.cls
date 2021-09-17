@@ -1941,7 +1941,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
             new npe03__Recurring_Donations_Settings__c(
                 IsRecurringDonations2Enabled__c = true,
-                EnableChangeHistory__c = true
+                EnableChangeLog__c = true
             )
         );
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
@@ -1968,19 +1968,19 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
             'The pause reason shuold be updated according to the user selection');
 
-        List<RecurringDonationChangeHistory__c> rdchList = 
-            RD2_ChangeHistoryService_TEST.getRecurringDonationChangeHistory(rd.Id);
-        System.assertEquals(1, rdchList.size(), 'There should be 1 Change History after the update');
-        RecurringDonationChangeHistory__c rdch = rdchList[0];
-        System.assertEquals(RD2_Constants.STATUS_PAUSED, rdch.NewStatus__c, 
+        List<RecurringDonationChangeLog__c> changeLogs = 
+            RD2_ChangeLogService_TEST.getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, changeLog.NewStatus__c, 
             'New Status should be ' + RD2_Constants.STATUS_PAUSED);
-        System.assertEquals(RD2_Constants.STATUS_ACTIVE, rdch.PreviousStatus__c, 
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, changeLog.PreviousStatus__c, 
             'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
-        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rdch.NewStatusReason__c, 
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, changeLog.NewStatusReason__c, 
             'New Status Reason should be ' + RD2_ScheduleService_TEST.PAUSE_REASON);
-        System.assertEquals(null, rdch.PreviousStatusReason__c, 
+        System.assertEquals(null, changeLog.PreviousStatusReason__c, 
             'Previous Status should be null');
-        System.assertEquals(null, rdch.ChangeType__c, 'The Change Type should be null');
+        System.assertEquals(null, changeLog.ChangeType__c, 'The Change Type should be null');
     }
 
     /**

@@ -133,7 +133,7 @@ export default class rd2EntryForm extends LightningElement {
     @track isSaveButtonDisabled = true;
     @track changeType;
     @track showChangeTypeField = false;
-    isChangeHistoryEnabled = false;
+    isChangeLogEnabled = false;
     periodToYearlyFrequencyMap;
     donationValue;
     recurringType;
@@ -220,7 +220,7 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
-                this.isChangeHistoryEnabled = response.isChangeHistoryEnabled;
+                this.isChangeLogEnabled = response.isChangeLogEnabled;
                 this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
                 this.closedStatusValues = response.closedStatusValues;
             })
@@ -451,10 +451,10 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Checks if Change History is Enabled, then checks the Annual Value
+    * @description Checks if Change Log is Enabled, then checks the Annual Value
     */
     handleDonationValueChange() {
-        if (this.isChangeHistoryEnabled) {
+        if (this.isChangeLogEnabled) {
             if (!this.donationValue) {
                 this.donationValue = this.returnDonationValue(true);
                 this.recurringType = this.getRecurringType();
