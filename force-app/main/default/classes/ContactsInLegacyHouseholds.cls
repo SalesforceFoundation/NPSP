@@ -104,7 +104,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterDelete() {
-        LegacyHouseholds oldHouseholds = Application.getLegacyHouseholdsInstance(householdIds());
+        LegacyHouseholds oldHouseholds = Application.getLegacyHouseholdsInstance(new List<Id>(householdIds()));
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
     }
