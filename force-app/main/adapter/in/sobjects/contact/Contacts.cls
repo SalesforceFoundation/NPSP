@@ -831,15 +831,32 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Contacts contactsNeedingHouseholdAddressApplied() {
-        List<Contact> addressRefreshQueue = new List<Contact>();
+        List<Contact> householdHasAddresses = contactsInHouseholdsThatHaveAddresses();
+        List<Contact> contactsWithoutAddresses = contactsWithoutAddresses();
+        List<Contact> needHouseholdAddressApplied = new List<Contact>();
+        needHouseholdAddressApplied.addAll(householdHasAddresses);
+        needHouseholdAddressApplied.addAll(contactsWithoutAddresses);
+        return new Contacts(needHouseholdAddressApplied);
+    }
+
+    private List<Contact> contactsWithoutAddresses() {
+        List<Contact> contactsWithoutAddresses = new List<Contact>();
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
-            //todo: this is too low - move up
-            if (shouldUseAccountAddress(npspContact)) {
-                // if the contact has no address specified and the household has a default address, pick up the hh default.
-                addressRefreshQueue.add(npspContact.getRecord());
+            if (npspContact.isAddressEmpty()) {
+                contactsWithoutAddresses.add(npspContact.getRecord());
             }
         }
-        return new Contacts(addressRefreshQueue);
+        return contactsWithoutAddresses;
+    }
+
+    private List<Contact> contactsInHouseholdsThatHaveAddresses() {
+        List<Contact> householdHasAddresses = new List<Contact>();
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
+            if (accountHasAddresses(npspContact.getRecord())) {
+                householdHasAddresses.add(npspContact.getRecord());
+            }
+        }
+        return householdHasAddresses;
     }
 
     private Map<Id, Boolean> getIsOverrideByAddressIdBeforeInsert() {
@@ -862,10 +879,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return useCurrentAddressQueue;
-    }
-
-    private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
-        return npspContact.isAddressEmpty() && accountHasAddresses(npspContact.getRecord());
     }
 
     //todo: need to abstract out further naming stuff
