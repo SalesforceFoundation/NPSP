@@ -2,14 +2,6 @@
     <h2 class="slds-text-title_bold slds-p-horizontal_x-small slds-p-top_small slds-p-bottom_xxx-small">
         {CUSTOM_LABELS.commonSoftCredits}
     </h2>
-    <c-util-alert-banner if:true={hasAlert}
-                         theme={alertClass}
-                         assist-text="Soft Credit Error"
-                         icon={alertIcon}
-                         variant="inverse"
-                         size="x-small"
-                         message={alertBanner.message}>
-    </c-util-alert-banner>
     <template for:each={giftInView.processedSoftCredits}
               for:item='processedSoftCredit'
               for:index='index'>
