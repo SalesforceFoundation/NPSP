@@ -4,6 +4,8 @@ import GeLabelService from 'c/geLabelService';
 import { isNotEmpty } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 
+const NET_NEW_SOFT_CREDITS_LIMIT = 250;
+
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
@@ -23,6 +25,10 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
                 key: event.detail.rowIndex
             }
         });
+    }
+
+    get isBelowLimit() {
+        return this.giftInView.softCredits.length < NET_NEW_SOFT_CREDITS_LIMIT;
     }
 
     reset() {
