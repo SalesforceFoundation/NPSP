@@ -957,7 +957,7 @@ public with sharing class CON_ContactMerge_CTRL {
             return null;
         }
 
-       populateNonUniqueSelectedValuesFor(winningContact);
+        populateContactWithNonUniqueFields(winningContact);
 
         List<Contact> losingContacts = groupLosingContacts(winningContact);
         
@@ -976,20 +976,17 @@ public with sharing class CON_ContactMerge_CTRL {
         }
 
         System.SavePoint sp = Database.setSavepoint();
-
-        Database.SaveResult sr = updateWinningContactWithSelectedFields(winningContact);
-        if (!sr.isSuccess()) {
-            String strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
-            for (Database.Error err : sr.getErrors()) {
-                strErr += err.getMessage() + '\n';
-            }
-            Database.rollback(sp);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, strErr));
-            return null;
-        }
-
         try {
+            // We need to turn off Affiliation processing or there will be duplicate affiliates
+            // created after the merge.  As merge transactions do not fire child triggers
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
+            updateAndHandleWinningContact(winningContact);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
+            
             CON_ContactMerge.mergeContacts(winningContact, losingContacts);
+
+            winningContact = populateContactWithOnlyUniqueFields(winningContact.Id);
+            updateAndHandleWinningContact(winningContact);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -998,9 +995,6 @@ public with sharing class CON_ContactMerge_CTRL {
 
             return null;
         }
-
-        addUniqueValuesToWinningContact(winningContact);
-        update winningContact;
 
         return new PageReference('/' + winningContact.id);
     }
@@ -1028,7 +1022,7 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     // Update the field values of master record based on the selected value for each field.
-    private void populateNonUniqueSelectedValuesFor(Contact winningContact) {
+    private void populateContactWithNonUniqueFields(Contact winningContact) {
         for (FieldRow row : fieldRows) {
             if (row.showRadio
                 && !row.fieldName.equals(MASTER_KEY)
@@ -1037,16 +1031,17 @@ public with sharing class CON_ContactMerge_CTRL {
             {
                 SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
                 Object val = selectedRecord.get(row.fieldName);
-                winningContact.put(row.fieldName, val);     
+                winningContact.put(row.fieldName, val);
             }
         }
     }
 
-    private void addUniqueValuesToWinningContact(Contact winningContact) {
+    private Contact populateContactWithOnlyUniqueFields(Id winningContactId) {
+        Contact winningContact = new Contact(Id = winningContactId);
         for (FieldRow row : fieldRows) {
             if (row.showRadio
                 && !row.fieldName.equals(MASTER_KEY)
-                && row.selectedValue != winningContact.Id
+                && row.selectedValue != winningContactId
                 && UTIL_Describe.isFieldUnique('Contact', row.fieldName))
             {
                 SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
@@ -1054,6 +1049,7 @@ public with sharing class CON_ContactMerge_CTRL {
                 winningContact.put(row.fieldName, val);     
             }
         }
+        return winningContact;
     }
 
     private List<Contact> lockAllContacts(List<Contact> toLock) {
@@ -1063,20 +1059,27 @@ public with sharing class CON_ContactMerge_CTRL {
             WHERE Id IN :toLock FOR UPDATE];
     }
 
-    private Database.SaveResult updateWinningContactWithSelectedFields(Contact winningContact) {
-        // Update the master with the selected values
+    private void updateAndHandleWinningContact(Contact winningContact) {
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
-        // We need to turn off Affiliation processing or there will be duplicate affiliates
-        // created after the merge.  As merge transactions do not fire child triggers
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
 
         Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
-
-        TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
-
-        return saveResult;
+        handleDMLError(saveResult);
     }
+
+    private void handleDMLError(Database.SaveResult saveResult) {
+        if (saveResult.isSuccess()) {
+            return;
+        }
+
+        String errorMessage = '';
+        for (Database.Error err : saveResult.getErrors()) {
+            errorMessage += err.getMessage() + '\n';
+        }
+        throw new ConMergeException(errorMessage);
+    }
+
+    public class ConMergeException extends Exception {} 
 
     /***********************************************************************************************
     * @description Shows list of Duplicate Record Set records related to contact dupliacte rules
