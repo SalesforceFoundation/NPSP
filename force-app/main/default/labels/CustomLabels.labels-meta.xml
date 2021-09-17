@@ -2808,52 +2808,52 @@
         <value>UnPause requests cannot include Start Date or End Date.</value>
     </labels>
     <labels>
-        <fullName>RDCH_Annual_Value</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Annual_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Annual Value change field label</shortDescription>
         <value>Annual Value</value>
     </labels>
     <labels>
-        <fullName>RDCH_Change_History</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Change_Log</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header on the Change History component</shortDescription>
-        <value>Change History</value>
+        <shortDescription>Header on the Change Log component</shortDescription>
+        <value>Change Log</value>
     </labels>
     <labels>
-        <fullName>RDCH_Disabled</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Disabled</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Displayed in the change history component when RDCH is disabled</shortDescription>
-        <value>Recurring Donation Change History is currently disabled.</value>
+        <shortDescription>Displayed in the change log component when RDCL is disabled</shortDescription>
+        <value>Recurring Donation Change Log is currently disabled.</value>
     </labels>
     <labels>
-        <fullName>RDCH_Expected_Total_Value</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Expected_Total_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Expected Total Value change field label</shortDescription>
         <value>Expected Total Value</value>
     </labels>
     <labels>
-        <fullName>RDCH_Frequency</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Frequency</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Frequency change field label</shortDescription>
         <value>Frequency</value>
     </labels>
     <labels>
-        <fullName>RDCH_No_Records</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_No_Records</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Displayed when no changes are available for a recurring donation</shortDescription>
-        <value>There is no change history for this Recurring Donation.</value>
+        <value>There are no Change Logs for this Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>

@@ -82,7 +82,7 @@ public class RD2_QueueableService {
      * Current/Next Year Value and re-evaluate Opportunities on specified Recurring Donations.
      * @param rdIds Recurring Donation Ids
      * @param rdIdsWhereScheduleChanged - Ids of Recurring Donation for which a schedule has been changed
-     * @param oldRds - Recurring Donations used as a comparison for creating Change History records
+     * @param oldRds - Recurring Donations used as a comparison for creating Change Log records
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged,
@@ -172,7 +172,7 @@ public class RD2_QueueableService {
          * @description Constructor
          * @param rdIds - the RD Ids to process in this Queueable action
          * @param rdIdsWhereScheduleChanged - Ids of Recurring Donations that have a changed schedule
-         * @param oldRds - Recurring Donations used as a comparison for creating Change History records
+         * @param oldRds - Recurring Donations used as a comparison for creating Change Log records
          */
         public EvaluateInstallmentOpportunities(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged,
                 List<npe03__Recurring_Donation__c> oldRds) {
