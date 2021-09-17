@@ -92,7 +92,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void refreshHouseholdNamesAndMemberCounts() {
         if (householdsWithMembershipOrNamingFieldChanges().size() > 0) {
-            if (new HouseholdSettings().isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
+            if (householdSettings.isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
                 HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                     householdsWithMembershipOrNamingFieldChanges());
             } else {
@@ -104,7 +104,8 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterDelete() {
-        LegacyHouseholds oldHouseholds = Application.getLegacyHouseholdsInstance(new List<Id>(householdIds()));
+        LegacyHouseholds oldHouseholds =
+            Application.getLegacyHouseholdsInstance(new List<Id>(householdIds()));
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
     }
