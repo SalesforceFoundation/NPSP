@@ -92,7 +92,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
     public void refreshHouseholdNamesAndMemberCounts() {
         if (householdsWithMembershipOrNamingFieldChanges().size() > 0) {
-            if (settings.isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
+            if (new HouseholdSettings().isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
                 HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
                     householdsWithMembershipOrNamingFieldChanges());
             } else {
