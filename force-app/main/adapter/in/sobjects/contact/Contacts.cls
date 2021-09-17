@@ -204,13 +204,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
-        List<Contact> contactsWithoutAccounts = new List<Contact>();
+        List<Contact> publicContacts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (contactRecord.npe01__Private__c != true
-                && contactRecord.AccountId == null) {
-                // Avoid creating a new contact with the 1:1 account of another contact
-                resetAccountIdFor(contactRecord);
-                contactsWithoutAccounts.add(contactRecord);
+            if (!contactRecord.npe01__Private__c) {
+                publicContacts.add(contactRecord);
+            }
+        }
+        List<Contact> publicContactsWithoutAccounts = new List<Contact>();
+        for (Contact contactRecord : publicContacts) {
+            if (contactRecord.AccountId == null) {
+                publicContactsWithoutAccounts.add(contactRecord);
             }
         }
 
@@ -222,7 +225,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         List<Contact> contacts = new List<Contact>();
-        contacts.addAll(contactsWithoutAccounts);
+        contacts.addAll(publicContactsWithoutAccounts);
         contacts.addAll(organizationContacts);
         return new Contacts(contacts);
     }
