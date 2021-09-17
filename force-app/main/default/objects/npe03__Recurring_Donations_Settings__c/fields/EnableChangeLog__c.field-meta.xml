@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>EnableChangeLog__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When enabled, NPSP creates a Recurring Donation Change Log record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When enabled, NPSP creates a Recurring Donation Change Log record each time amount, schedule, or campaign fields of a Recurring Donation are updated.</inlineHelpText>
+    <label>Enable Recurring Donation Change Log</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

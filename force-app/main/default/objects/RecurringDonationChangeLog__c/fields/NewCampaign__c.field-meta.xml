@@ -7,8 +7,8 @@
     <inlineHelpText>The new Campaign for the related Recurring Donation.</inlineHelpText>
     <label>New Campaign</label>
     <referenceTo>Campaign</referenceTo>
-    <relationshipLabel>Recurring Donation Change History (New Campaign)</relationshipLabel>
-    <relationshipName>RDChangeHistoryNewCampaign</relationshipName>
+    <relationshipLabel>Recurring Donation Change Log (New Campaign)</relationshipLabel>
+    <relationshipName>RDChangeLogNewCampaign</relationshipName>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>

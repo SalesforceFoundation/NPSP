@@ -7,8 +7,8 @@
     <inlineHelpText>The previous Campaign for the related Recurring Donation.</inlineHelpText>
     <label>Previous Campaign</label>
     <referenceTo>Campaign</referenceTo>
-    <relationshipLabel>Recurring Donation Change History (Previous Campaign)</relationshipLabel>
-    <relationshipName>RDChangeHistoryPreviousCampaign</relationshipName>
+    <relationshipLabel>Recurring Donation Change Log (Previous Campaign)</relationshipLabel>
+    <relationshipName>RDChangeLogPreviousCampaign</relationshipName>
     <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
