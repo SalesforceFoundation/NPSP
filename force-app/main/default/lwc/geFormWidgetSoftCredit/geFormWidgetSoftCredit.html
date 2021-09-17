@@ -5,18 +5,22 @@
     <c-util-alert-banner if:true={hasAlert}
                          theme={alertClass}
                          assist-text="Soft Credit Error"
-                         icon= {alertIcon}
+                         icon={alertIcon}
                          variant="inverse"
                          size="x-small"
                          message={alertBanner.message}>
     </c-util-alert-banner>
-    <template for:each={giftInView.processedSoftCredits} for:item='processedSoftCredit' for:index='index'>
+    <template for:each={giftInView.processedSoftCredits}
+              for:item='processedSoftCredit'
+              for:index='index'>
         <c-ge-form-widget-soft-credit-row key={processedSoftCredit.Id}
                                           row={processedSoftCredit}
                                           row-index={index}>
         </c-ge-form-widget-soft-credit-row>
     </template>
-    <template for:each={giftInView.softCredits} for:item='softCredit' for:index='index'>
+    <template for:each={giftInView.softCredits}
+              for:item='softCredit'
+              for:index='index'>
         <c-ge-form-widget-soft-credit-row key={softCredit.key}
                                           row={softCredit}
                                           row-index={index}
