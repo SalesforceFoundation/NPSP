@@ -112,15 +112,6 @@ public inherited sharing class HouseholdService {
                 && !System.isFuture() && !System.isBatch();
     }
 
-    public void processOldHouseholdsAfterDeletingContacts(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        LegacyHouseholds oldHouseholds =
-                new LegacyHouseholds(contactsInLegacyHouseholds.householdIds(),
-                        new LegacyHouseholdSelector());
-        oldHouseholds.deleteEmptyHouseholds();
-        oldHouseholds.updateHouseholdNameAndMemberCount();
-    }
-
     private Boolean allIndividualContactsGetHouseholds() {
         return settings.isAllIndividualsProcessor();
     }

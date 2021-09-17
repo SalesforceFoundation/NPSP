@@ -78,7 +78,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
 
         if (!householdsWithMembershipChanges().isEmpty()) {
             LegacyHouseholds householdsWithMembershipChanges =
-                Application.getLegacyHouseholdsInstance(householdsWithMembershipChanges());
+                Application.getLegacyHouseholdsInstance(new List<Id>(householdsWithMembershipChanges()));
         
             householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
         }
@@ -104,7 +104,9 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     public void onAfterDelete() {
-        householdService.processOldHouseholdsAfterDeletingContacts(this);
+        LegacyHouseholds oldHouseholds = Application.getLegacyHouseholdsInstance(householdIds());
+        oldHouseholds.deleteEmptyHouseholds();
+        oldHouseholds.updateHouseholdNameAndMemberCount();
     }
 
     public ContactsInLegacyHouseholds(List<Contact> records) {
