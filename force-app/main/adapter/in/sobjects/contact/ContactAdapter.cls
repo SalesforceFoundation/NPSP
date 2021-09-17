@@ -260,6 +260,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                     contacts.contactsWithoutAccounts());
         } else {
             if (CAO_Constants.isOneToOne()) {
+                List<Contact> organizationContacts = contacts.organizationContacts();
+                resetAccountIdFor(organizationContacts);
                 householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
                         (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
                                 .getRecords());
@@ -272,4 +274,11 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         }
 
     }
+
+    public void resetAccountIdFor(List<Contact> contacts) {
+        for (Contact contactRecord : contacts) {
+            contactRecord.AccountId = null;
+        }
+    }
+
 }
