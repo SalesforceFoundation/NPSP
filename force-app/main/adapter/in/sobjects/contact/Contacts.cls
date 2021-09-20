@@ -905,7 +905,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Contacts contactsInLegacyHouseholds() {
         List<Contact> consInHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
-            if (householdIdFor(con) != null) {
+            if (con.npo02__Household__c != null) {
                 consInHouseholds.add(con);
             }
         }
@@ -995,10 +995,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return mergedWinningContactIds;
-    }
-
-    private Id householdIdFor(Contact con) {
-        return con.npo02__Household__c;
     }
 
     private Boolean isLosingRecordInMergeOperation(Contact con) {
