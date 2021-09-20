@@ -61,7 +61,7 @@ export default class Input extends LightningElement {
     @api validity;
     @api value;
     @api variant;
-    @api checkValidity = mockCheckInputValidity.bind(this);
+    @api checkValidity = mockCheckInputValidity;
     @api reportValidity() {}
     @api setCustomValidity() {}
     @api showHelpMessageIfInvalid() {}
