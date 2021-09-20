@@ -884,15 +884,16 @@ flows:
                 options:
                     package_xml: lib/admin_profile_packaging.xml
 
-    deploy_contat_merge_testing:
-        description: 'Deploys a Unique custom field and test class for Contact Merge and execute all Contact Merge related tests.'
+    deploy_contact_merge_testing:
+        description: 'Deploys a Unique custom field on Contact and a test class for Contact Merge.'
         group: NPSP
         steps:
             1:
                 task: deploy
                 options:
                     path: unpackaged/config/con_merge_testing
-
+            2:
+                task: update_admin_profile
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
@@ -1182,13 +1183,11 @@ flows:
                 task: test_data_1k
 
     regression_tests:
-        description: 'Deploys and execute tests which required extra metadata for regression.'
+        description: 'Deploys and executes tests which require extra metadata for regression.'
         steps:
             1:
-                flow: deploy_contat_merge_testing
+                flow: deploy_contact_merge_testing
             2:
-                task: update_admin_profile
-            3:
                 task: run_tests
                 options:
                     test_name_match: REG_%
