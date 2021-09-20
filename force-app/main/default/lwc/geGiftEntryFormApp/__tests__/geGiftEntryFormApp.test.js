@@ -7,6 +7,8 @@ import retrieveDefaultSGERenderWrapper from '@salesforce/apex/GE_GiftEntryContro
 import getFormRenderWrapper from '@salesforce/apex/GE_GiftEntryController.getFormRenderWrapper';
 import getAllocationsSettings from '@salesforce/apex/GE_GiftEntryController.getAllocationsSettings';
 import checkForElevateCustomer from '@salesforce/apex/GE_GiftEntryController.isElevateCustomer';
+import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
+import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import addGiftTo from '@salesforce/apex/GE_GiftEntryController.addGiftTo';
 import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
 import getGiftBatchView from '@salesforce/apex/GE_GiftEntryController.getGiftBatchView';
@@ -15,6 +17,10 @@ import processGiftsFor from '@salesforce/apex/GE_GiftEntryController.processGift
 import OPP_PAYMENT_OBJECT from '@salesforce/schema/npe01__OppPayment__c';
 import { getRecord } from 'lightning/uiRecordApi';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { mockCheckInputValidity, mockCheckInputValidityImpl } from 'lightning/input';
+import { mockCheckComboboxValidity } from 'lightning/combobox';
+import { mockGetIframeReply } from 'c/psElevateTokenHandler';
+
 
 const pubSub = require('c/pubsubNoPageRef');
 import gift from 'c/geGift';
@@ -26,6 +32,7 @@ const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
 const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
+const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
 const dataImportBatchRecord = require('./data/getDataImportBatchRecord.json');
 const selectedContact = require('./data/getSelectedContact.json');
 const selectedAccount = require('./data/getSelectedAccount.json');
@@ -89,6 +96,27 @@ jest.mock(
     },
     { virtual: true }
 );
+
+// mock labels so that we can assert the values being replaced in the string
+jest.mock(
+    '@salesforce/label/c.geErrorDonorTypeValidationSingle',
+    () => {
+        return {
+            default: 'When you select {0} for {1}, you must enter information in {2}'
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    '@salesforce/label/c.geErrorUncertainCardChargePart1',
+    () => {
+        return {
+            default: 'A system error occurred for the {0} donation by {1}. Your admin should review transactions in {2} and determine if the payment was processed.'
+        };
+    },
+    { virtual: true }
+)
 
 describe('c-ge-gift-entry-form-app', () => {
 
@@ -565,6 +593,180 @@ describe('c-ge-gift-entry-form-app', () => {
             expect(batchProcessingText(formApp).innerHTML).toBe(PROCESSING_BATCH_MESSAGE);
         });
     });
+
+    describe('donor fields validation validation', () => {
+        it('when donor type is contact and contact fields not filled in, on save displays error', async () => {
+            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
+            mockCheckInputValidity.mockImplementation(mockCheckInputValidityImpl);
+            mockCheckComboboxValidity.mockImplementation(mockCheckInputValidityImpl);
+            await flushPromises();
+
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === formApp.recordId;
+            });
+
+            getObjectInfo.emit({ keyPrefix: 'a01' }, config => {
+                return config.objectApiName.objectApiName === OPP_PAYMENT_OBJECT.objectApiName;
+            });
+
+            getObjectInfo.emit({ keyPrefix: '006' }, config => {
+                return config.objectApiName.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const geFormSections = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
+            const [donorType, accountLookup, contactLookup] = shadowQuerySelectorAll(geFormSections[0], 'c-ge-form-field');
+            const donorInput = shadowQuerySelector(donorType, 'lightning-combobox');
+
+            runWithFakeTimer(() => {
+                donorInput.dispatchEvent(new CustomEvent('change', { detail: { value: 'Contact1' } } ));
+            });
+
+            await flushPromises();
+
+            const rendererButton = shadowQuerySelector(geFormRenderer, 'lightning-button[data-qa-locator="button c.geButtonSaveNewGift"]');
+            rendererButton.click();
+
+            await flushPromises();
+
+            const pageLevelMessage = shadowQuerySelector(geFormRenderer, 'c-util-page-level-message');
+            expect(pageLevelMessage).toBeTruthy();
+
+            const pElement = pageLevelMessage.querySelector('ul li p');
+            expect(pElement.textContent).toBe('When you select Contact1 for Donor Type, you must enter information in Existing Donor Contact');
+        });
+
+        it('when donor type is account and account fields not filled in, on save displays error', async () => {
+            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
+            mockCheckInputValidity.mockImplementation(mockCheckInputValidityImpl);
+            mockCheckComboboxValidity.mockImplementation(mockCheckInputValidityImpl);
+            await flushPromises();
+
+            getRecord.emit(dataImportBatchRecord, config => {
+                return config.recordId === formApp.recordId;
+            });
+
+            getObjectInfo.emit({ keyPrefix: 'a01' }, config => {
+                return config.objectApiName.objectApiName === OPP_PAYMENT_OBJECT.objectApiName;
+            });
+
+            getObjectInfo.emit({ keyPrefix: '006' }, config => {
+                return config.objectApiName.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const geFormSections = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
+            const [donorType, accountLookup, contactLookup] = shadowQuerySelectorAll(geFormSections[0], 'c-ge-form-field');
+            const donorInput = shadowQuerySelector(donorType, 'lightning-combobox');
+
+            runWithFakeTimer(() => {
+                donorInput.dispatchEvent(new CustomEvent('change', { detail: { value: 'Account1' } } ));
+            });
+
+            await flushPromises();
+
+            const saveButton = shadowQuerySelector(geFormRenderer, 'lightning-button[data-qa-locator="button c.geButtonSaveNewGift"]');
+            saveButton.click();
+
+            await flushPromises();
+
+            const pageLevelMessage = shadowQuerySelector(geFormRenderer, 'c-util-page-level-message');
+            expect(pageLevelMessage).toBeTruthy();
+
+            const pElement = pageLevelMessage.querySelector('ul li p');
+            expect(pElement.textContent).toBe('When you select Account1 for Donor Type, you must enter information in Existing Donor Organization Account');
+        });
+    });
+
+    describe.only('payments in batch mode', () => {
+        it.only('returns an error message when purchase call times out', async () => {
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            isElevateCustomer.mockResolvedValue(true);
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            upsertDataImport.mockImplementation((dataImport) => {
+                return { Id: 'fakeDataImportId', ...dataImport };
+            });
+            sendPurchaseRequest.mockResolvedValue(JSON.stringify({
+                status: '408',
+                message: 'Timed out'
+            }));
+            mockCheckInputValidity.mockImplementation(mockCheckInputValidityImpl);
+            mockCheckComboboxValidity.mockImplementation(mockCheckInputValidityImpl);
+
+            const formApp = createGeGiftEntryFormApp();
+            document.body.appendChild(formApp);
+
+
+            mockGetIframeReply.mockImplementation((iframe, message, targetOrigin) => {
+                if (message.action === 'createToken') {
+                    return {"type": "post__npsp", "token": "a_dummy_token"};
+                }
+            });
+            await flushPromises();
+
+            window.scrollTo = jest.fn();
+
+            getObjectInfo.emit(dataImportObjectInfo, config => {
+                return config.objectApiName?.objectApiName === 'DataImport__c';
+            });
+
+            getObjectInfo.emit({ keyPrefix: 'a01' }, config => {
+                return config.objectApiName?.objectApiName === OPP_PAYMENT_OBJECT.objectApiName;
+            });
+
+            getObjectInfo.emit({ keyPrefix: '006' }, config => {
+                return config.objectApiName?.objectApiName === OPPORTUNITY_OBJECT.objectApiName;
+            });
+
+            await flushPromises();
+
+            expect(formApp).toMatchSnapshot();
+            const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
+            const [firstSection, secondSection, thirdSection, fourthSection] = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
+            const [donorType, accountLookup, contactLookup] = shadowQuerySelectorAll(firstSection, 'c-ge-form-field');
+            const [donationDate,
+                donationAmount,
+                recordType,
+                opportunityType,
+                campaign,
+                paymentMethod,
+                checkNumber] = shadowQuerySelectorAll(fourthSection, 'c-ge-form-field');
+            expect(paymentMethod).toBeTruthy();
+
+            runWithFakeTimer(() => {
+                changeFieldValue(donorType, 'Contact1');
+                changeFieldValue(contactLookup, ['003_fake_contact_id']);
+                changeFieldValue(paymentMethod, 'Credit Card');
+                changeFieldValue(donationDate, '2021-06-15');
+                changeFieldValue(donationAmount, 123.45);
+            });
+
+            await flushPromises();
+
+            getRecord.emit(selectedContact, config => {
+                return config.recordId === '003_fake_contact_id';
+            });
+
+            await flushPromises();
+
+            const saveButton = shadowQuerySelector(geFormRenderer, 'lightning-button[data-qa-locator="button c.commonSave"]');
+            saveButton.click();
+
+            await flushPromises();
+
+            expect(geFormRenderer).toMatchSnapshot();
+            const illustrationCmp = shadowQuerySelector(geFormRenderer, 'c-util-illustration');
+
+            const errorText = illustrationCmp.querySelector('div p.critical-error-text');
+            expect(errorText).toBeTruthy();
+            expect(errorText.textContent).toBe('A system error occurred for the $123.45 donation by History Tester. Your admin should review transactions in c.commonPaymentServices and determine if the payment was processed.');
+
+        });
+    });
 });
 
 const spinner = (element) => {
@@ -573,6 +775,14 @@ const spinner = (element) => {
 
 const batchProcessingText = (element) => {
     return shadowQuerySelector(element, '.loading-text');
+}
+
+const changeFieldValue = (formField, value) => {
+    const detail = { value };
+    const inputField = shadowQuerySelector(formField, '[data-id="inputComponent"]');
+    expect(inputField).toBeTruthy();
+    inputField.value = value;
+    inputField.dispatchEvent(new CustomEvent('change', { detail }));
 }
 
 const getShadowRoot = (element) => {
