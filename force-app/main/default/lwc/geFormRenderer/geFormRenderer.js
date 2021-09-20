@@ -1705,23 +1705,6 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    /*******************************************************************************
-    * @description Get a form field's value and label properties by the source
-    * field api name.
-    *
-    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
-    * custom object.
-    */
-    getFormFieldBySourceName(sourceFieldApiName) {
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        for (let i = 0; i < sectionsList.length; i++) {
-            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
-            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
-                return matchingFormField[sourceFieldApiName];
-            }
-        }
-    }
-
     get namespace() {
         return getNamespace(apiNameFor(FORM_TEMPLATE_FIELD));
     }
