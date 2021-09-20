@@ -1011,14 +1011,14 @@ public with sharing class CON_ContactMerge_CTRL {
     }
 
     private List<Contact> groupLosingContacts(Contact winningContact) {
-        List<Contact> losingerContacts = new List<Contact>();
+        List<Contact> losingContacts = new List<Contact>();
         for (Contact c : this.selectedRecords.values()) {
             if (c.Id != winningContact.Id) {
-                losingerContacts.add(c);
+                losingContacts.add(c);
             }
         }
 
-        return losingerContacts;
+        return losingContacts;
     }
 
     // Update the field values of master record based on the selected value for each field.
