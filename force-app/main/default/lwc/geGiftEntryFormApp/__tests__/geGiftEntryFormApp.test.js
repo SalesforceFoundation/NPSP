@@ -682,8 +682,8 @@ describe('c-ge-gift-entry-form-app', () => {
         });
     });
 
-    describe.only('payments in batch mode', () => {
-        it.only('returns an error message when purchase call times out', async () => {
+    describe('payments in batch mode', () => {
+        it('returns an error message when purchase call times out', async () => {
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             isElevateCustomer.mockResolvedValue(true);
             retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
