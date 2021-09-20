@@ -13,12 +13,12 @@ public class REG_ContactMergeUniqueField_TEST {
         losingContact.LastName = '2Contact_forTests_Merge';
         
         insert new Contact[] {winningContact, losingContact};
-         
+
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         controller.showContactSearchPage();
-        controller.searchText = 'test';
+        controller.searchText = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS;
         
         List<Id> fixedSearchResults=new List<Id> {
             winningContact.Id,
@@ -47,7 +47,8 @@ public class REG_ContactMergeUniqueField_TEST {
         controller.mergeContacts();
         Test.stopTest();
         
-        System.assertEquals(LOSING_UNIQUE_VALUE, [SELECT ContactMergeUniqueField__c FROM Contact WHERE Id=:winningContact.Id].ContactMergeUniqueField__c,
-        'Contact Merge Unique Field should be updated to losing contact value');
+        Contact mergedContact = [SELECT ContactMergeUniqueField__c FROM Contact WHERE Id=:winningContact.Id];
+        System.assertEquals(LOSING_UNIQUE_VALUE, mergedContact.ContactMergeUniqueField__c,
+            'Contact Merge Unique Field should be updated to losing contact value');
     }
 }
