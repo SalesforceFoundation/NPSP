@@ -1131,7 +1131,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     private Set<Contact> consWithAddressChanges() {
-        Set<Contact> consWithAddressChanges = getConsWithAddressChanges();
+        Set<Contact> consWithAddressChanges = contactsInHouseholdAccountsWithAddressChanges();
         Set<Contact> consMovingToANewHousehold = getConsMovingToANewHousehold();
         consWithAddressChanges.addAll(consMovingToANewHousehold);
         return consWithAddressChanges;
@@ -1163,7 +1163,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     //todo: are we duplicating this logic? Can it be merged?
-    private Set<Contact> getConsWithAddressChanges() {
+    private Set<Contact> contactsInHouseholdAccountsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
         for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
