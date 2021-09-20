@@ -42,6 +42,17 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     /** @description Allocations settings. */
     public DmlWrapper dmlWrapper = new dmlWrapper();
 
+    /** @description Contains Record Ids for Any Opportunities whose Allocations were recreated as a result of a Recurring Donation Allocation change */
+    public Set<Id> updatedRecurringDonationOppIds {
+       public get {
+            if (updatedRecurringDonationOppIds == null) {
+                updatedRecurringDonationOppIds = new Set<Id>();
+            }
+            return updatedRecurringDonationOppIds;
+        }
+        private set;
+    }
+
     /** @description Allocations settings. */
     public static Allocations_Settings__c settings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
@@ -112,6 +123,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, true);
         TDTM_TriggerHandler.processDML(dmlWrapper);
         dmlWrapper = null;
+
+        // Post processing of payment allocations is required if Payment Allocations is enabled and Recurring Donation Allocations were updated
+        recreateScheduledPaymentAllocationsIfNecessary();
+
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
 
         return null;
@@ -216,7 +231,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         List<npe01__OppPayment__c> pmtsNeedingAllocations = new List<npe01__OppPayment__c>();
 
         //do not run if Payment allocations are disabled
-        if (settings.Payment_Allocations_Enabled__c != true) {
+        if (!isPaymentAllocationsEnabled()) {
             return;
         }
 
@@ -297,7 +312,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
 
             //throw error if payment allocations are disabled and Payment__c is not null
-            if (settings.Payment_Allocations_Enabled__c != true && allo.Payment__c != null) {
+            if (!isPaymentAllocationsEnabled() && allo.Payment__c != null) {
                 allo.addError(Label.alloPaymentNotEnabled);
                 parentErrorDetected = true;
             }
@@ -511,6 +526,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
                 //first, delete all existing opp allocations
                 for (Opportunity opp : listRecDonOpps) {
+                    if (isPaymentAllocationsEnabled()) { // Record for further processing if Payment Allocations is enabled
+                        updatedRecurringDonationOppIds.add(opp.Id);
+                    }
                     if (mapWrapper.containsKey(opp.Id)){
                         alloWrapper oppWrap = mapWrapper.get(opp.Id);
                         dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.listAllo);
@@ -1174,6 +1192,58 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     @testVisible private static Decimal valueOrDefaultIfNull(Decimal val, Decimal defaultVal) {
         return (val != null) ? val : defaultVal;
+    }
+
+    /**
+     * @description Recreates the Scheduled Payment Allocations for Opportunities whose Allocations were updated as a
+     *              result of A Recurring Donations GAU Allocations being updated.
+     */
+    @testVisible private void recreateScheduledPaymentAllocationsIfNecessary() {
+        if (!isPaymentAllocationsEnabled() || updatedRecurringDonationOppIds.isEmpty()) {
+            return;
+        }
+
+        DmlWrapper paDMLWrapper =  new DMLWrapper();
+
+        // Payment with Payment Allocations Query for Scheduled Payments related to Opportunities
+        // whose Allocations were recreated because the Recurring Donations Allocations changed
+        String pmtReviewQuery = 'SELECT     Id, ' +
+                                ' (SELECT Id FROM Allocations__r) ' +
+                                'FROM npe01__OppPayment__c ' +
+                                'WHERE npe01__Paid__c <> true AND ' +
+                                '      npe01__Written_Off__c <> true AND ' +
+                                '      npe01__Opportunity__c in :updatedRecurringDonationOppIds';
+
+        List<SObject> pmtsRequiringAllocationReview = Database.query(pmtReviewQuery);
+
+        List<SObject> pmtAllocations = new List<SObject>();
+        for (SObject pmtSObj : pmtsRequiringAllocationReview) {
+            npe01__OppPayment__c pmt = (npe01__OppPayment__c) pmtSObj;
+            if (pmt.Allocations__r != null && !pmt.Allocations__r.isEmpty()) {
+                paDMLWrapper.objectsToDelete.addAll((List<SObject>)pmt.Allocations__r);
+            }
+        }
+
+        // Delete the existing Payment Allocations
+        TDTM_TriggerHandler.processDML(paDMLWrapper);
+
+        // Leverage the Allocations Service class to recreate the Payment Allocations
+        // Let it log the errors, if any occur.
+        ALLO_AllocationsService allocService = new ALLO_AllocationsService()
+                                                .withAllocationTriggersDisabled(true)
+                                                .withCommitAndClearRecordsEnabled(true);
+
+        // Process Allocations (Will Replicate Opportunity Allocations to Scheduled Payments without Allocations)
+        Set<Id> successfullyProcessedOppIds = allocService.processRecords(updatedRecurringDonationOppIds);
+    }
+
+    /**
+     * @description Wraps checks to see if Payment Allocations are enabled so it can be changed in one spot
+     *              in class later
+     * @return Boolean true if enabled
+     */
+    @testVisible private static Boolean isPaymentAllocationsEnabled() {
+        return (settings.Payment_Allocations_Enabled__c == true);
     }
 
 }
