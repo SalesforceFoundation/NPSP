@@ -682,7 +682,7 @@ describe('c-ge-gift-entry-form-app', () => {
         });
     });
 
-    describe('payments in batch mode', () => {
+    describe('payments in single mode', () => {
         it('returns an error message when purchase call times out', async () => {
             getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
             isElevateCustomer.mockResolvedValue(true);
@@ -724,7 +724,6 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
-            expect(formApp).toMatchSnapshot();
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
             const [firstSection, secondSection, thirdSection, fourthSection] = shadowQuerySelectorAll(geFormRenderer, 'c-ge-form-section');
             const [donorType, accountLookup, contactLookup] = shadowQuerySelectorAll(firstSection, 'c-ge-form-field');
@@ -735,7 +734,6 @@ describe('c-ge-gift-entry-form-app', () => {
                 campaign,
                 paymentMethod,
                 checkNumber] = shadowQuerySelectorAll(fourthSection, 'c-ge-form-field');
-            expect(paymentMethod).toBeTruthy();
 
             runWithFakeTimer(() => {
                 changeFieldValue(donorType, 'Contact1');
@@ -758,7 +756,6 @@ describe('c-ge-gift-entry-form-app', () => {
 
             await flushPromises();
 
-            expect(geFormRenderer).toMatchSnapshot();
             const illustrationCmp = shadowQuerySelector(geFormRenderer, 'c-util-illustration');
 
             const errorText = illustrationCmp.querySelector('div p.critical-error-text');
