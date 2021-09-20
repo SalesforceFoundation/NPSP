@@ -983,7 +983,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         Set<Id> mergedWinningContact = getMergedWinningContactIds();
         if (mergedWinningContact.size() > 0) {
             // this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            rollupContactsAndHouseholdsAfterMerge(mergedWinningContact);
+            rollupContactsAndLegacyHouseholdsAfterMerge(mergedWinningContact);
         }
     }
 
@@ -1068,7 +1068,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * @param winningContacts Set of Contact Id's
      ********************************************************************************************************/
     @TestVisible
-    private static void rollupContactsAndHouseholdsAfterMerge(Set<Id> winningContacts) {
+    private static void rollupContactsAndLegacyHouseholdsAfterMerge(Set<Id> winningContacts) {
         if (contactAndOrgSettings.isHouseholdAccountModelEnabled()) {
             return;
         }
