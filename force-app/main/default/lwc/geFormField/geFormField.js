@@ -311,15 +311,6 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    get fieldValueAndFieldApiName() {
-        let fieldWrapper = { value: this.value, apiName: this.targetFieldApiName };
-        let returnMap = {};
-        returnMap[ this.targetFieldApiName ] = fieldWrapper;
-
-        return returnMap;
-    }
-
-    @api
     setCustomValidity(errorMessage) {
         const inputField = this.inputField();
 
