@@ -457,6 +457,8 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isChangeLogEnabled) {
             if (!this.donationValue) {
                 this.donationValue = this.returnDonationValue(true);
+            }
+            if (!this.recurringType) {
                 this.recurringType = this.getRecurringType();
             }
             this.showChangeTypeField = this.isEdit;
@@ -469,7 +471,8 @@ export default class rd2EntryForm extends LightningElement {
     */
     getAnnualValue(duringInit) {
         const allFields = this.getAllFields();
-        const amount = allFields[FIELD_AMOUNT.fieldApiName];
+        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
+            : allFields[FIELD_AMOUNT.fieldApiName];
         const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
         const frequency = (duringInit || !formFrequency)
             ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) : formFrequency;
@@ -521,8 +524,7 @@ export default class rd2EntryForm extends LightningElement {
 
         if (this.recurringType != this.getRecurringType()) {
             newChangeType = '';
-        }
-        else if (newdonationValue > this.donationValue) {
+        } else if (newdonationValue > this.donationValue) {
             newChangeType = CHANGE_TYPE_UPGRADE;
         } else if (newdonationValue < this.donationValue) {
             newChangeType = CHANGE_TYPE_DOWNGRADE;
