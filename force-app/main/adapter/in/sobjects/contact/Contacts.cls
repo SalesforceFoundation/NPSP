@@ -756,7 +756,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (SObject so : getRecords()) {
             NPSP_Contact npspContact = new NPSP_Contact((Contact) so, oldVersionOf(
                     (Contact) so));
-            if (isAnAccountOfTypeHousehold(accountFor(npspContact))) {
+            Account account = accountsByIds().get(npspContact.accountId());
+            if (account != null
+                    && account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
                 contactsInHouseholdAccounts.add(npspContact);
             }
         }
@@ -1098,17 +1100,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             oppIds.add(ocr.OpportunityId);
         }
         return oppIds;
-    }
-
-    private Account accountFor(NPSP_Contact npspContact) {
-        return accountsByIds().get(npspContact.accountId());
-    }
-
-    private Boolean isAnAccountOfTypeHousehold(Account a) {
-        if (a == null) {
-            return false;
-        }
-        return a.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE;
     }
 
     private Set<Contact> getAddressCreationQueue() {
