@@ -282,14 +282,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void normalizeLineBreaksForContactsWithChangedAddresses() {
-        List<Contact> contactsWAddressChanges = getContactsWithAddressChanges();
-        for (Contact contact : contactsWAddressChanges) {
+        Contacts contactsWAddressChanges = getContactsWithAddressChanges();
+        for (Contact contact : (List<Contact>) contactsWAddressChanges.getRecords()) {
             UTIL_Address.normalizeLineBreak(contact);
         }
     }
 
     //todo: extracting uncovered dupe logic.  See if we can merge
-    private List<Contact> getContactsWithAddressChanges() {
+    private Contacts getContactsWithAddressChanges() {
         List<Contact> contactsWAddressChanges = new List<Contact>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
@@ -297,7 +297,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 contactsWAddressChanges.add(newRecord);
             }
         }
-        return contactsWAddressChanges;
+        return new Contacts(contactsWAddressChanges);
     }
 
     public void normalizeLineBreaks() {
