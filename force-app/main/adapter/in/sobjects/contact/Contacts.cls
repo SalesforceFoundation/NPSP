@@ -282,8 +282,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void normalizeLineBreaksForContactsWithChangedAddresses() {
-        Contacts contactsWAddressChanges = getContactsWithAddressChanges();
-        contactsWAddressChanges.normalizeLineBreaks();
+        getContactsWithAddressChanges().normalizeLineBreaks();
     }
 
     public void normalizeLineBreaks() {
