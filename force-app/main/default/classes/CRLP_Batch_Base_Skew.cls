@@ -275,9 +275,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         // Zero out any unhandled summary records
         if (handledParentRecordIds.size() != recordIds.size()) {
             if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                CRLP_ClearSkewQueueable clearSkewQueueable =
-                    new CRLP_ClearSkewQueueable(this.jobType, getUnhandledRecordIds());
-                System.enqueueJob(clearSkewQueueable);
+                CRLP_ResetRollupFieldsQueueable resetRollupFieldsQueueable =
+                    new CRLP_ResetRollupFieldsQueueable(this.jobType, getUnhandledParentRecordIds());
+                System.enqueueJob(resetRollupFieldsQueueable);
             }
         }
 

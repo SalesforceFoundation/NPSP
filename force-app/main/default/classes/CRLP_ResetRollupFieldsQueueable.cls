@@ -45,7 +45,7 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
     /** @description The Summary Object Type this batch job will process */
     private SObjectType summaryObjectType;
 
-    public CRLP_ClearSkewQueueable(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
+    public CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
         this.jobType = jobType;
         this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(jobType);
         this.recordIds = recordIds;
@@ -57,7 +57,7 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
      */
     public void execute(QueueableContext qc) {
         try {
-            clearRollups();
+            clearRollupFieldValues();
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }
