@@ -1680,8 +1680,8 @@ export default class GeFormRenderer extends LightningElement{
      */
     formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
-        const donationAmountFormField = this.getFormFieldBySourceName(apiNameFor(DONATION_AMOUNT));
-        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
+        const donationAmount = this.getFieldValueFromFormState(DONATION_AMOUNT);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmount);
 
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
