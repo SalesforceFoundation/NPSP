@@ -975,25 +975,13 @@ export default class GeFormRenderer extends LightningElement{
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
     isDonorTypeInvalid(sectionsList) {
-
-        const DONATION_VALUES = [
-            DONATION_DONOR_FIELDS.donationDonorField,
-            DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField,
-            DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
-        // get label and value using apiName as key from fields for each section
-        let miniFieldWrapper = {};
-        sectionsList.forEach(section => {
-            miniFieldWrapper = { ...miniFieldWrapper, ...(section.getFieldValueAndLabel(DONATION_VALUES))};
-        });
-
         // if no donation donor selection, nothing to validate here yet
-        if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
+        if ( isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
             return false;
         }
 
         // returns true when error message was generated
-        return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
+        return this.getDonorTypeValidationError(sectionsList);
     }
 
     /**
@@ -1002,7 +990,7 @@ export default class GeFormRenderer extends LightningElement{
      * @param sectionsList - Array, all sections
      * @returns {boolean} - true if error message was generated, false if otherwise
      */
-    getDonorTypeValidationError(fieldWrapper, sectionsList) {
+    getDonorTypeValidationError(sectionsList) {
 
         // get data import record helper
         const dataImportHelper = this.getDataImportHelper();
@@ -1021,7 +1009,7 @@ export default class GeFormRenderer extends LightningElement{
             this.hasPageLevelError = true;
             this.pageLevelErrorMessageList = [ {
                 index: 0,
-                errorMessage: this.getDonationDonorErrorLabel(dataImportHelper, fieldWrapper)
+                errorMessage: this.getDonationDonorErrorLabel(dataImportHelper)
             } ];
         }
 
@@ -1034,7 +1022,7 @@ export default class GeFormRenderer extends LightningElement{
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns {String}, formatted error message for donation donor validation
      */
-    getDonationDonorErrorLabel(dataImportHelper, fieldWrapper) {
+    getDonationDonorErrorLabel(dataImportHelper) {
 
         // init array replacement for custom label
         let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
