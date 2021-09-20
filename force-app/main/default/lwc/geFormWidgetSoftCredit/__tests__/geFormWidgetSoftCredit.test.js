@@ -1,17 +1,21 @@
 import { createElement } from 'lwc';
 import GeFormWidgetSoftCredit from 'c/geFormWidgetSoftCredit';
 
-const DUMMY_SOFT_CREDITS = [
+let DUMMY_SOFT_CREDITS = [
     { Role: 'Influencer', ContactId: '1', key: '1' },
     { Role: 'Honoree', ContactId: '2', key: '2' },
     { Role: 'Solicitor', ContactId: '3', key: '3' }
 ];
-const DUMMY_PROCESSED_SOFT_CREDITS = [
+let DUMMY_PROCESSED_SOFT_CREDITS = [
     { Role: 'Donor', ContactId: '4', Id: '1' },
     { Role: 'Household Member', ContactId: '5', Id: '2' },
 ];
 
 describe('c-form-widget-soft-credit', () => {
+
+    DUMMY_SOFT_CREDITS = JSON.stringify(DUMMY_SOFT_CREDITS);
+    DUMMY_PROCESSED_SOFT_CREDITS = JSON.stringify(DUMMY_PROCESSED_SOFT_CREDITS);
+
     afterEach(() => {
         clearDOM();
     });
@@ -28,8 +32,8 @@ describe('c-form-widget-soft-credit', () => {
             const element = createSoftCreditWidget();
             element.giftInView = {
                 fields: {},
-                softCredits: [],
-                processedSoftCredits: []
+                softCredits: `[]`,
+                processedSoftCredits: `[]`
             };
             document.body.appendChild(element);
 
@@ -39,13 +43,13 @@ describe('c-form-widget-soft-credit', () => {
             const text = headerElement.innerHTML;
             expect(text).toBe('c.commonSoftCredits');
         });
-        
+
         it('renders 3 soft credit rows', async () => {
             const element = createSoftCreditWidget();
             element.giftInView = {
                 fields: {},
                 softCredits: DUMMY_SOFT_CREDITS,
-                processedSoftCredits: []
+                processedSoftCredits: `[]`
             };
             document.body.appendChild(element);
 
@@ -59,7 +63,7 @@ describe('c-form-widget-soft-credit', () => {
             const element = createSoftCreditWidget();
             element.giftInView = {
                 fields: {},
-                softCredits: [],
+                softCredits: `[]`,
                 processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS
             };
             document.body.appendChild(element);
@@ -74,7 +78,7 @@ describe('c-form-widget-soft-credit', () => {
             let element = createSoftCreditWidget();
             element.giftInView = {
                 fields: {},
-                softCredits: [],
+                softCredits: `[]`,
                 processedSoftCredits: DUMMY_PROCESSED_SOFT_CREDITS
             };
             document.body.appendChild(element);
@@ -110,6 +114,6 @@ describe('c-form-widget-soft-credit', () => {
         for (let i = 0; i < softCreditsCount; i++) {
             dummySoftCredits.push({key: i});
         }
-        return dummySoftCredits;
+        return JSON.stringify(dummySoftCredits);
     }
 });

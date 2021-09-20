@@ -25,8 +25,22 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
         });
     }
 
+    get softCredits() {
+        if (this.giftInView?.softCredits) {
+            return JSON.parse(this.giftInView.softCredits);
+        }
+        return [];
+    }
+
+    get processedSoftCredits() {
+        if (this.giftInView?.processedSoftCredits) {
+            return JSON.parse(this.giftInView.processedSoftCredits);
+        }
+        return [];
+    }
+
     get isBelowLimit() {
-        return this.giftInView.softCredits.length < NET_NEW_SOFT_CREDITS_LIMIT;
+        return this.softCredits.length < NET_NEW_SOFT_CREDITS_LIMIT;
     }
 
     get qaLocatorAddNewSoftCredit() {

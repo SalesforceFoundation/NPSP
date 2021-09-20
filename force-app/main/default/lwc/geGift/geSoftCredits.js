@@ -4,6 +4,9 @@ class SoftCredits {
     _processedSoftCredits = [];
 
     constructor(softCredits) {
+        if (typeof softCredits === 'string') {
+            softCredits = JSON.parse(softCredits);
+        }
         this._indexSoftCredits(softCredits);
     }
 
@@ -35,6 +38,9 @@ class SoftCredits {
     }
 
     addProcessedSoftCredits(processedSoftCredits) {
+        if (typeof processedSoftCredits === 'string') {
+            processedSoftCredits = JSON.parse(processedSoftCredits);
+        }
         this._processedSoftCredits = [ ...processedSoftCredits ];
     }
 
