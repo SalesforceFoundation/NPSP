@@ -1030,25 +1030,25 @@ export default class GeFormRenderer extends LightningElement{
 
     /**
      * Set donation donor error message using custom label depending on field presence
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns {String}, formatted error message for donation donor validation
      */
-    getDonationDonorErrorLabel(diRecord, fieldWrapper) {
+    getDonationDonorErrorLabel(dataImportHelper, fieldWrapper) {
 
         // init array replacement for custom label
-        let validationErrorLabelReplacements = [diRecord.donationDonorValue, diRecord.donationDonorLabel];
+        let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
-        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1) {
-            if (diRecord.isAccount1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
-            if (diRecord.isAccount1NamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+        if (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) {
+            if (dataImportHelper.isAccount1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
+            if (dataImportHelper.isAccount1NamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
         } else {
-            if (diRecord.isContact1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
-            if (diRecord.isContact1LastNamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+            if (dataImportHelper.isContact1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
+            if (dataImportHelper.isContact1LastNamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.contact1LastNameField));
         }
 
         // set label depending fields present on template
@@ -1073,17 +1073,17 @@ export default class GeFormRenderer extends LightningElement{
 
     /**
      * highlight geForm fields on lSections using sError as message
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param lSections, Array of geFormSection
      * @param sError, String to set on setCustomValidity
      */
-    highlightValidationErrorFields(diRecord, lSections, sError) {
+    highlightValidationErrorFields(dataImportHelper, lSections, sError) {
 
         // prepare array to highlight fields that require attention depending on Donation_Donor
         const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField :
+            dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField :
                 DONATION_DONOR_FIELDS.contact1ImportedField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField :
+            dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField :
                 DONATION_DONOR_FIELDS.contact1LastNameField
         ];
         lSections.forEach(section => {
