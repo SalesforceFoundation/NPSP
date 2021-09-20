@@ -1166,11 +1166,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (NPSP_Contact npspContact : contactsWithAnAccountId()) {
-            Account a = accountsByIds().get(npspContact.accountId());
-            if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
-                continue;
-            }
+        for (NPSP_Contact npspContact : npspContactsInHouseholdAccounts()) {
             if (npspContact.isAddressChanged()) {
                 consWithAddressChanges.add(npspContact.getRecord());
             }
