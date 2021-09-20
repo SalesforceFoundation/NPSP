@@ -105,7 +105,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         // create any new Default Address objects
         createAddressFromContactAndSetCurrentAddressLookupId(
-                new List<Contact>(contactsWithAddressChanges()));
+                contactsWithAddressChanges().getRecords());
 
         // update the Latest date fields on any address overrides
         Addresses.updateAddrIsOverride(getIsOverrideByAddressIdBeforeInsert());
@@ -133,7 +133,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
      * this method will be removed.
      */
     public void onBeforeUpdate_FromAddrContactTDTM() {
-        normalizeLineBreaksForContactsWithChangedAddresses();
+        contactsWithAddressChanges().normalizeLineBreaks();
         Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
         isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
 
@@ -281,10 +281,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 && accountsByIds().get(con.AccountId).Addresses__r.size() > 0);
     }
 
-    public void normalizeLineBreaksForContactsWithChangedAddresses() {
-        getContactsWithAddressChanges().normalizeLineBreaks();
-    }
-
     public void normalizeLineBreaks() {
         for (Contact contact : (List<Contact>) getRecords()) {
             UTIL_Address.normalizeLineBreak(contact);
@@ -292,7 +288,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     //todo: extracting uncovered dupe logic.  See if we can merge
-    private Contacts getContactsWithAddressChanges() {
+    private Contacts contactsWithAddressChanges() {
         List<Contact> contactsWAddressChanges = new List<Contact>();
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
