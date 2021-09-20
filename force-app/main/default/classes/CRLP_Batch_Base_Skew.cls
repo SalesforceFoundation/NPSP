@@ -298,7 +298,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * @return List<Id> unhandledIds
      */
     @TestVisible
-    private List<Id> getUnhandledRecordIds() {
+    private List<Id> getUnhandledParentRecordIds() {
         List<Id> unhandledIds = new List<Id>();
         for (Id recordId : recordIds) {
             if (!this.handledParentRecordIds.contains(recordId)) {

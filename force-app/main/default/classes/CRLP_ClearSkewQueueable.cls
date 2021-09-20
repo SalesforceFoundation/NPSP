@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Skew mode queueable job to zero out summary records whose related detail records have been deleted.
 */
-public class CRLP_ClearSkewQueueable implements System.Queueable {
+public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
 
     /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
     private CRLP_RollupProcessingOptions.RollupType jobType;
@@ -67,7 +67,7 @@ public class CRLP_ClearSkewQueueable implements System.Queueable {
      * @description Clear summary records for records whose associated details have been deleted after a skew mode run.
      */
     @TestVisible
-    private void clearRollups() {
+    private void clearRollupFieldValues() {
         List<SObject> parents = getSummaryRecords();
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
@@ -88,7 +88,10 @@ public class CRLP_ClearSkewQueueable implements System.Queueable {
         }
 
         if (!updatedRecords.isEmpty()) {
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(clearSkewModeFlag(updatedRecords), jobType);
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(
+                clearSkewModeFlag(updatedRecords), 
+                jobType
+            );
         }
     }
 
