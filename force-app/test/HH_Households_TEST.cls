@@ -700,7 +700,8 @@ public with sharing class HH_Households_TEST {
         System.assertEquals(1, [SELECT Count() FROM OpportunityContactRole WHERE IsPrimary = True AND ContactId = :c1.Id]);
 
         Test.startTest();
-        Contacts.rollupContactsAndLegacyHouseholdsAfterMerge(new Set<Id>{c1.Id});
+        ContactsInLegacyHouseholds.rollupContactsAndLegacyHouseholdsAfterMerge(new
+                Set<Id>{c1.Id});
         Test.stopTest();
 
         c1 = [SELECT npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c FROM Contact WHERE Id = :c1.Id];

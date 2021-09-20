@@ -175,15 +175,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     }
 
-    public void onAfterDelete() {
-        fireRollupsForMergedContactsInLegacyHouseholds();
-        if (!contactsInLegacyHouseholds().isEmpty()) {
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(contactsInLegacyHouseholds().getRecords());
-            contactsInLegacyHouseholds.onAfterDelete();
-        }
-    }
-
     /**
      * @description Determines whether or not Contacts belong to the BucketAccount, when
      * Contacts are being inserted.
@@ -902,7 +893,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
-    private Contacts contactsInLegacyHouseholds() {
+    public Contacts contactsInLegacyHouseholds() {
         List<Contact> consInHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (con.npo02__Household__c != null) {
@@ -979,28 +970,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
     }
 
-    private void fireRollupsForMergedContactsInLegacyHouseholds() {
-        Set<Id> mergedWinningContact = getMergedWinningContactIds();
-        if (mergedWinningContact.size() > 0) {
-            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
-            rollupContactsAndLegacyHouseholdsAfterMerge(mergedWinningContact);
-        }
-    }
-
-    private Set<Id> getMergedWinningContactIds() {
-        Set<Id> mergedWinningContactIds = new Set<Id>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (isLosingRecordInMergeOperation(con)) {
-                mergedWinningContactIds.add(con.MasterRecordId);
-            }
-        }
-        return mergedWinningContactIds;
-    }
-
-    private Boolean isLosingRecordInMergeOperation(Contact con) {
-        return con.MasterRecordId != null;
-    }
-
     //todo: bulk filter, contacts with naming field changes
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account
@@ -1060,40 +1029,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             return true;
         }
         return false;
-    }
-
-    /*******************************************************************************************************
-     * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
-     * the Household Account model
-     * @param winningContacts Set of Contact Id's
-     ********************************************************************************************************/
-    @TestVisible
-    private static void rollupContactsAndLegacyHouseholdsAfterMerge(Set<Id> winningContacts) {
-        if (contactAndOrgSettings.isHouseholdAccountModelEnabled()) {
-            return;
-        }
-
-        Set<Id> oppIds = getOppIdsForWinningContacts(winningContacts);
-        if (!oppIds.isEmpty()) {
-            if (System.isFuture() || System.isBatch()) {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
-            } else {
-                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
-            }
-        }
-    }
-
-    private static Set<Id> getOppIdsForWinningContacts(Set<Id> winningContacts) {
-        Set<Id> oppIds = new Set<Id>();
-        for (OpportunityContactRole ocr : [
-                SELECT OpportunityId
-                FROM OpportunityContactRole
-                WHERE ContactId IN :winningContacts AND IsPrimary = TRUE
-        ]
-        ) {
-            oppIds.add(ocr.OpportunityId);
-        }
-        return oppIds;
     }
 
     private Set<Contact> getAddressCreationQueue() {
