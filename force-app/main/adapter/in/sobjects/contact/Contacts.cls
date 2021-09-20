@@ -177,9 +177,9 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     public void onAfterDelete() {
         fireRollupsForMergedContacts();
-        if (!contactsInHouseholds().isEmpty()) {
+        if (!contactsInLegacyHouseholds().isEmpty()) {
             ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
+                    new ContactsInLegacyHouseholds(contactsInLegacyHouseholds().getRecords());
             contactsInLegacyHouseholds.onAfterDelete();
         }
     }
@@ -902,7 +902,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
-    private Contacts contactsInHouseholds() {
+    private Contacts contactsInLegacyHouseholds() {
         List<Contact> consInHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (householdIdFor(con) != null) {
