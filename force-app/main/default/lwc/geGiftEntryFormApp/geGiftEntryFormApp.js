@@ -52,6 +52,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     namespace;
     isLoading = true;
+    isFormRendering = false;
 
     giftBatch = new GiftBatch();
     elevateBatch = new ElevateBatch();
@@ -70,11 +71,21 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleLoadData(event) {
         try {
-            const giftId = event.detail.Id;
-            const foundGift = this.giftBatch.findGiftBy(giftId);
-            this.gift = new Gift(foundGift.state());
-            this.giftInView = this.gift.state();
-            this.openedGiftDonationId = this.gift.donationId();
+            this.isFormRendering = true;
+
+            new Promise((resolve,reject) => {
+                setTimeout(()=> {
+                    const giftId = event.detail.Id;
+                    const foundGift = this.giftBatch.findGiftBy(giftId);
+                    this.gift = new Gift(foundGift.state());
+                    this.giftInView = this.gift.state();
+                    this.openedGiftDonationId = this.gift.donationId();
+                    resolve();
+                }, 100);
+            })
+            .then(() => {
+                this.isFormRendering = false;
+            });
         } catch(error) {
             handleError(error);
         }
