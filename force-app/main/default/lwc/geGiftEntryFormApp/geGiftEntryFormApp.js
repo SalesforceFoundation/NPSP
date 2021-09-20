@@ -83,7 +83,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     resolve();
                 }, 100);
             })
-            .then(() => {
+            .finally(() => {
                 this.isFormRendering = false;
             });
         } catch(error) {
