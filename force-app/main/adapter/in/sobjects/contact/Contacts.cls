@@ -753,13 +753,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
     //todo: assess repeated generation of collection of Contacts in HouseholdAccounts
     private List<NPSP_Contact> npspContactsInHouseholdAccounts() {
         List<NPSP_Contact> contactsInHouseholdAccounts = new List<NPSP_Contact>();
-        for (SObject so : getRecords()) {
-            NPSP_Contact npspContact = new NPSP_Contact((Contact) so, oldVersionOf(
-                    (Contact) so));
-            Account account = accountsByIds().get(npspContact.accountId());
+        for (Contact con : (List<Contact>) getRecords()) {
+            Account account = accountsByIds().get(con.AccountId);
             if (account != null
                     && account.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                contactsInHouseholdAccounts.add(npspContact);
+                contactsInHouseholdAccounts.add(new NPSP_Contact(con));
             }
         }
         return contactsInHouseholdAccounts;
