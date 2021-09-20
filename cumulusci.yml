@@ -892,8 +892,6 @@ flows:
                 task: deploy
                 options:
                     path: unpackaged/config/con_merge_testing
-            2:
-                task: update_admin_profile
 
     deploy_rollup_testing:
         description: 'Deploys custom fields and rollup definitions for testing Customizable Rollups using the Apex Anon testing script. >>> NOTE: Customizable Rollups needs to be successfully enabled before deploy_rollup_testing can be run <<<'
