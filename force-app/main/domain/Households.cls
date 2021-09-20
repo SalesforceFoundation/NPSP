@@ -167,6 +167,30 @@ public inherited sharing class Households extends fflib_SObjects {
         rollupAccounts(ids());
     }
 
+    /*******************************************************************************************************
+    * @description for the map of addresses, update household member's mailing fields
+    * if they are using the address as an override.
+    * @param addressesById a map of Address Id's to Addresses
+    * @param dmlWrapper to hold the Contacts to update
+    */
+    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+
+        List<Contact> contactsWithAddressOverrides = ContactSelector.getContactOverridesForAddressesIn(
+                addressesById.keySet()
+        );
+
+        for (Contact contact : contactsWithAddressOverrides) {
+            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
+
+            npspContact.mailingAddress(npspAddress);
+            npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
+
+            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
+        }
+    }
+
     private void resetPrimaryContact(TDTM_Runnable.DmlWrapper dmlWrapper) {
         // now go thru each account and update their primary contact if the current one isn't valid
         List<Account> accounts = new List<Account>();
