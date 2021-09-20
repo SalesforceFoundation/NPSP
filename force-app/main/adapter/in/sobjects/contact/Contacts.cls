@@ -176,7 +176,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public void onAfterDelete() {
-        fireRollupsForMergedContacts();
+        fireRollupsForMergedContactsInLegacyHouseholds();
         if (!contactsInLegacyHouseholds().isEmpty()) {
             ContactsInLegacyHouseholds contactsInLegacyHouseholds =
                     new ContactsInLegacyHouseholds(contactsInLegacyHouseholds().getRecords());
@@ -979,7 +979,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
     }
 
-    private void fireRollupsForMergedContacts() {
+    private void fireRollupsForMergedContactsInLegacyHouseholds() {
         Set<Id> mergedWinningContact = getMergedWinningContactIds();
         if (mergedWinningContact.size() > 0) {
             // this fires off opp rollups, which we aren't going to move to dmlWrapper!
