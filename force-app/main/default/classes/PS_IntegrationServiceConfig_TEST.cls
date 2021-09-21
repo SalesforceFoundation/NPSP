@@ -207,6 +207,78 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
             'Commitment View URL should be ' + testCommitmentViewURL);
     }
 
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWithProductId() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withProductId(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
+        System.assert(serviceConfig.isIntegrationEnabled());
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWithClientId() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withClientId(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
+        System.assert(serviceConfig.isIntegrationEnabled());
+    }
+
+    private class PaymentServicesConfigurationSelectorMock implements StubProvider {
+
+        public Boolean withClientId = false;
+        private Boolean withProductId = false;
+
+        public PaymentServicesConfigurationSelectorMock withClientId(Boolean withClientId) {
+            this.withClientId = withClientId;
+            return this;
+        }
+
+        public PaymentServicesConfigurationSelectorMock withProductId(Boolean withProductId) {
+            this.withProductId = withProductId;
+            return this;
+        }
+
+        private List<Payment_Services_Configuration__c> buildConfiguration() {
+            List<Payment_Services_Configuration__c> configurations = getConfigurations();
+            if (withClientId) {
+                return configurations;
+            }
+
+            if (withProductId) {
+                for (Payment_Services_Configuration__c configuration : configurations) {
+                    if(configuration.Key__c == PS_IntegrationServiceConfig.CLIENTID) {
+                        configuration.Key__c = PS_IntegrationServiceConfig.PRODUCTID;
+                    }
+                }
+            }
+            return configurations;
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getConfigRecordsByName' {
+                    return buildConfiguration();
+                }
+            }
+            return null;
+        }
+    }
+
+    private static PaymentServicesConfigurationSelector stubFor(
+        PaymentServicesConfigurationSelectorMock paymentServicesConfigurationSelectorMock) {
+        return (PaymentServicesConfigurationSelector) Test.createStub(
+            PaymentServicesConfigurationSelector.class, paymentServicesConfigurationSelectorMock);
+    }
+
     /***
     * @description Stub for the integration service config instance
     */
