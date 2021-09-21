@@ -68,12 +68,12 @@ public inherited sharing class HouseholdService {
     }
 
     @TestVisible
-    private HouseholdSettings householdSettings {
+    private HouseholdSettings householdSettingsInstance {
         get {
-            if (householdSettings == null) {
-                householdSettings = new HouseholdSettings();
+            if (householdSettingsInstance == null) {
+                householdSettingsInstance = new HouseholdSettings();
             }
-            return householdSettings;
+            return householdSettingsInstance;
         }
         set;
     }
@@ -451,7 +451,7 @@ public inherited sharing class HouseholdService {
     }
 
     private void configureHouseholdAccount(Contact contactRecord, Account accountRecord) {
-        if (householdSettings.isAdvancedHouseholdNaming()) {
+        if (householdSettingsInstance.isAdvancedHouseholdNaming()) {
             // Generate and set the Name + Greetings
             HouseholdName householdName =
                     new HouseholdName(new Contacts(new List<Contact>{

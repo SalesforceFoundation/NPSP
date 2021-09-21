@@ -70,23 +70,23 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     @TestVisible
-    private HouseholdService householdService {
+    private HouseholdService householdServiceInstance {
         get {
-            if (householdService == null) {
-                householdService = new HouseholdService();
+            if (householdServiceInstance == null) {
+                householdServiceInstance = new HouseholdService();
             }
-            return householdService;
+            return householdServiceInstance;
         }
         set;
     }
     private Map<Id, Contact> oldMap;
 
     public void onAfterInsert() {
-        householdService.createLegacyHouseholdsFor(this);
+        householdServiceInstance.createLegacyHouseholdsFor(this);
     }
 
     public void onAfterUpdate() {
-        householdService.createLegacyHouseholdsFor(this);
+        householdServiceInstance.createLegacyHouseholdsFor(this);
 
         if (!householdsWithMembershipChanges().isEmpty()) {
             LegacyHouseholds householdsWithMembershipChanges =
@@ -334,7 +334,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     private Boolean namingFieldChangedFor(Contact con) {
-        for (String fieldName : householdService.fieldsUsedForHouseholdNaming()) {
+        for (String fieldName : householdServiceInstance.fieldsUsedForHouseholdNaming()) {
             if (isFieldChanged(con, fieldName)) {
                 return true;
             }
