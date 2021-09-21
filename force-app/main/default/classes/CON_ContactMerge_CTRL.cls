@@ -1011,9 +1011,9 @@ public with sharing class CON_ContactMerge_CTRL {
 
     private List<Contact> groupLosingContacts(Contact winningContact) {
         List<Contact> losingContacts = new List<Contact>();
-        for (Contact c : this.selectedRecords.values()) {
-            if (c.Id != winningContact.Id) {
-                losingContacts.add(c);
+        for (Contact contact : this.selectedRecords.values()) {
+            if (contact.Id != winningContact.Id) {
+                losingContacts.add(contact);
             }
         }
 
@@ -1029,40 +1029,36 @@ public with sharing class CON_ContactMerge_CTRL {
 
     // Update the field values of master record based on the selected value for each field.
     private void populateContactWithNonUniqueFields(Contact winningContact) {
-        for (FieldRow row : fieldRows) {
-            if (row.showRadio
-                && !row.fieldName.equals(MASTER_KEY)
-                && row.selectedValue != winningContact.Id
-                && !UTIL_Describe.isFieldUnique('Contact', row.fieldName))
-            {
-                SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
-                Object val = selectedRecord.get(row.fieldName);
-                winningContact.put(row.fieldName, val);
-            }
-        }
+        populateContactWithFields(winningContact, false);
     }
 
     private void updateContactWithOnlyUniqueFields(Id winningContactId) {
         Contact winningContact = new Contact(Id = winningContactId);
-        Boolean hasUniqueFieldChange = false;
 
-        for (FieldRow row : fieldRows) {
-            if (row.showRadio
-                && !row.fieldName.equals(MASTER_KEY)
-                && row.selectedValue != winningContactId
-                && UTIL_Describe.isFieldUnique('Contact', row.fieldName))
-            {
-                SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
-                Object val = selectedRecord.get(row.fieldName);
-                winningContact.put(row.fieldName, val);     
-                hasUniqueFieldChange = true;
-            }
-        }
+        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
 
         if (hasUniqueFieldChange) {
             updateAndHandleWinningContact(winningContact);
         }
+    }
 
+    private Boolean populateContactWithFields(Contact winningContact, Boolean isUniqueField) {
+        Boolean hasFieldChange = false;
+
+        for (FieldRow row : fieldRows) {
+            if (row.showRadio
+                && !row.fieldName.equals(MASTER_KEY)
+                && row.selectedValue != winningContact.Id
+                && UTIL_Describe.isFieldUnique('Contact', row.fieldName) == isUniqueField)
+            {
+                SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
+                Object val = selectedRecord.get(row.fieldName);
+                winningContact.put(row.fieldName, val);     
+                hasFieldChange = true;
+            }
+        }
+
+        return hasFieldChange;
     }
 
     private void updateAndHandleWinningContact(Contact winningContact) {

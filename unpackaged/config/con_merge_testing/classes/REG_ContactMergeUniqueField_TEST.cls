@@ -91,5 +91,6 @@ public class REG_ContactMergeUniqueField_TEST {
             'Contact Merge Unique Field should be updated to losing contact value');
         System.assertEquals(LOSING_LAST_NAME, mergedContact.LastName,
             'Contact Merge Last Name should be updated to losing contact value');
+        System.assertEquals(0, ApexPages.getMessages().size(), 'There should be no error thrown onto the Contact Merge Page');
     }
 }
