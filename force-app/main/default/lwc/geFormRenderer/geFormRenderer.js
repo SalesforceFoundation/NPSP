@@ -1066,18 +1066,19 @@ export default class GeFormRenderer extends LightningElement{
      * @param sError, String to set on setCustomValidity
      */
     highlightValidationErrorFields(dataImportHelper, lSections, sError) {
+        const accountFields = [DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField];
+        const contactFields = [DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField];
+        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
+            ...(dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? accountFields : contactFields)
+        ];
+        const clearFields = dataImportHelper.donationDonorValue !== DONATION_DONOR.isAccount1 ? accountFields : contactFields;
 
         // prepare array to highlight fields that require attention depending on Donation_Donor
-        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
-            dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField :
-                DONATION_DONOR_FIELDS.contact1ImportedField,
-            dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField :
-                DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
+
         lSections.forEach(section => {
+            section.setCustomValidityOnFields(clearFields, '');
             section.setCustomValidityOnFields(highlightFields, sError);
         });
-
     }
 
     /**
