@@ -95,7 +95,7 @@ public inherited sharing class HouseholdService {
         return householdNamingServiceInst.getHouseholdNamingContactFields();
     }
 
-    public void createHouseholdsFor(
+    public void createLegacyHouseholdsFor(
             ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContacts(
@@ -107,51 +107,9 @@ public inherited sharing class HouseholdService {
         }
     }
 
-    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        LegacyHouseholds oldHouseholds = new LegacyHouseholds(
-                new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
-                new LegacyHouseholdSelector());
-        oldHouseholds.deleteEmptyHouseholds();
-    }
-
-    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
-            if (isFutureEligible()) {
-                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
-                        contactsInLegacyHouseholds
-                                .householdsWithMembershipOrNamingFieldChanges());
-            } else {
-                HouseholdNamingService householdNamingService = new HouseholdNamingService();
-                householdNamingService.updateHouseholdNameAndMemberCount(
-                        contactsInLegacyHouseholds
-                                .householdsWithMembershipOrNamingFieldChanges());
-            }
-        }
-    }
-
     private Boolean isFutureEligible() {
         return settings.isAsyncEnabled()
                 && !System.isFuture() && !System.isBatch();
-    }
-
-    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipChanges().isEmpty()) {
-            return; //No need to fire rollups if no Contacts changed Households
-        }
-        LegacyHouseholds householdsWithMembershipChanges =
-                new LegacyHouseholds(
-                        contactsInLegacyHouseholds.householdsWithMembershipChanges(),
-                        new LegacyHouseholdSelector());
-        householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
-    }
-
-    public void processOldHouseholdsAfterDeletingContacts(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        LegacyHouseholds oldHouseholds =
-                new LegacyHouseholds(contactsInLegacyHouseholds.householdIds(),
-                        new LegacyHouseholdSelector());
-        oldHouseholds.deleteEmptyHouseholds();
-        oldHouseholds.updateHouseholdNameAndMemberCount();
     }
 
     private Boolean allIndividualContactsGetHouseholds() {

@@ -85,8 +85,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 }
             }
             when AfterDelete {
-                Contacts contacts = new Contacts(oldlist);
-                contacts.onAfterDelete();
+                ContactAdapter contactAdapter = new ContactAdapter(oldlist);
+                contactAdapter.onAfterDelete();
             }
             when AfterUpdate {
                 ContactsInLegacyHouseholds legacyHouseholdContacts =

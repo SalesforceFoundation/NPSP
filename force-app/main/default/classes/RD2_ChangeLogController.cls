@@ -27,13 +27,15 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-public with sharing class RD2_ChangeHistoryView {
-    @AuraEnabled public List<RD2_ChangeView> changes;
-    @AuraEnabled public Boolean settingEnabled;
-    @AuraEnabled public Boolean rd2Enabled;
-    @AuraEnabled public Boolean hasMore;
+public with sharing class RD2_ChangeLogController {
 
-    public RD2_ChangeHistoryView() {
-        this.changes = new List<RD2_ChangeView>();
+    @AuraEnabled
+    public static RD2_ChangeLogView getChangeLog(Id recurringDonationId, Integer recordLimit, String changeTypeFilter) {
+        RD2_ChangeLogService service = new RD2_ChangeLogService();
+        try {
+            return service.getChangeLogView(recurringDonationId, recordLimit, changeTypeFilter);
+        } catch (Exception ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
     }
 }

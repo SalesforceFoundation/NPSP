@@ -118,6 +118,14 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 new Contacts(getRecords(), oldMap.values()));
     }
 
+    public void onAfterDelete() {
+        Contacts contacts = new Contacts(getRecords());
+        if (!contacts.contactsInLegacyHouseholds().isEmpty()) {
+            new ContactsInLegacyHouseholds(
+                    contacts.contactsInLegacyHouseholds().getRecords()).onAfterDelete();
+        }
+    }
+
     private static List<Contact> contactsWithoutAccounts(Contacts contacts) {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
@@ -260,6 +268,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 (List<Contact>) contacts.contactsWithoutAccounts().getRecords());
         } else {
             if (CAO_Constants.isOneToOne()) {
+                List<Contact> organizationContacts = contacts.organizationContacts();
+                resetAccountIdFor(organizationContacts);
                 householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
                         (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
                                 .getRecords());
@@ -272,4 +282,11 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         }
 
     }
+
+    public void resetAccountIdFor(List<Contact> contacts) {
+        for (Contact contactRecord : contacts) {
+            contactRecord.AccountId = null;
+        }
+    }
+
 }

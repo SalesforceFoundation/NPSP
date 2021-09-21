@@ -48,6 +48,17 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     }
 
     @TestVisible
+    private static ContactAndOrgSettings contactAndOrgSettingsInst {
+        get {
+            if (contactAndOrgSettingsInst == null) {
+                contactAndOrgSettingsInst = new ContactAndOrgSettings();
+            }
+            return contactAndOrgSettingsInst;
+        }
+        set;
+    }
+
+    @TestVisible
     private HouseholdSettings householdSettings {
         get {
             if (householdSettings == null) {
@@ -57,6 +68,7 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         }
         set;
     }
+
     @TestVisible
     private HouseholdService householdService {
         get {
@@ -70,18 +82,45 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
     private Map<Id, Contact> oldMap;
 
     public void onAfterInsert() {
-        householdService.createHouseholdsFor(this);
+        householdService.createLegacyHouseholdsFor(this);
     }
 
     public void onAfterUpdate() {
-        householdService.createHouseholdsFor(this);
-        householdService.fireHouseholdRollupsFor(this);
-        householdService.updateHouseholdNamesFor(this);
-        householdService.deleteEmptyHouseholdsFor(this);
+        householdService.createLegacyHouseholdsFor(this);
+
+        if (!householdsWithMembershipChanges().isEmpty()) {
+            LegacyHouseholds householdsWithMembershipChanges =
+                Application.getLegacyHouseholdsInstance(new List<Id>(householdsWithMembershipChanges()));
+        
+            householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
+        }
+
+        refreshHouseholdNamesAndMemberCounts();
+
+        LegacyHouseholds oldHouseholds =
+                Application.getLegacyHouseholdsInstance(oldHouseholdIds());
+        oldHouseholds.deleteEmptyHouseholds();
+    }
+
+    public void refreshHouseholdNamesAndMemberCounts() {
+        if (householdsWithMembershipOrNamingFieldChanges().size() > 0) {
+            if (householdSettings.isAsyncEnabled() && !System.isFuture() && !System.isBatch()) {
+                HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
+                    householdsWithMembershipOrNamingFieldChanges());
+            } else {
+                HouseholdNamingService householdNamingService = new HouseholdNamingService();
+                householdNamingService.updateHouseholdNameAndMemberCount(
+                    householdsWithMembershipOrNamingFieldChanges());
+            }
+        }
     }
 
     public void onAfterDelete() {
-        householdService.processOldHouseholdsAfterDeletingContacts(this);
+        fireRollupsForMergedContactsInLegacyHouseholds();
+        LegacyHouseholds oldHouseholds =
+            Application.getLegacyHouseholdsInstance(new List<Id>(householdIds()));
+        oldHouseholds.deleteEmptyHouseholds();
+        oldHouseholds.updateHouseholdNameAndMemberCount();
     }
 
     public ContactsInLegacyHouseholds(List<Contact> records) {
@@ -92,6 +131,62 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         super(records, Contact.SObjectType);
         this.oldMap = oldMap != null ?
                 new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
+    }
+
+    private void fireRollupsForMergedContactsInLegacyHouseholds() {
+        Set<Id> mergedWinningContact = getMergedWinningContactIds();
+        if (mergedWinningContact.size() > 0) {
+            // this fires off opp rollups, which we aren't going to move to dmlWrapper!
+            rollupContactsAndLegacyHouseholdsAfterMerge(mergedWinningContact);
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
+     * the Household Account model
+     * @param winningContacts Set of Contact Id's
+     ********************************************************************************************************/
+    @TestVisible
+    private static void rollupContactsAndLegacyHouseholdsAfterMerge(Set<Id> winningContacts) {
+        if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
+            return;
+        }
+
+        Set<Id> oppIds = getOppIdsForWinningContacts(winningContacts);
+        if (!oppIds.isEmpty()) {
+            if (System.isFuture() || System.isBatch()) {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTrigger(oppIds);
+            } else {
+                RLLP_OppRollup.rollupContactsandHouseholdsForTriggerFuture(oppIds);
+            }
+        }
+    }
+
+    private static Set<Id> getOppIdsForWinningContacts(Set<Id> winningContacts) {
+        Set<Id> oppIds = new Set<Id>();
+        for (OpportunityContactRole ocr : [
+                SELECT OpportunityId
+                FROM OpportunityContactRole
+                WHERE ContactId IN :winningContacts AND IsPrimary = TRUE
+        ]
+        ) {
+            oppIds.add(ocr.OpportunityId);
+        }
+        return oppIds;
+    }
+
+    private Set<Id> getMergedWinningContactIds() {
+        Set<Id> mergedWinningContactIds = new Set<Id>();
+        for (Contact con : (List<Contact>) getRecords()) {
+            if (isLosingRecordInMergeOperation(con)) {
+                mergedWinningContactIds.add(con.MasterRecordId);
+            }
+        }
+        return mergedWinningContactIds;
+    }
+
+    private Boolean isLosingRecordInMergeOperation(Contact con) {
+        return con.MasterRecordId != null;
     }
 
     public List<Contact> contactsWithoutHouseholds() {

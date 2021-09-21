@@ -207,20 +207,6 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
         }
     }
 
-    public static Boolean isWithoutAccount(Contact contactRecord) {
-        return contactRecord.npe01__Private__c != true
-                && contactRecord.AccountId == null;
-    }
-
-    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
-        return contactRecord.npe01__Private__c != true
-                &&
-                (accountRecord != null
-                        && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
-                );
-    }
-
-
     /*******************************************************************************************************
     * @description contact's owner has changed.  consider updating related account owner.
     * @param newOwnerContactById a map of Contact Id to Contact, for the contacts to consider

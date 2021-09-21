@@ -35,4 +35,11 @@
 */
 public inherited sharing class Application {
 
+    public static LegacyHouseholds getLegacyHouseholdsInstance(List<Id> ids) {
+        LegacyHouseholds oldHouseholds = new LegacyHouseholds(
+                new Set<Id>(ids),
+                new LegacyHouseholdSelector());
+        return oldHouseholds;
+    }
+
 }
