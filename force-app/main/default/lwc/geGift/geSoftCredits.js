@@ -4,10 +4,7 @@ class SoftCredits {
     _processedSoftCredits = [];
 
     constructor(softCredits) {
-        if (typeof softCredits === 'string') {
-            softCredits = JSON.parse(softCredits);
-        }
-        this._indexSoftCredits(softCredits);
+        this._indexSoftCredits(this._parseIfString(softCredits));
     }
 
     forSave() {
@@ -38,10 +35,7 @@ class SoftCredits {
     }
 
     addProcessedSoftCredits(processedSoftCredits) {
-        if (typeof processedSoftCredits === 'string') {
-            processedSoftCredits = JSON.parse(processedSoftCredits);
-        }
-        this._processedSoftCredits = [ ...processedSoftCredits ];
+        this._processedSoftCredits = this._parseIfString(processedSoftCredits);
     }
 
     clearProcessedSoftCredits() {
@@ -89,6 +83,13 @@ class SoftCredits {
 
         this._unprocessedSoftCredits = [];
         this._indexSoftCredits(softCredits);
+    }
+
+    _parseIfString(object) {
+        if (typeof object === 'string') {
+            return JSON.parse(object);
+        }
+        return object;
     }
 }
 

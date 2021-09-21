@@ -1,20 +1,17 @@
 import { createElement } from 'lwc';
 import GeFormWidgetSoftCredit from 'c/geFormWidgetSoftCredit';
 
-let DUMMY_SOFT_CREDITS = [
+const DUMMY_SOFT_CREDITS = JSON.stringify([
     { Role: 'Influencer', ContactId: '1', key: '1' },
     { Role: 'Honoree', ContactId: '2', key: '2' },
     { Role: 'Solicitor', ContactId: '3', key: '3' }
-];
-let DUMMY_PROCESSED_SOFT_CREDITS = [
+]);
+const DUMMY_PROCESSED_SOFT_CREDITS = JSON.stringify([
     { Role: 'Donor', ContactId: '4', Id: '1' },
     { Role: 'Household Member', ContactId: '5', Id: '2' },
-];
+]);
 
 describe('c-form-widget-soft-credit', () => {
-
-    DUMMY_SOFT_CREDITS = JSON.stringify(DUMMY_SOFT_CREDITS);
-    DUMMY_PROCESSED_SOFT_CREDITS = JSON.stringify(DUMMY_PROCESSED_SOFT_CREDITS);
 
     afterEach(() => {
         clearDOM();
