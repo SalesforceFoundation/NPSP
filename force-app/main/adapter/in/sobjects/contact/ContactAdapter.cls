@@ -209,7 +209,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         contacts.resetDeprecatedFields();
         contacts.keepPrivateContactsPrivate();
         householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-            (List<Contact>) contacts.contactsWithoutAccounts().getRecords());
+            contactsWithoutAccounts(contacts));
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             LegacyHouseholds.attachToBucketAccount(
