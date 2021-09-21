@@ -977,6 +977,9 @@ export default class GeFormRenderer extends LightningElement{
     isDonorTypeInvalid(sectionsList) {
         // if no donation donor selection, nothing to validate here yet
         if ( isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
+            sectionsList.forEach( section => {
+                section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
+            });
             return false;
         }
 
@@ -1068,6 +1071,8 @@ export default class GeFormRenderer extends LightningElement{
     highlightValidationErrorFields(dataImportHelper, lSections, sError) {
         const accountFields = [DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField];
         const contactFields = [DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField];
+
+        // prepare arrays to highlight/clear fields that require attention depending on Donation_Donor
         const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
             ...(dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? accountFields : contactFields)
         ];
