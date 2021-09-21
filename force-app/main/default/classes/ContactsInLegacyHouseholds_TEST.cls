@@ -42,7 +42,7 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
                 new ContactsInLegacyHouseholds(TEST_ContactBuilder.dummyContactList());
 
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
-        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
+        contactsInLegacyHouseholds.householdServiceInstance = stubFor(householdServiceMock);
 
         //When
         contactsInLegacyHouseholds.onAfterInsert();
@@ -69,7 +69,7 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
                         new Map<Id, Contact>(TEST_ContactBuilder.dummyContactListWithIds())
                 );
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
-        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
+        contactsInLegacyHouseholds.householdServiceInstance = stubFor(householdServiceMock);
 
         //When
         contactsInLegacyHouseholds.onAfterUpdate();
