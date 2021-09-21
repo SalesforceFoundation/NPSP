@@ -221,9 +221,13 @@ class GeFormService {
                 fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
     }
 
-    getFieldLabelFromTemplate(sourceFieldApiName) {
+    getFieldLabelBySourceFromTemplate(sourceFieldApiName) {
         const mapping = this.fieldMappingForSourceField(sourceFieldApiName);
-        const element = this.findElementByDeveloperName(mapping.DeveloperName);
+        return this.getFieldLabelByDevNameFromTemplate(mapping.DeveloperName);
+    }
+
+    getFieldLabelByDevNameFromTemplate(developerName) {
+        const element = this.findElementByDeveloperName(developerName);
         return element.customLabel;
     }
 

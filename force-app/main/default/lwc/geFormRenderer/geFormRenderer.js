@@ -1029,14 +1029,14 @@ export default class GeFormRenderer extends LightningElement{
 
         if (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) {
             if (dataImportHelper.isAccount1ImportedPresent)
-                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
             if (dataImportHelper.isAccount1NamePresent)
-                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
         } else {
             if (dataImportHelper.isContact1ImportedPresent)
-                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
             if (dataImportHelper.isContact1LastNamePresent)
-                validationErrorLabelReplacements.push(GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.contact1LastNameField));
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.contact1LastNameField));
         }
 
         // set label depending fields present on template
@@ -1090,14 +1090,14 @@ export default class GeFormRenderer extends LightningElement{
         const contact1Imported = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1ImportedField);
         const contact1LastName = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1LastNameField);
         const account1Name = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.account1NameField);
-        const isAccount1ImportedPresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.account1ImportedField);
+        const isAccount1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.account1ImportedField);
         const isAccount1NamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.account1NameField);
-        const isContact1ImportedPresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.contact1ImportedField);
+        const isContact1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.contact1ImportedField);
         const isContact1LastNamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.contact1LastNameField);
 
         return {
             donationDonorValue: this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField),
-            donationDonorLabel: GeFormService.getFieldLabelFromTemplate(DONATION_DONOR_FIELDS.donationDonorField),
+            donationDonorLabel: GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.donationDonorField),
             isAccount1ImportedEmpty: isEmpty(account1Imported),
             isContact1ImportedEmpty: isEmpty(contact1Imported),
             isContact1LastNameEmpty: isEmpty(contact1LastName),
