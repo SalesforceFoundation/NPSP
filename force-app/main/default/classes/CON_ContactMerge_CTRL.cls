@@ -985,8 +985,7 @@ public with sharing class CON_ContactMerge_CTRL {
             
             CON_ContactMerge.mergeContacts(winningContact, losingContacts);
 
-            winningContact = populateContactWithOnlyUniqueFields(winningContact.Id);
-            updateAndHandleWinningContact(winningContact);
+            updateContactWithOnlyUniqueFields(winningContact.Id);
 
         } catch (Exception e) {
             Database.rollback(sp);
@@ -1021,6 +1020,13 @@ public with sharing class CON_ContactMerge_CTRL {
         return losingContacts;
     }
 
+    private List<Contact> lockAllContacts(List<Contact> toLock) {
+        return [
+            SELECT Id 
+            FROM Contact 
+            WHERE Id IN :toLock FOR UPDATE];
+    }
+
     // Update the field values of master record based on the selected value for each field.
     private void populateContactWithNonUniqueFields(Contact winningContact) {
         for (FieldRow row : fieldRows) {
@@ -1036,8 +1042,10 @@ public with sharing class CON_ContactMerge_CTRL {
         }
     }
 
-    private Contact populateContactWithOnlyUniqueFields(Id winningContactId) {
+    private void updateContactWithOnlyUniqueFields(Id winningContactId) {
         Contact winningContact = new Contact(Id = winningContactId);
+        Boolean hasUniqueFieldChange = false;
+
         for (FieldRow row : fieldRows) {
             if (row.showRadio
                 && !row.fieldName.equals(MASTER_KEY)
@@ -1047,16 +1055,14 @@ public with sharing class CON_ContactMerge_CTRL {
                 SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
                 Object val = selectedRecord.get(row.fieldName);
                 winningContact.put(row.fieldName, val);     
+                hasUniqueFieldChange = true;
             }
         }
-        return winningContact;
-    }
 
-    private List<Contact> lockAllContacts(List<Contact> toLock) {
-        return [
-            SELECT Id 
-            FROM Contact 
-            WHERE Id IN :toLock FOR UPDATE];
+        if (hasUniqueFieldChange) {
+            updateAndHandleWinningContact(winningContact);
+        }
+
     }
 
     private void updateAndHandleWinningContact(Contact winningContact) {
