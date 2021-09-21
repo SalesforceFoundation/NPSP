@@ -976,7 +976,7 @@ export default class GeFormRenderer extends LightningElement{
      */
     isDonorTypeInvalid(sectionsList) {
         // if no donation donor selection, nothing to validate here yet
-        if ( isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
+        if (isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
             sectionsList.forEach( section => {
                 section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
             });
@@ -984,39 +984,33 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         // returns true when error message was generated
-        return this.getDonorTypeValidationError(sectionsList);
-    }
-
-    /**
-     * helper class for isDonorTypeInvalid, contains majority of logic
-     * @param fieldWrapper - Array, field ui-label and value using field-api-name as key
-     * @param sectionsList - Array, all sections
-     * @returns {boolean} - true if error message was generated, false if otherwise
-     */
-    getDonorTypeValidationError(sectionsList) {
-
         // get data import record helper
         const dataImportHelper = this.getDataImportHelper();
 
+        const isAccountDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1;
+        const areEmptyAccountFields = dataImportHelper.isAccount1ImportedEmpty && dataImportHelper.isAccount1NameEmpty;
+        const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
+        const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
-        let isError = (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) ?
-            dataImportHelper.isAccount1ImportedEmpty && dataImportHelper.isAccount1NameEmpty :
-            dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1 &&
-            dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
+        const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
 
         // process error notification when error
         if (isError) {
-            // highlight validation fields
-            this.highlightValidationErrorFields(dataImportHelper, sectionsList, ' ');
-            // set page error
-            this.hasPageLevelError = true;
-            this.pageLevelErrorMessageList = [ {
-                index: 0,
-                errorMessage: this.getDonationDonorErrorLabel(dataImportHelper)
-            } ];
+            this.displayDonorTypeError(dataImportHelper, sectionsList);
         }
 
         return isError;
+    }
+
+    displayDonorTypeError(dataImportHelper, sectionsList) {
+        // highlight validation fields
+        this.highlightValidationErrorFields(dataImportHelper, sectionsList, ' ');
+        // set page error
+        this.hasPageLevelError = true;
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: this.getDonationDonorErrorLabel(dataImportHelper)
+        }];
     }
 
     /**
