@@ -313,29 +313,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
-    * @param addressesById a map of Address Id's to Addresses
-    * @param dmlWrapper to hold the Contacts to update
-    */
-    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        List<Contact> contactsWithAddressOverrides = ContactSelector.getContactOverridesForAddressesIn(
-                addressesById.keySet()
-        );
-
-        for (Contact contact : contactsWithAddressOverrides) {
-            NPSP_Contact npspContact = new NPSP_Contact(contact);
-            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
-
-            npspContact.mailingAddress(npspAddress);
-            npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
-
-            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
-        }
-    }
-
-    /*******************************************************************************************************
     * @description for each contact, refresh its mailing address from its Address lookup
     * @param listCon the list of Contacts to update
     ********************************************************************************************************/
@@ -921,7 +898,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
-    private Contacts contactsInHouseholds() {
+    public Contacts contactsInHouseholds() {
         List<Contact> consInHouseholds = new List<Contact>();
         for (Contact con : (List<Contact>) getRecords()) {
             if (householdIdFor(con) != null) {

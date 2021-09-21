@@ -120,9 +120,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     public void onAfterDelete() {
         Contacts contacts = new Contacts(getRecords());
-        if (!contacts.contactsInLegacyHouseholds().isEmpty()) {
+        if (!contacts.contactsInHouseholds().isEmpty()) {
             new ContactsInLegacyHouseholds(
-                    contacts.contactsInLegacyHouseholds().getRecords()).onAfterDelete();
+                    contacts.contactsInHouseholds().getRecords()).onAfterDelete();
         }
     }
 
