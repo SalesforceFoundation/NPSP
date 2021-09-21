@@ -539,7 +539,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         for (Contact contact : listCon) {
             NPSP_Address npspAddress = new NPSP_Address(addressesByContact.get(contact));
             NPSP_Address npspMatchingAddress = new NPSP_Address(addressMatchesByAddress.get(npspAddress.getRecord()));
-            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Contact npspContact = new NPSP_Contact(contact, oldVersionOf(contact));
             Boolean addressUpdated = false;
 
             // if found a match
@@ -611,6 +611,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
                     NPSP_Address npspAddress = new NPSP_Address(address);
                     NPSP_Contact npspContact = new NPSP_Contact(contact);
                     npspContact.setCurrentAddress(npspAddress);
+                    npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
                 }
             }
         }
