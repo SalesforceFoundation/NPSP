@@ -206,7 +206,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
+            if (ContactAdapter.isWithoutAccount(contactRecord)) {
                 // Avoid creating a new contact with the 1:1 account of another contact
                 resetAccountIdFor(contactRecord);
                 contactsWithoutAccounts.add(contactRecord);
@@ -215,7 +215,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
         List<Contact> organizationContacts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (LegacyHouseholds.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+            if (ContactAdapter.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
                 resetAccountIdFor(contactRecord);
                 organizationContacts.add(contactRecord);
             }
@@ -691,7 +691,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     public Contacts contactsWithoutAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (LegacyHouseholds.isWithoutAccount(contactRecord)) {
+            if (ContactAdapter.isWithoutAccount(contactRecord)) {
                 contactsWithoutAccounts.add(contactRecord);
             }
         }
@@ -776,6 +776,16 @@ public inherited sharing class Contacts extends fflib_SObjects {
             return householdAccountContacts;
         }
         set;
+    }
+
+    public List<Contact> organizationContacts() {
+        List<Contact> organizationContacts = new List<Contact>();
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            if (ContactAdapter.isOrganizationContact(contactRecord, accountFor(contactRecord))) {
+                organizationContacts.add(contactRecord);
+            }
+        }
+        return organizationContacts;
     }
 
     public Set<Id> accountIds() {
