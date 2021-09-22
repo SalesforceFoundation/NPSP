@@ -748,19 +748,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
-    private List<NPSP_Contact> householdAccountContacts;
-    public List<NPSP_Contact> householdAccountContacts() {
-        if (householdAccountContacts == null) {
-            householdAccountContacts = new List<NPSP_Contact>();
+    private List<NPSP_Contact> npspContactsInAccounts;
+    public List<NPSP_Contact> npspContactsInAccounts() {
+        if (npspContactsInAccounts == null) {
+            npspContactsInAccounts = new List<NPSP_Contact>();
             for (Contact con : (List<Contact>) getRecords()) {
                 NPSP_Contact npspContact = new NPSP_Contact(con, oldVersionOf(con));
                 if (!npspContact.hasAccount()) {
                     continue;
                 }
-                householdAccountContacts.add(npspContact);
+                npspContactsInAccounts.add(npspContact);
             }
         }
-        return householdAccountContacts;
+        return npspContactsInAccounts;
     }
 
     public Set<Id> accountIds() {
@@ -1114,7 +1114,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getConsMovingToANewHousehold() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInAccounts()) {
 
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -1140,7 +1140,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     private Set<Contact> getConsWithAddressChanges() {
         Set<Contact> consWithAddressChanges = new Set<Contact>();
         // we only support address management with HH Accounts being used
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInAccounts()) {
 
             Account a = accountsByIds().get(npspContact.accountId());
             if (a.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
@@ -1165,7 +1165,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
 
     private Set<Contact> getAddressCreationQueueInAfterContext() {
         Set<Contact> addressCreationQueue = new Set<Contact>();
-        for (NPSP_Contact npspContact : householdAccountContacts()) {
+        for (NPSP_Contact npspContact : npspContactsInAccounts()) {
 
             if (npspContact.householdAndAccountDiffer()) {
                 continue;
