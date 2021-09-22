@@ -69,7 +69,6 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
-        CLIENTID,
         BASE_URL,
         API_KEY,
         SFDO_MERCHANTIDS,
@@ -253,6 +252,7 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(ELEVATE_SDK);
         }
 
+        // Add comment here
         public String getClientId() {
             return config.get(CLIENTID) == null
                 ? config.get(PRODUCTID)
@@ -290,14 +290,11 @@ public with sharing class PS_IntegrationServiceConfig {
         }
 
         public Boolean hasAllRequiredServiceData() {
-            for (String requiredConfigKey : REQUIRED_CONFIG_KEYS) {
-                if (String.isBlank(config.get(requiredConfigKey))
-                    && requiredConfigKey != CLIENTID) {
-                    return false;
-                }
+            if (config.keySet().containsAll(REQUIRED_CONFIG_KEYS)) {
+               return String.isNotBlank(config.get(PRODUCTID))
+                   || String.isNotBlank(config.get(CLIENTID));
             }
-    
-            return true;
+            return false;
         }
 
         private String getRecordViewBaseURL() {
