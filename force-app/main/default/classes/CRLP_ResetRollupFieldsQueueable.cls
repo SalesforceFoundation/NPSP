@@ -36,18 +36,24 @@
 */
 public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
 
-    /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
+    /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc.
+     * Currently only supported for GAU jobType.
+     */
     private CRLP_RollupProcessingOptions.RollupType jobType;
 
-    /** @description Specified list of Summary (Account, Contact or GAU) Id's to roll up */
+    /** @description Specified list of Summary (Account, Contact or GAU) Id's to roll up
+     * Currently only supported for GAU jobType.
+     */
     private List<Id> recordIds;
 
-    /** @description The Summary Object Type this batch job will process */
+    /** @description The Summary Object Type this batch job will process
+     * Currently only supported for GAU summaryObjectType.
+     */
     private SObjectType summaryObjectType;
 
-    public CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
-        this.jobType = jobType;
-        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(jobType);
+    public CRLP_ResetRollupFieldsQueueable(List<Id> recordIds) {
+        this.jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
+        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(this.jobType);
         this.recordIds = recordIds;
     }
 
@@ -57,6 +63,9 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
      */
     public void execute(QueueableContext qc) {
         try {
+            if (recordIds == null) {
+                this.recordIds = getParentRecordIds();
+            }
             clearRollupFieldValues();
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
@@ -66,10 +75,22 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
     /**
      * @description Clear summary records for records whose associated details have been deleted after a skew mode run.
      */
-    @TestVisible
     private void clearRollupFieldValues() {
-        List<SObject> parents = getSummaryRecords();
+        List<SObject> updatedRecords = getUpdatedRecords(getSummaryRecords());
+        if (!updatedRecords.isEmpty()) {
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(
+                clearSkewModeFlag(updatedRecords), 
+                jobType
+            );
+        }
+    }
 
+    /**
+     * @description Get updated summary records.
+     * @return List<SObject>
+     */
+    @TestVisible
+    private List<SObject> getUpdatedRecords(List<SObject> parents) {
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.useRollupDefsByParentIdMap = true;
 
@@ -86,13 +107,7 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
                 updatedRecords.add(updatedRecord);
             }
         }
-
-        if (!updatedRecords.isEmpty()) {
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(
-                clearSkewModeFlag(updatedRecords), 
-                jobType
-            );
-        }
+        return updatedRecords;
     }
 
     /**
@@ -118,5 +133,38 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
             }
         }
         return updatedRecords;
+    }
+
+    /**
+     * @description Query parent records to clear.
+     * @return List<Id>
+     */
+    private List<Id> getParentRecordIds() {
+        Set<Id> gausWithChildren = getGAUsWithChildren();
+        String query = 'SELECT Id FROM ' + UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c') +
+            ' WHERE Id NOT IN :gausWithChildren';
+
+        List<Id> records = new List<Id>();
+        for (SObject record : Database.query(query)) {
+            records.add((Id) record.get('Id'));
+        }
+        return records;
+    }
+
+    /**
+     * @description Query all GAU records with children.
+     * @return Set<Id>
+     */
+    private Set<Id> getGAUsWithChildren() {
+        String gauWithNamespace = UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
+        String query = 'SELECT ' + gauWithNamespace +
+            ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('Allocation__c') +
+            ' GROUP BY ' + gauWithNamespace;
+
+        Set<Id> gausWithChildren = new Set<Id>();
+        for (AggregateResult result : (List<AggregateResult>) Database.query(query)) {
+            gausWithChildren.add((Id) result.get(gauWithNamespace));
+        }
+        return gausWithChildren;
     }
 }

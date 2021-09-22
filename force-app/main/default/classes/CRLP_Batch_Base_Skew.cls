@@ -50,6 +50,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     private Id lastIdProcessedForChunking;
 
     /** @description Set of Summary (Account, Contact or GAU) Ids that have been processed by any batch */
+    @TestVisible
     protected Set<Id> handledParentRecordIds = new Set<Id>();
 
     /**
@@ -273,12 +274,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         }
 
         // Zero out any unhandled summary records
-        if (recordIds != null && handledParentRecordIds.size() != recordIds.size()) {
-            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                CRLP_ResetRollupFieldsQueueable resetRollupFieldsQueueable =
-                    new CRLP_ResetRollupFieldsQueueable(this.jobType, getUnhandledParentRecordIds());
-                System.enqueueJob(resetRollupFieldsQueueable);
-            }
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            clearUnhandledRollupTotals();
         }
 
         // In debug mode, write a summary of the job to the error log
@@ -294,11 +291,29 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     }
 
     /**
+     * @description Test conditions and enqueue queueable job to clear Rollup totals.
+     */
+    @TestVisible
+    private void clearUnhandledRollupTotals() {
+        if (recordIds == null || handledParentRecordIds.size() != recordIds.size()) {
+            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+                CRLP_ResetRollupFieldsQueueable resetRollupFieldsQueueable =
+                    new CRLP_ResetRollupFieldsQueueable(getUnhandledParentRecordIds());
+                System.enqueueJob(resetRollupFieldsQueueable);
+            }
+        }
+    }
+
+    /**
      * @description Identify and return unhandled record Ids from all batches.
      * @return List<Id> unhandledIds
      */
     @TestVisible
     private List<Id> getUnhandledParentRecordIds() {
+        if (this.recordIds == null) {
+            return null;
+        }
+
         List<Id> unhandledIds = new List<Id>();
         for (Id recordId : recordIds) {
             if (!this.handledParentRecordIds.contains(recordId)) {
