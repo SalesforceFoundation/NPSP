@@ -947,6 +947,7 @@ export default class GeFormRenderer extends LightningElement{
 
         // custom donor type validation
         const dataImportHelper = this.getDataImportHelper();
+        this.resetDonorTypeValidations(sectionsList);
         if (this.isDonorTypeInvalid(dataImportHelper, sectionsList)) {
             this.displayDonorTypeError(dataImportHelper, sectionsList);
             return false;
@@ -979,9 +980,6 @@ export default class GeFormRenderer extends LightningElement{
     isDonorTypeInvalid(dataImportHelper, sectionsList) {
         // if no donation donor selection, nothing to validate here yet
         if (isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
-            sectionsList.forEach( section => {
-                section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
-            });
             return false;
         }
 
@@ -993,6 +991,12 @@ export default class GeFormRenderer extends LightningElement{
         const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
 
         return isError;
+    }
+
+    resetDonorTypeValidations(sectionsList) {
+        sectionsList.forEach(section => {
+            section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
+        });
     }
 
     displayDonorTypeError(dataImportHelper, sectionsList) {
