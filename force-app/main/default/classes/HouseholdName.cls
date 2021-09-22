@@ -34,15 +34,15 @@
 */
 public inherited sharing class HouseholdName {
 
-    private Contacts contacts;
+    private IHouseholdMembers householdMembers;
     private HH_INaming service;
 
-    public HouseholdName(Contacts contacts) {
-        this(contacts, null);
+    public HouseholdName(IHouseholdMembers householdMembers) {
+        this(householdMembers, null);
     }
     
-    public HouseholdName(Contacts contacts, HH_INaming service) {
-        this.contacts = contacts;
+    public HouseholdName(IHouseholdMembers householdMembers, HH_INaming service) {
+        this.householdMembers = householdMembers;
         this.service = service == null ? defaultHH_INamingImplementation() : service;
     }
 
@@ -55,7 +55,7 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String asName() {
-        return service.getHouseholdName(contacts.forHouseholdName());
+        return service.getHouseholdName(householdMembers.forHouseholdName());
     }
 
     /*******************************************************************************************************
@@ -63,7 +63,7 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String asFormalGreeting() {
-        return service.getHouseholdFormalGreeting(contacts.forFormalGreeting());
+        return service.getHouseholdFormalGreeting(householdMembers.forFormalGreeting());
     }
 
     /*******************************************************************************************************
@@ -71,7 +71,7 @@ public inherited sharing class HouseholdName {
     * @return String
     */
     public String asInformalGreeting() {
-        return service.getHouseholdInformalGreeting(contacts.forInformalGreeting());
+        return service.getHouseholdInformalGreeting(householdMembers.forInformalGreeting());
     }
 
 }

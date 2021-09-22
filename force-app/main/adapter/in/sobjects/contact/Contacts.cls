@@ -260,54 +260,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return newOwnerContactById;
     }
 
-    public List<Contact> forHouseholdName() {
-        List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (isIncludedInHouseholdName(con)) {
-                contactsForHouseholdNameGeneration.add(con);
-            }
-        }
-        return contactsForHouseholdNameGeneration;
-    }
-
-    public List<Contact> forFormalGreeting() {
-        List<Contact> contactsForFormalName = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (isIncludedInFormalGreeting(con)) {
-                contactsForFormalName.add(con);
-            }
-        }
-        return contactsForFormalName;
-    }
-
-    public List<Contact> forInformalGreeting() {
-        List<Contact> listCon = new List<Contact>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            if (isIncludedInInformalGreeting(con)) {
-                listCon.add(con);
-            }
-        }
-        return listCon;
-    }
-
-    private Boolean isIncludedInHouseholdName(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromName();
-    }
-
-    private Boolean isIncludedInFormalGreeting(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromFormalGreeting();
-    }
-
-    private Boolean isIncludedInInformalGreeting(Contact con) {
-        HouseholdNamingExclusionsString exclusionsAsString = new
-                HouseholdNamingExclusionsString(con);
-        return !exclusionsAsString.isExcludedFromInformalGreeting();
-    }
-
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
     * @param contactRecord the new version of the Contact
@@ -357,7 +309,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         }
         return setAccountId;
     }
-
 
     /*******************************************************************************************************
     * @description returns whether changes in the contact require a rename of a HH Account

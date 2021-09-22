@@ -483,7 +483,7 @@ public inherited sharing class HouseholdService {
         if (householdSettings.isAdvancedHouseholdNaming()) {
             // Generate and set the Name + Greetings
             HouseholdName householdName =
-                    new HouseholdName(new Contacts(new List<Contact>{
+                    new HouseholdName(new HouseholdMembers(new List<Contact>{
                             contactRecord
                     }));
             accountRecord.Name = householdName.asName();
