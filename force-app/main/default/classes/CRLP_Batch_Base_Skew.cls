@@ -274,7 +274,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         }
 
         // Zero out any unhandled summary records
-        if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU && recordIds != null) {
             clearUnhandledRollupTotals();
         }
 
@@ -295,10 +295,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      */
     @TestVisible
     private void clearUnhandledRollupTotals() {
-        if (recordIds == null || handledParentRecordIds.size() != recordIds.size()) {
+        if (handledParentRecordIds.size() != recordIds.size()) {
             if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
                 CRLP_ResetRollupFieldsQueueable resetRollupFieldsQueueable =
-                    new CRLP_ResetRollupFieldsQueueable(getUnhandledParentRecordIds());
+                    new CRLP_ResetRollupFieldsQueueable(jobType, getUnhandledParentRecordIds());
                 System.enqueueJob(resetRollupFieldsQueueable);
             }
         }
@@ -310,10 +310,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      */
     @TestVisible
     private List<Id> getUnhandledParentRecordIds() {
-        if (this.recordIds == null) {
-            return null;
-        }
-
         List<Id> unhandledIds = new List<Id>();
         for (Id recordId : recordIds) {
             if (!this.handledParentRecordIds.contains(recordId)) {

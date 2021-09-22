@@ -51,9 +51,9 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
      */
     private SObjectType summaryObjectType;
 
-    public CRLP_ResetRollupFieldsQueueable(List<Id> recordIds) {
-        this.jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
-        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(this.jobType);
+    public CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
+        this.jobType = jobType;
+        this.summaryObjectType = CRLP_Rollup_SVC.getSummaryObjectType(jobType);
         this.recordIds = recordIds;
     }
 
@@ -63,9 +63,6 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
      */
     public void execute(QueueableContext qc) {
         try {
-            if (recordIds == null) {
-                this.recordIds = getParentRecordIds();
-            }
             clearRollupFieldValues();
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
@@ -75,11 +72,12 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
     /**
      * @description Clear summary records for records whose associated details have been deleted after a skew mode run.
      */
+    @TestVisible
     private void clearRollupFieldValues() {
         List<SObject> updatedRecords = getUpdatedRecords(getSummaryRecords());
         if (!updatedRecords.isEmpty()) {
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(
-                clearSkewModeFlag(updatedRecords), 
+                clearSkewModeFlag(updatedRecords),
                 jobType
             );
         }
@@ -133,38 +131,5 @@ public class CRLP_ResetRollupFieldsQueueable implements System.Queueable {
             }
         }
         return updatedRecords;
-    }
-
-    /**
-     * @description Query parent records to clear.
-     * @return List<Id>
-     */
-    private List<Id> getParentRecordIds() {
-        Set<Id> gausWithChildren = getGAUsWithChildren();
-        String query = 'SELECT Id FROM ' + UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c') +
-            ' WHERE Id NOT IN :gausWithChildren';
-
-        List<Id> records = new List<Id>();
-        for (SObject record : Database.query(query)) {
-            records.add((Id) record.get('Id'));
-        }
-        return records;
-    }
-
-    /**
-     * @description Query all GAU records with children.
-     * @return Set<Id>
-     */
-    private Set<Id> getGAUsWithChildren() {
-        String gauWithNamespace = UTIL_Namespace.StrTokenNSPrefix('General_Accounting_Unit__c');
-        String query = 'SELECT ' + gauWithNamespace +
-            ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('Allocation__c') +
-            ' GROUP BY ' + gauWithNamespace;
-
-        Set<Id> gausWithChildren = new Set<Id>();
-        for (AggregateResult result : (List<AggregateResult>) Database.query(query)) {
-            gausWithChildren.add((Id) result.get(gauWithNamespace));
-        }
-        return gausWithChildren;
     }
 }
