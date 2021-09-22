@@ -21,8 +21,8 @@ writers.
 | Development              | `dev_org`                      | `dev`            |         |            |
 | Development (Namespaced) | `dev_org_namespaced`           | `dev_namespaced` |         | ✔          |
 | QA                       | `qa_org`                       | `dev`            |         |            |
-| QA (Namespaced)          | `qa_org_namespaced`            | `dev_namespaced`            |         | ✔          |
-| Regression               | `regression_org`               | `beta`     | ✔       |            |
+| QA (Namespaced)          | `qa_org_namespaced`            | `dev_namespaced` |         | ✔          |
+| Regression               | `regression_org`               | `beta`           | ✔       |            |
 | Trial (Clone of TSO)     | None (`cci org browser trial`) | `trial`          | ✔       |            |
 
 ### Org Definitions
@@ -59,7 +59,7 @@ as well as many other features needed to define the workspace for the org's inte
 | `beta_statecountry`       |            | Yes              | Beta test org with State and Country Picklists enabled.                 |
 | `enterprise`              |            | Yes              | Enterprise Edition org.                                                 |
 | `feature`                 |            | No               | Feature test org.                                                       |
-| `prerelease`              |            | No              | Feature test org on Prerelease pod.                                     |
+| `prerelease`              |            | No              | Feature test org on Prerelease pod.                                      |
 | `trial`                   |            | Yes              | Clone of TSO.                                                           |
 
 
@@ -97,6 +97,11 @@ as well as many other features needed to define the workspace for the org's inte
 | ------------------ | ---- | --------------------------------------------- |
 | `test_performance` | Flow | Creates a BDI org and runs a performance test |
 
+### Regression Testing
+| Name        | Type | Description                |
+| ------------------ | ---- | ---------------------------------------------------------- |
+| `regression_tests` | Flow | Deploys and runs tests that required extra metadata |
+
 ### LDV Testing
 | Name        | Type | Description                |
 | ----------- | ---- | -------------------------- |
@@ -128,6 +133,7 @@ Cumulus's unpackaged configuration is used as follows:
 
 | Directory                     | Purpose                                                                       | Deploy task                                     | Retrieve task |
 | ----------------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------- | ------------- |
+| `con_merge_testing/`          | Configure test class related to Contact Merge                                 | via `deploy_contat_merge_testing`               |               |
 | `crlp_testing/`               | QA metadata for CRLPs.                                                        | via `deploy_rollup_testing`                     |               |
 | `delete/`                     | Removes default org metadata.                                                 | `deploy_dev_config_delete`                      |               |
 | `dev/`                        | Minimal configuration changes for development.                                | `deploy_dev_config`                             |               |
@@ -142,7 +148,7 @@ Cumulus's unpackaged configuration is used as follows:
 | `reports/`                    | Reports and dashboards.                                                       | `deploy_reports`                                |               |
 | `trial/`                      | Trial-style experience metadata.                                              | `deploy_trial_config`                           |               |
 | `trial_translations/`         | Translations for Trial-style experience metadata.                             | `deploy_trial_translations`                     |               |
-| `npsp_standard_user_profile/` | Base Non-Admin User Proile for testing                                        | via `create_testing_user`           |               |
+| `npsp_standard_user_profile/` | Base Non-Admin User Proile for testing                                        | via `create_testing_user`                       |               |
 
 ## Data Sets
 

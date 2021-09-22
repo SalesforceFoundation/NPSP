@@ -68,9 +68,9 @@ public class CON_ContactMerge {
     * @param losers The loser records.
     * @return Boolean Whether the merge was successful.
     */
-    public static Boolean mergeContacts(Contact winner, List<Contact> losers) {
+    public static Boolean mergeContacts(Contact winningContact, List<Contact> losers) {
         boolean successfulMerge = false;
-        
+
         List<Account> winnerAccount = new List<Account>();
         Set<Id> loserAccountIds = new Set<Id>();
         List<Account> loserAccounts = new List<Account>();
@@ -79,7 +79,7 @@ public class CON_ContactMerge {
     
         Id winningAccountId = null;
         Boolean winnerAccountIsOneToOne = false;
-        winner = [Select Account.Id,Account.npe01__SYSTEM_AccountType__c from Contact where Id=:winner.Id];
+        Contact winner = [SELECT AccountId,Account.npe01__SYSTEM_AccountType__c FROM Contact WHERE Id =:winningContact.Id];
 
         // detect PersonAccounts
         boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
@@ -192,5 +192,5 @@ public class CON_ContactMerge {
         }
         successfulMerge = true;
         return successfulMerge;
-    }   
+    }
 }
