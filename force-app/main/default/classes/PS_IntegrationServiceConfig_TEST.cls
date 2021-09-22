@@ -110,7 +110,7 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     }
 
     @IsTest
-    private static void shouldHaveIntegrationDisabledWhenIsActiveServiceRecordIsTrue() {
+    private static void shouldHaveIntegrationEnabledWhenIsActiveServiceRecordIsTrue() {
         PaymentServicesConfigurationSelectorMock configurationSelectorMock =
             new PaymentServicesConfigurationSelectorMock()
                 .withClientId(true)
