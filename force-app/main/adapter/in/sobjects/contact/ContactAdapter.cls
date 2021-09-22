@@ -756,7 +756,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
             HouseholdMembers householdMembers =
-                    new HouseholdMembers(new List<Contact>(addressCreationQueue));
+                    new HouseholdMembers(new List<Contact>(addressCreationQueue), oldMap);
             householdMembers.createAddressAfterInsertUpdate(dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);

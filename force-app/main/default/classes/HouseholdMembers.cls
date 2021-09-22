@@ -39,6 +39,13 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         this.records = records;
     }
 
+    public Map<Id, Contact> oldMap;
+    public HouseholdMembers(List<Contact> records, Map<Id, Contact> oldMap) {
+        this.records = records;
+        this.oldMap = oldMap != null ?
+                new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();
+    }
+
     public List<Contact> forHouseholdName() {
         List<Contact> contactsForHouseholdNameGeneration = new List<Contact>();
         for (Contact con : records) {
@@ -128,7 +135,7 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         for (Contact contact : listCon) {
             NPSP_Address npspAddress = new NPSP_Address(addressesByContact.get(contact));
             NPSP_Address npspMatchingAddress = new NPSP_Address(addressMatchesByAddress.get(npspAddress.getRecord()));
-            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Contact npspContact = new NPSP_Contact(contact, oldVersionOf(contact));
             Boolean addressUpdated = false;
 
             // if found a match
@@ -229,5 +236,8 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         }
     }
 
+    public Contact oldVersionOf(Contact con) {
+        return oldMap.get(con.Id);
+    }
 
 }
