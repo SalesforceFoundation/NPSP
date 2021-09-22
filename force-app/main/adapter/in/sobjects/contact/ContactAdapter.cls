@@ -1016,7 +1016,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     private static List<Contact> contactsWithoutAccountsAndOrganizationContacts(Contacts contactsInstance) {
-        List<Contact> contactsWithoutAccounts2 = new List<Contact>();
+        List<Contact> contactsWithoutAccounts = new List<Contact>();
         Map<Id, Account> oldAccounts = new Map<Id, Account>([
                 SELECT Id
                 FROM Account
@@ -1039,12 +1039,12 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 }
 
                 if (contactRecord.AccountId == null) {
-                    contactsWithoutAccounts2.add(contactRecord);
+                    contactsWithoutAccounts.add(contactRecord);
                 }
 
             }
         }
-        return contactsWithoutAccounts2;
+        return contactsWithoutAccounts;
     }
 
     public static Boolean isWithoutAccount(Contact contactRecord) {
