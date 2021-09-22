@@ -950,97 +950,138 @@ public with sharing class CON_ContactMerge_CTRL {
     * @return PageReference The page that it redirects to. Same page user is in.
     */
     public PageReference mergeContacts() {
-        SObject master;
-        // Find the master record based the selected value of the Master FieldRow
+        Contact winningContact = getWinningContact();
         
+        if (winningContact == null) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_No_Master));
+            return null;
+        }
+
+        populateContactWithNonUniqueFields(winningContact);
+
+        List<Contact> losingContacts = groupLosingContacts(winningContact);
+        
+        // before proceeding further first lock the records for change
+        List<Contact> allContacts = new List<Contact>();
+        allContacts.add((Contact)winningContact);
+        allContacts.addAll(losingContacts);
+
+        List<Contact> lockedContacts = lockAllContacts(allContacts);
+
+        if (lockedContacts == null || lockedContacts.size() != allContacts.size()) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+                label.npe01.Contact_Merge_Error_Lock_failed  + ' ' + 
+                label.npe01.Contact_Merge_Error_please_retry) );
+            return null;
+        }
+
+        System.SavePoint sp = Database.setSavepoint();
+        try {
+            // We need to turn off Affiliation processing or there will be duplicate affiliates
+            // created after the merge.  As merge transactions do not fire child triggers
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
+            updateAndHandleWinningContact(winningContact);
+            TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
+            
+            CON_ContactMerge.mergeContacts(winningContact, losingContacts);
+
+            updateContactWithOnlyUniqueFields(winningContact.Id);
+
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.CON);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
+
+            return null;
+        }
+
+        return new PageReference('/' + winningContact.id);
+    }
+
+    // Find the winningContact record based the selected value of the winningContact FieldRow
+    private Contact getWinningContact() {
         for (FieldRow row : fieldRows) {
             if (row.showRadio && row.fieldName.equals(MASTER_KEY)) {
-                master = new Contact(id = row.selectedValue);
-                break;
+                return new Contact(Id = row.selectedValue);
             }
         }
-
-        if (master != null) {
-            // Update the field values of master record based on the selected value for each field.
-            for (FieldRow row : fieldRows) {
-                if (row.showRadio && 
-                    !row.fieldName.equals(MASTER_KEY) && 
-                    row.selectedValue != master.id) {
-                    SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
-
-                    // Sobject.put is not happy when sobject.get returns null. It throws an 
-                    // exception System.SObjectException: Illegal assignment from Object to String.
-                    // But instead when you pass a null directly to put, it works fine. 
-                    // And hence, this if statement.
-                    if (selectedRecord.get(row.fieldName) == null) {
-                        master.put(row.fieldName, null);
-                    } else {
-                        Object val = selectedRecord.get(row.fieldName);
-                        master.put(row.fieldName, val);
-                    }
-                }
-            }
-
-            // Group all the loosing records separately.
-            List<Contact> losers = new List<Contact>();
-
-            for (Contact c : this.selectedRecords.values()) {
-                if (c.id != master.id) {
-                    losers.add(c);
-                }
-            }
-
-            // before proceeding further first lock the records for change
-            List<Contact> allContacts = new List<Contact>();
-            allContacts.add((Contact)master);
-            allContacts.addAll(losers);
-            List<Contact> lock = [
-                SELECT Id 
-                FROM Contact 
-                WHERE Id IN :allContacts for update];
-
-            if (lock == null || lock.size() != allContacts.size()) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
-                    label.npe01.Contact_Merge_Error_Lock_failed  + ' ' + 
-                    label.npe01.Contact_Merge_Error_please_retry) );
-                return null;
-            }
-
-            System.SavePoint sp = Database.setSavepoint();
-            try {
-                Database.DMLOptions dml = new Database.DMLOptions();
-                dml.DuplicateRuleHeader.AllowSave = true;
-                // We need to turn off Affiliation processing or there will be duplicate affiliates
-                // created after the merge.  As merge transactions do not fire child triggers
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
-
-                Database.SaveResult sr = UTIL_DMLService.updateRecord(master, dml);
-                if (!sr.isSuccess()) {
-                    String strErr = label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ';
-                    for (Database.Error err : sr.getErrors()) {
-                        strErr += err.getMessage() + '\n';
-                    }
-                    Database.rollback(sp);
-                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, strErr));
-                    return null;
-                }
-
-                TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
-
-                CON_ContactMerge.mergeContacts((Contact)master, losers);
-                // Update the master with the selected values
-                return new PageReference('/' + master.id);
-            } catch (Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.CON);
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_Merge_Failed + ' Error: ' + e));
-            }
-        } else {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, label.npe01.Contact_Merge_Error_No_Master));
-        }
-
+        
         return null;
     }
+
+    private List<Contact> groupLosingContacts(Contact winningContact) {
+        List<Contact> losingContacts = new List<Contact>();
+        for (Contact contact : this.selectedRecords.values()) {
+            if (contact.Id != winningContact.Id) {
+                losingContacts.add(contact);
+            }
+        }
+
+        return losingContacts;
+    }
+
+    private List<Contact> lockAllContacts(List<Contact> toLock) {
+        return [
+            SELECT Id 
+            FROM Contact 
+            WHERE Id IN :toLock FOR UPDATE];
+    }
+
+    // Update the field values of master record based on the selected value for each field.
+    private void populateContactWithNonUniqueFields(Contact winningContact) {
+        populateContactWithFields(winningContact, false);
+    }
+
+    private void updateContactWithOnlyUniqueFields(Id winningContactId) {
+        Contact winningContact = new Contact(Id = winningContactId);
+
+        Boolean hasUniqueFieldChange = populateContactWithFields(winningContact, true);
+
+        if (hasUniqueFieldChange) {
+            updateAndHandleWinningContact(winningContact);
+        }
+    }
+
+    private Boolean populateContactWithFields(Contact winningContact, Boolean isUniqueField) {
+        Boolean hasFieldChange = false;
+
+        for (FieldRow row : fieldRows) {
+            if (row.showRadio
+                && !row.fieldName.equals(MASTER_KEY)
+                && row.selectedValue != winningContact.Id
+                && UTIL_Describe.isFieldUnique('Contact', row.fieldName) == isUniqueField)
+            {
+                SObject selectedRecord = this.selectedRecords.get(row.selectedValue);
+                Object val = selectedRecord.get(row.fieldName);
+                winningContact.put(row.fieldName, val);     
+                hasFieldChange = true;
+            }
+        }
+
+        return hasFieldChange;
+    }
+
+    private void updateAndHandleWinningContact(Contact winningContact) {
+        Database.DMLOptions dml = new Database.DMLOptions();
+        dml.DuplicateRuleHeader.AllowSave = true;
+
+        Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
+        handleDMLError(saveResult);
+    }
+
+    private void handleDMLError(Database.SaveResult saveResult) {
+        if (saveResult.isSuccess()) {
+            return;
+        }
+
+        String errorMessage = '';
+        for (Database.Error err : saveResult.getErrors()) {
+            errorMessage += err.getMessage() + '\n';
+        }
+        throw new ConMergeException(errorMessage);
+    }
+
+    public class ConMergeException extends Exception {} 
 
     /***********************************************************************************************
     * @description Shows list of Duplicate Record Set records related to contact dupliacte rules
