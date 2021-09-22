@@ -92,7 +92,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onBeforeInsert() {
-        syncNamingExclusionsBeforeInsert();
+        NamingExclusions namingExclusions = new NamingExclusions(getRecords());
+        namingExclusions.syncNamingExclusionsBeforeInsert();
     }
 
     public void onBeforeInsert(List<Contact> newSObjects) {
@@ -138,7 +139,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public void onBeforeUpdate_HH_Households_TDTM() {
-        syncNamingExclusionsBeforeUpdate();
+        NamingExclusions namingExclusions = new NamingExclusions(getRecords(), oldMap);
+        namingExclusions.synchronizeBeforeUpdate();
     }
 
     /**
@@ -248,124 +250,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     public Contact oldVersionOf(Contact con) {
         return oldMap.get(con.Id);
-    }
-
-    private Boolean shouldUpdateAddressUndeliverableStatusFromContact(NPSP_Contact npspContact) {
-        return npspContact.isUndeliverableStatusChanged();
-    }
-
-    /*******************************************************************************************************
-    * @description Creates a new address or matches an existing one, for each Contact.
-    * This routine is called both by BeforeInsert/Update and AfterInsert/Update.
-    * when pushing a new default address, we need to do it in the AfterInsert/Update.
-    * otherwise we want to do it in the BeforeInsert/Update so we can update the contacts' info now.
-    * @param contacts the list of Contacts
-    * @param dmlWrapper to hold the Addresses that need inserting/updating
-    ********************************************************************************************************/
-    public void createAddressFromContactAfterInsertUpdate(List<Contact> contacts,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        // Strategy:
-        // create a new (unsaved) address for each contact.
-        // see if there is an existing address that matches each new address.
-        //
-        // for existing addresses we match
-        //     process during BeforeInsert/Update
-        //     update appropriate fields on contact
-        //
-        // for new addresses that won't be a default (ie, the contact has override set)
-        //     process during BeforeInsert/Update
-        //     create the address now
-        //     update appropriate fields on contact
-        //
-        // for new addresses that will be a default address
-        //     process during AfterInsert/Update
-        //     mark the new address as default
-        //     put it on dmlWrapper
-        //
-
-        Map<Contact, Address__c> addressesByContact = new Map<Contact, Address__c>();
-        List<Contact> listCon = new List<Contact>();
-
-        for (Contact contact : contacts) {
-            listCon.add(contact);
-            NPSP_Address npspAddressFromContact = new NPSP_Address(contact);
-            addressesByContact.put(contact, npspAddressFromContact.getRecord());
-        }
-
-        // look for duplicates for our proposed new addresses
-        Map<Address__c, Address__c> addressMatchesByAddress = Addresses.getExistingAddresses(
-                addressesByContact.values());
-
-        // maps & lists to keep track of the addresses we must insert or update
-        List<Address__c> addressesToUpdate = new List<Address__c>();
-        List<Address__c> addressesToInsert = new List<Address__c>();
-
-        for (Contact contact : listCon) {
-            NPSP_Address npspAddress = new NPSP_Address(addressesByContact.get(contact));
-            NPSP_Address npspMatchingAddress = new NPSP_Address(addressMatchesByAddress.get(npspAddress.getRecord()));
-            NPSP_Contact npspContact = new NPSP_Contact(contact, oldVersionOf(contact));
-            Boolean addressUpdated = false;
-
-            // if found a match
-            if (npspMatchingAddress.getRecord() != null) {
-                // record the match in the contact
-                // if it is a fuzzy match, not exact, then we want to update the existing address.
-                if (shouldUpdateAddressUndeliverableStatusFromContact(npspContact)) {
-                    npspMatchingAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
-                    addressUpdated = true;
-                }
-                if (!npspAddress.isEqualToIncludingAddressType(npspMatchingAddress, true)) {
-                    npspMatchingAddress.copyFrom(npspAddress);
-                    if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
-                        npspMatchingAddress.setAsDefault();
-                    }
-                    addressUpdated = true;
-                }
-                // exact match. we aren't specifying override, so the address should become the new hh default address
-                else if (!npspContact.hasAddressOverride() && !npspMatchingAddress.isDefault()) {
-                    npspMatchingAddress.setAsDefault();
-                    addressUpdated = true;
-                }
-                if (addressUpdated) {
-                    addressesToUpdate.add(npspMatchingAddress.getRecord());
-                }
-            } else {
-                // no match, not an override, make it a new default hh address
-                npspAddress.setAsDefault();
-                npspAddress.setUndeliverable(npspContact.isUndeliverableMailingAddress());
-                addressesToInsert.add(npspAddress.getRecord());
-            }
-        }
-
-        if (addressesToUpdate.size() > 0) {
-            for (Address__c addr : addressesToUpdate) {
-                dmlWrapper.objectsToUpdate.add(addr);
-            }
-        }
-
-        if (addressesToInsert.size() > 0) {
-            dmlWrapper.objectsToInsert.addAll((List<SObject>) addressesToInsert);
-        }
-    }
-
-    /**
-     * @description NPSP Contacts have two forms of tracking which Household Name / Greetings
-     * they should be excluded from.  Checkboxes are a newer implementation and have priority.
-     * This method aligns the concatenated String with the Checkboxes to keep them in sync.
-     */
-    public void synchronizeNamingExclusions() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            INamingExclusionsString exclusionsAsString =
-                    new HouseholdNamingExclusionsString(con);
-            INamingExclusions exclusionsAsBooleans =
-                    new HouseholdNamingExclusionsCheckboxes(con);
-            if (!exclusionsAsString.equals(exclusionsAsBooleans)) {
-                mergeExclusions(exclusionsAsBooleans, exclusionsAsString);
-                setExclusionsStringFor(con, exclusionsAsString.value());
-                setExclusionsCheckboxes(con, exclusionsAsBooleans);
-            }
-        }
     }
 
     public Boolean accountHasAddresses(Contact con) {
@@ -518,31 +402,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         return addressRefreshQueue;
     }
 
-    private void setExclusionsStringFor(Contact contact, String val) {
-        contact.npo02__Naming_Exclusions__c = val;
-    }
-
-    /**
-     * @param exclusionsAsBooleans Checkbox implemenation of Household Naming Exclusions
-     * @param exclusionsAsString Concatenated string implementation of Household Naming
-     * Exclusions
-     * @description Checks any exclusions checkboxes to true that are included in the
-     * concatenated string, and then updates the string to include exclusions (field names)
-     * for any Exclusion checkboxes that are marked TRUE for the Contact.
-     */
-    private void mergeExclusions(INamingExclusions exclusionsAsBooleans,
-            INamingExclusions exclusionsAsString) {
-        // Prioritize booleans by syncing from picklists first
-        exclusionsAsBooleans.synchronizeFrom(exclusionsAsString);
-        exclusionsAsString.synchronizeFrom(exclusionsAsBooleans);
-    }
-
-    private void setExclusionsCheckboxes(Contact con, INamingExclusions exclusions) {
-        con.Exclude_from_Household_Name__c = exclusions.isExcludedFromName();
-        con.Exclude_from_Household_Formal_Greeting__c = exclusions.isExcludedFromFormalGreeting();
-        con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
-    }
-
     private Id householdIdFor(Contact con) {
         return con.npo02__Household__c;
     }
@@ -555,48 +414,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
             }
         }
         return new Contacts(consInHouseholds);
-    }
-
-    private void syncNamingExclusionsBeforeInsert() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsString namingExclusionsString =
-                    new HouseholdNamingExclusionsString(con);
-
-            HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes =
-                    new HouseholdNamingExclusionsCheckboxes(con);
-
-            if (namingExclusionsString.hasNamingExclusions()) {
-                exclusionsAsCheckboxes.updateFrom(namingExclusionsString);
-                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
-            }
-
-            if (exclusionsAsCheckboxes.hasNamingExclusions()) {
-                namingExclusionsString.synchronizeFrom(exclusionsAsCheckboxes);
-                setExclusionsStringFor(con, namingExclusionsString.value());
-            }
-        }
-    }
-
-    private void syncNamingExclusionsBeforeUpdate() {
-        for (Contact con : (List<Contact>) getRecords()) {
-            HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes =
-                    new HouseholdNamingExclusionsCheckboxes(con);
-            HouseholdNamingExclusionsCheckboxes oldExclusionsAsCheckboxes =
-                    new HouseholdNamingExclusionsCheckboxes(oldVersionOf(con));
-            HouseholdNamingExclusionsString householdNamingExclusionsString =
-                    new HouseholdNamingExclusionsString(con);
-            HouseholdNamingExclusionsString oldHouseholdNamingExclusionsString =
-                    new HouseholdNamingExclusionsString(oldVersionOf(con));
-
-            if (!exclusionsAsCheckboxes.equals(oldExclusionsAsCheckboxes)) {
-                householdNamingExclusionsString.synchronizeFrom(exclusionsAsCheckboxes);
-                setExclusionsStringFor(con, householdNamingExclusionsString.value());
-            } else if (!householdNamingExclusionsString.equals
-                    (oldHouseholdNamingExclusionsString)) {
-                exclusionsAsCheckboxes.updateFrom(householdNamingExclusionsString);
-                setExclusionsCheckboxes(con, exclusionsAsCheckboxes);
-            }
-        }
     }
 
     private Boolean shouldUseAccountAddress(NPSP_Contact npspContact) {
@@ -935,7 +752,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
         // create any new Default Address objects
         if (addressCreationQueue.size() > 0) {
-            createAddressFromContactAfterInsertUpdate(new List<Contact>(addressCreationQueue), dmlWrapper);
+            HouseholdMembers householdMembers =
+                    new HouseholdMembers(new List<Contact>(addressCreationQueue));
+            householdMembers.createAddressAfterInsertUpdate(dmlWrapper);
         }
         TDTM_TriggerHandler.processDML(dmlWrapper);
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ADDR_hasRunContactOnBefore, false);
