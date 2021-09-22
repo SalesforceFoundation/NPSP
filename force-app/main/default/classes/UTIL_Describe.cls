@@ -449,9 +449,9 @@ public class UTIL_Describe {
     * @description checks whether the field exists
     * @param objectName the name of the object to look up
     * @param fieldName the name of the field to look up
-    * @return boolean whether the field exists
+    * @return Boolean whether the field exists
     */
-    public static boolean isValidField(String objectName, String fieldName) {
+    public static Boolean isValidField(String objectName, String fieldName) {
         // make sure we have this field's schema mapped
         try {
             objectName = objectName.toLowerCase();
@@ -465,6 +465,25 @@ public class UTIL_Describe {
         } catch (exception ex) {
             return false;
         }
+    }
+
+    /*******************************************************************************************************
+    * @description checks whether the field is unique
+    * @param objectName the name of the object to look up
+    * @param fieldName the name of the field to look up
+    * @return Boolean whether the field is unique
+    */
+    public static Boolean isFieldUnique(String objectName, String fieldName) {
+        objectName = objectName.toLowerCase();
+        fieldName = fieldName.toLowerCase();
+
+        if (!fieldDescribes.containsKey(objectName) || !fieldDescribes.get(objectName).containsKey(fieldName)) {
+            fillFieldMapsForObject(objectName, fieldName);
+        }
+
+        Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
+
+        return dfr.isUnique() || dfr.isExternalId();
     }
 
     /*******************************************************************************************************
