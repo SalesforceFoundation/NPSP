@@ -43,10 +43,10 @@ private class HouseholdNamingExclusions_TEST {
                 Exclude_from_Household_Formal_Greeting__c = true
         );
 
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         });
-        contacts.onBeforeInsert();
+        contactAdapter.onBeforeInsert();
 
         HouseholdNamingExclusionsString householdNamingExclusionsString =
                 new HouseholdNamingExclusionsString(c);
@@ -66,10 +66,10 @@ private class HouseholdNamingExclusions_TEST {
                 Exclude_from_Household_Formal_Greeting__c = true
         );
 
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         });
-        contacts.onBeforeInsert();
+        contactAdapter.onBeforeInsert();
 
         HouseholdNamingExclusionsString householdNamingExclusionsString =
                 new HouseholdNamingExclusionsString(c);
@@ -92,12 +92,12 @@ private class HouseholdNamingExclusions_TEST {
                 Id = id,
                 LastName = 'test'
         );
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         }, new List<Contact>{
                 oldContact
         });
-        contacts.onBeforeUpdate();
+        contactAdapter.onBeforeUpdate();
 
         HouseholdNamingExclusionsString householdNamingExclusionsString =
                 new HouseholdNamingExclusionsString(c);
@@ -113,10 +113,10 @@ private class HouseholdNamingExclusions_TEST {
                 npo02__Naming_Exclusions__c = 'Household__c.Name'
         );
 
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         });
-        contacts.onBeforeInsert();
+        contactAdapter.onBeforeInsert();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -140,12 +140,12 @@ private class HouseholdNamingExclusions_TEST {
                 npo02__Naming_Exclusions__c = 'Household__c.Name'
         );
 
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         }, new List<Contact>{
                 oldContact
         });
-        contacts.onBeforeUpdate();
+        contactAdapter.onBeforeUpdate();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -177,12 +177,12 @@ private class HouseholdNamingExclusions_TEST {
                 LastName = 'test',
                 Exclude_from_Household_Formal_Greeting__c = true
         );
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         }, new List<Contact>{
                 oldContact
         });
-        contacts.onBeforeUpdate();
+        contactAdapter.onBeforeUpdate();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -211,12 +211,12 @@ private class HouseholdNamingExclusions_TEST {
                 Id = id,
                 LastName = 'test'
         );
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         }, new List<Contact>{
                 oldContact
         });
-        contacts.onBeforeUpdate();
+        contactAdapter.onBeforeUpdate();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -245,10 +245,10 @@ private class HouseholdNamingExclusions_TEST {
                 Exclude_from_Household_Formal_Greeting__c = true
         );
 
-        Contacts contacts = new Contacts(new List<Contact>{
+        ContactAdapter contactAdapter = new ContactAdapter(new List<Contact>{
                 c
         });
-        contacts.onBeforeInsert();
+        contactAdapter.onBeforeInsert();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
