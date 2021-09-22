@@ -946,7 +946,9 @@ export default class GeFormRenderer extends LightningElement{
     isFormValid(sectionsList) {
 
         // custom donor type validation
-        if (this.isDonorTypeInvalid(sectionsList)) {
+        const dataImportHelper = this.getDataImportHelper();
+        if (this.isDonorTypeInvalid(dataImportHelper, sectionsList)) {
+            this.displayDonorTypeError(dataImportHelper, sectionsList);
             return false;
         }
 
@@ -974,7 +976,7 @@ export default class GeFormRenderer extends LightningElement{
      * @param sectionsList, list of sections
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
-    isDonorTypeInvalid(sectionsList) {
+    isDonorTypeInvalid(dataImportHelper, sectionsList) {
         // if no donation donor selection, nothing to validate here yet
         if (isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
             sectionsList.forEach( section => {
@@ -983,21 +985,12 @@ export default class GeFormRenderer extends LightningElement{
             return false;
         }
 
-        // returns true when error message was generated
-        // get data import record helper
-        const dataImportHelper = this.getDataImportHelper();
-
         const isAccountDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1;
         const areEmptyAccountFields = dataImportHelper.isAccount1ImportedEmpty && dataImportHelper.isAccount1NameEmpty;
         const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
         const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
         const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
-
-        // process error notification when error
-        if (isError) {
-            this.displayDonorTypeError(dataImportHelper, sectionsList);
-        }
 
         return isError;
     }
