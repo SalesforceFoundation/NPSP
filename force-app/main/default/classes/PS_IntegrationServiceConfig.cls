@@ -252,7 +252,11 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(ELEVATE_SDK);
         }
 
-        // Add comment here
+        /**
+         * This method returns productId or clientId to allow for pilot customers of Elevate in Gift Entry to keep
+         * using their existing configuration
+         * @return clientId || productId
+         */
         public String getClientId() {
             return config.get(CLIENTID) == null
                 ? config.get(PRODUCTID)
@@ -271,6 +275,11 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(API_KEY);
         }
 
+        /**
+         * This method returns 'true' as default because configuration records without an active flag
+         * are regarded as 'active' records
+         * @return Boolean
+         */
         public Boolean getIsActiveFlag() {
             return hasIsActiveFlag() 
                 ? Boolean.valueOf(config.get(IS_ACTIVE))
