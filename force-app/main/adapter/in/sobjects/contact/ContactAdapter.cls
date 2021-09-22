@@ -37,11 +37,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     public Map<Id, Contact> oldMap;
 
-    //Note: Eventually this Selector should be removed from the Adapter layer.
-    //  Should move toward a design where the Adapter layer simply passes
-    //  data on to domains, which would use their own Selectors to query additional
-    //  data when needed.  It is here temporarily as the Contact domains get
-    //  put in place and stabilized.
     @TestVisible
     private ContactSelector contactSelector {
         get {
@@ -96,6 +91,36 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
     }
 
+    public void onBeforeInsert() {
+        syncNamingExclusionsBeforeInsert();
+    }
+
+    public void onBeforeInsert(List<Contact> newSObjects) {
+        Contacts contacts = new Contacts(newSObjects);
+        contacts.resetDeprecatedFields();
+
+        if (CAO_Constants.isHHAccountModel()) {
+            householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
+                    contacts.contactsWithoutAccounts());
+        } else {
+            if (CAO_Constants.isOneToOne()) {
+                householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
+                        (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
+                                .getRecords());
+            }
+
+            if (CAO_Constants.isBucketModel()) {
+                LegacyHouseholds.attachToBucketAccount(
+                        contacts.contactsWithoutAccounts());
+            }
+        }
+
+    }
+
+    public void onAfterInsert() {
+        createAddressesForContacts();
+    }
+
     public void onAfterInsert(TDTM_Runnable.DmlWrapper dmlWrapper) {
         List<Contact> contactsWithAccountAndAddressFields =
                 getContactsWithAccountAndAddressFields();
@@ -107,17 +132,119 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 contactsWithAccountAndAddressFields);
     }
 
-    private List<Contact> getContactsWithAccountAndAddressFields() {
-        List<Contact> contactsWithAccountAndAddressFields =
-                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
-        return contactsWithAccountAndAddressFields;
-    }
-
     public void onBeforeUpdate() {
         handleContactsBeforeUpdate(
                 new Contacts(getRecords(), oldMap.values()));
     }
 
+    public void onBeforeUpdate_HH_Households_TDTM() {
+        syncNamingExclusionsBeforeUpdate();
+    }
+
+    /**
+     * @description ADDR_Contact_TDTM was refactored and its logic was moved down into this
+     * class and supporting entity classes like NPSP_Contact and NPSP_Address.  However, there
+     * is already a Trigger Handler (HH_Households_TDTM) running in the
+     * before update context for Contacts, and that handler calls the onBeforeUpdate method.
+     * Secondary Trigger Handlers running in
+     * the same context will have to use specific trigger context entry point methods, like
+     * this one (or call other public methods directly) until NPSP is able to merge down
+     * Trigger Handlers so that there is only one per Trigger Context for each object.  At
+     * that point the logic in this method will be moved into the onBeforeUpdate method and
+     * this method will be removed.
+     */
+    public void onBeforeUpdate_FromAddrContactTDTM() {
+        normalizeLineBreaksForContactsWithChangedAddresses();
+        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
+        isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
+
+        // set the mailing address for contacts who specify an address lookup or override
+        List<Contact> consNeedingAddressFieldsPopulated = consWhoseAddressChanged();
+        if (consNeedingAddressFieldsPopulated.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            setRecursionFlags();
+            setContactAddressFromCurrentAddress(consNeedingAddressFieldsPopulated);
+            deactivateAddrRecursionFlag();
+        }
+
+        // reset the mailing address for contacts who no longer have an address override
+        List<Contact> addressRefreshQueue =
+                consWhoseAccountChangedAndDontHaveAddressOverrides();
+        addressRefreshQueue.addAll(consHavingAddressOverridesRemoved());
+        if (addressRefreshQueue.size() > 0) {
+            // to avoid pushing these address changes to the HH.
+            setRecursionFlags();
+            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
+            contactsForAddressRefresh.resetAddressUsingHouseholdAddress();
+            deactivateAddrRecursionFlag();
+        }
+
+        // create any new Default Address objects
+        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
+        createAddressFromContactAndSetCurrentAddressLookupId(new List<Contact>(addressCreationQueue));
+
+        // update the Latest date fields on any address overrides
+        Addresses.updateAddrIsOverride(isOverrideByAddressId);
+    }
+
+    public void onAfterUpdate() {
+        createAddressesForContacts();
+    }
+
+    public void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
+        LegacyHouseholds.handleContactsAfterUpdate(
+                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
+                dmlWrapper);
+    }
+
+    public void onAfterDelete() {
+        fireRollupsForMergedContacts();
+        if (!contactsInHouseholds().isEmpty()) {
+            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
+                    new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
+            contactsInLegacyHouseholds.onAfterDelete();
+        }
+    }
+
+    public void onAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        Households households = getHouseholdsFor(accountIds());
+        households.handleContactDeletion(dmlWrapper);
+    }
+
+    public void onAfterUndelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        List<Contact> contactsWithAccountAndAddressFields =
+                getContactsWithAccountAndAddressFields();
+
+        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
+                dmlWrapper, contactsWithAccountAndAddressFields);
+
+        Households.renameHouseholdAccountsAfterInsert(
+                contactsWithAccountAndAddressFields);
+    }
+
+    /**
+     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
+     */
+    private void handleContactsBeforeUpdate(Contacts contacts) {
+        contacts.resetDeprecatedFields();
+        contacts.keepPrivateContactsPrivate();
+        householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
+                contactsWithoutAccounts(contacts));
+
+        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
+            LegacyHouseholds.attachToBucketAccount(
+                    contacts.contactsWithoutAccounts()
+            );
+        }
+    }
+
+    private List<Contact> getContactsWithAccountAndAddressFields() {
+        List<Contact> contactsWithAccountAndAddressFields =
+                contactSelector.getContactsWithAccountAndAddressFields(getRecords());
+        return contactsWithAccountAndAddressFields;
+    }
 
     public Contact oldVersionOf(Contact con) {
         return oldMap.get(con.Id);
@@ -246,6 +373,19 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 && accountsByIds().get(con.AccountId).Addresses__r.size() > 0);
     }
 
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
     private Map<Id, Account> accountsById;
     public Map<Id, Account> accountsByIds() {
         if (accountsById == null) {
@@ -257,7 +397,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         }
         return accountsById;
     }
-
 
     private Account accountFor(NPSP_Contact npspContact) {
         return accountsByIds().get(npspContact.accountId());
@@ -282,10 +421,10 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         return contactsInHouseholdAccounts;
     }
 
-
     private Boolean isEligibleForRefresh(NPSP_Contact npspContact) {
         return !npspContact.hasAddressOverride() && !npspContact.isAddressChanged();
     }
+
     private Map<Id, Boolean> getIsOverrideByAddressIdFromAddressOverrideChanges() {
         Map<Id, Boolean> isOverrideByAddressId = new Map<Id, Boolean>();
         // we only support address management with HH Accounts being used
@@ -516,7 +655,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         set;
     }
 
-
     public void normalizeLineBreaksForContactsWithChangedAddresses() {
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
@@ -525,9 +663,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 UTIL_Address.normalizeLineBreak(newRecord);
             }
         }
-    }
-    public void onBeforeInsert() {
-        syncNamingExclusionsBeforeInsert();
     }
 
     public void normalizeLineBreaks() {
@@ -724,70 +859,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         insertContactAddresses(contactAddressesToInsertByContact);
     }
 
-    /**
-     * @description ADDR_Contact_TDTM was refactored and its logic was moved down into this
-     * class and supporting entity classes like NPSP_Contact and NPSP_Address.  However, there
-     * is already a Trigger Handler (HH_Households_TDTM) running in the
-     * before update context for Contacts, and that handler calls the onBeforeUpdate method.
-     * Secondary Trigger Handlers running in
-     * the same context will have to use specific trigger context entry point methods, like
-     * this one (or call other public methods directly) until NPSP is able to merge down
-     * Trigger Handlers so that there is only one per Trigger Context for each object.  At
-     * that point the logic in this method will be moved into the onBeforeUpdate method and
-     * this method will be removed.
-     */
-    public void onBeforeUpdate_FromAddrContactTDTM() {
-        normalizeLineBreaksForContactsWithChangedAddresses();
-        Map<Id, Boolean> isOverrideByAddressId = getIsOverrideByAddressId();
-        isOverrideByAddressId.putAll(getIsOverrideByAddressIdFromAddressOverrideChanges());
-
-        // set the mailing address for contacts who specify an address lookup or override
-        List<Contact> consNeedingAddressFieldsPopulated = consWhoseAddressChanged();
-        if (consNeedingAddressFieldsPopulated.size() > 0) {
-            // to avoid pushing these address changes to the HH.
-            setRecursionFlags();
-            setContactAddressFromCurrentAddress(consNeedingAddressFieldsPopulated);
-            deactivateAddrRecursionFlag();
-        }
-
-        // reset the mailing address for contacts who no longer have an address override
-        List<Contact> addressRefreshQueue =
-                consWhoseAccountChangedAndDontHaveAddressOverrides();
-        addressRefreshQueue.addAll(consHavingAddressOverridesRemoved());
-        if (addressRefreshQueue.size() > 0) {
-            // to avoid pushing these address changes to the HH.
-            setRecursionFlags();
-            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
-            contactsForAddressRefresh.resetAddressUsingHouseholdAddress();
-            deactivateAddrRecursionFlag();
-        }
-
-        // create any new Default Address objects
-        Set<Contact> addressCreationQueue = getAddressCreationQueueBeforeUpdate();
-        createAddressFromContactAndSetCurrentAddressLookupId(new List<Contact>(addressCreationQueue));
-
-        // update the Latest date fields on any address overrides
-        Addresses.updateAddrIsOverride(isOverrideByAddressId);
-    }
-
-    public void onAfterUpdate() {
-        createAddressesForContacts();
-    }
-
-    public void onAfterInsert() {
-        createAddressesForContacts();
-
-    }
-
-    public void onAfterDelete() {
-        fireRollupsForMergedContacts();
-        if (!contactsInHouseholds().isEmpty()) {
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
-            contactsInLegacyHouseholds.onAfterDelete();
-        }
-    }
-
     private Set<Contact> getAddressCreationQueueBeforeUpdate() {
         if (isRecursive()) {
             UTIL_Debug.debug('**** RECURSION: Stop Addr Trigger recursion in ADDR_Contact_TDTM');
@@ -815,10 +886,10 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-
     private Boolean isLosingRecordInMergeOperation(Contact con) {
         return con.MasterRecordId != null;
     }
+
     private void fireRollupsForMergedContacts() {
         Set<Id> mergedWinningContact = getMergedWinningContactIds();
         if (mergedWinningContact.size() > 0) {
@@ -836,7 +907,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         }
         return mergedWinningContactIds;
     }
-
 
     /*******************************************************************************************************
      * @description kicks off Opportunity Rollups after contacts have been merged, but only if NOT using
@@ -858,6 +928,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
             }
         }
     }
+
     private void createAddressesForContacts() {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
         Set<Contact> addressCreationQueue = getAddressCreationQueue();
@@ -961,7 +1032,6 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         return addressCreationQueue;
     }
 
-
     private Set<Contact> getConsMovingToANewHousehold() {
         Set<Contact> consMovingToANewHousehold = new Set<Contact>();
         for (NPSP_Contact npspContact : npspContactsInAccounts()) {
@@ -1001,6 +1071,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         }
         return npspContactsInAccounts;
     }
+
     private static List<Contact> contactsWithoutAccounts(Contacts contacts) {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
@@ -1077,87 +1148,8 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     }
 
-    /**
-     * @description In the before update trigger context, ensure accounts are created for the contacts that need them.
-     */
-    private void handleContactsBeforeUpdate(Contacts contacts) {
-        contacts.resetDeprecatedFields();
-        contacts.keepPrivateContactsPrivate();
-        householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                contactsWithoutAccounts(contacts));
-
-        if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
-            LegacyHouseholds.attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
-            );
-        }
-    }
-
-    public void onAfterUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Contact> contactsWithAccountAndAddressFields =
-                new ContactSelector().getContactsWithAccountAndAddressFields(getRecords());
-        LegacyHouseholds.handleContactsAfterUpdate(
-                new Contacts(contactsWithAccountAndAddressFields, oldMap.values()),
-                dmlWrapper);
-    }
-
-    public void onAfterDelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        Households households = getHouseholdsFor(accountIds());
-        households.handleContactDeletion(dmlWrapper);
-    }
-
     private Households getHouseholdsFor(Set<Id> ids) {
         return new Households(householdSelector.findByIds(ids));
-    }
-
-    public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
-    }
-
-    public void onAfterUndelete(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        List<Contact> contactsWithAccountAndAddressFields =
-                getContactsWithAccountAndAddressFields();
-
-        LegacyHouseholds.updatePrimaryContactOnAccountsAfterInsert(
-                dmlWrapper, contactsWithAccountAndAddressFields);
-
-        Households.renameHouseholdAccountsAfterInsert(
-                contactsWithAccountAndAddressFields);
-    }
-
-    public void onBeforeInsert(List<Contact> newSObjects) {
-        Contacts contacts = new Contacts(newSObjects);
-        contacts.resetDeprecatedFields();
-
-        if (CAO_Constants.isHHAccountModel()) {
-            householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                    contacts.contactsWithoutAccounts());
-        } else {
-            if (CAO_Constants.isOneToOne()) {
-                householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                        (List<Contact>) contacts.legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts()
-                                .getRecords());
-            }
-
-            if (CAO_Constants.isBucketModel()) {
-                LegacyHouseholds.attachToBucketAccount(
-                        contacts.contactsWithoutAccounts());
-            }
-        }
-
-    }
-
-    public void onBeforeUpdate_HH_Households_TDTM() {
-        syncNamingExclusionsBeforeUpdate();
     }
 
 }
