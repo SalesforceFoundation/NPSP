@@ -68,14 +68,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 new Map<Id, Contact>(oldList) : new Map<Id, Contact>();
     }
 
-    /**
-     * @description Determines whether or not Contacts belong to the BucketAccount, when
-     * Contacts are being inserted.
-     */
-    public Contacts bucketContacts_insertContext() {
-        return new Contacts(contactsWithoutAccounts());
-    }
-
     public Contacts legacyHouseholdAndOrganizationContactsNeedingOneToOneAccounts() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
