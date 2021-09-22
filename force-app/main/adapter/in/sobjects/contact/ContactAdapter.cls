@@ -1024,9 +1024,13 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         ]);
 
         for (Contact contactRecord : (List<Contact>) contactsInstance.getRecords()) {
+            if (contactRecord.npe01__Private__c) {
+                continue;
+            }
+
             Account account = contactsInstance.accountById.get(contactRecord.AccountId);
             if (isWithoutAccount(contactRecord)
-                    || isOrganizationContact(contactRecord, account)) {
+                    || isOrganizationAccount(account)) {
 
                 Contact oldContact = contactsInstance.oldMap.get(contactRecord.Id);
 
@@ -1044,16 +1048,12 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public static Boolean isWithoutAccount(Contact contactRecord) {
-        return contactRecord.npe01__Private__c != true
-                && contactRecord.AccountId == null;
+        return contactRecord.AccountId == null;
     }
 
-    public static Boolean isOrganizationContact(Contact contactRecord, Account accountRecord) {
-        return contactRecord.npe01__Private__c != true
-                &&
-                (accountRecord != null
-                        && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
-                );
+    public static Boolean isOrganizationAccount(Account accountRecord) {
+        return accountRecord != null
+                && accountRecord.npe01__SYSTEM_AccountType__c == CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
     }
 
     /**
