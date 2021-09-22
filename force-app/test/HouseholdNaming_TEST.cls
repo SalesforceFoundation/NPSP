@@ -38,7 +38,8 @@ private class HouseholdNaming_TEST {
     @IsTest
     static void formalGreetingIsCorrectForDummyContact() {
         Contacts dummyContact = TEST_ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(dummyContact);
+        HouseholdName householdName = new HouseholdName(
+                new HouseholdMembers(dummyContact.getRecords()));
         System.assertEquals(
                 'test Contact_forTests',
                 householdName.asFormalGreeting());
@@ -48,7 +49,8 @@ private class HouseholdNaming_TEST {
     static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact() {
         HH_Households_TEST.setupHouseholdNamingSettings();
         Contacts dummyContact = TEST_ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(dummyContact);
+        HouseholdName householdName = new HouseholdName(
+                new HouseholdMembers(dummyContact.getRecords()));
         System.assertEquals(
                 'Doctor Contact_forTests',
                 householdName.asFormalGreeting());
@@ -61,7 +63,8 @@ private class HouseholdNaming_TEST {
         Contact handyMan = TEST_ContactBuilder.dummyContact();
         handyMan.Title = 'Handy Man';
         Contacts dummyContact = new Contacts(new List<Contact>{handyMan});
-        HouseholdName householdName = new HouseholdName(dummyContact);
+        HouseholdName householdName = new HouseholdName(
+                new HouseholdMembers(dummyContact.getRecords()));
         System.assertEquals(
                 'Handy Man Contact_forTests',
                 householdName.asFormalGreeting());
