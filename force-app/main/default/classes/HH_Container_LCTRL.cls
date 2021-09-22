@@ -547,8 +547,8 @@ public with sharing class HH_Container_LCTRL {
     public static SObject getHHNamesGreetings(SObject hh, List<Contact> listCon) {
         try {
             // update naming exclusions field based on exclusion checkboxes
-            Contacts contacts = new Contacts(listCon);
-            contacts.synchronizeNamingExclusions();
+            ContactAdapter contactAdapter = new ContactAdapter(listCon);
+            contactAdapter.synchronizeNamingExclusions();
 
             HouseholdSettings householdSettings = new HouseholdSettings();
             if (!householdSettings.isAdvancedHouseholdNaming()) {
@@ -558,7 +558,7 @@ public with sharing class HH_Container_LCTRL {
             HouseholdNamingService householdNamingService = new HouseholdNamingService();
             householdNamingService.setNameFieldValuesOnHousehold(
                     hh,
-                    new HouseholdName(contacts));
+                    new HouseholdName(new Contacts(listCon)));
 
             return hh;
         } catch (Exception ex) {
