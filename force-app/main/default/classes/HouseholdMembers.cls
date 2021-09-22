@@ -177,4 +177,57 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         return npspContact.isUndeliverableStatusChanged();
     }
 
+    /*******************************************************************************************************
+    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
+    * @param addressesById a map of Address Id's to Addresses
+    * @param dmlWrapper to hold the Contacts to update
+    */
+    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+
+        List<Contact> contactsWithAddressOverrides = ContactSelector.getContactOverridesForAddressesIn(
+                addressesById.keySet()
+        );
+
+        for (Contact contact : contactsWithAddressOverrides) {
+            NPSP_Contact npspContact = new NPSP_Contact(contact);
+            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
+
+            npspContact.mailingAddress(npspAddress);
+            npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
+
+            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
+        }
+    }
+
+    public void resetAddressUsingHouseholdAddress() {
+        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
+        for (Contact con : records) {
+            addressesByAccountId.put(con.AccountId, null);
+        }
+
+        // get the default and seasonal address for each HH
+        Map<Id, Addresses.HouseholdInfo> addressHouseholdInfoByAccountId =
+                Addresses.syncAddressesForAccountsAndContacts(addressesByAccountId,
+                        null, true);
+
+        // reset the Contact's address fields with the appropriate address
+        for (Contact contact : records) {
+            Addresses.HouseholdInfo householdInfo = addressHouseholdInfoByAccountId.get(contact.AccountId);
+            if (householdInfo != null) {
+                Address__c address = householdInfo.seasonalAddress;
+                if (address == null) {
+                    address = householdInfo.defaultAddress;
+                }
+                if (address != null) {
+                    NPSP_Address npspAddress = new NPSP_Address(address);
+                    NPSP_Contact npspContact = new NPSP_Contact(contact);
+                    npspContact.setCurrentAddress(npspAddress);
+                    npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
+                }
+            }
+        }
+    }
+
+
 }

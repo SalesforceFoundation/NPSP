@@ -176,8 +176,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         if (addressRefreshQueue.size() > 0) {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
-            Contacts contactsForAddressRefresh = new Contacts(addressRefreshQueue);
-            contactsForAddressRefresh.resetAddressUsingHouseholdAddress();
+            HouseholdMembers householdMembersForAddressRefresh =
+                    new HouseholdMembers(addressRefreshQueue);
+            householdMembersForAddressRefresh.resetAddressUsingHouseholdAddress();
             deactivateAddrRecursionFlag();
         }
 
@@ -517,7 +518,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
             // to avoid pushing these address changes to the HH.
             setRecursionFlags();
             // reset the mailing address for contacts who no longer have an address override
-            contactsNeedingHouseholdAddressApplied.resetAddressUsingHouseholdAddress();
+            HouseholdMembers householdMembers =
+                    new HouseholdMembers(contactsNeedingHouseholdAddressApplied.getRecords());
+            householdMembers.resetAddressUsingHouseholdAddress();
         }
 
         // create any new Default Address objects

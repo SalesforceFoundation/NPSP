@@ -107,7 +107,8 @@ public inherited sharing class Addresses extends fflib_SObjects {
         }
 
         if (addressChangesToSyncToContactOverrides().size() > 0) {
-            Contacts.syncAddressChangesToContactOverrides(addressChangesToSyncToContactOverrides(), dmlWrapperLocal);
+            HouseholdMembers.syncAddressChangesToContactOverrides(addressChangesToSyncToContactOverrides()
+                    , dmlWrapperLocal);
         }
 
         // we must process dmlWrapper ourselves, so we can extract out the appropriate errors

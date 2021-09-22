@@ -106,29 +106,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description for the map of addresses, update any contact's mailing fields that are using the address as an override.
-    * @param addressesById a map of Address Id's to Addresses
-    * @param dmlWrapper to hold the Contacts to update
-    */
-    public static void syncAddressChangesToContactOverrides(Map<Id, Address__c> addressesById,
-            TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        List<Contact> contactsWithAddressOverrides = ContactSelector.getContactOverridesForAddressesIn(
-                addressesById.keySet()
-        );
-
-        for (Contact contact : contactsWithAddressOverrides) {
-            NPSP_Contact npspContact = new NPSP_Contact(contact);
-            NPSP_Address npspAddress = new NPSP_Address(addressesById.get(npspContact.currentAddress()));
-
-            npspContact.mailingAddress(npspAddress);
-            npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
-
-            dmlWrapper.objectsToUpdate.add(npspContact.getRecord());
-        }
-    }
-
-    /*******************************************************************************************************
     * @description replaces the losing address with the winning address in any contacts referring to the
     * loser.  Note that it just updates the contact's Address lookup, and doesn't copy any Address data.
     * Any Contacts that are modified are put on dmlWrapper for later updating.
@@ -146,36 +123,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         dmlWrapper.objectsToUpdate.addAll(contactsToUpdate);
-    }
-
-
-    public void resetAddressUsingHouseholdAddress() {
-        Map<Id, Address__c> addressesByAccountId = new Map<Id, Address__c>();
-        for (Contact con : (List<Contact>) getRecords()) {
-            addressesByAccountId.put(con.AccountId, null);
-        }
-
-        // get the default and seasonal address for each HH
-        Map<Id, Addresses.HouseholdInfo> addressHouseholdInfoByAccountId =
-                Addresses.syncAddressesForAccountsAndContacts(addressesByAccountId,
-            null, true);
-
-        // reset the Contact's address fields with the appropriate address
-        for (Contact contact : (List<Contact>) getRecords()) {
-            Addresses.HouseholdInfo householdInfo = addressHouseholdInfoByAccountId.get(contact.AccountId);
-            if (householdInfo != null) {
-                Address__c address = householdInfo.seasonalAddress;
-                if (address == null) {
-                    address = householdInfo.defaultAddress;
-                }
-                if (address != null) {
-                    NPSP_Address npspAddress = new NPSP_Address(address);
-                    NPSP_Contact npspContact = new NPSP_Contact(contact);
-                    npspContact.setCurrentAddress(npspAddress);
-                    npspContact.setUndeliverableMailingAddress(npspAddress.isUndeliverable());
-                }
-            }
-        }
     }
 
     public List<Contact> getOneToOneContactsToUpdate() {
