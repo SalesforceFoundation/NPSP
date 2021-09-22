@@ -487,7 +487,8 @@ export default class rd2EntryForm extends LightningElement {
     */
     getExpectedTotalValue(duringInit) {
         const allFields = this.getAllFields();
-        const amount = allFields[FIELD_AMOUNT.fieldApiName];
+        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
+            : allFields[FIELD_AMOUNT.fieldApiName];
         const paidAmount = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_AMOUNT));
         const paidInstallments = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_INSTALLMENTS));
         const numberOfInstallments = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENTS) 
