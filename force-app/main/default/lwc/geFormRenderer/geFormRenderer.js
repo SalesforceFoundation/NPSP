@@ -946,7 +946,10 @@ export default class GeFormRenderer extends LightningElement{
     isFormValid(sectionsList) {
 
         // custom donor type validation
-        if (this.isDonorTypeInvalid(sectionsList)) {
+        const dataImportHelper = this.getDataImportHelper();
+        this.resetDonorTypeValidations(sectionsList);
+        if (this.isDonorTypeInvalid(dataImportHelper, sectionsList)) {
+            this.displayDonorTypeError(dataImportHelper, sectionsList);
             return false;
         }
 
@@ -974,81 +977,60 @@ export default class GeFormRenderer extends LightningElement{
      * @param sectionsList, list of sections
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
-    isDonorTypeInvalid(sectionsList) {
-
-        const DONATION_VALUES = [
-            DONATION_DONOR_FIELDS.donationDonorField,
-            DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField,
-            DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
-        // get label and value using apiName as key from fields for each section
-        let miniFieldWrapper = {};
-        sectionsList.forEach(section => {
-            miniFieldWrapper = { ...miniFieldWrapper, ...(section.getFieldValueAndLabel(DONATION_VALUES))};
-        });
-
+    isDonorTypeInvalid(dataImportHelper, sectionsList) {
         // if no donation donor selection, nothing to validate here yet
-        if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
+        if (isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
             return false;
         }
 
-        // returns true when error message was generated
-        return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
-    }
-
-    /**
-     * helper class for isDonorTypeInvalid, contains majority of logic
-     * @param fieldWrapper - Array, field ui-label and value using field-api-name as key
-     * @param sectionsList - Array, all sections
-     * @returns {boolean} - true if error message was generated, false if otherwise
-     */
-    getDonorTypeValidationError(fieldWrapper, sectionsList) {
-
-        // get data import record helper
-        const di_record = this.getDataImportHelper(fieldWrapper);
-
+        const isAccountDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1;
+        const areEmptyAccountFields = dataImportHelper.isAccount1ImportedEmpty && dataImportHelper.isAccount1NameEmpty;
+        const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
+        const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
-        let isError = (di_record.donationDonorValue === DONATION_DONOR.isAccount1) ?
-            di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
-            di_record.donationDonorValue === DONATION_DONOR.isContact1 &&
-            di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
-
-        // process error notification when error
-        if (isError) {
-            // highlight validation fields
-            this.highlightValidationErrorFields(di_record, sectionsList, ' ');
-            // set page error
-            this.hasPageLevelError = true;
-            this.pageLevelErrorMessageList = [ {
-                index: 0,
-                errorMessage: this.getDonationDonorErrorLabel(di_record, fieldWrapper)
-            } ];
-        }
+        const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
 
         return isError;
     }
 
+    resetDonorTypeValidations(sectionsList) {
+        sectionsList.forEach(section => {
+            section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
+        });
+    }
+
+    displayDonorTypeError(dataImportHelper, sectionsList) {
+        // highlight validation fields
+        this.highlightValidationErrorFields(dataImportHelper, sectionsList, ' ');
+        // set page error
+        this.hasPageLevelError = true;
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: this.getDonationDonorErrorLabel(dataImportHelper)
+        }];
+    }
+
     /**
      * Set donation donor error message using custom label depending on field presence
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns {String}, formatted error message for donation donor validation
      */
-    getDonationDonorErrorLabel(diRecord, fieldWrapper) {
+    getDonationDonorErrorLabel(dataImportHelper) {
 
         // init array replacement for custom label
-        let validationErrorLabelReplacements = [diRecord.donationDonorValue, diRecord.donationDonorLabel];
+        let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
-        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1) {
-            if (diRecord.isAccount1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
-            if (diRecord.isAccount1NamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+        if (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) {
+            if (dataImportHelper.isAccount1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
+            if (dataImportHelper.isAccount1NamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
         } else {
-            if (diRecord.isContact1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
-            if (diRecord.isContact1LastNamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+            if (dataImportHelper.isContact1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
+            if (dataImportHelper.isContact1LastNamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.contact1LastNameField));
         }
 
         // set label depending fields present on template
@@ -1073,23 +1055,26 @@ export default class GeFormRenderer extends LightningElement{
 
     /**
      * highlight geForm fields on lSections using sError as message
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param lSections, Array of geFormSection
      * @param sError, String to set on setCustomValidity
      */
-    highlightValidationErrorFields(diRecord, lSections, sError) {
+    highlightValidationErrorFields(dataImportHelper, lSections, sError) {
+        const accountFields = [DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField];
+        const contactFields = [DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField];
+
+        // prepare arrays to highlight/clear fields that require attention depending on Donation_Donor
+        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
+            ...(dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? accountFields : contactFields)
+        ];
+        const clearFields = dataImportHelper.donationDonorValue !== DONATION_DONOR.isAccount1 ? accountFields : contactFields;
 
         // prepare array to highlight fields that require attention depending on Donation_Donor
-        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField :
-                DONATION_DONOR_FIELDS.contact1ImportedField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField :
-                DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
+
         lSections.forEach(section => {
+            section.setCustomValidityOnFields(clearFields, '');
             section.setCustomValidityOnFields(highlightFields, sError);
         });
-
     }
 
     /**
@@ -1097,25 +1082,27 @@ export default class GeFormRenderer extends LightningElement{
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns Object, helper object to minimize length of if statements and improve code legibility
      */
-    getDataImportHelper(fieldWrapper) {
+    getDataImportHelper() {
+        const account1Imported = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.account1ImportedField);
+        const contact1Imported = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1ImportedField);
+        const contact1LastName = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1LastNameField);
+        const account1Name = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.account1NameField);
+        const isAccount1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.account1ImportedField);
+        const isAccount1NamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.account1NameField);
+        const isContact1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.contact1ImportedField);
+        const isContact1LastNamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.contact1LastNameField);
+
         return {
-            // donation donor
-            donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
-            donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
-            // empty val checks
-            isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
-            isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
-            isContact1LastNameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].value),
-            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value),
-            // field presence
-            isAccount1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]),
-            isAccount1NamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
-            isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
-            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField])
+            donationDonorValue: this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField),
+            donationDonorLabel: GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.donationDonorField),
+            isAccount1ImportedEmpty: isEmpty(account1Imported),
+            isContact1ImportedEmpty: isEmpty(contact1Imported),
+            isContact1LastNameEmpty: isEmpty(contact1LastName),
+            isAccount1NameEmpty: isEmpty(account1Name),
+            isAccount1ImportedPresent,
+            isAccount1NamePresent,
+            isContact1ImportedPresent,
+            isContact1LastNamePresent
         };
     }
 
@@ -1680,8 +1667,8 @@ export default class GeFormRenderer extends LightningElement{
      */
     formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
-        const donationAmountFormField = this.getFormFieldBySourceName(apiNameFor(DONATION_AMOUNT));
-        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
+        const donationAmount = this.getFieldValueFromFormState(DONATION_AMOUNT);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmount);
 
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
@@ -1702,23 +1689,6 @@ export default class GeFormRenderer extends LightningElement{
             return `${names.firstName} ${names.lastName}`;
         } else {
             return names.accountName;
-        }
-    }
-
-    /*******************************************************************************
-    * @description Get a form field's value and label properties by the source
-    * field api name.
-    *
-    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
-    * custom object.
-    */
-    getFormFieldBySourceName(sourceFieldApiName) {
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        for (let i = 0; i < sectionsList.length; i++) {
-            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
-            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
-                return matchingFormField[sourceFieldApiName];
-            }
         }
     }
 

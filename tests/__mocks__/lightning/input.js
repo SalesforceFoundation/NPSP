@@ -7,6 +7,13 @@ import { LightningElement, api } from 'lwc';
 
 export const mockCheckInputValidity = jest.fn();
 
+export function mockCheckInputValidityImpl() {
+    if (this.required && (this.value === null || this.value === undefined)) {
+        return false;
+    }
+    return true;
+}
+
 export default class Input extends LightningElement {
     @api accept;
     @api autocomplete;
