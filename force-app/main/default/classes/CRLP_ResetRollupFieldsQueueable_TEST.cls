@@ -40,8 +40,11 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
 
     @IsTest
     private static void shouldClearGAUTotalsWhenRecordIdIsUnhandled() {
+        Integer amount = 90;
+        Integer count = 1;
+
         General_Accounting_Unit__c gau =
-            new General_Accounting_Unit__c(Total_Allocations__c = 90, Total_Number_of_Allocations__c = 1);
+            new General_Accounting_Unit__c(Total_Allocations__c = amount, Total_Number_of_Allocations__c = count);
         insert gau;
 
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(new List<Id>{gau.Id}, null);
@@ -61,8 +64,11 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
 
     @IsTest
     private static void shouldNotClearGAUTotalsWhenRecordIdIsHandled() {
+        Integer amount = 90;
+        Integer count = 1;
+
         General_Accounting_Unit__c gau =
-            new General_Accounting_Unit__c(Total_Allocations__c = 90, Total_Number_of_Allocations__c = 1);
+            new General_Accounting_Unit__c(Total_Allocations__c = amount, Total_Number_of_Allocations__c = count);
         insert gau;
 
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(new List<Id>{gau.Id}, null);
@@ -75,9 +81,57 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
         List<General_Accounting_Unit__c> generalAccountingUnits =
         [SELECT Id, Total_Allocations__c, Total_Number_of_Allocations__c FROM General_Accounting_Unit__c];
 
-        System.assertNotEquals(0, generalAccountingUnits[0].Total_Allocations__c,
-            'Total Allocations should not be reset to 0');
-        System.assertNotEquals(0, generalAccountingUnits[0].Total_Number_of_Allocations__c,
-            'Total Number of Allocations should not be reset to 0');
+        System.assertEquals(amount, generalAccountingUnits[0].Total_Allocations__c,
+            'Total Allocations should retain previous value');
+        System.assertEquals(count, generalAccountingUnits[0].Total_Number_of_Allocations__c,
+            'Total Number of Allocations should retain previous value');
+    }
+
+    @IsTest
+    private static void shouldClearSkewModeFlagForContact() {
+        List<Contact> contacts = new List<Contact>{new Contact(CustomizableRollups_UseSkewMode__c = true)};
+
+        CRLP_ResetRollupFieldsQueueable resetQueueable =
+            new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, null);
+        List<Contact> updatedContacts = resetQueueable.clearSkewModeFlag(contacts);
+
+        System.assertEquals(false, updatedContacts[0].CustomizableRollups_UseSkewMode__c,
+            'Customizable Rollups Use Skew Mode flag should be set true');
+    }
+
+    @IsTest
+    private static void shouldNotChangeSkewModeFlagForContact() {
+        List<Contact> contacts = new List<Contact>{new Contact(CustomizableRollups_UseSkewMode__c = false)};
+
+        CRLP_ResetRollupFieldsQueueable resetQueueable =
+            new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, null);
+        List<Contact> updatedContacts = resetQueueable.clearSkewModeFlag(contacts);
+
+        System.assertEquals(false, updatedContacts[0].CustomizableRollups_UseSkewMode__c,
+            'Customizable Rollups Use Skew Mode flag should remain false');
+    }
+
+    @IsTest
+    private static void shouldClearSkewModeFlagForAccount() {
+        List<Account> accounts = new List<Account>{new Account(CustomizableRollups_UseSkewMode__c = true)};
+
+        CRLP_ResetRollupFieldsQueueable resetQueueable =
+            new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, null);
+        List<Account> updatedAccounts = resetQueueable.clearSkewModeFlag(accounts);
+
+        System.assertEquals(false, updatedAccounts[0].CustomizableRollups_UseSkewMode__c,
+            'Customizable Rollups Use Skew Mode flag should be set true');
+    }
+
+    @IsTest
+    private static void shouldNotChangeSkewModeFlagForAccount() {
+        List<Account> accounts = new List<Account>{new Account(CustomizableRollups_UseSkewMode__c = false)};
+
+        CRLP_ResetRollupFieldsQueueable resetQueueable =
+            new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, null);
+        List<Account> updatedAccounts = resetQueueable.clearSkewModeFlag(accounts);
+
+        System.assertEquals(false, updatedAccounts[0].CustomizableRollups_UseSkewMode__c,
+            'Customizable Rollups Use Skew Mode flag should remain false');
     }
 }
