@@ -7,12 +7,15 @@ Library        robot/Cumulus/resources/BDI_API.py
 
 *** Keywords ***
 Collect BDI Failures
+    Output      Gather Data Import Test Failures
     @{failures} =   Salesforce Query  DataImport__c
     ...           select=Id,Status__c,FailureInformation__c, PaymentImported__c, PaymentImportStatus__c
     ...           Status__c=Failed
     Return From Keyword   @{failures}
 
 Ensure Custom Metadata Was Deployed
+    Output      Validating Data Import Custom Metadata Configuration
+
     ${Default_Object_Mapping_Set} =   Salesforce Query  Data_Import_Object_Mapping__mdt
     ...           select=Id
     ...           Data_Import_Object_Mapping_Set__r.DeveloperName=Default_Object_Mapping_Set
@@ -25,7 +28,7 @@ Ensure Custom Metadata Was Deployed
 
     Should Be Equal     ${Default_Object_Mapping_Set_Length}    ${Migrated_Custom_Object_Mapping_Set_Length}
 
-    Output      Custom Metadata Deployed        ${Migrated_Custom_Object_Mapping_Set_Length}
+    Output      Data Import Custom Metadata Confirmed
 
 Display BDI Failures
     @{failures} =   Collect BDI Failures

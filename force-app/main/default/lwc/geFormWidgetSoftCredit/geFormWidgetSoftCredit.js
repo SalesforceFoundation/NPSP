@@ -1,15 +1,15 @@
 import { LightningElement, api, track } from 'lwc';
 import GeLabelService from 'c/geLabelService';
 
-import { isNotEmpty } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
+
+const NET_NEW_SOFT_CREDITS_LIMIT = 250;
 
 export default class GeFormWidgetSoftCredit extends LightningElement {
 
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
 
     @api giftInView;
-    @api element;
     @track alertBanner = {};
 
     handleAddRow() {
@@ -25,47 +25,22 @@ export default class GeFormWidgetSoftCredit extends LightningElement {
         });
     }
 
-    reset() {
-        // handle reset
-    }
-
-    validate() {
-        // validate
-    }
-
-    get hasAlert() {
-        return false;
-    }
-
-    get alertIcon() {
-        if (isNotEmpty(this.alertBanner.level)) {
-            const warningIcon = 'utility:warning';
-            const errorIcon = 'utility:error';
-            switch(this.alertBanner.level) {
-                case 'error':
-                    return errorIcon;
-                case 'warning':
-                    return warningIcon;
-                default:
-                    return errorIcon;
-            }
+    get softCredits() {
+        if (this.giftInView?.softCredits) {
+            return JSON.parse(this.giftInView.softCredits);
         }
+        return [];
     }
 
-    get alertClass() {
-        if (isNotEmpty(this.alertBanner.level)) {
-            const errorClass = 'error';
-            const warningClass = 'warning';
-
-            switch(this.alertBanner.level) {
-                case errorClass:
-                    return errorClass;
-                case warningClass:
-                    return warningClass;
-                default:
-                    return errorClass;
-            }
+    get processedSoftCredits() {
+        if (this.giftInView?.processedSoftCredits) {
+            return JSON.parse(this.giftInView.processedSoftCredits);
         }
+        return [];
+    }
+
+    get isBelowLimit() {
+        return this.softCredits.length < NET_NEW_SOFT_CREDITS_LIMIT;
     }
 
     get qaLocatorAddNewSoftCredit() {

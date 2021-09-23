@@ -1,0 +1,38 @@
+# ========================================================================================
+# BDI Performance Test - Test Data with No Match to an existing Account and Contact
+#
+# run it like this:
+#
+# cci task run generate_and_load_from_yaml -o num_records_tablename DataImport__c -o num_records 10000 -o generator_yaml datasets/bdi_benchmark/BDI-Without-Matching.recipe.yml --org whatever
+
+
+- object: General_Accounting_Unit__c
+  nickname: the_gau
+  just_once: True
+  fields:
+      Name: General Fund
+
+- object:  DataImport__c
+  fields:
+      Contact1_Lastname__c: BDITEST ${{batchnum}} ${{id}}
+      Contact1_Firstname__c:
+        fake: first_name
+      Contact1_Work_Phone__c:
+        fake: phone_number
+      Contact1_Work_Email__c:
+        fake: free_email
+      Account1_Country__c: Tuvalu
+      Account1_Street__c: Cordova Street
+      Donation_Donor__c: Contact1
+      Donation_Amount__c: ${{id * 100}}
+      Donation_Record_Type_Name__c: Donation
+      Donation_Date__c:
+        date_between:
+          start_date: -0d
+          end_date: +90d
+      Opportunity_Contact_Role_1_Role__c: Influencer
+      GAU_Allocation_1_GAU__c:
+        reference:
+          - the_gau
+      GAU_Allocation_1_Percent__c: 100
+      Payment_Method__c: Check
