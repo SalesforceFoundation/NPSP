@@ -49,8 +49,8 @@
       "value": "2021-05-03T21:25:48.000Z"
     },
     "CurrentYearValue__c": {
-      "displayValue": "$3.60",
-      "value": 3.6
+      "displayValue": "$4.00",
+      "value": 4.0
     },
     "Day_of_Month__c": {
       "displayValue": "3",
@@ -106,11 +106,11 @@
     },
     "Name": {
       "displayValue": null,
-      "value": "Testing Contact $0.45 - Recurring"
+      "value": "Testing Contact $0.50 - Recurring"
     },
     "NextYearValue__c": {
-      "displayValue": "$5.40",
-      "value": 5.4
+      "displayValue": "$6.00",
+      "value": 6.0
     },
     "OwnerId": {
       "displayValue": null,
@@ -137,8 +137,8 @@
       "value": "2021-05-03T21:25:51.000Z"
     },
     "npe03__Amount__c": {
-      "displayValue": "$0.45",
-      "value": 0.45
+      "displayValue": "$0.50",
+      "value": 0.50
     },
     "npe03__Contact__c": {
       "displayValue": null,
