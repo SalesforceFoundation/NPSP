@@ -11,6 +11,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     });
 
     @api giftBatchState;
+    @api isGiftBatchProcessing;
 
     get batchName() {
         return this.giftBatchState.name;
@@ -22,10 +23,6 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
 
     get hasFailedPayments() {
         return this.giftBatchState.failedPaymentsCount > 0;
-    }
-
-    get isGiftBatchProcessing() {
-        return this.giftBatchState.isProcessingGifts;
     }
 
     get processBatchButtonName() {

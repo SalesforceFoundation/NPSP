@@ -25,6 +25,18 @@ describe('c-ge-batch-gift-entry-header', () => {
             expect(buttons.length).toBe(3);
         });
 
+        it('should disable action buttons', async () => {
+            const element = setupComponentWithDummy({});
+            element.isGiftBatchProcessing = true;
+
+            await flushPromises();
+            const buttons = element.shadowRoot.querySelectorAll('lightning-button');
+            expect(buttons.length).toBe(3);
+            expect(buttons[0].disabled).toBe(true);
+            expect(buttons[1].disabled).toBe(true);
+            expect(buttons[2].disabled).toBe(true);
+        });
+
         it('should render process batch and payments button', async () => {
             const batchHeader = setupComponentWithDummy({
                 authorizedPaymentsCount: 1

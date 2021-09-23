@@ -14,10 +14,11 @@ describe('ge-gift', () => {
 
     it('should initialize with expected properties', async () => {
         const gift = new Gift(mockGiftView);
+        const giftState = gift.state();
 
-        expect(gift.state().fields).toEqual(DUMMY_GIFT_VIEW);
-        expect(gift.state().softCredits.length).toBe(0);
-        expect(gift.state().processedSoftCredits.length).toBe(0);
+        expect(giftState.fields).toEqual(DUMMY_GIFT_VIEW);
+        expect(JSON.parse(giftState.softCredits).length).toBe(0);
+        expect(JSON.parse(giftState.processedSoftCredits).length).toBe(0);
     });
 
     it('should return the expected id', async () => {
