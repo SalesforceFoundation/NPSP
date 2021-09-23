@@ -40,6 +40,7 @@ class GeFormService {
     fieldMappings;
     objectMappings;
     fieldTargetMappings;
+    formTemplate;
     donationFieldTemplateLabel;
 
     getOrgDomain = async () => {
@@ -59,6 +60,7 @@ class GeFormService {
             getRenderWrapper({})
                 .then((result) => {
                     this.readFieldMappings(result.fieldMappingSetWrapper);
+                    this.formTemplate = result.formTemplate;
                     if (isEmpty(this.donationFieldTemplateLabel)) {
                         this.donationFieldTemplateLabel = this.getDonationAmountCustomLabel(result.formTemplate);
                     }
@@ -217,6 +219,36 @@ class GeFormService {
         return this.fieldMappings && Object.values(this.fieldMappings)
             .filter(fieldMapping =>
                 fieldMapping.Target_Object_Mapping_Dev_Name === objectMappingDevName);
+    }
+
+    getFieldLabelBySourceFromTemplate(sourceFieldApiName) {
+        const mapping = this.fieldMappingForSourceField(sourceFieldApiName);
+        return this.getFieldLabelByDevNameFromTemplate(mapping.DeveloperName);
+    }
+
+    getFieldLabelByDevNameFromTemplate(developerName) {
+        const element = this.findElementByDeveloperName(developerName);
+        return element.customLabel;
+    }
+
+    findElementByDeveloperName(developerName) {
+        const allElements = this.formTemplate.layout.sections.flatMap(s => s.elements);
+        return allElements.find(element => {
+            return element.dataImportFieldMappingDevNames
+                && element.dataImportFieldMappingDevNames.includes(developerName);
+        });
+    }
+
+    fieldMappingForSourceField(sourceFieldApiName) {
+        return this.fieldMappings && Object.values(this.fieldMappings)
+            .find(
+                fieldMapping => fieldMapping.Source_Field_API_Name === sourceFieldApiName
+            );
+    }
+
+    isSourceFieldInTemplate(sourceFieldApiName) {
+        const mapping = this.fieldMappingForSourceField(sourceFieldApiName);
+        return !!this.findElementByDeveloperName(mapping.DeveloperName);
     }
 
 }
