@@ -94,7 +94,8 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
-    public void createAndUpdateHouseholdAddresses(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void createAndUpdateHouseholdAddresses() {
+        TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         // Strategy:
         // create a new (unsaved) address for each contact.
@@ -174,10 +175,10 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
                 dmlWrapper.objectsToUpdate.add(addr);
             }
         }
-
         if (addressesToInsert.size() > 0) {
             dmlWrapper.objectsToInsert.addAll((List<SObject>) addressesToInsert);
         }
+        TDTM_TriggerHandler.processDML(dmlWrapper);
     }
 
     private Boolean shouldUpdateAddressUndeliverableStatusFromContact(NPSP_Contact npspContact) {
