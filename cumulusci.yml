@@ -826,7 +826,7 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
-            12: 
+            12:
                 task: create_perms_testing_user
             13:
                 task: assign_permission_sets
@@ -1215,10 +1215,20 @@ flows:
         steps:
             1:
                 flow: qa_org
+            2:
+                task: enable_crlp
+                # Enable customizable rollups before running the tests
+            2.5:
+                task: custom_settings_value_wait
+                # Wait for CRLP to be fully enabled before continuing
+                options:
+                    object: "%%%NAMESPACE%%%Customizable_Rollup_Settings__c"
+                    field: "%%%NAMESPACE%%%Customizable_Rollups_Enabled__c"
+                    value: true
             3:
                 task: test_performance
                 options:
-                    include: medium
+                    include: bdi
                     vars: persistent_org:False
 
     test_performance_LDV:

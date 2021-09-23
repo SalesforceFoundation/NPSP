@@ -1708,11 +1708,11 @@ export default class GeFormRenderer extends LightningElement{
         return `button ${this.saveActionLabel}`;
     }
 
+    @api
     get giftInView() {
         return this._giftInView;
     }
 
-    @api
     set giftInView(gift) {
         if (!this._connected) return;
 
@@ -1729,7 +1729,6 @@ export default class GeFormRenderer extends LightningElement{
             this._giftInView = giftLocalCopy;
             this._openedGiftId = giftLocalCopy.fields.Id || null;
             this.formState = giftLocalCopy.fields;
-            this.expandForm();
         }
     }
 
@@ -2698,8 +2697,13 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    @api
     get isFormCollapsed() {
         return this._isFormCollapsed;
+    }
+
+    set isFormCollapsed(value) {
+        this._isFormCollapsed = value;
     }
 
     get altTextLabel() {
@@ -2709,13 +2713,8 @@ export default class GeFormRenderer extends LightningElement{
 
     expandForm() {
         if (this.isFormCollapsed) {
-            this._isFormCollapsed = false;
+            this.dispatchEvent(new CustomEvent('collapseform', { detail: false }));
         }
-    }
-
-    @api
-    collapse() {
-        this._isFormCollapsed = true;
     }
 
     get expandableContainerId() {
@@ -2723,7 +2722,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCollapse(event) {
-        this._isFormCollapsed = event.detail.isCollapsed;
+        this.dispatchEvent(new CustomEvent('collapseform', { detail: event.detail.isCollapsed }));
     }
 
     get showMismatchedCurrencyWarning() {
