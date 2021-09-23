@@ -51,6 +51,7 @@ public with sharing class PS_IntegrationServiceConfig {
     public static final String SFDO_USERNAME = 'sfdo.username';
     public static final String ELEVATE_SDK = 'elevateSDK';
     public static final String CLIENTID = 'clientId';
+    public static final String PRODUCTID = 'productId';
 
     //Determine if Elevate connection is active
     public static final String IS_ACTIVE = 'isActive';
@@ -68,7 +69,6 @@ public with sharing class PS_IntegrationServiceConfig {
     @TestVisible
     private static final List<String> REQUIRED_CONFIG_KEYS = new List<String> {
         ELEVATE_SDK,
-        CLIENTID,
         BASE_URL,
         API_KEY,
         SFDO_MERCHANTIDS,
@@ -155,6 +155,17 @@ public with sharing class PS_IntegrationServiceConfig {
         } set;
     }
 
+    @TestVisible
+    private static PaymentServicesConfigurationSelector paymentServicesConfigurationSelector {
+        get {
+            if (paymentServicesConfigurationSelector == null) {
+                paymentServicesConfigurationSelector = new PaymentServicesConfigurationSelector();
+            }
+            return paymentServicesConfigurationSelector;
+        }
+        set;
+    }
+
     /**
     * @description Inner class responsible for retrieving Payment Services configuration from
     *              application storage and building and exposing a set of key-value
@@ -178,7 +189,8 @@ public with sharing class PS_IntegrationServiceConfig {
                     keyValueMap = new Map<String, String>();
                     String makanaKey;
 
-                    for (Payment_Services_Configuration__c configRecord : getConfigRecordsByName(
+                    for (Payment_Services_Configuration__c configRecord :
+                        paymentServicesConfigurationSelector.getConfigRecordsByName(
                         new List<String> { PAYMENTS_SERVICE_NAME, MAKANA_SERVICE_NAME }
                     )) {
 
@@ -209,30 +221,12 @@ public with sharing class PS_IntegrationServiceConfig {
         public Payment_Services_Configuration__c lastModifiedRecord {
             get {
                 if (lastModifiedRecords == null) {
-                    lastModifiedRecords = getLastModifiedConfigRecord();
+                    lastModifiedRecords = paymentServicesConfigurationSelector.getLastModifiedConfigRecord();
                     lastModifiedRecord = lastModifiedRecords.isEmpty() ? null : lastModifiedRecords[0];
                 }
                 return lastModifiedRecord;
             }
             private set;
-        }
-
-        private List<Payment_Services_Configuration__c> getConfigRecordsByName(List<String> serviceNames) {
-            return [
-                SELECT Key__c, Value__c, Service__c
-                FROM Payment_Services_Configuration__c
-                WHERE Service__c IN :serviceNames
-            ];
-        }
-
-        private List<Payment_Services_Configuration__c> getLastModifiedConfigRecord() {
-            return [
-                SELECT Key__c, Value__c, Service__c, 
-                LastModifiedById, LastModifiedDate
-                FROM Payment_Services_Configuration__c
-                ORDER BY LastModifiedDate DESC
-                LIMIT 1
-            ];
         }
     }
 
@@ -258,8 +252,15 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(ELEVATE_SDK);
         }
 
+        /**
+         * This method returns productId or clientId to allow for pilot customers of Elevate in Gift Entry to keep
+         * using their existing configuration
+         * @return clientId || productId
+         */
         public String getClientId() {
-            return config.get(CLIENTID);
+            return config.get(CLIENTID) == null
+                ? config.get(PRODUCTID)
+                :  config.get(CLIENTID);
         }
 
         public String getGatewayIds() {
@@ -274,6 +275,11 @@ public with sharing class PS_IntegrationServiceConfig {
             return config.get(API_KEY);
         }
 
+        /**
+         * This method returns 'true' as default because configuration records without an active flag
+         * are regarded as 'active' records
+         * @return Boolean
+         */
         public Boolean getIsActiveFlag() {
             return hasIsActiveFlag() 
                 ? Boolean.valueOf(config.get(IS_ACTIVE))
@@ -293,13 +299,11 @@ public with sharing class PS_IntegrationServiceConfig {
         }
 
         public Boolean hasAllRequiredServiceData() {
-            for (String requiredConfigKey : REQUIRED_CONFIG_KEYS) {
-                if (String.isBlank(config.get(requiredConfigKey))) {
-                    return false;
-                }
+            if (config.keySet().containsAll(REQUIRED_CONFIG_KEYS)) {
+               return String.isNotBlank(config.get(PRODUCTID))
+                   || String.isNotBlank(config.get(CLIENTID));
             }
-    
-            return true;
+            return false;
         }
 
         private String getRecordViewBaseURL() {
