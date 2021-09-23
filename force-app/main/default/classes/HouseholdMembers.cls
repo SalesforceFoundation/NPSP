@@ -94,7 +94,7 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         return !exclusionsAsString.isExcludedFromInformalGreeting();
     }
 
-    public void createAddressAfterInsertUpdate(TDTM_Runnable.DmlWrapper dmlWrapper) {
+    public void createAndUpdateHouseholdAddresses(TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         // Strategy:
         // create a new (unsaved) address for each contact.
