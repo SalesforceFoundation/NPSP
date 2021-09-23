@@ -35,7 +35,7 @@
 * @description Tests for queueable job to clear rollup values for records with no associated details
 * which have been previously calculated in skew mode.
 */
-@isTest(IsParallel=true)
+@isTest(IsParallel=false)
 private class CRLP_ResetRollupFieldsQueueable_TEST {
 
     @IsTest
