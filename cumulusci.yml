@@ -826,7 +826,7 @@ flows:
                 task: deploy_reports
             11:
                 task: deploy_qa_namespaced_config
-            12: 
+            12:
                 task: create_perms_testing_user
             13:
                 task: assign_permission_sets
