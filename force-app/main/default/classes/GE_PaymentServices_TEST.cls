@@ -106,25 +106,6 @@ public class GE_PaymentServices_TEST {
     }
 
     @IsTest
-    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
-        List<Payment_Services_Configuration__c> requiredConfigs = new
-                List<Payment_Services_Configuration__c>();
-
-        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
-            requiredConfigs.add(new Payment_Services_Configuration__c(
-                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                Value__c = String.valueOf(i)
-            ));
-        }
-        insert requiredConfigs;
-        GE_PaymentServices paymentServices = new GE_PaymentServices();
-        System.assertEquals(true, paymentServices.isElevateCustomer(),
-            'The org should be considered an Elevate customer when '
-            + 'all required configuration keys are present.');
-    }
-
-    @IsTest
     private static void shouldNotBeAnElevateCustomer() {
         GE_PaymentServices paymentServices = new GE_PaymentServices();
         System.assertEquals(false, paymentServices.isElevateCustomer(),
