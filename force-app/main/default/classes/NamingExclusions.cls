@@ -86,7 +86,7 @@ public inherited sharing class NamingExclusions {
         con.Exclude_from_Household_Informal_Greeting__c = exclusions.isExcludedFromInformalGreeting();
     }
 
-    public void syncNamingExclusionsBeforeInsert() {
+    public void synchronizeNamingExclusionsBeforeInsert() {
         for (Contact con : contacts) {
             HouseholdNamingExclusionsString namingExclusionsString =
                     new HouseholdNamingExclusionsString(con);
@@ -106,7 +106,7 @@ public inherited sharing class NamingExclusions {
         }
     }
 
-    public void synchronizeBeforeUpdate() {
+    public void synchronizeNamingExclusionsBeforeUpdate() {
         for (Contact con : contacts) {
             HouseholdNamingExclusionsCheckboxes exclusionsAsCheckboxes =
                     new HouseholdNamingExclusionsCheckboxes(con);

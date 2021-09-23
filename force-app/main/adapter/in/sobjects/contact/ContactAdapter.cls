@@ -93,7 +93,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     public void onBeforeInsert() {
         NamingExclusions namingExclusions = new NamingExclusions(getRecords());
-        namingExclusions.syncNamingExclusionsBeforeInsert();
+        namingExclusions.synchronizeNamingExclusionsBeforeInsert();
     }
 
     public void onBeforeInsert(List<Contact> newSObjects) {
@@ -140,7 +140,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
     public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
         NamingExclusions namingExclusions = new NamingExclusions(getRecords(), oldMap);
-        namingExclusions.synchronizeBeforeUpdate();
+        namingExclusions.synchronizeNamingExclusionsBeforeUpdate();
     }
 
     /**
