@@ -57,16 +57,6 @@ private with sharing class PS_GatewayManagement_TEST {
                 'invoked, the gateway Id stored in CRM should be the gateway returned.');
     }
 
-    @IsTest
-    private static void shouldHaveIntegrationEnabledWhenOrgIsConnectedToElevate() {
-        setUpConfiguration();
-
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        System.assertEquals(true, PS_GatewayManagement.isElevateCustomer(),
-                'The org should have Integration Enabled when '
-                        + 'all required configuration keys are present.');
-    }
-
     @isTest
     private static void shouldReturnAsAdmin() {
         User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
@@ -78,20 +68,4 @@ private with sharing class PS_GatewayManagement_TEST {
         }
     }
 
-    /***
-     * @descriptions Inserts required payments services configuration
-     */
-    private static void setUpConfiguration() {
-        List<Payment_Services_Configuration__c> requiredConfigs = new List<Payment_Services_Configuration__c>();
-
-        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
-            requiredConfigs.add(new Payment_Services_Configuration__c(
-                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-                    Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
-                    Value__c = String.valueOf(i)
-            ));
-        }
-
-        insert requiredConfigs;
-    }
 }
