@@ -172,12 +172,12 @@ public with sharing class HH_Households_TEST {
     private static void validateThat_ContactsInLegacyHouseholds_OnAfterInsert_CalledOnContactInsert() {
         HH_Households_TDTM householdsTDTM = new HH_Households_TDTM();
         ContactsInLegacyHouseholdsMock mock = new ContactsInLegacyHouseholdsMock();
-        ContactsInLegacyHouseholds stub = (ContactsInLegacyHouseholds) Test.createStub(
-                ContactsInLegacyHouseholds.class,
+        LegacyHouseholdMembers stub = (LegacyHouseholdMembers) Test.createStub(
+                LegacyHouseholdMembers.class,
                 mock
         );
         System.assert(!mock.onAfterInsertCalled);
-        ContactsInLegacyHouseholds.setMock(stub);
+        LegacyHouseholdMembers.setMock(stub);
 
         //When
         householdsTDTM.run(

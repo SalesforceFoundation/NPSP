@@ -35,16 +35,16 @@
 * documentation they are referred to as "Individual Contacts". They are also referred to this
 * way in Household Settings.
 */
-public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects {
+public inherited sharing class LegacyHouseholdMembers extends fflib_SObjects {
 
-    private static ContactsInLegacyHouseholds mock;
+    private static LegacyHouseholdMembers mock;
     @TestVisible
-    private static void setMock(ContactsInLegacyHouseholds mockInstance) {
+    private static void setMock(LegacyHouseholdMembers mockInstance) {
         mock = mockInstance;
     }
 
-    public static ContactsInLegacyHouseholds newInstance(List<Contact> records){
-        return mock != null ? mock : new ContactsInLegacyHouseholds(records);
+    public static LegacyHouseholdMembers newInstance(List<Contact> records){
+        return mock != null ? mock : new LegacyHouseholdMembers(records);
     }
 
     @TestVisible
@@ -84,11 +84,11 @@ public inherited sharing class ContactsInLegacyHouseholds extends fflib_SObjects
         householdService.processOldHouseholdsAfterDeletingContacts(this);
     }
 
-    public ContactsInLegacyHouseholds(List<Contact> records) {
+    public LegacyHouseholdMembers(List<Contact> records) {
         this(records, null);
     }
 
-    public ContactsInLegacyHouseholds(List<Contact> records, Map<Id, Contact> oldMap) {
+    public LegacyHouseholdMembers(List<Contact> records, Map<Id, Contact> oldMap) {
         super(records, Contact.SObjectType);
         this.oldMap = oldMap != null ?
                 new Map<Id, Contact>(oldMap) : new Map<Id, Contact>();

@@ -79,8 +79,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 //since we don't have the contact's household ids until after the insert
                 //we'll check the trigger action again there to make sure it doesn't run twice
                 if (orgUsesLegacyHouseholds()) {
-                    ContactsInLegacyHouseholds legacyHouseholdContacts =
-                            ContactsInLegacyHouseholds.newInstance(newlist);
+                    LegacyHouseholdMembers legacyHouseholdContacts =
+                            LegacyHouseholdMembers.newInstance(newlist);
                     legacyHouseholdContacts.onAfterInsert();
                 }
             }
@@ -89,8 +89,8 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 contactAdapter.onAfterDelete();
             }
             when AfterUpdate {
-                ContactsInLegacyHouseholds legacyHouseholdContacts =
-                        new ContactsInLegacyHouseholds(
+                LegacyHouseholdMembers legacyHouseholdContacts =
+                        new LegacyHouseholdMembers(
                                 newlist, new Map<Id, Contact>((List<Contact>) oldList));
                 legacyHouseholdContacts.onAfterUpdate();
             }

@@ -205,9 +205,9 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     public void onAfterDelete() {
         fireRollupsForMergedContacts();
         if (!contactsInHouseholds().isEmpty()) {
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                    new ContactsInLegacyHouseholds(contactsInHouseholds().getRecords());
-            contactsInLegacyHouseholds.onAfterDelete();
+            LegacyHouseholdMembers legacyHouseholdMembers =
+                    new LegacyHouseholdMembers(contactsInHouseholds().getRecords());
+            legacyHouseholdMembers.onAfterDelete();
         }
     }
 

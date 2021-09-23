@@ -96,34 +96,34 @@ public inherited sharing class HouseholdService {
     }
 
     public void createHouseholdsFor(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+            LegacyHouseholdMembers legacyHouseholdMembers) {
         if (allContactsGetHouseholds()) {
             insertHouseholdsForContacts(
-                    contactsInLegacyHouseholds.contactsWithoutHouseholds());
+                    legacyHouseholdMembers.contactsWithoutHouseholds());
         }
         if (allIndividualContactsGetHouseholds()) {
             insertHouseholdsForContacts(
-                    contactsInLegacyHouseholds.contactsInIndividualAccountsWithoutHouseholds());
+                    legacyHouseholdMembers.contactsInIndividualAccountsWithoutHouseholds());
         }
     }
 
-    public void deleteEmptyHouseholdsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+    public void deleteEmptyHouseholdsFor(LegacyHouseholdMembers legacyHouseholdMembers) {
         LegacyHouseholds oldHouseholds = new LegacyHouseholds(
-                new Set<Id>(contactsInLegacyHouseholds.oldHouseholdIds()),
+                new Set<Id>(legacyHouseholdMembers.oldHouseholdIds()),
                 new LegacyHouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
     }
 
-    public void updateHouseholdNamesFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
+    public void updateHouseholdNamesFor(LegacyHouseholdMembers legacyHouseholdMembers) {
+        if (legacyHouseholdMembers.householdsWithMembershipOrNamingFieldChanges().size() > 0) {
             if (isFutureEligible()) {
                 HouseholdNamingService.updateHouseholdNameAndMemberCountAsynchronously(
-                        contactsInLegacyHouseholds
+                        legacyHouseholdMembers
                                 .householdsWithMembershipOrNamingFieldChanges());
             } else {
                 HouseholdNamingService householdNamingService = new HouseholdNamingService();
                 householdNamingService.updateHouseholdNameAndMemberCount(
-                        contactsInLegacyHouseholds
+                        legacyHouseholdMembers
                                 .householdsWithMembershipOrNamingFieldChanges());
             }
         }
@@ -134,21 +134,21 @@ public inherited sharing class HouseholdService {
                 && !System.isFuture() && !System.isBatch();
     }
 
-    public void fireHouseholdRollupsFor(ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
-        if (contactsInLegacyHouseholds.householdsWithMembershipChanges().isEmpty()) {
+    public void fireHouseholdRollupsFor(LegacyHouseholdMembers legacyHouseholdMembers) {
+        if (legacyHouseholdMembers.householdsWithMembershipChanges().isEmpty()) {
             return; //No need to fire rollups if no Contacts changed Households
         }
         LegacyHouseholds householdsWithMembershipChanges =
                 new LegacyHouseholds(
-                        contactsInLegacyHouseholds.householdsWithMembershipChanges(),
+                        legacyHouseholdMembers.householdsWithMembershipChanges(),
                         new LegacyHouseholdSelector());
         householdsWithMembershipChanges.calculateLegacyHouseholdRollups();
     }
 
     public void processOldHouseholdsAfterDeletingContacts(
-            ContactsInLegacyHouseholds contactsInLegacyHouseholds) {
+            LegacyHouseholdMembers legacyHouseholdMembers) {
         LegacyHouseholds oldHouseholds =
-                new LegacyHouseholds(contactsInLegacyHouseholds.householdIds(),
+                new LegacyHouseholds(legacyHouseholdMembers.householdIds(),
                         new LegacyHouseholdSelector());
         oldHouseholds.deleteEmptyHouseholds();
         oldHouseholds.updateHouseholdNameAndMemberCount();
