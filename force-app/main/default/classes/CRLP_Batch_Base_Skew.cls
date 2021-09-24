@@ -49,6 +49,10 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     /** @description The last Id of a set of records passed to this method. Passed back to the SkewDispatcher batch job */
     private Id lastIdProcessedForChunking;
 
+    /** @description Set of Summary (Account, Contact or GAU) Ids that have been processed by any batch */
+    @TestVisible
+    protected Set<Id> handledParentRecordIds = new Set<Id>();
+
     /**
      * @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
      * which can cause a single parent to be committed multiple times, this is used to track which parent records
@@ -155,6 +159,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords,
                 (parentObjectField != null ? parentObjectField + '.' : '') + parentKeyField);
+
+            // Track handled Ids in a stateful collection for all batches
+            handledParentRecordIds.addAll(parentIds);
 
             // If there is any post-query filtering that needs to be applied, do it here
             detailRecords = applyPostQueryLocatorFilters(detailRecords);
@@ -266,6 +273,11 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
         }
 
+        // Zero out any unhandled summary records
+        if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU && recordIds != null) {
+            clearUnhandledRollupTotals();
+        }
+
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
             String additionalInfo = 'Parent Ids Committed in Finish: ' +
@@ -276,6 +288,35 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             logDebugInfo(additionalInfo);
         }
 
+    }
+
+    /**
+     * @description Test conditions and enqueue queueable job to clear Rollup totals.
+     */
+    @TestVisible
+    private void clearUnhandledRollupTotals() {
+        if (handledParentRecordIds.size() != recordIds.size()) {
+            if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+                CRLP_ResetRollupFieldsQueueable resetRollupFieldsQueueable =
+                    new CRLP_ResetRollupFieldsQueueable(jobType, getUnhandledParentRecordIds());
+                System.enqueueJob(resetRollupFieldsQueueable);
+            }
+        }
+    }
+
+    /**
+     * @description Identify and return unhandled record Ids from all batches.
+     * @return List<Id> unhandledIds
+     */
+    @TestVisible
+    private List<Id> getUnhandledParentRecordIds() {
+        List<Id> unhandledIds = new List<Id>();
+        for (Id recordId : recordIds) {
+            if (!this.handledParentRecordIds.contains(recordId)) {
+                unhandledIds.add(recordId);
+            }
+        }
+        return unhandledIds;
     }
 
     /**
