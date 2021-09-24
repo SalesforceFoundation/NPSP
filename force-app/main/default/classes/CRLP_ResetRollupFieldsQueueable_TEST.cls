@@ -47,6 +47,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
             new General_Accounting_Unit__c(Total_Allocations__c = amount, Total_Number_of_Allocations__c = count);
         insert gau;
 
+        mockRollupCMTValues();
+
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(new List<Id>{gau.Id}, null);
 
         Test.startTest();
@@ -70,6 +72,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
         General_Accounting_Unit__c gau =
             new General_Accounting_Unit__c(Total_Allocations__c = amount, Total_Number_of_Allocations__c = count);
         insert gau;
+
+        mockRollupCMTValues();
 
         CRLP_GAU_BATCH gauBatch = new CRLP_GAU_BATCH(new List<Id>{gau.Id}, null);
         gauBatch.handledParentRecordIds.addAll(gauBatch.recordIds);
@@ -96,7 +100,7 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
         List<Contact> updatedContacts = resetQueueable.clearSkewModeFlag(contacts);
 
         System.assertEquals(false, updatedContacts[0].CustomizableRollups_UseSkewMode__c,
-            'Customizable Rollups Use Skew Mode flag should be set true');
+            'Customizable Rollups Use Skew Mode flag should be set false');
     }
 
     @IsTest
@@ -120,7 +124,7 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
         List<Account> updatedAccounts = resetQueueable.clearSkewModeFlag(accounts);
 
         System.assertEquals(false, updatedAccounts[0].CustomizableRollups_UseSkewMode__c,
-            'Customizable Rollups Use Skew Mode flag should be set true');
+            'Customizable Rollups Use Skew Mode flag should be set false');
     }
 
     @IsTest
@@ -133,5 +137,45 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
 
         System.assertEquals(false, updatedAccounts[0].CustomizableRollups_UseSkewMode__c,
             'Customizable Rollups Use Skew Mode flag should remain false');
+    }
+
+    /**
+     * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
+     */
+    private static void mockRollupCMTValues() {
+
+        // Create a single Filter Group (no need for filter rules here)
+        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
+        String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
+
+        // Extremely simple Filter Rule for IsWon only
+        String filterGroupsJSON = '[' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
+            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
+            ']';
+        String filterRulesJSON = '[' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+            ']';
+
+        // Deserialize the filter group and filter rule to use for the tests
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
+
+        // Create a single Rollup that uses the above Filter Group
+        String rollupsJSON = '[' +
+            CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId1,
+                CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
+                CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
+
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+                CMT_UnitTestData_TEST.RollupRecordType.GAU,
+                'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount__c') +
+            ']';
+
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 }
