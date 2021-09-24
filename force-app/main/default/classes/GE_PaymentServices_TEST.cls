@@ -49,6 +49,35 @@ public class GE_PaymentServices_TEST {
     public static final String GOOD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + GOOD_TOKEN + '"}';
     public static final String BAD_PURCHASE_CALL_BODY = BASE_PURCHASE_CALL_BODY + '"paymentMethodToken":"' + BAD_TOKEN + '"}';  
 
+    @IsTest
+    private static void shouldRequireConfigurationKeysToBeAnElevateCustomer() {
+        List<Payment_Services_Configuration__c> requiredConfigs = new
+                List<Payment_Services_Configuration__c>();
+
+        for (Integer i = 0; i < PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.size(); i++) {
+            requiredConfigs.add(new Payment_Services_Configuration__c(
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                Key__c = PS_IntegrationServiceConfig.REQUIRED_CONFIG_KEYS.get(i),
+                Value__c = String.valueOf(i)
+            ));
+        }
+        requiredConfigs.add(new Payment_Services_Configuration__c(
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+            Key__c = 'isActive',
+            Value__c = 'false'
+        ));
+        requiredConfigs.add(new Payment_Services_Configuration__c(
+                Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+            Key__c = 'clientId',
+            Value__c = 'dummy'
+        ));
+
+        insert requiredConfigs;
+        GE_PaymentServices paymentServices = new GE_PaymentServices();
+        System.assertEquals(false, paymentServices.isElevateCustomer(),
+            'The org should not be considered an Elevate customer when '
+            + 'all required configuration keys are present but isActive is false.');
+    }
 
     @isTest static void shouldReturnSuccessfulResponse() {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
