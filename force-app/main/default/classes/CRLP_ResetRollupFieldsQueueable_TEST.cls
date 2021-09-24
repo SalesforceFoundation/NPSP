@@ -95,6 +95,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
     private static void shouldClearSkewModeFlagForContact() {
         List<Contact> contacts = new List<Contact>{new Contact(CustomizableRollups_UseSkewMode__c = true)};
 
+        mockRollupCMTValues();
+
         CRLP_ResetRollupFieldsQueueable resetQueueable =
             new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, null);
         List<Contact> updatedContacts = resetQueueable.clearSkewModeFlag(contacts);
@@ -106,6 +108,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
     @IsTest
     private static void shouldNotChangeSkewModeFlagForContact() {
         List<Contact> contacts = new List<Contact>{new Contact(CustomizableRollups_UseSkewMode__c = false)};
+
+        mockRollupCMTValues();
 
         CRLP_ResetRollupFieldsQueueable resetQueueable =
             new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, null);
@@ -119,6 +123,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
     private static void shouldClearSkewModeFlagForAccount() {
         List<Account> accounts = new List<Account>{new Account(CustomizableRollups_UseSkewMode__c = true)};
 
+        mockRollupCMTValues();
+
         CRLP_ResetRollupFieldsQueueable resetQueueable =
             new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, null);
         List<Account> updatedAccounts = resetQueueable.clearSkewModeFlag(accounts);
@@ -130,6 +136,8 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
     @IsTest
     private static void shouldNotChangeSkewModeFlagForAccount() {
         List<Account> accounts = new List<Account>{new Account(CustomizableRollups_UseSkewMode__c = false)};
+
+        mockRollupCMTValues();
 
         CRLP_ResetRollupFieldsQueueable resetQueueable =
             new CRLP_ResetRollupFieldsQueueable(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, null);
