@@ -35,7 +35,7 @@
 * @description Tests for queueable job to clear rollup values for records with no associated details
 * which have been previously calculated in skew mode.
 */
-@isTest(IsParallel=false)
+@isTest(IsParallel=true)
 private class CRLP_ResetRollupFieldsQueueable_TEST {
 
     @IsTest
@@ -144,34 +144,13 @@ private class CRLP_ResetRollupFieldsQueueable_TEST {
      */
     private static void mockRollupCMTValues() {
 
-        // Create a single Filter Group (no need for filter rules here)
-        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
-        String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
-
-        // Extremely simple Filter Rule for IsWon only
-        String filterGroupsJSON = '[' +
-            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
-            CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-            ']';
-        String filterRulesJSON = '[' +
-            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
-            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-            CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
-            ']';
-
-        // Deserialize the filter group and filter rule to use for the tests
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
-
-        // Create a single Rollup that uses the above Filter Group
         String rollupsJSON = '[' +
-            CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', filterGroupId1,
+            CMT_UnitTestData_TEST.createRollupRecord('Total Allocations All Time', null,
                 CMT_UnitTestData_TEST.RollupRecordType.GAU,
                 'Total_Allocations__c', CRLP_Operation.RollupType.Sum, 'Amount__c',
                 CRLP_Operation.TimeBoundOperationType.All_Time, 0) + ',' +
 
-            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', filterGroupId1,
+            CMT_UnitTestData_TEST.createRollupRecord('Count Donations All Year', null,
                 CMT_UnitTestData_TEST.RollupRecordType.GAU,
                 'Total_Number_of_Allocations__c', CRLP_Operation.RollupType.Count, 'Amount__c') +
             ']';
