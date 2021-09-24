@@ -126,8 +126,8 @@ class Gift {
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: [ ...this._softCredits.unprocessedSoftCredits() ],
-            processedSoftCredits: [ ...this._softCredits.processedSoftCredits() ]
+            softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
+            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ])
         }
     }
 

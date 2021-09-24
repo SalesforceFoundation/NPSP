@@ -1,6 +1,14 @@
+## @description: NPSP BDI Performance Tests
+##               Two Separate BDI Jobs, each with 10K DI records. One is 100% match to existing Contacts, and the other has 0 matches.
+## @date 2021-08-23
+
 *** Variables ***
-${database_url} =    
-${persistent_org} =     ${False}
+${persistent_org} =         ${False}
+${AdvMappingConfigValue} =  Data Import Field Mapping
+${DataImportBatchSize} =    250
+${DataImportRecordCount} =  10000
+${RecipeWithNoMatches} =    datasets/bdi_benchmark/BDI-without-matching.recipe.yml
+${RecipeWithMatches} =      datasets/bdi_benchmark/BDI-with-matching.recipe.yml
 
 *** Settings ***
 
@@ -8,131 +16,137 @@ Resource  cumulusci/robotframework/CumulusCI.robot
 Resource        robot/Cumulus/resources/NPSP.robot
 Resource        robot/Cumulus/resources/Data.robot
 Resource        robot/Cumulus/resources/BDI_API.robot
-Suite Setup       Workaround Bug
+Suite Setup     Configure Org
 
 *** Keywords ***
-Clear Generated Records
-    Output  Clearing Generated Records
-    # Organized in dependency order
-    Bulk Delete     DataImport__c, CustomObject1__c, CustomObject2__c, CustomObject3__c      
-    Bulk Delete     Account_Soft_Credit__c     where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Account__r.Name Like '%BDITEST%'
-    Bulk Delete     Allocation__c        where=Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR Opportunity__r.Account.Name Like '%BDITEST%'
-    Bulk Delete     npe01__OppPayment__c     where=npe01__Opportunity__r.Primary_Contact__r.LastName Like '%BDITEST%' OR npe01__Opportunity__r.Account.Name Like '%BDITEST%'
-    Bulk Delete     Opportunity     where=Primary_Contact__r.LastName Like '%BDITEST%' OR Account.Name Like '%BDITEST%'
-    Bulk Delete     Account     where=Name Like '%BDITEST%'
-    Bulk Delete     Contact     where=LastName Like '%BDITEST%'
+## =============================================================================================
+## Main Testing Keywords:
+## =============================================================================================
 
+Setup For Test
+    [Arguments]             ${BdiMatchingMode}
+    Output      \n
+    Output      Preparing Data for Test
+    Clear Test Data
+    Generate Data           ${BdiMatchingMode}
+    Output      Executing Data Import Batch Job
+
+Configure Org
+    Disable Duplicate Matching
+    Delete Default Data
+    Configure BDI       ${AdvMappingConfigValue}
+    Ensure Custom Metadata Was Deployed
+
+## =============================================================================================
+## Data Creation Keywords:
+## =============================================================================================
 Generate Data
-    [Arguments]    ${count}
-    ${count} =  Convert To Integer	${count}
+    [Arguments]    ${BdiMatchingMode}
+    ${count} =  Convert To Integer      ${DataImportRecordCount}
+
+    ${recipe} =     Set Variable if    '${BdiMatchingMode}'=='FullMatch'       
+    ...             ${RecipeWithMatches}
+    ...             ${RecipeWithNoMatches}
+
+    Output      Generating ${count} Records for '${BdiMatchingMode}' Test Using '${recipe}'
 
     Run Task   generate_and_load_from_yaml
     ...                 num_records=${count}
     ...                 num_records_tablename=DataImport__c
     ...                 batch_size=${500000}
+    ...                 generator_yaml=${recipe}
 #    ...                 database_url=sqlite:////tmp/temp_db.db  # turn this on to look at the DB for debugging
-    ...                 generator_yaml=datasets/bdi_benchmark/BDI.recipe.yml
 
-Setup BDI
-    [Arguments]     ${field_mapping_method}
-    Configure BDI     ${field_mapping_method}
+Clear Test Data
+    Output  Clear Pre-Existing Test Data
+    Disable NPSP Triggers
+    Bulk Delete     DataImport__c,DataImportBatch__c
+    Bulk Delete     Account_Soft_Credit__c, Allocation__c, npe01__OppPayment__c, Opportunity
+    Bulk Delete     Account                    where=Name Like '%BDITEST%'
+    Bulk Delete     Contact                    where=LastName Like '%BDITEST%'
+    Bulk Delete     General_Accounting_Unit__c
+    Enable NPSP Triggers
 
-    Run Keyword If    '${field_mapping_method}'=='Data Import Field Mapping'
-    ...               Ensure Custom Metadata Was Deployed
+## =============================================================================================
+## Helper Keywords
+## =============================================================================================
+
+Disable Duplicate Matching
+    [Documentation]  Disable Salesforce duplicate matching
+    Run Task        set_duplicate_rule_status
+        ...     active=${False}
+
+Delete Default Data
+    [Documentation]     Delete Entitlement & Associated Records (these are created by default in new scratch orgs)
+    Log to Console      Deleting Entitlement Records
+    Run keyword and ignore error        Run Task            test_data_delete
+        ...     objects=Entitlement
+
+Disable NPSP Triggers
+    [Documentation]  Disable all NPSP Triggers
+    Log to Console   Disable NPSP Triggers
+    Run Task         disable_triggers
+        ...     active=${False}
+        ...     restore=${False}
+
+Enable NPSP Triggers
+    [Documentation]  Enable all NPSP Triggers
+    Log to Console   Enable NPSP Triggers
+    Run Task         restore_triggers
+        ...     active=${True}
+        ...     restore=${False}
 
 Report BDI
-    ${result} =   Row Count      DataImport__c  
+    ${result} =   Row Count      DataImport__c
     ...           Status__c=Imported
 
     Output  DataImport__c imported    ${result}
 
-    ${result} =   Row Count     CustomObject3__c  
-
-    Output  CustomObject3__c imported    ${result}
-
-    ${result} =   Row Count  Account  
+    ${result} =   Row Count  Account
     ...           BillingCountry=Tuvalu
 
     Output  Accounts imported    ${result}
 
-    ${result} =   Row Count     Contact  
+    ${result} =   Row Count     Contact
     ...           Name Like '%BDITEST%'
 
     Output  Contacts imported    ${result}
 
-Workaround Bug
-    [Documentation]   The first BDI import often fails. W-035180
-    Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
-    Generate Data   4
-    Setup BDI       Data Import Field Mapping
-    Batch Data Import   1000
+#Workaround Bug
+#    [Documentation]   The first BDI import often fails. W-035180
+#    Return From Keyword If      ${persistent_org}   # persistent orgs don't have this bug
+#    Generate Data   4
+#    Setup BDI       Data Import Field Mapping
+#    Batch Data Import   1000
 
 Validate Data
-    [Arguments]     ${count}
-    Output      Validating ${TEST NAME}
-    ${result} =    Check Row Count    ${count}     DataImport__c       Status__c=Imported
+    Output      Validating Test Results
+
+    ${result} =    Check Row Count    ${DataImportRecordCount}     DataImport__c       Status__c=Imported
     Run Keyword Unless   "${result}"=="PASS"      Display BDI Failures
     Should be Equal     ${result}      PASS
 
-Setup For Test
-    [Arguments]                 ${count}    ${bdi_mode}
-    Output      Preparing for ${TEST NAME}
-    Clear Generated Records
-    Setup BDI                   ${bdi_mode}
-    Generate Data               ${count}
-    Output      Starting ${TEST NAME}
+    ${result} =    Check Row Count    ${DataImportRecordCount}     Account
+    Run Keyword Unless   "${result}"=="PASS"      Log to Console  Account Record Count is not ${DataImportRecordCount}
+    Should be Equal     ${result}      PASS
+
+    ${result} =    Check Row Count    ${DataImportRecordCount}     Opportunity
+    Run Keyword Unless   "${result}"=="PASS"      Log to Console  Opportunity Record Count is not ${DataImportRecordCount}
+    Should be Equal     ${result}      PASS
 
 *** Test Cases ***
-BGE/BDI Import - CO - 100 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
-    [Setup]     Setup For Test    100    Data Import Field Mapping
-    [Teardown]     Validate Data      100
-    [Tags]    ultra-short     advanced-mapping
-    Batch Data Import   250
+## =============================================================================================
+## INDIVIDUAL TEST CASES
+## =============================================================================================
 
-BGE/BDI Import - HT - 100 / 250 - 3.5 Objs/DI - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
-    [Setup]     Setup For Test    100    Help Text
-    [Teardown]     Validate Data      100
-    [Tags]    ultra-short     help-text
-    Batch Data Import   250
+BDI - Advanced Mapping with Full Match to Existing Contact 10K
+    [Setup]        Setup For Test    FullMatch
+    [Teardown]     Validate Data
+    [Tags]         bdi   medium     advanced-mapping     full-contact-match
+    Batch Data Import   ${DataImportBatchSize}
 
-BGE/BDI Import - CO - 1000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
-    [Setup]     Setup For Test    1000    Data Import Field Mapping
-    [Teardown]     Validate Data      1000
-    [Tags]    short     advanced-mapping
-    Batch Data Import   250
-
-BGE/BDI Import - HT - 1000 / 250 - 3.5 Objs/DI - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
-    [Setup]     Setup For Test    1000    Help Text
-    [Teardown]     Validate Data      1000
-    [Tags]    short     help-text
-    Batch Data Import   250
-
-BGE/BDI Import - CO - 10000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
-    [Setup]     Setup For Test    10000    Data Import Field Mapping
-    [Teardown]     Validate Data      10000
-    [Tags]    medium     advanced-mapping
-    Batch Data Import   250
-
-BGE/BDI Import - HT - 10000 / 250 - 3.5 Objs/DI - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
-    [Setup]     Setup For Test    10000    Help Text
-    [Teardown]     Validate Data      10000
-    [Tags]    medium     help-text
-    Batch Data Import   250
-
-BGE/BDI Import - CO - 120000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
-    [Setup]     Setup For Test    120000    Data Import Field Mapping
-    [Teardown]     Validate Data      120000
-    [Tags]    long     advanced-mapping
-    Batch Data Import   250
-
-BGE/BDI Import - HT - 120000 / 250 - 3.5 Objs/DI - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con ,1Payment,1 Opp
-    [Setup]     Setup For Test    120000    Help Text
-    [Teardown]     Validate Data      120000
-    [Tags]    long     help-text
-    Batch Data Import   250
-
-BGE/BDI Import - CO - 1000000 / 250 - 7.5 Objs/DI - 0.75 New Acc 0.25 Mtchd Acc 0.25 New Con 0.25 Mtchd Con 1CO1 0.5CO2 1CO3 1Payment 1Allocation 0.5ASC 1 Opp
-    [Setup]     Setup For Test    1000000    Data Import Field Mapping
-    [Teardown]     Validate Data      1000000
-    [Tags]    ultra-long     advanced-mapping
-    Batch Data Import   250
+BDI - Advanced Mapping with No Match to Existing Contact 10K
+    [Setup]        Setup For Test    NoMatch
+    [Teardown]     Validate Data
+    [Tags]         bdi   medium     advanced-mapping     no-contact-match
+    Batch Data Import   ${DataImportBatchSize}
