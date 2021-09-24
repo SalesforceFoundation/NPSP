@@ -173,7 +173,7 @@ public without sharing class HouseholdNamingService {
         for (SObject household : householdsOrAccounts) {
             List<Contact> householdMembers = getHouseholdMembers(membersByHouseholdId, household);
             HouseholdName householdName = new HouseholdName(
-                    new Contacts(householdMembers),
+                    new HouseholdMembers(householdMembers),
                     householdNamingImpl);
             String formalGreeting = (String) household.get('npo02__Formal_Greeting__c');
             String informalGreeting = (String) household.get('npo02__Informal_Greeting__c');

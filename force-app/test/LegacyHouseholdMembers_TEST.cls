@@ -30,22 +30,22 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description ContactsInLegacyHouseholds tests in NPSP.
+* @description LegacyHouseholdMembers tests in NPSP.
 */
 @IsTest
-private with sharing class ContactsInLegacyHouseholds_TEST {
+private with sharing class LegacyHouseholdMembers_TEST {
 
     @IsTest
     static void whenOnAfterInsert_thenCreateHouseholdsCalled() {
         //Given
-        ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                new ContactsInLegacyHouseholds(TEST_ContactBuilder.dummyContactList());
+        LegacyHouseholdMembers legacyHouseholdMembers =
+                new LegacyHouseholdMembers(TEST_ContactBuilder.dummyContactList());
 
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
-        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
+        legacyHouseholdMembers.householdService = stubFor(householdServiceMock);
 
         //When
-        contactsInLegacyHouseholds.onAfterInsert();
+        legacyHouseholdMembers.onAfterInsert();
 
         //Then
         System.assert(householdServiceMock.createHouseholdsCalled);
@@ -61,18 +61,18 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
         Contact dummyContactWithTitleChanged = TEST_ContactBuilder.dummyContactWithId();
         String newTitle = 'Handy Man';
         dummyContactWithTitleChanged.Title = newTitle;
-        ContactsInLegacyHouseholds contactsInLegacyHouseholds =
-                new ContactsInLegacyHouseholds(
+        LegacyHouseholdMembers legacyHouseholdMembers =
+                new LegacyHouseholdMembers(
                         new List<Contact>{
                                 dummyContactWithTitleChanged
                         },
                         new Map<Id, Contact>(TEST_ContactBuilder.dummyContactListWithIds())
                 );
         HouseholdServiceMock householdServiceMock = new HouseholdServiceMock();
-        contactsInLegacyHouseholds.householdService = stubFor(householdServiceMock);
+        legacyHouseholdMembers.householdService = stubFor(householdServiceMock);
 
         //When
-        contactsInLegacyHouseholds.onAfterUpdate();
+        legacyHouseholdMembers.onAfterUpdate();
 
         //Then
         System.assert(householdServiceMock.updateHouseholdNamesCalled);
@@ -97,9 +97,9 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
 
     public class HouseholdServiceMock implements StubProvider {
         public Boolean createHouseholdsCalled = false;
-        public ContactsInLegacyHouseholds contactsQueuedForHouseholdCreation;
+        public LegacyHouseholdMembers contactsQueuedForHouseholdCreation;
         public Boolean updateHouseholdNamesCalled = false;
-        public ContactsInLegacyHouseholds contactsQueuedForHouseholdNameUpdate;
+        public LegacyHouseholdMembers contactsQueuedForHouseholdNameUpdate;
 
         public Object handleMethodCall(Object stubbedObject,
                 String stubbedMethodName,
@@ -112,12 +112,12 @@ private with sharing class ContactsInLegacyHouseholds_TEST {
                 when 'createHouseholdsFor' {
                     createHouseholdsCalled = true;
                     contactsQueuedForHouseholdCreation =
-                            (ContactsInLegacyHouseholds) listOfArgs[0];
+                            (LegacyHouseholdMembers) listOfArgs[0];
                 }
                 when 'updateHouseholdNamesFor' {
                     updateHouseholdNamesCalled = true;
                     contactsQueuedForHouseholdNameUpdate =
-                            (ContactsInLegacyHouseholds) listOfArgs[0];
+                            (LegacyHouseholdMembers) listOfArgs[0];
                 }
             }
             return null;
