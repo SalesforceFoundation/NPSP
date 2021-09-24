@@ -33,7 +33,7 @@
 * @group Elevate Payment Services
 * @description Determines the Elevate Payment Integration Services status and permissions
 */
-public with sharing class PS_IntegrationServiceConfig {
+public without sharing class PS_IntegrationServiceConfig {
     
     // Names of Payment Service configuration sets
     public static final String PAYMENTS_SERVICE_NAME = 'payments';
