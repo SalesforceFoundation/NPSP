@@ -86,7 +86,9 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     @IsTest
     private static void shouldHaveIntegrationEnabledWhenOrgIsConnectedToElevate() {
-        setUpConfiguration();
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withClientId(true).withProductId(false);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
 
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         System.assert(ps.isIntegrationEnabled(),
@@ -96,16 +98,28 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
     @IsTest
     private static void shouldHaveIntegrationDisabledWhenIsActiveServiceRecordIsFalse() {
-        setUpConfiguration();
-        insert new Payment_Services_Configuration__c(
-            Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
-            Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
-            Value__c = 'false'
-        );
-
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock()
+                .withClientId(true)
+                .withProductId(false)
+                .withActiveFlagAsFalse(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
         PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
         System.assertEquals(false, ps.isIntegrationEnabled(),
             'The org should have Integration Disabled when isActive record is false');
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWhenIsActiveServiceRecordIsTrue() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock()
+                .withClientId(true)
+                .withProductId(false)
+                .withActiveFlagAsTrue(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
+        System.assertEquals(true, ps.isIntegrationEnabled(),
+            'The org should have Integration Enabled when isActive record is true');
     }
 
     @IsTest
@@ -205,6 +219,120 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
 
         System.assertEquals(testCommitmentViewURL, expectedURL,
             'Commitment View URL should be ' + testCommitmentViewURL);
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWithProductId() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withProductId(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
+        System.assert(serviceConfig.isIntegrationEnabled());
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationEnabledWithClientId() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withClientId(true);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
+        System.assert(serviceConfig.isIntegrationEnabled());
+    }
+
+    @IsTest
+    private static void shouldHaveIntegrationDisabledWithoutProductIdOrClientId() {
+        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
+            new PaymentServicesConfigurationSelectorMock().withClientId(false).withProductId(false);
+        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
+        PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
+        System.assert(!serviceConfig.isIntegrationEnabled());
+    }
+
+    private class PaymentServicesConfigurationSelectorMock implements StubProvider {
+
+        private Boolean withClientId = false;
+        private Boolean withProductId = false;
+        private Boolean withActiveFlagAsTrue = false;
+        private Boolean withActiveFlagAsFalse = false;
+
+        public PaymentServicesConfigurationSelectorMock withClientId(Boolean withClientId) {
+            this.withClientId = withClientId;
+            return this;
+        }
+
+        public PaymentServicesConfigurationSelectorMock withProductId(Boolean withProductId) {
+            this.withProductId = withProductId;
+            return this;
+        }
+
+        public PaymentServicesConfigurationSelectorMock withActiveFlagAsFalse(Boolean withActiveFlagAsFalse) {
+            this.withActiveFlagAsFalse = withActiveFlagAsFalse;
+            return this;
+        }
+
+        public PaymentServicesConfigurationSelectorMock withActiveFlagAsTrue(Boolean withActiveFlagAsTrue) {
+            this.withActiveFlagAsTrue = withActiveFlagAsTrue;
+            return this;
+        }
+
+        private List<Payment_Services_Configuration__c> buildConfiguration() {
+            List<Payment_Services_Configuration__c> configurations = getConfigurations();
+            if (withClientId) {
+                configurations.add(new Payment_Services_Configuration__c(
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.CLIENTID,
+                    Value__c = PS_IntegrationServiceConfig.CLIENTID
+                ));
+            }
+
+            if (withProductId) {
+                configurations.add(new Payment_Services_Configuration__c(
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.PRODUCTID,
+                    Value__c = PS_IntegrationServiceConfig.PRODUCTID
+                ));
+            }
+
+            if (withActiveFlagAsFalse) {
+                configurations.add(new Payment_Services_Configuration__c(
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
+                    Value__c = withActiveFlagAsFalse ? 'false' : 'true'
+                ));
+            }
+
+            if (withActiveFlagAsTrue) {
+                configurations.add(new Payment_Services_Configuration__c(
+                    Service__c = PS_IntegrationServiceConfig.PAYMENTS_SERVICE_NAME,
+                    Key__c = PS_IntegrationServiceConfig.IS_ACTIVE,
+                    Value__c = withActiveFlagAsTrue ? 'true' : 'false'
+                ));
+            }
+
+            return configurations;
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getConfigRecordsByName' {
+                    return buildConfiguration();
+                }
+            }
+            return null;
+        }
+    }
+
+    private static PaymentServicesConfigurationSelector stubFor(
+        PaymentServicesConfigurationSelectorMock paymentServicesConfigurationSelectorMock) {
+        return (PaymentServicesConfigurationSelector) Test.createStub(
+            PaymentServicesConfigurationSelector.class, paymentServicesConfigurationSelectorMock);
     }
 
     /***
