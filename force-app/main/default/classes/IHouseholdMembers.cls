@@ -30,48 +30,10 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household Name value object in NPSP.
+* @description Interface definition for Household Members in NPSP.
 */
-public inherited sharing class HouseholdName {
-
-    private Contacts contacts;
-    private HH_INaming service;
-
-    public HouseholdName(Contacts contacts) {
-        this(contacts, null);
-    }
-    
-    public HouseholdName(Contacts contacts, HH_INaming service) {
-        this.contacts = contacts;
-        this.service = service == null ? defaultHH_INamingImplementation() : service;
-    }
-
-    private HH_NameSpec defaultHH_INamingImplementation() {
-        return new HH_NameSpec();
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Household Name for the list of Contacts
-    * @return String
-    */
-    public String asName() {
-        return service.getHouseholdName(contacts.forHouseholdName());
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Formal Greeting for the list of Contacts
-    * @return String
-    */
-    public String asFormalGreeting() {
-        return service.getHouseholdFormalGreeting(contacts.forFormalGreeting());
-    }
-
-    /*******************************************************************************************************
-    * @description returns the Informal Greeting for the list of Contacts
-    * @return String
-    */
-    public String asInformalGreeting() {
-        return service.getHouseholdInformalGreeting(contacts.forInformalGreeting());
-    }
-
+public interface IHouseholdMembers {
+    List<Contact> forHouseholdName();
+    List<Contact> forFormalGreeting();
+    List<Contact> forInformalGreeting();
 }

@@ -172,12 +172,12 @@ public with sharing class HH_Households_TEST {
     private static void validateThat_ContactsInLegacyHouseholds_OnAfterInsert_CalledOnContactInsert() {
         HH_Households_TDTM householdsTDTM = new HH_Households_TDTM();
         ContactsInLegacyHouseholdsMock mock = new ContactsInLegacyHouseholdsMock();
-        ContactsInLegacyHouseholds stub = (ContactsInLegacyHouseholds) Test.createStub(
-                ContactsInLegacyHouseholds.class,
+        LegacyHouseholdMembers stub = (LegacyHouseholdMembers) Test.createStub(
+                LegacyHouseholdMembers.class,
                 mock
         );
         System.assert(!mock.onAfterInsertCalled);
-        ContactsInLegacyHouseholds.setMock(stub);
+        LegacyHouseholdMembers.setMock(stub);
 
         //When
         householdsTDTM.run(
@@ -700,7 +700,7 @@ public with sharing class HH_Households_TEST {
         System.assertEquals(1, [SELECT Count() FROM OpportunityContactRole WHERE IsPrimary = True AND ContactId = :c1.Id]);
 
         Test.startTest();
-        Contacts.rollupContactsAndHouseholdsAfterMerge(new Set<Id>{c1.Id});
+        ContactAdapter.rollupContactsAndHouseholdsAfterMerge(new Set<Id>{c1.Id});
         Test.stopTest();
 
         c1 = [SELECT npo02__TotalOppAmount__c, npo02__Household__r.npo02__TotalOppAmount__c FROM Contact WHERE Id = :c1.Id];

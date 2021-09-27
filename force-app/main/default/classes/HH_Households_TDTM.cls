@@ -66,12 +66,12 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
             when BeforeInsert {
                 //prevent execution of BeforeUpdate in ACCT_Accounts_TDTM
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, true);
-                Contacts contacts = new Contacts(newlist);
-                contacts.onBeforeInsert();
+                ContactAdapter contactAdapter = new ContactAdapter(newlist);
+                contactAdapter.onBeforeInsert();
             }
             when BeforeUpdate {
-                Contacts contacts = new Contacts(newlist, oldlist);
-                contacts.onBeforeUpdate();
+                ContactAdapter contactAdapter = new ContactAdapter(newlist, oldlist);
+                contactAdapter.onBeforeUpdate();
             }
             when AfterInsert {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH_isRunningBeforeInsert, false);
@@ -79,18 +79,18 @@ public without sharing class HH_Households_TDTM extends TDTM_Runnable {
                 //since we don't have the contact's household ids until after the insert
                 //we'll check the trigger action again there to make sure it doesn't run twice
                 if (orgUsesLegacyHouseholds()) {
-                    ContactsInLegacyHouseholds legacyHouseholdContacts =
-                            ContactsInLegacyHouseholds.newInstance(newlist);
+                    LegacyHouseholdMembers legacyHouseholdContacts =
+                            LegacyHouseholdMembers.newInstance(newlist);
                     legacyHouseholdContacts.onAfterInsert();
                 }
             }
             when AfterDelete {
-                Contacts contacts = new Contacts(oldlist);
-                contacts.onAfterDelete();
+                ContactAdapter contactAdapter = new ContactAdapter(oldlist);
+                contactAdapter.onAfterDelete();
             }
             when AfterUpdate {
-                ContactsInLegacyHouseholds legacyHouseholdContacts =
-                        new ContactsInLegacyHouseholds(
+                LegacyHouseholdMembers legacyHouseholdContacts =
+                        new LegacyHouseholdMembers(
                                 newlist, new Map<Id, Contact>((List<Contact>) oldList));
                 legacyHouseholdContacts.onAfterUpdate();
             }
