@@ -59,19 +59,19 @@ public class ADDR_Contact_TDTM extends TDTM_Runnable {
             return dmlWrapper;
         }
 
-        Contacts contacts = new Contacts(listNew, listOld);
+        ContactAdapter contactAdapter = new ContactAdapter(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                contacts.onBeforeInsert_FromAddrContactTDTM();
+                contactAdapter.onBeforeInsert_FromAddrContactTDTM();
             }
             when AfterInsert {
-                contacts.onAfterInsert();
+                contactAdapter.onAfterInsert();
             }
             when BeforeUpdate {
-                contacts.onBeforeUpdate_FromAddrContactTDTM();
+                contactAdapter.onBeforeUpdate_FromAddrContactTDTM();
             }
             when AfterUpdate {
-                contacts.onAfterUpdate();
+                contactAdapter.onAfterUpdate();
             }
         }
         // Rules:
