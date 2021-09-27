@@ -30,44 +30,48 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household naming tests in NPSP.
+* @description Household Name value object in NPSP.
 */
-@IsTest
-private class HouseholdNaming_TEST {
+public inherited sharing class HouseholdName {
 
-    @IsTest
-    static void formalGreetingIsCorrectForDummyContact() {
-        Contacts dummyContact = TEST_ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(
-                new HouseholdMembers(dummyContact.getRecords()));
-        System.assertEquals(
-                'test Contact_forTests',
-                householdName.asFormalGreeting());
+    private IHouseholdMembers householdMembers;
+    private HH_INaming service;
+
+    public HouseholdName(IHouseholdMembers householdMembers) {
+        this(householdMembers, null);
+    }
+    
+    public HouseholdName(IHouseholdMembers householdMembers, HH_INaming service) {
+        this.householdMembers = householdMembers;
+        this.service = service == null ? defaultHH_INamingImplementation() : service;
     }
 
-    @IsTest
-    static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact() {
-        HH_Households_TEST.setupHouseholdNamingSettings();
-        Contacts dummyContact = TEST_ContactBuilder.dummyContacts();
-        HouseholdName householdName = new HouseholdName(
-                new HouseholdMembers(dummyContact.getRecords()));
-        System.assertEquals(
-                'Doctor Contact_forTests',
-                householdName.asFormalGreeting());
+    private HH_NameSpec defaultHH_INamingImplementation() {
+        return new HH_NameSpec();
     }
 
-    @IsTest
-    static void givenDummyHHNamingSettings_thenFormalGreetingIsCorrectForDummyContact_newTitle
-            () {
-        HH_Households_TEST.setupHouseholdNamingSettings();
-        Contact handyMan = TEST_ContactBuilder.dummyContact();
-        handyMan.Title = 'Handy Man';
-        Contacts dummyContact = new Contacts(new List<Contact>{handyMan});
-        HouseholdName householdName = new HouseholdName(
-                new HouseholdMembers(dummyContact.getRecords()));
-        System.assertEquals(
-                'Handy Man Contact_forTests',
-                householdName.asFormalGreeting());
+    /*******************************************************************************************************
+    * @description returns the Household Name for the list of Contacts
+    * @return String
+    */
+    public String asName() {
+        return service.getHouseholdName(householdMembers.forHouseholdName());
+    }
+
+    /*******************************************************************************************************
+    * @description returns the Formal Greeting for the list of Contacts
+    * @return String
+    */
+    public String asFormalGreeting() {
+        return service.getHouseholdFormalGreeting(householdMembers.forFormalGreeting());
+    }
+
+    /*******************************************************************************************************
+    * @description returns the Informal Greeting for the list of Contacts
+    * @return String
+    */
+    public String asInformalGreeting() {
+        return service.getHouseholdInformalGreeting(householdMembers.forInformalGreeting());
     }
 
 }

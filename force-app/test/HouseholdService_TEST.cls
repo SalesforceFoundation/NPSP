@@ -64,7 +64,7 @@ private class HouseholdService_TEST {
 
         //When
         service.createHouseholdsFor(
-                new ContactsInLegacyHouseholds(
+                new LegacyHouseholdMembers(
                         TEST_ContactBuilder.dummyContactList()));
 
         //Then

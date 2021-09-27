@@ -3,7 +3,7 @@
 #
 # run it like this:
 #
-# cci task run generate_and_load_from_yaml -o num_records_tablename DataImport__c -o num_records 10000 -o generator_yaml datasets/bdi_benchmark/BDI-Without-Matching.recipe.yml --org whatever
+# cci task run generate_and_load_from_yaml -o num_records_tablename DataImport__c -o num_records 10000 -o generator_yaml datasets/bdi_benchmark/BDI-without-matching.recipe.yml --org whatever
 
 
 - object: General_Accounting_Unit__c
