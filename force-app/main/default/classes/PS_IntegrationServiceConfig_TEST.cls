@@ -97,19 +97,6 @@ public with sharing class PS_IntegrationServiceConfig_TEST {
     }
 
     @IsTest
-    private static void shouldHaveIntegrationDisabledWhenIsActiveServiceRecordIsFalse() {
-        PaymentServicesConfigurationSelectorMock configurationSelectorMock =
-            new PaymentServicesConfigurationSelectorMock()
-                .withClientId(true)
-                .withProductId(false)
-                .withActiveFlagAsFalse(true);
-        PS_IntegrationServiceConfig.paymentServicesConfigurationSelector = stubFor(configurationSelectorMock);
-        PS_IntegrationServiceConfig ps = new PS_IntegrationServiceConfig();
-        System.assertEquals(false, ps.isIntegrationEnabled(),
-            'The org should have Integration Disabled when isActive record is false');
-    }
-
-    @IsTest
     private static void shouldHaveIntegrationEnabledWhenIsActiveServiceRecordIsTrue() {
         PaymentServicesConfigurationSelectorMock configurationSelectorMock =
             new PaymentServicesConfigurationSelectorMock()
