@@ -171,9 +171,8 @@ public without sharing class HouseholdNamingService {
     private void setHouseholdNameFieldValues(List<SObject> householdsOrAccounts,
             Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
-            List<Contact> householdMembers = getHouseholdMembers(membersByHouseholdId, household);
             HouseholdName householdName = new HouseholdName(
-                    new HouseholdMembers(householdMembers),
+                    new HouseholdMembers(membersByHouseholdId.get(household.Id)),
                     householdNamingImpl);
             String formalGreeting = (String) household.get('npo02__Formal_Greeting__c');
             String informalGreeting = (String) household.get('npo02__Informal_Greeting__c');
@@ -369,7 +368,35 @@ public without sharing class HouseholdNamingService {
                 hhList.add(household.Id);
             }
         }
+        Households householdsWithPrimaryContactChanges = new Households(
+                new Set<Id>(getPrimaryContactChanges(records, oldMap)));
+
+        Map<Id, SObject> objectsByIds = new Map<Id, SObject>(records);
+        HouseholdMembers householdMembers = new HouseholdMembers(
+                ContactSelector.householdMembersFor(householdsWithPrimaryContactChanges.ids())
+        );
+        for (Id id : getPrimaryContactChanges(records, oldMap)) {
+            SObject household = (SObject) objectsByIds.get(id);
+            HouseholdName householdName = new HouseholdName(
+                    householdMembers.membersFor(
+                            new HouseholdId(id)));
+            if (nameFor(household) != householdName.asName()
+                    || formalGreetingFor(household) != householdName.asFormalGreeting()
+                    || informalGreetingFor(household) != householdName.asInformalGreeting()) {
+                hhList.add(id);
+            }
+        }
         return hhList;
+    }
+
+    private List<Id> getPrimaryContactChanges(List<SObject> records, Map<Id, SObject> oldMap) {
+        List<Id> primaryContactChanges = new List<Id>();
+        for (SObject household : records) {
+            if (oneToOneAccountChanged(household, oldMap.get(household.Id))) {
+                primaryContactChanges.add(household.Id);
+            }
+        }
+        return primaryContactChanges;
     }
 
     public void setCustomNamingField(List<SObject> records, Map<Id, SObject> oldMap) {

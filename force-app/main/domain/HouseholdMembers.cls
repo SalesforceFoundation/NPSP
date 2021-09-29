@@ -241,4 +241,14 @@ public inherited sharing class HouseholdMembers implements IHouseholdMembers {
         return oldMap.get(con.Id);
     }
 
+    public IHouseholdMembers membersFor(HouseholdId householdId) {
+        List<Contact> members = new List<Contact>();
+        for (Contact contact : records) {
+           if (contact.AccountId == householdId.value()){
+               members.add(contact);
+           }
+        }
+        return new HouseholdMembers(members);
+    }
+
 }

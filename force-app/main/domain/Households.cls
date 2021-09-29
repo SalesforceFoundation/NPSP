@@ -198,7 +198,7 @@ public inherited sharing class Households extends fflib_SObjects {
         }
     }
 
-    private List<Id> ids() {
+    public List<Id> ids() {
         return new List<Id>(getIdFieldValues(Account.Id));
     }
 
