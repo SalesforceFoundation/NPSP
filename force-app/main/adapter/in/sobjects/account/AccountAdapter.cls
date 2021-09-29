@@ -254,7 +254,10 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
     }
 
     private void renameHouseholdsNeedingNameUpdate() {
-        Households.updateNameAndMemberCount(getHouseholdsNeedingNameUpdate());
+        List<Id> householdsNeedingNameUpdate = getHouseholdsNeedingNameUpdate();
+        if (!householdsNeedingNameUpdate.isEmpty()) {
+            Households.updateNameAndMemberCount(householdsNeedingNameUpdate);
+        }
     }
 
     private List<Id> getHouseholdsNeedingNameUpdate() {

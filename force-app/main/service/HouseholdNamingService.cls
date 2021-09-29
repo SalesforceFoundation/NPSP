@@ -368,9 +368,6 @@ public without sharing class HouseholdNamingService {
             if (needsNamingFieldsUpdated(household, oldMap.get(household.Id))) {
                 hhList.add(household.Id);
             }
-            if (oneToOneAccountChanged(household, oldMap.get(household.Id))) {
-                hhList.add(household.Id);
-            }
         }
         return hhList;
     }
