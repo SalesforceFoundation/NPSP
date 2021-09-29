@@ -376,7 +376,7 @@ export default class GeFormField extends LightningElement {
     }
 
     set formState(formState) {
-        const newValue = formState[this.sourceFieldAPIName];
+        const newValue = formState && formState[this.sourceFieldAPIName];
         const previousValue = this.formState && this.formState[this.sourceFieldAPIName];
 
         new Promise((resolve,reject) => {
