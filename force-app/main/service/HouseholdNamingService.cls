@@ -368,15 +368,14 @@ public without sharing class HouseholdNamingService {
                 hhList.add(household.Id);
             }
         }
-        Households householdsWithPrimaryContactChanges = new Households(
-                new Set<Id>(getPrimaryContactChanges(records, oldMap)));
 
-        Map<Id, SObject> objectsByIds = new Map<Id, SObject>(records);
+        Map<Id, SObject> householdsById = new Map<Id, SObject>(records);
         HouseholdMembers householdMembers = new HouseholdMembers(
-                ContactSelector.householdMembersFor(householdsWithPrimaryContactChanges.ids())
+                ContactSelector.householdMembersFor(
+                        getPrimaryContactChanges(records, oldMap))
         );
         for (Id id : getPrimaryContactChanges(records, oldMap)) {
-            SObject household = (SObject) objectsByIds.get(id);
+            SObject household = (SObject) householdsById.get(id);
             HouseholdName householdName = new HouseholdName(
                     householdMembers.membersFor(
                             new HouseholdId(id)));
