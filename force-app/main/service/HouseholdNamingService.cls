@@ -316,8 +316,6 @@ public without sharing class HouseholdNamingService {
             return true;
         } else if (isSystemCustomNamingChanged(household, oldRecord)) {
             return true;
-        } else if (oneToOneAccountChanged(household, oldRecord)) {
-            return true;
         }
         return false;
     }
@@ -368,6 +366,9 @@ public without sharing class HouseholdNamingService {
         List<Id> hhList = new List<Id>();
         for (SObject household : records) {
             if (needsNamingFieldsUpdated(household, oldMap.get(household.Id))) {
+                hhList.add(household.Id);
+            }
+            if (oneToOneAccountChanged(household, oldMap.get(household.Id))) {
                 hhList.add(household.Id);
             }
         }
