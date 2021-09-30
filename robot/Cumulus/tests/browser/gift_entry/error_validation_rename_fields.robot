@@ -36,7 +36,7 @@ Validate Errors When Field Is Renamed
     ...                     status is dry run error. Rename the field to correct it and verify no errors or warnings are thrown on AM, object group,
     ...                     and template builder. Creates a batch and verifys field is back on form and on saving gift its status is dry run validated.
 
-    [tags]                              unstable                      feature:GE        W-8292840
+    [tags]                              feature:GE        W-8292840
     Go To Page                          Landing                       GE_Gift_Entry
     Click Link                          Templates
     Click Gift Entry Button             Create Template
@@ -77,6 +77,10 @@ Validate Errors When Field Is Renamed
     # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
+    #more verification for timing issues
+    Verify Field Default Value
+    ...                                 Data Import: Donation Donor=Account1
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts
     ...                                 Donor Name=${ACCOUNT}[Name]
@@ -90,6 +94,7 @@ Validate Errors When Field Is Renamed
     Click Link                          Templates
     Select Template Action              ${TEMPLATE}                   Edit
     Current Page Should Be              Template                      GE_Gift_Entry
+    Load Page Object                    Template                      GE_Gift_Entry  #this is to fix issues with incorrect form states displaying
     Click Gift Entry Button             Next: Form Fields
     Page Should Not Contain Locator     gift_entry.page_error
     Page Should Not Contain Locator     gift_entry.object_field_checkbox    Account 1      Field not found
@@ -108,6 +113,10 @@ Validate Errors When Field Is Renamed
     ...                                 Opportunity: Amount=10
     # This is separate from the other Fill Gift Entry keyword to prevent timing issues
     Fill Gift Entry Form
+    ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
+    #more verification for timing issues
+    Verify Field Default Value
+    ...                                 Data Import: Donation Donor=Account1
     ...                                 Data Import: Account1 Imported=${ACCOUNT}[Name]
     Click Gift Entry Button             Save & Enter New Gift
     Verify Table Field Values           Batch Gifts

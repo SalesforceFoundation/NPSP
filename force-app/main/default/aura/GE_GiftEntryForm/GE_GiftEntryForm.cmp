@@ -1,0 +1,21 @@
+<aura:component implements="force:hasSObjectName,force:hasRecordId,flexipage:availableForAllPageTypes"
+                access="global"
+                description="Aura component that wraps the geGiftEntryFormApp LWC component to
+                    show modals using the overlayLibrary.">
+    <aura:dependency resource="c:geBatchWizard" />
+
+    <lightning:overlayLibrary aura:id="giftEntryFormOverlayLib" />
+    <!-- modal attribute is a reference to the modal created by lightning:overlayLibrary -->
+    <aura:attribute name="modal"
+                    type="Object" />
+
+    <c:utilDedicatedListener eventName="geModalCloseEvent"
+                             onreceiveevent="{!c.closeModal}" />
+
+    <c:geGiftEntryFormApp aura:id="giftEntryFormApp"
+                          recordId="{!v.recordId}"
+                          sObjectName="{!v.sObjectName}"
+                          oneditbatch="{!c.handleEditBatch}"
+                          ontogglemodal="{!c.handleToggleModal}"
+                          onclosemodal="{!c.closeModal}"/>
+</aura:component>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parent_Task__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Indicates that this Engagement Plan Task is dependent on a Parent Task.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Indicates that this Engagement Plan Task is dependent on a Parent Task.</inlineHelpText>
+    <label>Parent Task</label>
+    <referenceTo>Engagement_Plan_Task__c</referenceTo>
+    <relationshipLabel>Engagement Plan Tasks</relationshipLabel>
+    <relationshipName>Engagement_Plan_Tasks</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

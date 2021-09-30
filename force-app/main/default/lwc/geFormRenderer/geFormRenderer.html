@@ -1,0 +1,234 @@
+<template>
+    <div class='slds-card slds-card_extension'
+         if:false={isAccessible}>
+        <div class='slds-p-top_x-large'>
+            <c-util-illustration title={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingHeader}
+                                 message={CUSTOM_LABELS.geErrorPageLevelAdvancedMappingBody}
+                                 size='large'
+                                 variant='lake-mountain'>
+            </c-util-illustration>
+        </div>
+    </div>
+
+    <template if:true={isAccessible}>
+        <lightning-layout multiple-rows='true'
+                          class='ge-form-container'>
+            <template if:true={isSingleGiftEntry}>
+                <lightning-layout-item size='12'>
+                    <c-util-page-header pretext={CUSTOM_LABELS.geHeaderSingleGiftEntry}
+                                        title={title}
+                                        icon-name='standard:contract'
+                                        icon-size='medium'>
+                    </c-util-page-header>
+                </lightning-layout-item>
+            </template>
+
+            <template if:true={hasPurchaseCallTimedout}>
+                <lightning-layout-item size='12'
+                                       class='slds-card slds-p-around_small'>
+                    <div class="illustration-container fade-in">
+                        <c-util-illustration title={CUSTOM_LABELS.commonCriticalError}
+                                             size='large'
+                                             variant='going-camping'>
+                            <div slot='body'
+                                 class='critical-error-container'>
+                                <p slot='body'
+                                   class='slds-text-body_regular critical-error-text'>
+                                    {CUSTOM_LABELS.geErrorUncertainCardChargePart1}
+                                </p>
+                                <ul class="slds-list_dotted critical-error-ul">
+                                    <li>{CUSTOM_LABELS.geErrorUncertainCardChargePart2}</li>
+                                    <li>{CUSTOM_LABELS.geErrorUncertainCardChargePart3}</li>
+                                </ul>
+                                <p slot='body'
+                                   class='slds-text-body_regular critical-error-text'>
+                                    {CUSTOM_LABELS.geErrorUncertainCardChargePart4}
+                                </p>
+                            </div>
+                        </c-util-illustration>
+                    </div>
+                </lightning-layout-item>
+            </template>
+
+            <template if:false={hasPurchaseCallTimedout}>
+                <template if:false={isPermissionError}>
+                    <lightning-layout-item size='12'>
+                        <c-ge-review-donations ontogglemodal={toggleModal}
+                                               onchangeselecteddonation={handleChangeSelectedDonation}
+                                               donor-id={donorId}
+                                               selected-donation={selectedDonationCopyForReviewDonationsModal}>
+                        </c-ge-review-donations>
+                    </lightning-layout-item>
+                </template>
+
+                <lightning-layout-item size='12'
+                                       class='slds-card slds-p-around_small'>
+                    <div if:true={showSpinner}
+                         class='spinner-container'>
+                        <lightning-spinner alternative-text={CUSTOM_LABELS.messageLoading}
+                                           variant='brand'
+                                           size='large'>
+                        </lightning-spinner>
+                        <p class='loading-text slds-text-heading_medium'>{loadingText}</p>
+                    </div>
+                    <template if:true={hasPageLevelError}>
+                        <c-util-page-level-message variant='error'
+                                                   title={CUSTOM_LABELS.commonError}>
+                            <ul slot='body'
+                                class='slds-list_dotted slds-text-color_error'>
+                                <template for:each={pageLevelErrorMessageList}
+                                          for:item='errorMessageWrapper'>
+                                    <li key={errorMessageWrapper.index}>
+                                        <p>{errorMessageWrapper.errorMessage}</p>
+                                        <ul if:true={errorMessageWrapper.multilineMessages}
+                                            class="slds-list_dotted slds-text-color_error">
+                                            <template for:each={errorMessageWrapper.multilineMessages}
+                                                      for:item='error'>
+                                                <li key={error.index}>{error.message}</li>
+                                            </template>
+                                        </ul>
+                                    </li>
+                                </template>
+                            </ul>
+                        </c-util-page-level-message>
+                    </template>
+                    <template if:true={isPermissionError}>
+                        <div class="illustration-container">
+                            <c-util-illustration title={permissionErrorTitle}
+                                                 message={permissionErrorMessage}
+                                                 size='large'
+                                                 variant='lake-mountain'>
+                            </c-util-illustration>
+                        </div>
+                    </template>
+                    <template if:true={showElevateTransactionWarning}>
+                        <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                            <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                            <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                    <lightning-icon
+                                            variant="warning"
+                                            icon-name="utility:warning"
+                                            size="small">
+                                    </lightning-icon>
+                                </span>
+                            <div class="slds-text-heading_small">{elevateTransactionWarning}</div>
+                        </div>
+                    </template>
+                    <template if:true={isSingleGiftEntry}>
+                        <template if:false={isPermissionError}
+                                  for:each={sections}
+                                  for:item='section'>
+                            <c-ge-form-section key={section.id}
+                                               section={section}
+                                               onregisterpaymentwidget={handleRegisterPaymentWidget}
+                                               widget-config={widgetConfig}
+                                               onformfieldchange={handleFormFieldChange}
+                                               onformwidgetchange={handleFormWidgetChange}
+                                               form-state={formState}>
+                            </c-ge-form-section>
+                        </template>
+                        <lightning-layout multiple-rows='true'
+                                          horizontal-align='center'
+                                          if:false={isPermissionError}>
+                            <lightning-layout-item size='12'
+                                                   if:true={showPaymentSaveNotice}>
+                                <p class='slds-align_absolute-center slds-p-top_small'>
+                                    {CUSTOM_LABELS.geTextPaymentsSaveNotice}
+                                </p>
+                            </lightning-layout-item>
+                            <lightning-layout-item size='12'>
+                                <div class='slds-align_absolute-center slds-p-vertical_small'>
+                                    <lightning-button label={cancelButtonText}
+                                                      title={cancelButtonText}
+                                                      onclick={handleCancel}
+                                                      class='slds-m-left_x-small'
+                                                      data-qa-locator={qaLocatorCancelButton}>
+                                    </lightning-button>
+                                    <lightning-button variant='brand'
+                                                      label={saveActionLabel}
+                                                      title={saveActionLabel}
+                                                      onclick={handleSave}
+                                                      class='slds-m-left_x-small'
+                                                      disabled={isUpdateActionDisabled}
+                                                      data-qa-locator={qaLocatorSaveButton}>
+                                    </lightning-button>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                    <template if:false={isSingleGiftEntry}>
+                        <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
+                                                   id={expandableContainerId}
+                                                   is-collapsed={isFormCollapsed}
+                                                   alternative-text={altTextLabel}
+                                                   label={CUSTOM_LABELS.geHeaderFormFieldsDefaultSectionName}
+                                                   body-class='slds-m-left_medium'
+                                                   onsectioncollapse={handleCollapse}
+                                                   should-inform-parent={_shouldInformParent}>
+                            
+                            <template if:false={isPermissionError}
+                                      for:each={sections}
+                                      for:item='section'>
+                                <c-ge-form-section key={section.id}
+                                                   section={section}
+                                                   onregisterpaymentwidget={handleRegisterPaymentWidget}
+                                                   widget-config={widgetConfig}
+                                                   onformfieldchange={handleFormFieldChange}
+                                                   onformwidgetchange={handleFormWidgetChange}
+                                                   form-state={formState}>
+                                </c-ge-form-section>
+                            </template>
+
+                            <template if:true={showMismatchedCurrencyWarning}>
+                                <div class="slds-notify slds-notify_alert payment-warn" role="alert">
+                                    <span class="slds-assistive-text">{CUSTOM_LABELS.commonWarning}</span>
+                                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                                        <lightning-icon
+                                                variant="warning"
+                                                icon-name="utility:warning"
+                                                size="small">
+                                        </lightning-icon>
+                                    </span>
+                                    <div class="slds-text-heading_small">
+                                        {mismatchedCurrencyWarning}
+                                    </div>
+                                </div>
+                            </template>
+
+                            <lightning-layout multiple-rows='true'
+                                              horizontal-align='center'
+                                              if:false={isPermissionError}>
+                                <lightning-layout-item size='12'
+                                                       if:true={showPaymentSaveNotice}>
+                                    <p class='slds-align_absolute-center slds-p-top_small'>
+                                        {CUSTOM_LABELS.geTextPaymentsSaveNotice}
+                                    </p>
+                                </lightning-layout-item>
+                                <lightning-layout-item size='12'>
+                                    <div class='slds-align_absolute-center slds-p-vertical_small'>
+                                        <lightning-button label={cancelButtonText}
+                                                          title={cancelButtonText}
+                                                          onclick={handleCancel}
+                                                          class='slds-m-left_x-small'
+                                                          data-qa-locator={qaLocatorCancelButton}>
+                                        </lightning-button>
+                                        <lightning-button variant='brand'
+                                                          label={saveActionLabel}
+                                                          title={saveActionLabel}
+                                                          onclick={handleSave}
+                                                          class='slds-m-left_x-small'
+                                                          disabled={isUpdateActionDisabled}
+                                                          data-qa-locator={qaLocatorSaveButton}>
+                                        </lightning-button>
+                                    </div>
+                                </lightning-layout-item>
+                            </lightning-layout>
+                        </c-util-expandable-section>
+                    </template>
+
+
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </template>
+</template>

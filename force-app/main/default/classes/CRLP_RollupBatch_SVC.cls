@@ -1,0 +1,264 @@
+/*
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2018
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups2.htm
+* @description Service method explicitly related to batch or queueable rollup operations
+*/
+public class CRLP_RollupBatch_SVC {
+
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+    /**
+     * @description Returns a portion of the WHERE clause to use to filter "Skew" or "NonSkew" mode records. This is
+     * effectively the only place where the fields needed to make this determination are referenced.
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Job Mode (Skew or NonSkew)
+     * @return A portion of a WHERE clause without WHERE or AND; or an empty string
+     */
+    public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        return getSkewWhereClause(jobType, jobMode, '');
+    }
+
+    /**
+     * @description Returns a portion of the WHERE clause to use to filter "Skew" or "NonSkew" mode records. This is
+     * effectively the only place where the fields needed to make this determination are referenced.
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Job Mode (Skew or NonSkew)
+     * @param parentRelationshipField If the query this where clause will be used on is the detail object, then need
+     * the parent relationship prefix to use with the conditions
+     * @return A portion of a WHERE clause without WHERE or AND; or an empty string
+     */
+    public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode,
+        String parentRelationshipField) {
+        String queryFilter = '';
+        Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations
+            ) {
+
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = false)';
+            } else {
+                queryFilter = '(' + parentRelationshipField + UTIL_Namespace.StrTokenNSPrefix('CustomizableRollups_UseSkewMode__c') + ' = true)';
+            }
+
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+
+            String rdInstallmentCountField = 'npe03__Total_Paid_Installments__c';
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + rdInstallmentCountField + ' = null OR ' + rdInstallmentCountField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+            } else {
+                queryFilter = '(' + rdInstallmentCountField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
+            }
+
+        }
+
+        return queryFilter;
+    }
+
+    /**
+     * @description Determine if a given record Id needs to use the Skew rollup method.
+     * @param recordId The specific record Id to verify
+     * @param jobType Rollup Job Type Enum
+     * @return True or False
+     */
+    public static Boolean doesRecordNeedSkewRollupMethod(Id recordId, CRLP_RollupProcessingOptions.RollupType jobType) {
+        if (jobType != CRLP_RollupProcessingOptions.RollupType.GAU &&
+            jobType != CRLP_RollupProcessingOptions.RollupType.RecurringDonations)
+        {
+            String objName = recordId.getSobjectType().getDescribe().getName();
+            String soql = 'SELECT Id FROM ' + objName + ' WHERE Id = :recordID ';
+            String filter = getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!String.isEmpty(filter)) {
+                soql += ' AND ' + filter;
+            }
+            List<SObject> rollupSummaryObjects = database.query(soql);
+            return rollupSummaryObjects.size() == 1;
+        }
+        return true;
+    }
+
+    public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        executeBatchRollupJob(jobType, jobMode, null, null);
+    }
+
+    /**
+     * @description Centralized Rollup Batch Job execution based on the Job Type, Batch Job Mode, etc.
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Mode Enum (Skew or NonSkew)
+     * @param recordIds (Optional) List of Record Id's to be rolled up
+     * @param lastIdProcessed (Optional) If this is being called by the SkewDispatcher class, the last record id of
+     * the parent records is passed into the batch job to allow it to be passed back to the SkewDispatcher to
+     * support chunking by Id.
+     */
+    public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_RollupProcessingOptions.BatchJobMode jobMode, List<Id> recordIds, Id lastIdProcessed) {
+
+        Integer batchSize = getBatchSize(jobType, jobMode);
+
+        switch on (jobMode) {
+            when SkewMode {
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when AccountSoftCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when ContactHardCredit {
+                        Database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when AccountContactSoftCredit {
+                        Database.executeBatch(new CRLP_AccountSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when ContactSoftCredit {
+                        Database.executeBatch(new CRLP_ContactSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when GAU {
+                        Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when RecurringDonations {
+                        Database.executeBatch(new CRLP_RDSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                }
+            }
+
+            when else {
+                switch on (jobType) {
+                    when AccountHardCredit {
+                        Database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
+                    }
+                    when AccountSoftCredit {
+                        Database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when ContactHardCredit {
+                        Database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
+                    }
+                    when AccountContactSoftCredit {
+                        Database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when ContactSoftCredit {
+                        Database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
+                    }
+                    when GAU {
+                        // Technically this job is always processed in "skew" mode
+                        Database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
+                    }
+                    when RecurringDonations {
+                        Database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @description Return the batch size to use for the specified Rollup Job and Rollup Type. Note that this is
+     * usedd to return a batch size for legacy rollup jobs as well since technically they fall into the same Account &
+     * Contact Hard/Soft credit operations. Only "Rollup" batch jobs should use this method though. Other batch jobs,
+     * such as SeasonalAddresses can access their specific batch size setting through the appropriate
+     * CustomSettingsFacade method.
+     * @param jobType Job Type Enum
+     * @param jobMode Batch Job Mode Enum
+     * @return Integer value
+     */
+    public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        Decimal batchSize;
+        Decimal recurringDonationBatchSize =
+                UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c;
+
+        try {
+            switch on (jobType){
+                when GAU {
+                    batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c;
+                }
+                when RecurringDonations {
+                    batchSize = recurringDonationBatchSize;
+                }
+                when else {
+                    switch on (jobMode) {
+                        when NonSkewMode {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_AcctContactSoftCredit_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
+                                }
+                                when AccountSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+                                }
+                            }
+                        }
+                        when else {
+                            switch on (jobType) {
+                                when AccountHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactHardCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                                when AccountContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                                when ContactSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c;
+                                }
+                                when AccountSoftCredit {
+                                    batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            // ignore null pointer exception errors because a default will be returned
+        }
+
+        // Legacy Batch Job Sizes are limited to 200 (this is hardcoded in UTIL_AbstractRollup_BATCH)
+        if (customizableRollupSettings.Customizable_Rollups_Enabled__c != true && batchSize > 200) {
+            batchSize = 200;
+        }
+        return (batchSize != null ? batchSize.intValue() : 200);
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ACH_Code__c</fullName>
+    <description>The Standard Entry Class (SEC) code used for this ACH transaction.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Standard Entry Class (SEC) code used for this ACH transaction.</inlineHelpText>
+    <label>ACH Code</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetName>Payment_ACH_Code</valueSetName>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,42 @@
+<template>
+    <header class="slds-page-header slds-m-bottom_small">
+        <div class="slds-grid">
+            <div class="slds-grid slds-align-middle slds-col slds-has-flexi-truncate">
+                <template if:true={hasIcon}>
+                    <div class="slds-media slds-no-space">
+                        <div class="slds-media__figure slds-icon">
+                            <lightning-icon icon-name={iconName}
+                                            variant={iconVariant}
+                                            size={iconSize}>
+                            </lightning-icon>
+                        </div>
+                    </div>
+                </template>
+                <div class="slds-media__body">
+                    <template if:true={hasStringTitle}>
+                        <h1>
+                            <template if:true={hasPretext}>
+                                <div class="entityNameTitle slds-line-height_reset">{pretext}</div>
+                            </template>
+                            <div class="slds-page-header__title slds-m-right--small slds-align-middle fade-text"
+                                 title={title}>
+                                <span class="uiOutputText">
+                                    {title}
+                                </span>
+                            </div>
+                        </h1>
+                    </template>
+                    <slot name="title"></slot>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
+                <slot name="actions"></slot>
+            </div>
+        </div>
+        <div class="slds-page-header__row slds-page-header__row_gutters">
+            <div class="slds-page-header__col-details">
+                <slot></slot>
+            </div>
+        </div>
+    </header>
+</template>

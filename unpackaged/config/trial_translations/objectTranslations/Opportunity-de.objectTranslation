@@ -12,12 +12,12 @@
   </recordTypes>
   <recordTypes>
     <name>InKindGift</name>
-    <label>Sachgeschenk</label>
+    <label>Sachspende</label>
     <description>Als Sachspende eingegangene Waren oder Dienstleistungen</description>
   </recordTypes>
   <recordTypes>
     <name>MajorGift</name>
-    <label>Großschenkung</label>
+    <label>Großspende</label>
     <description>Große Spende von einem Großspender</description>
   </recordTypes>
   <recordTypes>
@@ -37,7 +37,7 @@
       <section>Donation Information</section>
     </sections>
     <sections>
-      <label>Informationen zur Großschenkung</label>
+      <label>Informationen zur Großspende</label>
       <section>Major Gift Information</section>
     </sections>
     <sections>

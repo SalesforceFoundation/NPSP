@@ -14,13 +14,13 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """To go to NPSP Settings page"""
         url_template = "{root}/lightning/n/{object}"
         name = self._object_name
-        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Cumulus Managed Feature Test")
+        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Nonprofit Success Pack Managed Feature Test")
         object_name = "{}{}".format(namespace, name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
         self.salesforce.wait_until_loading_is_complete()
-        self.npsp.wait_for_locator("frame","Nonprofit Success Pack Settings")
-        self.npsp.choose_frame("Nonprofit Success Pack Settings")
+        self.npsp.wait_for_locator("frame","accessibility title")
+        self.npsp.choose_frame("accessibility title")
 
     def open_main_menu(self,title):
         """Waits for the menu item to load and clicks to expand menu"""
@@ -105,7 +105,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
         """ specify the partial id of submenu under which the checkbox exists """
         locator = npsp_lex_locators["npsp_settings"]["checkbox"].format(page_name)
         self.selenium.wait_until_element_is_enabled(locator,error="Checkbox could not be found on the page")
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         self.selenium.capture_page_screenshot()
         self.selenium.get_webelement(locator).click()
         self.selenium.capture_page_screenshot()
@@ -158,7 +158,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
                 self.builtin.log("Advanced Mapping is not enabled by default")
                 self.click_toggle_button("Advanced Mapping")
                 self.wait_for_message("Advanced Mapping is enabled")
-                self.npsp.choose_frame("Nonprofit Success Pack Settings")
+                self.npsp.choose_frame("accessibility title")
             else:
                 self.builtin.log("Advanced Mapping is already enabled")
 
@@ -200,7 +200,7 @@ class NPSPSettingsPage(BaseNPSPPage, BasePage):
             else:
                 self.click_toggle_button("Gift Entry")
                 self.wait_for_message("Gift Entry Enabled")
-                self.npsp.choose_frame("Nonprofit Success Pack Settings")
+                self.npsp.choose_frame("accessibility title")
 
 
     def check_crlp_not_enabled_by_default(self):

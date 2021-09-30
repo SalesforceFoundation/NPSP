@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>השדה (שם מפתח) באובייקט היעד המשמש לשמירת החיפוש ברמה הקודמת של האובייקט.  אופציונלי.</help>
+    <label>שדה רמה קודמת</label>
+    <name>Previous_Level_Field__c</name>
+</CustomFieldTranslation>

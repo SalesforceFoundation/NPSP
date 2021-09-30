@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact1_Preferred_Email__c</fullName>
+    <externalId>false</externalId>
+    <inlineHelpText>Contact1.npe01__Preferred_Email__c</inlineHelpText>
+    <label>Contact1 Preferred Email</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Personal</fullName>
+                <default>false</default>
+                <label>Personal</label>
+            </value>
+            <value>
+                <fullName>Work</fullName>
+                <default>false</default>
+                <label>Work</label>
+            </value>
+            <value>
+                <fullName>Alternate</fullName>
+                <default>false</default>
+                <label>Alternate</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

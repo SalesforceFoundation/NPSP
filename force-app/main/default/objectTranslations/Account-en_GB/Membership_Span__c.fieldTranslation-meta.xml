@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>The number of years that a member of this Household has had a Membership (read only).</help>
+    <label>Membership Span</label>
+    <name>Membership_Span__c</name>
+</CustomFieldTranslation>

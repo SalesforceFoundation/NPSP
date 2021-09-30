@@ -12,8 +12,8 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
         """
         Waits for the current page to be a Engagement Plan list view page
         """
-        self.npsp.wait_for_locator('frame','Manage Engagement Plan Template')
-        self.npsp.choose_frame('Manage Engagement Plan Template')
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame('accessibility title')
 
     def click_eng_plan_dropdown(self, title):
         locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
@@ -41,6 +41,8 @@ class EngagementPlanHomePage(BaseNPSPPage, HomePage):
     def enter_task_id_and_subject(self, id, value):
         """Enter values into corresponding task subject fields based on last 2 digits of id"""
         locator = npsp_lex_locators['engagement_plan']['input_box'].format(id)
+        self.selenium.wait_until_element_is_visible(locator,60)
+        self.salesforce.scroll_element_into_view(locator)
         self.selenium.get_webelement(locator).send_keys(value)
 
     def save_engagement_plan_template(self):
@@ -94,7 +96,7 @@ class EngagementPlanListPage(BaseNPSPPage, ListingPage):
             self.salesforce.wait_until_loading_is_complete()
             self.selenium.wait_until_location_contains("/edit",timeout=60, message="Page not loaded")
 
-        self.npsp.wait_for_locator("frame","Manage Engagement Plan Template")
+        self.npsp.wait_for_locator("frame","accessibility title")
 
 
 @pageobject("Details", "Engagement_Plan_Template__c")

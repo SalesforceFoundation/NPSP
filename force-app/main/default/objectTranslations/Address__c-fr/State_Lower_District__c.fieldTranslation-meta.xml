@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>La circonscription locale (par exemple un « state lower district ») à laquelle appartient cette adresse.</help>
+    <label>Circonscription locale</label>
+    <name>State_Lower_District__c</name>
+</CustomFieldTranslation>

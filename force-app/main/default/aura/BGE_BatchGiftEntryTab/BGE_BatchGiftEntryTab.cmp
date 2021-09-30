@@ -1,0 +1,116 @@
+<!--
+    Copyright (c) 2019, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2019
+  @group Batch Gift Entry
+  @description Tab component used to view all DataImportBatch records used for Batch Gift Entry.
+-->
+
+<aura:component implements="force:appHostable" controller="BGE_BatchGiftEntryTab_CTRL" access="public">
+
+    <!-- attributes -->
+    <aura:attribute name="modalOpen" type="Boolean" description="Prevents multiple modals from opening"/>
+
+    <!-- events we handle -->
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.doInit}"/> -->
+
+    <!-- Private Attributes -->
+    <aura:attribute name="batchData" type="List" default="[]" access="private"
+                    description="List of Data Import Batch records and sorting info for the datatable."/>
+    <aura:attribute name="batchListColumns" type="List" access="private"
+                    description="Set of columns to display in the datatable"/>
+    <aura:attribute name="totalNumberOfRows" type="Integer" access="private"
+                    description="Count of all Data Import Batch records
+                    where GiftBatch__c = true that are accessible to the user."/>
+    <aura:attribute name="sortBy" type="String" default="CreatedDate" access="private"/>
+    <aura:attribute name="sortDirection" type="String" default="desc" access="private"/>
+    <aura:attribute name="isLoadingDataTable" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="enableInfiniteLoading" type="Boolean" default="true" access="private"/>
+
+    <!-- Start Markup -->
+    <lightning:overlayLibrary aura:id="overlayLib"/>
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <!-- Banner -->
+    <header role="banner" class="header slds-p-bottom_medium">
+        <div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate slds-align-middle">
+                    <h1>
+                        <span class="slds-page-header__title" title="{!$Label.c.bgeTabHeader}">
+                            {!$Label.c.bgeTabHeader}
+                        </span>
+                    </h1>
+                </div>
+                <!--
+                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
+                    <lightning:buttonGroup>
+                        <lightning:button aura:id="newBGEBatch"
+                                          label="{!$Label.c.bgeNewBatch}"
+                                          onclick="{!c.handleNewBatchClick}"/>
+                    </lightning:buttonGroup>
+                </div>
+                -->
+            </div>
+        </div>
+    </header>
+
+    <article class="slds-card">
+        <div class="slds-card__body slds-card__body_inner slds-p-vertical_large">
+            <c:utilIllustration title="{!$Label.c.bgeNotSupportedHeader}"
+                                message="{!$Label.c.bgeNotSupportedBody}"
+                                shouldWrapText="true"
+                                size="small"
+                                variant="page-not-available">
+            </c:utilIllustration>
+        </div>
+    </article>
+
+    <!--Data Table-->
+    <!-- <lightning:datatable aura:id="dataTable"
+                         keyField="id"
+                         data="{!v.batchData}"
+                         columns="{!v.batchListColumns}"
+                         onrowaction="{!c.handleRowAction}"
+                         hideCheckboxColumn="true"
+                         enableInfiniteLoading="{!v.enableInfiniteLoading}"
+                         showRowNumberColumn="true"
+                         onloadmore="{!c.loadMoreData}"
+                         isLoading="{!v.isLoadingDataTable}"
+                         onsort="{!c.sortByColumns}"
+                         sortedBy="{!v.sortBy}"
+                         sortedDirection="{!v.sortDirection}"
+                         defaultSortDirection="asc"
+    /> -->
+
+    <!-- End Markup -->
+
+</aura:component>

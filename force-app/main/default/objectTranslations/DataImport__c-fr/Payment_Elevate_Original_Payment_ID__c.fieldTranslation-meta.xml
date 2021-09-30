@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Uniquement pour les remboursements. Affiche l’ID de la transaction de paiement d’origine d’Elevate.</help>
+    <label>ID paiement d’origine paiement Elevate</label>
+    <name>Payment_Elevate_Original_Payment_ID__c</name>
+</CustomFieldTranslation>

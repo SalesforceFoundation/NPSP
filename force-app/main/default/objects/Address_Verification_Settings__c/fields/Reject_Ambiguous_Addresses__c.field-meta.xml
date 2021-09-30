@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reject_Ambiguous_Addresses__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Marks ambiguous addresses as invalid, when the API returns more than one address. If left unselected, Salesforce will accept the first suggested address as the valid address.</inlineHelpText>
+    <label>Reject Ambiguous Addresses-DEPRECATED</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

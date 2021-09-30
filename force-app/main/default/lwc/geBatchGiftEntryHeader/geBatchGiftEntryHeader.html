@@ -1,0 +1,57 @@
+<template>
+    <c-util-page-header title={batchName}
+                        pretext={LABELS.bgeTabHeader}
+                        icon-name="standard:contract">
+
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button label={LABELS.bgeBatchDryRun}
+                                  onclick={handleClick}
+                                  disabled={isBatchProcessing}
+                                  data-action={ACTIONS.DRY_RUN_BATCH}
+                                  data-qa-locator={qaLocatorBatchDryRun}>
+                </lightning-button>
+                <lightning-button label={processBatchButtonName}
+                                  onclick={handleClick}
+                                  disabled={isBatchProcessing}
+                                  data-action={ACTIONS.PROCESS_BATCH}
+                                  data-qa-locator={qaLocatorProcessBatch}>
+                </lightning-button>
+                <lightning-button label={LABELS.geEditBatchInfo}
+                                  onclick={handleClick}
+                                  disabled={isBatchProcessing}
+                                  data-action={ACTIONS.EDIT_BATCH}
+                                  data-qa-locator={qaLocatorEditBatchInfo}>
+                </lightning-button>
+            </lightning-button-group>
+        </div>
+
+        <c-util-page-header-detail-row if:true={shouldDisplayHeaderDetails}>
+            <c-util-page-header-detail-block class="first-child">
+                <p class="slds-text-title">
+                    {LABELS.commonRecordsProcessed}
+                </p>
+                <p class="slds-text-body_regular">
+                    {batchTotals.processedGiftsCount} / {batchTotals.totalGiftsCount}
+                </p>
+            </c-util-page-header-detail-block>
+            <c-util-page-header-detail-block>
+                <p class="slds-text-title">
+                    {LABELS.commonRecordsFailed}
+                </p>
+                <p class="slds-text-body_regular">
+                    {batchTotals.failedGiftsCount}
+                </p>
+            </c-util-page-header-detail-block>
+            <c-util-page-header-detail-block if:true={isElevateCustomer}>
+                <p class="slds-text-title">
+                    {LABELS.commonPaymentProcessingErrors}
+                </p>
+                <p class="slds-text-body_regular">
+                    {batchTotals.failedPaymentsCount}
+                </p>
+            </c-util-page-header-detail-block>
+        </c-util-page-header-detail-row>
+        
+    </c-util-page-header>
+</template>

@@ -14,7 +14,7 @@ class DataImportPage(BaseNPSPPage, ListingPage):
         when running NPSP tests in a different repo"""
         url_template = "{root}/lightning/o/{object}/list"
         name = self._object_name
-        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Cumulus Managed Feature Test")
+        namespace= self.cumulusci.get_namespace_prefix("Nonprofit Success Pack") or self.cumulusci.get_namespace_prefix("Nonprofit Success Pack Managed Feature Test")
         object_name = "{}{}".format(namespace, name)
         url = url_template.format(root=self.cumulusci.org.lightning_base_url, object=object_name)
         self.selenium.go_to(url)
@@ -33,8 +33,8 @@ class DataImportPage(BaseNPSPPage, ListingPage):
 
     def begin_data_import_process_and_verify_status(self,batch,status):
         """On the DI page, clicks the Begin Data Import Process button and waits for specified status to display """
-        self.npsp.wait_for_locator("frame","NPSP Data Import")
-        self.npsp.select_frame_and_click_element("NPSP Data Import","button","Begin Data Import Process")
+        self.npsp.wait_for_locator("frame","accessibility title")
+        self.npsp.select_frame_and_click_element("accessibility title","button","Begin Data Import Process")
         self.npsp.wait_for_batch_to_process(batch,status)
 
     def click_close_button(self):
@@ -86,7 +86,7 @@ class DataImportDetailPage(BaseNPSPPage, DetailPage):
             'does not contain' then the specified value should not be present in the field"""
         locator = npsp_lex_locators['data_imports']['check_status'].format(field)
         self.selenium.wait_until_page_contains_element(locator, error=f"Couldn't find {field} on the page")
-        self.selenium.scroll_element_into_view(locator)
+        self.salesforce.scroll_element_into_view(locator)
         actual_value=self.selenium.get_webelement(locator).text
         print(f"actual value is {actual_value}")
         if status == "contains":

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>Introduzca el número de días desde la fecha de la donación cuando se busque una oportunidad o pago coincidente. NPSP elegirá la oportunidad o pago coincidente cuya fecha caiga dentro del número de días Y esté más cercana a la fecha de la donación.</help>
+    <label>Número de días desde fecha de donación</label>
+    <name>Donation_Date_Range__c</name>
+</CustomFieldTranslation>

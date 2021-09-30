@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help><!-- The number of gifts that are expected to be entered in this Batch. --></help>
+    <label><!-- Expected Count of Gifts --></label>
+    <name>Expected_Count_of_Gifts__c</name>
+</CustomFieldTranslation>

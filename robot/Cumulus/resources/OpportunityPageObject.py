@@ -17,8 +17,7 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         """
         self.selenium.wait_until_location_contains("/lightning/r/Opportunity/",timeout=60,message="Current page is not a Opportunity detail view")
         self.selenium.wait_until_page_contains("Donation Information")
-        locator = npsp_lex_locators['manage_hh_page']['more_actions_btn']
-        self.selenium.wait_until_element_is_visible(locator,60)
+        self.selenium.wait_until_page_contains("Delete")
 
     def ensure_opportunity_details_are_loaded(self,objectID, value):
         """ Navigate to the page with objectid mentioned
@@ -44,12 +43,12 @@ class OpportunityPage(BaseNPSPPage, DetailPage):
         #     self.npsp.choose_frame("vfFrameId")
 
     def navigate_to_writeoff_payments_page(self):
-        if self.npsp.latest_api_version==51.0:
+        if self.npsp.latest_api_version==51.0 or self.npsp.latest_api_version==52.0:
             self.npsp.click_related_list_dd_button('Payments', 'Show more actions', 'Writeoff_Payments')
         else:
             self.npsp.click_related_list_dd_button('Payments', 'Show one more action', 'Write Off Payments')
-        self.npsp.wait_for_locator('frame','Write Off Remaining Balance')
-        self.npsp.choose_frame("Write Off Remaining Balance")
+        self.npsp.wait_for_locator('frame','accessibility title')
+        self.npsp.choose_frame("accessibility title")
         self.selenium.wait_until_page_contains("You are preparing to write off")
 
     def change_related_contact_role_settings(self,name,role=None,**kwargs):

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <help>When selected, enables Address management for non-Household Accounts such as Organisational Accounts.</help>
+    <label>Organisational Account Addresses Enabled</label>
+    <name>Organizational_Account_Addresses_Enabled__c</name>
+</CustomFieldTranslation>
