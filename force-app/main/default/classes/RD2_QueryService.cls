@@ -161,7 +161,7 @@ public inherited sharing class RD2_QueryService {
     }
 
 
-    
+
     /**
      * @description Returns query on Recurring Donation Schedule
      * Return all schedules for the RD Schedule visualization.
