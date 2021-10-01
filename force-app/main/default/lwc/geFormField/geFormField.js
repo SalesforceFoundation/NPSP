@@ -15,6 +15,7 @@ import PRIMARY_CONTACT from '@salesforce/schema/Opportunity.Primary_Contact__c';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import RECORD_TYPE_FIELD from '@salesforce/schema/Opportunity.RecordTypeId';
 import OPPORTUNITY from '@salesforce/schema/Opportunity';
+import { validityCheck } from './geFormFieldHelper';
 
 const LOOKUP_TYPE = 'REFERENCE';
 const PICKLIST_TYPE = 'PICKLIST';
@@ -106,16 +107,7 @@ export default class GeFormField extends LightningElement {
      */
     @api
     isValid() {
-        // We need to check for invalid values, regardless if the field is required
-        let fieldIsValid = this.checkFieldValidity();
-
-        if (this.element !== null && this.element.required) {
-            return isNotEmpty(this.value)
-                && this.value !== this.CUSTOM_LABELS.commonLabelNone
-                && fieldIsValid;
-        }
-
-        return fieldIsValid;
+        return validityCheck(this);
     }
 
     /**

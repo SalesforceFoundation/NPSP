@@ -2,6 +2,7 @@ import { createElement } from 'lwc';
 import GeFormField from 'c/geFormField';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { registerListener } from 'c/pubsubNoPageRef';
+import * as geFormFieldHelper from '../geFormFieldHelper';
 
 // Import mock data
 const mockGetPicklistValues = require('./data/wiredPicklistValues.json');
@@ -201,6 +202,25 @@ describe('c-ge-form-field', () => {
             .then(() => {
                 expect(picklist.value).toBe('Picklist_Option_2');
             });
+    });
+
+    it('calls validity check when value changes', async () => {
+        const element = createStandardPicklistElement();
+        const validityCheckSpy = jest.spyOn(geFormFieldHelper, 'validityCheck');
+
+        const picklistChangeHandler = jest.fn();
+        registerListener('formfieldchange', picklistChangeHandler, this);
+
+        document.body.appendChild(element);
+
+        expect(element.isPicklist).toBeTruthy();
+
+        const picklist = element.shadowRoot.querySelector('lightning-combobox');
+        dispatchChangeEvent(picklist, 'newPicklistValue');
+
+        return Promise.resolve().then(() => {
+            expect(validityCheckSpy).toHaveBeenCalledTimes(1);
+        });
     });
 
 });
