@@ -430,80 +430,32 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param listDI The DataImport records we are trying to match
     * @return list<Opportunity> The list of potential matching Opps.  null if none.
     */
-    private List<Opportunity> getPotentialDonationMatches(List<DataImport__c> listDI) {
+    private list<Opportunity> getPotentialDonationMatches(list<DataImport__c> listDI) {
         
         // collect all the contacts and accounts who have donations to import
-        Set<Id> contactIds = new Set<Id>();
-        Set<Id> accountIds = new Set<Id>();
-        Set<Id> opportunityIds = new Set<Id>();
-        populateQueryFilterSetsFrom(listDI, opportunityIds, accountIds, contactIds);
-
-        // bail out if no donations to import!
-        if (opportunityIds.size() == 0 && accountIds.size() == 0 && contactIds.size() == 0) {
-            return null;
-        }
-
-        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
-        List<Opportunity> listOpp = Database.query(buildPotentialDonationMatchingQuery(
-            opportunityIds, accountIds, contactIds));
-        pl.stop();
-        return listOpp;           
-    }
-
-    private String buildPotentialDonationMatchingQuery(Set<Id> opportunityIds, Set<Id> accountIds, Set<Id> contactIds) {
-        Integer cFilter = 0;
-        String strSoql = 'SELECT ' + String.join(new List<String>(opportunityFields()), ',');
-
-        // add Payment subquery
-        strSoql += ', (SELECT ' + String.join(new List<String>(paymentFields()), ',');
-        strSoql += ' FROM npe01__OppPayment__r ' +
-            'WHERE npe01__Paid__c = false ' +
-            'AND npe01__Written_Off__c = false)';
-
-        strSoql += ' FROM Opportunity';
-        strSoql += ' WHERE IsClosed = false AND (';
-        if (opportunityIds.size() > 0) {
-            strSoql += ' Id IN :setOppId ';
-            cFilter++;
-        }
-        if (accountIds.size() > 0) {
-            if (cFilter > 0) {
-                strSoql += ' or ';
-            }
-            strSoql += ' AccountId IN :setAccId ';
-            cFilter++;
-        }
-        if (contactIds.size() > 0) {
-            if (cFilter > 0) {
-                strSoql += ' OR ';
-            }
-            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
-            cFilter++;
-        }
-        strSoql += ') LIMIT 50000';
-        return strSoql;
-    }
-
-    private void populateQueryFilterSetsFrom(
-        List<DataImport__c> dataImports,
-        Set<Id> setOppId,
-        Set<Id> setConId,
-        Set<Id> setAccId) {
-        for (DataImport__c di : dataImports) {
-            Contact con = bdi.contactFromDi(di, 1);
-            Account acc = bdi.AccountFromDi(di, 1);
+        set<Id> setConId = new set<Id>();
+        set<Id> setAccId = new set<Id>();
+        set<Id> setOppId = new set<Id>();
+        
+        for (DataImport__c di : listDI) {
             // handle already been given the match!
             if (di.DonationImported__c != null) {
                 setOppId.add(di.DonationImported__c);
-            } else if (di.Donation_Donor__c == 'Contact1' && con.Id != null) {
-                setConId.add(con.Id);
-            } else if (di.Donation_Donor__c == 'Account1' && acc.Id != null) {
+            } else if (di.Donation_Donor__c == 'Contact1') {
+                Contact con = bdi.ContactFromDi(di, 1);
+                setConId.add(con.Id);                                
+            } else if (di.Donation_Donor__c == 'Account1') {
+                Account acc = bdi.AccountFromDi(di, 1);
                 setAccId.add(acc.Id);
             }
         }
-    }
-
-    private Set<String> opportunityFields() {
+        
+        // bail out if no donations to import!
+        if (setOppId.size() == 0 && setAccId.size() == 0 && setConId.size() == 0) {
+            return null;
+        }
+        
+        // the set of Opportunity fields for our soql
         set<String> setOppFields = new set<String>();
         setOppFields.add('Id');
         setOppFields.add('Name');
@@ -513,11 +465,11 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setOppFields.add('CloseDate');
         setOppFields.add('npe01__Number_of_Payments__c');
         setOppFields.add('Account.npe01__SYSTEMIsIndividual__c');
-        setOppFields.addAll(mapDIFieldToOppField.values());
-        return setOppFields;
-    }
 
-    private Set<String> paymentFields() {
+        // need to include any Opp fields we may update, so we can compare against them
+        setOppFields.addAll(mapDIFieldToOppField.values());
+        
+        // the set of Payment fields for our soql
         set<String> setPmtFields = new set<String>();
         setPmtFields.add('Id');
         setPmtFields.add('Name');
@@ -527,8 +479,45 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.add('npe01__Payment_Date__c');
         setPmtFields.add('npe01__Scheduled_Date__c');
         setPmtFields.add('npe01__Written_Off__c');
+
+        // need to include any Pmt fields we may update, so we can compare against them
         setPmtFields.addAll(mapDIFieldToPmtField.values());
-        return setPmtFields;
+
+        // now query for all Open Opportunities from these Contacts or Accounts
+        integer cFilter = 0;
+        string strSoql = 'SELECT ' + string.join(new list<String>(setOppFields), ',');
+        
+        // add Payment subquery
+        strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
+        strSoql += ' FROM npe01__OppPayment__r ' +
+                'WHERE npe01__Paid__c = false ' +
+                'AND npe01__Written_Off__c = false)';
+
+        strSoql += ' FROM Opportunity';
+        strSoql += ' WHERE IsClosed = false AND (';
+        if (setOppId.size() > 0) {
+            strSoql += ' Id IN :setOppId ';
+            cFilter++;
+        }
+        if (setAccId.size() > 0) {
+            if (cFilter > 0) {
+                strSoql += ' or ';
+            }
+            strSoql += ' AccountId IN :setAccId ';
+            cFilter++;
+        }
+        if (setConId.size() > 0) {
+            if (cFilter > 0) {
+                strSoql += ' OR ';
+            }
+            strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
+            cFilter++;
+        }
+        strSoql += ') LIMIT 50000 ';
+        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
+        list<Opportunity> listOpp = database.query(strSoql);
+        pl.stop();
+        return listOpp;           
     }
     
     /*******************************************************************************************************
