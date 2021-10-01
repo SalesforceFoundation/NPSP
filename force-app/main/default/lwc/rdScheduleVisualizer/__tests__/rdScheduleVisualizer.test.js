@@ -16,6 +16,11 @@ jest.mock('@salesforce/apex/RD2_VisualizeScheduleController.getInstallments',
 );
 const FAKE_RD2_ID = '00A_fake_rd2_id';
 
+afterEach(() => {
+    clearDOM();
+    jest.clearAllMocks();
+});
+
 describe('rendering a schedule', () => {
 
     let element;
