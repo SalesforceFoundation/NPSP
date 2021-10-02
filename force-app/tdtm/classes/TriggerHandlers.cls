@@ -17,6 +17,17 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
         private set;
     }
 
+    @TestVisible
+    private static UnitOfWork uow {
+        get {
+            if (uow == null) {
+                uow = new UnitOfWork();
+            }
+            return uow;
+        }
+        private set;
+    }
+
     public TriggerHandlers(List<Trigger_Handler__c> triggerHandlers) {
         super(triggerHandlers, Trigger_Handler__c.SObjectType);
     }
@@ -42,31 +53,45 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
      * @description Randomize load order of handlers
      */
     public void shuffleLoadOrder() {
-        UnitOfWork unitOfWork = new UnitOfWork();
         for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
             //todo: prevent from being same as orig
-            Integer newRandomLoadOrder = Integer.valueOf((Math.random() * 100));
-            triggerHandler.Load_Order__c = newRandomLoadOrder;
-            unitOfWork.registerDirty(new List<SObject>{
+            triggerHandler.Load_Order__c = getRandomInteger();
+            uow.registerDirty(new List<SObject>{
                     triggerHandler
             });
         }
-        unitOfWork.save();
+        uow.save();
     }
 
     /**
      * @description Randomize which handlers are active
      */
     public void randomizeIsActive() {
-        UnitOfWork unitOfWork = new UnitOfWork();
         for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
-            Integer newRandomLoadOrder = Integer.valueOf((Math.random() * 100));
-            triggerHandler.Active__c = Math.mod(newRandomLoadOrder, 2) == 0;
-            unitOfWork.registerDirty(new List<SObject>{
+            triggerHandler.Active__c = Math.mod(getRandomInteger(), 2) == 0;
+            uow.registerDirty(new List<SObject>{
                     triggerHandler
             });
         }
-        unitOfWork.save();
+        uow.save();
+    }
+
+    /**
+     * @description Randomize which handlers run async
+     */
+    public void randomizeAsync() {
+        for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
+            triggerHandler.Asynchronous__c =
+                    Boolean.valueOf(Math.mod(getRandomInteger(), 2) == 0);
+            uow.registerDirty(new List<SObject>{
+                    triggerHandler
+            });
+        }
+        uow.save();
+    }
+
+    private Integer getRandomInteger() {
+        return Integer.valueOf((Math.random() * 100));
     }
 
     public void reset() {
