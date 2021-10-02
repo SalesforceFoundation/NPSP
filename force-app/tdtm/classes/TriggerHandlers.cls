@@ -1,5 +1,11 @@
 public inherited sharing class TriggerHandlers extends fflib_SObjects {
 
+    public static TriggerHandlers newInstance() {
+        return new TriggerHandlers(
+                selector.getTriggerHandlers()
+        );
+    }
+
     @TestVisible
     private static TriggerHandlerSelector selector {
         get {
@@ -13,6 +19,23 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
 
     public TriggerHandlers(List<Trigger_Handler__c> triggerHandlers) {
         super(triggerHandlers, Trigger_Handler__c.SObjectType);
+    }
+
+    public TriggerHandlers inTriggerAction(String triggerAction) {
+        List<Trigger_Handler__c> triggerHandlers = new List<Trigger_Handler__c>();
+        for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
+            if (triggerHandler.Trigger_Action__c.contains(triggerAction)) {
+                triggerHandlers.add(triggerHandler);
+            }
+        }
+        return new TriggerHandlers(triggerHandlers);
+    }
+
+    public TriggerHandlers handlersFor(SObjectType sObjectType) {
+        return new TriggerHandlers(
+                selectByFieldValue(Trigger_Handler__c.Object__c, String.valueOf(sObjectType))
+                        .getRecords()
+        );
     }
 
     /**
@@ -46,32 +69,9 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
         unitOfWork.save();
     }
 
-    public TriggerHandlers inTriggerAction(String triggerAction) {
-        List<Trigger_Handler__c> triggerHandlers = new List<Trigger_Handler__c>();
-        for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
-            if (triggerHandler.Trigger_Action__c.contains(triggerAction)) {
-                triggerHandlers.add(triggerHandler);
-            }
-        }
-        return new TriggerHandlers(triggerHandlers);
-    }
-
-    public TriggerHandlers handlersFor(SObjectType sObjectType) {
-        return new TriggerHandlers(
-                selectByFieldValue(Trigger_Handler__c.Object__c, String.valueOf(sObjectType))
-                        .getRecords()
-        );
-    }
-
     public void reset() {
         TriggerHandlers triggerHandlers = TriggerHandlers.newInstance();
         delete triggerHandlers.getRecords();
         insert TDTM_DefaultConfig.getDefaultRecords();
-    }
-
-    public static TriggerHandlers newInstance() {
-        return new TriggerHandlers(
-                selector.getTriggerHandlers()
-        );
     }
 }
