@@ -484,14 +484,28 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.addAll(mapDIFieldToPmtField.values());
 
         // now query for all Open Opportunities from these Contacts or Accounts
+        String strSoql = buildMatchQuery(setOppFields, setPmtFields, setOppId, setAccId, setConId);
+        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
+        list<Opportunity> listOpp = database.query(strSoql);
+        pl.stop();
+        return listOpp;           
+    }
+
+    @TestVisible
+    private String buildMatchQuery(
+        Set<String> setOppFields,
+        Set<String> setPmtFields,
+        Set<Id> setOppId,
+        Set<Id> setAccId,
+        Set<Id> setConId) {
         integer cFilter = 0;
         string strSoql = 'SELECT ' + string.join(new list<String>(setOppFields), ',');
-        
+
         // add Payment subquery
         strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
         strSoql += ' FROM npe01__OppPayment__r ' +
-                'WHERE npe01__Paid__c = false ' +
-                'AND npe01__Written_Off__c = false)';
+            'WHERE npe01__Paid__c = false ' +
+            'AND npe01__Written_Off__c = false)';
 
         strSoql += ' FROM Opportunity';
         strSoql += ' WHERE IsClosed = false AND (';
@@ -514,12 +528,9 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             cFilter++;
         }
         strSoql += ') LIMIT 50000 ';
-        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
-        list<Opportunity> listOpp = database.query(strSoql);
-        pl.stop();
-        return listOpp;           
+        return strSoql;
     }
-    
+
     /*******************************************************************************************************
     * @description creates a map from a Contact Id or Account Id, to a list of Opportunities
     * @param listOpp The opps to put on the map
