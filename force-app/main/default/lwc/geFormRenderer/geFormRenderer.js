@@ -746,26 +746,26 @@ export default class GeFormRenderer extends LightningElement{
         const removeResult = await this.handleRemoveFromElevateBatch(tokenizedGift);
         if (removeResult.hasError) { return; }
 
-        const hasSaved = await this.saveDataImport(this.saveableFormState());
-        if (!hasSaved) {
+        try {
+            await this.saveDataImport(this.saveableFormState());
+            await this.prepareForBatchGiftSave(
+                this.saveableFormState(), formControls, tokenizedGift);
+        } catch (err) {
             if (removeResult.hasProcessed) {
                 this.handleLogError(
                     '',
                     GeLabelService.format(
                         this.CUSTOM_LABELS.geElevateUpdateErrorLog,
                         [this.CUSTOM_LABELS.commonPaymentServices,
-                        this._openedGiftId,
-                        this.batchId]
+                            this._openedGiftId,
+                            this.batchId]
                     )
-                );    
+                );
             }
-                
             this.disabled = false;
             this.toggleSpinner();
-            return;
+            this.handleCatchOnSave(err);
         }
-
-        await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
     }
 
     handleLogError(error, context) {
@@ -2350,7 +2350,13 @@ export default class GeFormRenderer extends LightningElement{
         } catch (error) {
             this.disabled = false;
             this.toggleSpinner();
-            handleError(error);
+
+            const exceptionWrapper = new ExceptionDataError(error);
+            if (isNotEmpty(exceptionWrapper.exceptionType)) {
+                this.handleCatchOnSave(error)
+            } else {
+                handleError(error);
+            }
         }
     }
 
@@ -2358,18 +2364,11 @@ export default class GeFormRenderer extends LightningElement{
         this.loadingText = this.hasDataImportId
             ? this.CUSTOM_LABELS.geTextUpdating
             : this.CUSTOM_LABELS.geTextSaving;
-
-        try {
-            delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
-            const upsertResponse = await upsertDataImport({
-                dataImport: dataImportFromFormState
-            });
-            this.updateFormState(upsertResponse);
-            return true;
-        } catch (err) {
-            this.handleCatchOnSave(err);
-            return false;
-        }
+        delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
+        const upsertResponse = await upsertDataImport({
+            dataImport: dataImportFromFormState
+        });
+        this.updateFormState(upsertResponse);
     };
 
     makePurchaseRequest = async () => {
