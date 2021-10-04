@@ -126,6 +126,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import bgeGridGiftSaved from '@salesforce/label/c.bgeGridGiftSaved';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
@@ -573,16 +574,18 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
-                    
-                    if (isCreditCardAuth) {
-                        showToast(
-                            this.CUSTOM_LABELS.PageMessagesConfirm,
-                            this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
-                            'success', 
-                            'dismissible', 
-                            null
-                        );
-                    }
+
+                    const toastMessage = isCreditCardAuth
+                        ? this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess
+                        : bgeGridGiftSaved;
+
+                    showToast(
+                        this.CUSTOM_LABELS.PageMessagesConfirm,
+                        toastMessage,
+                        'success',
+                        'dismissible',
+                        null
+                    );
                 },
                 error: (error) => {
                     formControls.enableSaveButton();

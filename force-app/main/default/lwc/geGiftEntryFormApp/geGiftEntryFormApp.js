@@ -268,17 +268,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     this.giftBatchState = await this.giftBatch.addMember(this.gift);
                 }
 
-                event.detail.success();
-
-                showToast(
-                    this.CUSTOM_LABELS.PageMessagesConfirm,
-                    'Gift successfully saved',
-                    'success',
-                    'dismissible',
-                    null
-                );
-
-                this.handleClearGiftInView();
+                const mostRecentGift = this.giftBatch.mostRecentGift();
+                if (mostRecentGift.failureInformation()) {
+                    event.detail.error(mostRecentGift.failureInformation());
+                    return;
+                } else {
+                    event.detail.success();
+                    this.handleClearGiftInView();
+                }
             }
         } catch (error) {
             this.errorCallback(error);
