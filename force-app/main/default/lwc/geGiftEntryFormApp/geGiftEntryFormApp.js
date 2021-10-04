@@ -52,12 +52,18 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     namespace;
     isLoading = true;
+    isFormRendering = false;
+    isFormCollapsed = false;
 
     giftBatch = new GiftBatch();
     elevateBatch = new ElevateBatch();
     @track giftBatchState = {};
     gift = new Gift();
     @track giftInView = {};
+
+    handleCollapseForm(event) {
+        this.isFormCollapsed = event.detail;
+    }
 
     async handleLoadMoreGifts(event) {
         try {
@@ -70,11 +76,24 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     handleLoadData(event) {
         try {
-            const giftId = event.detail.Id;
-            const foundGift = this.giftBatch.findGiftBy(giftId);
-            this.gift = new Gift(foundGift.state());
-            this.giftInView = this.gift.state();
-            this.openedGiftDonationId = this.gift.donationId();
+            this.isFormRendering = true;
+
+            new Promise((resolve,reject) => {
+                setTimeout(()=> {
+                    const giftId = event.detail.Id;
+                    const foundGift = this.giftBatch.findGiftBy(giftId);
+                    this.gift = new Gift(foundGift.state());
+                    this.giftInView = this.gift.state();
+                    this.openedGiftDonationId = this.gift.donationId();
+                    if (this.isFormCollapsed) {
+                        this.isFormCollapsed = false;
+                    }
+                    resolve();
+                }, 100);
+            })
+            .finally(() => {
+                this.isFormRendering = false;
+            });
         } catch(error) {
             handleError(error);
         }
@@ -415,14 +434,19 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async processBatch() {
         this.handleClearGiftInView();
-        await processBatch({
-            batchId: this.batchId
-        }).then(() => {
-            this._isBatchProcessing = true;
-        }).catch(error => {
-            handleError(error);
-        }).finally(() => {
-            this.startPolling();
+        this._isBatchProcessing = true;
+
+        new Promise((resolve,reject) => {
+            setTimeout(async ()=> {
+                await processBatch({
+                    batchId: this.batchId
+                }).catch(error => {
+                    handleError(error);
+                }).finally(() => {
+                    this.startPolling();
+                });
+                resolve();
+            }, 0);
         });
     }
 
@@ -447,7 +471,7 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
 
     async handleProcessedBatch() {
         this.giftBatchState = await this.giftBatch.init(this.recordId);
-        this.collapseForm();
+        this.isFormCollapsed = true;
         showToast(
             this.CUSTOM_LABELS.PageMessagesConfirm,
             GeLabelService.format(
@@ -459,28 +483,20 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
         );
     }
 
-    collapseForm() {
-        // TODO: formRenderer should be able to
-        // figure out when it's collapse based on
-        // props that are received from formApp.
-        // Look into removing this function entirely
-        const form = this.template.querySelector('c-ge-form-renderer');
-        form.collapse();
-    }
-
     async refreshBatchTotals() {
         try {
             const wasProcessing = this._isBatchProcessing;
 
             this._hasDisplayedExpiredAuthorizationWarning = false;
             this.giftBatchState = await this.giftBatch.refreshTotals();
-            this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
 
             const finishedProcessingDuringThisRefresh =
-                wasProcessing && this._isBatchProcessing === false;
+                wasProcessing && this.giftBatchState.isProcessingGifts === false;
             if (finishedProcessingDuringThisRefresh) {
-                this.handleProcessedBatch();
+                await this.handleProcessedBatch();
             }
+
+            this._isBatchProcessing = this.giftBatchState.isProcessingGifts;
         } catch(error) {
             handleError(error);
         }

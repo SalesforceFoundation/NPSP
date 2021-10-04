@@ -109,7 +109,7 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this._softCredits.unprocessedSoftCredits() ]
+            softCredits: [ ...this._softCredits.forSave() ]
         }
     }
 
@@ -126,8 +126,8 @@ class Gift {
     state() {
         return {
             fields: { ...this._fields },
-            softCredits: [ ...this._softCredits.unprocessedSoftCredits() ],
-            processedSoftCredits: [ ...this._softCredits.processedSoftCredits() ]
+            softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
+            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ])
         }
     }
 

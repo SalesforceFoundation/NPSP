@@ -3,6 +3,7 @@ import { debouncify, isNotEmpty, relatedRecordFieldNameFor, UtilDescribe, isStri
 import GeFormService from 'c/geFormService';
 import GeLabelService from 'c/geLabelService';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { fireEvent } from 'c/pubsubNoPageRef';
 import DONATION_RECORD_TYPE_NAME
     from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ACCOUNT1_IMPORTED
@@ -310,26 +311,6 @@ export default class GeFormField extends LightningElement {
     }
 
     @api
-    get fieldValueAndLabel() {
-
-        let fieldWrapper = { value: this.value, label: this.fieldLabel };
-        let returnMap = {};
-        returnMap[ this.sourceFieldAPIName ] = fieldWrapper;
-
-        return returnMap;
-
-    }
-
-    @api
-    get fieldValueAndFieldApiName() {
-        let fieldWrapper = { value: this.value, apiName: this.targetFieldApiName };
-        let returnMap = {};
-        returnMap[ this.targetFieldApiName ] = fieldWrapper;
-
-        return returnMap;
-    }
-
-    @api
     setCustomValidity(errorMessage) {
         const inputField = this.inputField();
 
@@ -425,15 +406,14 @@ export default class GeFormField extends LightningElement {
     }
 
     fireFormFieldChangeEvent(value) {
-        const formFieldChangeEvent = new CustomEvent('formfieldchange', {
-            detail:
-                {
-                    value: value,
-                    label: this.isRecordTypePicklist ? this.utilDescribe.recordTypeNameFor(value) : value,
-                    fieldMappingDevName: this.fieldMappingDevName()
-                }
-        });
-        this.dispatchEvent(formFieldChangeEvent);
+
+        const detail = {
+            value: value,
+            label: this.isRecordTypePicklist ? this.utilDescribe.recordTypeNameFor(value) : value,
+            fieldMappingDevName: this.fieldMappingDevName()
+        };
+
+        fireEvent({}, 'formfieldchange', { detail });
     }
 
     fieldMappingDevName() {

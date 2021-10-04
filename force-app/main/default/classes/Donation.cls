@@ -57,7 +57,7 @@ public inherited sharing class Donation {
     public Donation(Id opportunityId) {
         List<Opportunity> foundOpportunities =
             donationSelector.getDonation(opportunityId);
-        if (foundOpportunities != null) {
+        if (foundOpportunities?.size() > 0) {
             this.opportunity = foundOpportunities[0];
             initialize();
         } else {

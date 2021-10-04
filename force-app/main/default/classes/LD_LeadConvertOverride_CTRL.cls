@@ -529,7 +529,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 if (!CAO_Constants.isBucketModel()) {
                     // change its recordtype if specified in settings
-                    Id rtIdAcccount = AccountsAdapter.rtIdForNewAccount();
+                    Id rtIdAcccount =
+                            ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
                     if (rtIdAcccount != null) {
                         myAccount.put('RecordTypeID', rtIdAcccount);
                     }
@@ -542,8 +543,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
                     if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
                        hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
-                        ContactsInLegacyHouseholds legacyHouseholdContacts =
-                                new ContactsInLegacyHouseholds(new List<Contact>{
+                        LegacyHouseholdMembers legacyHouseholdContacts =
+                                new LegacyHouseholdMembers(new List<Contact>{
                                         con
                                 });
                         legacyHouseholdContacts.onAfterInsert();

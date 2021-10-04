@@ -14,10 +14,11 @@ describe('ge-gift', () => {
 
     it('should initialize with expected properties', async () => {
         const gift = new Gift(mockGiftView);
+        const giftState = gift.state();
 
-        expect(gift.state().fields).toEqual(DUMMY_GIFT_VIEW);
-        expect(gift.state().softCredits.length).toBe(0);
-        expect(gift.state().processedSoftCredits.length).toBe(0);
+        expect(giftState.fields).toEqual(DUMMY_GIFT_VIEW);
+        expect(JSON.parse(giftState.softCredits).length).toBe(0);
+        expect(JSON.parse(giftState.processedSoftCredits).length).toBe(0);
     });
 
     it('should return the expected id', async () => {
@@ -48,6 +49,35 @@ describe('ge-gift', () => {
         expect(Object.keys(inboundGiftDTO.fields).length).toEqual(12);
         expect(Object.keys(inboundGiftDTO)).toContain('softCredits');
         expect(inboundGiftDTO.softCredits.length).toEqual(0);
+    });
+
+    it('should add 2 soft credits to the gift', async () => {
+        const gift = new Gift(deepClone(mockGiftView));
+        gift.addNewSoftCredit();
+        gift.addNewSoftCredit();
+        gift.addNewSoftCredit();
+
+        gift.updateSoftCredit({
+            key: 0,
+            Role: 'Influencer',
+            ContactId: 'DUMMY_CONTACT_ID_0'
+        });
+
+        gift.updateSoftCredit({
+            key: 1,
+            Role: '',
+            ContactId: ''
+        });
+
+        gift.updateSoftCredit({
+            key: 2,
+            Role: 'Honoree',
+            ContactId: 'DUMMY_CONTACT_ID_1'
+        });
+
+        const inboundGiftDTO = gift.forSave();
+        expect(Object.keys(inboundGiftDTO)).toContain('softCredits');
+        expect(inboundGiftDTO.softCredits.length).toEqual(2);
     });
 
     it('should return list of 3 soft credits and 2 processed soft credits', async () => {

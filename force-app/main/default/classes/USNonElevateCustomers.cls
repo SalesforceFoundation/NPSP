@@ -39,8 +39,9 @@ public inherited sharing class USNonElevateCustomers implements IAudience {
 
    public UserIds audience() {
       UserIds audience;
+
       if (isTargetOrganization()) {
-         audience = new UserIds(userSelector.getUsers());
+         audience = new UserIds(new Map<Id, User>(userSelector.getUsers()).keySet());
       }
       return audience;
    }
@@ -50,15 +51,22 @@ public inherited sharing class USNonElevateCustomers implements IAudience {
    }
 
    private Boolean isElevateCustomer () {
-      PS_IntegrationServiceConfig serviceConfig = new PS_IntegrationServiceConfig();
       return serviceConfig.isIntegrationEnabled();
    }
 
    private Boolean isUSOrganization () {
-      return [
-          SELECT SignupCountryIsoCode
-          FROM Organization
-      ].SignupCountryIsoCode == US_ISO_CODE;
+      return organizationSelector.isUSOrganization();
+   }
+
+   @TestVisible
+   private PS_IntegrationServiceConfig serviceConfig {
+      get {
+         if (serviceConfig == null) {
+            serviceConfig = new PS_IntegrationServiceConfig();
+         }
+         return serviceConfig;
+      }
+      set;
    }
 
    @TestVisible
@@ -68,6 +76,17 @@ public inherited sharing class USNonElevateCustomers implements IAudience {
             userSelector = new UserSelector();
          }
          return userSelector;
+      }
+      set;
+   }
+
+   @TestVisible
+   private OrganizationSelector organizationSelector {
+      get {
+         if (organizationSelector == null) {
+            organizationSelector = new OrganizationSelector();
+         }
+         return organizationSelector;
       }
       set;
    }

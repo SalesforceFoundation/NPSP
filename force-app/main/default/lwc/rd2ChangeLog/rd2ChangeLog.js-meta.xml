@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <description>Recurring Donation Change Log</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Recurring Donation Change Log</masterLabel>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="recordLimit" description="Maximum number of records to display." label="Record Limit" type="Integer" default="3" min="1"/>
+            <property name="changeTypeFilter" description="Select Change Types to display by entering semicolon separated values. For example, Upgrade;Downgrade;Custom Type." label="Change Type Filter" type="String"/>
+            <objects>
+                <object>npe03__Recurring_Donation__c</object>
+            </objects>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

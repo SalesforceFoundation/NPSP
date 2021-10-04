@@ -4,7 +4,14 @@ class SoftCredits {
     _processedSoftCredits = [];
 
     constructor(softCredits) {
-        this._indexSoftCredits(softCredits);
+        this._indexSoftCredits(this._parseIfString(softCredits));
+    }
+
+    forSave() {
+        return this._unprocessedSoftCredits
+            .filter(softCredit => {
+                return softCredit.Role != '' && softCredit.ContactId != ''
+            });
     }
 
     unprocessedSoftCredits() {
@@ -28,7 +35,7 @@ class SoftCredits {
     }
 
     addProcessedSoftCredits(processedSoftCredits) {
-        this._processedSoftCredits = [ ...processedSoftCredits ];
+        this._processedSoftCredits = this._parseIfString(processedSoftCredits);
     }
 
     clearProcessedSoftCredits() {
@@ -76,6 +83,13 @@ class SoftCredits {
 
         this._unprocessedSoftCredits = [];
         this._indexSoftCredits(softCredits);
+    }
+
+    _parseIfString(object) {
+        if (typeof object === 'string') {
+            return JSON.parse(object);
+        }
+        return object;
     }
 }
 

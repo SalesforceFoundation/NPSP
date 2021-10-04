@@ -1,14 +1,14 @@
 import { LightningElement, api } from 'lwc';
 import GeLabelService from 'c/geLabelService';
-import { apiNameFor, isNotEmpty, deepClone } from 'c/utilCommon';
+import { apiNameFor, isNotEmpty } from 'c/utilCommon';
 import { fireEvent } from 'c/pubsubNoPageRef';
 
 import OPP_CONTACT_ROLE_OBJECT from '@salesforce/schema/OpportunityContactRole';
 import ROLE_FIELD from '@salesforce/schema/OpportunityContactRole.Role';
 import CONTACT_FIELD from '@salesforce/schema/OpportunityContactRole.ContactId';
-import OPPORTUNITY_FIELD from '@salesforce/schema/OpportunityContactRole.OpportunityId';
 
-export default class GeFormWidgetRowAllocation extends LightningElement {
+
+export default class GeFormWidgetSoftCreditRow extends LightningElement {
     @api rowIndex;
     @api row;
 

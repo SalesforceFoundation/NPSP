@@ -84,10 +84,10 @@ public with sharing class RD2_Settings {
     }
 
     /***
-    * @description Indicates if Recurring Donation Change History is Enabled
+    * @description Indicates if Recurring Donation Change Log is Enabled
     */
-    public Boolean isChangeHistoryEnabled() {
-        return settings.EnableChangeHistory__c == true;
+    public Boolean isChangeLogEnabled() {
+        return settings.EnableChangeLog__c == true;
     }
 
     /***

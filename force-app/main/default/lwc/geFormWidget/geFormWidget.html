@@ -12,14 +12,12 @@
     <template if:true={isAllocation}>
         <c-ge-form-widget-allocation data-id='widgetComponent'
                                      element={element}
-                                     widget-data-from-state={widgetDataFromState}
-                                     onformwidgetchange={handleFormWidgetChange}>
+                                     widget-data-from-state={widgetDataFromState}>
         </c-ge-form-widget-allocation>
     </template>
     <template if:true={isSoftCredit}>
         <c-ge-form-widget-soft-credit data-id='widgetComponent'
-                                      gift-in-view={giftInView}
-                                      element={element}>
+                                      gift-in-view={giftInView}>
         </c-ge-form-widget-soft-credit>
     </template>
 </template>

@@ -35,10 +35,11 @@
 
 public with sharing class CustomNotificationTypeSelector {
 
-   public List<CustomNotificationType> getCustomNotificationTypes () {
+   public List<CustomNotificationType> getCustomNotificationTypesFor (List<String> activeNotificationChannels) {
       return [
         SELECT Id, CustomNotifTypeName
         FROM CustomNotificationType
+        WHERE CustomNotifTypeName IN: activeNotificationChannels
       ];
    }
 }

@@ -71,6 +71,7 @@ public abstract class CRLP_Batch_Base {
     protected Integer totalCommits=0;
 
     /** @description Specified list of Summary (Account, Contact or GAU) Id's to roll up */
+    @TestVisible
     protected List<Id> recordIds;
 
     /** @description The Summary Object Type this batch job will process */

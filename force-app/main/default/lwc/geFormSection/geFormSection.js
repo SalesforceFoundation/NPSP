@@ -27,30 +27,6 @@ export default class GeFormSection extends LightningElement {
     }
 
     /**
-     * Gets value and UI-label for the requestedFields in the section (if any)
-     * @param requestedFields - Array of API Field Names to get information
-     * @returns {Array} - field value and ui-label using api-field-name as key
-     */
-    @api
-    getFieldValueAndLabel( requestedFields ) {
-
-        const fields = this.template.querySelectorAll('c-ge-form-field');
-        let dataImportFieldAndLabels = {};
-
-        if (fields !== null && typeof fields !== 'undefined') {
-            fields.forEach( field => {
-                if ( requestedFields.indexOf(field.sourceFieldAPIName) !== -1 ){
-                    field.clearCustomValidity();
-                    dataImportFieldAndLabels = { ...dataImportFieldAndLabels, ...(field.fieldValueAndLabel) };
-                }
-            });
-        }
-
-        return dataImportFieldAndLabels;
-
-    }
-
-    /**
      * Sets custom validity on fields inside fieldsArray
      * @param fieldsArray
      * @param errorMessage
@@ -140,14 +116,6 @@ export default class GeFormSection extends LightningElement {
             return [];
         }
         return this.section.elements.filter(e => e.isRenderable);
-    }
-
-    handleFormWidgetChange(event) {
-        this.dispatchEvent(new CustomEvent('formwidgetchange', {detail: event.detail}));
-    }
-
-    handleFormFieldChange(event) {
-        this.dispatchEvent(new CustomEvent('formfieldchange', {detail: event.detail}));
     }
 
 }

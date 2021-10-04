@@ -1762,6 +1762,14 @@
         <value>Please enter a new Effective Date. The Effective Date for an Elevate Recurring Donation cannot be in the future.</value>
     </labels>
     <labels>
+        <fullName>RD2_ElevateRDCannotChangeElevateFields</fullName>
+        <categories>Recurring-Donations</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Checks if Closed Elevate Recurring Donation&apos;s Elevate fields have been modified</shortDescription>
+        <value>You can&apos;t edit the donor, amount, schedule, or campaign fields on a Closed Elevate-connected Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RD2_ElevateRDCampaignCannotUpdateToNull</fullName>
         <categories>Recurring-Donations</categories>
         <language>en_US</language>
@@ -2800,76 +2808,52 @@
         <value>UnPause requests cannot include Start Date or End Date.</value>
     </labels>
     <labels>
-        <fullName>RDCH_Annual_Value</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Annual_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Annual Value change field label</shortDescription>
         <value>Annual Value</value>
     </labels>
     <labels>
-        <fullName>RDCH_Change_History</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Change_Log</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header on the Change History component</shortDescription>
-        <value>Change History</value>
+        <shortDescription>Header on the Change Log component</shortDescription>
+        <value>Change Log</value>
     </labels>
     <labels>
-        <fullName>RDCH_Change_Type_Filter</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Disabled</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Change Type Filter label for RDCH in Lightning App Builder</shortDescription>
-        <value>Change Type Filter</value>
+        <shortDescription>Displayed in the change log component when RDCL is disabled</shortDescription>
+        <value>Recurring Donation Change Log is currently disabled.</value>
     </labels>
     <labels>
-        <fullName>RDCH_Change_Type_Filter_Description</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Expected_Total_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text description for Change Type Filter property</shortDescription>
-        <value>Select Change Types to display by entering semicolon separated values. For example, Upgrade;Downgrade;Custom Type.</value>
+        <shortDescription>Expected Total Value change field label</shortDescription>
+        <value>Expected Total Value</value>
     </labels>
     <labels>
-        <fullName>RDCH_Disabled</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Displayed in the change history component when RDCH is disabled</shortDescription>
-        <value>Recurring Donation Change History is currently disabled.</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Frequency</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_Frequency</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Frequency change field label</shortDescription>
         <value>Frequency</value>
     </labels>
     <labels>
-        <fullName>RDCH_No_Records</fullName>
-        <categories>RD2_ChangeHistory</categories>
+        <fullName>RDCL_No_Records</fullName>
+        <categories>RD2_ChangeLog</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Displayed when no changes are available for a recurring donation</shortDescription>
-        <value>There is no change history for this Recurring Donation.</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Record_Limit</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Record Limit property label for RDCH in Lightning App Builder</shortDescription>
-        <value>Record Limit</value>
-    </labels>
-    <labels>
-        <fullName>RDCH_Record_Limit_Description</fullName>
-        <categories>RD2_ChangeHistory</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Help text description for Record Limit property</shortDescription>
-        <value>Maximum number of records to display.</value>
+        <value>There are no Change Logs for this Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>RecurringDonationNameSuffix</fullName>

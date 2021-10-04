@@ -8,27 +8,14 @@
         component.set(strParam, JSON.parse(JSON.stringify(obj)));
     },
     
-    /*******************************************************************************************************
-     * @description called at onInit to load up the Household Object/Account, and its Contacts
-     */
-    loadObjects: function(component) {
-        component.set("v.showSpinner", true);
-        var hhId = component.get('v.hhId');
-        
-        // handle new household object
-        if (hhId === null)
-            return;
-        
-        component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
-        var namespacePrefix = component.get('v.namespacePrefix');
-
+    loadHousehold: function (component, hhId, namespacePrefix) {
         // query for the Household account/object
-        var action = component.get("c.getHH");
+        const action = component.get("c.getHousehold");
         action.setParams({
-            hhId: hhId
+            householdId: hhId
         });
-        var self = this;
-        action.setCallback(this, function(response) {
+        let self = this;
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var hh = response.getReturnValue();
@@ -47,13 +34,15 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadContacts: function (component, hhId, namespacePrefix) {
         // query for the Household Contacts
-        action = component.get("c.getContacts");
+        const action = component.get("c.getContacts");
         action.setParams({
-            hhId: hhId
+            householdId: hhId
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listCon = response.getReturnValue();
@@ -66,10 +55,12 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadSalutations: function (component) {
         // query for the Contact Salutations
-        action = component.get("c.getSalutations");
-        action.setCallback(this, function(response) {
+        const action = component.get("c.getSalutations");
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 var listSalutation = response.getReturnValue();
@@ -80,17 +71,19 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadHouseholdDeletePermissions: function (component) {
         // query for Household Delete permissions for merge usage
-        var strSObject = 'Account';
+        let strSObject = 'Account';
         if (component.get('v.hhTypePrefix') !== '001') {
             strSObject = 'npo02__Household__c';
         }
-        action = component.get("c.isDeletable");
+        let action = component.get("c.isDeletable");
         action.setParams({
             strSObject: strSObject
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
                 component.set("v.allowHouseholdMerge", response.getReturnValue());
@@ -100,14 +93,16 @@
             }
         });
         $A.enqueueAction(action);
+    },
 
+    loadAddresses: function (component, hhId, namespacePrefix) {
         // query for the Addresses
-        action = component.get("c.getAddresses");
+        const action = component.get("c.getAddresses");
         action.setParams({
-            hhId: hhId,
-            listAddrExisting: null
+            householdId: hhId,
+            existingAddresses: null
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
 
             // tell our visualforce page we are done loading
             var event = $A.get("e.c:HH_ContainerLoadedEvent");
@@ -130,6 +125,43 @@
     },
 
     /*******************************************************************************************************
+     * @description called at onInit to load up the Household Object/Account, and its Contacts
+     */
+    loadObjects: function(component) {
+        component.set("v.showSpinner", true);
+        var hhId = component.get('v.hhId');
+        
+        // handle new household object
+        if (hhId === null)
+            return;
+        
+        component.set('v.hhTypePrefix', String(hhId).substr(0, 3));
+        var namespacePrefix = component.get('v.namespacePrefix');
+
+        this.loadHousehold(component, hhId, namespacePrefix);
+        this.loadContacts(component, hhId, namespacePrefix);
+        this.loadSalutations(component);
+        this.loadHouseholdDeletePermissions(component);
+        this.loadAddresses(component, hhId, namespacePrefix);
+        this.loadFieldLabels(component, namespacePrefix);
+    },
+
+    loadFieldLabels: function(component) {
+        const action = component.get("c.getFieldLabels");
+        let self = this;
+        action.setCallback(this, function(response) {
+           let state = response.getState();
+           if (component.isValid() && state === "SUCCESS") {
+               component.set("v.fieldLabels",
+                   this.removePrefixFromObjectFields(component.get('v.namespacePrefix'), response.getReturnValue()))
+           } else if (component.isValid() && state === 'ERROR') {
+               self.reportError(component, response);
+           }
+        });
+        $A.enqueueAction(action);
+    },
+
+    /*******************************************************************************************************
      * @description get updated names and greetings from server's custom naming code
      */
     updateHHNames: function(component) {
@@ -140,7 +172,7 @@
         this.updateNamingExclusions(component, hh);
 
         // get updated Names and Greetings
-        var action = component.get("c.getHHNamesGreetings");
+        const action = component.get("c.getHHNamesGreetings");
         // now we need to fixup namespacing of fields
         var namespacePrefix = component.get('v.namespacePrefix');
         hh = this.addPrefixToObjectFields(namespacePrefix, hh);
@@ -399,7 +431,6 @@
     updateDefaultAddress: function(component, addr) {
         var hh = component.get('v.hh');
         var isAccount = component.get('v.hhTypePrefix') === '001';
-
         // update the household
         if (isAccount) {
             hh.BillingStreet = addr.MailingStreet__c;
@@ -409,6 +440,7 @@
             hh.BillingState = addr.MailingState__c;
             hh.BillingPostalCode = addr.MailingPostalCode__c;
             hh.BillingCountry = addr.MailingCountry__c;
+            hh.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
         } else {
             hh.npo02__MailingStreet__c = addr.MailingStreet__c;
             if (addr.MailingStreet2__c)
@@ -425,7 +457,7 @@
         for (var i = 0; i < listCon.length; i++) {
             var con = listCon[i];
             if (!con.is_Address_Override__c) {
-                this.copyAddrToContact(addr, con);
+                this.copyAddressToContact(addr, con);
             }
         }
         this.componentSetObjFix(component, 'v.listCon', listCon);
@@ -434,7 +466,7 @@
     /*******************************************************************************************************
      * @description copy the address object to the appropriate contact fields
      */
-    copyAddrToContact: function(addr, con) {
+    copyAddressToContact: function(addr, con) {
         con.MailingStreet = addr.MailingStreet__c;
         if (addr.MailingStreet2__c)
             con.MailingStreet += '\n' + addr.MailingStreet2__c;
@@ -442,6 +474,7 @@
         con.MailingState = addr.MailingState__c;
         con.MailingPostalCode = addr.MailingPostalCode__c;
         con.MailingCountry = addr.MailingCountry__c;
+        con.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
     },
 
     /*******************************************************************************************************
@@ -472,34 +505,34 @@
      */
     includeLabelReferences: function() {
         try {
-            $A.get("$Label.npsp.lblAddressOverride");
-            $A.get("$Label.npsp.lblCCardExcludeFrom");
-            $A.get("$Label.npsp.lblHouseholdName");
-            $A.get("$Label.npsp.lblFormalGreeting");
-            $A.get("$Label.npsp.lblInformalGreeting");
-            $A.get("$Label.npsp.lblHousehold");
-            $A.get("$Label.npsp.lblDeleteContact");
-            $A.get("$Label.npsp.lblDeleteContactPrompt");
-            $A.get("$Label.npsp.btnRemove");
-            $A.get("$Label.npsp.lblStreet");
-            $A.get("$Label.npsp.lblCity");
-            $A.get("$Label.npsp.lblState");
-            $A.get("$Label.npsp.lblPostalCode");
-            $A.get("$Label.npsp.lblCountry");
-            $A.get("$Label.npsp.lblSalutation");
-            $A.get("$Label.npsp.lblFirstName");
-            $A.get("$Label.npsp.lblLastName");
-            $A.get("$Label.npsp.stgBtnCancel");
-            $A.get("$Label.npsp.stgBtnSave");
-            $A.get("$Label.npsp.bdiBtnClose");
-            $A.get("$Label.npsp.lblMergeHHTitle");
-            $A.get("$Label.npsp.lblMergeHHPrompt");
-            $A.get("$Label.npsp.lblBtnAddContact");
-            $A.get("$Label.npsp.lblBtnAddAllHHMembers");
-            $A.get("$Label.npsp.lblFindOrAddContact");
-            $A.get("$Label.npsp.lblFindInContacts");
-            $A.get("$Label.npsp.lblNoHHMergePermissions");
-            $A.get("$Label.npsp.lblYouAreHere");
+            $A.get("$Label.c.lblAddressOverride");
+            $A.get("$Label.c.lblCCardExcludeFrom");
+            $A.get("$Label.c.lblHouseholdName");
+            $A.get("$Label.c.lblFormalGreeting");
+            $A.get("$Label.c.lblInformalGreeting");
+            $A.get("$Label.c.lblHousehold");
+            $A.get("$Label.c.lblDeleteContact");
+            $A.get("$Label.c.lblDeleteContactPrompt");
+            $A.get("$Label.c.btnRemove");
+            $A.get("$Label.c.lblStreet");
+            $A.get("$Label.c.lblCity");
+            $A.get("$Label.c.lblState");
+            $A.get("$Label.c.lblPostalCode");
+            $A.get("$Label.c.lblCountry");
+            $A.get("$Label.c.lblSalutation");
+            $A.get("$Label.c.lblFirstName");
+            $A.get("$Label.c.lblLastName");
+            $A.get("$Label.c.stgBtnCancel");
+            $A.get("$Label.c.stgBtnSave");
+            $A.get("$Label.c.bdiBtnClose");
+            $A.get("$Label.c.lblMergeHHTitle");
+            $A.get("$Label.c.lblMergeHHPrompt");
+            $A.get("$Label.c.lblBtnAddContact");
+            $A.get("$Label.c.lblBtnAddAllHHMembers");
+            $A.get("$Label.c.lblFindOrAddContact");
+            $A.get("$Label.c.lblFindInContacts");
+            $A.get("$Label.c.lblNoHHMergePermissions");
+            $A.get("$Label.c.lblYouAreHere");
         } catch (e) {}
     },
 
@@ -549,7 +582,7 @@
 
         var addrDefault = component.find('addrMgr').get('v.addrDefault');
         if (addrDefault)
-            this.copyAddrToContact(addrDefault, conNew);
+            this.copyAddressToContact(addrDefault, conNew);
         conNew.npo02__Household_Naming_Order__c = listCon.length;
         listCon.push(conNew);
         this.componentSetObjFix(component, 'v.listCon', listCon);
@@ -691,7 +724,7 @@
         // query for the Household Contacts
         var action = component.get("c.getContacts");
         action.setParams({
-            hhId: hhMerge.Id
+            householdId: hhMerge.Id
         });
         var self = this;
         action.setCallback(this, function(response) {
@@ -749,8 +782,8 @@
         
         listAddr = this.addPrefixToListObjectFields(namespacePrefix, listAddr);
         action.setParams({
-            hhId: hhMerge.Id,
-            listAddrExisting: listAddr
+            householdId: hhMerge.Id,
+            existingAddresses: listAddr
         });
         self = this;
         action.setCallback(this, function(response) {
