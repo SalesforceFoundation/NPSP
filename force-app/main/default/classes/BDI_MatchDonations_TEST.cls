@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Test class for the BDI .
+* @description Test class for the BDI Match Donations.
 */
 @IsTest
 private class BDI_MatchDonations_TEST {
