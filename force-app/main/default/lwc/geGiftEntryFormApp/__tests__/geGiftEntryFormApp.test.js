@@ -27,6 +27,7 @@ import gift from 'c/geGift';
 
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
+import FAILURE_INFORMATION from '@salesforce/schema/DataImport__c.FailureInformation__c';
 
 const PROCESSING_BATCH_MESSAGE = 'c.geProcessingBatch';
 
@@ -282,7 +283,7 @@ describe('c-ge-gift-entry-form-app', () => {
     describe('save, update, and delete behavior', () => {
         it('should call addGiftTo with expected arguments when a gift is saved in batch mode', async () => {
             addGiftTo.mockResolvedValue({});
-            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [], totals: { TOTAL: 1 }});
+            const formApp = setupForBatchMode({giftBatchId: 'DUMMY_BATCH_ID', gifts: [{fields: {[FAILURE_INFORMATION.fieldApiName]: null}}], totals: { TOTAL: 1 }});
             await flushPromises();
 
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
@@ -301,10 +302,8 @@ describe('c-ge-gift-entry-form-app', () => {
         });
 
         it('should call expected methods when a gift save fails in batch mode', async () => {
-            addGiftTo.mockImplementation(() => {
-                throw new Error();
-            });
-            const formApp = setupForBatchMode({gifts: [], totals: { TOTAL: 1 }});
+            addGiftTo.mockResolvedValue({});
+            const formApp = setupForBatchMode({gifts: [{fields: {[FAILURE_INFORMATION.fieldApiName]: 'dummy fail reason'}}], totals: { TOTAL: 1 }});
             await flushPromises();
 
             const geFormRenderer = shadowQuerySelector(formApp, 'c-ge-form-renderer');
@@ -319,6 +318,7 @@ describe('c-ge-gift-entry-form-app', () => {
             await flushPromises();
 
             expect(submitEvent.detail.error).toHaveBeenCalled();
+            expect(submitEvent.detail.error).toHaveBeenCalledWith('dummy fail reason');
         });
     });
 
