@@ -855,17 +855,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async handleAuthorizationFailure(declineReason) {
-        this.updateFormState({
-            [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
-            [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
-            [apiNameFor(STATUS_FIELD)]: FAILED
+        new Promise((resolve,reject) => {
+            this.updateFormState({
+                [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
+                [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
+                [apiNameFor(STATUS_FIELD)]: FAILED
+            });
+            resolve();
+        })
+        .finally(async () => {
+            await this.saveDataImport(this.saveableFormState());
+            const errors = [{ message: declineReason }];
+            this.handleElevateAPIErrors(errors);
+            fireEvent(this, 'refreshbatchtable', {});
         });
-        await this.saveDataImport(this.saveableFormState());
-
-        const errors = [{ message: declineReason }];
-        this.handleElevateAPIErrors(errors);
-
-        fireEvent(this, 'refreshbatchtable', {});
     }
 
     /*******************************************************************************
