@@ -682,6 +682,10 @@
         <name>CallableApiJobScheduleInvalidClass</name>
     </customLabels>
     <customLabels>
+        <label><!-- CallableApi Method Maximum Records Exceeded --></label>
+        <name>CallableApiMaximumRecordsExceeded</name>
+    </customLabels>
+    <customLabels>
         <label><!-- CallableApi Method Not Implemented --></label>
         <name>CallableApiMethodNotImplemented</name>
     </customLabels>
@@ -930,6 +934,14 @@
         <name>RD2_ElevateRDCampaignCannotUpdateToNull</name>
     </customLabels>
     <customLabels>
+        <label><!-- Elevate RD cannot be paused --></label>
+        <name>RD2_ElevateRDCannotBePaused</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Checks if Closed Elevate Recurring Donation&apos;s Elevate fields have been modified --></label>
+        <name>RD2_ElevateRDCannotChangeElevateFields</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Error when an attempt is made to change the Status of a Closed Elevate RD --></label>
         <name>RD2_ElevateRDClosedStatusCannotBeChanged</name>
     </customLabels>
@@ -1126,6 +1138,10 @@
         <name>RD2_EndDateMustBeValidForFixedLength</name>
     </customLabels>
     <customLabels>
+        <label><!-- Enhanced Recurring Donations Not Enabled --></label>
+        <name>RD2_EnhancedRecurringDonationsNotEnabled</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Recurring Donation Entry Form Custom Field section header --></label>
         <name>RD2_EntryFormCustomFieldsSectionHeader</name>
     </customLabels>
@@ -1246,6 +1262,10 @@
         <name>RD2_InstallmentStatusSkipped</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when the Recurring Donation Id provided is invalid. --></label>
+        <name>RD2_InvalidRecurringDonationId</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Detail for the next payment charging date --></label>
         <name>RD2_NextACHPaymentDonationDateInfo</name>
     </customLabels>
@@ -1290,6 +1310,14 @@
         <name>RD2_PauseDescription</name>
     </customLabels>
     <customLabels>
+        <label><!-- RD2 Pause end date must be 1 year or less from start date --></label>
+        <name>RD2_PauseEndDateCannotBeMoreThanTwelveMonths</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2 Pause end date must be greater than start date --></label>
+        <name>RD2_PauseEndDateMustBeGreaterThanStartDate</name>
+    </customLabels>
+    <customLabels>
         <label><!-- RD2 Pause first donation date after the pause --></label>
         <name>RD2_PauseFirstDonationDateDynamicText</name>
     </customLabels>
@@ -1302,6 +1330,10 @@
         <name>RD2_PausePermissionRequired</name>
     </customLabels>
     <customLabels>
+        <label><!-- RD2 Pause start date and end date must be populated --></label>
+        <name>RD2_PauseRequestMustIncludeBothStartDateAndEndDate</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Contains message indicating a pause has been saved successfully --></label>
         <name>RD2_PauseSaveSuccessMessage</name>
     </customLabels>
@@ -1312,6 +1344,10 @@
     <customLabels>
         <label><!-- Contains message indicating one installment has been selected to skip --></label>
         <name>RD2_PauseSelectedInstallmentTextSingular</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD2 Pause start date must be today or later --></label>
+        <name>RD2_PauseStartDateMustBeTodayOrLater</name>
     </customLabels>
     <customLabels>
         <label><!-- Error when Recurring Donation Status picklist value Paused does not exist --></label>
@@ -1402,12 +1438,44 @@
         <name>RD2_StatusMappingSuccessMessage</name>
     </customLabels>
     <customLabels>
+        <label><!-- Pause request requires Active or Paused status --></label>
+        <name>RD2_StatusMustBeActiveOrPause</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Validation and health check error message when status is not mapped to a state. --></label>
         <name>RD2_StatusMustBeMapped</name>
     </customLabels>
     <customLabels>
         <label><!-- Validation and health check solution when status is not mapped to a state. --></label>
         <name>RD2_StatusMustBeMappedSolution</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- UnPause requests cannot include dates --></label>
+        <name>RD2_UnPauseRequestCannotIncludeDates</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Annual Value change field label --></label>
+        <name>RDCL_Annual_Value</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header on the Change Log component --></label>
+        <name>RDCL_Change_Log</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Displayed in the change log component when RDCL is disabled --></label>
+        <name>RDCL_Disabled</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Expected Total Value change field label --></label>
+        <name>RDCL_Expected_Total_Value</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Frequency change field label --></label>
+        <name>RDCL_Frequency</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Displayed when no changes are available for a recurring donation --></label>
+        <name>RDCL_No_Records</name>
     </customLabels>
     <customLabels>
         <label><!-- Validate Recurring Donations data if contact is not found with HH Account --></label>
@@ -2868,6 +2936,10 @@
         <name>commonConcurrentBatchError</name>
     </customLabels>
     <customLabels>
+        <label><!-- Contact Count --></label>
+        <name>commonContactCount</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Message indicating user should contact the system administrator for help --></label>
         <name>commonContactSystemAdminMessage</name>
     </customLabels>
@@ -2896,7 +2968,7 @@
         <name>commonEdit</name>
     </customLabels>
     <customLabels>
-        <label><!-- Text to edit elevate payment information --></label>
+        <label><!-- Text to edit payment information --></label>
         <name>commonEditPaymentInformation</name>
     </customLabels>
     <customLabels>
@@ -3024,6 +3096,10 @@
         <name>commonSelectOptionPlaceholder</name>
     </customLabels>
     <customLabels>
+        <label><!-- Common label for Soft Credits --></label>
+        <name>commonSoftCredits</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Template --></label>
         <name>commonTemplate</name>
     </customLabels>
@@ -3100,6 +3176,10 @@
         <name>conMergeErrorNoReadDSRObjPermission</name>
     </customLabels>
     <customLabels>
+        <label><!-- Name of First Contact in the Duplicate Record Set --></label>
+        <name>conMergeFirstContactLabel</name>
+    </customLabels>
+    <customLabels>
         <label><!-- conMergeFoundContacts --></label>
         <name>conMergeFoundContacts</name>
     </customLabels>
@@ -3158,6 +3238,14 @@
     <customLabels>
         <label><!-- conMergeWinnerAsstText --></label>
         <name>conMergeWinnerAsstText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Elevate Advert Notification Body --></label>
+        <name>elevateAdNotificationFor234Body</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Elevate Advert Notification Title --></label>
+        <name>elevateAdNotificationFor234Title</name>
     </customLabels>
     <customLabels>
         <label>לא ניתן להקצות תוכנית מעורבות זו לאובייקט חדש. צור תוכנית מעורבות חדשה.</label>
@@ -3222,6 +3310,10 @@
     <customLabels>
         <label><!-- GAU Widget: Add New Allocation --></label>
         <name>geAddNewAllocation</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Soft Credit Widget: Add Soft Credit --></label>
+        <name>geAddSoftCredit</name>
     </customLabels>
     <customLabels>
         <label><!-- Alt text: Active section icon --></label>
@@ -3540,6 +3632,18 @@
         <name>geEditBatchInfo</name>
     </customLabels>
     <customLabels>
+        <label><!-- Error log entry for gift removed from Elevate by not removed from Gift Entry. --></label>
+        <name>geElevateDeleteErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error log entry for gift updated in Elevate by not updated in Gift Entry. --></label>
+        <name>geElevateUpdateErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message within Elevate field bundle when not connected to Elevate. --></label>
+        <name>geElevateWidgetPaymentServiceUnavailable</name>
+    </customLabels>
+    <customLabels>
         <label><!-- Toast reporting Gift Entry is enabled --></label>
         <name>geEnableGiftEntrySuccess</name>
     </customLabels>
@@ -3574,6 +3678,14 @@
     <customLabels>
         <label><!-- Page-level error for gift entered without required donor info, 1 field present --></label>
         <name>geErrorDonorTypeValidationSingle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when gift deleted in Gift Entry but not deleted from Elevate batch. --></label>
+        <name>geErrorElevateDelete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when gift updated in Gift Entry but not fixed in Elevate batch. --></label>
+        <name>geErrorElevateUpdate</name>
     </customLabels>
     <customLabels>
         <label><!-- Field-level error message when template name is not unique --></label>
@@ -3626,6 +3738,10 @@
     <customLabels>
         <label><!-- Page-level error message for required group of fields is missing --></label>
         <name>geErrorPageLevelMissingRequiredGroupFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when gift deleted in Elevate but not deleted from Gift Entry batch. --></label>
+        <name>geErrorRecordFailAfterElevateDelete</name>
     </customLabels>
     <customLabels>
         <label><!-- Reason for system error when uncertain if payment was processed --></label>
@@ -3882,6 +3998,18 @@
     <customLabels>
         <label><!-- Failure message description for when the tokenization request times out --></label>
         <name>gePaymentRequestTimedOut</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning about batch when Elevate isn&apos;t connected --></label>
+        <name>gePaymentServicesUnavailableBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- NPSP Data Import Failure Information for when Elevate not connected --></label>
+        <name>gePaymentServicesUnavailableFailureMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Header for when Elevate not connected. --></label>
+        <name>gePaymentServicesUnavailableHeader</name>
     </customLabels>
     <customLabels>
         <label><!-- Button to Process Anyway --></label>
@@ -7551,6 +7679,10 @@
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
+        <label><!-- Contact Merge (OLD) --></label>
+        <name>Contact_Merge</name>
+    </customTabs>
+    <customTabs>
         <label><!-- Contacts Settings --></label>
         <name>Contacts_Settings</name>
     </customTabs>
@@ -7663,4 +7795,4 @@
             <name>Contacts</name>
         </sections>
     </reportTypes>
-</Translations>
+    </Translations>
