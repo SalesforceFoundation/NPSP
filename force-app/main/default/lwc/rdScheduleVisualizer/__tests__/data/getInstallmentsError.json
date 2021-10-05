@@ -1,0 +1,7 @@
+{
+  "status": 500,
+  "body": {
+    "message": "You must enable Enhanced Recurring Donations to use this component."
+  },
+  "headers": {}
+}
