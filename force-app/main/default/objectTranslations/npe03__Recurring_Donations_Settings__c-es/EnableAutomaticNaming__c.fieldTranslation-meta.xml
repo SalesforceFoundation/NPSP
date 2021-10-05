@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EnableAutomaticNaming__c</name>
     <help>Si está activada, Salesforce rellena automáticamente el Nombre de donación recurrente.</help>
     <label>Nomenclatura autom. donación recurrente</label>
-    <name>EnableAutomaticNaming__c</name>
 </CustomFieldTranslation>

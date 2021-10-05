@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Expected_Count_of_Gifts__c</name>
     <help>Het aantal giften die naar verwachting in deze Batch zullen worden ingevoerd.</help>
     <label>Verwachte aantal giften</label>
-    <name>Expected_Count_of_Gifts__c</name>
 </CustomFieldTranslation>

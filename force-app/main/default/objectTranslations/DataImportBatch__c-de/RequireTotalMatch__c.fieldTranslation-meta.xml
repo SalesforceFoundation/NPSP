@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RequireTotalMatch__c</name>
     <help>Wenn dieses Kontrollkästchen aktiviert ist, müssen die Gesamtanzahl an Spenden und der Gesamtbetrag mit dem für den Batch eingegebenen erwarteten Gesamtbetrag übereinstimmen.</help>
     <label>Übereinstimmung der Summen erforderlich</label>
-    <name>RequireTotalMatch__c</name>
 </CustomFieldTranslation>

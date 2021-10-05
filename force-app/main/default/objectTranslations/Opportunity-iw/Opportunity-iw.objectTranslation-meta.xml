@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
+        <label/>
         <name>BDE_Entry_FS_v2</name>
     </fieldSets>
     <fieldSets>
-        <label><!-- New BDE List v2 --></label>
+        <label/>
         <name>BDE_List_FS_v2</name>
     </fieldSets>
     <layouts>
@@ -15,7 +15,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label/>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -23,7 +23,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label/>
             <section>Tribute Information</section>
         </sections>
     </layouts>
@@ -68,7 +68,7 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label/>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -76,7 +76,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label/>
             <section>Tribute Information</section>
         </sections>
     </layouts>
@@ -94,7 +94,7 @@
     <layouts>
         <layout>Membership Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -110,7 +110,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- System Information --></label>
+            <label/>
             <section>System Information</section>
         </sections>
     </layouts>

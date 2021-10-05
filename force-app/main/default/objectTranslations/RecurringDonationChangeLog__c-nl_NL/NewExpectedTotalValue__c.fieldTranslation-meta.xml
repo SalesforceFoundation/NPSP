@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewExpectedTotalValue__c</name>
+    <help>De nieuwe verwachte totale waarde voor deze vaste terugkerende donatie, op basis van het bedrag en de planning.</help>
+    <label>Nieuwe verwachte totale waarde</label>
+</CustomFieldTranslation>

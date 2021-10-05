@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRecordDataHealthChecks__c</name>
     <help>Aktiviert prüfen die Statusüberprüfungen lediglich Ihre NPSP-Konfigurationseinstellungen auf Probleme. Aktivieren Sie diese Option, wenn Ihre Organisation große Datensatzmengen verarbeitet und Probleme beim Abschluss der Statusüberprüfungen auftreten.</help>
     <label>Keine Statusprüfungen von Datensätzen</label>
-    <name>DisableRecordDataHealthChecks__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonation__c</name>
+    <help>Die diesem Änderungsprotokoll-Datensatz zugeordnete wiederkehrende Spende.</help>
+    <relationshipLabel>Änderungsprotokoll für wiederkehrende Spende</relationshipLabel>
+    <label>Wiederkehrende Spende</label>
+</CustomFieldTranslation>

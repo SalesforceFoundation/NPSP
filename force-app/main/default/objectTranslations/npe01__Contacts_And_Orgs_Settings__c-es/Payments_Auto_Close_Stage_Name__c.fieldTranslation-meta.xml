@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payments_Auto_Close_Stage_Name__c</name>
     <help>NPSP establece automáticamente la etapa de una oportunidad a este valor cuando Importe de pago recibido es igual a Importe de oportunidad. Si no se selecciona una etapa, la etapa de la oportunidad no cambiará cuando se completen los pagos.</help>
     <label>Estado oportunidad para pagado completo</label>
-    <name>Payments_Auto_Close_Stage_Name__c</name>
 </CustomFieldTranslation>

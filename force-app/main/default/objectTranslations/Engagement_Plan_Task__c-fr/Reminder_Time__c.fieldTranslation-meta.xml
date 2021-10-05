@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reminder_Time__c</name>
     <help>L’heure à laquelle le rappel apparait à la date d’échéance.</help>
     <label>Heure de rappel</label>
-    <name>Reminder_Time__c</name>
 </CustomFieldTranslation>

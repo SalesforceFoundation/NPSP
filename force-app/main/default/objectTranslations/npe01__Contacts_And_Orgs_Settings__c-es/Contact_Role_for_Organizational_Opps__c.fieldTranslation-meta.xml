@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Role_for_Organizational_Opps__c</name>
     <help>La función de contacto predeterminada que se asigna automáticamente al contacto principal de la oportunidad cuando la cuenta de la oportunidad NO es una cuenta Hogar, Uno a uno o Individuo.</help>
     <label>Función contacto oportunidades organiz.</label>
-    <name>Contact_Role_for_Organizational_Opps__c</name>
 </CustomFieldTranslation>

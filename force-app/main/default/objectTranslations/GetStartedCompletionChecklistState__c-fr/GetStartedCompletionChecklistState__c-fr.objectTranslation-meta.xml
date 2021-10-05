@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>Nom de l&apos;état de la liste de contrôle de réalisation Premier pas</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nom de l&apos;état de la liste de contrôle de réalisation Premier pas</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>État de la liste de contrôle de réalisation Premiers pas</value>
@@ -8,7 +15,4 @@
         <plural>true</plural>
         <value>États de la liste de contrôle de réalisation Premiers pas</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nom de l&apos;état de la liste de contrôle de réalisation Premier pas</nameFieldLabel>
-    <startsWith>Vowel</startsWith>
 </CustomObjectTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Is_Deleted__c</name>
     <help>Geeft, indien ingeschakeld, aan dat deze record is verwijderd uit de gebruikersinterface Geavanceerd toewijzen voor gegevensimport en dat deze wordt genegeerd tijdens de verwerking van NPSP-gegevensimport.</help>
     <label>Is verwijderd</label>
-    <name>Is_Deleted__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Send_Email__c</name>
     <help>ToDo が有効になったときに ToDo の [割り当て先] 項目内のユーザにメールを送信するかどうかを決定します。連動 ToDo はその親 ToDo の完了時に有効になります。</help>
     <label>メールを送信</label>
-    <name>Send_Email__c</name>
 </CustomFieldTranslation>

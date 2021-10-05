@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Assigned_To__c</name>
     <help>Opzoeken van de Gebruiker aan wie u de taak wilt toewijzen. Laat u dit veld leeg, wijst NPSP de taak toe op basis van de Standaard Toegewezen persoon van de Sjabloon van het Betrokkenheidsplan.</help>
     <label>Toegewezen aan</label>
-    <name>Assigned_To__c</name>
-    <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
 </CustomFieldTranslation>

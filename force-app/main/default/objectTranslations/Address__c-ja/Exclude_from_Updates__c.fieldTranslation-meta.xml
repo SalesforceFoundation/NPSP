@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Exclude_from_Updates__c</name>
     <help>選択した場合、この住所は NCOA または住所検証ベンダーからの住所更新に含まれなくなります。</help>
     <label>更新から除外</label>
-    <name>Exclude_from_Updates__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CommitmentId__c</name>
     <help>Externer Bezeichner für die Integration des Salesforce.org-Zahlungsservice.</help>
     <label>Wiederholungs-ID in Elevate</label>
-    <name>CommitmentId__c</name>
 </CustomFieldTranslation>

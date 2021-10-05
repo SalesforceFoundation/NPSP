@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LastElevateEventPlayed__c</name>
     <help>Das letzte Elevate-Ereignis, das zu einer Aktualisierung dieser wiederkehrenden Spende geführt hat.</help>
     <label>Letztes verarbeitetes Elevate-Ereignis</label>
-    <name>LastElevateEventPlayed__c</name>
 </CustomFieldTranslation>

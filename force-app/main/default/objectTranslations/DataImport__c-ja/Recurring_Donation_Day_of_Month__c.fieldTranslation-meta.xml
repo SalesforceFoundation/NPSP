@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Day_of_Month__c</name>
     <help>[間隔] が [毎月] の場合、今後の割賦商談の特定の日付 (月の特定の日) を設定します。29 または 30 を選択した場合、その日数がない月の割賦日は月の最終日になります。</help>
     <label>継続支援の日付</label>
-    <name>Recurring_Donation_Day_of_Month__c</name>
 </CustomFieldTranslation>

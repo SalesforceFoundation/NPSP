@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Soft_Credits_Last_Year__c</name>
     <help>Le nombre de crédits indirects de l’année dernière.</help>
     <label>Nbre crédits indirects année dernière</label>
-    <name>Number_of_Soft_Credits_Last_Year__c</name>
 </CustomFieldTranslation>

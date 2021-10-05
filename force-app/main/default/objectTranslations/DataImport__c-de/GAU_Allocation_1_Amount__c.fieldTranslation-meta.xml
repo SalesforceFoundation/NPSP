@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_1_Amount__c</name>
     <help>Der Geldbetrag, der der ersten GAU-Zuweisung (Verwendungszweck) zugeschrieben wurde. Für die Zuweisung dieses Feldes muss beim Datenimport die Erweiterte Zuordnung verwendet werden.</help>
     <label>GAU-Zuweisung 1: Betrag</label>
-    <name>GAU_Allocation_1_Amount__c</name>
 </CustomFieldTranslation>

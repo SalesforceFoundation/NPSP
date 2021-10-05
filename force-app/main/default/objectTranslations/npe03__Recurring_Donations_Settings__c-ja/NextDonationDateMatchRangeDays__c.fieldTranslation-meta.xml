@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>次の進行中の商談の完了予定日が変更された場合に NPSP が新しい割賦商談を作成しない次回の支援日の前後の日数。[間隔] が [毎月] の継続支援にのみ適用されます。</help>
-    <label>次回の支援日の照合範囲</label>
     <name>NextDonationDateMatchRangeDays__c</name>
+    <help>次の進行中の商談の完了予定日が変更された場合に NPSP が新しい割賦商談を作成しない次回の支援日の前後の日数。[間隔] が [毎月] または [毎年] の継続支援にのみ適用されます。</help>
+    <label>次回の支援日の照合範囲</label>
 </CustomFieldTranslation>

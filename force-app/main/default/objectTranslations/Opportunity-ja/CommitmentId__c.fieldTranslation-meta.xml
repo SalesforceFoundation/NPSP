@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CommitmentId__c</name>
     <help>Salesforce.org 支払サービスインテグレーションの外部識別子。</help>
     <label>Elevate 継続 ID</label>
-    <name>CommitmentId__c</name>
 </CustomFieldTranslation>

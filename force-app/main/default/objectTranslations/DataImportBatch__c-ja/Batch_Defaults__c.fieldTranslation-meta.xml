@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
     <help>支援エントリのバッチのデフォルト項目値。直接編集しないでください。これは、バッチを編集する UI で更新する必要があります。</help>
     <label>バッチのデフォルト</label>
-    <name>Batch_Defaults__c</name>
 </CustomFieldTranslation>

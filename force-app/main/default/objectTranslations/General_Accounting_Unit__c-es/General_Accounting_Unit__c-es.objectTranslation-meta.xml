@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Cuenta Contable General</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Cuentas Contables Generales</value>
-    </caseValues>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Volver a calcular totales</label>
+    </webLinks>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
@@ -25,8 +20,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de Cuenta Contable General</nameFieldLabel>
-    <webLinks>
-        <label>Volver a calcular totales</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de Cuenta Contable General</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Cuenta Contable General</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Cuentas Contables Generales</value>
+    </caseValues>
 </CustomObjectTranslation>

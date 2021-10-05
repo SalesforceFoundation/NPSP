@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LastElevateVersionPlayed__c</name>
     <help>Dernière version d’événement Elevate exécutée entraînant m. à j. du don récurrent. Incrémentation auto après chaque appel à l’API Elevate pour modif. Permet d’empêcher les m. à j. circulaires et de garantir que la dernière version n’est pas écrasée.</help>
     <label>Dernière version Elevate exécutée</label>
-    <name>LastElevateVersionPlayed__c</name>
 </CustomFieldTranslation>

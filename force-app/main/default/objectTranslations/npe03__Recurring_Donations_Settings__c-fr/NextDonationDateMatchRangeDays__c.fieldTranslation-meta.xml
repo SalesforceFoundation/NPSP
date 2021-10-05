@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Nombre de jours avant ou après la date du prochain don pendant lesquels NPSP ne crée pas d&apos;opportunité de versement si la date de fermeture de l&apos;opportunité ouverte suivante change. S&apos;applique uniquement aux dons avec une période de versement Mensuelle.</help>
-    <label>Plage correspondance dates prochain don</label>
     <name>NextDonationDateMatchRangeDays__c</name>
+    <help>Nb de jours avant ou après la date du prochain don pendant lesquels NPSP ne crée pas
+           d’opp. de versement si la date de fermeture de l’opp. ouverte suivante change. S’applique aux
+           dons avec période de versement mensuelle ou annuelle.</help>
+    <label>Plage correspondance dates prochain don</label>
 </CustomFieldTranslation>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousCampaign__c</name>
+    <help>関連する継続支援の前のキャンペーン。</help>
+    <relationshipLabel>継続支援の変更ログ (前のキャンペーン)</relationshipLabel>
+    <label>前のキャンペーン</label>
+</CustomFieldTranslation>

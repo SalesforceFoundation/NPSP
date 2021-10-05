@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
     <help>The default field values for a Batch in Gift Entry. Do not edit directly. This should be updated in the UI where you edit your Batch.</help>
     <label>Batch Defaults</label>
-    <name>Batch_Defaults__c</name>
 </CustomFieldTranslation>

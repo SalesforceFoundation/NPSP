@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Card_Last_4__c</name>
     <help>De laatste vier cijfers van de kaart die voor deze transactie is gebruikt.</help>
     <label>Laatste 4 betaalkaart</label>
-    <name>Payment_Card_Last_4__c</name>
 </CustomFieldTranslation>

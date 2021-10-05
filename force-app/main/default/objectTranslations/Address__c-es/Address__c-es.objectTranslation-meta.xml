@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Dirección</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Direcciones</value>
-    </caseValues>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Verify_Address</name>
+        <label>Verificar dirección</label>
+    </webLinks>
     <layouts>
         <layout>Address Layout</layout>
+        <sections>
+            <label>Información de estación</label>
+            <section>Seasonal Information</section>
+        </sections>
         <sections>
             <label>Verificación de dirección</label>
             <section>Address Verification</section>
@@ -19,18 +18,19 @@
             <label>Vínculos personalizados</label>
             <section>Custom Links</section>
         </sections>
-        <sections>
-            <label>Información de estación</label>
-            <section>Seasonal Information</section>
-        </sections>
     </layouts>
     <nameFieldLabel>Id. de Dirección</nameFieldLabel>
-    <quickActions>
-        <label>Actualizar dirección</label>
-        <name>Update_Address</name>
-    </quickActions>
-    <webLinks>
-        <label>Verificar dirección</label>
-        <name>Verify_Address</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Id. de Dirección</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Dirección</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Direcciones</value>
+    </caseValues>
 </CustomObjectTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
-    <label>以前の助成金商談</label>
     <name>Previous_Grant_Opportunity__c</name>
+    <help>この助成金が以前の助成金の更新である場合、この項目を使用してこのレコードを以前のレコードに関連付けます。</help>
     <relationshipLabel>関連する助成金支援</relationshipLabel>
+    <label>以前の助成金商談</label>
 </CustomFieldTranslation>

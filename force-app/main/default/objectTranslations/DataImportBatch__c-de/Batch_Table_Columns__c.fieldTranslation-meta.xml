@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Table_Columns__c</name>
     <help>Liste der API-Namen für die in der Spenden-Batchtabelle enthaltenen Felder. Als JSON gespeichert.</help>
     <label>Spalten der Batchtabelle</label>
-    <name>Batch_Table_Columns__c</name>
 </CustomFieldTranslation>

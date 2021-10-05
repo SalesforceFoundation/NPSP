@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- The role associated with this soft credit. The role describes how the Account was involved with the Opportunity. --></help>
-    <label><!-- Role --></label>
+    <help/>
+    <label/>
     <name>Role__c</name>
     <picklistValues>
         <masterLabel>Donation Source</masterLabel>
-        <translation><!-- Donation Source --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Influencer</masterLabel>
-        <translation><!-- Influencer --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Match</masterLabel>
-        <translation><!-- Match --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign_Member_Responded_Status__c</name>
     <help>Le statut par défaut que NPSP utilise sur les membres de campagne pour des opp.Clôturées/Gagnées ayant un contact principal et une source de campagne principale associée. Si vide, NPSP utilise le premier statut « A répondu ».</help>
     <label>Statut « Répondu » de membre de campagne</label>
-    <name>Campaign_Member_Responded_Status__c</name>
 </CustomFieldTranslation>

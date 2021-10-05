@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Keyword_Terms__c</name>
+    <help>Google Analytics-Parameter zur Nachverfolgung bezahlter Suchbegriffe.</help>
+    <label>UTM-Stichwortbegriffe</label>
+</CustomFieldTranslation>

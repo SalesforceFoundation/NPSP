@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Active__c</name>
     <help>このレベルが現在使用されているかどうか。</help>
     <label>有効</label>
-    <name>Active__c</name>
 </CustomFieldTranslation>

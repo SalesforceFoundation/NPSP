@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
-    </caseValues>
-    <gender>Masculine</gender>
     <layouts>
         <layout>GS Checklist Section Layout</layout>
         <sections>
@@ -48,4 +7,45 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Abschnitt der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Abschnitts der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Abschnitten der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Abschnitte der NPSP-Checkliste &quot;Erste Schritte&quot;</value>
+    </caseValues>
 </CustomObjectTranslation>

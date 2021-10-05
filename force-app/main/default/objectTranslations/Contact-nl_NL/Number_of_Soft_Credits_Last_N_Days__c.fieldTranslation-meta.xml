@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     <help>Het aantal aan deze Contactpersoon toegekende soft credits die in de laatste N dagen zijn gesloten. De waarde van N is ingesteld in NPSP-instellingen | Donaties | Donorstatistieken.</help>
     <label>Aantal Soft Credits Laatste N Dagen</label>
-    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
 </CustomFieldTranslation>

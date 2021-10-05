@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La plantilla del plan de acción a aplicar al objeto destino cuando este nivel es alcanzado.</help>
-    <label>Plantilla del plan de acción</label>
     <name>Engagement_Plan_Template__c</name>
+    <help>La plantilla del plan de acción a aplicar al objeto destino cuando este nivel es alcanzado.</help>
     <relationshipLabel>Niveles</relationshipLabel>
+    <label>Plantilla de plan de participación</label>
 </CustomFieldTranslation>

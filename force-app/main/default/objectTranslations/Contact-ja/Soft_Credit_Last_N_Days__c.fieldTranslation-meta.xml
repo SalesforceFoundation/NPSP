@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Soft_Credit_Last_N_Days__c</name>
     <help>[世帯設定] で定義された過去の日数の間に完了したソフトクレジットの総額。</help>
     <label>過去 N 日間のソフトクレジット</label>
-    <name>Soft_Credit_Last_N_Days__c</name>
 </CustomFieldTranslation>

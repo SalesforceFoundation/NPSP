@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Request_Deadline__c</name>
     <help>Gebruik dit veld voor notities over de leeftijdsbeperkingen die dit bedrijf oplegt voor geschiktheid voor Geëvenaarde Giften.</help>
     <label>Deadline Aanvraag Geëvenaarde Gift</label>
-    <name>Matching_Gift_Request_Deadline__c</name>
 </CustomFieldTranslation>
