@@ -36,6 +36,9 @@ cci task run update_admin_profile --org translations
 echo "# ==== Use force:source:retrieve to pull down the non-object related translation metadata ===="
 # cci task run retrieve_unpackaged --org translations
 sfdx force:source:retrieve -p force-app/main/default/translations -u Cumulus__translations
+sfdx force:source:retrieve -p force-app/main/default/globalValueSetTranslations -u Cumulus__translations
+sfdx force:source:retrieve -p force-app/main/default/objectTranslations -u Cumulus__translations
+sfdx force:source:retrieve -p force-app/tdtm/objectTranslations -u Cumulus__translations
 
 echo "# ==== CLEANUP task to strip out extraneous elements from the translation files ===="
 cci task run cleanup_translation_metadata
