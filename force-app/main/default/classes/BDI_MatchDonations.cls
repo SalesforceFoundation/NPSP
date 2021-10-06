@@ -443,10 +443,14 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
                 setOppId.add(di.DonationImported__c);
             } else if (di.Donation_Donor__c == 'Contact1') {
                 Contact con = bdi.ContactFromDi(di, 1);
-                setConId.add(con.Id);                                
+                if (con.Id != null) {
+                    setConId.add(con.Id);
+                }
             } else if (di.Donation_Donor__c == 'Account1') {
                 Account acc = bdi.AccountFromDi(di, 1);
-                setAccId.add(acc.Id);
+                if (acc.Id != null) {
+                    setAccId.add(acc.Id);
+                }
             }
         }
         
@@ -484,6 +488,8 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.addAll(mapDIFieldToPmtField.values());
 
         // now query for all Open Opportunities from these Contacts or Accounts
+        System.debug('setAccId '+ setAccId);
+        System.debug('setConId '+ setConId);
         String strSoql = buildMatchQuery(setOppFields, setPmtFields, setOppId, setAccId, setConId);
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
         list<Opportunity> listOpp = database.query(strSoql);
@@ -527,7 +533,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
             cFilter++;
         }
-        strSoql += ') LIMIT 50000 ';
+        strSoql += ')';
         return strSoql;
     }
 
