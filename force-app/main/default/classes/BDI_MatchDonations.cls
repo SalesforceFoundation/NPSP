@@ -488,8 +488,6 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.addAll(mapDIFieldToPmtField.values());
 
         // now query for all Open Opportunities from these Contacts or Accounts
-        System.debug('setAccId '+ setAccId);
-        System.debug('setConId '+ setConId);
         String strSoql = buildMatchQuery(setOppFields, setPmtFields, setOppId, setAccId, setConId);
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
         list<Opportunity> listOpp = database.query(strSoql);
