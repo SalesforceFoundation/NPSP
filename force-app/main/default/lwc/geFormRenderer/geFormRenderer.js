@@ -1128,7 +1128,16 @@ export default class GeFormRenderer extends LightningElement{
         this.hasPageLevelError = false;
         this.pageLevelErrorMessageList = [];
 
-        // Clear the field level errors
+        // Clear the field level custom validations
+        const sections = this.template.querySelectorAll('c-ge-form-section');
+        sections.forEach(section => {
+            const fields = section.getAllFieldsByAPIName();
+            Object.values(fields).forEach(field => {
+                field.clearCustomValidity();
+            });
+        });
+
+        // Clear the field level errors from custom aura exception
         if (this.erroredFields.length > 0) {
             this.erroredFields.forEach(fieldToReset => {
                 fieldToReset.setCustomValidity('');
@@ -1729,6 +1738,10 @@ export default class GeFormRenderer extends LightningElement{
             this._giftInView = giftLocalCopy;
             this._openedGiftId = giftLocalCopy.fields.Id || null;
             this.formState = giftLocalCopy.fields;
+
+            if (this._openedGiftId && this.hasPageLevelError) {
+                this.clearErrors();
+            }
         }
     }
 
