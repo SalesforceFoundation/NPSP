@@ -44,10 +44,11 @@ jest.mock('c/geFormService', () => {
 });
 
 // Setup for standard picklists
-const createStandardPicklistElement = () => {
+const createStandardPicklistElement = (dummyId) => {
     const element = createElement('c-ge-form-field', { is: GeFormField });
     element.element = elementJSON;
     element.formState = {
+        Id: dummyId ? dummyId : null,
         [fieldMapping.Source_Field_API_Name]: null
     };
 
@@ -204,8 +205,8 @@ describe('c-ge-form-field', () => {
             });
     });
 
-    it('calls validity check when value changes', async () => {
-        const element = createStandardPicklistElement();
+    it('performs validity check when value changes upon opening a gift', async () => {
+        const element = createStandardPicklistElement('dummy id');
         const validityCheckSpy = jest.spyOn(geFormFieldHelper, 'validityCheck');
 
         const picklistChangeHandler = jest.fn();
@@ -220,6 +221,25 @@ describe('c-ge-form-field', () => {
 
         return Promise.resolve().then(() => {
             expect(validityCheckSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it('does not perform validity check when value changes because standard onblur handler will perform validity', async () => {
+        const element = createStandardPicklistElement();
+        const validityCheckSpy = jest.spyOn(geFormFieldHelper, 'validityCheck');
+
+        const picklistChangeHandler = jest.fn();
+        registerListener('formfieldchange', picklistChangeHandler, this);
+
+        document.body.appendChild(element);
+
+        expect(element.isPicklist).toBeTruthy();
+
+        const picklist = element.shadowRoot.querySelector('lightning-combobox');
+        dispatchChangeEvent(picklist, 'newPicklistValue');
+
+        return Promise.resolve().then(() => {
+            expect(validityCheckSpy).toHaveBeenCalledTimes(0);
         });
     });
 

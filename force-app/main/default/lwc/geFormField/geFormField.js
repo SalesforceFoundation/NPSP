@@ -37,15 +37,25 @@ export default class GeFormField extends LightningElement {
     @track objectDescribeInfo;
     @track _disabled = false;
     @track targetFieldDescribeInfo;
-    @api element;
     @api targetFieldName;
     _recordTypeId;
     _picklistValues;
     _isRichTextValid = true;
+    _required = false;
 
     richTextFormats = RICH_TEXT_FORMATS;
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     utilDescribe = new UtilDescribe();
+
+    @api
+    get element() {
+        return this._element;
+    }
+
+    set element(value) {
+        this._element = value;
+        this._required = value.required;
+    }
 
     get value() {
         return this.valueFromFormState;
@@ -165,8 +175,8 @@ export default class GeFormField extends LightningElement {
     }
 
     get required() {
-        return (this.fieldMapping && this.fieldMapping.Is_Required && this.fieldType !== BOOLEAN_TYPE) ||
-            (this.element && this.element.required);
+        return (this.fieldMapping && this.fieldMapping.Is_Required && this.fieldType !== BOOLEAN_TYPE)
+            || this._required;
     }
 
     get disabled() {
@@ -318,9 +328,16 @@ export default class GeFormField extends LightningElement {
 
     @api
     clearCustomValidity() {
-
         if (!this.isLookup) {
-            this.setCustomValidity('');
+            if (this.element.required) {
+                const inputField = this.inputField();
+                inputField.required = false;
+                inputField.setCustomValidity('');
+                inputField.reportValidity();
+                inputField.required = true;
+            } else {
+                this.setCustomValidity('');
+            }
         }
 
     }
@@ -377,8 +394,9 @@ export default class GeFormField extends LightningElement {
             resolve();
         })
         .finally(() => {
+            const isNewGift = !formState?.Id;
             const isValueChanged = newValue !== previousValue;
-            if (isValueChanged) {
+            if (isValueChanged && !isNewGift) {
                 this.isValid();
             }
         });
