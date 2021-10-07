@@ -41,7 +41,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the bdi we are invoked from
     */ 
-    private BDI_DataImportService bdi { get; set; }
+    @TestVisible private BDI_DataImportService bdi { get; set; }
+    @TestVisible private Set<Id> setConId = new Set<Id>();
+    @TestVisible private Set<Id> setAccId = new Set<Id>();
+    @TestVisible private Set<Id> setOppId = new Set<Id>();
 
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
@@ -430,13 +433,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param listDI The DataImport records we are trying to match
     * @return list<Opportunity> The list of potential matching Opps.  null if none.
     */
+    @TestVisible
     private List<Opportunity> getPotentialDonationMatches(List<DataImport__c> listDI) {
         
         // collect all the contacts and accounts who have donations to import
-        Set<Id> setConId = new Set<Id>();
-        Set<Id> setAccId = new Set<Id>();
-        Set<Id> setOppId = new Set<Id>();
-        
         for (DataImport__c di : listDI) {
             // handle already been given the match!
             if (di.DonationImported__c != null) {
@@ -489,10 +489,20 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
 
         // now query for all Open Opportunities from these Contacts or Accounts
         String strSoql = buildMatchQuery(setOppFields, setPmtFields, setOppId, setAccId, setConId);
-        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
         List<Opportunity> listOpp = Database.query(strSoql);
-        pl.stop();
+        perfLog.stop();
         return listOpp;           
+    }
+
+    @TestVisible
+    private static BDI_PerfLogger.PerfLog perfLog {
+        get {
+            if (perfLog == null) {
+                perfLog = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
+            }
+            return perfLog;
+        }
+        set;
     }
 
     private String buildMatchQuery(
