@@ -180,6 +180,72 @@ describe('c-ge-form-renderer', () => {
                 dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
             });
         });
+
+    it('when a form is saved with a possible validation rule error then processing of the donation should be halted',
+        async () => {
+
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            mockCheckInputValidity.mockReturnValue(true); // lightning-inputs always report they are valid
+            mockCheckComboboxValidity.mockReturnValue(true); // lightning-comboboxes always report they are valid
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+
+            const validationRuleErrorResponse = {
+                "status":500,
+                "body":{
+                    "exceptionType":"System.DmlException",
+                    "isUserDefinedException":false,
+                    "message":"{\"exceptionType\":\"System.DmlException\"," +
+                        "\"errorMessage\":null," +
+                        "\"DMLErrorMessageMapping\":" +
+                        "{\"0\":\"Donation has to be more than $5\"}," +
+                        "\"DMLErrorFieldNameMapping\":{}}",
+                    "stackTrace":""
+                },
+                "headers":{}
+            }
+            upsertDataImport.mockRejectedValue(validationRuleErrorResponse);
+
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer});
+            document.body.appendChild(element);
+
+            getObjectInfo.emit(dataImportObjectInfo, config => {
+                return config.objectApiName.objectApiName === 'DataImport__c';
+            });
+
+            await flushPromises();
+
+            const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
+            element.giftInView = {
+                fields: {
+                    'Donation_Amount__c': '0.01',
+                    'Contact1Imported__c': DUMMY_CONTACT_ID,
+                    'Donation_Date__c': '2021-02-23',
+                    'Donation_Donor__c': 'Contact',
+                    'Contact1_Lastname__c': 'DummyLastName'
+                },
+                softCredits: { all: [] }
+            };
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(getRecordContact1Imported, config => {
+                return config.recordId === DUMMY_CONTACT_ID;
+            });
+            await flushPromises();
+            // resolve form updates before clicking save button
+
+            const saveButton = element.shadowRoot.querySelectorAll('lightning-button')[1];
+            saveButton.click();
+            await flushPromises();
+
+            expect(upsertDataImport).toHaveBeenCalledTimes(1);
+
+            const pageLevelMessage = element.shadowRoot.querySelector('c-util-page-level-message');
+            const pElement = pageLevelMessage.querySelector('p');
+            expect(pElement.innerHTML).toBe('Donation has to be more than $5');
+            const spinner = element.shadowRoot.querySelector('lightning-spinner');
+            expect(spinner).toBeFalsy();
+    });
 });
 
 const traverse = (element, ...selectors) => {

@@ -126,6 +126,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import bgeGridGiftSaved from '@salesforce/label/c.bgeGridGiftSaved';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
@@ -573,16 +574,18 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
-                    
-                    if (isCreditCardAuth) {
-                        showToast(
-                            this.CUSTOM_LABELS.PageMessagesConfirm,
-                            this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
-                            'success', 
-                            'dismissible', 
-                            null
-                        );
-                    }
+
+                    const toastMessage = isCreditCardAuth
+                        ? this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess
+                        : bgeGridGiftSaved;
+
+                    showToast(
+                        this.CUSTOM_LABELS.PageMessagesConfirm,
+                        toastMessage,
+                        'success',
+                        'dismissible',
+                        null
+                    );
                 },
                 error: (error) => {
                     formControls.enableSaveButton();
@@ -743,26 +746,26 @@ export default class GeFormRenderer extends LightningElement{
         const removeResult = await this.handleRemoveFromElevateBatch(tokenizedGift);
         if (removeResult.hasError) { return; }
 
-        const hasSaved = await this.saveDataImport(this.saveableFormState());
-        if (!hasSaved) {
+        try {
+            await this.saveDataImport(this.saveableFormState());
+            await this.prepareForBatchGiftSave(
+                this.saveableFormState(), formControls, tokenizedGift);
+        } catch (err) {
             if (removeResult.hasProcessed) {
                 this.handleLogError(
                     '',
                     GeLabelService.format(
                         this.CUSTOM_LABELS.geElevateUpdateErrorLog,
                         [this.CUSTOM_LABELS.commonPaymentServices,
-                        this._openedGiftId,
-                        this.batchId]
+                            this._openedGiftId,
+                            this.batchId]
                     )
-                );    
+                );
             }
-                
             this.disabled = false;
             this.toggleSpinner();
-            return;
+            this.handleCatchOnSave(err);
         }
-
-        await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
     }
 
     handleLogError(error, context) {
@@ -855,17 +858,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async handleAuthorizationFailure(declineReason) {
-        this.updateFormState({
-            [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
-            [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
-            [apiNameFor(STATUS_FIELD)]: FAILED
+        new Promise((resolve,reject) => {
+            this.updateFormState({
+                [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
+                [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
+                [apiNameFor(STATUS_FIELD)]: FAILED
+            });
+            resolve();
+        })
+        .finally(async () => {
+            await this.saveDataImport(this.saveableFormState());
+            const errors = [{ message: declineReason }];
+            this.handleElevateAPIErrors(errors);
+            fireEvent(this, 'refreshbatchtable', {});
         });
-        await this.saveDataImport(this.saveableFormState());
-
-        const errors = [{ message: declineReason }];
-        this.handleElevateAPIErrors(errors);
-
-        fireEvent(this, 'refreshbatchtable', {});
     }
 
     /*******************************************************************************
@@ -1729,12 +1735,8 @@ export default class GeFormRenderer extends LightningElement{
             this.reset();
         } else if (gift && gift.fields) {
             let giftLocalCopy = deepClone(gift);
-
-            if (giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
-                giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
-                    convertBDIToWidgetJson(giftLocalCopy.fields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)])
-            }
-
+            this.handleWidgetJSON(giftLocalCopy.fields);
+            this.handleReset(giftLocalCopy.fields.Id);
             this._giftInView = giftLocalCopy;
             this._openedGiftId = giftLocalCopy.fields.Id || null;
             this.formState = giftLocalCopy.fields;
@@ -1742,6 +1744,19 @@ export default class GeFormRenderer extends LightningElement{
             if (this._openedGiftId && this.hasPageLevelError) {
                 this.clearErrors();
             }
+        }
+    }
+
+    handleWidgetJSON(giftFields) {
+        if (giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
+            giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
+                convertBDIToWidgetJson(giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
+        }
+    }
+
+    handleReset(giftId) {
+        if (this._openedGiftId !== giftId) {
+            this.resetElevateWidget();
         }
     }
 
@@ -2348,7 +2363,13 @@ export default class GeFormRenderer extends LightningElement{
         } catch (error) {
             this.disabled = false;
             this.toggleSpinner();
-            handleError(error);
+
+            const exceptionWrapper = new ExceptionDataError(error);
+            if (isNotEmpty(exceptionWrapper.exceptionType)) {
+                this.handleCatchOnSave(error)
+            } else {
+                handleError(error);
+            }
         }
     }
 
@@ -2356,18 +2377,11 @@ export default class GeFormRenderer extends LightningElement{
         this.loadingText = this.hasDataImportId
             ? this.CUSTOM_LABELS.geTextUpdating
             : this.CUSTOM_LABELS.geTextSaving;
-
-        try {
-            delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
-            const upsertResponse = await upsertDataImport({
-                dataImport: dataImportFromFormState
-            });
-            this.updateFormState(upsertResponse);
-            return true;
-        } catch (err) {
-            this.handleCatchOnSave(err);
-            return false;
-        }
+        delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
+        const upsertResponse = await upsertDataImport({
+            dataImport: dataImportFromFormState
+        });
+        this.updateFormState(upsertResponse);
     };
 
     makePurchaseRequest = async () => {

@@ -58,6 +58,7 @@ import RECURRING_DONATION_RECURRING_TYPE_FIELD from '@salesforce/schema/DataImpo
 import RECURRING_DONATION_STATUS_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Status__c';
 import RECURRING_DONATION_STATUS_REASON_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Status_Reason__c';
 import RECURRING_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.RecurringDonationImported__c';
+import RECURRING_DONATION_CHANGE_TYPE_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Change_Type__c';
 
 const FIELD = 'field';
 const BOOLEAN_TYPE = 'BOOLEAN';
@@ -126,7 +127,8 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     RECURRING_DONATION_RECURRING_TYPE_FIELD.fieldApiName,
     RECURRING_DONATION_STATUS_FIELD.fieldApiName,
     RECURRING_DONATION_STATUS_REASON_FIELD.fieldApiName,
-    RECURRING_DONATION_IMPORTED_FIELD.fieldApiName
+    RECURRING_DONATION_IMPORTED_FIELD.fieldApiName,
+    RECURRING_DONATION_CHANGE_TYPE_FIELD.fieldApiName
 ];
 
 const FIELD_BUNDLE_MASTER_NAMES = [
