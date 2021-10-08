@@ -40,6 +40,8 @@ public with sharing class GiftSelector {
     private Integer giftsOffset;
     private Integer giftsLimit;
 
+    public GiftSelector() {}
+
     public GiftSelector(GiftTemplate giftTemplate) {
         this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
     }
@@ -135,6 +137,7 @@ public with sharing class GiftSelector {
         return giftEntryFieldApiNames;
     }
 
+    @TestVisible
     private List<String> fields() {
         Set<String> queryFieldAsSet = new Set<String>();
         queryFieldAsSet.addAll(coreFields());
