@@ -138,8 +138,8 @@ public virtual with sharing class UTIL_PerfLogger {
     public virtual with sharing class PerfLog {
 
         private SObject plSObject;
-        private Long tmStart;
-        private Long tmEnd;
+        private Long tmStart = 0L;
+        private Long tmEnd = 0L;
 
         /*******************************************************************************************************
         * @description the total times this PerfLog has been started

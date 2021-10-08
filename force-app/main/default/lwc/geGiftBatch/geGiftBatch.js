@@ -121,6 +121,10 @@ class GiftBatch {
         return this._gifts.length;
     }
 
+    mostRecentGift() {
+        return this._gifts?.length > 0 && this._gifts[0];
+    }
+
     findGiftBy(giftId) {
         return this._gifts.find(gift => gift.id() === giftId);
     }
