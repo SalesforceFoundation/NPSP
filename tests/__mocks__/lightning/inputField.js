@@ -12,6 +12,8 @@ export const mockReportValidity = jest.fn().mockImplementation(function () {
     return true;
 });
 
+export const mockReset = jest.fn();
+
 export default class InputField extends LightningElement {
     @api dirty;
     @api disabled;
@@ -22,7 +24,7 @@ export default class InputField extends LightningElement {
     @api variant;
     @api clean() {}
     @api reportValidity = mockReportValidity;
-    @api reset() {}
+    @api reset = mockReset;
     @api setErrors() {}
     @api updateDependentField() {}
     @api wirePicklistValues() {}
