@@ -6,13 +6,6 @@ describe('custom fields', () => {
     let element;
 
     beforeEach(async () => {
-        mockReportValidity.mockImplementation(function () {
-            if (this.required === true && this.value === undefined) {
-                return false;
-            }
-            return true;
-        });
-
         element = createElement('c-rd2-entry-form-custom-fields-section', {is: rd2EntryFormCustomFieldsSection});
         element.recordId = '123456';
         element.fields = [
@@ -82,12 +75,12 @@ describe('custom fields', () => {
             this.value = undefined;
         });
 
-        const inputFields = element.shadowRoot.querySelectorAll('lightning-input-field');
-        inputFields.forEach(f => { f.value = '1' });
+        const inputField = element.shadowRoot.querySelector('lightning-input-field');
+        inputField.value = "1";
 
         const returnValues = element.returnValues();
         expect(returnValues["npe03__Recurring_Donation__c.Custom1__c"]).toBe("1");
-        expect(returnValues["SomeObject.SomeField__c"]).toBe("1");
+        expect(returnValues["SomeObject.SomeField__c"]).toBeFalsy();
 
         element.resetValues();
 
