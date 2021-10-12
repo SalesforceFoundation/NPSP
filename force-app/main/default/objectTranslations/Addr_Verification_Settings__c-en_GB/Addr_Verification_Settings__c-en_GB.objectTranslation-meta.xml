@@ -4,9 +4,5 @@
         <plural>false</plural>
         <value>Address Verification Settings</value>
     </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value/>
-    </caseValues>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>
