@@ -36,6 +36,8 @@
 
 public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 
+    private static final Long pageLoadStartTime = System.currentTimeMillis();
+
     /*********************************************************************************************************
     * @description The controller's constructor
     */
@@ -89,6 +91,13 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
+
+        Long loadTime = System.currentTimeMillis() - pageLoadStartTime;
+        SfdoInstrumentationService.log(
+            SfdoInstrumentationEnum.Feature.Settings, 
+            SfdoInstrumentationEnum.Component.Page, 
+            SfdoInstrumentationEnum.Action.Open, 
+            loadTime.intValue());
     }
 
     /*********************************************************************************************************
