@@ -67,10 +67,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
             try {
-                updateOpportunityNames((list<Opportunity>) newList);            
+                updateOpportunityNames((list<Opportunity>) newList);
             } catch (Exception ex) {
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
             }
+            instrumentNewGifts(newlist);
+
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             upsertContactRolesAfterUpdate((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
         }
@@ -894,5 +896,68 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
      */
     private static Boolean isIndividualAccount(Map<Id, Account> accountMap, Id accountId) {
         return (accountId != null && accountMap.containsKey(accountId) ? accountMap.get(accountId).npe01__SYSTEMIsIndividual__c  : null);
+    }
+
+    /**
+     * @description Instrument creations of new gift to Splunk using the RecordType to identify the specific type of gift 
+     * which sets the appropriate Feature enum to use in the instrumentation
+     * @param  newlist Collection of Opportunities being inserted
+     */
+    private static void instrumentNewGifts(List<Opportunity> newlist) {
+
+        Map<SfdoInstrumentationEnum.Feature, Integer> countsByFeature = new Map<SfdoInstrumentationEnum.Feature, Integer>();
+
+        for (Opportunity opp : newlist) {
+            SfdoInstrumentationEnum.Feature feature = featureByOppRecordType.get(opp.RecordTypeId);
+            if (feature != null) {
+                if (countsByFeature.get(feature) == null) {
+                    countsByFeature.put(feature, 0);
+                }
+                countsByFeature.put(feature, countsByFeature.get(feature)+1);
+            }
+        }
+
+        for (SfdoInstrumentationEnum.Feature feature : countsByFeature.keySet()) {
+            SfdoInstrumentationService.log(
+                feature, 
+                SfdoInstrumentationEnum.Component.TriggerAction,
+                SfdoInstrumentationEnum.Action.Create, 
+                countsByFeature.get(feature)
+            );
+        }
+    }
+
+    /**
+     * @description Retrieve a Map of Opportunity RecordTypeId to Instrumentation Feature Enum to use for instrumenting counts of new gifts
+     * @return   Map<Id, SfdoInstrumentationEnum.Feature>
+     */
+    private static Map<Id, SfdoInstrumentationEnum.Feature> featureByOppRecordType {
+        get {
+
+            if (featureByOppRecordType == null) {
+                featureByOppRecordType = new Map<Id, SfdoInstrumentationEnum.Feature>();
+
+                Map<SfdoInstrumentationEnum.Feature, Set<String>> recordTypesByEnum = new Map<SfdoInstrumentationEnum.Feature, Set<String>>{
+                    SfdoInstrumentationEnum.Feature.Donations => new Set<String>{ 'Donation', 'NPSP_Default' },
+                    SfdoInstrumentationEnum.Feature.MajorGifts => new Set<String>{ 'MajorGift' },
+                    SfdoInstrumentationEnum.Feature.Memberships => new Set<String>{ 'Membership' },
+                    SfdoInstrumentationEnum.Feature.Grants => new Set<String>{ 'Grant' },
+                    SfdoInstrumentationEnum.Feature.MatchingGifts => new Set<String>{ 'MatchingGift' }
+                };
+        
+                Map<Id, Schema.RecordTypeInfo> oppRecordTypes = UTIL_Describe.getObjectDescribe(Opportunity.SObjectType).getRecordTypeInfosById();
+                for (Id rtId : oppRecordTypes.keySet()) {
+                    String rtDevName = oppRecordTypes.get(rtId).getDeveloperName();
+                    for (SfdoInstrumentationEnum.Feature feature : recordTypesByEnum.keySet()) {
+                        if (recordTypesByEnum.get(feature).contains(rtDevName)) {
+                            featureByOppRecordType.put(rtId, feature);
+                            break;
+                        }
+                    }
+                }
+            }
+            return featureByOppRecordType;
+
+        } set;
     }
 }
