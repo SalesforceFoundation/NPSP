@@ -521,4 +521,18 @@ public with sharing class RD2_EntryFormController {
         }
     }
 
+    @AuraEnabled
+    public static void logLoadDuration(Integer duration) {
+        try {
+            // Log the page load duration time
+            SfdoInstrumentationService.log(
+                SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, 
+                SfdoInstrumentationEnum.Component.Page,
+                SfdoInstrumentationEnum.Action.Open,
+                duration
+            );
+        } catch (Exception e) {
+            // do nothing
+        }
+    }
 }

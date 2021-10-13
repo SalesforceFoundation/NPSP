@@ -61,6 +61,7 @@ import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRe
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 import logError from '@salesforce/apex/RD2_EntryFormController.logError';
+import logLoadDuration from '@salesforce/apex/RD2_EntryFormController.logLoadDuration';
 
 import MAILING_COUNTRY_FIELD from '@salesforce/schema/Contact.MailingCountry';
 import CONTACT_FIRST_NAME from '@salesforce/schema/Contact.FirstName';
@@ -83,6 +84,8 @@ const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 const ELEVATE_WIDGET_EVENT_NAME = 'rd2ElevateCreditCardForm';
 
 export default class rd2EntryForm extends LightningElement {
+
+    loadTimerStart = Date.now();
 
     listenerEvent = 'rd2EntryFormEvent';
 
@@ -231,6 +234,11 @@ export default class rd2EntryForm extends LightningElement {
                 this.isLoading = false;
                 this.evaluateElevateEditWidget();
                 this.handleDonationValueChange();
+
+                let duration = Date.now() - this.loadTimerStart;
+                logLoadDuration({ duration: duration })
+                    .catch((error) => { });
+
             });
 
         /*
