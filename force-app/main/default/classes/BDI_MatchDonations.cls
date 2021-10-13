@@ -41,7 +41,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     /*******************************************************************************************************
     * @description the bdi we are invoked from
     */ 
-    private BDI_DataImportService bdi { get; set; }
+    @TestVisible private BDI_DataImportService bdi { get; set; }
+    @TestVisible private Set<Id> setConId = new Set<Id>();
+    @TestVisible private Set<Id> setAccId = new Set<Id>();
+    @TestVisible private Set<Id> setOppId = new Set<Id>();
 
     /*******************************************************************************************************
     * @description the map of DI Donation Fields to Opportunity Fields
@@ -430,23 +433,24 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
     * @param listDI The DataImport records we are trying to match
     * @return list<Opportunity> The list of potential matching Opps.  null if none.
     */
-    private list<Opportunity> getPotentialDonationMatches(list<DataImport__c> listDI) {
+    @TestVisible
+    private List<Opportunity> getPotentialDonationMatches(List<DataImport__c> listDI) {
         
         // collect all the contacts and accounts who have donations to import
-        set<Id> setConId = new set<Id>();
-        set<Id> setAccId = new set<Id>();
-        set<Id> setOppId = new set<Id>();
-        
         for (DataImport__c di : listDI) {
             // handle already been given the match!
             if (di.DonationImported__c != null) {
                 setOppId.add(di.DonationImported__c);
             } else if (di.Donation_Donor__c == 'Contact1') {
-                Contact con = bdi.ContactFromDi(di, 1);
-                setConId.add(con.Id);                                
+                Contact con = bdi.contactFromDi(di, 1);
+                if (con.Id != null) {
+                    setConId.add(con.Id);
+                }
             } else if (di.Donation_Donor__c == 'Account1') {
                 Account acc = bdi.AccountFromDi(di, 1);
-                setAccId.add(acc.Id);
+                if (acc.Id != null) {
+                    setAccId.add(acc.Id);
+                }
             }
         }
         
@@ -456,7 +460,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         }
         
         // the set of Opportunity fields for our soql
-        set<String> setOppFields = new set<String>();
+        Set<String> setOppFields = new Set<String>();
         setOppFields.add('Id');
         setOppFields.add('Name');
         setOppFields.add('Amount');
@@ -470,7 +474,7 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setOppFields.addAll(mapDIFieldToOppField.values());
         
         // the set of Payment fields for our soql
-        set<String> setPmtFields = new set<String>();
+        Set<String> setPmtFields = new Set<String>();
         setPmtFields.add('Id');
         setPmtFields.add('Name');
         setPmtFields.add('npe01__Paid__c');
@@ -484,14 +488,37 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
         setPmtFields.addAll(mapDIFieldToPmtField.values());
 
         // now query for all Open Opportunities from these Contacts or Accounts
-        integer cFilter = 0;
-        string strSoql = 'SELECT ' + string.join(new list<String>(setOppFields), ',');
-        
+        String strSoql = buildMatchQuery(setOppFields, setPmtFields, setOppId, setAccId, setConId);
+        List<Opportunity> listOpp = Database.query(strSoql);
+        perfLog.stop();
+        return listOpp;           
+    }
+
+    @TestVisible
+    private static BDI_PerfLogger.PerfLog perfLog {
+        get {
+            if (perfLog == null) {
+                perfLog = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
+            }
+            return perfLog;
+        }
+        set;
+    }
+
+    private String buildMatchQuery(
+        Set<String> setOppFields,
+        Set<String> setPmtFields,
+        Set<Id> setOppId,
+        Set<Id> setAccId,
+        Set<Id> setConId) {
+        Integer cFilter = 0;
+        String strSoql = 'SELECT ' + String.join(new List<String>(setOppFields), ',');
+
         // add Payment subquery
-        strSoql += ', (SELECT ' + string.join(new list<String>(setPmtFields), ',');
+        strSoql += ', (SELECT ' + String.join(new List<String>(setPmtFields), ',');
         strSoql += ' FROM npe01__OppPayment__r ' +
-                'WHERE npe01__Paid__c = false ' +
-                'AND npe01__Written_Off__c = false)';
+            'WHERE npe01__Paid__c = false ' +
+            'AND npe01__Written_Off__c = false)';
 
         strSoql += ' FROM Opportunity';
         strSoql += ' WHERE IsClosed = false AND (';
@@ -513,13 +540,10 @@ public with sharing class BDI_MatchDonations implements BDI_IMatchDonations {
             strSoql += ' ' + UTIL_Namespace.StrTokenNSPrefix('Primary_Contact__c') + ' IN :setConId ';
             cFilter++;
         }
-        strSoql += ') ';
-        BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Opps', BDI_PerfLogger.QUERY);
-        list<Opportunity> listOpp = database.query(strSoql);
-        pl.stop();
-        return listOpp;           
+        strSoql += ')';
+        return strSoql;
     }
-    
+
     /*******************************************************************************************************
     * @description creates a map from a Contact Id or Account Id, to a list of Opportunities
     * @param listOpp The opps to put on the map

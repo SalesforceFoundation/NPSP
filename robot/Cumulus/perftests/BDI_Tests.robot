@@ -44,7 +44,7 @@ Generate Data
     [Arguments]    ${BdiMatchingMode}
     ${count} =  Convert To Integer      ${DataImportRecordCount}
 
-    ${recipe} =     Set Variable if    '${BdiMatchingMode}'=='FullMatch'       
+    ${recipe} =     Set Variable if    '${BdiMatchingMode}'=='FullMatch'
     ...             ${RecipeWithMatches}
     ...             ${RecipeWithNoMatches}
 
@@ -80,7 +80,7 @@ Delete Default Data
     [Documentation]     Delete Entitlement & Associated Records (these are created by default in new scratch orgs)
     Log to Console      Deleting Entitlement Records
     Run keyword and ignore error        Run Task            test_data_delete
-        ...     objects=Entitlement
+        ...     objects=Entitlement,Account
 
 Disable NPSP Triggers
     [Documentation]  Disable all NPSP Triggers

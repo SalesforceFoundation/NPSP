@@ -2,7 +2,7 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import { NavigationMixin } from 'lightning/navigation';
 import { registerListener, unregisterListener } from 'c/pubsubNoPageRef';
-import { validateJSONString, getNamespace, showToast } from 'c/utilCommon';
+import { validateJSONString, getNamespace, showToast, format } from 'c/utilCommon';
 import { handleError } from "c/utilTemplateBuilder";
 import GeLabelService from 'c/geLabelService';
 import geBatchGiftsExpectedTotalsMessage
@@ -268,17 +268,14 @@ export default class GeGiftEntryFormApp extends NavigationMixin(LightningElement
                     this.giftBatchState = await this.giftBatch.addMember(this.gift);
                 }
 
-                event.detail.success();
-
-                showToast(
-                    this.CUSTOM_LABELS.PageMessagesConfirm,
-                    'Gift successfully saved',
-                    'success',
-                    'dismissible',
-                    null
-                );
-
-                this.handleClearGiftInView();
+                const mostRecentGift = this.giftBatch.mostRecentGift();
+                if (mostRecentGift.failureInformation()) {
+                    event.detail.error(mostRecentGift.failureInformation());
+                    return;
+                } else {
+                    event.detail.success();
+                    this.handleClearGiftInView();
+                }
             }
         } catch (error) {
             this.errorCallback(error);
