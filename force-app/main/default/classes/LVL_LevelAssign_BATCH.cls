@@ -52,6 +52,8 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
     /** @description The time that the batch started */
     private DateTime batchStartTime;
 
+    private Integer levelAssignedCount = 0;
+
     /*********************************************************************************************************
     * @description The batch process constructor; creates opportunity query for all opportunities.
     */
@@ -127,6 +129,7 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                             }
 
                             recordsById.put(record.Id, record);
+                            levelAssignedCount++;
 
                             // apply the Engagement Plan
                             if (level.Engagement_Plan_Template__c != null) {
@@ -247,6 +250,12 @@ public without sharing class LVL_LevelAssign_BATCH implements Database.Batchable
                 levelsSettings.LastJobStartTimeContact__c = batchStartTime;
                 upsert levelsSettings;
             }
+
+            SfdoInstrumentationService.log(
+                SfdoInstrumentationEnum.Feature.Levels, 
+                SfdoInstrumentationEnum.Component.Batch, 
+                SfdoInstrumentationEnum.Action.Create, 
+                levelAssignedCount);
         }
     }
 
