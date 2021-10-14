@@ -490,6 +490,26 @@ public class HouseholdNamingService_TEST {
 
     }
 
+    @IsTest
+    private static void verifyHouseholdMemberCountShouldBeZeroWhenTheLastMemberIsRemoved(){
+        Contact member = new Contact(FirstName='member', LastName='smith');
+        insert member;
+
+        Account household = [SELECT Name, Number_of_Household_Members__c FROM Account LIMIT 1];
+
+        System.assertEquals(1, household.Number_of_Household_Members__c, 'There should be one member in the household');
+
+        Test.startTest();
+        delete member;
+        Test.stopTest();
+
+        household = [SELECT Name, Number_of_Household_Members__c FROM Account LIMIT 1];
+
+        String defaultName = System.Label.npo02.HouseholdAnonymousName + ' ' + System.Label.npo02.DefaultHouseholdName;
+        System.assertEquals(0, household.Number_of_Household_Members__c, 'There should be no member left in the household');
+        System.assertEquals(defaultName, household.Name, 'The Household name should be rename to Anonymous');
+    }
+
     /*********************************************************************************************************
     @description
         Test strContactSelectStmtAllNamingFields property when Household Naming Settings is valid
