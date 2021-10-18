@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <name>Contact1_Preferred_Email__c</name>
-    <help>Contact1.npe01__Preferred_Email__c</help>
     <label>Contacto1 Correo e. elegido</label>
     <picklistValues>
         <masterLabel>Personal</masterLabel>
