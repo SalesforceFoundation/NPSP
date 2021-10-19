@@ -344,7 +344,7 @@ class PauseFormTestController {
 
     selectRow(installmentNumber) {
         const dataTable = this.dataTable();
-        const selectedRows = this.dataTable().getSelectedRows();
+        const selectedRows = this.dataTable().selectedRows;
         if(selectedRows === null || selectedRows === undefined) {
             dataTable.selectedRows = [ installmentNumber ]
         } else {
