@@ -61,7 +61,7 @@ public with sharing class ElevateBatchResponse {
 
     public String firstError() {
         if (!isValidCaptureResponse()) {
-            return errors == null ? null : errors()[0].message;
+            return errors == null ? '' : errors()[0].message;
         }
         return null;
     }
