@@ -46,7 +46,8 @@ private class ElevateBatchCapturer_TEST {
                 UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType()),
                 buildElevateBatchIds(200));
         Test.startTest();
-        String validResponse = '{"id": "test-valid-group-id","status": "Processing"}';
+        String validResponse = '{"id": "test-valid-group-id","status": "' +
+                BDI_DataImport_API.bdiProcessing + '"}';
         UTIL_Http_TEST.mockSuccessCalloutResponse(validResponse);
         capturer.execute(null);
         Test.stopTest();
