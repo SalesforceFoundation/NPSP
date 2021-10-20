@@ -22,5 +22,6 @@
     "Weekly": 52,
     "Daily": 365
   },
-  "closedStatusValues": ["Closed"]
+  "closedStatusValues": ["Closed"],
+  "defaultRecurringType": "Open"
 }
