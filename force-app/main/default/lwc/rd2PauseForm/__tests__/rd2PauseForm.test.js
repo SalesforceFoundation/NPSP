@@ -120,13 +120,7 @@ describe('c-rd2-pause-form', () => {
         it('sends paused reason when saving a pause record', async () => {
             savePause.mockResolvedValue({});
             const controller = new PauseFormTestController(component);
-            controller.selectRow(mockGetInstallments.dataTable.records[2].installmentNumber);
-            await flushPromises();
-
-            controller.selectRow(mockGetInstallments.dataTable.records[5].installmentNumber);
-            await flushPromises();
-            expect(controller.getSelectedRows()).toHaveLength(4);
-
+            await controller.selectRows([2,5]);
             controller.setPauseReason('Some Fake Reason');
             await flushPromises();
 
