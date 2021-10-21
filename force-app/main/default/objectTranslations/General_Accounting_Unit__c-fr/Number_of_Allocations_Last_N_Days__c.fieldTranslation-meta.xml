@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Allocations_Last_N_Days__c</name>
     <help>Nombre total d’allocations d’opportunités à une étape fermée et gagnée au cours des derniers N jours. La valeur de N peut être modifiée dans la configuration.</help>
     <label>Nombre d’allocations N derniers jours</label>
-    <name>Number_of_Allocations_Last_N_Days__c</name>
 </CustomFieldTranslation>

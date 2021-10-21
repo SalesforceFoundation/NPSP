@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Address_Verification_Status__c</name>
     <help>Le statut de vérification de l’adresse actuelle. Si cette adresse doit être vérifiée, accédez à l’enregistrement de l’adresse actuelle et cliquez sur « Vérifier l’adresse ». Pour plus d’informations, consultez la documentation dans le hub Power of Us.</help>
     <label>Statut de vérification d’adresse</label>
-    <name>Address_Verification_Status__c</name>
 </CustomFieldTranslation>

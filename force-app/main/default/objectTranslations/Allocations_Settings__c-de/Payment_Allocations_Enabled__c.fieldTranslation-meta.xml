@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Allocations_Enabled__c</name>
     <help>Gibt an, ob Zuweisungen auf Zahlungsebene festgelegt werden können. Lesen Sie die Dokumentation zu Zuweisungen auf Zahlungsebene, bevor Sie diese Einstellung ändern.</help>
     <label>Zahlungszuweisungen aktiviert</label>
-    <name>Payment_Allocations_Enabled__c</name>
 </CustomFieldTranslation>

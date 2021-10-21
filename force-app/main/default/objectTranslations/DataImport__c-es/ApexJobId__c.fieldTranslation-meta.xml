@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ApexJobId__c</name>
     <help>El Id del trabajo de Apex que procesó este registro</help>
     <label>Id Trabajo de Apex</label>
-    <name>ApexJobId__c</name>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>L’enregistrement de contact honoraire existant pour ce don.</help>
-    <label>Contact honoraire</label>
     <name>Honoree_Contact__c</name>
+    <help>L’enregistrement de contact honoraire existant pour ce don.</help>
     <relationshipLabel>Opportunités (contact honoraire)</relationshipLabel>
+    <label>Contact honoraire</label>
 </CustomFieldTranslation>

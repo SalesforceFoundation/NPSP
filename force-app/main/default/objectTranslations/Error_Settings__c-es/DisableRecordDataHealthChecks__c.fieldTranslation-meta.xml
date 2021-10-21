@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRecordDataHealthChecks__c</name>
     <help>Comprobación de estado solo comprueba los parámetros de su configuración de NPSP buscando problemas. Seleccione esta opción si su organización tiene un gran número de registros y Comprobación de estado está teniendo dificultades para completarse.</help>
     <label>Desac. comprobac. estado datos registros</label>
-    <name>DisableRecordDataHealthChecks__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Description_Label__c</name>
     <help>El nombre de API para la etiqueta Descripción de este elemento en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
     <label>Nombre de etiqueta de descripción</label>
-    <name>Description_Label__c</name>
 </CustomFieldTranslation>

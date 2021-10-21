@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Name__c</name>
     <help>Vul hier niets in als u een naamindeling voor de terugkerende donatie hebt geselecteerd. Vul anders uw naam in.</help>
     <label>Naam van terugkerende donatie</label>
-    <name>Recurring_Donation_Name__c</name>
 </CustomFieldTranslation>

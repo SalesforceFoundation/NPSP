@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Auth_Token__c</name>
     <help>El token de autenticación.</help>
     <label>Token de autenticación</label>
-    <name>Auth_Token__c</name>
 </CustomFieldTranslation>

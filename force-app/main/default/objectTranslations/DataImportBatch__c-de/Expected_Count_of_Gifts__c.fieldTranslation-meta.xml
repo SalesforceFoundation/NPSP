@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Expected_Count_of_Gifts__c</name>
     <help>Die Zahl der Spenden, die in diesen Batch einzugeben erwartet wird.</help>
     <label>Erwartete Anzahl an Spenden</label>
-    <name>Expected_Count_of_Gifts__c</name>
 </CustomFieldTranslation>

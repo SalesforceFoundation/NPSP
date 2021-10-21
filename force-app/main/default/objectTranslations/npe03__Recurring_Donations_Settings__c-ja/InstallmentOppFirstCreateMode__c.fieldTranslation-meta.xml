@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppFirstCreateMode__c</name>
     <help>NPSP が継続支援の割賦商談を作成する方法を指定します。デフォルトは [Synchronous (同期)] です。</help>
     <label>割賦商談の非同期動作</label>
-    <name>InstallmentOppFirstCreateMode__c</name>
 </CustomFieldTranslation>

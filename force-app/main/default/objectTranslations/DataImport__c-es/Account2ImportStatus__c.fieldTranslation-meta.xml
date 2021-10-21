@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Cuenta2 Estado de importación</label>
     <name>Account2ImportStatus__c</name>
+    <label>Cuenta2 Estado de importación</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default__c</name>
     <help>Enthält die Kennung des Standard-Verwendungszwecks für die Erstellung der Standardzuweisungen oder für die Zuweisung nicht zugewiesener Beträge.</help>
     <label>Standard-Verwendungszweck</label>
-    <name>Default__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Gateway_ID__c</name>
     <help>このトランザクションを処理した支払ゲートウェイの ID。</help>
     <label>支払ゲートウェイ ID</label>
-    <name>Payment_Gateway_ID__c</name>
 </CustomFieldTranslation>

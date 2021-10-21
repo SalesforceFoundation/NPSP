@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
     <help>De externe, unieke ID van de desbetreffende terugkerende donatie in Elevate.</help>
     <label>ID terugkerende donatie in Elevate</label>
-    <name>Recurring_Donation_Elevate_Recurring_ID__c</name>
 </CustomFieldTranslation>

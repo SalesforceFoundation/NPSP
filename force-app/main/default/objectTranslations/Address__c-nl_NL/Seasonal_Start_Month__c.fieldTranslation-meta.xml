@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Seasonal_Start_Month__c</name>
     <help>De maand van het jaar wanneer dit Adres het Standaardadres vervangt.</help>
     <label>Beginmaand Seizoen</label>
-    <name>Seasonal_Start_Month__c</name>
     <picklistValues>
         <masterLabel>1</masterLabel>
         <translation>1</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>10</masterLabel>
-        <translation>10</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>11</masterLabel>
-        <translation>11</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>12</masterLabel>
-        <translation>12</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>2</masterLabel>
@@ -50,5 +38,17 @@
     <picklistValues>
         <masterLabel>9</masterLabel>
         <translation>9</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>10</masterLabel>
+        <translation>10</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>11</masterLabel>
+        <translation>11</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>12</masterLabel>
+        <translation>12</translation>
     </picklistValues>
 </CustomFieldTranslation>

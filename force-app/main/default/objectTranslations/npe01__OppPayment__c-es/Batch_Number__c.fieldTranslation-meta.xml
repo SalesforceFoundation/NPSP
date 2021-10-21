@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Number__c</name>
     <help>El número de lote que establece este pago como realizado. Este campo se rellena automáticamente en base a su configuración de números de lote en Configuración de NPSP.</help>
     <label>Número de lote</label>
-    <name>Batch_Number__c</name>
 </CustomFieldTranslation>

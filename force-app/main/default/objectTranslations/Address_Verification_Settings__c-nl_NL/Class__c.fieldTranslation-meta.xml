@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Class__c</name>
     <help>Salesforce-klasse verantwoordelijk voor het contacteren van de SmartyStreets-API en het verifiëren van adressen.</help>
     <label>Klasse-VEROUDERD</label>
-    <name>Class__c</name>
 </CustomFieldTranslation>

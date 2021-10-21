@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Recurring Schedule Layout</layout>
+        <sections>
+            <label>Schedule Details</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Custom Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Recurring Schedule Num</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Recurring Schedule Num</label>
+    </standardFields>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Recurring Donation Schedule</value>
@@ -8,17 +25,4 @@
         <plural>true</plural>
         <value>Recurring Donation Schedules</value>
     </caseValues>
-    <layouts>
-        <layout>Recurring Schedule Layout</layout>
-        <sections>
-            <label>Custom Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Schedule Details</label>
-            <section>Schedule Details</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Recurring Schedule Num</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

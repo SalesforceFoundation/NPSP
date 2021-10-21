@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousPlannedInstallments__c</name>
+    <help>Nombre de versements (dons) précédent que vous prévoyiez de recevoir. Uniquement utilisé avec des dons récurrents avec date de fin.</help>
+    <label>Nombre de versements prévus précédent</label>
+</CustomFieldTranslation>

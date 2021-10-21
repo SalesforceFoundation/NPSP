@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>is_Address_Override__c</name>
     <help>Cuando se selecciona, NPSP no sincronizará la dirección de este contacto con la predeterminada del hogar o la dirección de temporada. Utilice esta opción para mantener una dirección postal separada para este contacto en particular.</help>
     <label>Sustituir dirección</label>
-    <name>is_Address_Override__c</name>
 </CustomFieldTranslation>

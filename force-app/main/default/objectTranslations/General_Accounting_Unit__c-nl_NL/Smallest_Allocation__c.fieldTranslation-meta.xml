@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Smallest_Allocation__c</name>
     <help>Het bedrag van de kleinste Toewijzing aan deze GAU. NPSP werkt dit veld bij in een nachtelijke Geplande Taak.</help>
     <label>Kleinste Toewijzing</label>
-    <name>Smallest_Allocation__c</name>
 </CustomFieldTranslation>

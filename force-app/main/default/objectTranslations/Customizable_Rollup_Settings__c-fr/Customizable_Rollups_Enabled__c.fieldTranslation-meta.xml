@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Customizable_Rollups_Enabled__c</name>
     <help>Cochez cette case pour activer le nouveau Moteur de cumuls personnalisables de NPSP</help>
     <label>Activer les cumuls personnalisables</label>
-    <name>Customizable_Rollups_Enabled__c</name>
 </CustomFieldTranslation>

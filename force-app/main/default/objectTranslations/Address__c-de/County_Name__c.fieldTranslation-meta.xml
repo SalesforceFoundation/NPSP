@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>County_Name__c</name>
     <help>Name des Landkreises, in dem sich die Adresse befindet.</help>
     <label>Landkreisname</label>
-    <name>County_Name__c</name>
 </CustomFieldTranslation>

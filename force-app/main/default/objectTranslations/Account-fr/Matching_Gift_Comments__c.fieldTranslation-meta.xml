@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Comments__c</name>
     <help>Notes supplémentaires sur le programme de dons jumelés de l’entreprise.</help>
     <label>Commentaires sur les dons jumelés</label>
-    <name>Matching_Gift_Comments__c</name>
 </CustomFieldTranslation>

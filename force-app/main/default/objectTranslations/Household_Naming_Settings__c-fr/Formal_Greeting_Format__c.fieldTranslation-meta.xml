@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Formal_Greeting_Format__c</name>
     <help>Le format à utiliser pour la salutation formelle du foyer.</help>
     <label>Format de salutation formelle</label>
-    <name>Formal_Greeting_Format__c</name>
 </CustomFieldTranslation>

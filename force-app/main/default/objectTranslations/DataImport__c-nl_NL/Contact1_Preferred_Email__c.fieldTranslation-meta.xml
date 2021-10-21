@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Contact1 Voorkeurs-e-mail</label>
     <name>Contact1_Preferred_Email__c</name>
-    <picklistValues>
-        <masterLabel>Alternate</masterLabel>
-        <translation>Alternatief</translation>
-    </picklistValues>
+    <label>Contact1 Voorkeurs-e-mail</label>
     <picklistValues>
         <masterLabel>Personal</masterLabel>
         <translation>Persoonlijk</translation>
@@ -13,5 +9,9 @@
     <picklistValues>
         <masterLabel>Work</masterLabel>
         <translation>Werk</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Alternate</masterLabel>
+        <translation>Alternatief</translation>
     </picklistValues>
 </CustomFieldTranslation>

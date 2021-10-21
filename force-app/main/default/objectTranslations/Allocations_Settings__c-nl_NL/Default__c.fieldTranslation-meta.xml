@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default__c</name>
     <help>Bevat het ID voor de standaard GAU voor het maken van standaardtoewijzingen of voor de toewijzing van niet-toegewezen bedragen.</help>
     <label>Standaard GAU</label>
-    <name>Default__c</name>
 </CustomFieldTranslation>

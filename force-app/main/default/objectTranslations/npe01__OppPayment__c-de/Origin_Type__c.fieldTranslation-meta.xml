@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Origin_Type__c</name>
     <help>Der Typ des Systems, das zum Einleiten der Zahlung verwendet wurde. Zu den verfügbaren Werten gehören Engagement Hub, Spendenseite, Zahlungs-API, Salesforce.</help>
     <label>Ursprungstyp</label>
-    <name>Origin_Type__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Related_Record_ID__c</name>
     <help>De Salesforce-ID van de record die is gekoppeld aan deze fout.</help>
     <label>ID van gerelateerde record</label>
-    <name>Related_Record_ID__c</name>
 </CustomFieldTranslation>

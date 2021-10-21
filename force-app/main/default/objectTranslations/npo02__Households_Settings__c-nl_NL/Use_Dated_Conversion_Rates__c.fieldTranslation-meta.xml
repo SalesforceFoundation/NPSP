@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Dated_Conversion_Rates__c</name>
     <help>Vink aan om Omrekeningskoersen met Datum te gebruiken wanneer Geavanceerd valutabeheer ingeschakeld is in deze Organisatie. Indien niet aangevinkt en indien ACM ingeschakeld is, gebruiken alle NPSP-totaliseringen de standaardwisselkoers voor de valuta.</help>
     <label>Gebruik Omrekeningskoersen met Datum</label>
-    <name>Use_Dated_Conversion_Rates__c</name>
 </CustomFieldTranslation>

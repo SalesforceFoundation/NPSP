@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>このレベルを達成したときに対象オブジェクトに適用されるエンゲージメント計画テンプレート。</help>
-    <label>エンゲージメント計画テンプレート</label>
     <name>Engagement_Plan_Template__c</name>
+    <help>このレベルを達成したときに対象オブジェクトに適用されるエンゲージメント計画テンプレート。</help>
     <relationshipLabel>レベル</relationshipLabel>
+    <label>エンゲージメント計画テンプレート</label>
 </CustomFieldTranslation>

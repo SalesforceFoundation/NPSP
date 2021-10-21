@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Class__c</name>
     <help>Für die Kontaktierung des Webservice und die Überprüfung der Adressen zuständige Salesforce-Klasse</help>
     <label>Überprüfungsservice</label>
-    <name>Class__c</name>
 </CustomFieldTranslation>

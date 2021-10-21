@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Recurring Donation Change Log Layout</layout>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nummer im Änderungsprotokoll für wiederkehrende Spenden</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nummer im Änderungsprotokoll für wiederkehrende Spenden</label>
+    </standardFields>
+    <gender>Neuter</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Änderungsprotokoll für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Änderungsprotokolls für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Änderungsprotokollen für wiederkehrende Spenden</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Änderungsprotokolle für wiederkehrende Spenden</value>
+    </caseValues>
+</CustomObjectTranslation>

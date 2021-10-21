@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Day_of_Month__c</name>
     <help>Establece el día específico del mes para Oportunidades de cuota futuras cuando el Período de cuota es Mensualmente. Si selecciona 29 o 30, la fecha de la cuota será el último día del mes para los meses que no tengan ese número de días.</help>
     <label>Día del mes de donación recurrente</label>
-    <name>Recurring_Donation_Day_of_Month__c</name>
 </CustomFieldTranslation>

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Tâche du plan d&apos;engagement</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Tâches du plan d&apos;engagement</value>
-    </caseValues>
-    <gender>Feminine</gender>
     <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
@@ -17,5 +8,18 @@
         </sections>
     </layouts>
     <nameFieldLabel>Sujet</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Sujet</label>
+    </standardFields>
+    <gender>Feminine</gender>
     <startsWith>Consonant</startsWith>
+    <caseValues>
+        <plural>false</plural>
+        <value>Tâche du plan d&apos;engagement</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Tâches du plan d&apos;engagement</value>
+    </caseValues>
 </CustomObjectTranslation>
