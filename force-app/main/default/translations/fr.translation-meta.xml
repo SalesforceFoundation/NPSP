@@ -7805,10 +7805,6 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouvelle campagne</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.Pause</name>
-        <label>Interruption</label>
-    </quickActions>
-    <quickActions>
         <name>Account.New_Affiliation</name>
         <label>Nouvelle affiliation</label>
     </quickActions>
@@ -7821,28 +7817,8 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
         <label>Nouveau don régulier</label>
     </quickActions>
     <quickActions>
-        <name>npe03__Recurring_Donation__c.New_Opportunity</name>
-        <label>Nouvelle opportunité</label>
-    </quickActions>
-    <quickActions>
         <name>Contact.New_Recurring_Donation</name>
         <label>Nouveau don régulier</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Quick_Update</name>
-        <label>Mise à jour rapide</label>
-    </quickActions>
-    <quickActions>
-        <name>npo02__Household__c.Update_Household</name>
-        <label>Mettre à jour un foyer</label>
-    </quickActions>
-    <quickActions>
-        <name>Address__c.Update_Address</name>
-        <label>Mettre à jour une adresse</label>
-    </quickActions>
-    <quickActions>
-        <name>npe03__Recurring_Donation__c.Close_Recurring_Donation</name>
-        <label>Fermer le don récurrent</label>
     </quickActions>
     <quickActions>
         <name>Contact.New_Affiliation</name>
@@ -7863,10 +7839,6 @@ Remarque : l’onglet de paramètres NPSP est visible dans l’application NPSP
     <quickActions>
         <name>Contact.New_Relationship</name>
         <label>Nouvelle relation</label>
-    </quickActions>
-    <quickActions>
-        <name>npe01__OppPayment__c.Quick_Update</name>
-        <label>Mise à jour rapide</label>
     </quickActions>
     <quickActions>
         <name>Account.Quick_Household_Update</name>
