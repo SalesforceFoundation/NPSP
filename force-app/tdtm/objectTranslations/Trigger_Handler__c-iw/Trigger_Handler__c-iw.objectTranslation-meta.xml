@@ -3,34 +3,34 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- Trigger Handler --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הTrigger Handler --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- Trigger Handler --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הTrigger Handler --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>Trigger Handler Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label/>
             <section>New Section</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Trigger Handler Name --></nameFieldLabel>
+    <nameFieldLabel/>
 </CustomObjectTranslation>

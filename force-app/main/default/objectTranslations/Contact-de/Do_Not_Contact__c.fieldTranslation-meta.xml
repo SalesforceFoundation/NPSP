@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Do_Not_Contact__c</name>
     <help>Gibt an, dass der Kontakt keine Anrufe und E-Mails von Ihrer Organisation erhalten möchte. Mit diesem Feld filtern Sie Kontakte aus den E-Mail- und Telefonlisten heraus. Mit dieser Option wird dieser Kontakt aus den Opp.-Bestätigungen ausgeschl.</help>
     <label>Nicht kontaktieren</label>
-    <name>Do_Not_Contact__c</name>
 </CustomFieldTranslation>

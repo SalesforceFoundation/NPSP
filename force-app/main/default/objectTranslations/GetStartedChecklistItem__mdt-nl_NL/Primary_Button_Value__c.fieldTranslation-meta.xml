@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Primary_Button_Value__c</name>
     <help>Actie die door primaire knop wordt uitgevoerd.
 Voor externe-paginaknop, externe URL.
 Voor Nieuw tabblad SFDC, is de notatie &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. Zie documentatie Lightning NavigationMixin voor voorbeelden en specificaties.</help>
     <label>Waarde primaire knop</label>
-    <name>Primary_Button_Value__c</name>
 </CustomFieldTranslation>

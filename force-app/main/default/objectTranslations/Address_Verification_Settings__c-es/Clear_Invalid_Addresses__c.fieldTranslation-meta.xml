@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Clear_Invalid_Addresses__c</name>
     <help>Si se selecciona, cualquier dirección de EE.UU. que el servicio marque como imposible de entregar se borra automáticamente. (Podrá revisar la entrada no válida en el registro Dirección).</help>
     <label>Borrar direcciones no válidas-DESUSADO</label>
-    <name>Clear_Invalid_Addresses__c</name>
 </CustomFieldTranslation>

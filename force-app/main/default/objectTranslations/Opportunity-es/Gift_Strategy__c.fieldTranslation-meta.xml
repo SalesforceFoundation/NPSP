@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Gift_Strategy__c</name>
     <help>Categoriza el tipo de petición para esta oportunidad, como por ejemplo, Nuevo donante.</help>
     <label>Estrategia de regalos</label>
-    <name>Gift_Strategy__c</name>
     <picklistValues>
         <masterLabel>New Donor</masterLabel>
         <translation>Nuevo donante</translation>

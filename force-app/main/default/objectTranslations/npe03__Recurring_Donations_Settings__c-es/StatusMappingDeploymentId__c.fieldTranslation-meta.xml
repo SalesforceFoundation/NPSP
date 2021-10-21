@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusMappingDeploymentId__c</name>
     <help>Id. de la implementación de metadatos personalizados de asignación de estado</help>
     <label>Id. de Implementación asignación estado</label>
-    <name>StatusMappingDeploymentId__c</name>
 </CustomFieldTranslation>

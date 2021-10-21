@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
+    <webLinks>
+        <name>Merge_Contacts</name>
+        <label>Combinar contactos</label>
+    </webLinks>
+    <webLinks>
+        <name>New_Gift</name>
+        <label>Nuevo regalo</label>
+    </webLinks>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Volver a calcular totales</label>
+    </webLinks>
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
             <label>Detalle del contacto</label>
             <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>Dirección de hogar</label>
+            <section>Household Address</section>
         </sections>
         <sections>
             <label>Información de la donación</label>
@@ -27,8 +31,8 @@
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label>Dirección de hogar</label>
-            <section>Household Address</section>
+            <label>Totales de créditos blandos</label>
+            <section>Soft Credit Totals</section>
         </sections>
         <sections>
             <label>Información de donaciones de hogar</label>
@@ -42,37 +46,5 @@
             <label>Miscelánea</label>
             <section>Misc</section>
         </sections>
-        <sections>
-            <label>Totales de créditos blandos</label>
-            <section>Soft Credit Totals</section>
-        </sections>
     </layouts>
-    <quickActions>
-        <label>Nueva afiliación</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva donación recurrente</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>Nueva relación</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>Actualización rápida</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Combinar contactos</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>Nuevo regalo</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Volver a calcular totales</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
 </CustomObjectTranslation>

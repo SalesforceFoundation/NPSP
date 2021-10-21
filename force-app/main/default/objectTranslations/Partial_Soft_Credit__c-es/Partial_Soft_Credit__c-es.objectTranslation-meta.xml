@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Crédito blando parcial</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Créditos blandos parciales</value>
-    </caseValues>
-    <gender>Masculine</gender>
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Gestionar créditos blandos</label>
+    </webLinks>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
@@ -17,8 +12,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de crédito blando parcial</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar créditos blandos</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de crédito blando parcial</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Crédito blando parcial</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Créditos blandos parciales</value>
+    </caseValues>
 </CustomObjectTranslation>

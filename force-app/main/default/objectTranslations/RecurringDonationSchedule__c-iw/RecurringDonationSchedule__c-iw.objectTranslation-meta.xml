@@ -3,34 +3,34 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הRecurring Donation Schedule --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- Recurring Donation Schedule --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הRecurring Donation Schedule --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>Recurring Schedule Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Schedule Details --></label>
+            <label/>
             <section>Schedule Details</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Recurring Schedule Num --></nameFieldLabel>
+    <nameFieldLabel/>
 </CustomObjectTranslation>

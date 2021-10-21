@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Last_Soft_Credit_Date__c</name>
     <help>La fecha del último crédito blando de este contacto.</help>
     <label>Fecha del último crédito blando</label>
-    <name>Last_Soft_Credit_Date__c</name>
 </CustomFieldTranslation>

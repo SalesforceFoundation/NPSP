@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Assignee__c</name>
     <help>When an Engagement Plan Task&apos;s Assigned To field is left blank, who should the Task be assigned to?</help>
     <label>Default Assignee</label>
-    <name>Default_Assignee__c</name>
     <picklistValues>
         <masterLabel>Owner of Object for Engagement Plan</masterLabel>
         <translation>Owner of Object for Engagement Plan</translation>

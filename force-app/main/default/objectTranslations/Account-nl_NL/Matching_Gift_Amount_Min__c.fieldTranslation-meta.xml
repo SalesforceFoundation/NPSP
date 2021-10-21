@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Amount_Min__c</name>
     <help>Het minimumbedrag dat het bedrijf wil evenaren voor een enkele gift.</help>
     <label>Minimumbedrag Geëvenaarde Gift</label>
-    <name>Matching_Gift_Amount_Min__c</name>
 </CustomFieldTranslation>

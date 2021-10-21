@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Campaign__c</name>
+    <help>Paramètre Google Analytics pour suivre le nom ou le code de sollicitation de l’effort de sensibilisation. Par exemple, spring_2021_fundraiser.</help>
+    <label>Campagne UTM</label>
+</CustomFieldTranslation>

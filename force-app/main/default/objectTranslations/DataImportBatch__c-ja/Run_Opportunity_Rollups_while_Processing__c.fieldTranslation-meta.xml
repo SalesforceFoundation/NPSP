@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
     <help>オンの場合、NPSP は支援処理時に支援者の積み上げ集計を計算します。オフの場合、支援者の積み上げ集計はデフォルトの夜間スケジュール済みジョブ時に計算されます。このチェックボックスを選択すると、バッチの処理が遅くなることがあります。</help>
     <label>バッチでの支援積み上げ集計の計算</label>
-    <name>Run_Opportunity_Rollups_while_Processing__c</name>
 </CustomFieldTranslation>

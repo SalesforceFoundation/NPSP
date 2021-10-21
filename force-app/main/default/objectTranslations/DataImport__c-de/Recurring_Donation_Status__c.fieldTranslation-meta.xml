@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Status__c</name>
     <help>Zeigt an, ob diese wiederkehrende Spende zurzeit aktiv, vorübergehend ausgesetzt oder geschlossen ist.</help>
     <label>Status der wiederkehrenden Spende</label>
-    <name>Recurring_Donation_Status__c</name>
 </CustomFieldTranslation>

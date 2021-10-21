@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_2_Imported__c</name>
     <help>Die Salesforce-ID der importierten Opportunity-Kontaktrolle.</help>
     <label>Opportunity-Kontaktrolle 2: importiert</label>
-    <name>Opportunity_Contact_Role_2_Imported__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousStatusReason__c</name>
+    <help>El motivo de estado anterior para la donación recurrente relacionada.</help>
+    <label>Motivo de estado anterior</label>
+</CustomFieldTranslation>

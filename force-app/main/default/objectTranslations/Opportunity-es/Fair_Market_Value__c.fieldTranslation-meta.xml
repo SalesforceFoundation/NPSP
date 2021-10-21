@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Fair_Market_Value__c</name>
     <help>El justiprecio de mercado de un regalo en especie.</help>
     <label>Justiprecio de mercado</label>
-    <name>Fair_Market_Value__c</name>
 </CustomFieldTranslation>

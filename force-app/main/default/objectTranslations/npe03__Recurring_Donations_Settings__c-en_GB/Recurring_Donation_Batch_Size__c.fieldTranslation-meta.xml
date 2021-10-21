@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Batch_Size__c</name>
     <help>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</help>
     <label>Recurring Donation Batch Size</label>
-    <name>Recurring_Donation_Batch_Size__c</name>
 </CustomFieldTranslation>

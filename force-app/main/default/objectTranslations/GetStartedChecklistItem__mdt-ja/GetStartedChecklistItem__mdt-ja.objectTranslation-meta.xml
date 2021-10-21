@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP 使用開始チェックリスト項目</value>
-    </caseValues>
     <layouts>
         <layout>GS Checklist Item Layout</layout>
-        <sections>
-            <label>ボタン</label>
-            <section>Buttons</section>
-        </sections>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
         <sections>
             <label>情報</label>
             <section>Info</section>
@@ -22,5 +10,17 @@
             <label>リンク</label>
             <section>Link</section>
         </sections>
+        <sections>
+            <label>ボタン</label>
+            <section>Buttons</section>
+        </sections>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP 使用開始チェックリスト項目</value>
+    </caseValues>
 </CustomObjectTranslation>

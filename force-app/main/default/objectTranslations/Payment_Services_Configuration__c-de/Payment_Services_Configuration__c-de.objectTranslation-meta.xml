@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Zahlungsservices-Konfiguration</value>
-    </caseValues>
-    <gender>Feminine</gender>
     <layouts>
         <layout>Payment Configuration Layout</layout>
         <sections>
@@ -49,4 +8,49 @@
         </sections>
     </layouts>
     <nameFieldLabel>Konfigurationsname der Zahlungsservices</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Konfigurationsname der Zahlungsservices</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Zahlungsservices-Konfiguration</value>
+    </caseValues>
 </CustomObjectTranslation>

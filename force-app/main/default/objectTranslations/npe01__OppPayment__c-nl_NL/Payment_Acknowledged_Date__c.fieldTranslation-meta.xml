@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Acknowledged_Date__c</name>
     <help>Datum van erkenning</help>
     <label>Datum Betaling Erkend</label>
-    <name>Payment_Acknowledged_Date__c</name>
 </CustomFieldTranslation>

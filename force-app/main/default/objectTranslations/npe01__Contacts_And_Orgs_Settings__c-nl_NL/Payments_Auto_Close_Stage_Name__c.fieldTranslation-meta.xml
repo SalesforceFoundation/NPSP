@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payments_Auto_Close_Stage_Name__c</name>
     <help>NPSP stelt de fase van een Opportunity automatisch in op deze waarde wanneer het Ontvangen Betalingsbedrag gelijk is aan het Opportunitybedrag. Als er geen fase is geselecteerd, verandert de Opportunityfase niet wanneer betalingen zijn voltooid.</help>
     <label>Opp.fase voor Wanneer Volledig Betaald</label>
-    <name>Payments_Auto_Close_Stage_Name__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Ambiguous__c</name>
     <help>Geeft aan of er meer dan één geldige Adressen zijn gevonden bij het proberen te valideren via een externe dienst.</help>
     <label>Dubbelzinnig</label>
-    <name>Ambiguous__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Card_Network__c</name>
     <help>La red de tarjeta de la tarjeta empleada para esta transacción.</help>
     <label>Red de tarjeta de pago</label>
-    <name>Payment_Card_Network__c</name>
 </CustomFieldTranslation>

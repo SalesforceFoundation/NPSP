@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Statut du lot</label>
     <name>Batch_Status__c</name>
-    <picklistValues>
-        <masterLabel>Complete</masterLabel>
-        <translation>Terminé</translation>
-    </picklistValues>
+    <label>Statut du lot</label>
     <picklistValues>
         <masterLabel>In Progress</masterLabel>
         <translation>En cours</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Complete</masterLabel>
+        <translation>Terminé</translation>
     </picklistValues>
 </CustomFieldTranslation>
