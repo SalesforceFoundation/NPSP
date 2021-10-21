@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Date_Range__c</name>
     <help>Introduzca los días desde la fecha de la donación a contar al buscar una oportunidad o pago coincidente. Data Importer elegirá la oportunidad o pago coincidente con fecha caiga dentro del número de días Y esté más cercana a la fecha de la donación.</help>
     <label>Número de días desde fecha de donación</label>
-    <name>Donation_Date_Range__c</name>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La Donación recurrente con la que este registro de programación está asociado.</help>
-    <label>Donación recurrente</label>
     <name>RecurringDonation__c</name>
+    <help>La Donación recurrente con la que este registro de programación está asociado.</help>
     <relationshipLabel>Programaciones de Donación recurrente</relationshipLabel>
+    <label>Donación recurrente</label>
 </CustomFieldTranslation>

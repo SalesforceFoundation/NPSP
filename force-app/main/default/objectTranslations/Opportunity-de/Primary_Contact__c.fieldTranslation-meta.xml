@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Der Hauptansprechpartner für diese Opportunity. Handelt es sich dabei um eine einzelne Spende, weißt NPSP die Spende dem Hauptansprechpartner zu. Handelt es sich um die Spende einer Organisation, weist NPSP dem Hauptansprechpartner einen Soft Credit zu.</help>
-    <label>Hauptansprechpartner</label>
     <name>Primary_Contact__c</name>
+    <help>Der Hauptansprechpartner für diese Opportunity. Handelt es sich dabei um eine einzelne Spende, weißt NPSP die Spende dem Hauptansprechpartner zu. Handelt es sich um die Spende einer Organisation, weist NPSP dem Hauptansprechpartner einen Soft Credit zu.</help>
     <relationshipLabel>Opportunities</relationshipLabel>
+    <label>Hauptansprechpartner</label>
 </CustomFieldTranslation>

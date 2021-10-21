@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
     <help>デフォルトで使用する必要のあるデータインポート項目の対応付けセットレコードのカスタムメタデータ API 参照名。</help>
     <label>デフォルトのデータインポート項目の対応付けセット</label>
-    <name>Default_Data_Import_Field_Mapping_Set__c</name>
 </CustomFieldTranslation>

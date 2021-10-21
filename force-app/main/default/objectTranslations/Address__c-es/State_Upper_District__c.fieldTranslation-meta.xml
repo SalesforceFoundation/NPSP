@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>State_Upper_District__c</name>
     <help>El distrito superior estatal (como un distrito de senado estatal) al que pertenece esta dirección.</help>
     <label>Distrito superior estatal</label>
-    <name>State_Upper_District__c</name>
 </CustomFieldTranslation>

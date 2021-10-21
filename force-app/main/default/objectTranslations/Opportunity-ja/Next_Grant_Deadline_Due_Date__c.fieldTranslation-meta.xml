@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Next_Grant_Deadline_Due_Date__c</name>
     <help>NPSP では、次の提出書類期日レコードに基づいてこの項目が自動的に更新されます。</help>
     <label>次の提出書類期日</label>
-    <name>Next_Grant_Deadline_Due_Date__c</name>
 </CustomFieldTranslation>

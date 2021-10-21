@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Requested_Amount__c</name>
     <help>El importe que se solicita. Este número puede ser diferente al importe otorgado al final.</help>
     <label>Importe solicitado</label>
-    <name>Requested_Amount__c</name>
 </CustomFieldTranslation>

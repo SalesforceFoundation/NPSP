@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>API_Response__c</name>
     <help>未加工の応答またはエラーメッセージが含まれます。</help>
     <label>API 応答</label>
-    <name>API_Response__c</name>
 </CustomFieldTranslation>

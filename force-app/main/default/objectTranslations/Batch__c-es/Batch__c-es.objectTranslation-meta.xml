@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Lote</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Lotes</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- BatchDetailView --></label>
-        <name>BatchDetailView</name>
-    </fieldSets>
-    <gender>Masculine</gender>
     <layouts>
         <layout>Batch Layout</layout>
         <sections>
@@ -21,4 +8,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de lote</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de lote</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Lote</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Lotes</value>
+    </caseValues>
 </CustomObjectTranslation>

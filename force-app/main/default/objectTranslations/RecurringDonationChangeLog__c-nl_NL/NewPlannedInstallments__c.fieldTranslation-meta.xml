@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewPlannedInstallments__c</name>
+    <help>Het nieuwe aantal geplande termijnen (donaties) dat u verwacht te ontvangen. Alleen voor terugkerende donaties met een vaste duur.</help>
+    <label>Het aantal geplande termijnen</label>
+</CustomFieldTranslation>

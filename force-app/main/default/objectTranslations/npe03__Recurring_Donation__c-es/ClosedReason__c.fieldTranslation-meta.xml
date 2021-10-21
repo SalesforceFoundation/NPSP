@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ClosedReason__c</name>
     <help>El motivo por el que esta Donación recurrente tiene su valor de Estado actual.</help>
     <label>Motivo de estado</label>
-    <name>ClosedReason__c</name>
     <picklistValues>
         <masterLabel>Card Expired</masterLabel>
         <translation>Tarjeta caducada</translation>

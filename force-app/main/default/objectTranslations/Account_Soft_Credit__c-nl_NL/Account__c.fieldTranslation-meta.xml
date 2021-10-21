@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>De Account die deze soft credit ontvangt.</help>
-    <label>Account</label>
     <name>Account__c</name>
+    <help>De Account die deze soft credit ontvangt.</help>
     <relationshipLabel>Soft Credits van Account</relationshipLabel>
+    <label>Account</label>
 </CustomFieldTranslation>

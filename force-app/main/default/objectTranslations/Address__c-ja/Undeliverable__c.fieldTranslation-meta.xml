@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Undeliverable__c</name>
+    <help>住所が配達不可であることを示します。</help>
+    <label>配達不可</label>
+</CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Pre_Verification_Address__c</name>
     <help>検証処理で情報が失われてしまう場合に備えて、リモートサービスを使用して検証する前に入力した住所が保存されます。</help>
     <label>検証前の住所</label>
-    <name>Pre_Verification_Address__c</name>
 </CustomFieldTranslation>

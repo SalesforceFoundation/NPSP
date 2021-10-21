@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
-    <label>Formuliersjabloon</label>
     <name>Form_Template__c</name>
+    <help>De te gebruiken sjabloon voor het formulier Opgave van gift voor deze batch.</help>
     <relationshipLabel>Batches van NPSP-gegevensimport</relationshipLabel>
+    <label>Formuliersjabloon</label>
 </CustomFieldTranslation>

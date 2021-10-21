@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Dated_Conversion_Rates__c</name>
     <help>高度な為替管理がこの団体で有効な場合に日次変換レートを使用するには、このボックスをオンにします。この設定がオフで ACM が有効な場合、すべての NPSP 積み上げ集計は通貨のデフォルト為替レートを使用します。</help>
     <label>可能な場合日次変換レートを使用</label>
-    <name>Use_Dated_Conversion_Rates__c</name>
 </CustomFieldTranslation>

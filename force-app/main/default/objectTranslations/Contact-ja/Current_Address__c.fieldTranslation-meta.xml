@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>取引先責任者の郵送先項目が入力された現在の住所。</help>
-    <label>現在の住所</label>
     <name>Current_Address__c</name>
+    <help>取引先責任者の郵送先項目が入力された現在の住所。</help>
     <relationshipLabel>取引先責任者 (現在の住所)</relationshipLabel>
+    <label>現在の住所</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Status__c</name>
     <help>Elevate から取得した、トランザクションの API 状況。</help>
     <label>支払 Elevate API 状況</label>
-    <name>Payment_Status__c</name>
 </CustomFieldTranslation>

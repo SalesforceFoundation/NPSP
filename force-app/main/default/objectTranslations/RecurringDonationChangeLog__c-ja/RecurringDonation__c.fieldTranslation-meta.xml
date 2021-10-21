@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonation__c</name>
+    <help>この変更ログレコードに関連する継続支援。</help>
+    <relationshipLabel>継続支援の変更ログ</relationshipLabel>
+    <label>継続支援</label>
+</CustomFieldTranslation>

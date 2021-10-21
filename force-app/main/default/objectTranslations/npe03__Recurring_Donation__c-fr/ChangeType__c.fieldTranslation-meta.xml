@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChangeType__c</name>
+    <help>Type de modification (mise à niveau, restauration d’une version antérieure, etc.) que cette mise à jour représente.</help>
+    <label>Type de modification</label>
+    <picklistValues>
+        <masterLabel>Upgrade</masterLabel>
+        <translation>Mettre à niveau</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Downgrade</masterLabel>
+        <translation>Restaurer une version antérieure</translation>
+    </picklistValues>
+</CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
     <help>Los valores de campo predeterminados para un lote en Entrada de regalos. No los modifique directamente. Se deben actualizar en la interfaz de usuario donde modifica su lote.</help>
     <label>Valores predeterminados de lote</label>
-    <name>Batch_Defaults__c</name>
 </CustomFieldTranslation>

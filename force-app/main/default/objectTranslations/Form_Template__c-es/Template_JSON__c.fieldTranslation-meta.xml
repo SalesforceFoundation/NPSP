@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Template_JSON__c</name>
     <help>Las secciones y los campos de esta plantilla, junto con su orden, requisitos y valores predeterminados. Se almacena como JSON. No modificar directamente.</help>
     <label>JSON de plantilla</label>
-    <name>Template_JSON__c</name>
 </CustomFieldTranslation>

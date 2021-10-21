@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La campagne associée à cette allocation. Utilisez ce champ si vous souhaitez que les nouvelles opportunités associées à cette campagne soient allouées de la même manière.</help>
-    <label>Campagne</label>
     <name>Campaign__c</name>
+    <help>La campagne associée à cette allocation. Utilisez ce champ si vous souhaitez que les nouvelles opportunités associées à cette campagne soient allouées de la même manière.</help>
     <relationshipLabel>Allocations UCG</relationshipLabel>
+    <label>Campagne</label>
 </CustomFieldTranslation>

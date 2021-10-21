@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Relationship_To_Predecessor__c</name>
     <help>Indique si cet objet est un parent ou un enfant du prédécesseur.</help>
     <label>Relation avec le prédécesseur</label>
-    <name>Relationship_To_Predecessor__c</name>
+    <picklistValues>
+        <masterLabel>Parent</masterLabel>
+        <translation>Parent</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Child</masterLabel>
         <translation>Enfant</translation>
@@ -10,9 +14,5 @@
     <picklistValues>
         <masterLabel>No Predecessor</masterLabel>
         <translation>Aucun prédécesseur</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Parent</masterLabel>
-        <translation>Parent</translation>
     </picklistValues>
 </CustomFieldTranslation>

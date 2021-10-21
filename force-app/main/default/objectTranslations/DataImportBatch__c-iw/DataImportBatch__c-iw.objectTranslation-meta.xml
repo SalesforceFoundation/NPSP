@@ -3,50 +3,50 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הNPSP Data Import Batch --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- NPSP Data Import Batch --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הNPSP Data Import Batch --></value>
+        <value/>
     </caseValues>
     <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
+        <label/>
         <name>BatchGiftEntryTabColumns</name>
     </fieldSets>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label><!-- Contact &amp; Account Matching --></label>
+            <label/>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Donation Matching --></label>
+            <label/>
             <section>Donation Matching</section>
         </sections>
         <sections>
-            <label><!-- Extensibility --></label>
+            <label/>
             <section>Extensibility</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <nameFieldLabel/>
     <webLinks>
-        <label><!-- Process_Batch --></label>
+        <label/>
         <name>Process_Batch</name>
     </webLinks>
 </CustomObjectTranslation>

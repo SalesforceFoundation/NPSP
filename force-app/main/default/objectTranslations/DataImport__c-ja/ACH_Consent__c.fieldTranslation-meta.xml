@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ACH_Consent__c</name>
     <help>支援者が同意した Elevate Giving Page 同意メッセージ。</help>
     <label>支払 ACH 同意メッセージ</label>
-    <name>ACH_Consent__c</name>
 </CustomFieldTranslation>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Paid__c</name>
     <help>Indique si ce paiement a été effectué ou non.</help>
     <label>Paiement effectué</label>
-    <name>Payment_Paid__c</name>
-    <picklistValues>
-        <masterLabel>False</masterLabel>
-        <translation>Faux</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>True</masterLabel>
         <translation>Vrai</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>False</masterLabel>
+        <translation>Faux</translation>
     </picklistValues>
 </CustomFieldTranslation>

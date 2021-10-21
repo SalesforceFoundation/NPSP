@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
     <help>Wanneer aangevinkt, berekent NPSP donortotaliseringen bij verwerking van donaties. Wanneer niet aangevinkt, worden donortotaliseringen berekend tijdens de standaard nachtelijke Geplande Opdracht. Deze selectie kan de verwerking van deze batch vertragen.</help>
     <label>Donatietotalisering met Batch berekenen</label>
-    <name>Run_Opportunity_Rollups_while_Processing__c</name>
 </CustomFieldTranslation>

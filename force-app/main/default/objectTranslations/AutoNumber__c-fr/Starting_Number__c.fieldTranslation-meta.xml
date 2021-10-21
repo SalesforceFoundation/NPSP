@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Starting_Number__c</name>
     <help>Le premier numéro de la séquence de numérotation automatique.</help>
     <label>Numéro de début</label>
-    <name>Starting_Number__c</name>
 </CustomFieldTranslation>

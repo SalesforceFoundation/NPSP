@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Operator</label>
     <name>Operator__c</name>
+    <label>Operator</label>
+    <picklistValues>
+        <masterLabel>Equals</masterLabel>
+        <translation>Is gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Equals</masterLabel>
+        <translation>Is niet gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater Than</masterLabel>
+        <translation>Groter dan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less Than</masterLabel>
+        <translation>Kleiner dan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater or Equal</masterLabel>
+        <translation>Groter dan of Gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less or Equal</masterLabel>
+        <translation>Kleiner dan of Gelijk aan</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Starts With</masterLabel>
+        <translation>Begint met</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Contains</masterLabel>
         <translation>Bevat</translation>
@@ -11,20 +39,12 @@
         <translation>Bevat niet</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Equals</masterLabel>
-        <translation>Is gelijk aan</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Greater Than</masterLabel>
-        <translation>Groter dan</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Greater or Equal</masterLabel>
-        <translation>Groter dan of Gelijk aan</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>In List</masterLabel>
         <translation>In Lijst</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not In List</masterLabel>
+        <translation>Niet in Lijst</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Is Included</masterLabel>
@@ -33,25 +53,5 @@
     <picklistValues>
         <masterLabel>Is Not Included</masterLabel>
         <translation>Is Niet Inbegrepen</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Less Than</masterLabel>
-        <translation>Kleiner dan</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Less or Equal</masterLabel>
-        <translation>Kleiner dan of Gelijk aan</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Not Equals</masterLabel>
-        <translation>Is niet gelijk aan</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Not In List</masterLabel>
-        <translation>Niet in Lijst</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Starts With</masterLabel>
-        <translation>Begint met</translation>
     </picklistValues>
 </CustomFieldTranslation>

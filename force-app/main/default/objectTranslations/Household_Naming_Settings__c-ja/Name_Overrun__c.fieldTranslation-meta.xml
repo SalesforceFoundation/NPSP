@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Name_Overrun__c</name>
     <help>名前のリストが長いときに名前の置き換えに使用される文字列。</help>
     <label>超過時の名前</label>
-    <name>Name_Overrun__c</name>
 </CustomFieldTranslation>

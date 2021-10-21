@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Pre_Verification_Address__c</name>
     <help>Guarda la dirección como estaba antes de la verificación con un servicio remoto, en caso de que se pierda alguna información en el proceso de verificación.</help>
     <label>Dirección previa a la verificación</label>
-    <name>Pre_Verification_Address__c</name>
 </CustomFieldTranslation>

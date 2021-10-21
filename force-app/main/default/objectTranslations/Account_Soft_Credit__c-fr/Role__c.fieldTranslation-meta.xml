@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Role__c</name>
     <help>Le rôle associé à ce crédit indirect Le rôle décrit la manière dont le compte a été impliqué dans l’opportunité.</help>
     <label>Rôle</label>
-    <name>Role__c</name>
     <picklistValues>
         <masterLabel>Donation Source</masterLabel>
         <translation>Source du don</translation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Authorized_UTC_Timestamp__c</name>
     <help>支払ゲートウェイから取得した、このトランザクションが正常に承認された正確な日時 (ミリ秒単位まで)。</help>
     <label>承認 UTC タイムスタンプ</label>
-    <name>Authorized_UTC_Timestamp__c</name>
 </CustomFieldTranslation>

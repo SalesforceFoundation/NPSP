@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
     <help>Al marcarse, el trabajo nocturno Crédito duro contacto (sin desfase) limita contactos seleccionados para recalcularlos buscando contactos en oportunidades actualizadas recientemente. Mejora el rendimiento del trabajo nocturno Totalización personalizable.</help>
     <label>Crédito duro contacto incre. sin desfase</label>
-    <name>ContactHardCreditNonSkew_Incremental__c</name>
 </CustomFieldTranslation>

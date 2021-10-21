@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
     <help>Die Standardwerte für einen Batch im Spendeneintrag. Bearbeiten Sie diese nicht direkt. Diese Werte sollten über die Benutzeroberfläche aktualisiert werden, auf der Sie Ihren Batch bearbeiten.</help>
     <label>Batch-Standardwerte</label>
-    <name>Batch_Defaults__c</name>
 </CustomFieldTranslation>

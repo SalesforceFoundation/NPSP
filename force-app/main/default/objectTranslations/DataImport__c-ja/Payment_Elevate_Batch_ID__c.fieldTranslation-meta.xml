@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Elevate_Batch_ID__c</name>
     <help>処理のために Elevate に送信された支払のバッチの ID。</help>
     <label>支払 Elevate バッチ ID</label>
-    <name>Payment_Elevate_Batch_ID__c</name>
 </CustomFieldTranslation>
