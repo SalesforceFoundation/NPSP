@@ -204,5 +204,19 @@
             "message": "Los Informes y paneles de NPSP vienen con nuevas pruebas de instalaciones de NPSP que empiezan en la versión 3.90 (Febrero de 2017). Si inició una prueba o instaló NPSP antes de esta versión, utilice este instalador para agregar los Informes y paneles. Para obtener información completa sobre los Informes y paneles de NPSP, consulte [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nEste instalador requiere 5 tipos de registro de oportunidad incluidos en la plantilla de prueba del Nonprofit Starter Pack, que crearemos si no se encuentran en su organización. El instalador busca tipos de registro por Nombre de desarrollador (no etiqueta), de modo que si cambió los nombres de desarrollador de los tipos de registro originales, el instalador los agregará de nuevo. Los tipos de registro de Nombres de desarrollador son los siguientes:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "Actualización de producto",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Este instalador actualiza este paquete y todas las dependencias necesarias a la versión más reciente en su organización. Este instalador no dispone de asistencia y tiene riesgos. No ejecute este instalador a no ser que esté al tanto de sus consideraciones y casos de uso específicos.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "La instalación está completa y el paquete está en la versión más reciente.",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Seasonal_Addresses_Batch_Size__c</name>
     <help>Aantal records per te verwerken batch bij instellen van seizoensadres als postadres.</help>
     <label>Batchgrootte van seizoensadres</label>
-    <name>Seasonal_Addresses_Batch_Size__c</name>
 </CustomFieldTranslation>

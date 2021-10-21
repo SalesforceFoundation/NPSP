@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Possible_Matches__c</name>
     <help>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</help>
     <label>Payment Possible Matches</label>
-    <name>Payment_Possible_Matches__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Smallest_Allocation__c</name>
     <help>L’allocation la plus faible de cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
     <label>Allocation la plus faible</label>
-    <name>Smallest_Allocation__c</name>
 </CustomFieldTranslation>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Tribute_Type__c</name>
     <help>支援が個人に敬意を表して行われるのか、個人を追悼して行われるのかを示します。</help>
     <label>敬意/追悼種別</label>
-    <name>Tribute_Type__c</name>
     <picklistValues>
         <masterLabel>Honor</masterLabel>
         <translation>名誉</translation>

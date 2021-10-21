@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Funding_Focus__c</name>
     <help>Le ou les secteur(s) financé(s) par cette organisation.</help>
     <label>Focus de financement</label>
-    <name>Funding_Focus__c</name>
     <picklistValues>
         <masterLabel>Animal Welfare</masterLabel>
         <translation>Protection des animaux</translation>

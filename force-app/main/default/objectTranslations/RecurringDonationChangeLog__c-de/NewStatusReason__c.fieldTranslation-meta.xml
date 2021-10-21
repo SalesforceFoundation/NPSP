@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewStatusReason__c</name>
+    <help>Der Grund für den neuen Status für die zugeordnete wiederkehrende Spende.</help>
+    <label>Grund für neuen Status</label>
+</CustomFieldTranslation>

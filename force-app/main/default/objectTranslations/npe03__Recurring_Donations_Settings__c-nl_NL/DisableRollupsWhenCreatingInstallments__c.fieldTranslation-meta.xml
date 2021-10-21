@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
     <help>Indien geselecteerd, en als Aanpasbare totaliseringen is ingeschakeld, worden onmiddellijke berekeningen van totaliseringen uitgeschakeld bij het maken van nieuwe Opportunities voor termijnen voor een terugkerende donatie.</help>
     <label>CRLP uitschakelen bij termijnen maken</label>
-    <name>DisableRollupsWhenCreatingInstallments__c</name>
 </CustomFieldTranslation>

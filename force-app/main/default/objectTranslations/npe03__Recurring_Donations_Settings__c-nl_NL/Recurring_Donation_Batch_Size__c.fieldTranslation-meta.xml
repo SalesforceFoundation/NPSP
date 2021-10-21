@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Batch_Size__c</name>
     <help>Het aantal records dat tegelijk moet worden verwerkt wanneer de batchtaak voor Terugkerende Donaties wordt uitgevoerd. De standaardgrootte is 50. Verminder dit aantal als de batchtaak voor Terugkerende Donaties mislukt door systeemlimieten.</help>
     <label>Batchgrootte van Terugkerende Donaties</label>
-    <name>Recurring_Donation_Batch_Size__c</name>
 </CustomFieldTranslation>

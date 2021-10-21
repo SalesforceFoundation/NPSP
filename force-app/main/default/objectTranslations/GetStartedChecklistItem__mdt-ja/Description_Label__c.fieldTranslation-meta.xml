@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Description_Label__c</name>
     <help>[使用開始] ページでのこの項目の [説明] 表示ラベルの API 参照名。gsLabelMapper LWC にインポートされている表示ラベルと一致する必要があります。</help>
     <label>説明表示ラベル名</label>
-    <name>Description_Label__c</name>
 </CustomFieldTranslation>

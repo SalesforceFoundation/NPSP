@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Honoree_Name__c</name>
     <help>Nombre del homenajeado como es provisto por el donante. Si este campo se deja en blanco, y el campo Contacto homenajeado contiene un valor, NPSP automáticamente rellena este valor con ese valor.</help>
     <label>Nombre del homenajeado</label>
-    <name>Honoree_Name__c</name>
 </CustomFieldTranslation>

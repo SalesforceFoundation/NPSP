@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Allocations_Last_N_Days__c</name>
     <help>過去 N 日間の成立フェーズにある商談の割り当ての総数。N の値は設定で変更できます。</help>
     <label>過去 N 日間の割り当て数</label>
-    <name>Number_of_Allocations_Last_N_Days__c</name>
 </CustomFieldTranslation>

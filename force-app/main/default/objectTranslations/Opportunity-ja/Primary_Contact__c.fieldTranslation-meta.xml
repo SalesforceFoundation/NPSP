@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>この商談の主取引先責任者。主取引先責任者の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
-    <label>主取引先責任者</label>
     <name>Primary_Contact__c</name>
+    <help>この商談の主取引先責任者。主取引先責任者の役割は、この項目との同期が保たれます。個人の支援の場合、これはこの支援の帰属を意味します。</help>
     <relationshipLabel>商談</relationshipLabel>
+    <label>主取引先責任者</label>
 </CustomFieldTranslation>

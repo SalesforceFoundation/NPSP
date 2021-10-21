@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
 
   <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
@@ -214,6 +214,11 @@
     <label>Ingangsdatum</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%EndDate__c</name>
+    <help>De datum waarop deze terugkerende donatie is gesloten.</help>
+    <label>Einddatum</label>
+  </fields>
+  <fields>
     <name>%%%NAMESPACE%%%Status__c</name>
     <help>Geeft aan of deze terugkerende donatie actief in gebruik, tijdelijk opgeschort of gesloten is.</help>
     <label>Status</label>
@@ -236,7 +241,7 @@
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+    <help>De Termijnperiode, samen met Frequentie van termijnen, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
     <label>Termijnperiode</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -261,7 +266,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
+    <help>De Frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen  van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als "elke 3 maanden".</help>
     <label>Frequentie van termijnen</label>
   </fields>
   <fields>
@@ -307,4 +312,18 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  </CustomObjectTranslation>
+  <nameFieldLabel>Naam van terugkerende donatie</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Naam van terugkerende donatie</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <value>Terugkerende donatie</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Terugkerende donaties</value>
+  </caseValues>
+</CustomObjectTranslation>

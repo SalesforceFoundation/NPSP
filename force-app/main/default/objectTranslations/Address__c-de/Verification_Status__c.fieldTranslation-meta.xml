@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Verification_Status__c</name>
     <help>Klicken Sie oben rechts auf der Seite auf den Dropdown-Pfeil &quot;Mehr anzeigen&quot; und dann auf &quot;Adresse überprüfen&quot;, falls diese Adresse überprüft werden muss. Weitere Informationen finden Sie in der Hilfedokumentation im &quot;Power of Us&quot;-Hub.</help>
     <label>Überprüfungsstatus</label>
-    <name>Verification_Status__c</name>
 </CustomFieldTranslation>

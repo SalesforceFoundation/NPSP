@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>OverrideFeature_PilotEnabled__c</name>
     <help>更新しないでください。Salesforce.org パイロットテストでのみ使用します。関連付けられている製品ライセンスが LMO にない組織でパイロットテストができるように、スクラッチ組織の PilotEnabled 機能パラメータの上書きの限定的なアクセスを許可します。</help>
     <label>スクラッチ組織の上書き: PilotEnabled</label>
-    <name>OverrideFeature_PilotEnabled__c</name>
 </CustomFieldTranslation>

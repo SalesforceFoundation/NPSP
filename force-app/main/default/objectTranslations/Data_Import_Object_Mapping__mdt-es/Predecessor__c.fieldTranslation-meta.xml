@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Predecessor__c</name>
     <help>El registro de Grupo de objetos de importación de datos que debe existir antes de que se pueda crear este registro (ya sea principal o secundario).</help>
     <label>Predecesor</label>
-    <name>Predecessor__c</name>
 </CustomFieldTranslation>

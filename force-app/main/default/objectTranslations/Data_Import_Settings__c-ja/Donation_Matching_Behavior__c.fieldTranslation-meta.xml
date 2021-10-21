@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Behavior__c</name>
     <help>データインポーターがマッチング支援をどのように処理するかを定義します。値を選択する必要があります。</help>
     <label>支援マッチング動作</label>
-    <name>Donation_Matching_Behavior__c</name>
 </CustomFieldTranslation>

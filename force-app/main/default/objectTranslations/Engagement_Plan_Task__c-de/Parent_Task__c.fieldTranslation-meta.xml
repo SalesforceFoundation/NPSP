@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Gibt an, dass diese Engagementplan-Aufgabe von einer übergeordneten Aufgabe abhängt.</help>
-    <label>Übergeordnete Aufgabe</label>
     <name>Parent_Task__c</name>
+    <help>Gibt an, dass diese Engagementplan-Aufgabe von einer übergeordneten Aufgabe abhängt.</help>
     <relationshipLabel>Engagementplan-Aufgaben</relationshipLabel>
+    <label>Übergeordnete Aufgabe</label>
 </CustomFieldTranslation>

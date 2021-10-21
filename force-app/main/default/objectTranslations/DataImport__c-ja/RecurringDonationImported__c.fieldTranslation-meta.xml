@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>正常に作成されたときの継続支援へのルックアップ。</help>
-    <label>継続支援がインポートされました</label>
     <name>RecurringDonationImported__c</name>
+    <help>正常に作成されたときの継続支援へのルックアップ。</help>
     <relationshipLabel>NPSP データインポート</relationshipLabel>
+    <label>継続支援がインポートされました</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
     <help>オンの場合、1 つの取引先責任者または取引先の住所項目を変更すると、新しい住所が作成される代わりに既存の住所が更新されます。</help>
     <label>1 つの住所の変更を更新として処理</label>
-    <name>Simple_Address_Change_Treated_as_Update__c</name>
 </CustomFieldTranslation>

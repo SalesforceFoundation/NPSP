@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Defaults__c</name>
     <help>De standaardveldwaarden voor een batch in Opgave van gift. Niet rechtstreeks bewerken. Dit moet worden bijgewerkt in de UI waar u uw batch bewerkt.</help>
     <label>Standaardwaarden voor Batch</label>
-    <name>Batch_Defaults__c</name>
 </CustomFieldTranslation>

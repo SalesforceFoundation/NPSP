@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Disable_Related_Records_Filter__c</name>
     <help>Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records.</help>
     <label>Disable Related Records Filter</label>
-    <name>Disable_Related_Records_Filter__c</name>
 </CustomFieldTranslation>

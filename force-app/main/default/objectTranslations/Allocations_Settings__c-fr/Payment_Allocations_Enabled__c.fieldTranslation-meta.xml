@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Allocations_Enabled__c</name>
     <help>Indique si les allocations peuvent être définies au niveau du paiement. Vérifiez la documentation sur les allocations au niveau du paiement avant de modifier ce paramètre.</help>
     <label>Allocations de paiement activées</label>
-    <name>Payment_Allocations_Enabled__c</name>
 </CustomFieldTranslation>

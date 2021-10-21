@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Membership_Span__c</name>
     <help>Het aantal jaar dat een lid van dit Huishouden een Lidmaatschap heeft (enkel lezen).</help>
     <label>Lidmaatschapsduur</label>
-    <name>Membership_Span__c</name>
 </CustomFieldTranslation>

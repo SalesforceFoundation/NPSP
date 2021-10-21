@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Expected_Total_Batch_Amount__c</name>
     <help>このバッチで入力が予測されているすべての支援の総額。</help>
     <label>予測合計バッチ金額</label>
-    <name>Expected_Total_Batch_Amount__c</name>
 </CustomFieldTranslation>

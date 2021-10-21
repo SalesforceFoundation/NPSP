@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CustomizableRollups_UseSkewMode__c</name>
     <help>オンになっていると、カスタマイズ可能な積み上げ集計では常に「スキューモード」を使用してこのレコードのハードクレジットとソフトクレジットを積み上げ集計します。</help>
     <label>カスタマイズ可能な積み上げ集計: スキューモードの強制</label>
-    <name>CustomizableRollups_UseSkewMode__c</name>
 </CustomFieldTranslation>

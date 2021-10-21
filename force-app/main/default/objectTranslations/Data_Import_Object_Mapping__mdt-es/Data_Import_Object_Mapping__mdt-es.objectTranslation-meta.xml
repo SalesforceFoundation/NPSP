@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Data Import Object Mapping Layout</layout>
+        <sections>
+            <label>Detalles de relación de objeto personalizado</label>
+            <section>Custom Object Relationship Details</section>
+        </sections>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <gender>Feminine</gender>
     <caseValues>
         <plural>false</plural>
         <value>Asignación de objeto de importación de datos</value>
@@ -8,16 +20,4 @@
         <plural>true</plural>
         <value>Asignaciones de objetos de importaciones de datos</value>
     </caseValues>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Detalles de relación de objeto personalizado</label>
-            <section>Custom Object Relationship Details</section>
-        </sections>
-    </layouts>
 </CustomObjectTranslation>

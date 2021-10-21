@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollup_N_Day_Value__c</name>
     <help>Cette valeur affecte le nombre de jours à compter pour les champs de cumul d’allocations sur N jours.</help>
     <label>Valeur de cumul N jours</label>
-    <name>Rollup_N_Day_Value__c</name>
 </CustomFieldTranslation>
