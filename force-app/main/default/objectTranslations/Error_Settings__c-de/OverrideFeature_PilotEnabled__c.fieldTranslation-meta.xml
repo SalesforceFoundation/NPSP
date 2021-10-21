@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>OverrideFeature_PilotEnabled__c</name>
     <help>Nicht aktualisieren. Nur für Salesforce.org-Pilot-Tests. Ermöglicht das Überschreiben mit eingeschränktem Zugriff des PilotEnabled-Featureparameters in Scratch-Organisationen, in denen keine zugeordnete Produktlizenz im LMO vorhanden ist.</help>
     <label>Scratch-Org. Override: Pilot aktiviert</label>
-    <name>OverrideFeature_PilotEnabled__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Informal_Greeting_Format__c</name>
     <help>Das Format für die informelle Anrede des Haushalts.</help>
     <label>Format der informellen Anrede</label>
-    <name>Informal_Greeting_Format__c</name>
 </CustomFieldTranslation>

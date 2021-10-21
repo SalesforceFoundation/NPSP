@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Na deze datum maakt NPSP geen termijnen meer voor de terugkerende donatie en wordt de status bijgewerkt naar Gesloten.</help>
-    <label>Einddatum terugkerende donatie</label>
     <name>Recurring_Donation_End_Date__c</name>
+    <help>De datum waarop deze terugkerende donatie is gesloten.</help>
+    <label>Einddatum terugkerende donatie</label>
 </CustomFieldTranslation>

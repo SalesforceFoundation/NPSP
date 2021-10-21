@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppAutoCreateOption__c</name>
     <help>Specifies when NPSP will create installment Opportunities for Recurring Donations. The default is Always Create Next Installment.</help>
     <label>Installment Opportunity Auto-Creation</label>
-    <name>InstallmentOppAutoCreateOption__c</name>
 </CustomFieldTranslation>

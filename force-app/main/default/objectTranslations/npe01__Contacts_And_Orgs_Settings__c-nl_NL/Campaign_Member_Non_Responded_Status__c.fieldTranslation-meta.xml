@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign_Member_Non_Responded_Status__c</name>
     <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Open of Gesloten/Verloren Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Indien leeg, gebruikt NPSP de eerste Niet Gereageerd-status.</help>
     <label>Campagnelid Niet Gereageerd-Status</label>
-    <name>Campaign_Member_Non_Responded_Status__c</name>
 </CustomFieldTranslation>

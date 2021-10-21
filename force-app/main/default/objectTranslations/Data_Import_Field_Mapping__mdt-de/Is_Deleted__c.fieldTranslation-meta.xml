@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Is_Deleted__c</name>
     <help>Wenn diese Option aktiviert ist, wurde dieser Datensatz aus der Benutzeroberfläche der Erweiterten Zuordnung des Datenimports gelöscht und bei der Verarbeitung des NPSP-Datenimports ignoriert.</help>
     <label>Ist gelöscht</label>
-    <name>Is_Deleted__c</name>
 </CustomFieldTranslation>

@@ -630,21 +630,23 @@ tasks:
                 # Strip all underlying field translations, leaving translations for new fields in these objects
                 - path: force-app/main/default/*ranslations/**/*ranslation-meta.xml
                   xpath: /*/*[re:match(ns:name, '...+__..+')]
+                - path: force-app/tdtm/*ranslations/**/*ranslation-meta.xml
+                  xpath: /*/*[re:match(ns:name, '...+__..+')]
                 # Strip any underlying package object label translations
-                - path: force-app/main/default/objectTranslations/npe01**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/npe01**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
-                - path: force-app/main/default/objectTranslations/npo02**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/npo02**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
-                - path: force-app/main/default/objectTranslations/npe03**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/npe03**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
-                - path: force-app/main/default/objectTranslations/npe4**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/npe4**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
-                - path: force-app/main/default/objectTranslations/npe5**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/npe5**/**objectTranslation-meta.xml
                   xpath: //ns:layouts|//ns:nameFieldLabel|//ns:gender|//ns:caseValues|//ns:plural|//ns:startsWith
                 # Strip RecordType translations from the Account and Opp because these are not in the package
-                - path: force-app/main/default/objectTranslations/Account-**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/Account-**/**objectTranslation-meta.xml
                   xpath: //ns:recordTypes
-                - path: force-app/main/default/objectTranslations/Opportunity-**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/Opportunity-**/**objectTranslation-meta.xml
                   xpath: //ns:recordTypes
                 # Strip Report Type and SControl translations that should not be in the package
                 - path: force-app/main/default/translations/**.translation-meta.xml
@@ -655,65 +657,65 @@ tasks:
                 - path: force-app/main/default/translations/**.translation-meta.xml
                   xpath: //ns:prompts
                 # Strip field translations that should not be included in the package
-                - path: force-app/main/default/objectTranslations/Schedulable__c-**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/Schedulable__c-**/**Translation-meta.xml
                   xpath: //ns:picklistValues[ns:masterLabel='Daily']|//ns:picklistValues[ns:masterLabel='Hourly']|//ns:picklistValues[ns:masterLabel='Monthly']|//ns:picklistValues[ns:masterLabel='Quarterly']|//ns:picklistValues[ns:masterLabel='Weekly']
                 # Strip Campaign translations that should not be included in the package
-                - path: force-app/main/default/objectTranslations/Campaign-**.objectTranslation-meta.xml
+                - path: force-app/main/default/objectTranslations/Campaign-**/**objectTranslation-meta.xml
                   xpath: //ns:webLinks[ns:name='ViewCampaignInfluenceReport']
                 # Strip out any help text translations in the DataImport__c object because HelpText on that object is used for legacy mapping
-                - path: force-app/main/default/objectTranslations/DataImport__c-**/*fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_City__c']|//ns:fields/ns:help[../ns:name='Account1_Country__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_State_Province__c']|//ns:fields/ns:help[../ns:name='Account1_Street__c']|//ns:fields/ns:help[../ns:name='Account1_Zip_Postal_Code__c']
+                  xpath: //ns:help[../ns:name='Account1_City__c']|//ns:help[../ns:name='Account1_Country__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account1_Name__c']|//ns:fields/ns:help[../ns:name='Account1_Phone__c']|//ns:fields/ns:help[../ns:name='Account1_Website__c']
+                  xpath: //ns:help[../ns:name='Account1_State_Province__c']|//ns:help[../ns:name='Account1_Street__c']|//ns:help[../ns:name='Account1_Zip_Postal_Code__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_City__c']|//ns:fields/ns:help[../ns:name='Account2_Country__c']
+                  xpath: //ns:help[../ns:name='Account1_Name__c']|//ns:help[../ns:name='Account1_Phone__c']|//ns:help[../ns:name='Account1_Website__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_State_Province__c']|//ns:fields/ns:help[../ns:name='Account2_Street__c']|//ns:fields/ns:help[../ns:name='Account2_Zip_Postal_Code__c']
+                  xpath: //ns:help[../ns:name='Account2_City__c']|//ns:help[../ns:name='Account2_Country__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Account2_Name__c']|//ns:fields/ns:help[../ns:name='Account2_Phone__c']|//ns:fields/ns:help[../ns:name='Account2_Website__c']
+                  xpath: //ns:help[../ns:name='Account2_State_Province__c']|//ns:help[../ns:name='Account2_Street__c']|//ns:help[../ns:name='Account2_Zip_Postal_Code__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Firstname__c']|//ns:fields/ns:help[../ns:name='Contact1_Lastname__c']|//ns:fields/ns:help[../ns:name='Contact1_Salutation__c']
+                  xpath: //ns:help[../ns:name='Account2_Name__c']|//ns:help[../ns:name='Account2_Phone__c']|//ns:help[../ns:name='Account2_Website__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Birthdate__c']|//ns:fields/ns:help[../ns:name='Contact1_Title__c']
+                  xpath: //ns:help[../ns:name='Contact1_Firstname__c']|//ns:help[../ns:name='Contact1_Lastname__c']|//ns:help[../ns:name='Contact1_Salutation__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Home_Phone__c']|//ns:fields/ns:help[../ns:name='Contact1_Mobile_Phone__c']|//ns:fields/ns:help[../ns:name='Contact1_Other_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact1_Birthdate__c']|//ns:help[../ns:name='Contact1_Title__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Personal_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Preferred_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Preferred_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact1_Home_Phone__c']|//ns:help[../ns:name='Contact1_Mobile_Phone__c']|//ns:help[../ns:name='Contact1_Other_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact1_Alternate_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Work_Email__c']|//ns:fields/ns:help[../ns:name='Contact1_Work_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact1_Personal_Email__c']|//ns:help[../ns:name='Contact1_Preferred_Email__c']|//ns:help[../ns:name='Contact1_Preferred_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Firstname__c']|//ns:fields/ns:help[../ns:name='Contact2_Lastname__c']|//ns:fields/ns:help[../ns:name='Contact2_Salutation__c']
+                  xpath: //ns:help[../ns:name='Contact1_Alternate_Email__c']|//ns:help[../ns:name='Contact1_Work_Email__c']|//ns:help[../ns:name='Contact1_Work_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Birthdate__c']|//ns:fields/ns:help[../ns:name='Contact2_Title__c']
+                  xpath: //ns:help[../ns:name='Contact2_Firstname__c']|//ns:help[../ns:name='Contact2_Lastname__c']|//ns:help[../ns:name='Contact2_Salutation__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Home_Phone__c']|//ns:fields/ns:help[../ns:name='Contact2_Mobile_Phone__c']|//ns:fields/ns:help[../ns:name='Contact2_Other_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact2_Birthdate__c']|//ns:help[../ns:name='Contact2_Title__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Personal_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Preferred_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Preferred_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact2_Home_Phone__c']|//ns:help[../ns:name='Contact2_Mobile_Phone__c']|//ns:help[../ns:name='Contact2_Other_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Contact2_Alternate_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Work_Email__c']|//ns:fields/ns:help[../ns:name='Contact2_Work_Phone__c']
+                  xpath: //ns:help[../ns:name='Contact2_Personal_Email__c']|//ns:help[../ns:name='Contact2_Preferred_Email__c']|//ns:help[../ns:name='Contact2_Preferred_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Amount__c']|//ns:fields/ns:help[../ns:name='Donation_Date__c']
+                  xpath: //ns:help[../ns:name='Contact2_Alternate_Email__c']|//ns:help[../ns:name='Contact2_Work_Email__c']|//ns:help[../ns:name='Contact2_Work_Phone__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Description__c']|//ns:fields/ns:help[../ns:name='Donation_Name__c']
+                  xpath: //ns:help[../ns:name='Donation_Amount__c']|//ns:help[../ns:name='Donation_Date__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Member_Level__c']|//ns:fields/ns:help[../ns:name='Donation_Membership_End_Date__c']
+                  xpath: //ns:help[../ns:name='Donation_Description__c']|//ns:help[../ns:name='Donation_Name__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Membership_Origin__c']|//ns:fields/ns:help[../ns:name='Donation_Membership_Start_Date__c']
+                  xpath: //ns:help[../ns:name='Donation_Member_Level__c']|//ns:help[../ns:name='Donation_Membership_End_Date__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']|//ns:fields/ns:help[../ns:name='Donation_Stage__c']|//ns:fields/ns:help[../ns:name='Donation_Type__c']
+                  xpath: //ns:help[../ns:name='Donation_Membership_Origin__c']|//ns:help[../ns:name='Donation_Membership_Start_Date__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Donation_Record_Type_Name__c']
+                  xpath: //ns:help[../ns:name='Donation_Record_Type_Name__c']|//ns:help[../ns:name='Donation_Stage__c']|//ns:help[../ns:name='Donation_Type__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Home_City__c']|//ns:fields/ns:help[../ns:name='Home_Country__c']
+                  xpath: //ns:help[../ns:name='Donation_Record_Type_Name__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Home_State_Province__c']|//ns:fields/ns:help[../ns:name='Home_Street__c']|//ns:fields/ns:help[../ns:name='Home_Zip_Postal_Code__c']
+                  xpath: //ns:help[../ns:name='Home_City__c']|//ns:help[../ns:name='Home_Country__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Household_Phone__c']
+                  xpath: //ns:help[../ns:name='Home_State_Province__c']|//ns:help[../ns:name='Home_Street__c']|//ns:help[../ns:name='Home_Zip_Postal_Code__c']
                 - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
-                  xpath: //ns:fields/ns:help[../ns:name='Payment_Check_Reference_Number__c']|//ns:fields/ns:help[../ns:name='Payment_Method__c']|//ns:fields/ns:help[../ns:name='DonationCampaignImported__c']
-                # Unpackaged Metadata Cleanup
+                  xpath: //ns:help[../ns:name='Household_Phone__c']
+                - path: force-app/main/default/objectTranslations/DataImport__c-**/**.fieldTranslation-meta.xml
+                  xpath: //ns:help[../ns:name='Payment_Check_Reference_Number__c']|//ns:help[../ns:name='Payment_Method__c']|//ns:help[../ns:name='DonationCampaignImported__c']
+                  # Unpackaged Metadata Cleanup
                 - path: unpackaged/config/rd2_post_config/objectTranslations/**.objectTranslation-
                   xpath: //ns:gender|//ns:caseValues|//ns:nameFieldLabel|//ns:standardFields
                 - path: unpackaged/config/trial/objectTranslations/**.objectTranslation

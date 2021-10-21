@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Size__c</name>
     <help>各バッチで処理する NPSP データインポートレコードの数。</help>
     <label>バッチサイズ</label>
-    <name>Batch_Size__c</name>
 </CustomFieldTranslation>

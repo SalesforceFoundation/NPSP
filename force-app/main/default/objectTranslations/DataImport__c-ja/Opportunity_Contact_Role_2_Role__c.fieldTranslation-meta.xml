@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_2_Role__c</name>
     <help>商談取引先責任者の役割を作成するときに使用する必要のある役割。たとえば、「ソフトクレジット」と入力して、ソフトクレジットの商談取引先責任者の役割を作成します。</help>
     <label>商談取引先責任者の役割 2: 役割</label>
-    <name>Opportunity_Contact_Role_2_Role__c</name>
 </CustomFieldTranslation>

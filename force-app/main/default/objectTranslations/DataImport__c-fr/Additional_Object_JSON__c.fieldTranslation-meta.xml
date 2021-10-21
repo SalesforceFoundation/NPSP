@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Additional_Object_JSON__c</name>
     <help>Ce champ permet de créer un nombre d&apos;enregistrements dynamiques pour un nombre d&apos;objets dynamiques à partir d&apos;un seul enregistrement Importation de données. Des informations supplémentaires sur les objets sont stockées ici sous le format JSON.</help>
     <label>JSON Objets supplémentaires</label>
-    <name>Additional_Object_JSON__c</name>
 </CustomFieldTranslation>

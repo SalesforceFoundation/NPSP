@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Process_Size__c</name>
     <help>Het aantal records om tegelijkertijd te verwerken in elke batch.</help>
     <label>Verwerkingsgrootte van Batch</label>
-    <name>Batch_Process_Size__c</name>
 </CustomFieldTranslation>

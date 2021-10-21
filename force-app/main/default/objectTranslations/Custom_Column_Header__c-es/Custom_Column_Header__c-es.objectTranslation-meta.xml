@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <gender>Masculine</gender>
     <caseValues>
         <plural>false</plural>
         <value>Encabezado de columna personalizado</value>
@@ -8,5 +9,4 @@
         <plural>true</plural>
         <value>Encabezados de columnas personalizados</value>
     </caseValues>
-    <gender>Masculine</gender>
 </CustomObjectTranslation>

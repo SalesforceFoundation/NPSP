@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Ask_Date__c</name>
     <help>La fecha en la que se pidió al donante esta donación. Puede ser diferente a la fecha en que la recibió.</help>
     <label>Fecha de petición</label>
-    <name>Ask_Date__c</name>
 </CustomFieldTranslation>

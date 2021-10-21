@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Der Kontakt, der diesen weichen Kredit erhält.</help>
-    <label>Kontakt</label>
     <name>Contact__c</name>
+    <help>Der Kontakt, der diesen weichen Kredit erhält.</help>
     <relationshipLabel>Teilweise Soft Credits</relationshipLabel>
+    <label>Kontakt</label>
 </CustomFieldTranslation>

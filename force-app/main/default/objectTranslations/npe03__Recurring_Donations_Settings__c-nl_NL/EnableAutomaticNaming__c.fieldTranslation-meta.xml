@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EnableAutomaticNaming__c</name>
     <help>Indien ingeschakeld, vult Salesforce automatisch Naam van terugkerende donatie in.</help>
     <label>Naamgeving autom. terugkerende donatie</label>
-    <name>EnableAutomaticNaming__c</name>
 </CustomFieldTranslation>

@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Configuración de Servicios de pago</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Configuraciones de Servicios de pago</value>
-    </caseValues>
-    <gender>Feminine</gender>
     <layouts>
         <layout>Payment Configuration Layout</layout>
         <sections>
@@ -17,4 +8,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre configuración Servicios de pago</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre configuración Servicios de pago</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Configuración de Servicios de pago</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Configuraciones de Servicios de pago</value>
+    </caseValues>
 </CustomObjectTranslation>

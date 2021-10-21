@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Additional_Object_JSON__c</name>
     <help>Dieses Feld lässt die Erstellung einer dynamischen Anzahl Datensätze für eine dynamische Anzahl Objekte aus einem einzelnen Datenimport-Datensatz zu. Zusätzliche Objektinformationen werden hier im JSON-Format gespeichert.</help>
     <label>Zusätzliches Objekt-JSON</label>
-    <name>Additional_Object_JSON__c</name>
 </CustomFieldTranslation>

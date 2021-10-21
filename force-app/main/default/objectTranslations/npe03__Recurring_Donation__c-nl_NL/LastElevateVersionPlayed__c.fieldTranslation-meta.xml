@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LastElevateVersionPlayed__c</name>
     <help>Getal dat verw. naar het laatst afgesp. Elevate-event dat tot een update van de donatie heeft geleid. Wordt elke wijz.aanroep van de Elevate API verhoogd. Wordt gebruikt om circ. updates te voorkomen en te zorgen dat de rec. versie nooit wordt overschr.</help>
     <label>Laatst afgespeelde Elevate-versie</label>
-    <name>LastElevateVersionPlayed__c</name>
 </CustomFieldTranslation>

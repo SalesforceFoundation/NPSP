@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Run_Opportunity_Rollups_while_Processing__c</name>
     <help>Bei Akt. berechn. NPSP die Spender-Stat‘en, wenn Spenden verarb. werden. Wenn nicht, werden die Spender-Stat‘en während des nächtl. gepl. Stand‘auftrags berechnet. Die Verarbeitung dieses Batches kann durch Ausw. dieses Kontrollk. Langsamer werden.</help>
     <label>Spenden-Rollups mit Batch berechnen</label>
-    <name>Run_Opportunity_Rollups_while_Processing__c</name>
 </CustomFieldTranslation>

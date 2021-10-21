@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Annual_Employee_Max__c</name>
     <help>Der maximale Betrag, den das Unternehmen pro Jahr mit einem Mitarbeiter abgleicht</help>
     <label>Max. Spendenverdopplung/Jahr f. Mitarb.</label>
-    <name>Matching_Gift_Annual_Employee_Max__c</name>
 </CustomFieldTranslation>

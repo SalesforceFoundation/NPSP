@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Naming__c</name>
     <help>Deze instelling genereert automatisch de recordnaam voor via batch ingevoerde Opportunityrecords op basis van de waarde van de ingevoerde velden.</help>
     <label>Benoeming Opportunity</label>
-    <name>Opportunity_Naming__c</name>
 </CustomFieldTranslation>

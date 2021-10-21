@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Simple_Address_Change_Treated_as_Update__c</name>
     <help>Wanneer ingeschakeld, werkt een wijziging van één Contactpersoonveld of Accountadresveld het bestaande Adres bij, in plaats van een nieuw Adres te maken.</help>
     <label>Adreswijziging Gezien Als Update</label>
-    <name>Simple_Address_Change_Treated_as_Update__c</name>
 </CustomFieldTranslation>

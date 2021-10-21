@@ -3,23 +3,23 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- AutoNumber --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הAutoNumber --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- AutoNumber --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הAutoNumber --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
-    <nameFieldLabel><!-- Auto-Number Name --></nameFieldLabel>
+    <gender/>
+    <nameFieldLabel/>
 </CustomObjectTranslation>

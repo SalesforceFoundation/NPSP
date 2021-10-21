@@ -1,50 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Engagementplan-Vorlage</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Engagementplan-Vorlagen</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Manage_Template</name>
+        <label>Vorlage verwalten</label>
+    </webLinks>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
@@ -53,8 +12,49 @@
         </sections>
     </layouts>
     <nameFieldLabel>Engagementplan-Vorlagenname</nameFieldLabel>
-    <webLinks>
-        <label>Vorlage verwalten</label>
-        <name>Manage_Template</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Engagementplan-Vorlagenname</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Engagementplan-Vorlage</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Engagementplan-Vorlage</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Engagementplan-Vorlage</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Engagementplan-Vorlage</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Engagementplan-Vorlagen</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Engagementplan-Vorlagen</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Engagementplan-Vorlagen</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Engagementplan-Vorlagen</value>
+    </caseValues>
 </CustomObjectTranslation>

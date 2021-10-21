@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Naming__c</name>
     <help>この設定は、バッチ入力された商談レコードのレコード名を入力された項目値に基づいて自動的に生成します。</help>
     <label>商談の命名</label>
-    <name>Opportunity_Naming__c</name>
 </CustomFieldTranslation>

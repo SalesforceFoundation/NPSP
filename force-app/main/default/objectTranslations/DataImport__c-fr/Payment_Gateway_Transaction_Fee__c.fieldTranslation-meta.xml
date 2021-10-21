@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Gateway_Transaction_Fee__c</name>
+    <help>Frais de transaction facturés par votre passerelle de paiement.</help>
+    <label>Frais transaction passerelle paiement</label>
+</CustomFieldTranslation>

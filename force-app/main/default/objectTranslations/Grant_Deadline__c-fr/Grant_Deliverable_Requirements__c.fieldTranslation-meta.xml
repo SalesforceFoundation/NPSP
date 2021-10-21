@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Deliverable_Requirements__c</name>
     <help>Description de ce qui est requis pour ce livrable.</help>
     <label>Exigences</label>
-    <name>Grant_Deliverable_Requirements__c</name>
 </CustomFieldTranslation>

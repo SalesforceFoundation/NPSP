@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonation__c</name>
+    <help>Don récurrent associé à cet enregistrement de journal des modifications.</help>
+    <relationshipLabel>Journal des modifications apportées aux dons récurrents</relationshipLabel>
+    <label>Don récurrent</label>
+</CustomFieldTranslation>

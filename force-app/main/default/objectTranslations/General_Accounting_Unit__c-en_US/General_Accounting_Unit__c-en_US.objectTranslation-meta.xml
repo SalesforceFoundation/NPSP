@@ -11,21 +11,21 @@
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
-            <label><!-- Allocation Information --></label>
+            <label/>
             <section>Allocation Information</section>
         </sections>
         <sections>
-            <label><!-- Allocation Totals --></label>
+            <label/>
             <section>Allocation Totals</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label/>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

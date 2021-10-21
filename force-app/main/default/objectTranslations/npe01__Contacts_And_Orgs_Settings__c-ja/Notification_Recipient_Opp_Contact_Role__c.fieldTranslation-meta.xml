@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
     <help>この設定に入力すると、商談での取引先責任者の役割レコードが通知受信者取引先責任者に対して自動作成されます。</help>
     <label>通知受信者商談個人の役割</label>
-    <name>Notification_Recipient_Opp_Contact_Role__c</name>
 </CustomFieldTranslation>

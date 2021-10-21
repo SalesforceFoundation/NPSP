@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DataMigrationBatchSize__c</name>
     <help>既存の継続支援レコードを拡張継続支援データモデルに移行するときに処理するレコードの数。</help>
     <label>拡張継続支援データ移行バッチサイズ</label>
-    <name>DataMigrationBatchSize__c</name>
 </CustomFieldTranslation>
