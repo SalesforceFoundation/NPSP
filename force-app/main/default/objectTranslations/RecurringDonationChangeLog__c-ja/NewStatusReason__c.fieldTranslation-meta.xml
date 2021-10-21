@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewStatusReason__c</name>
+    <help>関連する継続支援の新規状況の理由。</help>
+    <label>新規状況の理由</label>
+</CustomFieldTranslation>

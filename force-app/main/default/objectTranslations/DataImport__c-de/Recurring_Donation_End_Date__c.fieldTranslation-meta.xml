@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Nach diesem Datum erstellt NPSP keine Raten für diese wiederkehrende Spende mehr und aktualisiert den Status auf &quot;Abgeschlossen&quot;.</help>
-    <label>Enddatum der wiederkehrenden Spende</label>
     <name>Recurring_Donation_End_Date__c</name>
+    <help>Das Datum der Schließung dieser wiederkehrenden Spende</help>
+    <label>Enddatum der wiederkehrenden Spende</label>
 </CustomFieldTranslation>

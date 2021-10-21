@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Modèle de plan d&apos;engagement</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Modèles de plan d&apos;engagement</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <gender>Masculine</gender>
+    <webLinks>
+        <name>Manage_Template</name>
+        <label>Gérer un modèle</label>
+    </webLinks>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
@@ -21,9 +12,18 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nom du modèle de plan d’engagement</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nom du modèle de plan d’engagement</label>
+    </standardFields>
+    <gender>Masculine</gender>
     <startsWith>Consonant</startsWith>
-    <webLinks>
-        <label>Gérer un modèle</label>
-        <name>Manage_Template</name>
-    </webLinks>
+    <caseValues>
+        <plural>false</plural>
+        <value>Modèle de plan d&apos;engagement</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Modèles de plan d&apos;engagement</value>
+    </caseValues>
 </CustomObjectTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GiftBatch__c</name>
     <help>Deze batch is bedoeld voor gebruik met Batchgiftinvoer. Batches worden automatisch gemarkeerd als giftbatches wanneer ze via het tabblad Batchgiftinvoer worden ingesteld. Dit veld handmatig wijzigen, kan onbedoelde gevolgen hebben.</help>
     <label>Giftbatch</label>
-    <name>GiftBatch__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Respect_Duplicate_Rule_Settings__c</name>
     <help>重複レコードを許可するかどうかを管理する [重複ルール] の設定を考慮します。既存の設定を確認するには、[設定] の [重複ルール] に移動します。ルールの [作成のアクション] または [編集のアクション] 項目が [許可] に設定されている場合、重複は保存されます。</help>
     <label>重複ルール設定の考慮</label>
-    <name>Respect_Duplicate_Rule_Settings__c</name>
 </CustomFieldTranslation>

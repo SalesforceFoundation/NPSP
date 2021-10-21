@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewPlannedInstallments__c</name>
+    <help>予定されている新規 (支援) 回数。固定期間の継続支援でのみ使用されます。</help>
+    <label>新規予定回数</label>
+</CustomFieldTranslation>

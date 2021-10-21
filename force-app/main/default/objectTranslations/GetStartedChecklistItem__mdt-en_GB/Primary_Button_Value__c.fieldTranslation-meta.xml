@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Primary_Button_Value__c</name>
     <help>The action of the Primary Button.
 For an External Page button, the external URL.
 For an SFDC New Tab button, the format is &quot;{pageReference}:{objectOrPageApiName}:{action}&quot;. See the Lightning NavigationMixin Documentation for examples and all specs.</help>
     <label>Primary Button Value</label>
-    <name>Primary_Button_Value__c</name>
 </CustomFieldTranslation>

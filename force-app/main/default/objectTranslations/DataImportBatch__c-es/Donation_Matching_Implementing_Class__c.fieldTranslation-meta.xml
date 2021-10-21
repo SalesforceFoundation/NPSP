@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Implementing_Class__c</name>
     <help>El nombre del desarrollador de una clase de Apex que implementa la interfaz BDI_IMatching para donaciones. Deje esta opción en blanco para permitir que NPSP controle las coincidencias.</help>
     <label>Clase implement. coincidente donaciones</label>
-    <name>Donation_Matching_Implementing_Class__c</name>
 </CustomFieldTranslation>

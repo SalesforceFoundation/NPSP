@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewRecurringType__c</name>
+    <help>Der neue Wiederholungstyp für die zugeordnete wiederkehrende Spende.</help>
+    <label>Neuer Wiederholungstyp</label>
+</CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Planned_Installments__c</name>
     <help>Número de cuotas que espera recibir. Solo se utiliza cuando Tipo de recurrencia es Fijo.</help>
     <label>Cuotas planificadas donación recurrente</label>
-    <name>Recurring_Donation_Planned_Installments__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GiftBatch__c</name>
     <help>Este lote se utilizará con la entrada de regalos en lote. Los lotes se marcan automáticamente como lotes de regalos cuando se configuran a través de la ficha Entrada de regalo en lote. El cambio manual de este campo podría tener consecuencias inesperadas.</help>
     <label>Lote de regalos</label>
-    <name>GiftBatch__c</name>
 </CustomFieldTranslation>

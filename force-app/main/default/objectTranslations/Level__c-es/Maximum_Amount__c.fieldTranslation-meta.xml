@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Maximum_Amount__c</name>
     <help>El valor debe ser menor a este importe para que NPSP lo asigne este nivel. Si esta vacío, NPSP asignará este nivel a cualquier importe mayor o igual al importe mínimo de este nivel.</help>
     <label>Importe máximo (&lt;)</label>
-    <name>Maximum_Amount__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousPaymentMethod__c</name>
+    <help>De vorige betalingswijze voor de desbetreffende terugkerende donatie.</help>
+    <label>Vorige betalingswijze</label>
+</CustomFieldTranslation>

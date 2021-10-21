@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusMappingDeploymentId__c</name>
     <help>Status mapping custom metadata deployment Id</help>
     <label>Status Mapping Deployment Id</label>
-    <name>StatusMappingDeploymentId__c</name>
 </CustomFieldTranslation>

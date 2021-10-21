@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     <help>Wenn diese Option aktiviert wird, plant NPSP wiederkehrende Stand‘aufträge nicht autom. Mit diesen wiederkehrenden Auftr. werden Rollups berechnet, wiederkehrende Spenden und saisonale Adressen aktualisiert sowie die Fehlerbehandlung durchgeführt.</help>
     <label>Keine autom. Plan. v. NPSP-Stand.-Auftr.</label>
-    <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
 </CustomFieldTranslation>

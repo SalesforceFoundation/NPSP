@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>HHId__c</name>
     <help>Contient l’ID de l’enregistrement du foyer (qu’il s’agisse d’un compte de foyer ou d’un objet de foyer) auquel ce contact est actuellement associé (lecture seule).</help>
     <label>Identifiant du foyer</label>
-    <name>HHId__c</name>
 </CustomFieldTranslation>

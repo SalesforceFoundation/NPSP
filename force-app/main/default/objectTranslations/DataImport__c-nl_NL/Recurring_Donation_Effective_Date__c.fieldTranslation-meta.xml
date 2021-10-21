@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Effective_Date__c</name>
     <help>De datum waarop nieuwe of bijgewerkte planningsgegevens (Bedrag, Dag van de maand, enz.) voor deze terugkerende donatie van kracht worden. De standaardwaarde is de huidige datum.</help>
     <label>Ingangsdatum terugkerende donatie</label>
-    <name>Recurring_Donation_Effective_Date__c</name>
 </CustomFieldTranslation>

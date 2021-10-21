@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Asignación de CCG</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Asignaciones de CCG</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Manage_Allocations</name>
+        <label>Gestionar asignaciones</label>
+    </webLinks>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
@@ -21,8 +12,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de asignación de CCG</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar asignaciones</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de asignación de CCG</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Asignación de CCG</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Asignaciones de CCG</value>
+    </caseValues>
 </CustomObjectTranslation>

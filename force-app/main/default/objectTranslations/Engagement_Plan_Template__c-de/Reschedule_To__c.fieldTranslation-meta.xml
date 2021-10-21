@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reschedule_To__c</name>
     <help>Gibt an, ob Aufgaben mit einem Fälligkeitsdatum am Wochenende für den Freitag vor dem Wochenende oder den Montag danach geplant werden sollen. Dies gilt nur, wenn &quot;Wochenenden überspringen&quot; ausgewählt ist.</help>
     <label>Neu planen für</label>
-    <name>Reschedule_To__c</name>
-    <picklistValues>
-        <masterLabel>Friday</masterLabel>
-        <translation>Freitag</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Monday</masterLabel>
         <translation>Montag</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Freitag</translation>
     </picklistValues>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Qualified_Date__c</name>
     <help>The date your organisation identified this donor as qualifying for this Donation.</help>
     <label>Qualified Date</label>
-    <name>Qualified_Date__c</name>
 </CustomFieldTranslation>

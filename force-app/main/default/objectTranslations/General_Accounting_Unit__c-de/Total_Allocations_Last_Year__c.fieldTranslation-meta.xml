@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Total_Allocations_Last_Year__c</name>
     <help>Die Gesamtsumme aller Zuweisungen von Opportunities in einer geschlossenen und gewonnenen Phase im letzten Jahr.</help>
     <label>Zuweisungen gesamt im letzten Jahr</label>
-    <name>Total_Allocations_Last_Year__c</name>
 </CustomFieldTranslation>

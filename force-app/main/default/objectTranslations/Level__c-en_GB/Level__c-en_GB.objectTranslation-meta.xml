@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <validationRules>
+        <errorMessage>Target is a required field on Level.  Please specify the Target object for this Level.</errorMessage>
+        <name>Target_Required</name>
+    </validationRules>
+    <layouts>
+        <layout>Level Layout</layout>
+        <sections>
+            <label>long text section</label>
+            <section>long text section</section>
+        </sections>
+        <sections>
+            <label>Custom Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Level Name</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Level Name</label>
+    </standardFields>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Level</value>
@@ -8,25 +29,4 @@
         <plural>true</plural>
         <value>Levels</value>
     </caseValues>
-    <fieldSets>
-        <label><!-- LevelEdit --></label>
-        <name>LevelEdit</name>
-    </fieldSets>
-    <layouts>
-        <layout>Level Layout</layout>
-        <sections>
-            <label>Custom Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>long text section</label>
-            <section>long text section</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Level Name</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
-    <validationRules>
-        <errorMessage>Target is a required field on Level.  Please specify the Target object for this Level.</errorMessage>
-        <name>Target_Required</name>
-    </validationRules>
 </CustomObjectTranslation>

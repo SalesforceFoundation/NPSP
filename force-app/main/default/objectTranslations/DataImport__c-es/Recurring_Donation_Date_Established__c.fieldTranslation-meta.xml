@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Date_Established__c</name>
     <help>La fecha de efecto inicial de esta donación recurrente. El valor predeterminado es la fecha vigente.</help>
     <label>Fecha de donación recurrente establecida</label>
-    <name>Recurring_Donation_Date_Established__c</name>
 </CustomFieldTranslation>

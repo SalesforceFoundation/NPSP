@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EnableChangeLog__c</name>
+    <help>Wenn diese Funktion aktiviert ist, erstellt NPSP jedes Mal einen Datensatz für das Änderungsprotokoll einer wiederkehrenden Spende, wenn der Betrag, der Zeitplan oder die Kampagnenfelder einer wiederkehrenden Spende aktualisiert werden.</help>
+    <label>Änd-Protokoll wiederk. Spende aktivieren</label>
+</CustomFieldTranslation>

@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <layouts>
-        <layout>Donation Layout</layout>
-        <sections>
-            <label>Donatie-informatie</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Overeenkomende Giftinformatie</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Betalingsinformatie</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Hommage-informatie</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
+    <webLinks>
+        <name>Email_Acknowledgment</name>
+        <label>Erkenning e-mailen</label>
+    </webLinks>
+    <webLinks>
+        <name>Email_Acknowledgments</name>
+        <label>Erkenningen e-mailen</label>
+    </webLinks>
+    <webLinks>
+        <name>Find_Matched_Gifts</name>
+        <label>Overeenkomende Giften zoeken</label>
+    </webLinks>
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Soft Credits beheren</label>
+    </webLinks>
+    <webLinks>
+        <name>Refresh_Name</name>
+        <label>Naam opnieuw laden</label>
+    </webLinks>
     <layouts>
         <layout>Grant Layout</layout>
         <sections>
@@ -58,6 +51,25 @@
         </sections>
     </layouts>
     <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Donatie-informatie</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Betalingsinformatie</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Overeenkomende Giftinformatie</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Hommage-informatie</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
         <layout>Major Gift Layout</layout>
         <sections>
             <label>Donatie-informatie</label>
@@ -68,12 +80,12 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label>Overeenkomende Giftinformatie</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
             <label>Betalingsinformatie</label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Overeenkomende Giftinformatie</label>
+            <section>Matching Gift Information</section>
         </sections>
         <sections>
             <label>Hommage-informatie</label>
@@ -94,10 +106,6 @@
     <layouts>
         <layout>Membership Layout</layout>
         <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
             <label>Velden</label>
             <section>Fields</section>
         </sections>
@@ -110,36 +118,12 @@
             <section>Payment Information</section>
         </sections>
         <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
             <label>Systeeminformatie</label>
             <section>System Information</section>
         </sections>
     </layouts>
-    <quickActions>
-        <label>Nieuwe Betaling</label>
-        <name>New_Payment</name>
-    </quickActions>
-    <quickActions>
-        <label>Snelle Update</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Erkenning e-mailen</label>
-        <name>Email_Acknowledgment</name>
-    </webLinks>
-    <webLinks>
-        <label>Erkenningen e-mailen</label>
-        <name>Email_Acknowledgments</name>
-    </webLinks>
-    <webLinks>
-        <label>Overeenkomende Giften zoeken</label>
-        <name>Find_Matched_Gifts</name>
-    </webLinks>
-    <webLinks>
-        <label>Soft Credits beheren</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
-    <webLinks>
-        <label>Naam opnieuw laden</label>
-        <name>Refresh_Name</name>
-    </webLinks>
 </CustomObjectTranslation>

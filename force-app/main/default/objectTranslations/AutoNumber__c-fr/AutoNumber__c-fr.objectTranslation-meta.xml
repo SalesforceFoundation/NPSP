@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>Nom du numéro automatique</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nom du numéro automatique</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Numérotation automatique</value>
@@ -8,7 +15,4 @@
         <plural>true</plural>
         <value>Numérotations automatiques</value>
     </caseValues>
-    <gender>Feminine</gender>
-    <nameFieldLabel>Nom du numéro automatique</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Contact Merge Found FS --></label>
-        <name>ContactMergeFoundFS</name>
-    </fieldSets>
+    <webLinks>
+        <name>Merge_Contacts</name>
+        <label>取引先責任者のマージ</label>
+    </webLinks>
+    <webLinks>
+        <name>New_Gift</name>
+        <label>新規支援</label>
+    </webLinks>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>積み上げ集計の再計算</label>
+    </webLinks>
     <layouts>
         <layout>Contact Layout</layout>
         <sections>
             <label>取引先責任者の詳細</label>
             <section>Contact Details</section>
+        </sections>
+        <sections>
+            <label>世帯の住所</label>
+            <section>Household Address</section>
         </sections>
         <sections>
             <label>支援情報</label>
@@ -27,8 +31,8 @@
             <section>Donation Totals</section>
         </sections>
         <sections>
-            <label>世帯の住所</label>
-            <section>Household Address</section>
+            <label>ソフトクレジット合計</label>
+            <section>Soft Credit Totals</section>
         </sections>
         <sections>
             <label>世帯の支援情報</label>
@@ -42,37 +46,5 @@
             <label>その他</label>
             <section>Misc</section>
         </sections>
-        <sections>
-            <label>ソフトクレジット合計</label>
-            <section>Soft Credit Totals</section>
-        </sections>
     </layouts>
-    <quickActions>
-        <label>新規アフィリエーション</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>新規継続支援</label>
-        <name>New_Recurring_Donation</name>
-    </quickActions>
-    <quickActions>
-        <label>新規リレーション</label>
-        <name>New_Relationship</name>
-    </quickActions>
-    <quickActions>
-        <label>クイック更新</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>取引先責任者のマージ</label>
-        <name>Merge_Contacts</name>
-    </webLinks>
-    <webLinks>
-        <label>新規支援</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>積み上げ集計の再計算</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
 </CustomObjectTranslation>

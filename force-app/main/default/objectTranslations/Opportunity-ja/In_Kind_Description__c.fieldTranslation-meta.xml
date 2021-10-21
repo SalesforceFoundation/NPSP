@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Description__c</name>
     <help>現物支援のリッチテキストの説明 (写真を含む) を保持します。</help>
     <label>現物支援の説明</label>
-    <name>In_Kind_Description__c</name>
 </CustomFieldTranslation>
