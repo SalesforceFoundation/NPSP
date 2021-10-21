@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Process_Using_Scheduled_Job__c</name>
     <help>Wenn dieses Kontrollkästchen aktiviert ist, wird der Batch automatisch basierend auf dem Zeitplan für den verbundenen Auftrag verarbeitet.</help>
     <label>Mit geplantem Auftrag verarbeiten</label>
-    <name>Process_Using_Scheduled_Job__c</name>
 </CustomFieldTranslation>

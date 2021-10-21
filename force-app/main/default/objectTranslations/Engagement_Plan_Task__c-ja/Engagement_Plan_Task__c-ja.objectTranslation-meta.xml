@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>エンゲージメント計画 ToDo</value>
-    </caseValues>
     <layouts>
         <layout>Engagement Plan Task Layout</layout>
         <sections>
@@ -12,4 +8,12 @@
         </sections>
     </layouts>
     <nameFieldLabel>件名</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>件名</label>
+    </standardFields>
+    <caseValues>
+        <plural>false</plural>
+        <value>エンゲージメント計画 ToDo</value>
+    </caseValues>
 </CustomObjectTranslation>

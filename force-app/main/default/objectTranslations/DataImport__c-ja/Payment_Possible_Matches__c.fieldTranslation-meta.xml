@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Possible_Matches__c</name>
     <help>支援にマッチングする潜在的な支払上位 10 件の ID のコンマ区切りリスト。</help>
     <label>支払見込みマッチ</label>
-    <name>Payment_Possible_Matches__c</name>
 </CustomFieldTranslation>

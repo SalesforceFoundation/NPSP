@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Le lot dans lequel ce compte a été créé.</help>
-    <label>Lot</label>
     <name>Batch__c</name>
+    <help>Le lot dans lequel ce compte a été créé.</help>
     <relationshipLabel>Comptes</relationshipLabel>
+    <label>Lot</label>
 </CustomFieldTranslation>

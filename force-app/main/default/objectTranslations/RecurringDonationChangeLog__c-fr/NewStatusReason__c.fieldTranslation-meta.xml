@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewStatusReason__c</name>
+    <help>Nouveau motif du statut du don récurrent associé.</help>
+    <label>Nouveau motif du statut</label>
+</CustomFieldTranslation>

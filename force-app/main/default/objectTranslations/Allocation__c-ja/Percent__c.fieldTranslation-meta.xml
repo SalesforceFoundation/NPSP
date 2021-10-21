@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Percent__c</name>
     <help>この割り当ての一般会計単位に割り当てる商談金額のパーセント。商談金額を変更すると、一般会計単位の割当金額が更新されます。</help>
     <label>パーセント</label>
-    <name>Percent__c</name>
 </CustomFieldTranslation>

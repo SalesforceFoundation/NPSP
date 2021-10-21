@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ContactHardCreditNonSkew_Incremental__c</name>
     <help>Bei Akt. begr. der nächtl. Auftr. z. Kont.-Hard Credit (nicht verz.) die Anz. der Kont‘e, die zur Neuber. ausgew. werden, indem nach v. Kurz. aktual. Opp. in d. Kont. gesucht wird. So wird die Leist. des nächtl. Auftr. zu anpassb. Rollups verbessert.</help>
     <label>Inkrem. Kontakt-Hard Credit, nicht verz.</label>
-    <name>ContactHardCreditNonSkew_Incremental__c</name>
 </CustomFieldTranslation>

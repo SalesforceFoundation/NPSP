@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Process_Using_Scheduled_Job__c</name>
     <help>Lorsque cette option est sélectionnée, le lot sera automatiquement traité en fonction de la planification de la tâche associée.</help>
     <label>Processus utilisant une tâche planifiée</label>
-    <name>Process_Using_Scheduled_Job__c</name>
 </CustomFieldTranslation>

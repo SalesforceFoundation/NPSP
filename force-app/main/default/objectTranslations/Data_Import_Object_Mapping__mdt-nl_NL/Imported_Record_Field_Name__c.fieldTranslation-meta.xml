@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Imported_Record_Field_Name__c</name>
     <help>De veld-API-naam voor het object NPSP-gegevensimport, waarin de ID voor de /geïmporteerde record wordt geplaatst wanneer het importeren is geslaagd. Dit is ook de plaats waar de code gaat verifiëren of deze record is geïmporteerd of is gekoppeld.</help>
     <label>Veldnaam van geïmporteerde record</label>
-    <name>Imported_Record_Field_Name__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Total_Transaction_Fees__c</name>
+    <help>Die Summe der Transaktionsgebühren, die von Elevate und Ihrem Zahlungsgateway erhoben werden.</help>
+    <label>Transaktionsgebühren gesamt für Zahlung</label>
+</CustomFieldTranslation>

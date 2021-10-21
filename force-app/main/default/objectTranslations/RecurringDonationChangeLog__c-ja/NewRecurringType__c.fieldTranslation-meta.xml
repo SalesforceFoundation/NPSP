@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewRecurringType__c</name>
+    <help>関連する継続支援の新規継続種別。</help>
+    <label>新規継続種別</label>
+</CustomFieldTranslation>

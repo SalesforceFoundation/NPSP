@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonations2EnablementState__c</name>
     <help>Bevat bevestigingen en status van inschakelen van Uitgebreide terugkerende donaties.</help>
     <label>Inschak.-status Terugkerende donaties</label>
-    <name>RecurringDonations2EnablementState__c</name>
 </CustomFieldTranslation>

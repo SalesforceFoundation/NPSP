@@ -11,15 +11,15 @@
     <layouts>
         <layout>Rollup Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label/>
             <section>New Section</section>
         </sections>
         <sections>
-            <label><!-- Rollup Details --></label>
+            <label/>
             <section>Rollup Details</section>
         </sections>
     </layouts>

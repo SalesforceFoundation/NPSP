@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>County_Name__c</name>
     <help>Nom du comté dans lequel se trouve cette adresse.</help>
     <label>Nom de comté</label>
-    <name>County_Name__c</name>
 </CustomFieldTranslation>

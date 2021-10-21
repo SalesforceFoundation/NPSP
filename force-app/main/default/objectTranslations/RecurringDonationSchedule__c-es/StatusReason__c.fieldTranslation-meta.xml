@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>StatusReason__c</name>
     <help>Contiene detalles adicionales para la programación. Por ejemplo, un motivo de la pausa para una programación en pausa.</help>
     <label>Motivo de estado</label>
-    <name>StatusReason__c</name>
 </CustomFieldTranslation>

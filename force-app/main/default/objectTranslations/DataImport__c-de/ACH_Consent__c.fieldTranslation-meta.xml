@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ACH_Consent__c</name>
     <help>Die Zusagenachricht der Elevate Giving Page, der der Spender zugestimmt hat.</help>
     <label>ACH-Zusagenachricht für Zahlung</label>
-    <name>ACH_Consent__c</name>
 </CustomFieldTranslation>

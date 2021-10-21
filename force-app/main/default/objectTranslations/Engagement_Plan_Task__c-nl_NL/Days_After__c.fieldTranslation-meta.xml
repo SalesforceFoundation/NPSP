@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Days_After__c</name>
     <help>Het aantal dagen na de aanmaakdatum van het Betrokkenheidsplan waarop deze Taak klaar moet zijn. Voor afhankelijke Taken, het aantal dagen na de vervaldatum van de bovenliggende Taak waarop deze Taak klaar moet zijn.</help>
     <label>Dagen later</label>
-    <name>Days_After__c</name>
 </CustomFieldTranslation>

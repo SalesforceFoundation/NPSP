@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentFrequency__c</name>
     <help>La Fréquence de versement et la Période de versement définissent le calendrier des versements de ce Don récurrent. Par ex., si la Période de versement est Mensuelle et la Fréquence de versement est 3, le calendrier est défini sur « tous les 3 mois ».</help>
     <label>Fréquence de versement</label>
-    <name>InstallmentFrequency__c</name>
 </CustomFieldTranslation>

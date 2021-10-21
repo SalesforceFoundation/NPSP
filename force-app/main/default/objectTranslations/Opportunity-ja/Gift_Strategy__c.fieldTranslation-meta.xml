@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Gift_Strategy__c</name>
     <help>この商談の質問種別を分類します。</help>
     <label>支援の戦略</label>
-    <name>Gift_Strategy__c</name>
     <picklistValues>
         <masterLabel>New Donor</masterLabel>
         <translation>新規支援者</translation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     <help>Aantal te selecteren Account-, Contactpersoon of GAU-records per batch voor verwerking in Verschuivingsmodus.</help>
     <label>Batchgr. Dispatcher Verschuivingsmodus</label>
-    <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
 </CustomFieldTranslation>

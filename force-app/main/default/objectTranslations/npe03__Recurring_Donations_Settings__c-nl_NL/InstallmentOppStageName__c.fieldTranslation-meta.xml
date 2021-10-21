@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppStageName__c</name>
     <help>De opportunityfase die NPSP toepast op elke nieuwe Opportunity voor termijnen bij het maken van een terugkerende donatie.</help>
     <label>Fasenaam Opportunities voor termijnen</label>
-    <name>InstallmentOppStageName__c</name>
 </CustomFieldTranslation>

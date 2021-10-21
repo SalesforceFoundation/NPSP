@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableRollupsWhenCreatingInstallments__c</name>
     <help>Cuando se selecciona, y si las Totalizaciones personalizables están activadas, se desactivan los cálculos de totalización inmediatos cuando se crean nuevas oportunidades de cuota para una Donación recurrente.</help>
     <label>Desactivar CRLP al crear cuotas</label>
-    <name>DisableRollupsWhenCreatingInstallments__c</name>
 </CustomFieldTranslation>

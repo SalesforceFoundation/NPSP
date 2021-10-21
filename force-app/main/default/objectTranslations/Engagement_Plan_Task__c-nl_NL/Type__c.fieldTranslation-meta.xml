@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Type__c</name>
     <help>Het type Taak.</help>
     <label>Type</label>
-    <name>Type__c</name>
     <picklistValues>
         <masterLabel>Call</masterLabel>
         <translation>Telefoongesprek</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Email</masterLabel>
-        <translation>E-mail</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Meeting</masterLabel>
@@ -18,5 +14,9 @@
     <picklistValues>
         <masterLabel>Other</masterLabel>
         <translation>Anders</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Email</masterLabel>
+        <translation>E-mail</translation>
     </picklistValues>
 </CustomFieldTranslation>

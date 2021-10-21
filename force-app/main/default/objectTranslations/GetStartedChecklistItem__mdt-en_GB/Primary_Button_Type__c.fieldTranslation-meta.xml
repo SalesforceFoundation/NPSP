@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Primary_Button_Type__c</name>
     <help>The type of action related to the Primary Button. Indicates if the button is disabled, opens a new Salesforce tab, or opens an external page.</help>
     <label>Primary Button Type</label>
-    <name>Primary_Button_Type__c</name>
     <picklistValues>
         <masterLabel>Disabled</masterLabel>
         <translation>Disabled</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>External Page</masterLabel>
-        <translation>External Page</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>SFDC New Tab</masterLabel>
         <translation>SFDC New Tab</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>External Page</masterLabel>
+        <translation>External Page</translation>
     </picklistValues>
 </CustomFieldTranslation>

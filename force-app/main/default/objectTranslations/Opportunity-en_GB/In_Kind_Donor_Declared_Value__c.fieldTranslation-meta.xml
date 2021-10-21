@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Donor_Declared_Value__c</name>
     <help>Indicates whether the donor provided the Fair Market Value for this In-Kind Gift.</help>
     <label>In-Kind Donor Declared Value</label>
-    <name>In_Kind_Donor_Declared_Value__c</name>
 </CustomFieldTranslation>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fieldSets>
-        <label><!-- Recurring Donations Entry Form Custom Fields --></label>
+        <label/>
         <name>RD2_Entry_Form_Custom_Fields</name>
     </fieldSets>
     <quickActions>
-        <label><!-- Close Recurring Donation --></label>
+        <label/>
         <name>Close_Recurring_Donation</name>
     </quickActions>
     <quickActions>
@@ -13,7 +13,7 @@
         <name>New_Opportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- Pause --></label>
+        <label/>
         <name>Pause</name>
     </quickActions>
     <quickActions>
@@ -21,7 +21,7 @@
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
-        <label><!-- Recalculate_Rollups --></label>
+        <label/>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

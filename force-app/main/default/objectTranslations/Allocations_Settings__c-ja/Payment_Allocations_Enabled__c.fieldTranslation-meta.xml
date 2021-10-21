@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Allocations_Enabled__c</name>
     <help>割り当てを支払レベルで設定できるかどうかを示します。支払レベルの割り当てに関するドキュメントを確認してから、この設定を変更してください。</help>
     <label>支払の割り当ての有効化</label>
-    <name>Payment_Allocations_Enabled__c</name>
 </CustomFieldTranslation>

@@ -204,5 +204,19 @@
             "message": "NPSP のレポートとダッシュボードは、バージョン 3.90 (2017 年 2 月) 以降の NPSP の新しいトライアルとインストールに付属しています。このバージョンより前に NPSP のトライアルまたはインストールを開始した場合は、このインストーラを使用してレポートとダッシュボードを追加できます。NPSP のレポートとダッシュボードに関する詳細は、[NPSP Reports Workbook (NPSP レポートワークブック)](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook) を参照してください。\n\nこのインストーラには、標準 Nonprofit Starter Pack トライアルテンプレートに含まれている 5 つの商談レコードタイプが必要であり、それらが組織に存在しない場合には作成されます。レコードタイプは表示ラベルではなく API 参照名によって検索されるため、元のレコードタイプの API 参照名を変更した場合は、インストーラによってそれらがもう一度追加されます。レコードタイプの API 参照名は次のとおりです。\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "商品のアップグレード",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "このインストーラを使用すれば、組織内でこのパッケージと必須の連動関係がすべて最新バージョンにアップグレードされます。このインストーラはサポートされていないため、リスクがあります。このインストーラを実行する場合は、事前に必ず具体的な使用事例や考慮事項を確認しておいてください。",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "インストールが完了し、パッケージが最新バージョンになりました。",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }

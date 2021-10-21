@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Related_Opportunity_Contact_Role__c</name>
     <help>Wenn Sie eine Opportunity für den Kontakt in dieser Beziehung erstellen, weist NPSP diese Opportunity-Kontaktrolle dem verbundenen Kontakt zu.</help>
     <label>Verbundene Opportunity-Kontaktrolle</label>
-    <name>Related_Opportunity_Contact_Role__c</name>
     <picklistValues>
         <masterLabel>Soft Credit</masterLabel>
         <translation>Soft Credit</translation>

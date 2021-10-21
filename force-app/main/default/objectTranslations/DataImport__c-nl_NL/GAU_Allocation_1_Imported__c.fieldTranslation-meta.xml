@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Een opzoekopdracht voor de eerste GAU-toewijzing als het maken ervan is geslaagd.</help>
-    <label>GAU-toewijzing 1: Geïmporteerd</label>
     <name>GAU_Allocation_1_Imported__c</name>
+    <help>Een opzoekopdracht voor de eerste GAU-toewijzing als het maken ervan is geslaagd.</help>
     <relationshipLabel>NPSP-gegevensimports (GAU 1)</relationshipLabel>
+    <label>GAU-toewijzing 1: Geïmporteerd</label>
 </CustomFieldTranslation>

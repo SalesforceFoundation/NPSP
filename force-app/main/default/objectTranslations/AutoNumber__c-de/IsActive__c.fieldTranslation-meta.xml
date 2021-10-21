@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>IsActive__c</name>
     <help>Wenn diese Option ausgewählt ist, ist das Format für die automatische Nummerierung aktiv.</help>
     <label>Aktiv</label>
-    <name>IsActive__c</name>
 </CustomFieldTranslation>

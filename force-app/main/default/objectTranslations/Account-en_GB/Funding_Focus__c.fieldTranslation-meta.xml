@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Funding_Focus__c</name>
     <help>The general program area(s) that this organistion funds.</help>
     <label>Funding Focus</label>
-    <name>Funding_Focus__c</name>
     <picklistValues>
         <masterLabel>Animal Welfare</masterLabel>
         <translation>Animal Welfare</translation>

@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Checklistitem Aan de slag voor NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Checklistitems Aan de slag voor NPSP</value>
-    </caseValues>
-    <gender>Neuter</gender>
     <layouts>
         <layout>GS Checklist Item Layout</layout>
-        <sections>
-            <label>Knoppen</label>
-            <section>Buttons</section>
-        </sections>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
         <sections>
             <label>Info</label>
             <section>Info</section>
@@ -27,5 +10,22 @@
             <label>Koppeling</label>
             <section>Link</section>
         </sections>
+        <sections>
+            <label>Knoppen</label>
+            <section>Buttons</section>
+        </sections>
+        <sections>
+            <label>Aangepaste koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
+    <gender>Neuter</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Checklistitem Aan de slag voor NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Checklistitems Aan de slag voor NPSP</value>
+    </caseValues>
 </CustomObjectTranslation>

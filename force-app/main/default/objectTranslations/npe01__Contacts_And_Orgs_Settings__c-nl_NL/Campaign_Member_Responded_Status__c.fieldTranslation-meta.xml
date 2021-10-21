@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign_Member_Responded_Status__c</name>
     <help>De standaardstatus die u NPSP wilt laten gebruiken op Campagneleden voor Gesloten/Gewonnen Opportunities die een gekoppelde Primaire Contactpersoon en Primaire Campagnebron hebben. Als u dit veld leeg laat, gebruikt NPSP de eerste Gereageerd-status.</help>
     <label>Campagnelid Gereageerd-Status</label>
-    <name>Campaign_Member_Responded_Status__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GiftBatch__c</name>
     <help>Dieser Batch ist zur Verw. mit Batch-Spendeneintrag vorgesehen. Batches werden autom. als Spenden-Batches gekennz., wenn sie über eine Batch-Spendeneintrags-Registerkarte eingereicht werden. Manuelles Ändern dieses Felds kann unerwünschte Folgen haben.</help>
     <label>Spenden-Batch</label>
-    <name>GiftBatch__c</name>
 </CustomFieldTranslation>

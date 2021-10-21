@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>Nom du compte du crédit indirect</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nom du compte du crédit indirect</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Compte crédit indirect</value>
@@ -8,7 +15,4 @@
         <plural>true</plural>
         <value>Compte crédits indirects</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nom du compte du crédit indirect</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

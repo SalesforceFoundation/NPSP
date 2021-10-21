@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Allgemeine Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Allgemeine Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Allgemeinen Verrechnungseinheiten</value>
-    </caseValues>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Rollups neu berechnen</label>
+    </webLinks>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
@@ -57,8 +20,49 @@
         </sections>
     </layouts>
     <nameFieldLabel>Name des Verwendungszwecks</nameFieldLabel>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Name des Verwendungszwecks</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Allgemeine Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Allgemeinen Verrechnungseinheiten</value>
+    </caseValues>
 </CustomObjectTranslation>

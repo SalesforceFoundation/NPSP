@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Grant Deadline Layout</layout>
+        <sections>
+            <label>Exigences de livrables de subvention</label>
+            <section>Grant Deliverable Requirements</section>
+        </sections>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nom du livrable</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nom du livrable</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Livrable</value>
@@ -8,18 +26,4 @@
         <plural>true</plural>
         <value>Livrables</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <layouts>
-        <layout>Grant Deadline Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Exigences de livrables de subvention</label>
-            <section>Grant Deliverable Requirements</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nom du livrable</nameFieldLabel>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

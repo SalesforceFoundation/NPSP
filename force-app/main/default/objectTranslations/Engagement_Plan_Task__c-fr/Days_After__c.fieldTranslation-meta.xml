@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Days_After__c</name>
     <help>Le nombre de jours entre la date de création du plan d’engagement ou la date d’échéance de la tâche parente et la date d’échéance de cette tâche.</help>
     <label>Jours après</label>
-    <name>Days_After__c</name>
 </CustomFieldTranslation>

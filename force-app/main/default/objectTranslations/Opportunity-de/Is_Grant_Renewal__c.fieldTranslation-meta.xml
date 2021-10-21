@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Is_Grant_Renewal__c</name>
     <help>Gibt an, ob mit dem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird.</help>
     <label>Fördergeldverlängerung</label>
-    <name>Is_Grant_Renewal__c</name>
 </CustomFieldTranslation>

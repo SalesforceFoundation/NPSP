@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Percent__c</name>
     <help>Porcentaje de la donación que la empresa igualará.</help>
     <label>Porcentaje de regalo que iguala</label>
-    <name>Matching_Gift_Percent__c</name>
 </CustomFieldTranslation>

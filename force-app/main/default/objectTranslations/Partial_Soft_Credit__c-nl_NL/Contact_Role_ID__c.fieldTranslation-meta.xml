@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Role_ID__c</name>
     <help>De Opportunitycontactpersoonrol waarop deze soft credit van toepassing is.</help>
     <label>Contactpersoonrol-ID</label>
-    <name>Contact_Role_ID__c</name>
 </CustomFieldTranslation>
