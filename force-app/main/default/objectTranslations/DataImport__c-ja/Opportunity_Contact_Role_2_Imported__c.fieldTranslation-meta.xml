@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_2_Imported__c</name>
     <help>インポートされた商談取引先責任者の役割の Salesforce ID</help>
     <label>商談取引先責任者の役割 2: 挿入済み</label>
-    <name>Opportunity_Contact_Role_2_Imported__c</name>
 </CustomFieldTranslation>

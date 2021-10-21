@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Filter Rule Layout</layout>
+        <sections>
+            <label>Liens personnalisés</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <gender>Feminine</gender>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Règle de filtrage</value>
@@ -8,13 +17,4 @@
         <plural>true</plural>
         <value>Règles de filtrage</value>
     </caseValues>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Filter Rule Layout</layout>
-        <sections>
-            <label>Liens personnalisés</label>
-            <section>Custom Links</section>
-        </sections>
-    </layouts>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

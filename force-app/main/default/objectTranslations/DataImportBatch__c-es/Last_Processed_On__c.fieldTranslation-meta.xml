@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Last_Processed_On__c</name>
     <help>La fecha y la hora cuando se proceso el lote por última vez.</help>
     <label>Último procesamiento el</label>
-    <name>Last_Processed_On__c</name>
 </CustomFieldTranslation>

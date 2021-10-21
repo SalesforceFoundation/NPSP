@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ClosedReason__c</name>
     <help>この継続支援が現在の状況値になっている理由。</help>
     <label>状況の理由</label>
-    <name>ClosedReason__c</name>
     <picklistValues>
         <masterLabel>Card Expired</masterLabel>
         <translation>カードの期限が切れた</translation>

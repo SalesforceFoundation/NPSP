@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Relationship_To_Predecessor__c</name>
     <help>Dit geeft aan of dit object een bovenliggend of onderliggend element van de voorganger is.</help>
     <label>Relatie met voorganger</label>
-    <name>Relationship_To_Predecessor__c</name>
+    <picklistValues>
+        <masterLabel>Parent</masterLabel>
+        <translation>Bovenliggend element</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Child</masterLabel>
         <translation>Onderliggend element</translation>
@@ -10,9 +14,5 @@
     <picklistValues>
         <masterLabel>No Predecessor</masterLabel>
         <translation>Geen voorganger</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Parent</masterLabel>
-        <translation>Bovenliggend element</translation>
     </picklistValues>
 </CustomFieldTranslation>

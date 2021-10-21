@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LastElevateEventPlayed__c</name>
     <help>この継続支援が更新される最終再生 Elevate イベント。</help>
     <label>最終再生 Elevate イベント</label>
-    <name>LastElevateEventPlayed__c</name>
 </CustomFieldTranslation>

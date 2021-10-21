@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NewPaymentMethod__c</name>
+    <help>El nuevo método de pago para la donación recurrente relacionada.</help>
+    <label>Nuevo método de pago</label>
+</CustomFieldTranslation>

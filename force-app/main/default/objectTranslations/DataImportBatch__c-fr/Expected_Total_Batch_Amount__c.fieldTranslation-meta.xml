@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Expected_Total_Batch_Amount__c</name>
     <help>Le montant total attendu de tous les dons saisis dans ce lot.</help>
     <label>Montant total des lots attendus</label>
-    <name>Expected_Total_Batch_Amount__c</name>
 </CustomFieldTranslation>

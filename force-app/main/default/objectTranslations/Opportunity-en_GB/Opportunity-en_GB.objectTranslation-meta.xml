@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS v2 --></label>
-        <name>BDE_Entry_FS_v2</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- New BDE List v2 --></label>
-        <name>BDE_List_FS_v2</name>
-    </fieldSets>
-    <layouts>
-        <layout>Donation Layout</layout>
-        <sections>
-            <label>Donation Information</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Matching Gift Information</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
-            <label>Payment Information</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Tribute Information</label>
-            <section>Tribute Information</section>
-        </sections>
-    </layouts>
+    <webLinks>
+        <name>Email_Acknowledgment</name>
+        <label>Email Acknowledgment</label>
+    </webLinks>
+    <webLinks>
+        <name>Email_Acknowledgments</name>
+        <label>Email Acknowledgments</label>
+    </webLinks>
+    <webLinks>
+        <name>Find_Matched_Gifts</name>
+        <label>Find Matched Gifts</label>
+    </webLinks>
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Manage Soft Credits</label>
+    </webLinks>
+    <webLinks>
+        <name>Refresh_Name</name>
+        <label>Refresh Name</label>
+    </webLinks>
     <layouts>
         <layout>Grant Layout</layout>
         <sections>
@@ -58,6 +51,25 @@
         </sections>
     </layouts>
     <layouts>
+        <layout>Donation Layout</layout>
+        <sections>
+            <label>Donation Information</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Payment Information</label>
+            <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Matching Gift Information</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
+            <label>Tribute Information</label>
+            <section>Tribute Information</section>
+        </sections>
+    </layouts>
+    <layouts>
         <layout>Major Gift Layout</layout>
         <sections>
             <label>Donation Information</label>
@@ -68,12 +80,12 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label>Matching Gift Information</label>
-            <section>Matching Gift Information</section>
-        </sections>
-        <sections>
             <label>Payment Information</label>
             <section>Payment Information</section>
+        </sections>
+        <sections>
+            <label>Matching Gift Information</label>
+            <section>Matching Gift Information</section>
         </sections>
         <sections>
             <label>Tribute Information</label>
@@ -94,10 +106,6 @@
     <layouts>
         <layout>Membership Layout</layout>
         <sections>
-            <label>Custom Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
             <label>Fields</label>
             <section>Fields</section>
         </sections>
@@ -110,36 +118,12 @@
             <section>Payment Information</section>
         </sections>
         <sections>
+            <label>Custom Links</label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
             <label>System Information</label>
             <section>System Information</section>
         </sections>
     </layouts>
-    <quickActions>
-        <label>New Payment</label>
-        <name>New_Payment</name>
-    </quickActions>
-    <quickActions>
-        <label>Quick Update</label>
-        <name>Quick_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Email Acknowledgment</label>
-        <name>Email_Acknowledgment</name>
-    </webLinks>
-    <webLinks>
-        <label>Email Acknowledgments</label>
-        <name>Email_Acknowledgments</name>
-    </webLinks>
-    <webLinks>
-        <label>Find Matched Gifts</label>
-        <name>Find_Matched_Gifts</name>
-    </webLinks>
-    <webLinks>
-        <label>Manage Soft Credits</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
-    <webLinks>
-        <label>Refresh Name</label>
-        <name>Refresh_Name</name>
-    </webLinks>
 </CustomObjectTranslation>

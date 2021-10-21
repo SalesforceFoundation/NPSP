@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>LastElevateVersionPlayed__c</name>
     <help>この継続支援が更新される最終再生 Elevate イベントバージョンを表す整数。変更について Elevate API へのコールを行うたびに自動的にインクリメントされます。循環更新を防止し、最新バージョンが上書きされないようにするために使用されます。</help>
     <label>最終再生 Elevate バージョン</label>
-    <name>LastElevateVersionPlayed__c</name>
 </CustomFieldTranslation>

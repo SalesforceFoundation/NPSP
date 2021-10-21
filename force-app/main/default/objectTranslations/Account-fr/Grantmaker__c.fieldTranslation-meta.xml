@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grantmaker__c</name>
     <help>Indique que cette organisation attribue des subventions. Peut s’appliquer à des fondations, des agences gouvernementales, des entreprises, etc.</help>
     <label>Source de subventions</label>
-    <name>Grantmaker__c</name>
 </CustomFieldTranslation>

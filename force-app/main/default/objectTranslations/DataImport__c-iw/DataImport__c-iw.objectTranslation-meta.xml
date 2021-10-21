@@ -3,24 +3,24 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- NPSP Data Import --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הNPSP Data Import --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- NPSP Data Import --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הNPSP Data Import --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
@@ -32,7 +32,7 @@
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
-            <label><!-- Campaign Information --></label>
+            <label/>
             <section>Campaign Information</section>
         </sections>
         <sections>
@@ -44,15 +44,15 @@
             <section>Contact2 Information</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 1 Information --></label>
+            <label/>
             <section>GAU Allocation 1 Information</section>
         </sections>
         <sections>
-            <label><!-- GAU Allocation 2 Information --></label>
+            <label/>
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
@@ -60,31 +60,31 @@
             <section>Home Address</section>
         </sections>
         <sections>
-            <label><!-- Household Account Information --></label>
+            <label/>
             <section>Household Account Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 1 Information --></label>
+            <label/>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Contact Role 2 Information --></label>
+            <label/>
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label><!-- Opportunity Information --></label>
+            <label/>
             <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label><!-- Payment Information --></label>
+            <label/>
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Recurring Donation Information --></label>
+            <label/>
             <section>Recurring Donation Information</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- Data Import ID --></nameFieldLabel>
+    <nameFieldLabel/>
     <webLinks>
         <label>מחק את כל רשומות יבוא הנתונים</label>
         <name>Delete_All_Data_Import_Records</name>

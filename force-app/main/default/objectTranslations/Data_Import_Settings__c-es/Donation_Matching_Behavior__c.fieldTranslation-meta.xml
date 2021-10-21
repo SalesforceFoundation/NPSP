@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Behavior__c</name>
     <help>Define cómo debe tratar Data Importer las donaciones coincidentes. Debe seleccionar un valor.</help>
     <label>Comportamiento coincidencia donaciones</label>
-    <name>Donation_Matching_Behavior__c</name>
 </CustomFieldTranslation>

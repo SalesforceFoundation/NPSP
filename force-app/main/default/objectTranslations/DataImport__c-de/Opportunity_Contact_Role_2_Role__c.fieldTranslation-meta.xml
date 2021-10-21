@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Contact_Role_2_Role__c</name>
     <help>Die Rolle, mit der die Opportunity-Kontaktrolle erstellt werden soll. Geben Sie beispielsweise &quot;Soft Credit&quot; ein, um eine Soft Credit-Opportunity-Kontaktrolle zu erstellen.</help>
     <label>Opportunity-Kontaktrolle 2: Rolle</label>
-    <name>Opportunity_Contact_Role_2_Role__c</name>
 </CustomFieldTranslation>

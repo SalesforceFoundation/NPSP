@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Required__c</name>
     <help>NPSP データインポートオブジェクトの項目に値が含まれている必要があるかどうかを示します。必須の場合、項目に値が含まれていないと、Dry Run は失敗します。</help>
     <label>必須?</label>
-    <name>Required__c</name>
-    <picklistValues>
-        <masterLabel>No</masterLabel>
-        <translation>いいえ</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Yes</masterLabel>
         <translation>はい</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No</masterLabel>
+        <translation>いいえ</translation>
     </picklistValues>
 </CustomFieldTranslation>

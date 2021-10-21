@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>State__c</name>
     <help>Las entradas válidas son Activo, Transcurrido y Cerrado.</help>
     <label>Situación de Donación recurrente</label>
-    <name>State__c</name>
     <picklistValues>
         <masterLabel>Active</masterLabel>
         <translation>Activo</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Closed</masterLabel>
-        <translation>Cerrado</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>Lapsed</masterLabel>
         <translation>Transcurrido</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Closed</masterLabel>
+        <translation>Cerrado</translation>
     </picklistValues>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Source_Field__c</name>
     <help>Le champ (nom du développeur) de l’objet cible qui définit le montant et la période sur lesquels ce niveau est basé.</help>
     <label>Champ source</label>
-    <name>Source_Field__c</name>
 </CustomFieldTranslation>

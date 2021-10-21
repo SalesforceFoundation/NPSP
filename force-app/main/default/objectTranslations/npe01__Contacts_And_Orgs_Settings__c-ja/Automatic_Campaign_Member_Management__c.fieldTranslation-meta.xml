@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Automatic_Campaign_Member_Management__c</name>
     <help>選択すると、主取引先責任者と主キャンペーンソースを含む商談を作成したり、商談を成立フェーズに更新したりするときに、キャンペーンメンバーレコードが自動的に作成されます。</help>
     <label>キャンペーンメンバーの自動管理</label>
-    <name>Automatic_Campaign_Member_Management__c</name>
 </CustomFieldTranslation>

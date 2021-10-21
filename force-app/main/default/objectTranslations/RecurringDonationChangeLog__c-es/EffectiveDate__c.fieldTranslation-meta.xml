@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EffectiveDate__c</name>
+    <help>La fecha de entrada en vigor de la donación recurrente cuando se produjo este cambio.</help>
+    <label>Fecha efectiva</label>
+</CustomFieldTranslation>

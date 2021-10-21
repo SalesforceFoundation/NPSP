@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>First_Allocation_Date__c</name>
     <help>Der Schlusstermin der ersten Opportunity, die diesem Verwendungszweck zugewiesen ist. NPSP aktualisiert dieses Feld in einem nächtlichen geplanten Auftrag.</help>
     <label>Erstes Zuweisungsdatum</label>
-    <name>First_Allocation_Date__c</name>
 </CustomFieldTranslation>

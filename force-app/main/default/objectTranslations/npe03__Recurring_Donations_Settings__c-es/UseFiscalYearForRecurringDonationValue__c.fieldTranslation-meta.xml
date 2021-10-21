@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
     <help>Activa los totales de valores del año fiscal para Donaciones recurrentes. Para establecer el mes de inicio del año fiscal, vaya a Configuración | Configuración de empresa | Año fiscal. NOTA: Utilice solo el año fiscal estándar, no active el personalizado.</help>
     <label>Usar año fiscal Donaciones recurrentes</label>
-    <name>UseFiscalYearForRecurringDonationValue__c</name>
 </CustomFieldTranslation>

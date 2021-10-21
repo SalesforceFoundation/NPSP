@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Maximum_Amount__c</name>
     <help>Der Betrag unter dem der Wert liegen muss, damit NPSP diese Ebene zuweist. Wenn das Feld leer gelassen wird, weist NPSP diese Ebene einem beliebigen Betrag zugewiesen, der größer oder gleich dem Mindestbetrag dieser Ebene ist.</help>
     <label>Höchstbetrag (&lt;)</label>
-    <name>Maximum_Amount__c</name>
 </CustomFieldTranslation>

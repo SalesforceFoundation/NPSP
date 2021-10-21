@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Field_Api_Name__c</name>
     <help>Der API-Name des Felds, das in der Listenansicht angezeigt wird.</help>
     <label>Feld-API-Name</label>
-    <name>Field_Api_Name__c</name>
 </CustomFieldTranslation>

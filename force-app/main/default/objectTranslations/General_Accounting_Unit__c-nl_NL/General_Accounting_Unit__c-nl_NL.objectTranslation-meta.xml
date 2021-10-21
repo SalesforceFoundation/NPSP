@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>GAU</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>GAU&apos;s</value>
-    </caseValues>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Totaliseringen opnieuw berekenen</label>
+    </webLinks>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
@@ -25,8 +20,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Naam GAU</nameFieldLabel>
-    <webLinks>
-        <label>Totaliseringen opnieuw berekenen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Naam GAU</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>GAU</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>GAU&apos;s</value>
+    </caseValues>
 </CustomObjectTranslation>

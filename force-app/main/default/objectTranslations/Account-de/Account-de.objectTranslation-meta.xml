@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fieldSets>
-        <label><!-- BDE Entry FS --></label>
-        <name>BDE_Entry_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- BDE List FS --></label>
-        <name>BDE_List_FS</name>
-    </fieldSets>
-    <fieldSets>
-        <label><!-- Manage Household Custom --></label>
-        <name>Manage_Household_Custom</name>
-    </fieldSets>
+    <webLinks>
+        <name>Manage_Household</name>
+        <label>Haushalt verwalten</label>
+    </webLinks>
+    <webLinks>
+        <name>New_Gift</name>
+        <label>Neue Spende</label>
+    </webLinks>
+    <webLinks>
+        <name>Recalculate_Rollups</name>
+        <label>Rollups neu berechnen</label>
+    </webLinks>
     <layouts>
-        <layout>Household Layout</layout>
+        <layout>Organization Layout</layout>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
         <sections>
             <label>Adresse</label>
             <section>Address</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
         </sections>
         <sections>
             <label>Beschreibung</label>
@@ -33,85 +33,57 @@
         <sections>
             <label>Spendenbeträge gesamt</label>
             <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Felder</label>
-            <section>Fields</section>
         </sections>
         <sections>
             <label>Mitgliedschaftsinformationen</label>
             <section>Membership Information</section>
-        </sections>
-    </layouts>
-    <layouts>
-        <layout>Organization Layout</layout>
-        <sections>
-            <label>Adresse</label>
-            <section>Address</section>
-        </sections>
-        <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Beschreibung</label>
-            <section>Description</section>
-        </sections>
-        <sections>
-            <label>Spendeninformationen</label>
-            <section>Donation Information</section>
-        </sections>
-        <sections>
-            <label>Spendenbeträge gesamt</label>
-            <section>Donation Totals</section>
-        </sections>
-        <sections>
-            <label>Felder</label>
-            <section>Fields</section>
         </sections>
         <sections>
             <label>Geldgeberinformationen</label>
             <section>Grantmaking Information</section>
         </sections>
         <sections>
+            <label>Informationen zur Spendenverdopplung</label>
+            <section>Matching Gift Information</section>
+        </sections>
+        <sections>
             <label>Kommentare zu Spendenverdopplung</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label>Informationen zur Spendenverdopplung</label>
-            <section>Matching Gift Information</section>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <layouts>
+        <layout>Household Layout</layout>
+        <sections>
+            <label>Felder</label>
+            <section>Fields</section>
+        </sections>
+        <sections>
+            <label>Adresse</label>
+            <section>Address</section>
+        </sections>
+        <sections>
+            <label>Beschreibung</label>
+            <section>Description</section>
+        </sections>
+        <sections>
+            <label>Spendeninformationen</label>
+            <section>Donation Information</section>
+        </sections>
+        <sections>
+            <label>Spendenbeträge gesamt</label>
+            <section>Donation Totals</section>
         </sections>
         <sections>
             <label>Mitgliedschaftsinformationen</label>
             <section>Membership Information</section>
         </sections>
+        <sections>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
-    <quickActions>
-        <label>Neue Adresse</label>
-        <name>New_Address</name>
-    </quickActions>
-    <quickActions>
-        <label>Neue Zugehörigkeit</label>
-        <name>New_Affiliation</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Household_Update</name>
-    </quickActions>
-    <quickActions>
-        <label>Schnelle Aktualisierung</label>
-        <name>Quick_Organization_Update</name>
-    </quickActions>
-    <webLinks>
-        <label>Haushalt verwalten</label>
-        <name>Manage_Household</name>
-    </webLinks>
-    <webLinks>
-        <label>Neue Spende</label>
-        <name>New_Gift</name>
-    </webLinks>
-    <webLinks>
-        <label>Rollups neu berechnen</label>
-        <name>Recalculate_Rollups</name>
-    </webLinks>
 </CustomObjectTranslation>

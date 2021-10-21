@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Date_Range__c</name>
     <help>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</help>
     <label>Number of Days from Donation Date</label>
-    <name>Donation_Date_Range__c</name>
 </CustomFieldTranslation>

@@ -204,5 +204,19 @@
             "message": "NPSP-rapporten en -dashboards omvatten nieuwe proefversies en installaties van NPSP vanaf versie 3.90 (februari 2017). Als u met een proef bent gestart of NPSP hebt geïnstalleerd vóór deze versie, gebruikt u dit installatieprogramma om Rapporten en dashboards toe te voegen. Raadpleeg voor volledige informatie over NPSP-rapporten en -dashboards het [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDit installatieprogramma vereist de 5 recordtypen voor Opportunity, die zijn opgenomen in de standaard Nonprofit Starter Pack-proefsjabloon, en maakt deze aan als ze niet voorkomen in uw organisatie. Het installatieprogramma zoekt naar de recordtypen op Naam ontwikkelaar (niet het label); als u de namen van ontwikkelaars van de oorspronkelijke recordtypen hebt gewijzigd, voegt het installatieprogramma ze opnieuw toe. De recordtypen voor Namen van ontwikkelaars zijn als volgt:\n \n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "Productupgrade",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Met dit installatieprogramma wordt dit pakket en alle vereiste afhankelijkheden in uw organisatie geüpgraded naar de nieuwste versie. Dit installatieprogramma wordt niet ondersteund en brengt risico's met zich mee. Voer dit installatieprogramma niet uit, tenzij u op de hoogte bent van de specifieke gebruikscases en overwegingen.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Installatie is voltooid. Het pakket is nu van de nieuwste versie.",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }

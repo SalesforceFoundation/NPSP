@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Elevate_Batch_ID__c</name>
     <help>ID d’un lot de paiements envoyé à Elevate pour traitement.</help>
     <label>ID de lot de paiements Elevate</label>
-    <name>Payment_Elevate_Batch_ID__c</name>
 </CustomFieldTranslation>

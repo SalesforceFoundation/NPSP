@@ -3,24 +3,24 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הGeneral Accounting Unit --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- General Accounting Unit --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הGeneral Accounting Unit --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
@@ -32,11 +32,11 @@
             <section>Allocation Totals</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
     </layouts>
-    <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
+    <nameFieldLabel/>
     <webLinks>
         <label>חשב מחדש סיכומים</label>
         <name>Recalculate_Rollups</name>
