@@ -1736,12 +1736,11 @@ export default class GeFormRenderer extends LightningElement{
         } else if (gift && gift.fields) {
             let giftLocalCopy = deepClone(gift);
             this.handleWidgetJSON(giftLocalCopy.fields);
-            this.handleReset(giftLocalCopy.fields.Id);
             this._giftInView = giftLocalCopy;
             this._openedGiftId = giftLocalCopy.fields.Id || null;
             this.formState = giftLocalCopy.fields;
 
-            if (this._openedGiftId && this.hasPageLevelError) {
+            if (this._openedGiftId && this.hasPageLevelError && this.batchId) {
                 this.clearErrors();
             }
         }
@@ -1751,12 +1750,6 @@ export default class GeFormRenderer extends LightningElement{
         if (giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
             giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
                 convertBDIToWidgetJson(giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-        }
-    }
-
-    handleReset(giftId) {
-        if (this._openedGiftId !== giftId) {
-            this.resetElevateWidget();
         }
     }
 
