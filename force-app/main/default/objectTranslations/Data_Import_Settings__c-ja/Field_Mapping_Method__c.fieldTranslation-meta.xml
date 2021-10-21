@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Field_Mapping_Method__c</name>
     <help>NPSP データインポートレコードの項目を Salesforce の他のオブジェクトに対応付ける方法を定義します。オプションは [ヘルプテキスト] または [データインポート項目の対応付け] です。</help>
     <label>項目の対応付け方法</label>
-    <name>Field_Mapping_Method__c</name>
 </CustomFieldTranslation>

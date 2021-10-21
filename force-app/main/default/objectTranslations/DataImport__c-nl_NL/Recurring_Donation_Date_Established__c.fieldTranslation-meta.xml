@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Date_Established__c</name>
     <help>De datum van initiële inceptie voor deze terugkerende donatie. Standaard is dit de huidige datum.</help>
     <label>Insteldatum terugkerende donatie</label>
-    <name>Recurring_Donation_Date_Established__c</name>
 </CustomFieldTranslation>

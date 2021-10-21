@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default__c</name>
     <help>Contiene el Id. de la cuenta contable general predeterminada para la creación predeterminada de asignaciones o para la asignación de importes no asignados.</help>
     <label>Cuenta Contable General predeterminada</label>
-    <name>Default__c</name>
 </CustomFieldTranslation>

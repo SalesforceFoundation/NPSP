@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Excluded_Opp_RecTypes__c</name>
     <help>Tipos de registro de oportunidad excluidos de los cálculos de los totales de asignaciones.</help>
     <label>Tipos de registros de op. excluidos</label>
-    <name>Excluded_Opp_RecTypes__c</name>
 </CustomFieldTranslation>

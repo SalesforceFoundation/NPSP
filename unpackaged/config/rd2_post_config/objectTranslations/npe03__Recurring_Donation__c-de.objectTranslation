@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
 
   <!-- DEPRECATED FIELDS: These have to be manually copied/pasted back into this file after a translation run -->
@@ -197,7 +197,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%RecurringType__c</name>
-    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende &quot;Unbefristet&quot; aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten &quot;Befristet&quot; aus. Bei &quot;Befristet&quot; müssen Sie außerdem das Feld &quot;Anzahl der geplanten Raten&quot; ausfüllen.</help>
+    <help>Wählen Sie für eine fortlaufende wiederkehrende Spende "Unbefristet" aus. Wählen Sie für eine wiederkehrende Spende mit einer bestimmten Anzahl Raten "Befristet" aus. Bei "Befristet" müssen Sie außerdem das Feld "Anzahl der geplanten Raten" ausfüllen.</help>
     <label>Wiederholungstyp</label>
     <picklistValues>
       <masterLabel>Open</masterLabel>
@@ -212,6 +212,11 @@
     <name>%%%NAMESPACE%%%StartDate__c</name>
     <help>Das Datum, zu dem die neuen oder aktualisierten Zeitplaninformationen (Betrag, Tag des Monats usw.) für diese wiederkehrende Spende in Kraft treten. Der Standardwert ist das aktuelle Datum.</help>
     <label>Inkrafttreten</label>
+  </fields>
+  <fields>
+    <name>%%%NAMESPACE%%%EndDate__c</name>
+    <help>Das Datum der Schließung dieser wiederkehrenden Spende</help>
+    <label>Enddatum</label>
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Status__c</name>
@@ -236,7 +241,7 @@
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
+    <help>Die Ratenlaufzeit definiert zusammen mit der Häufigkeit der Ratenzahlung den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als "alle 3 Monate".</help>
     <label>Ratenlaufzeit</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -261,12 +266,12 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als &quot;alle 3 Monate&quot;.</help>
+    <help>Die Häufigkeit der Ratenzahlung definiert zusammen mit der Ratenlaufzeit den Ratenplan für diese wiederkehrende Spende. Wenn z. B. die Ratenlaufzeit als monatlich und die Häufigkeit als 3 festgelegt ist, definiert sich der Ratenplan als "alle 3 Monate".</help>
     <label>Häufigkeit der Ratenzahlung</label>
   </fields>
   <fields>
     <name>npe03__Last_Payment_Date__c</name>
-    <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als &quot;Bezahlt&quot; gekennzeichnet wurde (schreibgeschützt).</help>
+    <help>NPSP berechnet diesen Wert automatisch danach, wann eine Raten-Opportunity beim letzten Mal als "Bezahlt" gekennzeichnet wurde (schreibgeschützt).</help>
     <label>Letztes Spendendatum</label>
   </fields>
   <fields>
@@ -307,4 +312,50 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
-  </CustomObjectTranslation>
+  <nameFieldLabel>Name für wiederkehrende Spende</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Name für wiederkehrende Spende</label>
+  </standardFields>
+  <gender>Feminine</gender>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Nominative</caseType>
+    <value>Wiederkehrende Spende</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Accusative</caseType>
+    <value>Wiederkehrende Spende</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Dative</caseType>
+    <value>Wiederkehrende Spende</value>
+  </caseValues>
+  <caseValues>
+    <plural>false</plural>
+    <caseType>Genitive</caseType>
+    <value>Wiederkehrenden Spende</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Nominative</caseType>
+    <value>Wiederkehrende Spenden</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Accusative</caseType>
+    <value>Wiederkehrenden Spenden</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Dative</caseType>
+    <value>Wiederkehrenden Spenden</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <caseType>Genitive</caseType>
+    <value>Wiederkehrenden Spenden</value>
+  </caseValues>
+</CustomObjectTranslation>

@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Lote de importación de datos de NPSP</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Lotes de importaciones de datos de NPSP</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
-        <name>BatchGiftEntryTabColumns</name>
-    </fieldSets>
-    <gender>Masculine</gender>
+    <webLinks>
+        <name>Process_Batch</name>
+        <label>Procesar lote</label>
+    </webLinks>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
             <label>Coincidencia de contactos y cuentas</label>
             <section>Contact &amp; Account Matching</section>
-        </sections>
-        <sections>
-            <label>Vínculos personalizados</label>
-            <section>Custom Links</section>
         </sections>
         <sections>
             <label>Coincidencia de donaciones</label>
@@ -31,10 +18,23 @@
             <label>Capacidad de ampliación</label>
             <section>Extensibility</section>
         </sections>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
     <nameFieldLabel>Nombre de lote</nameFieldLabel>
-    <webLinks>
-        <label>Procesar lote</label>
-        <name>Process_Batch</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de lote</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Lote de importación de datos de NPSP</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Lotes de importaciones de datos de NPSP</value>
+    </caseValues>
 </CustomObjectTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Retry_Pending__c</name>
     <help>Indien gesel., geeft dit aan dat de opgegeven record in ID van gerelateerde record weer wordt verwerkt in het volg. geplande proces. Als dit lukt, wordt het veld gedeselecteerd. Geldt ook voor specifieke fouten die plaatsvinden tijdens geplande processen.</help>
     <label>In behandeling opnieuw proberen?</label>
-    <name>Retry_Pending__c</name>
 </CustomFieldTranslation>

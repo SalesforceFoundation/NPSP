@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Contract_Date__c</name>
     <help>Das Datum des Beginns der Fördergeldzahlung gemäß dem Dokument oder Vertrag, das die Organisation gesendet hat, die die Fördergelder zahlt</help>
     <label>Fördergeldvertragsdatum</label>
-    <name>Grant_Contract_Date__c</name>
 </CustomFieldTranslation>

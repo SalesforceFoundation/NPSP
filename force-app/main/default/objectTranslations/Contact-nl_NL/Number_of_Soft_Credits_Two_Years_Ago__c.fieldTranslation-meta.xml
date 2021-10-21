@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
     <help>Het aantal soft credits die twee kalenderjaren geleden zijn toegekend aan deze Contactpersoon.</help>
     <label>Aantal Soft Credits Twee Jaar Geleden</label>
-    <name>Number_of_Soft_Credits_Two_Years_Ago__c</name>
 </CustomFieldTranslation>

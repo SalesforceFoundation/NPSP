@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Excluded_Opp_RecTypes__c</name>
     <help>割り当て積み上げ集計の計算から除外する商談レコードタイプ。</help>
     <label>除外する支援レコードタイプ</label>
-    <name>Excluded_Opp_RecTypes__c</name>
 </CustomFieldTranslation>

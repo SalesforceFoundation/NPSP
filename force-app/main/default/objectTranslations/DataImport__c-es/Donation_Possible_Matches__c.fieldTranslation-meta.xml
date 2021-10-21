@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Possible_Matches__c</name>
     <help>Una lista separada por comas de los identificadores de las 10 primeras coincidencias de posibles oportunidades para una donación.</help>
     <label>Posibles coincidencias de donaciones</label>
-    <name>Donation_Possible_Matches__c</name>
 </CustomFieldTranslation>

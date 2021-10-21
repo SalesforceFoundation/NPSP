@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Fiscal_Year_for_Rollups__c</name>
     <help>Bei Akt. wird f. die Zuweis.-Rollup-Gesamtwerte das Geschäftsjahr statt der Einst. f. das Kalenderjahr verwendet. Festleg. der Gesch.jahrinf.: Setup -&gt; Unternehmensprofil -&gt; Geschäftsjahr. HINWEIS: Benutzerdef. Gesch.jahreinst. werden NICHT unterstützt.</help>
     <label>Geschäftsjahr für Rollups verwenden</label>
-    <name>Use_Fiscal_Year_for_Rollups__c</name>
 </CustomFieldTranslation>

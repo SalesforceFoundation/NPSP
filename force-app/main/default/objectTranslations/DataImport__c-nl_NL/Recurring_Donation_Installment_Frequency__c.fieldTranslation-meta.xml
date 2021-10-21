@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Frequency__c</name>
     <help>De frequentie van termijnen, samen met Termijnperiode, definieert de planning van termijnen van deze terugkerende donatie. Als Termijnperiode bijvoorbeeld Maandelijks is en Frequentie van termijnen 3, wordt de planning gedefinieerd als &quot;elke 3 maanden&quot;.</help>
     <label>Termijnfreq. terugkerende donatie</label>
-    <name>Recurring_Donation_Installment_Frequency__c</name>
 </CustomFieldTranslation>

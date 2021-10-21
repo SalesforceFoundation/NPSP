@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonationImportStatus__c</name>
     <help>Statut de la tentative d’insertion du don récurrent.</help>
     <label>Statut d’importation du don récurrent</label>
-    <name>RecurringDonationImportStatus__c</name>
 </CustomFieldTranslation>

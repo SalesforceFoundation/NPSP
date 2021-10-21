@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Name_Connector__c</name>
     <help>名前のペアの結合に使用する文字列。たとえば、「John &amp; Jane」、「John と Jane」など。</help>
     <label>名前コネクタ</label>
-    <name>Name_Connector__c</name>
 </CustomFieldTranslation>

@@ -204,5 +204,19 @@
             "message": "Les rapports et tableaux de bord NPSP sont livrés avec de nouvelles versions d’essai et installations de NPSP depuis la version 3.90 (février 2017). Si vous avez démarré une version d’essai ou installé NPSP avant cette version, utilisez ce programme d’installation pour ajouter les rapports et les tableaux de bord. Pour plus d'informations sur les rapports et tableaux de bord NPSP, consultez le [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nCe programme d’installation nécessite les 5 types d’enregistrement d’opportunité inclus dans le modèle d’essai standard Nonprofit Starter Pack, et les crée s’ils n’existent pas dans votre organisation. Ce programme d’installation recherche les types d'enregistrement par nom de développeur (pas par étiquette). Par conséquent, si vous avez modifié les noms de développeur des types d'enregistrement d’origine, le programme d'installation les ajoute de nouveau. Les noms de développeur de type d'enregistrement sont les suivants :\n\n* Donation\n* MajorGift\n* MatchingDonation\n* Grant\n* Membership",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "Mise à niveau du produit",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Ce programme d'installation met à niveau ce package et toutes les dépendances requises vers la dernière version dans votre organisation. Ce programme d’installation n’est pas pris en charge et comporte des risques. Exécutez ce programme d’installation uniquement si vous connaissez ses cas d’utilisation et ses considérations spécifiques.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "L’installation est terminée et le package est mis à niveau sur la dernière version.",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }

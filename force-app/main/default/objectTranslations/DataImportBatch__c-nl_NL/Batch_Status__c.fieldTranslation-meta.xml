@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Status__c</name>
     <help>De batchstatus wordt gebaseerd op de importstatus van de NPSP-gegevensimportrecords in de batch. Als één record niet wordt geïmporteerd, wordt de status van de batch Mislukt - Controle vereist.</help>
     <label>Batchstatus</label>
-    <name>Batch_Status__c</name>
+    <picklistValues>
+        <masterLabel>Open</masterLabel>
+        <translation>Open</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Completed</masterLabel>
         <translation>Voltooid</translation>
@@ -10,9 +14,5 @@
     <picklistValues>
         <masterLabel>Failed - Needs Review</masterLabel>
         <translation>Mislukt - Controle vereist</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Open</masterLabel>
-        <translation>Open</translation>
     </picklistValues>
 </CustomFieldTranslation>

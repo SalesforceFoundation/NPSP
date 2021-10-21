@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Percent__c</name>
     <help>Percentage van het Opportunitybedrag toegewezen aan de GAU van deze Toewijzing. Als u het Opportunitybedrag later wijzigt, werkt NPSP het toewijzingsbedrag bij op de GAU.</help>
     <label>Percentage</label>
-    <name>Percent__c</name>
 </CustomFieldTranslation>

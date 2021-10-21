@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Statut d’importation du Contact1</label>
     <name>Contact1ImportStatus__c</name>
+    <label>Statut d’importation du Contact1</label>
 </CustomFieldTranslation>

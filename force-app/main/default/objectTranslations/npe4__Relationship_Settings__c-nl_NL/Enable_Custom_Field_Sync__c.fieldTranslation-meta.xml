@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Enable_Custom_Field_Sync__c</name>
     <help>Als dit TRUE is, wordt de synchronisatie van aangepaste Relatievelden ingeschakeld.</help>
     <label>Synchr. Aangepast Veld Inschakelen</label>
-    <name>Enable_Custom_Field_Sync__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Notification_Recipient_Opp_Contact_Role__c</name>
     <help>Si vous activez ce paramètre, NPSP crée automatiquement un enregistrement de rôle de contact pour les opportunités avec un contact destinataire de notification.</help>
     <label>Rôle contact opp. destinataire notif.</label>
-    <name>Notification_Recipient_Opp_Contact_Role__c</name>
 </CustomFieldTranslation>

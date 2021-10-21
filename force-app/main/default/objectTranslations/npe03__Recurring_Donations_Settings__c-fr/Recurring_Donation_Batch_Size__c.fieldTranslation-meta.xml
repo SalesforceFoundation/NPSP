@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Batch_Size__c</name>
     <help>Le nombre d’enreg. à traiter en une fois lors de l’exécution du traitement par lots des dons réguliers. La taille par défaut est 50. Si le traitement par lots des dons réguliers échoue à cause des limites du système, réduisez-le à un nombre moins élevé.</help>
     <label>Taille du lot de dons réguliers</label>
-    <name>Recurring_Donation_Batch_Size__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Implementing_Class__c</name>
     <help>De naam van een Klasse die de HH_INaming-interface implementeert voor Benoeming van Huishoudens.</help>
     <label>Implementatieklasse</label>
-    <name>Implementing_Class__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Process_Size__c</name>
     <help>Le nombre d’enregistrements à traiter en même temps dans chaque lot.</help>
     <label>Taille de lot</label>
-    <name>Batch_Process_Size__c</name>
 </CustomFieldTranslation>

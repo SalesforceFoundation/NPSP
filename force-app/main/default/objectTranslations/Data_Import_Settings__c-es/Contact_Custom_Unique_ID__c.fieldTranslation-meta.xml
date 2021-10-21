@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Custom_Unique_ID__c</name>
     <help>Campo opcional de Id. exclusivo para la coincidencia de contactos.</help>
     <label>Id. de contacto exclusivo personalizado</label>
-    <name>Contact_Custom_Unique_ID__c</name>
 </CustomFieldTranslation>

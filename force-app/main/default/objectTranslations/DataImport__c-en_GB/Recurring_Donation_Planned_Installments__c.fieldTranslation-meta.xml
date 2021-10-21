@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Planned_Installments__c</name>
     <help>Number of installments you expect to receive. Only used when Recurring Type is Fixed.</help>
     <label>Recurring Donation Planned Installments</label>
-    <name>Recurring_Donation_Planned_Installments__c</name>
 </CustomFieldTranslation>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Required__c</name>
     <help>Geeft aan of het veld voor het object NPSP-gegevensimport een waarde moet bevatten. Wanneer dit verplicht is, zal de testuitvoering mislukken als dat veld geen waarde bevat.</help>
     <label>Vereist?</label>
-    <name>Required__c</name>
-    <picklistValues>
-        <masterLabel>No</masterLabel>
-        <translation>Nee</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Yes</masterLabel>
         <translation>Ja</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>No</masterLabel>
+        <translation>Nee</translation>
     </picklistValues>
 </CustomFieldTranslation>

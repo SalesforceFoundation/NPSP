@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Name__c</name>
     <help>Nombre de las cuotas para incluir en el nombre de la oportunidad. Muestra el número de cuotas en paréntesis para donaciones recurrentes de final abierto, o el número de cuotas del total de una donación recurrentes con un número fijo de cuotas</help>
     <label>Nombre de cuota de donación recurrente</label>
-    <name>Recurring_Donation_Installment_Name__c</name>
 </CustomFieldTranslation>

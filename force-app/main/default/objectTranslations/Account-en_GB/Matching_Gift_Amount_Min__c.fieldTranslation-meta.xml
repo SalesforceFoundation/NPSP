@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Amount_Min__c</name>
     <help>The smallest amount the company will match on any single gift.</help>
     <label>Matching Gift Amount Min</label>
-    <name>Matching_Gift_Amount_Min__c</name>
 </CustomFieldTranslation>

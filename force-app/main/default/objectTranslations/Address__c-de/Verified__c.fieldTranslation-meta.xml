@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Verified__c</name>
     <help>Gibt an, ob die Adresse von einem externen Adressenüberprüfungsservice überprüft wurde.</help>
     <label>Überprüft</label>
-    <name>Verified__c</name>
 </CustomFieldTranslation>

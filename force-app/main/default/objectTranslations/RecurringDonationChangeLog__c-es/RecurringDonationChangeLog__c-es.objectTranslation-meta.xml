@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Recurring Donation Change Log Layout</layout>
+        <sections>
+            <label>Vínculos personalizados</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Número de registro de cambios de donación recurrente</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Número de registro de cambios de donación recurrente</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Registro de cambios de donación recurrente</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Registros de cambios de donaciones recurrentes</value>
+    </caseValues>
+</CustomObjectTranslation>

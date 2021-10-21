@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Using_SmartyStreets__c</name>
     <help>SmartyStreets 住所検証サービスを使用しているかどうかを指定します。</help>
     <label>廃止 - SmartyStreets の使用</label>
-    <name>Using_SmartyStreets__c</name>
 </CustomFieldTranslation>

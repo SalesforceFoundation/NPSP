@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <gender>Masculine</gender>
+    <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Événement de déploiement</value>
@@ -8,6 +10,4 @@
         <plural>true</plural>
         <value>Événements de déploiement</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <startsWith>Vowel</startsWith>
 </CustomObjectTranslation>

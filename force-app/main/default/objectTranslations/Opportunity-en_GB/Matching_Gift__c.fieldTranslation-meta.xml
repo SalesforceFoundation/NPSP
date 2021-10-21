@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Lookup to the Opportunity record for the Matching Gift for this Donation.</help>
-    <label>Matching Gift</label>
     <name>Matching_Gift__c</name>
+    <help>Lookup to the Opportunity record for the Matching Gift for this Donation.</help>
     <relationshipLabel>Matched Gifts</relationshipLabel>
+    <label>Matching Gift</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NCOA_Evaluation_Date__c</name>
     <help>De meest recente datum en het meest recente tijdstip waarop het adres is beoordeeld door de NCOA-aanbieder.</help>
     <label>NCOA-beoordelingsdatum</label>
-    <name>NCOA_Evaluation_Date__c</name>
 </CustomFieldTranslation>

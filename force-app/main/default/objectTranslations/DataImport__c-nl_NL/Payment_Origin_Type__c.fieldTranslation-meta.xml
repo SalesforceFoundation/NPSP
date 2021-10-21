@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Origin_Type__c</name>
     <help>Het type systeem dat is gebruikt om de transactie te initiëren. Beschikbare waarden zijn Engagement Hub, Giving Page, Payment-API en Salesforce.</help>
     <label>Type herkomst voor betaling</label>
-    <name>Payment_Origin_Type__c</name>
 </CustomFieldTranslation>

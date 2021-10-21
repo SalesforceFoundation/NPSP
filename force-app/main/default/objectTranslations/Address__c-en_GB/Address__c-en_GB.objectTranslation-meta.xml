@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Address</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Addresses</value>
-    </caseValues>
+    <webLinks>
+        <name>Verify_Address</name>
+        <label>Verify Address</label>
+    </webLinks>
     <layouts>
         <layout>Address Layout</layout>
+        <sections>
+            <label>Seasonal Information</label>
+            <section>Seasonal Information</section>
+        </sections>
         <sections>
             <label>Address Verification</label>
             <section>Address Verification</section>
@@ -18,19 +18,19 @@
             <label>Custom Links</label>
             <section>Custom Links</section>
         </sections>
-        <sections>
-            <label>Seasonal Information</label>
-            <section>Seasonal Information</section>
-        </sections>
     </layouts>
     <nameFieldLabel>Address ID</nameFieldLabel>
-    <quickActions>
-        <label>Update Address</label>
-        <name>Update_Address</name>
-    </quickActions>
+    <standardFields>
+        <name>Name</name>
+        <label>Address ID</label>
+    </standardFields>
     <startsWith>Vowel</startsWith>
-    <webLinks>
-        <label>Verify Address</label>
-        <name>Verify_Address</name>
-    </webLinks>
+    <caseValues>
+        <plural>false</plural>
+        <value>Address</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Addresses</value>
+    </caseValues>
 </CustomObjectTranslation>

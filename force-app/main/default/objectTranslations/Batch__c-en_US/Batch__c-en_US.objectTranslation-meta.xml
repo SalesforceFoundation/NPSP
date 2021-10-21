@@ -9,13 +9,13 @@
         <value>Batches</value>
     </caseValues>
     <fieldSets>
-        <label><!-- BatchDetailView --></label>
+        <label/>
         <name>BatchDetailView</name>
     </fieldSets>
     <layouts>
         <layout>Batch Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
     </layouts>

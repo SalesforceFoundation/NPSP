@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Fout</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Fouten</value>
-    </caseValues>
-    <gender>Feminine</gender>
     <layouts>
         <layout>Error Layout</layout>
         <sections>
@@ -17,4 +8,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Foutnummer</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Foutnummer</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Fout</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Fouten</value>
+    </caseValues>
 </CustomObjectTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Address_Verification_Status__c</name>
     <help>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</help>
     <label>Address Verification Status</label>
-    <name>Address_Verification_Status__c</name>
 </CustomFieldTranslation>

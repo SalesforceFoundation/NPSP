@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Keyword_Terms__c</name>
+    <help>Paramètre Google Analytics pour suivre des termes de recherche payante.</help>
+    <label>Mots clés UTM</label>
+</CustomFieldTranslation>

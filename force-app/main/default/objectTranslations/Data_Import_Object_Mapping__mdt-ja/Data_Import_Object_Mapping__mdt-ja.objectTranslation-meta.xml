@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>データインポートオブジェクトの対応付け</value>
-    </caseValues>
     <layouts>
         <layout>Data Import Object Mapping Layout</layout>
-        <sections>
-            <label>カスタムリンク</label>
-            <section>Custom Links</section>
-        </sections>
         <sections>
             <label>カスタムオブジェクトリレーションの詳細</label>
             <section>Custom Object Relationship Details</section>
         </sections>
+        <sections>
+            <label>カスタムリンク</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
+    <caseValues>
+        <plural>false</plural>
+        <value>データインポートオブジェクトの対応付け</value>
+    </caseValues>
 </CustomObjectTranslation>
