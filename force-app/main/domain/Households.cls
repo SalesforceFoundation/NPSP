@@ -32,7 +32,7 @@
 * @date 2021
 * @description Contact repository responsible for retrieval and storing of Contacts for specified Accounts
 */
-public inherited sharing class Households extends fflib_SObjects {
+public inherited sharing class Households extends fflib_SObjects2 {
 
     private Map<Id, Contacts> membersByHouseholdId {
         get {
@@ -192,7 +192,7 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     private List<Id> ids() {
-        return new List<Id>(getIdFieldValues(Account.Id));
+        return new List<Id>(getIdFieldValues(Account.Id).getIds());
     }
 
     /*******************************************************************************************************
