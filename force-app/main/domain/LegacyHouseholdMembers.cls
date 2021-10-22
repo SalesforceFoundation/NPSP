@@ -35,7 +35,7 @@
 * documentation they are referred to as "Individual Contacts". They are also referred to this
 * way in Household Settings.
 */
-public inherited sharing class LegacyHouseholdMembers extends fflib_SObjects {
+public inherited sharing class LegacyHouseholdMembers extends fflib_SObjects2 {
 
     private static LegacyHouseholdMembers mock;
     @TestVisible
@@ -95,8 +95,7 @@ public inherited sharing class LegacyHouseholdMembers extends fflib_SObjects {
     }
 
     public List<Contact> contactsWithoutHouseholds() {
-        fflib_SObjects contacts = selectByFieldValue(Contact.npo02__Household__c, null);
-        return (List<Contact>) contacts.getRecords();
+        return getRecordsByFieldValue(Contact.npo02__Household__c, null);
     }
 
     public Set<Id> householdsWithMembershipChanges() {
@@ -137,7 +136,7 @@ public inherited sharing class LegacyHouseholdMembers extends fflib_SObjects {
     }
 
     public Set<Id> householdIds() {
-        Set<Id> householdIds = getIdFieldValues(Contact.npo02__Household__c);
+        Set<Id> householdIds = getIdFieldValues(Contact.npo02__Household__c).getIds();
         householdIds.remove(null);
         return new Set<Id>(householdIds);
     }
