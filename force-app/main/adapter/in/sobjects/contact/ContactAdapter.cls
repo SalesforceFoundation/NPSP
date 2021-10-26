@@ -33,7 +33,7 @@
 * @description The ContactAdapter's role is to provide clients with a single Type
 * that will handle DML on Contacts and call the appropriate method on Domains.
 */
-public inherited sharing class ContactAdapter extends fflib_SObjects {
+public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
