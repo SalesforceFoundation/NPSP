@@ -259,16 +259,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects2 {
     }
 
     public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
+        return getIdFieldValues(Contact.AccountId).getIds();
     }
 
     private Map<Id, Account> accountsById;
