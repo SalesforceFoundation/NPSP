@@ -103,7 +103,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         });
     }
 
-    get tableTile() {
+    get tableTitle() {
         return format(geBatchGiftsHeader, [this.giftBatchState?.name]);
     }
 
