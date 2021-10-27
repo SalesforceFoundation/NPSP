@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>First_Allocation_Date__c</name>
     <help>La première date de fermeture de l’opportunité d’une allocation associée à cette unité comptable générale. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
     <label>Première date d’allocation</label>
-    <name>First_Allocation_Date__c</name>
 </CustomFieldTranslation>

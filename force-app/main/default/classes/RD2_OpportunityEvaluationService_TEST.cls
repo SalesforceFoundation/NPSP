@@ -1929,6 +1929,61 @@ private class RD2_OpportunityEvaluationService_TEST {
     }
 
     /**
+    * @description Verifies that when RD's next installment is skipped(paused),
+    * the RD status will be updated to Pause when the nightly batch job runs
+    */
+    @isTest
+    private static void shouldUpdateRDToPauseStatusWhenNextInstallmentIsPausedAndCreateHistory() {
+        Date today = Date.newInstance(2020, 1, 1);
+        Date pauseDate = Date.newInstance(2020, 2, 1);
+        RD2_ScheduleService.currentDate = today;
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+            new npe03__Recurring_Donations_Settings__c(
+                IsRecurringDonations2Enabled__c = true,
+                EnableChangeLog__c = true
+            )
+        );
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact().Id)
+            .withDayOfMonth('1')
+            .build();
+
+        insert rd;
+
+        RD2_ScheduleService_TEST.createPauseSchedule(rd.Id, pauseDate, pauseDate);
+
+        Test.startTest();
+        new RD2_OpportunityEvaluationService()
+            .withRds(new Set<Id>{ rd.Id })
+            .withCurrentDate(today.addDays(10))
+            .evaluateOpportunities();
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, rd.Status__c,
+            'Rd status should be paused when the next installment is paused');
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, rd.ClosedReason__c,
+            'The pause reason shuold be updated according to the user selection');
+
+        List<RecurringDonationChangeLog__c> changeLogs = 
+            RD2_ChangeLogService_TEST.getRecurringDonationChangeLog(rd.Id);
+        System.assertEquals(1, changeLogs.size(), 'There should be 1 Change Log after the update');
+        RecurringDonationChangeLog__c changeLog = changeLogs[0];
+        System.assertEquals(RD2_Constants.STATUS_PAUSED, changeLog.NewStatus__c, 
+            'New Status should be ' + RD2_Constants.STATUS_PAUSED);
+        System.assertEquals(RD2_Constants.STATUS_ACTIVE, changeLog.PreviousStatus__c, 
+            'Previous Status should be ' + RD2_Constants.STATUS_ACTIVE);
+        System.assertEquals(RD2_ScheduleService_TEST.PAUSE_REASON, changeLog.NewStatusReason__c, 
+            'New Status Reason should be ' + RD2_ScheduleService_TEST.PAUSE_REASON);
+        System.assertEquals(null, changeLog.PreviousStatusReason__c, 
+            'Previous Status should be null');
+        System.assertEquals(null, changeLog.ChangeType__c, 'The Change Type should be null');
+    }
+
+    /**
     * @description Verifies that when the RD is in the middle of pause period
     * the RD status should stay as Paused when the nightly batch job runs
     */
@@ -2037,7 +2092,7 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assert(installmentsClosedDate.contains(pauseEndDate.addMonths(1)),
             'An installment with close date after pause shuold be created');
 
-            System.assert(!installmentsClosedDate.contains(pauseStartDate),
+        System.assert(!installmentsClosedDate.contains(pauseStartDate),
             'No installment should be created with close date during the pause');
     }
 

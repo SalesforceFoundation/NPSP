@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_1_Amount__c</name>
     <help>商談の最初の一般会計単位の割り当てに起因する金額。データインポートの高度な対応付けを使用して、この項目に対応付ける必要があります。</help>
     <label>一般会計単位の割り当て 1: 金額</label>
-    <name>GAU_Allocation_1_Amount__c</name>
 </CustomFieldTranslation>

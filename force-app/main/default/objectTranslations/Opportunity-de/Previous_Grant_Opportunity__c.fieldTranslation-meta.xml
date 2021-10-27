@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Wenn mit diesem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird, verwenden Sie dieses Feld, um diesen Datensatz mit dem vorherigen Fördergeld zu verknüpfen.</help>
-    <label>Frühere Fördergeld-/Spenden-Opp.</label>
     <name>Previous_Grant_Opportunity__c</name>
+    <help>Wenn mit diesem Fördergeld ein zuvor gezahltes Fördergeld verlängert wird, verwenden Sie dieses Feld, um diesen Datensatz mit dem vorherigen Fördergeld zu verknüpfen.</help>
     <relationshipLabel>Zugehörige Fördergelder/Spenden</relationshipLabel>
+    <label>Frühere Fördergeld-/Spenden-Opp.</label>
 </CustomFieldTranslation>

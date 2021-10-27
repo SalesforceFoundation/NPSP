@@ -12,7 +12,7 @@
                                            flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
                                                onchange={onHandleRecurringTypeChange}
-                                               data-id='{fields.recurringType.apiName}'>
+                                               data-id='{fields.recurringType.apiName}'
                                                required>
                         </lightning-input-field>
                     </lightning-layout-item>
@@ -20,7 +20,10 @@
                     <template if:true={showNumPlannedInstallments}>
                         <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}
                                                if:true={fields.plannedInstallments}>
-                            <lightning-input-field field-name={fields.plannedInstallments.apiName} required>
+                            <lightning-input-field data-id="plannedInstallments"
+                                                   field-name={fields.plannedInstallments.apiName}
+                                                   onchange={onHandlePlannedInstallmentsChange}
+                                                   required>
                             </lightning-input-field>
                         </lightning-layout-item>
                     </template>
@@ -50,6 +53,7 @@
                                              class="advanced-mode-fields rd2-entry-custom-field-padding"
                                              value={inputFieldInstallmentFrequency}
                                              type="number"
+                                             onchange={onHandleRecurringFrequencyChange}
                                              field-level-help={fields.installmentFrequency.inlineHelpText}
                                              step="1"
                                              min="1"

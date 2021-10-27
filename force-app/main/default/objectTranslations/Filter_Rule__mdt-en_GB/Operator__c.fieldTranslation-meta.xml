@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Operator</label>
     <name>Operator__c</name>
+    <label>Operator</label>
+    <picklistValues>
+        <masterLabel>Equals</masterLabel>
+        <translation>Equals</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not Equals</masterLabel>
+        <translation>Not Equals</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater Than</masterLabel>
+        <translation>Greater Than</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less Than</masterLabel>
+        <translation>Less Than</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Greater or Equal</masterLabel>
+        <translation>Greater or Equal</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Less or Equal</masterLabel>
+        <translation>Less or Equal</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Starts With</masterLabel>
+        <translation>Starts With</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Contains</masterLabel>
         <translation>Contains</translation>
@@ -11,20 +39,12 @@
         <translation>Does Not Contain</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Equals</masterLabel>
-        <translation>Equals</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Greater Than</masterLabel>
-        <translation>Greater Than</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Greater or Equal</masterLabel>
-        <translation>Greater or Equal</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>In List</masterLabel>
         <translation>In List</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Not In List</masterLabel>
+        <translation>Not In List</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Is Included</masterLabel>
@@ -33,25 +53,5 @@
     <picklistValues>
         <masterLabel>Is Not Included</masterLabel>
         <translation>Is Not Included</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Less Than</masterLabel>
-        <translation>Less Than</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Less or Equal</masterLabel>
-        <translation>Less or Equal</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Not Equals</masterLabel>
-        <translation>Not Equals</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Not In List</masterLabel>
-        <translation>Not In List</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Starts With</masterLabel>
-        <translation>Starts With</translation>
     </picklistValues>
 </CustomFieldTranslation>

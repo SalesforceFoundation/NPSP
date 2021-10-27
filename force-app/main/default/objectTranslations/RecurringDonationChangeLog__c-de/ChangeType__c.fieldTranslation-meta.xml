@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChangeType__c</name>
+    <help>Der Typ der Änderung (Upgrade, Downgrade usw.), den dieser Änderungsprotokoll-Datensatz darstellt.</help>
+    <label>Änderungstyp</label>
+    <picklistValues>
+        <masterLabel>Upgrade</masterLabel>
+        <translation>Upgrade</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Downgrade</masterLabel>
+        <translation>Downgrade</translation>
+    </picklistValues>
+</CustomFieldTranslation>

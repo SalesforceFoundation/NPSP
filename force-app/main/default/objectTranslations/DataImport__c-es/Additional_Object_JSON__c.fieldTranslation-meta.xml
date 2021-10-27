@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Additional_Object_JSON__c</name>
     <help>Este campo permite un número dinámico de registros para crear un número de objetos dinámico a partir de un único registro de importación de datos. La información de objetos adicional se almacena aquí en formato JSON.</help>
     <label>JSON de objeto adicional</label>
-    <name>Additional_Object_JSON__c</name>
 </CustomFieldTranslation>

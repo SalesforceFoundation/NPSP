@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>Nombre de crédito blando de cuenta</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de crédito blando de cuenta</label>
+    </standardFields>
+    <gender>Masculine</gender>
     <caseValues>
         <plural>false</plural>
         <value>Crédito blando de cuenta</value>
@@ -8,6 +14,4 @@
         <plural>true</plural>
         <value>Créditos blandos de cuentas</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <nameFieldLabel>Nombre de crédito blando de cuenta</nameFieldLabel>
 </CustomObjectTranslation>

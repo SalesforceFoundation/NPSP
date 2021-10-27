@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La fecha de finalización, si se requiere, para este registro de programación.</help>
-    <label>Fecha de Finalización de la Recurrencia</label>
     <name>EndDate__c</name>
+    <help>La fecha de finalización, si se requiere, para este registro de programación.</help>
+    <label>Fecha de finalización de programación</label>
 </CustomFieldTranslation>

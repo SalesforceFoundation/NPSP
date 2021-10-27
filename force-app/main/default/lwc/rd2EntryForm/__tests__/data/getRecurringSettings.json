@@ -13,5 +13,14 @@
   },
   "customFieldSets": [],
   "isElevateCustomer": true,
+  "isChangeLogEnabled": true,
+  "periodToYearlyFrequencyMap": {
+    "Yearly": 1,
+    "Quarterly": 4,
+    "Monthly": 12,
+    "1st and 15th": 24,
+    "Weekly": 52,
+    "Daily": 365
+  },
   "closedStatusValues": ["Closed"]
 }

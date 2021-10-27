@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Administrator_Name__c</name>
     <help>会社のマッチングギフト管理者の名前。</help>
     <label>マッチングギフト 管理者名</label>
-    <name>Matching_Gift_Administrator_Name__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Stage__c</name>
     <help>API-naam van de opportunityfase die wordt toegewezen aan de status.</help>
     <label>Opportunityfase</label>
-    <name>Opportunity_Stage__c</name>
 </CustomFieldTranslation>

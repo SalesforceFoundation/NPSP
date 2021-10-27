@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Installment_Name__c</name>
     <help>Nom de versement pour la dénomination de l’opp. Indique le numéro de versement entre parenthèses pour les dons réguliers sans date de fin, ou le numéro de versement par rapport au total pour les dons réguliers avec un nombre de versements déterminé.</help>
     <label>Nom de versement de don régulier</label>
-    <name>Recurring_Donation_Installment_Name__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>State_Upper_District__c</name>
     <help>The state upper district (such as state senate district) this Address belongs to.</help>
     <label>State Upper District</label>
-    <name>State_Upper_District__c</name>
 </CustomFieldTranslation>

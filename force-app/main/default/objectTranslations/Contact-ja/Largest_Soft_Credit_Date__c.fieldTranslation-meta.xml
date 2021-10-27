@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Largest_Soft_Credit_Date__c</name>
     <help>最大ソフトクレジットの日付。</help>
     <label>最大ソフトクレジット日</label>
-    <name>Largest_Soft_Credit_Date__c</name>
 </CustomFieldTranslation>

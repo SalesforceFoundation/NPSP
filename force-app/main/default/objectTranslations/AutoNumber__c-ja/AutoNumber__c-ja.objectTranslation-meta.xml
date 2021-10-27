@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <nameFieldLabel>自動採番名</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>自動採番名</label>
+    </standardFields>
     <caseValues>
         <plural>false</plural>
         <value>自動採番</value>
     </caseValues>
-    <nameFieldLabel>自動採番名</nameFieldLabel>
 </CustomObjectTranslation>

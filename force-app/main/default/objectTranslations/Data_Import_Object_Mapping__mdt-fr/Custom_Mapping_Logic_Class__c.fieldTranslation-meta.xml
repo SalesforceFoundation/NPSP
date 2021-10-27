@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Custom_Mapping_Logic_Class__c</name>
     <help>Si une logique Apex personnalisée doit être utilisée pour mapper les champs de cet objet, un nom de classe (avec espace de noms si nécessaire) qui étend la classe BDI_ObjectMappingLogic et remplace la méthode populateObject doit être saisi dans ce champ.</help>
     <label>Classe logique de mappage personnalisée</label>
-    <name>Custom_Mapping_Logic_Class__c</name>
 </CustomFieldTranslation>

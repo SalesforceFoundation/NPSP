@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Data_Import_Field_Mapping_Set__c</name>
     <help>De aangepaste naam van de API voor metagegevens van de record Veldtoewijzingsset voor gegevensimport, die standaard moet worden gebruikt.</help>
     <label>Std. veldtoew.set voor gegev.import</label>
-    <name>Default_Data_Import_Field_Mapping_Set__c</name>
 </CustomFieldTranslation>

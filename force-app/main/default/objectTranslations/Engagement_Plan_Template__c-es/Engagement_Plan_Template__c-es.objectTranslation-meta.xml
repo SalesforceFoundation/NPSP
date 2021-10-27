@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plantilla de plan de acción</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Plantillas de planes de acción</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage EP Template FS --></label>
-        <name>ManageEPTemplateFS</name>
-    </fieldSets>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Manage_Template</name>
+        <label>Gestionar plantilla</label>
+    </webLinks>
     <layouts>
         <layout>Engagement Plan Template Layout</layout>
         <sections>
@@ -21,8 +12,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de plantilla del plan de acción</nameFieldLabel>
-    <webLinks>
-        <label>Gestionar plantilla</label>
-        <name>Manage_Template</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de plantilla del plan de acción</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Plantilla de plan de acción</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Plantillas de planes de acción</value>
+    </caseValues>
 </CustomObjectTranslation>

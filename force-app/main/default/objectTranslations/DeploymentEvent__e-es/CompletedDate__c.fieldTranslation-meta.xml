@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Fecha de realización</label>
     <name>CompletedDate__c</name>
+    <label>Fecha de realización</label>
 </CustomFieldTranslation>

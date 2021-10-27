@@ -34,7 +34,8 @@
 */
 public inherited sharing class NPSP_Address implements IAddress {
 
-    private Address__c addr;
+    private Address__c address;
+    private Address__c oldAddress;
 
     @TestVisible
     private OrgConfig orgConfig {
@@ -59,97 +60,107 @@ public inherited sharing class NPSP_Address implements IAddress {
     }
 
     public NPSP_Address(Address__c address) {
-        this.addr = address;
+        this.address = address;
+    }
+
+    public NPSP_Address(Address__c address, Address__c oldAddress) {
+        this.address = address;
+        this.oldAddress = oldAddress;
     }
 
     public NPSP_Address(Contact con) {
-        this.addr = new Address__c();
+        this.address = new Address__c();
         try {
-            addr.Household_Account__c = con.AccountId;
+            address.Household_Account__c = con.AccountId;
         } catch (NullPointerException npe) {
             UTIL_Debug.debug('*** ##### npe on NPSP_Address doing nothing. ######');
         }
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.is_Address_Override__c)
         )) {
-            addr.Default_Address__c = !con.is_Address_Override__c;
+            address.Default_Address__c = !con.is_Address_Override__c;
         }
-        addr.Latest_Start_Date__c = System.today();
-        addr.Latest_End_Date__c = null;
+        address.Undeliverable__c = con.Undeliverable_Address__c;
+        address.Latest_Start_Date__c = System.today();
+        address.Latest_End_Date__c = null;
         if (con.getPopulatedFieldsAsMap().keySet().contains(
                 String.valueOf(Contact.npe01__Primary_Address_Type__c)
         )) {
             copyFromSObject(con, 'Mailing', con.npe01__Primary_Address_Type__c);
         } else {
-            copyFromSObject(con, 'Mailing', 'Mailing');
+            copyFromSObject(con, 'Mailing', null);
         }
     }
 
-    public NPSP_Address(Account acc) {
-        this.addr = new Address__c();
-        addr.Household_Account__c = acc.Id;
-        addr.Default_Address__c = true;
-        addr.Latest_Start_Date__c = System.today();
-        addr.Latest_End_Date__c = null;
-        copyFromSObject(acc, 'Billing', null);
+    public NPSP_Address(NPSP_HouseholdAccount npspHouseholdAccount) {
+        this.address = new Address__c();
+        address.Household_Account__c = npspHouseholdAccount.getId();
+        address.Default_Address__c = true;
+        address.Latest_Start_Date__c = System.today();
+        address.Latest_End_Date__c = null;
+        copyFromSObject(npspHouseholdAccount.getRecord(), 'Billing', null);
     }
 
     public NPSP_Address(npo02__Household__c household) {
-        this.addr = new Address__c();
-        addr.MailingStreet__c = household.npo02__MailingStreet__c;
-        addr.MailingCity__c = household.npo02__MailingCity__c;
-        addr.MailingState__c = household.npo02__MailingState__c;
-        addr.MailingPostalCode__c = household.npo02__MailingPostalCode__c;
-        addr.MailingCountry__c = household.npo02__MailingCountry__c;
+        this.address = new Address__c();
+        address.MailingStreet__c = household.npo02__MailingStreet__c;
+        address.MailingCity__c = household.npo02__MailingCity__c;
+        address.MailingState__c = household.npo02__MailingState__c;
+        address.MailingPostalCode__c = household.npo02__MailingPostalCode__c;
+        address.MailingCountry__c = household.npo02__MailingCountry__c;
+    }
+
+    public NPSP_Address oldVersion() {
+        return new NPSP_Address(oldAddress);
     }
 
     public Boolean isSeasonal() {
-        return (this.addr.Seasonal_Start_Month__c != null && this.addr.Seasonal_Start_Day__c != null &&
-                this.addr.Seasonal_End_Month__c != null && this.addr.Seasonal_End_Day__c != null);
+        return (this.address.Seasonal_Start_Month__c != null && this.address.Seasonal_Start_Day__c != null &&
+                this.address.Seasonal_End_Month__c != null && this.address.Seasonal_End_Day__c != null);
     }
 
     public Address__c getRecord() {
-        return this.addr;
+        return address;
     }
 
     public String householdId() {
-        return this.addr.Household_Account__c;
+        return this.address.Household_Account__c;
     }
 
     public Boolean isAddressMatchFuzzyWith(NPSP_Address other) {
         Address__c otherAddress = other.getRecord();
 
-        if (addr == null || otherAddress == null) {
+        if (address == null || otherAddress == null) {
             return false;
         }
 
         Integer cChange = 0;
-        if (strCleanup(addr.MailingStreet__c) != strCleanup(otherAddress.MailingStreet__c)
+        if (strCleanup(address.MailingStreet__c) != strCleanup(otherAddress.MailingStreet__c)
                 && otherAddress.MailingStreet__c != null) {
             cChange++;
         }
-        if (strCleanup(addr.MailingStreet2__c) != strCleanup(otherAddress.MailingStreet2__c)
+        if (strCleanup(address.MailingStreet2__c) != strCleanup(otherAddress.MailingStreet2__c)
                 && otherAddress.MailingStreet2__c != null) {
             cChange++;
         }
-        if (strCleanup(addr.MailingCity__c) != strCleanup(otherAddress.MailingCity__c)
+        if (strCleanup(address.MailingCity__c) != strCleanup(otherAddress.MailingCity__c)
                 && otherAddress.MailingCity__c != null) {
             cChange++;
         }
-        if (strCleanup(addr.MailingState__c) != strCleanup(otherAddress.MailingState__c)
+        if (strCleanup(address.MailingState__c) != strCleanup(otherAddress.MailingState__c)
                 && otherAddress.MailingState__c != null) {
             cChange++;
         }
-        if (strCleanup(addr.MailingPostalCode__c) != strCleanup(otherAddress.MailingPostalCode__c)
+        if (strCleanup(address.MailingPostalCode__c) != strCleanup(otherAddress.MailingPostalCode__c)
                 && otherAddress.MailingPostalCode__c != null) {
             cChange++;
         }
-        if (strCleanup(addr.MailingCountry__c) != strCleanup(otherAddress.MailingCountry__c)
+        if (strCleanup(address.MailingCountry__c) != strCleanup(otherAddress.MailingCountry__c)
                 && otherAddress.MailingCountry__c != null) {
             cChange++;
         }
-        if (addr.Address_Type__c != null
-                && strCleanup(addr.Address_Type__c) != strCleanup(otherAddress.Address_Type__c)
+        if (address.Address_Type__c != null
+                && strCleanup(address.Address_Type__c) != strCleanup(otherAddress.Address_Type__c)
                 && otherAddress.Address_Type__c != null) {
             cChange++;
         }
@@ -158,17 +169,17 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public String getAddrKey() {
         String strKey =
-                strCleanup(addr.MailingStreet__c) +
-                        strCleanup(addr.MailingStreet2__c) +
-                        strCleanup(addr.MailingCity__c) +
-                        strCleanup(addr.MailingState__c) +
-                        strCleanup(addr.MailingPostalCode__c) +
-                        strCleanup(addr.MailingCountry__c) +
-                        strCleanup(addr.Address_Type__c) +
-                        (addr.Seasonal_Start_Day__c != null ? addr.Seasonal_Start_Day__c : '') +
-                        (addr.Seasonal_Start_Month__c != null ? addr.Seasonal_Start_Month__c : '') +
-                        (addr.Seasonal_End_Day__c != null ? addr.Seasonal_End_Day__c : '') +
-                        (addr.Seasonal_End_Month__c != null ? addr.Seasonal_End_Month__c : '');
+                strCleanup(address.MailingStreet__c) +
+                        strCleanup(address.MailingStreet2__c) +
+                        strCleanup(address.MailingCity__c) +
+                        strCleanup(address.MailingState__c) +
+                        strCleanup(address.MailingPostalCode__c) +
+                        strCleanup(address.MailingCountry__c) +
+                        strCleanup(address.Address_Type__c) +
+                        (address.Seasonal_Start_Day__c != null ? address.Seasonal_Start_Day__c : '') +
+                        (address.Seasonal_Start_Month__c != null ? address.Seasonal_Start_Month__c : '') +
+                        (address.Seasonal_End_Day__c != null ? address.Seasonal_End_Day__c : '') +
+                        (address.Seasonal_End_Month__c != null ? address.Seasonal_End_Month__c : '');
         return strKey;
     }
 
@@ -223,25 +234,27 @@ public inherited sharing class NPSP_Address implements IAddress {
         }
 
     }
-
+    public Id getId() {
+        return address.Id;
+    }
     public String endDay() {
-        return addr.Seasonal_End_Day__c;
+        return address.Seasonal_End_Day__c;
     }
 
     public String endMonth() {
-        return addr.Seasonal_End_Month__c;
+        return address.Seasonal_End_Month__c;
     }
 
     public String startDay() {
-        return addr.Seasonal_Start_Day__c;
+        return address.Seasonal_Start_Day__c;
     }
 
     public String startMonth() {
-        return addr.Seasonal_Start_Month__c;
+        return address.Seasonal_Start_Month__c;
     }
 
     public Boolean isEqualToIncludingAddressType(IAddress other, Boolean includeAddressType) {
-        if (addr == null || other == null) {
+        if (address == null || other == null) {
             return false;
         }
         if (includeAddressType) {
@@ -278,29 +291,33 @@ public inherited sharing class NPSP_Address implements IAddress {
     * @return void
     */
     public void copyFrom(IAddress other) {
-        addr.MailingStreet__c = other.street();
-        addr.MailingStreet2__c = other.street2();
-        addr.MailingCity__c = other.city();
-        addr.MailingState__c = other.state();
-        addr.MailingPostalCode__c = other.postalCode();
-        addr.MailingCountry__c = other.country();
-        addr.Geolocation__Latitude__s = other.latitude();
-        addr.Geolocation__Longitude__s = other.longitude();
+        address.MailingStreet__c = other.street();
+        address.MailingStreet2__c = other.street2();
+        address.MailingCity__c = other.city();
+        address.MailingState__c = other.state();
+        address.MailingPostalCode__c = other.postalCode();
+        address.MailingCountry__c = other.country();
+        address.Geolocation__Latitude__s = other.latitude();
+        address.Geolocation__Longitude__s = other.longitude();
         if (other.getType() != null) {
-            addr.Address_Type__c = other.getType();
+            address.Address_Type__c = other.getType();
         }
     }
 
     public Boolean isDefault() {
-        return addr.Default_Address__c;
+        return address.Default_Address__c;
+    }
+
+    public Boolean isNewDefault() {
+        return address.Default_Address__c && (address.Default_Address__c != oldAddress.Default_Address__c);
     }
 
     public void setAsDefault() {
-        addr.Default_Address__c = true;
+        address.Default_Address__c = true;
     }
 
     public String getType() {
-        return addr.Address_Type__c;
+        return address.Address_Type__c;
     }
 
     /*******************************************************************************************************
@@ -313,14 +330,14 @@ public inherited sharing class NPSP_Address implements IAddress {
     * @return void
     */
     public void copyFromSObject(SObject sobjSrc, String fieldPrefixSrc, String addrType) {
-        addr.MailingStreet__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Street');
-        Addresses.handleMultilineStreet(addr);
-        addr.MailingCity__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'City');
-        addr.MailingPostalCode__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'PostalCode');
-        addr.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'State');
-        addr.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Country');
-        addr.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
-        addr.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
+        address.MailingStreet__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Street');
+        Addresses.handleMultilineStreet(address);
+        address.MailingCity__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'City');
+        address.MailingPostalCode__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'PostalCode');
+        address.MailingState__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'State');
+        address.MailingCountry__c = (String) getSObjectField(sobjSrc, fieldPrefixSrc, 'Country');
+        address.Geolocation__Latitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Latitude');
+        address.Geolocation__Longitude__s = (Decimal) getSObjectField(sobjSrc, fieldPrefixSrc, 'Longitude');
 
         if (orgConfig.isStateCountryPicklistsEnabled()) {
             populateAddressCountryFromCountryCode(sobjSrc, fieldPrefixSrc);
@@ -329,12 +346,7 @@ public inherited sharing class NPSP_Address implements IAddress {
 
         // if specified, also include Address Type
         if (addrType != null) {
-            addr.Address_Type__c = addrType;
-        } else {
-            // A null value will force a newly created Address record to use its defined default value for
-            // the picklist, which if not reflected here could cause isAddressChanged() to return true
-            // in cases when it should not.
-            addr.Address_Type__c = Addresses.defaultAddressType;
+            address.Address_Type__c = addrType;
         }
     }
 
@@ -350,7 +362,7 @@ public inherited sharing class NPSP_Address implements IAddress {
 
     public void checkForPartialSeasonalErrors() {
         if (isPartialSeasonalAddr()) {
-            this.addr.addError(Label.addrSeasonalPartial);
+            this.address.addError(Label.addrSeasonalPartial);
         }
     }
 
@@ -361,10 +373,10 @@ public inherited sharing class NPSP_Address implements IAddress {
     */
     private Boolean isPartialSeasonalAddr() {
         Integer cParts = 0;
-        if (addr.Seasonal_Start_Month__c != null) cParts++;
-        if (addr.Seasonal_Start_Day__c != null) cParts++;
-        if (addr.Seasonal_End_Month__c != null) cParts++;
-        if (addr.Seasonal_End_Day__c != null) cParts++;
+        if (address.Seasonal_Start_Month__c != null) cParts++;
+        if (address.Seasonal_Start_Day__c != null) cParts++;
+        if (address.Seasonal_End_Month__c != null) cParts++;
+        if (address.Seasonal_End_Day__c != null) cParts++;
         return (cParts > 0 && cParts < 4);
     }
 
@@ -395,8 +407,8 @@ public inherited sharing class NPSP_Address implements IAddress {
             return;
         }
 
-        if (String.isEmpty(addr.MailingCountry__c)) {
-            addr.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
+        if (String.isEmpty(address.MailingCountry__c)) {
+            address.MailingCountry__c = orgConfig.validCountriesByCode().get(countryCode
                     .toUpperCase());
         }
     }
@@ -415,10 +427,10 @@ public inherited sharing class NPSP_Address implements IAddress {
             return;
         }
 
-        if (String.isEmpty(addr.MailingState__c) || !isMatchingStateCode(stateCode)) {
+        if (String.isEmpty(address.MailingState__c) || !isMatchingStateCode(stateCode)) {
 
             // Assume it's a valid statecode
-            addr.MailingState__c = stateCode;
+            address.MailingState__c = stateCode;
         }
     }
 
@@ -430,13 +442,13 @@ public inherited sharing class NPSP_Address implements IAddress {
     */
     @TestVisible
     private Boolean isMatchingStateCode(String stateCode) {
-        if (String.isBlank(addr.MailingState__c)) {
+        if (String.isBlank(address.MailingState__c)) {
             return false;
         }
 
         String mappedMailingState = (orgConfig.validStatesByLabel() == null)
                 ? ''
-                : orgConfig.validStatesByLabel().get(addr.MailingState__c.toUpperCase());
+                : orgConfig.validStatesByLabel().get(address.MailingState__c.toUpperCase());
 
         return stateCode.equalsIgnoreCase(mappedMailingState);
     }
@@ -447,44 +459,98 @@ public inherited sharing class NPSP_Address implements IAddress {
     * @return boolean
     */
     public Boolean isSeasonalAddr() {
-        return (addr.Seasonal_Start_Month__c != null && addr.Seasonal_Start_Day__c != null &&
-                addr.Seasonal_End_Month__c != null && addr.Seasonal_End_Day__c != null);
+        return (address.Seasonal_Start_Month__c != null && address.Seasonal_Start_Day__c != null &&
+                address.Seasonal_End_Month__c != null && address.Seasonal_End_Day__c != null);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to compare two address objects seasonal fields
+    * @param addrNew the new version of the Address
+    * @param addrOld the old version of the Address
+    * @return boolean. true if any of the seasonal fields have changed on the Address
+    */
+    private Boolean isSeasonalChanged() {
+        if (address == null || oldAddress == null) {
+            return false;
+        }
+        return (
+                address.Seasonal_Start_Month__c != oldAddress.Seasonal_Start_Month__c ||
+                        address.Seasonal_Start_Day__c != oldAddress.Seasonal_Start_Day__c ||
+                        address.Seasonal_End_Month__c != oldAddress.Seasonal_End_Month__c ||
+                        address.Seasonal_End_Day__c != oldAddress.Seasonal_End_Day__c);
+    }
+
+    public Boolean shouldSyncAddressChangesToContactOverrides() {
+        return !isDefault() && (!isEqualToIncludingAddressType(oldVersion(), TRUE) ||
+                isUndeliverableStatusChanged());
+    }
+
+    public Boolean shouldSyncAddressToHouseholdAccountAndContacts() {
+        if (oldAddress == null) {
+            return isDefault() ||
+                    isSeasonalAddr();
+        }
+
+        if (isNewDefault() ||
+            isSeasonalChanged() ||
+            (isUndeliverableStatusChanged()) && isDefault()) {
+
+            return true;
+        } else if (!isEqualToIncludingAddressType(oldVersion(), TRUE)) {
+            if (isDefault()) {
+
+                return true;
+            }
+        }
+        return false;
     }
 
     public void state(String state) {
-        addr.MailingState__c = state;
+        address.MailingState__c = state;
     }
 
     public String street() {
-        return addr.MailingStreet__c;
+        return address?.MailingStreet__c;
     }
 
     public String street2() {
-        return addr.MailingStreet2__c;
+        return address?.MailingStreet2__c;
     }
 
     public String city() {
-        return addr.MailingCity__c;
+        return address?.MailingCity__c;
     }
 
     public String state() {
-        return addr.MailingState__c;
+        return address?.MailingState__c;
     }
 
     public String postalCode() {
-        return addr.MailingPostalCode__c;
+        return address?.MailingPostalCode__c;
     }
 
     public String country() {
-        return addr.MailingCountry__c;
+        return address?.MailingCountry__c;
     }
 
     public Decimal longitude() {
-        return addr.Geolocation__Longitude__s;
+        return address?.Geolocation__Longitude__s;
     }
 
     public Decimal latitude() {
-        return addr.Geolocation__Latitude__s;
+        return address?.Geolocation__Latitude__s;
+    }
+
+    public Boolean isUndeliverable() {
+        return address?.Undeliverable__c;
+    }
+
+    public Boolean isUndeliverableStatusChanged() {
+        return address?.Undeliverable__c != oldAddress.Undeliverable__c;
+    }
+
+    public void setUndeliverable(Boolean isUndeliverable) {
+        address.Undeliverable__c = isUndeliverable;
     }
 
     /*******************************************************************************************************
@@ -493,11 +559,11 @@ public inherited sharing class NPSP_Address implements IAddress {
     * @return boolean
     */
     public String multilineStreet() {
-        Boolean isOneLineStreetAddress = String.isBlank(addr.MailingStreet2__c);
+        Boolean isOneLineStreetAddress = String.isBlank(address.MailingStreet2__c);
         if (isOneLineStreetAddress) {
-            return addr.MailingStreet__c;
+            return address.MailingStreet__c;
         }
-        return addr.MailingStreet__c + '\r\n' + addr.MailingStreet2__c;
+        return address.MailingStreet__c + '\r\n' + address.MailingStreet2__c;
     }
 
 }

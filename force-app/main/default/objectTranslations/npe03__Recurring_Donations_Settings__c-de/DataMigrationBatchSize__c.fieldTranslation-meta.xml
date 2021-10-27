@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DataMigrationBatchSize__c</name>
     <help>Die Anzahl der bei der Migration vorhandener Datensätze für wiederkehrende Spenden zum Datenmodell für Erweiterte wiederkehrende Spenden in einem Durchgang zu verarbeitenden Datensätze.</help>
     <label>Batch-Größe Datenmigration zu EWS</label>
-    <name>DataMigrationBatchSize__c</name>
 </CustomFieldTranslation>

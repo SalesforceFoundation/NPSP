@@ -35,7 +35,95 @@
 * @description Unit tests to cover methods in GE_GiftEntryController.
 */
 @isTest
-private with sharing class GE_GiftEntryController_TEST {
+public with sharing class GE_GiftEntryController_TEST {
+
+    // TODO: can remove integration test later, here to verify existing behavior is not changed
+    @isTest
+    static void shouldReturn2OpenDonationsForTheGivenDonor() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_And_Orgs_Settings__c(npe01__Payments_Enabled__c = false));
+
+        Account dummyOrg = UTIL_UnitTestData_TEST.buildOrganizationAccount();
+        insert dummyOrg;
+
+        List<Opportunity> opps = new List<Opportunity> {
+            new Opportunity(Name='Dummy Opp 0', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=1, CloseDate=Date.today(), AccountId=dummyOrg.Id),
+            new Opportunity(Name='Dummy Opp 1', StageName=UTIL_UnitTestData_TEST.getOpenStage(), Amount=2, CloseDate=Date.today(), AccountId=dummyOrg.Id)
+        };
+        insert opps;
+
+        List<npe01__OppPayment__c> payments = new List<npe01__OppPayment__c> {
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            ),
+            new npe01__OppPayment__c(
+                npe01__Paid__c=false,
+                npe01__Written_Off__c=false,
+                npe01__Opportunity__c=opps[0].Id
+            )
+        };
+        insert payments;
+
+        String openDonationsForDummyOrgString = GE_GiftEntryController.getOpenDonations(dummyOrg.Id, 'Account');
+        List<GE_GiftEntryController.OpportunityWrapper> openDonationsForDummyOrg =
+           (List<GE_GiftEntryController.OpportunityWrapper>)
+           JSON.deserialize(openDonationsForDummyOrgString, List<GE_GiftEntryController.OpportunityWrapper>.class);
+
+        System.assertEquals(2, openDonationsForDummyOrg.size());
+        System.assertEquals('Dummy Opp 0', openDonationsForDummyOrg[0].opportunity.Name);
+        System.assertEquals(3, openDonationsForDummyOrg[0].opportunity.npe01__OppPayment__r.size());
+
+        // TODO: assert new DonationService method matches behavior of existing controller method
+        DonationService donationService = new DonationService();
+        DonationsView donationsView = donationService.getDonationsView(dummyOrg.Id);
+
+        System.assertEquals(2, donationsView.donations.size());
+        System.assertEquals('Dummy Opp 0', donationsView.donations[0].opportunity.get('Name'));
+        System.assertEquals(3, donationsView.donations[0].unpaidPayments.size());
+    }
+
+    @isTest
+    static void shouldReturnAGiftView() {
+        Gift_Entry_Settings__c giftEntryCustomSetting = new Gift_Entry_Settings__c();
+        Form_Template__c defaultTemplate = new Form_Template__c( Format_Version__c = '1.0' );
+
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        String templateJSON = JSON.serialize(template);
+        defaultTemplate.Template_JSON__c = templateJSON;
+        insert defaultTemplate;
+
+        giftEntryCustomSetting.Default_Gift_Entry_Template__c = defaultTemplate.Id;
+        UTIL_CustomSettingsFacade.getGiftEntrySettingsForTests(giftEntryCustomSetting);
+
+        String additionalObjectStringWithSoftCredits =
+            new UTIL_AdditionalObjectData_TEST()
+            .withOpportunityContactRoles(2)
+            .build();
+        Date donationDate = Date.today();
+        DataImport__c dataImport = new DataImport__c(
+            Donation_Amount__c = 10,
+            Account1_Name__c = 'Dummy First Name',
+            Donation_Date__c = donationDate,
+            Additional_Object_JSON__c = additionalObjectStringWithSoftCredits
+        );
+        insert dataImport;
+
+        test.startTest();
+        GiftService service = new GiftService();
+        GiftView viewModel = service.viewModelFrom(new GiftId(dataImport.id));
+
+        String account1NameField = String.valueOf(DataImport__c.Account1_Name__c);
+        System.assertEquals('Dummy First Name', viewModel.fields.get(account1NameField));
+        System.assertEquals(2, viewModel.softCredits.all.size());
+        test.stopTest();
+    }
 
     @isTest static void createCreditCardElevateBatchShouldReturnFailureResponse() {
         GE_GiftEntryController.elevateBatchService = new ElevateBatchServiceInvalidRequest();
@@ -227,52 +315,6 @@ private with sharing class GE_GiftEntryController_TEST {
     }
 
     /***
-     * @description Confirm that the Data Import processes correctly and returns an Opportunity id.
-     */
-    @isTest
-    private static void shouldProcessDataImportRecord() {
-        DataImport__c inMemoryDataImport = BDI_DataImport_TEST.newDI('First', 'Last', null);
-        inMemoryDataImport.Donation_Amount__c = 10;
-        DataImport__c dataImportRecord = GE_GiftEntryController.upsertDataImport(inMemoryDataImport);
-
-        System.assert(dataImportRecord.Id != null);
-        System.assert(dataImportRecord.Donation_Amount__c == 10);
-
-        Test.startTest();
-        Boolean matchToExistingDonation = false;
-        String opportunityId = GE_GiftEntryController.submitDataImportToBDI(dataImportRecord, matchToExistingDonation);
-        Test.stopTest();
-
-        System.assert(opportunityId != null);
-    }
-
-    /***
-     * @description Saves the data import record, dry runs the record, and returns updated
-     * totals with the new row.
-     */
-    @isTest
-    private static void testShouldSaveAndDryRunDataImport() {
-
-        // required setting
-        UTIL_CustomSettingsFacade.getDataImportSettings();
-        // aux vars
-        String firstName = 'fooName';
-        String lastName = 'fooLastName';
-        String batchName = 'fooBatch';
-        // test data
-        Id batchId = createDataImportBatch( batchName );
-        DataImport__c di = createDataImport( firstName, lastName, batchId );
-
-        Test.startTest();
-        GE_GiftEntryController.saveAndDryRunDataImport(batchId,di);
-        Test.stopTest();
-
-        List<DataImportBatch__c> result = [SELECT Id FROM DataImportBatch__c];
-        System.assertEquals( result.size(), 1 );
-
-    }
-
-    /***
      * @description Confirm that a default RenderWrapper is correctly returned
      */
     @isTest
@@ -314,69 +356,6 @@ private with sharing class GE_GiftEntryController_TEST {
         System.assertNotEquals(null, bdiFieldMappingSet, 'Expected to receive field mappings, got null.');
         System.assertEquals('Default_Field_Mapping_Set', bdiFieldMappingSet.DeveloperName);
 
-    }
-
-    /***
-     * @description Tests that widget data can be properly coverted to the BDI_DynamicSourceGroup format required
-     * by BDI for N number of objects processing.
-     */
-    @isTest
-    private static void widgetDataShouldBeConvertedIntoDynamicSources() {
-        General_Accounting_Unit__c gau1 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 1',
-                Active__c = true);
-
-        General_Accounting_Unit__c gau2 = new General_Accounting_Unit__c(Name = 'TestGroupA GAU 2',
-                Active__c = true);
-        General_Accounting_Unit__c[] testGAUs = new General_Accounting_Unit__c[]{gau1,gau2};
-        insert testGAUs;
-
-        SObject sourceObjA1 = UTIL_Describe.getPrototypeObject(SObjectType.Allocation__c.getName());
-        sourceObjA1.put(Allocation__c.General_Accounting_Unit__c.getDescribe().getName(),
-                gau1.Id);
-        sourceObjA1.put(Allocation__c.Percent__c.getDescribe().getName(),75);
-
-        SObject sourceObjA2 = UTIL_Describe.getPrototypeObject(SObjectType.Allocation__c.getName());
-        sourceObjA2.put(Allocation__c.General_Accounting_Unit__c.getDescribe().getName(),
-                gau2.Id);
-        sourceObjA2.put(Allocation__c.Percent__c.getDescribe().getName(),25);
-
-        SObject[] testWidgetRecords = new SObject[]{sourceObjA1,sourceObjA2};
-
-        Map<String,SObject[]> widgetData = new Map<String,SObject[]>();
-
-        widgetData.put('GAU_Allocation_1',testWidgetRecords);
-
-        String widgetDataString = JSON.serialize(widgetData);
-
-        DataImport__c testDI = new DataImport__c();
-        Test.startTest();
-        testDI.Additional_Object_JSON__c = GE_GiftEntryController.convertWidgetDataToObjectJSON(widgetDataString);
-        Test.stopTest();
-
-        System.assertNotEquals(null,testDI.Additional_Object_JSON__c);
-
-        BDI_DynamicSourceGroup testDSG =
-                (BDI_DynamicSourceGroup)JSON.deserialize(testDI.Additional_Object_JSON__c, BDI_DynamicSourceGroup.class);
-
-        System.assertNotEquals(null,testDSG);
-        System.assertEquals(2,testDSG.dynamicSourceByObjMappingDevName.size());
-
-        BDI_DynamicSource dynSource1;
-        BDI_DynamicSource dynSource2;
-
-        for (String objMappingDevName : testDSG.dynamicSourceByObjMappingDevName.keySet()) {
-            BDI_DynamicSource tempDS = testDSG.dynamicSourceByObjMappingDevName.get(objMappingDevName);
-            if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c') == gau1.Id) {
-                dynSource1 = tempDS;
-            } else if (tempDS.sourceObj.get('GAU_Allocation_1_GAU__c')  == gau2.Id) {
-                dynSource2 = tempDS;
-            }
-        }
-
-        System.assertNotEquals(null, dynSource1);
-        System.assertNotEquals(null, dynSource2);
-        System.assertEquals(75,dynSource1.sourceObj.get('GAU_Allocation_1_Percent__c'));
-        System.assertEquals(25,dynSource2.sourceObj.get('GAU_Allocation_1_Percent__c'));
     }
 
     /***
@@ -786,5 +765,4 @@ private with sharing class GE_GiftEntryController_TEST {
             return null;
         }
     }
-
 }

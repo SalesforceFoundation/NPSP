@@ -75,6 +75,21 @@
                     </div>
                 </div>
             </div>
+            <div class="slds-form-element" style="{!IF(isRD2Enabled, 'display:block', 'display:none')}">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.EnableChangeLog__c.Label}" for="enableChangeLog" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <div class="slds-form-element__control">
+                        <apex:inputCheckbox value="{!stgService.stgRD.EnableChangeLog__c}" rendered="{!isEditMode}" id="enableChangeLog"
+                            html-aria-describedby="{!$Component.enableChangeLogHelp}" styleClass="slds-checkbox" />
+                        <apex:inputCheckbox value="{!stgService.stgRD.EnableChangeLog__c}" rendered="{!isReadOnlyMode}" disabled="true"
+                            id="enableChangeLogReadOnly" html-aria-describedby="{!$Component.enableChangeLogHelp}" styleClass="slds-checkbox" />
+                        <apex:outputPanel id="enableChangeLogHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" 
+                                value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.EnableChangeLog__c.InlineHelpText}" />
+                        </apex:outputPanel>
+                    </div>
+                </div>
+            </div>
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Record_Type__c.Label}" for="slRT" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">

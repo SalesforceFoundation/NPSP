@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousExpectedTotalValue__c</name>
+    <help>Der vorherige erwartete Gesamtwert für diese befristete wiederkehrende Spende, basierend auf dem Betrag und dem Zeitplan.</help>
+    <label>Vorheriger erwarteter Gesamtwert</label>
+</CustomFieldTranslation>

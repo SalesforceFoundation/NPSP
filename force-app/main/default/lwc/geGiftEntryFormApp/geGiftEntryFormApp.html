@@ -24,15 +24,11 @@
         </template>
         <template if:false={isLoading}>
             <template if:true={isBatchMode}>
-                <c-ge-batch-gift-entry-header
-                        batch-id={recordId}
-                        batch-totals={batchTotals}
-                        is-permission-error={isPermissionError}
-                        is-elevate-customer={isElevateCustomer}
-                        onbatchdryrun={handleBatchDryRun}
-                        onedit={handleEditBatch}
-                        is-batch-processing={isBatchProcessing}
-                        onprocessbatch={handleProcessBatch}>
+                <c-ge-batch-gift-entry-header gift-batch-state={giftBatchState}
+                                              is-gift-batch-processing={isBatchProcessing}
+                                              onbatchdryrun={handleBatchDryRun}
+                                              onedit={handleEditBatch}
+                                              onprocessbatch={handleProcessBatch}>
                 </c-ge-batch-gift-entry-header>
             </template>
 
@@ -45,34 +41,40 @@
                     <p class='loading-text slds-text-heading_medium'>{CUSTOM_LABELS.geProcessingBatch}</p>
                     <c-util-stencil row-count=20 column-count=4></c-util-stencil>
                 </div>
-
             </template>
 
             <template if:false={isBatchProcessing}>
-                <c-ge-form-renderer
-                        batch-id={recordId}
-                        onsubmit={handleSubmit}
-                        onsectionsretrieved={handleSectionsRetrieved}
-                        onpermissionerror={handlePermissionErrors}
-                        ontogglemodal={handleToggleModal}
-                        onnavigate={handleNavigateEvent}
-                        loading-text={loadingText}
-                        batch-currency-iso-code={batchCurrencyIsoCode}>
-                </c-ge-form-renderer>
+                <div class='slds-is-relative'>
+                    <lightning-spinner if:true={isFormRendering}></lightning-spinner>
+                    <c-ge-form-renderer
+                            is-form-collapsed={isFormCollapsed}
+                            gift-in-view={giftInView}
+                            onformstatechange={handleFormStateChange}
+                            onreviewdonationschange={handleReviewDonationsChange}
+
+                            is-elevate-customer={isElevateCustomer}
+                            batch-id={recordId}
+                            oncollapseform={handleCollapseForm}
+                            onclearcurrentgift={handleClearGiftInView}
+                            onsubmit={handleSubmit}
+                            onlogerror={handleLogError}
+                            onsectionsretrieved={handleSectionsRetrieved}
+                            onpermissionerror={handlePermissionErrors}
+                            ontogglemodal={handleToggleModal}
+                            onnavigate={handleNavigateEvent}
+                            loading-text={loadingText}
+                            batch-currency-iso-code={batchCurrencyIsoCode}>
+                    </c-ge-form-renderer>
+                </div>
 
                 <template if:false={isPermissionError}>
                     <c-ge-batch-gift-entry-table
-                        title={giftsTableTitle}
-                        count={count}
-                        expected-count={expectedCountOfGifts}
-                        total={total}
-                        expected-total={expectedTotalBatchAmount}
+                        gift-batch-state={giftBatchState}
                         user-defined-batch-table-column-names={userDefinedBatchTableColumnNames}
                         batch-id={recordId}
                         onloaddata={handleLoadData}
+                        onloadmoregifts={handleLoadMoreGifts}
                         ondelete={handleDelete}
-                        oncountchanged={handleCountChanged}
-                        ontotalchanged={handleTotalChanged}
                         onselectcolumns={handleSelectColumns}
                         batch-currency-iso-code={batchCurrencyIsoCode}
                         is-elevate-customer={isElevateCustomer}>
@@ -85,6 +87,11 @@
 
     <template if:false={isBatchMode}>
         <c-ge-form-renderer
+                gift-in-view={giftInView}
+                onformstatechange={handleFormStateChange}
+                ondeletefieldfromgiftstate={handleDeleteFieldFromGiftState}
+                onreviewdonationschange={handleReviewDonationsChange}
+
                 batch-id={recordId}
                 onsubmit={handleSubmit}
                 onsectionsretrieved={handleSectionsRetrieved}

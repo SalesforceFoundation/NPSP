@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Donation Record Type Name</label>
     <name>Donation_Record_Type_Name__c</name>
+    <label>Donation Record Type Name</label>
 </CustomFieldTranslation>

@@ -230,6 +230,14 @@
         <relatedList>%%%NAMESPACE%%%Allocation__c.%%%NAMESPACE%%%Recurring_Donation__c</relatedList>
     </relatedLists>
     <relatedLists>
+        <excludeButtons>New</excludeButtons>
+        <fields>NAME</fields>
+        <fields>%%%NAMESPACE%%%ChangeType__c</fields>
+        <fields>%%%NAMESPACE%%%EffectiveDate__c</fields>
+        <fields>%%%NAMESPACE%%%NewAmount__c</fields>
+        <relatedList>%%%NAMESPACE%%%RecurringDonationChangeLog__c.%%%NAMESPACE%%%RecurringDonation__c</relatedList>
+    </relatedLists>
+    <relatedLists>
         <relatedList>RelatedNoteList</relatedList>
     </relatedLists>
     <relatedLists>

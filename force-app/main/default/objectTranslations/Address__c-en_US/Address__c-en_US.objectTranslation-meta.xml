@@ -11,25 +11,25 @@
     <layouts>
         <layout>Address Layout</layout>
         <sections>
-            <label><!-- Address Verification --></label>
+            <label/>
             <section>Address Verification</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Seasonal Information --></label>
+            <label/>
             <section>Seasonal Information</section>
         </sections>
     </layouts>
     <quickActions>
-        <label><!-- Update Address --></label>
+        <label/>
         <name>Update_Address</name>
     </quickActions>
     <startsWith>Vowel</startsWith>
     <webLinks>
-        <label><!-- Verify_Address --></label>
+        <label/>
         <name>Verify_Address</name>
     </webLinks>
 </CustomObjectTranslation>

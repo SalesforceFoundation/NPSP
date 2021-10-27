@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Behavior__c</name>
     <help>Définit la manière dont NPSP doit gérer les dons correspondants.</help>
     <label>Comportement de correspondance de dons</label>
-    <name>Donation_Matching_Behavior__c</name>
-    <picklistValues>
-        <masterLabel>Best Match</masterLabel>
-        <translation>Meilleure correspondance</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Best Match or Create</masterLabel>
-        <translation>Meilleure correspondance ou créer</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Do Not Match</masterLabel>
         <translation>Ne correspond pas</translation>
@@ -26,5 +18,13 @@
     <picklistValues>
         <masterLabel>Single Match or Create</masterLabel>
         <translation>Correspondance unique ou créer</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Match</masterLabel>
+        <translation>Meilleure correspondance</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Best Match or Create</masterLabel>
+        <translation>Meilleure correspondance ou créer</translation>
     </picklistValues>
 </CustomFieldTranslation>

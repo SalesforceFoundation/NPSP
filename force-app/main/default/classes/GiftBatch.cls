@@ -33,33 +33,19 @@
 * @description Batch entity class in NPSP.
 */
 
-public inherited sharing class GiftBatch {
+public inherited sharing class GiftBatch implements IGiftBatch {
 
-    private Id batchId;
-    private DataImportBatch__c batch;
+    @TestVisible private GiftBatchId giftBatchId;
+    @TestVisible private DataImportBatch__c batch;
+    @TestVisible private Money total;
+    @TestVisible private Integer totalCount;
+    @TestVisible private GiftBatchTotals totals;
 
-    private GE_Template.Template formTemplate {
-        get {
-            if (formTemplate == null) {
-                formTemplate =
-                    (GE_Template.Template) JSON.deserialize(
-                        batch.Form_Template__r.Template_JSON__c,
-                        GE_Template.Template.class);
-            }
-            return formTemplate;
-        }
-        set;
-    }
+    @TestVisible
+    private Gifts gifts = new Gifts();
 
-    private Gifts gifts {
-        get {
-            if (gifts == null) {
-                gifts = new Gifts(giftSelector.getGiftsFor(this.batchId));
-            }
-            return gifts;
-        }
-        set;
-    }
+    @TestVisible
+    private GiftTemplate giftTemplate;
 
     private GiftBatchSelector giftBatchSelector {
         get {
@@ -67,16 +53,6 @@ public inherited sharing class GiftBatch {
                 giftBatchSelector = new GiftBatchSelector();
             }
             return giftBatchSelector;
-        }
-        set;
-    }
-
-    private GiftSelector giftSelector {
-        get {
-            if (giftSelector == null) {
-                giftSelector = new GiftSelector();
-            }
-            return giftSelector;
         }
         set;
     }
@@ -104,35 +80,43 @@ public inherited sharing class GiftBatch {
     }
 
     @TestVisible
+    private GiftBatch() {}
+
+    @TestVisible
     private GiftBatch(Gifts gifts) {
         this.gifts = gifts;
     }
 
-    public GiftBatch(Id batchId) {
-        this.batchId = batchId;
-        this.batch = giftBatchSelector.selectGiftBatchById(this.batchId);
+    public GiftBatch(GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
+        this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
+        this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
+    }
+
+    public Giftbatch(GiftBatchId giftBatchId, List<Id> giftIds) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
+        this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate, giftIds));
+        this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
+    }
+
+    public Giftbatch(GiftBatchId giftBatchId, Integer giftsLimit, Integer giftsOffset) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
+        this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate, giftsLimit, giftsOffset));
+        this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
     }
 
     public Boolean hasElevateWidget() {
-        Boolean hasWidget = false;
-        for (GE_Template.Section section : formTemplate.layout.sections) {
-            for (GE_Template.Element element : section.elements) {
-                if (isElevateWidget(element)) {
-                    hasWidget = true;
-                }
-            }
-        }
-        return hasWidget;
-    }
-
-    private Boolean isElevateWidget(GE_Template.Element element) {
-        return element.componentName != null
-            && element.componentName == 'geFormWidgetTokenizeCard';
+        return this.giftTemplate.hasElevateWidget();
     }
 
     public void captureAuthorizedGifts() {
-        elevateBatchService.enqueuePaymentCaptureJobFor(
-            batchId, gifts?.elevateBatchIds());
+        elevateBatchService.enqueuePaymentCaptureJobFor(id(), gifts?.elevateBatchIds());
         gifts.authorizedToPaymentProcessingStatus();
     }
 
@@ -146,10 +130,85 @@ public inherited sharing class GiftBatch {
         if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
             captureAuthorizedGifts();
         }
-        BDI_DataImport_API.processDataImportBatches(new List<Id>{batchId});
+        BDI_DataImport_API.processDataImportBatches(new List<Id>{ id() });
     }
 
     public void updateRecords() {
         gifts.updateRecords();
+    }
+
+    public void updateWith(InboundGiftBatchDTO giftBatchChanges) {
+        unitOfWork.registerDirty(new List<sObject> { giftBatchChanges.toSObject() });
+        Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
+    }
+
+    public void add(Gift gift) {
+        gift.saveRecord();
+        gift.dryRunThroughBDI();
+        this.gifts.add(gift);
+    }
+
+    public Id id() {
+        if (this.giftBatchId != null) {
+            return this.giftBatchId.value();
+        }
+        return null;
+    }
+
+    public String name() {
+        return this.batch.name;
+    }
+
+    public Gifts gifts() {
+        return this.gifts;
+    }
+
+    public void deleteGiftBy(GiftId giftId) {
+        Gift memberGift = this.gifts.findBy(giftId);
+        memberGift.deleteRecord();
+    }
+
+    public Map<String, Integer> totals() {
+        return this.totals.toMap();
+    }
+
+    public Money totalDonations() {
+        return new Money(this.totals.totalAmount(), 'US');
+    }
+
+    public Boolean requireTotalMatch() {
+        return this.batch.RequireTotalMatch__c;
+    }
+
+    public Decimal expectedCountOfGifts() {
+        return this.batch.Expected_Count_of_Gifts__c;
+    }
+
+    public Decimal expectedTotalBatchAmount() {
+        return this.batch.Expected_Total_Batch_Amount__c;
+    }
+
+    public String batchTableColumns() {
+        return this.batch.Batch_Table_Columns__c;
+    }
+
+    public DateTime lastModifiedDate() {
+        return this.batch.LastModifiedDate;
+    }
+
+    public String currencyIsoCode() {
+        RecordCurrencyCode currencyCode = new RecordCurrencyCode(this.batch);
+        return currencyCode.value();
+    }
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
     }
 }

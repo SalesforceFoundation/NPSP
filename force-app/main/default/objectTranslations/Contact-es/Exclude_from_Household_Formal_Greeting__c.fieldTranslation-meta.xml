@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Exclude_from_Household_Formal_Greeting__c</name>
     <help>Cuando se selecciona, NPSP excluye este contacto del saludo formal del hogar (establecido en Configuración de NPSP | Personas | Hogares).</help>
     <label>Excluir del saludo formal de hogar</label>
-    <name>Exclude_from_Household_Formal_Greeting__c</name>
 </CustomFieldTranslation>

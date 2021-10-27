@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Honoree_Opportunity_Contact_Role__c</name>
     <help>Wenn Sie hier etwas eingeben, erstellt NPSP automatisch einen Kontaktrollendatensatz für Opportunities mit einem Begünstigtenkontakt.</help>
     <label>Kontaktrolle für Begünstigten-Opport.</label>
-    <name>Honoree_Opportunity_Contact_Role__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Retry_Pending__c</name>
     <help>オンになっていると、[関連レコード ID] で指定されたレコードが、スケジュールされている次回のプロセスで再処理されることを示します。再処理に成功すると、この項目はオフになります。スケジュールされているプロセスで発生する特定のエラー種別に適用されます。</help>
     <label>保留中を再試行?</label>
-    <name>Retry_Pending__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Customizable_Rollups_Enabled__c</name>
     <help>Check this box to enable the new NPSP Customisable Rollup Engine</help>
     <label>Enable Customisable Rollups</label>
-    <name>Customizable_Rollups_Enabled__c</name>
 </CustomFieldTranslation>

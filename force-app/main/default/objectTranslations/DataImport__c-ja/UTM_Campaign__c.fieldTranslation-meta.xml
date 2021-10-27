@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Campaign__c</name>
+    <help>アウトリーチ活動の名前または要請コードをトラッキングするための Google アナリティクスパラメータ。たとえば、spring_2021_fundraiser。</help>
+    <label>UTM キャンペーン</label>
+</CustomFieldTranslation>

@@ -31,7 +31,7 @@ export function flatten(obj) {
  */
 export function convertBDIToWidgetJson(additionalObjectJson) {
     if (isEmptyObject(additionalObjectJson)) {
-        return;
+        return additionalObjectJson;
     }
 
     const additionalObjects = JSON.parse(additionalObjectJson);
@@ -39,7 +39,7 @@ export function convertBDIToWidgetJson(additionalObjectJson) {
     if (isEmptyObject(additionalObjects) ||
         !additionalObjects.hasOwnProperty('dynamicSourceByObjMappingDevName')) {
 
-        return;
+        return additionalObjectJson;
     }
 
     let targetFieldsByObjectDevName = {};

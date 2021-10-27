@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Class__c</name>
     <help>Salesforce クラスによって Web サービスへの接続と住所の検証が行われます。</help>
     <label>検証サービス</label>
-    <name>Class__c</name>
 </CustomFieldTranslation>

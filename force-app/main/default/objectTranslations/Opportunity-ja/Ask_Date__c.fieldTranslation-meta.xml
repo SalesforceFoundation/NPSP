@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Ask_Date__c</name>
     <help>取引先が設定する支援完了日 (支援が最初に作成された日、または支援が成立した日) に対して、支援者が支援について具体的に質問された日付。</help>
     <label>質問日</label>
-    <name>Ask_Date__c</name>
 </CustomFieldTranslation>

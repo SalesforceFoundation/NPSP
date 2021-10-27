@@ -70,6 +70,7 @@ public inherited sharing class RD2_Constants {
     public static final String INSTALLMENT_PERIOD_WEEKLY = 'Weekly';
     public static final String INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH = '1st and 15th';
     public static final String INSTALLMENT_PERIOD_DAILY = 'Daily';
+    public static final String INSTALLMENT_PERIOD_QUARTERLY = 'Quarterly';
 
     /**
     * @description Recurring Donation "Day of Month" picklist API values
@@ -102,6 +103,12 @@ public inherited sharing class RD2_Constants {
     public static final String PAYMENT_PICKLIST_VALUE_ACH = 'ACH';
 
     /**
+    * @description Recurring Donation "Change Type" picklist API values
+    */
+    public static final String CHANGE_TYPE_UPGRADE = 'Upgrade';
+    public static final String CHANGE_TYPE_DOWNGRADE = 'Downgrade';
+
+    /**
     * @description Returns all valid Installment Periods
     */
     public static Set<String> allInstallmentPeriods {
@@ -129,4 +136,14 @@ public inherited sharing class RD2_Constants {
     * @description Contains default value for the Next Donation Date Match Range Days field
     */
     public static final Integer DEFAULT_NEXT_DONATION_DATE_MATCH_RANGE_DAYS = 3;
+
+    public static final Map<String, Integer> PERIOD_TO_YEARLY_FREQUENCY = new Map<String, Integer>{
+        INSTALLMENT_PERIOD_YEARLY => 1,
+        INSTALLMENT_PERIOD_QUARTERLY => 4,
+        INSTALLMENT_PERIOD_MONTHLY => 12,
+        INSTALLMENT_PERIOD_FIRST_AND_FIFTEENTH => 24,
+        INSTALLMENT_PERIOD_WEEKLY => 52,
+        INSTALLMENT_PERIOD_DAILY => 365
+      };
+      
 }

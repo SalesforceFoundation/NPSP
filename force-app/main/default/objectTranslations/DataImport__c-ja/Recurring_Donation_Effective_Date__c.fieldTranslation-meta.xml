@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Effective_Date__c</name>
     <help>この継続支援の新規および更新されたスケジュール情報 (金額、日付など) が有効になる日付。デフォルトは現在の日付です。</help>
     <label>継続支援の発効日</label>
-    <name>Recurring_Donation_Effective_Date__c</name>
 </CustomFieldTranslation>

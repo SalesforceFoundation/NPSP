@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Status__c</name>
     <help>API-naam van de Status terugkerende donatie(s) die is toegewezen aan een staat.</help>
     <label>Status terugkerende donatie(s)</label>
-    <name>Status__c</name>
 </CustomFieldTranslation>

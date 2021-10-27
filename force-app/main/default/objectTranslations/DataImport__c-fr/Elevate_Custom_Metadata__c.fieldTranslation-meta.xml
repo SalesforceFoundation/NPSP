@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Custom_Metadata__c</name>
     <help>Métadonnées personnalisées des pages Elevate Giving, triées sous forme de JSON.</help>
     <label>Métadonnées personnalisées Elevate</label>
-    <name>Elevate_Custom_Metadata__c</name>
 </CustomFieldTranslation>

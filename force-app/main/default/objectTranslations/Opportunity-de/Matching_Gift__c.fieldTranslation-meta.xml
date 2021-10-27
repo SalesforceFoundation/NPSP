@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Nachschlagen im Opportunity-Datensatz für die verdoppelte Spende für diese Spende</help>
-    <label>Spendenverdopplung</label>
     <name>Matching_Gift__c</name>
+    <help>Nachschlagen im Opportunity-Datensatz für die verdoppelte Spende für diese Spende</help>
     <relationshipLabel>Verdoppelte Spenden</relationshipLabel>
+    <label>Spendenverdopplung</label>
 </CustomFieldTranslation>
