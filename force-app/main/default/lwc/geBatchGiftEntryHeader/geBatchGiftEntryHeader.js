@@ -63,4 +63,7 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
     get qaLocatorEditBatchInfo() {
         return `button ${this.LABELS.geEditBatchInfo}`;
     }
+
+    // Public property below is deprecated.
+    @api isPermissionError;
 }
