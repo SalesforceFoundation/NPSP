@@ -1,51 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimporte</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimporte</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimports</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimporte</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>NPSP-Datenimport</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>NPSP-Datenimporten</value>
-    </caseValues>
-    <gender>Masculine</gender>
+    <webLinks>
+        <name>Delete_All_Data_Import_Records</name>
+        <label>Alle Datenimportdatensätze löschen</label>
+    </webLinks>
+    <webLinks>
+        <name>Delete_Imported_Data_Import_Records</name>
+        <label>Importierte Datenimportdatensätze löschen</label>
+    </webLinks>
+    <webLinks>
+        <name>Process_Data_Import</name>
+        <label>Datenimport starten</label>
+    </webLinks>
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
+            <label>Kontakt1 Informationen</label>
+            <section>Contact1 Information</section>
+        </sections>
+        <sections>
+            <label>Haushalt-Accountinformationen</label>
+            <section>Household Account Information</section>
+        </sections>
+        <sections>
+            <label>Privatadresse</label>
+            <section>Home Address</section>
+        </sections>
+        <sections>
             <label>Account1 Organisationsinformationen</label>
             <section>Account1 Organization Information</section>
+        </sections>
+        <sections>
+            <label>Kontakt2 Informationen</label>
+            <section>Contact2 Information</section>
         </sections>
         <sections>
             <label>Account2 Organisationsinformationen</label>
@@ -56,16 +43,16 @@
             <section>Campaign Information</section>
         </sections>
         <sections>
-            <label>Kontakt1 Informationen</label>
-            <section>Contact1 Information</section>
+            <label>Opportunity-Informationen</label>
+            <section>Opportunity Information</section>
         </sections>
         <sections>
-            <label>Kontakt2 Informationen</label>
-            <section>Contact2 Information</section>
+            <label>Informationen für wiederkehrende Spenden</label>
+            <section>Recurring Donation Information</section>
         </sections>
         <sections>
-            <label>Benutzerdefinierte Links</label>
-            <section>Custom Links</section>
+            <label>Zahlungsinformationen</label>
+            <section>Payment Information</section>
         </sections>
         <sections>
             <label>Informationen zur Zuweisung Verwendungszweck 1</label>
@@ -76,14 +63,6 @@
             <section>GAU Allocation 2 Information</section>
         </sections>
         <sections>
-            <label>Privatadresse</label>
-            <section>Home Address</section>
-        </sections>
-        <sections>
-            <label>Haushalt-Accountinformationen</label>
-            <section>Household Account Information</section>
-        </sections>
-        <sections>
             <label>Informationen zur Opportunity-Kontaktrolle 1</label>
             <section>Opportunity Contact Role 1 Information</section>
         </sections>
@@ -92,29 +71,54 @@
             <section>Opportunity Contact Role 2 Information</section>
         </sections>
         <sections>
-            <label>Opportunity-Informationen</label>
-            <section>Opportunity Information</section>
-        </sections>
-        <sections>
-            <label>Zahlungsinformationen</label>
-            <section>Payment Information</section>
-        </sections>
-        <sections>
-            <label>Informationen für wiederkehrende Spenden</label>
-            <section>Recurring Donation Information</section>
+            <label>Benutzerdefinierte Links</label>
+            <section>Custom Links</section>
         </sections>
     </layouts>
     <nameFieldLabel>Datenimport-ID</nameFieldLabel>
-    <webLinks>
-        <label>Alle Datenimportdatensätze löschen</label>
-        <name>Delete_All_Data_Import_Records</name>
-    </webLinks>
-    <webLinks>
-        <label>Importierte Datenimportdatensätze löschen</label>
-        <name>Delete_Imported_Data_Import_Records</name>
-    </webLinks>
-    <webLinks>
-        <label>Datenimport starten</label>
-        <name>Process_Data_Import</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Datenimport-ID</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>NPSP-Datenimport</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>NPSP-Datenimports</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>NPSP-Datenimporten</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>NPSP-Datenimporte</value>
+    </caseValues>
 </CustomObjectTranslation>

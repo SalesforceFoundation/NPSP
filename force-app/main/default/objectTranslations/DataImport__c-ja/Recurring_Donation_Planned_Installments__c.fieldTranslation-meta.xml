@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Planned_Installments__c</name>
     <help>予定されている回数。[継続種別] が [固定] の場合のみ使用されます。</help>
     <label>継続支援の予定回数</label>
-    <name>Recurring_Donation_Planned_Installments__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>GAU_Allocation_1_Percent__c</name>
     <help>El porcentaje atribuido a la primera asignación de CCG. Debe utilizar Asignación avanzada de importación de datos para asignar a este campo.</help>
     <label>Asignación de CCG 1: Porcentaje</label>
-    <name>GAU_Allocation_1_Percent__c</name>
 </CustomFieldTranslation>

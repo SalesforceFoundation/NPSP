@@ -74,8 +74,8 @@ private class HH_Container_TEST {
 
         Test.startTest();
 
-        system.assertNotEquals(null, HH_Container_LCTRL.getHH(hhA.Id));
-        system.assertNotEquals(null, HH_Container_LCTRL.getHH(hhO.Id));
+        system.assertNotEquals(null, HH_Container_LCTRL.getHousehold(hhA.Id));
+        system.assertNotEquals(null, HH_Container_LCTRL.getHousehold(hhO.Id));
         system.assertNotEquals(null, HH_Container_LCTRL.getContacts(hhA.Id));
         system.assertNotEquals(null, HH_Container_LCTRL.getContacts(hhO.Id));
 
@@ -377,7 +377,7 @@ private class HH_Container_TEST {
         insert buildContacts(accounts, contactsPerAccount);
 
         //Refresh the Household data from database
-        accounts[0] = (Account) HH_Container_LCTRL.getHH(accounts[0].Id);
+        accounts[0] = (Account) HH_Container_LCTRL.getHousehold(accounts[0].Id);
 
         Map<Id, Contact[]> contactsByHh = getContactsByHousehold();
         System.assertEquals(accountSize, contactsByHh.size());
@@ -454,7 +454,7 @@ private class HH_Container_TEST {
         insert buildContacts(accounts, contactsPerAccount);
 
         //Refresh the Household data from database
-        accounts[0] = (Account) HH_Container_LCTRL.getHH(accounts[0].Id);
+        accounts[0] = (Account) HH_Container_LCTRL.getHousehold(accounts[0].Id);
 
         Map<Id, Contact[]> contactsByHh = getContactsByHousehold();
         System.assertEquals(accountSize, contactsByHh.size());

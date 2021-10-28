@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Link_Label__c</name>
     <help>El nombre de API para la etiqueta Vínculo en la página Empezar a trabajar. Debe coincidir con una etiqueta importada en el LWC gsLabelMapper.</help>
     <label>Nombre de etiqueta de vínculo</label>
-    <name>Link_Label__c</name>
 </CustomFieldTranslation>

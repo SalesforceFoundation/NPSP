@@ -39,7 +39,35 @@ public with sharing class GE_GiftEntryController {
 
     public static final String PURCHASE_CALL_TIMEOUT_MESSAGE = System.Label.geErrorRequestTimedout;
     private static final String BOOLEAN_DATA_TYPE = 'BOOLEAN';
-    private static GiftBatchService giftBatchService = new GiftBatchService();
+    @TestVisible
+    private static GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    @TestVisible
+    private static GiftService giftService {
+        get {
+            if (giftService == null) {
+                giftService = new GiftService();
+            }
+            return giftService;
+        }
+        set;
+    }
+    private static DonationService donationService {
+        get {
+            if (donationService == null) {
+                donationService = new DonationService();
+            }
+            return donationService;
+        }
+        set;
+    }
 
     @TestVisible
     private static ElevateBatchService elevateBatchService {
@@ -53,8 +81,95 @@ public with sharing class GE_GiftEntryController {
     }
 
     @AuraEnabled
+    public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
+        try {
+            // TODO: currency validity check should happen inside the GiftBatch.add(gift) method
+            if (areCurrenciesValid(dataImportBatchId)) {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                giftBatchService.add(giftBatchId, inboundGift);
+            }
+        } catch (AuraHandledException e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw buildDmlException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView getGiftBatchView(Id dataImportBatchId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+            return giftBatchService.viewModelFrom(giftBatchId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView getGiftBatchViewWithLimitsAndOffsets(
+        Id dataImportBatchId, Integer giftsLimit, Integer giftsOffset){
+            try {
+                GiftBatchId giftBatchId = new GiftBatchId(dataImportBatchId);
+                return giftBatchService.viewModelWithLimitsAndOffsets(giftBatchId, giftsLimit, giftsOffset);
+            } catch (AuraHandledException e) {
+                throw new AuraHandledException(e.getMessage());
+            }
+    }
+
+    @AuraEnabled
+    public static GiftView getGiftView(Id dataImportId){
+        try {
+            GiftId giftId = new GiftId(dataImportId);
+            return giftService.viewModelFrom(giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void saveSingleGift(InboundGiftDTO inboundGift) {
+        try {
+            Gift gift = inboundGift.asGift();
+            giftService.saveSingle(gift);
+        } catch (AuraHandledException e) {
+            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
+            throw buildDmlException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled
+    public static void logError(String error, String context) {
+        try {
+            ERR_Handler.processError(error, context);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
+    }
+
+    @AuraEnabled
+    public static GiftBatchView updateGiftBatchWith(String giftBatchChangesAsJSON){
+        try {
+            InboundGiftBatchDTO giftBatchChanges =
+                (InboundGiftBatchDTO) JSON.deserialize(giftBatchChangesAsJSON, InboundGiftBatchDTO.class);
+            return giftBatchService.store(giftBatchChanges);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static GiftBatchView deleteGiftFromGiftBatch(Id batchId, Id dataImportId){
+        try {
+            GiftBatchId giftBatchId = new GiftBatchId(batchId);
+            GiftId giftId = new GiftId(dataImportId);
+            return giftBatchService.deleteMemberGiftBy(giftBatchId, giftId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
     /*******************************************************************************************************
@@ -164,35 +279,6 @@ public with sharing class GE_GiftEntryController {
         return ex;
     }
 
-    /*******************************************************************************************************
-    * @description Saves the data import record, dry runs the record, and returns updated
-    * totals with the new row.
-    * @param batchId: ID of the NPSP_Data_Import_Batch__c
-    * @param dataImport: the NPSP_Data_Import__c record to update
-    * @return String serialized DataImportModel
-    */
-    @AuraEnabled
-    public static String saveAndDryRunDataImport(Id batchId, DataImport__c dataImport) {
-
-        try {
-            if (!areCurrenciesValid(batchId)) {
-                return null;
-            }
-
-            dataImport.Additional_Object_JSON__c =
-                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
-
-            upsertDataImport(dataImport);
-            return BGE_DataImportBatchEntry_CTRL.runSingleDryRun(dataImport.Id, batchId);
-
-        } catch (Exception ex) {
-            // create custom lwc exception and throw it
-            String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(ex);
-
-            throw buildDmlException(JSONExceptionData);
-        }
-    }
-
     @AuraEnabled
     public static ElevateAuthorizedGift addToElevateBatch(ElevateTokenizedGift tokenizedGift, String elevateBatchId) {
         ElevateAuthorizedGift authorizedGift;
@@ -202,6 +288,16 @@ public with sharing class GE_GiftEntryController {
           UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
         }
         return authorizedGift;
+    }
+
+    @AuraEnabled
+    public static ElevateAuthorizedGift removeFromElevateBatch(ElevateAuthorizedGift authorizedGift) {
+        try {
+           elevateBatchService.removeFromElevateBatch(authorizedGift);
+        } catch (AuraHandledException ex) {
+          UTIL_AuraEnabledCommon.throwAuraHandledException(ex.getMessage());
+        }
+        return null;
     }
 
     @AuraEnabled
@@ -245,27 +341,6 @@ public with sharing class GE_GiftEntryController {
         throw new CurrencyMismatchException(String.format(
             System.Label.geErrorBatchGiftEntryCurrencyMismatch, new List<String>{batchCurrencyIsoCode}
         ));
-    }
-
-    /*******************************************************************************************************
-    * @description Saves the data import record, dry runs the record, and returns updated
-    * totals with the new row.
-    * @param dataImport: the NPSP_Data_Import__c record to update
-    * @param updateGift: If true, BDI will attempt to match to an existing opportunity/payment
-    * @return String serialized DataImportModel
-    */
-    @AuraEnabled
-    public static Id submitDataImportToBDI(DataImport__c dataImport, Boolean updateGift) {
-        dataImport.Additional_Object_JSON__c =
-                convertWidgetDataToObjectJSON(dataImport.Additional_Object_JSON__c);
-
-        // Run the BDI process on this new Data Import
-        processDataImport(dataImport, false, updateGift);
-
-        // Get the ID of the created Opportunity so we can return it
-        Id oppId = getOpportunityIdFromImport(dataImport.Id);
-
-        return oppId;
     }
 
     /*******************************************************************************************************
@@ -345,6 +420,19 @@ public with sharing class GE_GiftEntryController {
             String JSONExceptionData = ERR_ExceptionData.createExceptionWrapperJSONString(e);
 
             throw UTIL_AuraEnabledCommon.buildAuraException(JSONExceptionData);
+        }
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static DonationsView getOpenDonationsView(Id donorId) {
+        try {
+            if (donorId == null) {
+                return null;
+            }
+
+            return donationService.getDonationsView(donorId);
+        } catch (AuraHandledException e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 

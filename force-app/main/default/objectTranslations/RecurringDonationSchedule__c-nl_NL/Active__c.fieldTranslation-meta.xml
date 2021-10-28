@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Active__c</name>
     <help>Stelt vast of Terugkerende Donatieplanning actief of niet-actief is op basis van Einddatum. Alleen-lezen.</help>
     <label>Actief</label>
-    <name>Active__c</name>
 </CustomFieldTranslation>

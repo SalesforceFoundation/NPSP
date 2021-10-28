@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Clear_Invalid_Addresses__c</name>
     <help>オンの場合、サービスが配信不可とマークされた米国の取引先住所は自動的にクリアされます(住所レコードで無効なエントリを確認できます)。</help>
     <label>無効な住所のクリア-廃止</label>
-    <name>Clear_Invalid_Addresses__c</name>
 </CustomFieldTranslation>

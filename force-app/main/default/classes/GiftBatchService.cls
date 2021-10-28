@@ -51,13 +51,44 @@ public with sharing class GiftBatchService {
     }
 
     public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
+        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
         giftBatch.processGifts();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
-        GiftBatch giftBatch = new GiftBatch(batchId);
+        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
         giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
         giftBatch.updateRecords();
+    }
+
+    public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
+        return new GiftBatchView(giftBatchDTO);
+    }
+
+    public GiftBatchView viewModelWithLimitsAndOffsets(
+        GiftBatchId giftBatchId, Integer giftsLimit, Integer giftsOffset) {
+            GiftBatch giftBatch = new GiftBatch(giftBatchId, giftsLimit, giftsOffset);
+            GiftBatchDTO giftBatchDTO = new GiftBatchDTO(giftBatch);
+            return new GiftBatchView(giftBatchDTO);
+    }
+
+    public GiftBatchView store(InboundGiftBatchDTO giftBatchChanges) {
+        GiftBatchId giftBatchId = new GiftBatchId(giftBatchChanges.giftBatchId);
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.updateWith(giftBatchChanges);
+        return viewModelFrom(giftBatchId);
+    }
+
+    public GiftBatchView deleteMemberGiftBy(GiftBatchId giftBatchId, GiftId giftId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.deleteGiftBy(giftId);
+        return viewModelFrom(giftBatchId);
+    }
+
+    public void add(GiftBatchId giftBatchId, InboundGiftDTO inboundGift) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftBatch.add(inboundGift.asGift());
     }
 }

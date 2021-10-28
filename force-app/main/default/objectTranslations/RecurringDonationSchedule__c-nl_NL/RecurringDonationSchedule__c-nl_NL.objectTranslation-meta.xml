@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <layouts>
+        <layout>Recurring Schedule Layout</layout>
+        <sections>
+            <label>Planningsdetails</label>
+            <section>Schedule Details</section>
+        </sections>
+        <sections>
+            <label>Aangepaste koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
+    </layouts>
+    <nameFieldLabel>Nummer van terugkerende planning</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nummer van terugkerende planning</label>
+    </standardFields>
+    <gender>Feminine</gender>
     <caseValues>
         <plural>false</plural>
         <value>Terugkerende donatieplanning</value>
@@ -8,17 +25,4 @@
         <plural>true</plural>
         <value>Terugkerende donatieplanningen</value>
     </caseValues>
-    <gender>Feminine</gender>
-    <layouts>
-        <layout>Recurring Schedule Layout</layout>
-        <sections>
-            <label>Aangepaste koppelingen</label>
-            <section>Custom Links</section>
-        </sections>
-        <sections>
-            <label>Planningsdetails</label>
-            <section>Schedule Details</section>
-        </sections>
-    </layouts>
-    <nameFieldLabel>Nummer van terugkerende planning</nameFieldLabel>
 </CustomObjectTranslation>

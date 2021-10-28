@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChunkSize_Account_HardCredit__c</name>
     <help>LDV 取引先のみ対象。SFDO ガイダンス併用。たくさんの取引先が登録された組織取引先の積み上げ集計バッチジョブでのクエリタイムアウトを防ぐために、この設定は各バッチで処理される取引先の最大数を指定します。</help>
     <label>LDV: 取引先ハードクレジットチャンクサイズ</label>
-    <name>ChunkSize_Account_HardCredit__c</name>
 </CustomFieldTranslation>

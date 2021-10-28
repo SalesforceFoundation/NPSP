@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>この項目の対応付けの対象データインポートオブジェクトグループ。</help>
-    <label>対象オブジェクトの対応付け</label>
     <name>Target_Object_Mapping__c</name>
+    <help>この項目の対応付けの対象データインポートオブジェクトグループ。</help>
     <relationshipLabel>データインポート項目の対応付け</relationshipLabel>
+    <label>対象オブジェクトの対応付け</label>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Change_Type__c</name>
+    <help>この更新が表す変更の種別 (アップグレード、ダウングレードなど)。</help>
+    <label>継続支援の変更種別</label>
+</CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Notification_Recipient_Information__c</name>
     <help>通知受信者の連絡先情報 (支援者によって提供される)。</help>
     <label>通知受信者の情報</label>
-    <name>Notification_Recipient_Information__c</name>
 </CustomFieldTranslation>

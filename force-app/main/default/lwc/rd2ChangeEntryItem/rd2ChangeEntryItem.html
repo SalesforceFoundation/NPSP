@@ -1,0 +1,34 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="4" class="slds-p-horizontal_x-small slds-m-top_medium" data-id="label">
+            {label}
+        </lightning-layout-item>
+        <lightning-layout-item size="8" class="slds-m-top_medium">
+            <lightning-layout>
+                <lightning-layout-item class="slds-p-horizontal_x-small">
+                    <lightning-layout-item data-id="oldValue">
+                        <c-rd2-change-entry-value
+                                value={oldValue}
+                                currency-code={currencyCode}
+                                record-id-value={oldId}
+                                display-type={displayType}
+                        ></c-rd2-change-entry-value>
+                    </lightning-layout-item>
+                    <template if:true={hasNewValue}>
+                        <lightning-layout-item class="slds-p-horizontal_small">
+                            <lightning-icon icon-name="utility:forward" size="x-small"></lightning-icon>
+                        </lightning-layout-item>
+                        <lightning-layout-item data-id="newValue">
+                            <c-rd2-change-entry-value
+                                    value={newValue}
+                                    currency-code={currencyCode}
+                                    record-id-value={newId}
+                                    display-type={displayType}
+                            ></c-rd2-change-entry-value>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

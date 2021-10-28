@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
   <fields>
     <name>npe03__Amount__c</name>
@@ -41,7 +41,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%Day_of_Month__c</name>
-    <help>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don&apos;t have that many days.</help>
+    <help>Sets the specific day of the month for future installment Opportunities when the Installment Period is Monthly. If you select 29 or 30, the installment date will be the last day of the month for months that don't have that many days.</help>
     <label>Day of Month</label>
     <picklistValues>
       <masterLabel>1</masterLabel>
@@ -191,6 +191,11 @@
     <label>Effective Date</label>
   </fields>
   <fields>
+    <name>%%%NAMESPACE%%%EndDate__c</name>
+    <help>The date on which this Recurring Donation was closed.</help>
+    <label>End Date</label>
+  </fields>
+  <fields>
     <name>%%%NAMESPACE%%%Status__c</name>
     <help>Indicates if this Recurring Donation is actively in use, temporarily suspended, or closed.</help>
     <label>Status</label>
@@ -213,7 +218,7 @@
   </fields>
   <fields>
     <name>npe03__Installment_Period__c</name>
-    <help>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
+    <help>The Installment Period along with Installment Frequency defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
     <label>Installment Period</label>
     <picklistValues>
       <masterLabel>Monthly</masterLabel>
@@ -238,7 +243,7 @@
   </fields>
   <fields>
     <name>%%%NAMESPACE%%%InstallmentFrequency__c</name>
-    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as &quot;every 3 months&quot;.</help>
+    <help>The Installment Frequency along with Installment Period defines the installment schedule of this Recurring Donation. For example, if Installment Period is Monthly and Installment Frequency is 3, the schedule is defined as "every 3 months".</help>
     <label>Installment Frequency</label>
   </fields>
   <fields>
@@ -284,5 +289,18 @@
       <section>Custom Links</section>
     </sections>
   </layouts>
+  <nameFieldLabel>Recurring Donation Name</nameFieldLabel>
+  <standardFields>
+    <name>Name</name>
+    <label>Recurring Donation Name</label>
+  </standardFields>
   <startsWith>Consonant</startsWith>
-  </CustomObjectTranslation>
+  <caseValues>
+    <plural>false</plural>
+    <value>Recurring Donation</value>
+  </caseValues>
+  <caseValues>
+    <plural>true</plural>
+    <value>Recurring Donations</value>
+  </caseValues>
+</CustomObjectTranslation>

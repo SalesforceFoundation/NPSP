@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Privatadresse importiert</label>
     <name>HomeAddressImported__c</name>
     <relationshipLabel>NPSP-Datenimporte</relationshipLabel>
+    <label>Privatadresse importiert</label>
 </CustomFieldTranslation>

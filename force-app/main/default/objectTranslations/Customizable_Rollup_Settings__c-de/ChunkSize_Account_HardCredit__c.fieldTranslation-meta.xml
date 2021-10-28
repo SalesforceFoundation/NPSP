@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChunkSize_Account_HardCredit__c</name>
     <help>NUR FÜR ORGANISATIONEN MIT GR. DATENVOL. M. SFDO-ORIENTIERUNGSHILFE. Zur Vermeidung einer Abfr‘zeitüberschr. i. Rollup-Batch-Auftr. in Organisat. mit vielen Mio. Accounts, wird d. max. Anz. an Acc. angeg., die in jedem Batch verarb. werden.</help>
     <label>Gr. Datenvol.: Acc.-Hard Credit-Blockgr.</label>
-    <name>ChunkSize_Account_HardCredit__c</name>
 </CustomFieldTranslation>

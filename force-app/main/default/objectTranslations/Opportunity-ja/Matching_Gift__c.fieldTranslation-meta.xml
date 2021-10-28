@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>この支援のマッチングギフトの商談レコードに対する参照。</help>
-    <label>マッチングギフト</label>
     <name>Matching_Gift__c</name>
+    <help>この支援のマッチングギフトの商談レコードに対する参照。</help>
     <relationshipLabel>マッチングされたギフト</relationshipLabel>
+    <label>マッチングギフト</label>
 </CustomFieldTranslation>

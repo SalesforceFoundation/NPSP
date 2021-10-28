@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La sección en la página Empezar a trabajar de la que forma parte este elemento.</help>
-    <label>Sección de lista de comprobación de GS</label>
     <name>GS_Checklist_Section__c</name>
+    <help>La sección en la página Empezar a trabajar de la que forma parte este elemento.</help>
     <relationshipLabel>Elementos de lista de comprobación de GS</relationshipLabel>
+    <label>Sección de lista de comprobación de GS</label>
 </CustomFieldTranslation>

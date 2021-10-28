@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reminder__c</name>
     <help>Legt eine Erinnerung für die Aufgabe fest.</help>
     <label>Erinnerung</label>
-    <name>Reminder__c</name>
 </CustomFieldTranslation>

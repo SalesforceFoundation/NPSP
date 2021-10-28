@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Status_Reason__c</name>
     <help>Der Grund, warum diese wiederkehrende Spende ihren aktuellen Statuswert hat.</help>
     <label>Grund für Status der wiederkehr. Spende</label>
-    <name>Recurring_Donation_Status_Reason__c</name>
 </CustomFieldTranslation>

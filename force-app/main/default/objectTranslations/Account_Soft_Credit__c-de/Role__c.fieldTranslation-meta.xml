@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Role__c</name>
     <help>Die mit diesem Soft Credit verbundene Rolle. Mithilfe der Rolle wird beschrieben, in welchem Verhältnis der Account zu der Opportunity stand.</help>
     <label>Rolle</label>
-    <name>Role__c</name>
     <picklistValues>
         <masterLabel>Donation Source</masterLabel>
         <translation>Spendenquelle</translation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CMT_API_Status__c</name>
     <help>JSON for the CMT deployment result
 { &quot;jobId&quot;: &quot;repsonse&quot; }</help>
     <label>CMT API Deployment Result</label>
-    <name>CMT_API_Status__c</name>
 </CustomFieldTranslation>

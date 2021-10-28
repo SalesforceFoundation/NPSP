@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>FailureInformation__c</name>
     <help>データインポートレコードのインポートに失敗した理由の説明。</help>
     <label>失敗情報</label>
-    <name>FailureInformation__c</name>
 </CustomFieldTranslation>

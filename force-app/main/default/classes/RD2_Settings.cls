@@ -84,6 +84,13 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Indicates if Recurring Donation Change Log is Enabled
+    */
+    public Boolean isChangeLogEnabled() {
+        return settings.EnableChangeLog__c == true;
+    }
+
+    /***
     * @description Indicates if open installment Opportunities should be deleted when RD is closed
     */
     public Boolean isCloseActionDeletion() {

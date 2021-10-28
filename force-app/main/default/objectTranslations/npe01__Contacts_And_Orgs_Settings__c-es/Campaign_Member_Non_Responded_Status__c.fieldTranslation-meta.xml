@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Campaign_Member_Non_Responded_Status__c</name>
     <help>El estado predeterminado que desea que NPSP utilice en miembros de campaña para oportunidades abiertas o cerradas perdidas con origen de campaña principal y contacto principal asociados. Si se deja en blanco, NPSP utiliza el primer estado no respondido.</help>
     <label>Estado miembro campaña que no responde</label>
-    <name>Campaign_Member_Non_Responded_Status__c</name>
 </CustomFieldTranslation>

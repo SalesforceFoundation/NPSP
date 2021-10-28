@@ -204,5 +204,19 @@
             "message": "Die NPSP-Berichte und -Dashboards werden zusammen mit neuen Testversionen und Installationen von NPSP ab Version 3.90 (Februar 2017) geliefert. Wenn Sie eine frühere Testversion gestartet oder NPSP in einer früheren Version installiert haben, verwenden Sie dieses Installationsprogramm, um die Berichte und Dashboards hinzuzufügen. Umfassende Informationen zu den NPSP-Berichten und -Dashboards finden Sie im [NPSP Reports Workbook](https://powerofus.force.com/articles/Resource/NPSP-Reports-Workbook).\n\nDieses Installationsprogramm setzt die 5 Opportunity-Datensatztypen voraus, die in der Testvorlage des standardmäßigen Nonprofit Starter Packs enthalten sind, und erstellt sie, wenn sie in Ihrer Organisation nicht vorhanden sind. Das Installationsprogramm sucht die Datensatztypen anhand des Entwicklernamens (nicht anhand der Bezeichnung). Wenn Sie also die Entwicklernamen der ursprünglichen Datensatztypen geändert haben, fügt das Installationsprogramm sie erneut hinzu. Dies sind die Entwicklernamen der Datensatztypen:\n \n* Donation (Spende)\n* MajorGift (GrößereSpende)\n* MatchingDonation (Spendenverdopplung)\n* Grant (Unterstützung)\n* Membership (Mitgliedschaft)",
             "description": "shown before user starts installation (markdown)"
         }
+    },
+    "plan:upgrade": {
+        "title": {
+            "message": "Produkt-Upgrade",
+            "description": "title of installation plan"
+        },
+        "preflight_message": {
+            "message": "Dieses Installationsprogramm führt in Ihrer Organisation ein Upgrade dieses Pakets und aller erforderlichen Abhängigkeiten auf die neueste Version durch. Dieses Installationsprogramm wird nicht unterstützt und birgt Risiken. Bitte führen Sie dieses Installationsprogramm nicht aus, es sei denn, Sie sind sich seiner spezifischen Anwendung und der geltenden Überlegungen bewusst.",
+            "description": "shown before user starts installation (markdown)"
+        },
+        "post_install_message": {
+            "message": "Die Installation ist abgeschlossen, und das Paket befindet sich auf dem neuesten Versionsstand.",
+            "description": "shown after successful installation (markdown)"
+        }
     }
 }

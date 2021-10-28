@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Role_for_Organizational_Opps__c</name>
     <help>De standaard Contactpersoonrol die automatisch wordt toegewezen aan de Primaire Contactpersoon voor de Opportunities wanneer de Account van de Opportunity GEEN Huishouden- of One-to-One-Account of Individuele Account is.</help>
     <label>Contactpersoonrol voor Organisatie-Opp.</label>
-    <name>Contact_Role_for_Organizational_Opps__c</name>
 </CustomFieldTranslation>

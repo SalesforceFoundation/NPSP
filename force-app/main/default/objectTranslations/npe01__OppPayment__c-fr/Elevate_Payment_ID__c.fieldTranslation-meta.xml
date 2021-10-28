@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Payment_ID__c</name>
     <help>L’ID unique pour cette transaction d’Elevate.</help>
     <label>ID de paiement Elevate</label>
-    <name>Elevate_Payment_ID__c</name>
 </CustomFieldTranslation>

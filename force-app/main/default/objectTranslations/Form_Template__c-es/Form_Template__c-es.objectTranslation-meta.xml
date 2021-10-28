@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Plantilla de formulario</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Plantillas de formularios</value>
-    </caseValues>
-    <gender>Feminine</gender>
     <layouts>
         <layout>Form Template Layout</layout>
         <sections>
@@ -17,4 +8,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Nombre de plantilla de formulario</nameFieldLabel>
+    <standardFields>
+        <name>Name</name>
+        <label>Nombre de plantilla de formulario</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Plantilla de formulario</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Plantillas de formularios</value>
+    </caseValues>
 </CustomObjectTranslation>

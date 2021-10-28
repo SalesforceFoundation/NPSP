@@ -11,11 +11,11 @@
     <layouts>
         <layout>Filter Group Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label/>
             <section>New Section</section>
         </sections>
     </layouts>

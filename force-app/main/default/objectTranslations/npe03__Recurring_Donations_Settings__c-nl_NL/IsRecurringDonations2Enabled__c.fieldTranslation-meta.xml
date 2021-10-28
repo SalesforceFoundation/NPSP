@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>IsRecurringDonations2Enabled__c</name>
     <help>Deze optie schakelt Uitgebreide terugkerende donaties in. BELANGRIJK: u moet Uitgebreide terugkerende donaties inschakelen in NPSP-Instellingen. Inschakelen in Aangepaste instellingen kan leiden tot gegevensinconsistenties.</help>
     <label>Uitgebreide terugkerende donaties</label>
-    <name>IsRecurringDonations2Enabled__c</name>
 </CustomFieldTranslation>

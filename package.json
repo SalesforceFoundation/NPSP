@@ -1,7 +1,7 @@
 {
   "devDependencies": {
-    "@sa11y/jest": "^0.3.0",
-    "@salesforce/sfdx-lwc-jest": "^0.12.1",
+    "@sa11y/jest": "^0.5.0",
+    "@salesforce/sfdx-lwc-jest": "^1.0.1",
     "jest": "^26.6.3"
   },
   "resolutions": {
@@ -12,7 +12,8 @@
   "scripts": {
     "test:unit": "lwc-jest --skipApiVersionCheck",
     "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
-    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck"
+    "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck",
+    "test:unit:a11y": "SA11Y_AUTO=1 SA11Y_CLEANUP=1 lwc-jest --skipApiVersionCheck"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"

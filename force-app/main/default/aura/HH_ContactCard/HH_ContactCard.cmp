@@ -1,6 +1,7 @@
 <aura:component >
     <!-- our attributes -->
     <aura:attribute name="contact" type="Object" access="public" />
+    <aura:attribute name="contactUndeliverableLabel" type="String" access="public" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactChangedEvent" type="c:HH_ContactChangedEvent" />
@@ -20,7 +21,9 @@
                             <aura:if isTrue="{!v.contact.Id != null}">
                             	<a href="{! '/' + v.contact.Id}" target="_blank">{!v.contact.Name}</a>
                             	<aura:set attribute="else">
-                                    <ui:outputText value="{!v.contact.FirstName + ' ' + v.contact.LastName}"/>
+                                    <lightning:formattedText
+                                            value="{!v.contact.FirstName + ' ' + v.contact.LastName}"
+                                            title="{!v.contact.FirstName + ' ' + v.contact.LastName}" />
                                 </aura:set>
                             </aura:if>
                         </div>
@@ -36,11 +39,19 @@
         <div class="slds-card__body slds-m-around_x-small slds-p-vertical_none" id="contactCard">
             <!-- address -->
             <div class="slds-text-body_small slds-m-bottom_small">
-                <ui:outputText value="{!v.contact.MailingStreet}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '') + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}" /><br/>
-                <ui:outputText value="{!v.contact.MailingCountry}" />
+                <lightning:formattedText value="{!v.contact.MailingStreet}" title="{!v.contact.MailingStreet}"/><br/>
+                <lightning:formattedText value="{!v.contact.MailingCity +
+                                                (v.contact.MailingState != null ? ', ' : '') +
+                                                v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"
+                                         title="{!v.contact.MailingCity + (v.contact.MailingState != null ? ', ' : '')
+                                         + v.contact.MailingState + ' ' + v.contact.MailingPostalCode + ' '}"/><br/>
+                <lightning:formattedText value="{!v.contact.MailingCountry}" title="{!v.contact.MailingCountry}" />
                 <aura:if isTrue="{!v.contact.is_Address_Override__c}">
                     <br/><i>{!$Label.c.lblAddressOverride}</i>
+                </aura:if>
+                <aura:if isTrue="{!v.contact.Undeliverable_Address__c}">
+                    <lightning:input type="checkbox" disabled="true" label="{!v.contactUndeliverableLabel}"
+                                     checked="{!v.contact.Undeliverable_Address__c}" />
                 </aura:if>
             </div>
 
@@ -49,35 +60,35 @@
                     <legend class="form-element__legend slds-form-element__label">{!$Label.c.lblCCardExcludeFrom}</legend>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Name__c"
-                                    class="slds-checkbox" change="{!c.onCheck}"
-                                    value="{!v.contact.Exclude_from_Household_Name__c }"/>
-                                <span class="slds-checkbox_faux" id="fauxCBExName"></span>
-                                <span class="slds-form-element__label" for="exHHName">{!$Label.c.lblHouseholdName} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Name__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Name__c}"
+                                label="{!$Label.c.lblHouseholdName}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Name__c"
+                            />
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Formal_Greeting__c"
-                                    class="slds-checkbox" change="{!c.onCheck}"
-                                    value="{!v.contact.Exclude_from_Household_Formal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux" id="fauxCBFormal"></span>
-                                <span class="slds-form-element__label">{!$Label.c.lblFormalGreeting} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Formal_Greeting__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Formal_Greeting__c}"
+                                label="{!$Label.c.lblFormalGreeting}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Formal_Greeting__c"
+                            />
                         </div>
                     </div>
                     <div class="slds-form-element">
                         <div class="slds-form-element__control">
-                            <label class="slds-checkbox">
-                                <ui:inputCheckbox aura:id="Exclude_from_Household_Informal_Greeting__c"
-                                class="slds-checkbox" change="{!c.onCheck}"
-                                value="{!v.contact.Exclude_from_Household_Informal_Greeting__c }"/>
-                                <span class="slds-checkbox_faux" id="fauxCBInformal"></span>
-                                <span class="slds-form-element__label">{!$Label.c.lblInformalGreeting} </span>
-                            </label>
+                            <lightning:input aura:id="Exclude_from_Household_Informal_Greeting__c"
+                                type="checkbox" 
+                                checked="{!v.contact.Exclude_from_Household_Informal_Greeting__c}"
+                                label="{!$Label.c.lblInformalGreeting}"
+                                onchange="{!c.onCheck}"
+                                name="Exclude_from_Household_Informal_Greeting__c"
+                            />
                         </div>
                     </div>
                 </fieldset>

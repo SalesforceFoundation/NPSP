@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Authorized_Date__c</name>
     <help>La date et l’heure auxquelles la transaction a été autorisée.</help>
     <label>Date autorisée du paiement</label>
-    <name>Payment_Authorized_Date__c</name>
 </CustomFieldTranslation>

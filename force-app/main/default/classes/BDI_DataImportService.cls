@@ -1875,7 +1875,7 @@ global with sharing class BDI_DataImportService {
                 if (accHH != null) {
                     NPSP_Address npspAddress = new NPSP_Address(addr);
                     NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(accHH);
-                    npspHousehold.billingAddress(npspAddress);
+                    npspHousehold.setBillingAddress(npspAddress);
                     if (setIdUpdate.add(accHH.Id)) {
                         listAccUpdate.add(npspHousehold.getRecord());
                         listAccDi.add(dataImport);

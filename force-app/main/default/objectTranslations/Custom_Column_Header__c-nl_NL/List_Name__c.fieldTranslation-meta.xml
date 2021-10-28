@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>List_Name__c</name>
     <help>De lijstweergave (bijvoorbeeld Batches of Sjablonen) die dit veld weergeeft.</help>
     <label>Lijstnaam</label>
-    <name>List_Name__c</name>
 </CustomFieldTranslation>

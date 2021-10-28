@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UseFiscalYearForRecurringDonationValue__c</name>
     <help>Diese Option legt für die Summen wiederkehrender Spenden das Geschäftsjahr zugrunde. Anfangsmonat festlegen: Einrichtung | Unternehmensprofil | Geschäftsjahr. HINWEIS: Nur Standard-Geschäftsjahr verwenden. Benutzerdef. Geschäftsjahr nicht aktivieren.</help>
     <label>Geschäftsjahr für wiederkehrende Spenden</label>
-    <name>UseFiscalYearForRecurringDonationValue__c</name>
 </CustomFieldTranslation>

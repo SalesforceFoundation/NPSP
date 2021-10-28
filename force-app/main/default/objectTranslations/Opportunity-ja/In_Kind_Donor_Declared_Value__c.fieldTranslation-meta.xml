@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Donor_Declared_Value__c</name>
     <help>支援者がこの現物支援の適正な市場価格を入力している場合はオンにします。</help>
     <label>現物支援者の申告価格</label>
-    <name>In_Kind_Donor_Declared_Value__c</name>
 </CustomFieldTranslation>

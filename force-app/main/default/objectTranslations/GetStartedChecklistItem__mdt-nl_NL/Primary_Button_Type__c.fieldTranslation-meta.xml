@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Primary_Button_Type__c</name>
     <help>Het soort actie dat aan de primaire knop is gekoppeld. Geeft aan of de knop is uitgeschakeld, een nieuw Salesforce-tabblad opent of een externe pagina opent.</help>
     <label>Type primaire knop</label>
-    <name>Primary_Button_Type__c</name>
     <picklistValues>
         <masterLabel>Disabled</masterLabel>
         <translation>Uitgeschakeld</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>External Page</masterLabel>
-        <translation>Externe pagina</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>SFDC New Tab</masterLabel>
         <translation>Nieuw tabblad SFDC</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>External Page</masterLabel>
+        <translation>Externe pagina</translation>
     </picklistValues>
 </CustomFieldTranslation>

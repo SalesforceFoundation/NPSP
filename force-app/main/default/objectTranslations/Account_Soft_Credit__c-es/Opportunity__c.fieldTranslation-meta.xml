@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>La oportunidad a la que se aplica este crédito blando.</help>
-    <label>Oportunidad</label>
     <name>Opportunity__c</name>
+    <help>La oportunidad a la que se aplica este crédito blando.</help>
     <relationshipLabel>Créditos blandos de cuenta</relationshipLabel>
+    <label>Oportunidad</label>
 </CustomFieldTranslation>

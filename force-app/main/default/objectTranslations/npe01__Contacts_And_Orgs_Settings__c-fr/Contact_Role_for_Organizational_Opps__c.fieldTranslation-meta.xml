@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Contact_Role_for_Organizational_Opps__c</name>
     <help>Le rôle de contact par défaut assigné automatiquement au contact Opportunité principal de l’opportunité lorsque le compte opportunité n’est PAS un compte de foyer, un-à-un ou individuel.</help>
     <label>Rôle de contact pour opportunités org.</label>
-    <name>Contact_Role_for_Organizational_Opps__c</name>
 </CustomFieldTranslation>

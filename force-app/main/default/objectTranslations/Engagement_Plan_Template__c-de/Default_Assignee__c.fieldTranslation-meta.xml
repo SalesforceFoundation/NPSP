@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Default_Assignee__c</name>
     <help>Wem soll die Aufgabe zugewiesen werden, wenn das Feld &quot;Zugewiesen zu&quot; einer Engagementplan-Aufgabe leer gelassen wird?</help>
     <label>Standard-Empfänger</label>
-    <name>Default_Assignee__c</name>
     <picklistValues>
         <masterLabel>Owner of Object for Engagement Plan</masterLabel>
         <translation>Eigentümer des Objekts für den Engagementplan</translation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>UTM_Content__c</name>
+    <help>Google Analytics-parameter voor het onderscheiden van vergelijkbare inhoud of koppelingen binnen een verzoek.</help>
+    <label>UTM-inhoud</label>
+</CustomFieldTranslation>

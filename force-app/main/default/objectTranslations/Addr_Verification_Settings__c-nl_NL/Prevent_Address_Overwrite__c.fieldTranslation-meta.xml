@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Prevent_Address_Overwrite__c</name>
     <help>Voorkomt dat de Cicero API tijdens de verificatie Adressen overschrijft.</help>
     <label>Overschrijven van Adressen Voorkomen</label>
-    <name>Prevent_Address_Overwrite__c</name>
 </CustomFieldTranslation>
