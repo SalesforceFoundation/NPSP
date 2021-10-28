@@ -255,4 +255,38 @@ public with sharing class GE_Template_TEST {
             return null;
         }
     }
+    
+    @IsTest
+    static void defaultTemplate() {
+        Form_Template__c t = GE_Template.buildDefaultTemplate();
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + t);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ t ^^^^^^');
+    }
+
+    @IsTest (SeeAllData=true)
+    static void defaultTemplateShouldNotIncludeDeletedFieldMappings() {
+        // GIVEN a field mapping has been deleted
+        // WHEN the default template is generated
+        // THEN it should not include deleted field mappings
+        //Todo: mock the Selector
+        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList =
+            DataImportFieldMappingSelector.newInstance().getDataImportFieldMappings();
+
+        Form_Template__c f = GE_Template.buildDefaultTemplate();
+
+        GE_Template.Template t = GE_GiftEntryController.deserializeFormTemplateFromObj(f);
+
+        System.assertEquals(false,
+                t.layout.containsField(npe01__OppPayment__c.npe01__Payment_Method__c),
+                'The layout should not include fields that do not have field mappings.');
+    }
+
+    @IsTest (SeeAllData=true)
+    static void defaultTemplateShouldNotIncludeFieldsWithoutFieldMappings() {
+        //Only the migrated field mappings should be removed if deleted.  IF there are any
+//        other field mappings for this source field they should remain.  these would be
+        // if a User deleted the original "migrated" mapping, and then created a new mapping
+        // for the same source field.
+        //
+    }
 }
