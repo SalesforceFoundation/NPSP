@@ -64,6 +64,10 @@ export default class GeBatchGiftEntryHeader extends LightningElement {
         return `button ${this.LABELS.geEditBatchInfo}`;
     }
 
-    // Public property below is deprecated.
+    // Public properties below are deprecated.
     @api isPermissionError;
+    @api batchId;
+    @api batchTotals = {};
+    @api isElevateCustomer;
+    @api isBatchProcessing;
 }
