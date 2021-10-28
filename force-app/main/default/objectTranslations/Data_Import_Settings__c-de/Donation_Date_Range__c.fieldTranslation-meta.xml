@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Date_Range__c</name>
     <help>Eing. d. Anz. an Tagen ab dem Spendendatum, die auf der Suche nach einer übereinst. Opp. O. Zahlung zu berücks. sind. Das Datenimp‘progr. wählt die übereinst. Opp. o. Zahl. aus, deren Datum in die Anz. an Tagen fällt UND am nächsten am Spendendatum liegt.</help>
     <label>Anzahl der Tage ab Spendendatum</label>
-    <name>Donation_Date_Range__c</name>
 </CustomFieldTranslation>

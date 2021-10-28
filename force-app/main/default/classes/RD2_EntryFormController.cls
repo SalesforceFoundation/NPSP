@@ -87,6 +87,8 @@ public with sharing class RD2_EntryFormController {
             'InstallmentFrequencyPermissions' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
             'customFieldSets' => getCustomFieldSectionFields(),
             'isElevateCustomer' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+            'isChangeLogEnabled' => RD2_ChangeLogService.isChangeLogEnabled,
+            'periodToYearlyFrequencyMap' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
             'closedStatusValues' => RD2_StatusMapper.getInstance().getClosedStatusValues()
         };
     }

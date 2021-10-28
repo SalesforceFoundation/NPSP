@@ -1,0 +1,68 @@
+{
+  "apiName": "Contact",
+  "childRelationships": {},
+  "fields": {
+    "Birthdate": {
+      "displayValue": null,
+      "value": null
+    },
+    "FirstName": {
+      "displayValue": null,
+      "value": "History"
+    },
+    "HomePhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "LastName": {
+      "displayValue": null,
+      "value": "Tester"
+    },
+    "MobilePhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "OtherPhone": {
+      "displayValue": null,
+      "value": null
+    },
+    "Salutation": {
+      "displayValue": "Mr.",
+      "value": "Mr."
+    },
+    "Title": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__AlternateEmail__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__HomeEmail__c": {
+      "displayValue": "fake_contact@example.org",
+      "value": "fake_contact@example.org"
+    },
+    "npe01__PreferredPhone__c": {
+      "displayValue": "Home",
+      "value": "Home"
+    },
+    "npe01__Preferred_Email__c": {
+      "displayValue": "Personal",
+      "value": "Personal"
+    },
+    "npe01__WorkEmail__c": {
+      "displayValue": null,
+      "value": null
+    },
+    "npe01__WorkPhone__c": {
+      "displayValue": null,
+      "value": null
+    }
+  },
+  "id": "003_fake_contact_id",
+  "lastModifiedById": "005P0000008DY1xIAG",
+  "lastModifiedDate": "2021-08-03T18:49:07.000Z",
+  "recordTypeId": "012000000000000AAA",
+  "recordTypeInfo": null,
+  "systemModstamp": "2021-08-03T18:49:07.000Z"
+}

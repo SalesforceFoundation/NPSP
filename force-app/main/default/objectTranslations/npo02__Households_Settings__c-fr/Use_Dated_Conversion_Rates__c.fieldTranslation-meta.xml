@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Use_Dated_Conversion_Rates__c</name>
     <help>Si coché, les taux de conversion datés sont utilisés lorsque la gestion avancée des devises est activée. Si décochée et que la gestion avancée des devises est activée, tous les cumuls NPSP utiliseront le taux de change par défaut pour la devise.</help>
     <label>Utiliser taux convers. datés si néces.</label>
-    <name>Use_Dated_Conversion_Rates__c</name>
 </CustomFieldTranslation>

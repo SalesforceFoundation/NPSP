@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>絞り込みルール</value>
-    </caseValues>
     <layouts>
         <layout>Filter Rule Layout</layout>
         <sections>
@@ -11,4 +7,8 @@
             <section>Custom Links</section>
         </sections>
     </layouts>
+    <caseValues>
+        <plural>false</plural>
+        <value>絞り込みルール</value>
+    </caseValues>
 </CustomObjectTranslation>

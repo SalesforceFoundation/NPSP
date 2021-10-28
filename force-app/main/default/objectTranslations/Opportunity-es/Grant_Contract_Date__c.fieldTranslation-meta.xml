@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Contract_Date__c</name>
     <help>Fecha de inicio de la beca, de acuerdo a la documentación o el contrato enviado por la organización que otorga la beca.</help>
     <label>Fecha de contrato de beca</label>
-    <name>Grant_Contract_Date__c</name>
 </CustomFieldTranslation>

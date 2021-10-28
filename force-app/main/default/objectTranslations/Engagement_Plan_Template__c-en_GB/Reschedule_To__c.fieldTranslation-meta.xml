@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reschedule_To__c</name>
     <help>Should Tasks with Due Dates on a weekend day be scheduled for the Friday before the weekend or the Monday after? This applies only if Skip Weekend is selected.</help>
     <label>Reschedule To</label>
-    <name>Reschedule_To__c</name>
-    <picklistValues>
-        <masterLabel>Friday</masterLabel>
-        <translation>Friday</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Monday</masterLabel>
         <translation>Monday</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Friday</translation>
     </picklistValues>
 </CustomFieldTranslation>

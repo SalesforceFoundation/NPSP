@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>First_Soft_Credit_Amount__c</name>
     <help>Het bedrag van de eerste soft credit van deze Contactpersoon.</help>
     <label>Bedrag van Eerste Soft Credit</label>
-    <name>First_Soft_Credit_Amount__c</name>
 </CustomFieldTranslation>

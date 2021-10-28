@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousExpectedTotalValue__c</name>
+    <help>De vorige verwachte totale waarde voor deze vaste terugkerende donatie, op basis van het bedrag en de planning.</help>
+    <label>Vorige verwachte totale waarde</label>
+</CustomFieldTranslation>

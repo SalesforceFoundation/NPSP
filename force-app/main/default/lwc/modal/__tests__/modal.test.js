@@ -1,9 +1,7 @@
 import { createElement } from "lwc";
-import { registerSa11yMatcher } from '@sa11y/jest'
 import Modal from "c/modal";
 
 const CSS_CLASS = "modal-hidden";
-registerSa11yMatcher();
 
 describe("c-modal", () => {
     let element;
@@ -30,7 +28,6 @@ describe("c-modal", () => {
 
             const headerSlotEl = element.shadowRoot.querySelector('slot[name="header"]');
             expect(headerSlotEl).toBeNull();
-            await expect(element).toBeAccessible();
         });
     });
 

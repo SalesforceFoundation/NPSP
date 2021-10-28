@@ -37,6 +37,7 @@
 
 public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
+    static final String FIELD_ELEMENT_TYPE = 'field';
 
     /**
      * @description This method determines if there is a default template, 
@@ -265,6 +266,33 @@ public with sharing class GE_Template {
             this.version = version;
             this.layout = layout;
         }
+
+        public List<String> giftFieldApiNames() {
+            List<Element> allElements = new List<Element>();
+            for (Section section : this.layout.sections) {
+                allElements.addAll(section.elements);
+            }
+
+            List<String> giftFieldApiNames = new List<String>();
+            BDI_FieldMappingSet fieldMappings = BDI_MappingServiceAdvanced.getInstance(false).fieldMappingSet;
+            for (Element element : allElements) {
+
+                if (element.elementType == FIELD_ELEMENT_TYPE && element.dataImportFieldMappingDevNames.size() > 0) {
+                    String fieldMappingDeveloperName = element.dataImportFieldMappingDevNames[0];
+                    BDI_FieldMapping fieldMapping = fieldMappings.fieldMappingByDevName.get(fieldMappingDeveloperName);
+
+                    Boolean isReferenceFieldMappedInObjectMapping = fieldMapping == null;
+                    if (isReferenceFieldMappedInObjectMapping) {
+                        giftFieldApiNames.add(element.fieldApiName);
+                    } else {
+                        String sourceFieldDevName = fieldMapping.Source_Field_API_Name;
+                        giftFieldApiNames.add(sourceFieldDevName);
+                    }
+                }
+            }
+
+            return giftFieldApiNames;
+        }
     }
 
     /**
@@ -398,7 +426,6 @@ public with sharing class GE_Template {
     */
     public class PermissionValidator {
 
-        public final String FIELD_ELEMENT_TYPE = 'field';
         Template template;
         Set<AccessLevel> accessLevels;
         UTIL_Permissions permissionsService = UTIL_Permissions.getInstance();

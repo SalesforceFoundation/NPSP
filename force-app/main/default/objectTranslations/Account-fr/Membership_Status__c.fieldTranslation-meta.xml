@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Membership_Status__c</name>
     <help>Le statut d’adhésion du foyer : Actuel, expiré ou en période de grâce. La valeur est basée sur la date de fin de l’adhésion et la période de grâce. La période de grâce par défaut est définie dans les param. NSPS, sous Param. de foyer (lecture seule).</help>
     <label>Statut d’adhésion</label>
-    <name>Membership_Status__c</name>
 </CustomFieldTranslation>

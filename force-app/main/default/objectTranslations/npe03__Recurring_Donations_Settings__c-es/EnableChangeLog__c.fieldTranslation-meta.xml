@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>EnableChangeLog__c</name>
+    <help>Cuando se activa, NPSP crea un registro Registro de cambios de donación recurrente cada vez que se actualizan los campos de importe, programación o campaña de una donación recurrente.</help>
+    <label>Activar registro cambios donación recurr</label>
+</CustomFieldTranslation>

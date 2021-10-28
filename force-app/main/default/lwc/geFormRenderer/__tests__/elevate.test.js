@@ -10,7 +10,7 @@ jest.mock('@salesforce/apex/GE_GiftEntryController.createElevateBatch',
     { virtual: true }
 );
 
-import ElevateBatch from "../elevateBatch";
+import ElevateBatch from "../../geElevateBatch/geElevateBatch";
 import ElevateTokenizeableGift from "../elevateTokenizeableGift";
 
 describe('elevate-elevate-batch', () => {

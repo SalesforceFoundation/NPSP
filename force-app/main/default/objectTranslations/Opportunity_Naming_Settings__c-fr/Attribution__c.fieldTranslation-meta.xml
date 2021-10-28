@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Attribution__c</name>
     <help>Détermine si ce paramètre s’applique aux opportunités individuelles, organisationnelles, ou les deux.</help>
     <label>Attribution</label>
-    <name>Attribution__c</name>
 </CustomFieldTranslation>

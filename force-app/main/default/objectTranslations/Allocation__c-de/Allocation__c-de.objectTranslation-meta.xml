@@ -1,50 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Manage Allocations Additional Fields --></label>
-        <name>ManageAllocationsAdditionalFields</name>
-    </fieldSets>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Manage_Allocations</name>
+        <label>Zuweisungen verwalten</label>
+    </webLinks>
     <layouts>
         <layout>Allocation Layout</layout>
         <sections>
@@ -53,8 +12,49 @@
         </sections>
     </layouts>
     <nameFieldLabel>Name der Verwendungszweck-Zuweisung</nameFieldLabel>
-    <webLinks>
-        <label>Zuweisungen verwalten</label>
-        <name>Manage_Allocations</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Name der Verwendungszweck-Zuweisung</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Zuordnung zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Zuordnungen zur allgemeinen Verrechnungseinheit</value>
+    </caseValues>
 </CustomObjectTranslation>

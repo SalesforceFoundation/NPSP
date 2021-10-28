@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Opzoeking van de Batch voor NPSP-Gegevensimport waar deze record bij hoort.</help>
-    <label>Batch voor NPSP-Gegevensimport</label>
     <name>NPSP_Data_Import_Batch__c</name>
+    <help>Opzoeking van de Batch voor NPSP-Gegevensimport waar deze record bij hoort.</help>
     <relationshipLabel>NPSP-Gegevensimports</relationshipLabel>
+    <label>Batch voor NPSP-Gegevensimport</label>
 </CustomFieldTranslation>

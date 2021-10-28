@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Informal_Greeting_Format__c</name>
     <help>Het formaat dat gebruikt wordt voor de Informele Begroeting voor Huishoudens.</help>
     <label>Formaat van Informele Begroeting</label>
-    <name>Informal_Greeting_Format__c</name>
 </CustomFieldTranslation>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Valid entries are Active, Lapsed, and Closed. --></help>
-    <label><!-- Recurring Donation State --></label>
+    <help/>
+    <label/>
     <name>State__c</name>
     <picklistValues>
         <masterLabel>Active</masterLabel>
-        <translation><!-- Active --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Closed</masterLabel>
-        <translation><!-- Closed --></translation>
+        <translation/>
     </picklistValues>
     <picklistValues>
         <masterLabel>Lapsed</masterLabel>
-        <translation><!-- Lapsed --></translation>
+        <translation/>
     </picklistValues>
 </CustomFieldTranslation>

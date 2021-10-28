@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</help>
-    <label>Previous Grant/Gift Opportunity</label>
     <name>Previous_Grant_Opportunity__c</name>
+    <help>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</help>
     <relationshipLabel>Related Grants/Gifts</relationshipLabel>
+    <label>Previous Grant/Gift Opportunity</label>
 </CustomFieldTranslation>

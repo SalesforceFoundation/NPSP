@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>住所</value>
-    </caseValues>
+    <webLinks>
+        <name>Verify_Address</name>
+        <label>住所を検証</label>
+    </webLinks>
     <layouts>
         <layout>Address Layout</layout>
+        <sections>
+            <label>季節性情報</label>
+            <section>Seasonal Information</section>
+        </sections>
         <sections>
             <label>住所検証</label>
             <section>Address Verification</section>
@@ -14,18 +18,14 @@
             <label>カスタムリンク</label>
             <section>Custom Links</section>
         </sections>
-        <sections>
-            <label>季節性情報</label>
-            <section>Seasonal Information</section>
-        </sections>
     </layouts>
     <nameFieldLabel>住所 ID</nameFieldLabel>
-    <quickActions>
-        <label>住所を更新</label>
-        <name>Update_Address</name>
-    </quickActions>
-    <webLinks>
-        <label>住所を検証</label>
-        <name>Verify_Address</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>住所 ID</label>
+    </standardFields>
+    <caseValues>
+        <plural>false</plural>
+        <value>住所</value>
+    </caseValues>
 </CustomObjectTranslation>

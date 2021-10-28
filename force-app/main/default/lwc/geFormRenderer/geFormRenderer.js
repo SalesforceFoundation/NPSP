@@ -2,7 +2,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 
 import sendPurchaseRequest from '@salesforce/apex/GE_GiftEntryController.sendPurchaseRequest';
 import upsertDataImport from '@salesforce/apex/GE_GiftEntryController.upsertDataImport';
-import submitDataImportToBDI from '@salesforce/apex/GE_GiftEntryController.submitDataImportToBDI';
 import validateAuthorizedGiftEdit from '@salesforce/apex/GE_GiftEntryController.validateAuthorizedGiftEdit';
 import getPaymentTransactionStatusValues from '@salesforce/apex/GE_PaymentServices.getPaymentTransactionStatusValues';
 import { getCurrencyLowestCommonDenominator } from 'c/utilNumberFormatter';
@@ -66,10 +65,12 @@ import {
     relatedRecordFieldNameFor,
     apiNameFor,
     isString,
-    showToast
+    showToast,
+    isEmptyObject
 } from 'c/utilCommon';
 import ExceptionDataError from './exceptionDataError';
-import ElevateBatch from './elevateBatch';
+import ElevateBatch from 'c/geElevateBatch';
+import Gift from 'c/geGift';
 import ElevateTokenizeableGift from './elevateTokenizeableGift';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import FORM_TEMPLATE_FIELD from '@salesforce/schema/DataImportBatch__c.Form_Template__c';
@@ -125,6 +126,7 @@ import DATA_IMPORT_ACCOUNT1_NAME
 import userSelectedMatch from '@salesforce/label/c.bdiMatchedByUser';
 import userSelectedNewOpp from '@salesforce/label/c.bdiMatchedByUserNewOpp';
 import applyNewPayment from '@salesforce/label/c.bdiMatchedApplyNewPayment';
+import bgeGridGiftSaved from '@salesforce/label/c.bgeGridGiftSaved';
 import CURRENCY from '@salesforce/i18n/currency';
 
 const mode = {
@@ -155,10 +157,12 @@ export default class GeFormRenderer extends LightningElement{
     @api sections = [];
     @api showSpinner = false;
     @api batchId;
+    @api gift;
     @api submissions = [];
     @api hasPageLevelError = false;
     @api pageLevelErrorMessageList = [];
     @api batchCurrencyIsoCode;
+    @api isElevateCustomer = false;
 
     @track isPermissionError = false;
     @track permissionErrorTitle;
@@ -177,6 +181,7 @@ export default class GeFormRenderer extends LightningElement{
     latestElevateBatchId = null;
     cardholderNamesNotInTemplate = {};
     _openedGiftId;
+    currentElevateBatch = new ElevateBatch();
 
     erroredFields = [];
     CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
@@ -193,15 +198,19 @@ export default class GeFormRenderer extends LightningElement{
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
-        } else if (this.isAPaymentId(record.Id)) {
-            this.setSelectedPaymentInFormState(record);
-            this.loadPaymentAndParentDonationFieldValues(record);
-        } else if (this.isAnOpportunityId(record.Id)) {
-            this.setSelectedDonationInFormState(record, record.applyPayment);
-            this.loadSelectedDonationFieldValues(record);
+        } else if (this.isAPaymentId(record.fields.Id)) {
+            this.setSelectedPaymentInFormState(record.fields);
+            this.loadPaymentAndParentDonationFieldValues(record.fields);
+        } else if (this.isAnOpportunityId(record.fields.Id)) {
+            this.setSelectedDonationInFormState(record.fields, record.fields.applyPayment);
+            this.loadSelectedDonationFieldValues(record.fields);
         } else {
             throw 'Unsupported selected donation type!';
         }
+
+        const reviewDonationsChangeEvent = new CustomEvent(
+            'reviewdonationschange', { detail: { record: record } });
+        this.dispatchEvent(reviewDonationsChangeEvent);
     }
 
     setSelectedPaymentInFormState(record) {
@@ -283,6 +292,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     connectedCallback() {
+        this._connected = true;
         getPaymentTransactionStatusValues()
             .then(response => {
                 this.PAYMENT_TRANSACTION_STATUS_ENUM = Object.freeze(JSON.parse(response));
@@ -293,6 +303,8 @@ export default class GeFormRenderer extends LightningElement{
         registerListener('nullPaymentFieldsInFormState', this.handleNullPaymentFieldsInFormState, this);
         registerListener('formRendererReset', this.reset, this);
         registerListener('widgetStateChange', this.handleWidgetStateChange, this);
+        registerListener('formfieldchange', this.handleFormFieldChange, this);
+        registerListener('formwidgetchange', this.handleFormWidgetChange, this);
 
         GeFormService.getFormTemplate().then(response => {
             if (this.batchId) {
@@ -486,9 +498,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCancel() {
-        this.reset();
-        this.initializeFormState();
-
         if (this.isSingleGiftEntry) {
             const originatedFromRecordDetailPage = getQueryParameters().c__donorRecordId;
             if (originatedFromRecordDetailPage) {
@@ -496,6 +505,10 @@ export default class GeFormRenderer extends LightningElement{
             } else {
                 this.goToLandingPage();
             }
+        } else {
+            this.dispatchEvent(new CustomEvent('clearcurrentgift'));
+            this.reset();
+            this.initializeFormState();
         }
     }
 
@@ -561,16 +574,18 @@ export default class GeFormRenderer extends LightningElement{
                     formControls.enableSaveButton();
                     formControls.toggleSpinner();
                     reset();
-                    
-                    if (isCreditCardAuth) {
-                        showToast(
-                            this.CUSTOM_LABELS.PageMessagesConfirm,
-                            this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess, 
-                            'success', 
-                            'dismissible', 
-                            null
-                        );
-                    }
+
+                    const toastMessage = isCreditCardAuth
+                        ? this.CUSTOM_LABELS.geAuthorizedCreditCardSuccess
+                        : bgeGridGiftSaved;
+
+                    showToast(
+                        this.CUSTOM_LABELS.PageMessagesConfirm,
+                        toastMessage,
+                        'success',
+                        'dismissible',
+                        null
+                    );
                 },
                 error: (error) => {
                     formControls.enableSaveButton();
@@ -728,14 +743,50 @@ export default class GeFormRenderer extends LightningElement{
             if (!canUpdate) { return; }
         }
 
-        const hasSaved = await this.saveDataImport(this.saveableFormState());
-        if (!hasSaved) {
+        const removeResult = await this.handleRemoveFromElevateBatch(tokenizedGift);
+        if (removeResult.hasError) { return; }
+
+        try {
+            await this.saveDataImport(this.saveableFormState());
+            await this.prepareForBatchGiftSave(
+                this.saveableFormState(), formControls, tokenizedGift);
+        } catch (err) {
+            if (removeResult.hasProcessed) {
+                this.handleLogError(
+                    '',
+                    GeLabelService.format(
+                        this.CUSTOM_LABELS.geElevateUpdateErrorLog,
+                        [this.CUSTOM_LABELS.commonPaymentServices,
+                            this._openedGiftId,
+                            this.batchId]
+                    )
+                );
+            }
             this.disabled = false;
             this.toggleSpinner();
-            return;
+            this.handleCatchOnSave(err);
+        }
+    }
+
+    handleLogError(error, context) {
+        this.dispatchEvent(new CustomEvent('logerror', { 
+            detail: {error: error, context: context}
+        }));    
+    }
+
+    async shouldRemoveFromElevateBatch(gift, shouldBeCreditCard) {
+        const isCreditCard = (this.selectedPaymentMethod() === PAYMENT_METHOD_CREDIT_CARD);
+        if (!gift.id() || !this.isElevateCustomer || isCreditCard !== shouldBeCreditCard) {
+            return false;
+        }    
+
+        try {
+            await gift.refresh();
+        } catch (exception) {
+            return false;
         }
 
-        await this.prepareForBatchGiftSave(this.saveableFormState(), formControls, tokenizedGift);
+        return gift.isAuthorized();
     }
 
     shouldNullPaymentRelatedFields() {
@@ -743,19 +794,40 @@ export default class GeFormRenderer extends LightningElement{
             && this.selectedPaymentMethod() !== PAYMENT_METHOD_CREDIT_CARD;
     }
 
+    async handleRemoveFromElevateBatch(tokenizedGift) {
+        const gift = new Gift(this.giftInView);
+        const result = {hasError: false, wasRemoved: false};
+
+        try {
+            if (await this.shouldRemoveFromElevateBatch(gift, !!tokenizedGift)) {
+                await this.currentElevateBatch.remove(gift.asDataImport());
+                if (!tokenizedGift) { this.handleNullPaymentFieldsInFormState(); }
+                result.wasRemoved = true;
+            }
+        } catch (exception) {
+            const errorMsg = GeLabelService.format(
+                this.CUSTOM_LABELS.geErrorElevateUpdate, 
+                [this.CUSTOM_LABELS.commonPaymentServices]
+            );
+            this.handleElevateAPIErrors([{message: errorMsg}]);
+            result.hasError = true;
+        }
+
+        return result;
+    }
+
     async prepareForBatchGiftSave(dataImportFromFormState, formControls, tokenizedGift) {
         if (tokenizedGift) {
             try {
                 this.loadingText = this.CUSTOM_LABELS.geAuthorizingCreditCard;
     
-                const currentElevateBatch = new ElevateBatch(this.latestElevateBatchId);
-                const authorizedGift = await currentElevateBatch.add(tokenizedGift);
+                const authorizedGift = await this.currentElevateBatch.add(tokenizedGift);
                 const isAuthorized = authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED
                     || authorizedGift.status === this.PAYMENT_TRANSACTION_STATUS_ENUM.PENDING;
 
                 if (isAuthorized) {
                     this.updateFormState({
-                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: currentElevateBatch.elevateBatchId,
+                        [apiNameFor(PAYMENT_ELEVATE_ELEVATE_BATCH_ID)]: this.currentElevateBatch.elevateBatchId,
                         [apiNameFor(PAYMENT_ELEVATE_ID)]: authorizedGift.paymentId,
                         [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.AUTHORIZED,
                         [apiNameFor(PAYMENT_ELEVATE_ORIGINAL_PAYMENT_ID)]: authorizedGift.originalTransactionId,
@@ -771,7 +843,6 @@ export default class GeFormRenderer extends LightningElement{
                         [apiNameFor(STATUS_FIELD)]: null
                     });
 
-                    this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
                     dataImportFromFormState = this.saveableFormState();
                 } else {
                     await this.handleAuthorizationFailure(authorizedGift.declineReason);
@@ -787,17 +858,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     async handleAuthorizationFailure(declineReason) {
-        this.updateFormState({
-            [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
-            [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
-            [apiNameFor(STATUS_FIELD)]: FAILED
+        new Promise((resolve,reject) => {
+            this.updateFormState({
+                [apiNameFor(PAYMENT_DECLINED_REASON)]: declineReason,
+                [apiNameFor(PAYMENT_STATUS)]: this.PAYMENT_TRANSACTION_STATUS_ENUM.DECLINED,
+                [apiNameFor(STATUS_FIELD)]: FAILED
+            });
+            resolve();
+        })
+        .finally(async () => {
+            await this.saveDataImport(this.saveableFormState());
+            const errors = [{ message: declineReason }];
+            this.handleElevateAPIErrors(errors);
+            fireEvent(this, 'refreshbatchtable', {});
         });
-        await this.saveDataImport(this.saveableFormState());
-
-        const errors = [{ message: declineReason }];
-        this.handleElevateAPIErrors(errors);
-
-        fireEvent(this, 'refreshtable', {});
     }
 
     /*******************************************************************************
@@ -878,7 +952,10 @@ export default class GeFormRenderer extends LightningElement{
     isFormValid(sectionsList) {
 
         // custom donor type validation
-        if (this.isDonorTypeInvalid(sectionsList)) {
+        const dataImportHelper = this.getDataImportHelper();
+        this.resetDonorTypeValidations(sectionsList);
+        if (this.isDonorTypeInvalid(dataImportHelper, sectionsList)) {
+            this.displayDonorTypeError(dataImportHelper, sectionsList);
             return false;
         }
 
@@ -906,81 +983,60 @@ export default class GeFormRenderer extends LightningElement{
      * @param sectionsList, list of sections
      * @returns {boolean|*} - true if form invalid, false otherwise
      */
-    isDonorTypeInvalid(sectionsList) {
-
-        const DONATION_VALUES = [
-            DONATION_DONOR_FIELDS.donationDonorField,
-            DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField,
-            DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
-        // get label and value using apiName as key from fields for each section
-        let miniFieldWrapper = {};
-        sectionsList.forEach(section => {
-            miniFieldWrapper = { ...miniFieldWrapper, ...(section.getFieldValueAndLabel(DONATION_VALUES))};
-        });
-
+    isDonorTypeInvalid(dataImportHelper, sectionsList) {
         // if no donation donor selection, nothing to validate here yet
-        if ( isEmpty(miniFieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value) ) {
+        if (isEmpty(this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField)) ) {
             return false;
         }
 
-        // returns true when error message was generated
-        return this.getDonorTypeValidationError( miniFieldWrapper, sectionsList );
-    }
-
-    /**
-     * helper class for isDonorTypeInvalid, contains majority of logic
-     * @param fieldWrapper - Array, field ui-label and value using field-api-name as key
-     * @param sectionsList - Array, all sections
-     * @returns {boolean} - true if error message was generated, false if otherwise
-     */
-    getDonorTypeValidationError(fieldWrapper, sectionsList) {
-
-        // get data import record helper
-        const di_record = this.getDataImportHelper(fieldWrapper);
-
+        const isAccountDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1;
+        const areEmptyAccountFields = dataImportHelper.isAccount1ImportedEmpty && dataImportHelper.isAccount1NameEmpty;
+        const isContactDonor = dataImportHelper.donationDonorValue === DONATION_DONOR.isContact1;
+        const areEmptyContactFields = dataImportHelper.isContact1ImportedEmpty && dataImportHelper.isContact1LastNameEmpty;
         // donation donor validation depending on selection and field presence
-        let isError = (di_record.donationDonorValue === DONATION_DONOR.isAccount1) ?
-            di_record.isAccount1ImportedEmpty && di_record.isAccount1NameEmpty :
-            di_record.donationDonorValue === DONATION_DONOR.isContact1 &&
-            di_record.isContact1ImportedEmpty && di_record.isContact1LastNameEmpty;
-
-        // process error notification when error
-        if (isError) {
-            // highlight validation fields
-            this.highlightValidationErrorFields(di_record, sectionsList, ' ');
-            // set page error
-            this.hasPageLevelError = true;
-            this.pageLevelErrorMessageList = [ {
-                index: 0,
-                errorMessage: this.getDonationDonorErrorLabel(di_record, fieldWrapper)
-            } ];
-        }
+        const isError = isAccountDonor ? areEmptyAccountFields : isContactDonor && areEmptyContactFields;
 
         return isError;
     }
 
+    resetDonorTypeValidations(sectionsList) {
+        sectionsList.forEach(section => {
+            section.setCustomValidityOnFields(Object.values(DONATION_DONOR_FIELDS), '');
+        });
+    }
+
+    displayDonorTypeError(dataImportHelper, sectionsList) {
+        // highlight validation fields
+        this.highlightValidationErrorFields(dataImportHelper, sectionsList, ' ');
+        // set page error
+        this.hasPageLevelError = true;
+        this.pageLevelErrorMessageList = [{
+            index: 0,
+            errorMessage: this.getDonationDonorErrorLabel(dataImportHelper)
+        }];
+    }
+
     /**
      * Set donation donor error message using custom label depending on field presence
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns {String}, formatted error message for donation donor validation
      */
-    getDonationDonorErrorLabel(diRecord, fieldWrapper) {
+    getDonationDonorErrorLabel(dataImportHelper) {
 
         // init array replacement for custom label
-        let validationErrorLabelReplacements = [diRecord.donationDonorValue, diRecord.donationDonorLabel];
+        let validationErrorLabelReplacements = [dataImportHelper.donationDonorValue, dataImportHelper.donationDonorLabel];
 
-        if (diRecord.donationDonorValue === DONATION_DONOR.isAccount1) {
-            if (diRecord.isAccount1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].label);
-            if (diRecord.isAccount1NamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].label);
+        if (dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1) {
+            if (dataImportHelper.isAccount1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.account1ImportedField));
+            if (dataImportHelper.isAccount1NamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.account1NameField));
         } else {
-            if (diRecord.isContact1ImportedPresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].label);
-            if (diRecord.isContact1LastNamePresent)
-                validationErrorLabelReplacements.push(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].label);
+            if (dataImportHelper.isContact1ImportedPresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelByDevNameFromTemplate(DONATION_DONOR_FIELDS.contact1ImportedField));
+            if (dataImportHelper.isContact1LastNamePresent)
+                validationErrorLabelReplacements.push(GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.contact1LastNameField));
         }
 
         // set label depending fields present on template
@@ -1005,23 +1061,26 @@ export default class GeFormRenderer extends LightningElement{
 
     /**
      * highlight geForm fields on lSections using sError as message
-     * @param diRecord, Object - helper obj
+     * @param dataImportHelper, Object - helper obj
      * @param lSections, Array of geFormSection
      * @param sError, String to set on setCustomValidity
      */
-    highlightValidationErrorFields(diRecord, lSections, sError) {
+    highlightValidationErrorFields(dataImportHelper, lSections, sError) {
+        const accountFields = [DONATION_DONOR_FIELDS.account1ImportedField, DONATION_DONOR_FIELDS.account1NameField];
+        const contactFields = [DONATION_DONOR_FIELDS.contact1ImportedField, DONATION_DONOR_FIELDS.contact1LastNameField];
+
+        // prepare arrays to highlight/clear fields that require attention depending on Donation_Donor
+        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
+            ...(dataImportHelper.donationDonorValue === DONATION_DONOR.isAccount1 ? accountFields : contactFields)
+        ];
+        const clearFields = dataImportHelper.donationDonorValue !== DONATION_DONOR.isAccount1 ? accountFields : contactFields;
 
         // prepare array to highlight fields that require attention depending on Donation_Donor
-        const highlightFields = [DONATION_DONOR_FIELDS.donationDonorField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1ImportedField :
-                DONATION_DONOR_FIELDS.contact1ImportedField,
-            diRecord.donationDonorValue === DONATION_DONOR.isAccount1 ? DONATION_DONOR_FIELDS.account1NameField :
-                DONATION_DONOR_FIELDS.contact1LastNameField
-        ];
+
         lSections.forEach(section => {
+            section.setCustomValidityOnFields(clearFields, '');
             section.setCustomValidityOnFields(highlightFields, sError);
         });
-
     }
 
     /**
@@ -1029,25 +1088,27 @@ export default class GeFormRenderer extends LightningElement{
      * @param fieldWrapper, Array of fields with Values and Labels
      * @returns Object, helper object to minimize length of if statements and improve code legibility
      */
-    getDataImportHelper(fieldWrapper) {
+    getDataImportHelper() {
+        const account1Imported = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.account1ImportedField);
+        const contact1Imported = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1ImportedField);
+        const contact1LastName = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.contact1LastNameField);
+        const account1Name = this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.account1NameField);
+        const isAccount1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.account1ImportedField);
+        const isAccount1NamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.account1NameField);
+        const isContact1ImportedPresent = !!GeFormService.findElementByDeveloperName(DONATION_DONOR_FIELDS.contact1ImportedField);
+        const isContact1LastNamePresent = GeFormService.isSourceFieldInTemplate(DONATION_DONOR_FIELDS.contact1LastNameField);
+
         return {
-            // donation donor
-            donationDonorValue: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].value,
-            donationDonorLabel: fieldWrapper[DONATION_DONOR_FIELDS.donationDonorField].label,
-            // empty val checks
-            isAccount1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField].value),
-            isContact1ImportedEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField].value),
-            isContact1LastNameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField].value),
-            isAccount1NameEmpty: isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]) ||
-                isEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField].value),
-            // field presence
-            isAccount1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1ImportedField]),
-            isAccount1NamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.account1NameField]),
-            isContact1ImportedPresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1ImportedField]),
-            isContact1LastNamePresent: isNotEmpty(fieldWrapper[DONATION_DONOR_FIELDS.contact1LastNameField])
+            donationDonorValue: this.getFieldValueFromFormState(DONATION_DONOR_FIELDS.donationDonorField),
+            donationDonorLabel: GeFormService.getFieldLabelBySourceFromTemplate(DONATION_DONOR_FIELDS.donationDonorField),
+            isAccount1ImportedEmpty: isEmpty(account1Imported),
+            isContact1ImportedEmpty: isEmpty(contact1Imported),
+            isContact1LastNameEmpty: isEmpty(contact1LastName),
+            isAccount1NameEmpty: isEmpty(account1Name),
+            isAccount1ImportedPresent,
+            isAccount1NamePresent,
+            isContact1ImportedPresent,
+            isContact1LastNamePresent
         };
     }
 
@@ -1073,7 +1134,16 @@ export default class GeFormRenderer extends LightningElement{
         this.hasPageLevelError = false;
         this.pageLevelErrorMessageList = [];
 
-        // Clear the field level errors
+        // Clear the field level custom validations
+        const sections = this.template.querySelectorAll('c-ge-form-section');
+        sections.forEach(section => {
+            const fields = section.getAllFieldsByAPIName();
+            Object.values(fields).forEach(field => {
+                field.clearCustomValidity();
+            });
+        });
+
+        // Clear the field level errors from custom aura exception
         if (this.erroredFields.length > 0) {
             this.erroredFields.forEach(fieldToReset => {
                 fieldToReset.setCustomValidity('');
@@ -1081,24 +1151,6 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         this.erroredFields = [];
-    }
-
-    @api
-    loadDataImportRecord(dataImport) {
-        const isAlreadyOpen = dataImport.Id === this._openedGiftId;
-        if (isAlreadyOpen) {
-            return;
-        }
-
-        this.expandForm();
-        const dataImportWithNullValuesAppended =
-            this.appendNullValuesForMissingFields(dataImport);
-
-        dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
-            convertBDIToWidgetJson(dataImportWithNullValuesAppended[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
-        this.reset();
-        this.updateFormState(dataImportWithNullValuesAppended);
-        this._openedGiftId = dataImport.Id;
     }
 
     reset() {
@@ -1630,8 +1682,8 @@ export default class GeFormRenderer extends LightningElement{
      */
     formatTimeoutErrorMessage() {
         const donorName = this.getDonorName();
-        const donationAmountFormField = this.getFormFieldBySourceName(apiNameFor(DONATION_AMOUNT));
-        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmountFormField.value);
+        const donationAmount = this.getFieldValueFromFormState(DONATION_AMOUNT);
+        const formattedDonationAmount = getNumberAsLocalizedCurrency(donationAmount);
 
         this.CUSTOM_LABELS.geErrorUncertainCardChargePart1 = GeLabelService.format(
             this.CUSTOM_LABELS.geErrorUncertainCardChargePart1,
@@ -1655,23 +1707,6 @@ export default class GeFormRenderer extends LightningElement{
         }
     }
 
-    /*******************************************************************************
-    * @description Get a form field's value and label properties by the source
-    * field api name.
-    *
-    * @param {string} sourceFieldApiName: A field api name from the DataImport__c
-    * custom object.
-    */
-    getFormFieldBySourceName(sourceFieldApiName) {
-        const sectionsList = this.template.querySelectorAll('c-ge-form-section');
-        for (let i = 0; i < sectionsList.length; i++) {
-            const matchingFormField = sectionsList[i].getFieldValueAndLabel([sourceFieldApiName]);
-            if (isObject(matchingFormField) && matchingFormField.hasOwnProperty(sourceFieldApiName)) {
-                return matchingFormField[sourceFieldApiName];
-            }
-        }
-    }
-
     get namespace() {
         return getNamespace(apiNameFor(FORM_TEMPLATE_FIELD));
     }
@@ -1686,6 +1721,36 @@ export default class GeFormRenderer extends LightningElement{
 
     get qaLocatorSaveButton() {
         return `button ${this.saveActionLabel}`;
+    }
+
+    @api
+    get giftInView() {
+        return this._giftInView;
+    }
+
+    set giftInView(gift) {
+        if (!this._connected) return;
+
+        if (gift && isEmptyObject(gift.fields)) {
+            this.reset();
+        } else if (gift && gift.fields) {
+            let giftLocalCopy = deepClone(gift);
+            this.handleWidgetJSON(giftLocalCopy.fields);
+            this._giftInView = giftLocalCopy;
+            this._openedGiftId = giftLocalCopy.fields.Id || null;
+            this.formState = giftLocalCopy.fields;
+
+            if (this._openedGiftId && this.hasPageLevelError && this.batchId) {
+                this.clearErrors();
+            }
+        }
+    }
+
+    handleWidgetJSON(giftFields) {
+        if (giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]) {
+            giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)] =
+                convertBDIToWidgetJson(giftFields[apiNameFor(DATA_IMPORT_ADDITIONAL_OBJECT_FIELD)]);
+        }
     }
 
     get formState() {
@@ -1712,17 +1777,16 @@ export default class GeFormRenderer extends LightningElement{
     updateFormState(fields) {
         fields = this.removeFieldsNotUpdatableInFormState(fields);
 
-        Object.assign(this.formState, fields);
         if (fields.hasOwnProperty(apiNameFor(DONATION_RECORD_TYPE_NAME))) {
-            this.updateFormStateForDonationRecordType(fields);
+            fields = this.updateFormStateForDonationRecordType(fields);
         }
 
         if (this.hasImportedRecordFieldsBeingSetToNull(fields)) {
             this.deleteRelationshipFieldsFromStateFor(fields);
         }
 
-        // Shallow-copy to a new object to prompt reactivity
-        this.formState = Object.assign({}, this.formState);
+        const formStateChangeEvent = new CustomEvent('formstatechange', { detail: deepClone(fields) });
+        this.dispatchEvent(formStateChangeEvent);
     }
 
     removeFieldsNotUpdatableInFormState(fieldsToUpdate) {
@@ -1760,11 +1824,17 @@ export default class GeFormRenderer extends LightningElement{
                 opportunityRecordTypeValue :
                 this.opportunityRecordTypeIdFor(opportunityRecordTypeValue);
 
-            this.formState[apiNameFor(DONATION_RECORD_TYPE_NAME)] =
-                this.opportunityRecordTypeNameFor(val);
+            if (isId) {
+                fields = {
+                    ...fields,
+                    [apiNameFor(DONATION_RECORD_TYPE_NAME)]: this.opportunityRecordTypeNameFor(val)
+                }
+            }
 
             this.setDonationRecordTypeIdInFormState(val);
         }
+
+        return fields;
     }
 
     opportunityRecordTypeNameFor(id) {
@@ -1796,7 +1866,11 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     deleteFieldFromFormState(field) {
-        delete this.formState[field];
+        const deleteFieldFromGiftState =
+            new CustomEvent('deletefieldfromgiftstate', {
+                detail: field
+            });
+        this.dispatchEvent(deleteFieldFromGiftState);
     }
 
     hasRelatedRecordFieldInFormState(field) {
@@ -1820,11 +1894,13 @@ export default class GeFormRenderer extends LightningElement{
         }
 
         if (isDonationDonor) {
-            this.handleDonationDonorChange(value)
+            this.handleDonationDonorChange(value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
 
         if (isImportedRecordField) {
             this.handleImportedRecordFieldChange(sourceField, value);
+            fireEvent(this, 'clearprocessedsoftcreditsinview', {});
         }
     }
 
@@ -1999,7 +2075,7 @@ export default class GeFormRenderer extends LightningElement{
         let updatedRecord;
         if (relatedRecord) {
             updatedRecord = Object.assign(
-                relatedRecord,
+                deepClone(relatedRecord),
                 {recordTypeId: opportunityRecordTypeId});
         } else {
             updatedRecord = {recordTypeId: opportunityRecordTypeId};
@@ -2185,6 +2261,7 @@ export default class GeFormRenderer extends LightningElement{
     saveableFormState() {
         let dataImportRecord = { ...this.formState };
         dataImportRecord = this.removeFieldsNotInObjectInfo(dataImportRecord);
+        delete dataImportRecord[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
 
         return dataImportRecord;
     }
@@ -2279,7 +2356,13 @@ export default class GeFormRenderer extends LightningElement{
         } catch (error) {
             this.disabled = false;
             this.toggleSpinner();
-            handleError(error);
+
+            const exceptionWrapper = new ExceptionDataError(error);
+            if (isNotEmpty(exceptionWrapper.exceptionType)) {
+                this.handleCatchOnSave(error)
+            } else {
+                handleError(error);
+            }
         }
     }
 
@@ -2287,18 +2370,11 @@ export default class GeFormRenderer extends LightningElement{
         this.loadingText = this.hasDataImportId
             ? this.CUSTOM_LABELS.geTextUpdating
             : this.CUSTOM_LABELS.geTextSaving;
-
-        try {
-            delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
-            const upsertResponse = await upsertDataImport({
-                dataImport: dataImportFromFormState
-            });
-            this.updateFormState(upsertResponse);
-            return true;
-        } catch (err) {
-            this.handleCatchOnSave(err);
-            return false;
-        }
+        delete dataImportFromFormState[apiNameFor(PAYMENT_AUTHORIZE_TOKEN)];
+        const upsertResponse = await upsertDataImport({
+            dataImport: dataImportFromFormState
+        });
+        this.updateFormState(upsertResponse);
     };
 
     makePurchaseRequest = async () => {
@@ -2310,6 +2386,7 @@ export default class GeFormRenderer extends LightningElement{
 
         const responseBody = JSON.parse(responseBodyString);
         await this.processPurchaseResponse(responseBody);
+        await this.saveDataImport(this.saveableFormState());
     }
 
     buildPurchaseRequestBodyParameters() {
@@ -2409,8 +2486,6 @@ export default class GeFormRenderer extends LightningElement{
             this.updateFormStateWithSuccessfulPurchaseCall(responseBody);
             this.hasFailedPurchaseRequest = false;
         }
-
-        await this.saveDataImport(this.saveableFormState());
     }
 
     isPurchaseCreated(responseBody) {
@@ -2525,21 +2600,20 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     processDataImport = async () => {
-        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
-        this.deleteFieldFromFormState(apiNameFor(PAYMENT_AUTHORIZE_TOKEN));
-        const dataImportRecord = this.saveableFormState();
+        const gift = new Gift(this.giftInView);
 
-        submitDataImportToBDI({
-            dataImport: dataImportRecord,
-            updateGift: this.hasSelectedDonationOrPayment()
-        })
-            .then(opportunityId => {
-                this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
-                this.goToRecordDetailPage(opportunityId);
-            })
-            .catch(error => {
-                this.handleBdiProcessingError(error);
-            });
+        this.loadingText = this.CUSTOM_LABELS.geTextProcessing;
+
+        await gift.save().catch(saveError => this.handleCatchOnSave(saveError));
+
+        await gift.refresh().catch(viewError => handleError(viewError));
+
+        if (gift.isFailed()) {
+            this.handleBdiProcessingError(gift.failureInformation());
+        } else {
+            this.loadingText = this.CUSTOM_LABELS.geTextNavigateToOpportunity;
+            this.goToRecordDetailPage(gift.donationId());
+        }
     }
 
     handleBdiProcessingError(error) {
@@ -2643,8 +2717,13 @@ export default class GeFormRenderer extends LightningElement{
         return formStateUpdates;
     }
 
+    @api
     get isFormCollapsed() {
         return this._isFormCollapsed;
+    }
+
+    set isFormCollapsed(value) {
+        this._isFormCollapsed = value;
     }
 
     get altTextLabel() {
@@ -2654,13 +2733,8 @@ export default class GeFormRenderer extends LightningElement{
 
     expandForm() {
         if (this.isFormCollapsed) {
-            this._isFormCollapsed = false;
+            this.dispatchEvent(new CustomEvent('collapseform', { detail: false }));
         }
-    }
-
-    @api
-    collapse() {
-        this._isFormCollapsed = true;
     }
 
     get expandableContainerId() {
@@ -2668,7 +2742,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleCollapse(event) {
-        this._isFormCollapsed = event.detail.isCollapsed;
+        this.dispatchEvent(new CustomEvent('collapseform', { detail: event.detail.isCollapsed }));
     }
 
     get showMismatchedCurrencyWarning() {

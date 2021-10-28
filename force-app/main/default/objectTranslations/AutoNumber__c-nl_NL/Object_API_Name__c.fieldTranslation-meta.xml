@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Object_API_Name__c</name>
     <help>De API-naam van het object voor de automatische nummering.</help>
     <label>Object-API-naam</label>
-    <name>Object_API_Name__c</name>
 </CustomFieldTranslation>

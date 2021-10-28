@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Automatically_Update_Child_Task_Due_Date__c</name>
     <help>Berechnet das Fälligkeitsdatum einer untergeordneten Aufgabe anhand des Zeitpunkts neu, an dem die übergeordnete Aufgabe tatsächlich abgeschlossen wurde.</help>
     <label>Fälligk. d. unterg. Aufg. autom. aktual.</label>
-    <name>Automatically_Update_Child_Task_Due_Date__c</name>
 </CustomFieldTranslation>

@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Operation</label>
     <name>Operation__c</name>
+    <label>Operation</label>
+    <picklistValues>
+        <masterLabel>Count</masterLabel>
+        <translation>Count</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Sum</masterLabel>
+        <translation>Sum</translation>
+    </picklistValues>
     <picklistValues>
         <masterLabel>Average</masterLabel>
         <translation>Average</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Largest</masterLabel>
+        <translation>Largest</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Smallest</masterLabel>
+        <translation>Smallest</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>First</masterLabel>
+        <translation>First</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Last</masterLabel>
+        <translation>Last</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Years Donated</masterLabel>
+        <translation>Years Donated</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Donor Streak</masterLabel>
+        <translation>Donor Streak</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Best Year</masterLabel>
@@ -13,37 +45,5 @@
     <picklistValues>
         <masterLabel>Best Year Total</masterLabel>
         <translation>Best Year Total</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Count</masterLabel>
-        <translation>Count</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Donor Streak</masterLabel>
-        <translation>Donor Streak</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>First</masterLabel>
-        <translation>First</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Largest</masterLabel>
-        <translation>Largest</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Last</masterLabel>
-        <translation>Last</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Smallest</masterLabel>
-        <translation>Smallest</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Sum</masterLabel>
-        <translation>Sum</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Years Donated</masterLabel>
-        <translation>Years Donated</translation>
     </picklistValues>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Attribue les allocations à un paiement.</help>
-    <label>Paiement</label>
     <name>Payment__c</name>
+    <help>Attribue les allocations à un paiement.</help>
     <relationshipLabel>Allocations de paiement</relationshipLabel>
+    <label>Paiement</label>
 </CustomFieldTranslation>

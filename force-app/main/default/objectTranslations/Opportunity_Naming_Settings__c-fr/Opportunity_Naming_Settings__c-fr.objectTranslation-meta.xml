@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <gender>Masculine</gender>
+    <startsWith>Consonant</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Paramètre de nommage d&apos;opportunité</value>
@@ -8,6 +10,4 @@
         <plural>true</plural>
         <value>Paramètres de nommage d&apos;opportunité</value>
     </caseValues>
-    <gender>Masculine</gender>
-    <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

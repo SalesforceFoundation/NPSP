@@ -198,6 +198,20 @@ public with sharing class GE_Template_TEST {
         */
     }
 
+    @isTest
+    static void shouldReturnListOfFieldApiNamesOnTheTemplate() {
+        UTIL_UnitTestData_TEST.createSampleFieldMappings();
+        GE_Template.Template template = UTIL_UnitTestData_TEST.createSampleTemplate();
+        GE_Template.Element lookupField =
+            new GE_Template.Element('field', 'True', null, 'CustomLabel',
+                new List<String>{String.valueOf(DataImport__c.Account1Imported__c)});
+        template.layout.sections[0].elements.add(lookupField);
+
+        System.assertEquals(template.giftFieldApiNames().size(), 2);
+        System.assertEquals(template.giftFieldApiNames()[0], String.valueOf(DataImport__c.Account1_Name__c));
+        System.assertEquals(template.giftFieldApiNames()[1], String.valueOf(DataImport__c.Account1Imported__c));
+    }
+
     private class UTIL_PermissionsMock implements StubProvider {
 
         Boolean hasPermission;

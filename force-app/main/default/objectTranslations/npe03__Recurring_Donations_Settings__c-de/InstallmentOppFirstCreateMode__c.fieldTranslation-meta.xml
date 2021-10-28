@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppFirstCreateMode__c</name>
     <help>Gibt an, wie NPSP die erste Raten-Opportunity für wiederkehrende Spenden erstellt. Das Standardverhalten ist synchron.</help>
     <label>Raten-Opportunities: asynch. Verhalten</label>
-    <name>InstallmentOppFirstCreateMode__c</name>
 </CustomFieldTranslation>

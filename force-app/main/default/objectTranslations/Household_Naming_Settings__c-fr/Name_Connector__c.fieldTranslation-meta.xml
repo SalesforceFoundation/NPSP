@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Name_Connector__c</name>
     <help>La chaîne de caractères à utiliser pour connecter des paires dans un nom. Par exemple, Jean &amp; Jeanne, ou Jean et Jeanne.</help>
     <label>Connecteur de nom</label>
-    <name>Name_Connector__c</name>
 </CustomFieldTranslation>

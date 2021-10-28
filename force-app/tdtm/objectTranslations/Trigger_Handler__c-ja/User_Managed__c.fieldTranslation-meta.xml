@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>User_Managed__c</name>
+    <help>レコードを自分自身で管理する場合にオンにします。パッケージを更新してもレコードは更新されません。</help>
+    <label>ユーザによる管理</label>
+</CustomFieldTranslation>

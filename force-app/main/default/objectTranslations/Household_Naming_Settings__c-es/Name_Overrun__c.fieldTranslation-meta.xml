@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Name_Overrun__c</name>
     <help>La cadena a utilizar cuando se sustituye una lista larga de nombres.</help>
     <label>Sustitución de nombres</label>
-    <name>Name_Overrun__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>Objeto de importe</label>
     <name>Amount_Object__c</name>
     <relationshipLabel>Importe de totalización</relationshipLabel>
+    <label>Objeto de importe</label>
 </CustomFieldTranslation>

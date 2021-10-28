@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Household_Account_Addresses_Disabled__c</name>
     <help>Cuando se selecciona, deshabilita la gestión de direcciones para cuentas Hogar.</help>
     <label>Direcciones cuentas Hogar deshabilitadas</label>
-    <name>Household_Account_Addresses_Disabled__c</name>
 </CustomFieldTranslation>

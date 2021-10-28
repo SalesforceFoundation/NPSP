@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Level_Assignment_Batch_Size__c</name>
     <help>レベルの再計算時のバッチあたりの処理対象レコード数。</help>
     <label>レベル割り当てバッチサイズ</label>
-    <name>Level_Assignment_Batch_Size__c</name>
 </CustomFieldTranslation>

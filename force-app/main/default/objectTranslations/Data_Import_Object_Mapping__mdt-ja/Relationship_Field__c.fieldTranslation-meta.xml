@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Relationship_Field__c</name>
     <help>このオブジェクトグループが前提要素の子である場合、この項目で親を参照する必要があります。このオブジェクトグループが前提要素の親である場合、この項目が子レコードの参照項目になっている必要があります。</help>
     <label>リレーション項目</label>
-    <name>Relationship_Field__c</name>
 </CustomFieldTranslation>

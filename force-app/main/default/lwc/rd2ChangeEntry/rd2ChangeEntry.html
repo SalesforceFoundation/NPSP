@@ -1,0 +1,33 @@
+<template>
+    <lightning-layout vertical-align="center">
+        <lightning-layout-item size="4" class="slds-p-around_x-small">
+            <b><lightning-formatted-date-time value={entryItem.changeDate}></lightning-formatted-date-time></b>
+        </lightning-layout-item>
+        <lightning-layout-item size="8">
+            <lightning-badge label={entryItem.changeType} class={badgeClass}></lightning-badge>
+        </lightning-layout-item>
+    </lightning-layout>
+    <template if:true={hasStatusChange}>
+        <lightning-layout vertical-align="center">
+            <lightning-layout-item size="4" class="slds-p-horizontal_x-small slds-m-top_medium">
+                {entryItem.statusLabel}
+            </lightning-layout-item>
+            <lightning-layout-item size="8" class="slds-p-horizontal_x-small slds-m-top_medium">
+                {entryItem.statusReason}
+            </lightning-layout-item>
+        </lightning-layout>
+    </template>
+    <template for:each={entryItem.fields} for:item='item'>
+        <c-rd2-change-entry-item
+                key={item.label}
+                label={item.label}
+                old-value={item.oldValue}
+                new-value={item.newValue}
+                display-type={item.displayType}
+                old-id={item.oldId}
+                new-id={item.newId}
+                currency-code={item.currencyCode}
+        >
+        </c-rd2-change-entry-item>
+    </template>
+</template>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Disable_Related_Records_Filter__c</name>
     <help>このボックスをオンにすると、取引先と取引先責任者のハードクレジットおよびソフトクレジット積み上げ集計が、既存の関連商談または商談取引先責任者の役割レコードを含む取引先責任者レコードおよび取引先レコードだけを処理しないようになります。</help>
     <label>関連レコード絞り込みの無効化</label>
-    <name>Disable_Related_Records_Filter__c</name>
 </CustomFieldTranslation>

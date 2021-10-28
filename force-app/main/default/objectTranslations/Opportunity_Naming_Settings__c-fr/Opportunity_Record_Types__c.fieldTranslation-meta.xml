@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Record_Types__c</name>
     <help>Indique le type d’enregistrement d’opportunité utilisant ce format de nom.</help>
     <label>Types d’enregistrement d’opportunité</label>
-    <name>Opportunity_Record_Types__c</name>
 </CustomFieldTranslation>

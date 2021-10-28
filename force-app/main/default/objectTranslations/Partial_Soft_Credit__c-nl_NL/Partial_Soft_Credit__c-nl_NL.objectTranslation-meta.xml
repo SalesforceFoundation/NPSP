@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Gedeeltelijke soft credit</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Gedeeltelijke soft credits</value>
-    </caseValues>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Soft Credits beheren</label>
+    </webLinks>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
@@ -17,8 +12,17 @@
         </sections>
     </layouts>
     <nameFieldLabel>Naam van Gedeeltelijke Soft Credits</nameFieldLabel>
-    <webLinks>
-        <label>Soft Credits beheren</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Naam van Gedeeltelijke Soft Credits</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>Gedeeltelijke soft credit</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Gedeeltelijke soft credits</value>
+    </caseValues>
 </CustomObjectTranslation>

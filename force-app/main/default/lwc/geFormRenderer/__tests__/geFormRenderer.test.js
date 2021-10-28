@@ -14,10 +14,10 @@ import { mockCheckInputValidity } from 'lightning/input';
 import { mockCheckComboboxValidity } from 'lightning/combobox';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 
-const mockWrapperWithNoNames = require('./data/retrieveDefaultSGERenderWrapper.json');
+const mockWrapperWithNoNames = require('../../../../../../tests/__mocks__/apex/data/retrieveDefaultSGERenderWrapper.json');
 const getRecordContact1Imported = require('./data/getRecordContact1Imported.json');
-const dataImportObjectInfo = require('./data/dataImportObjectInfo.json');
-const allocationsSettingsNoDefaultGAU = require('./data/allocationsSettingsNoDefaultGAU.json');
+const dataImportObjectInfo = require('../../../../../../tests/__mocks__/apex/data/dataImportObjectDescribeInfo.json');
+const allocationsSettingsNoDefaultGAU = require('../../../../../../tests/__mocks__/apex/data/allocationsSettingsNoDefaultGAU.json');
 
 describe('c-ge-form-renderer', () => {
 
@@ -80,8 +80,10 @@ describe('c-ge-form-renderer', () => {
 
         const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
         expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
-
-        dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
+        element.giftInView = {
+            fields: { 'Payment_Method__c': 'Credit Card' },
+            softCredits: { all: [] }
+        };
         await flushPromises();
 
         const {commonPaymentServices} = GeLabelService.CUSTOM_LABELS;
@@ -96,7 +98,7 @@ describe('c-ge-form-renderer', () => {
     it('form without contact firstname when lookup populated and widget in chargeable state then sendPurchaseRequest is called with first name',
         async () => {
             const EXPECTED_PURCHASE_BODY_PARAMS = JSON.stringify({
-                "firstName": "DummyFirstName",
+                "firstName": "",
                 "lastName": "DummyLastName",
                 "metadata": {},
                 "amount": 1,
@@ -106,10 +108,10 @@ describe('c-ge-form-renderer', () => {
             const EXPECTED_UPSERT_DATAIMPORT_FIELDS = {
                 Donation_Donor__c: 'Contact',
                 Contact1Imported__c: '003J000001zoYLGIA2',
+                Contact1_Lastname__c: 'DummyLastName',
                 Donation_Date__c: '2021-02-23',
                 Donation_Amount__c: '0.01',
                 Payment_Method__c: "Credit Card",
-                Payment_Status__c: "PENDING"
             };
             const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
 
@@ -143,12 +145,18 @@ describe('c-ge-form-renderer', () => {
             const sectionWithWidget = element.shadowRoot.querySelectorAll('c-ge-form-section')[0];
 
             expect(sectionWithWidget.isPaymentWidgetAvailable).toBeTruthy();
-
-            dispatchFormFieldChange(sectionWithWidget, 'Credit Card', 'Payment_Method_87c012365');
-            dispatchFormFieldChange(sectionWithWidget, 'Contact', 'Donation_Donor__c');
-            dispatchFormFieldChange(sectionWithWidget, '0.01', 'Donation_Amount_9e48e0798');
-            dispatchFormFieldChange(sectionWithWidget, '2021-02-23', 'Donation_Date_de92fcb14');
-            dispatchFormFieldChange(sectionWithWidget, DUMMY_CONTACT_ID, 'Contact1Imported__c');
+            element.giftInView = {
+                fields: {
+                    'Payment_Method__c': 'Credit Card',
+                    'Donation_Amount__c': '0.01',
+                    'Contact1Imported__c': DUMMY_CONTACT_ID,
+                    'Donation_Date__c': '2021-02-23',
+                    'Donation_Donor__c': 'Contact',
+                    'Payment_Authorization_Token__c': 'a_dummy_token',
+                    'Contact1_Lastname__c': 'DummyLastName'
+                },
+                softCredits: { all: [] }
+            };
             await flushPromises();
 
             // simulate getting back data for DUMMY_CONTACT_ID
@@ -171,14 +179,73 @@ describe('c-ge-form-renderer', () => {
             expect(upsertDataImport).toHaveBeenLastCalledWith({
                 dataImport: expect.objectContaining(EXPECTED_UPSERT_DATAIMPORT_FIELDS)
             });
-            // first name should not be present in upsert request if not on template
-            expect(upsertDataImport).toHaveBeenLastCalledWith({
-                dataImport: expect.not.objectContaining({
-                    Contact1_Firstname__c: expect.anything(),
-                    Contact1_LastName__c: expect.anything()
-                })
-            });
         });
+
+    it('when a form is saved with a possible validation rule error then processing of the donation should be halted',
+        async () => {
+
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            mockCheckInputValidity.mockReturnValue(true); // lightning-inputs always report they are valid
+            mockCheckComboboxValidity.mockReturnValue(true); // lightning-comboboxes always report they are valid
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+
+            const validationRuleErrorResponse = {
+                "status":500,
+                "body":{
+                    "exceptionType":"System.DmlException",
+                    "isUserDefinedException":false,
+                    "message":"{\"exceptionType\":\"System.DmlException\"," +
+                        "\"errorMessage\":null," +
+                        "\"DMLErrorMessageMapping\":" +
+                        "{\"0\":\"Donation has to be more than $5\"}," +
+                        "\"DMLErrorFieldNameMapping\":{}}",
+                    "stackTrace":""
+                },
+                "headers":{}
+            }
+            upsertDataImport.mockRejectedValue(validationRuleErrorResponse);
+
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer});
+            document.body.appendChild(element);
+
+            getObjectInfo.emit(dataImportObjectInfo, config => {
+                return config.objectApiName.objectApiName === 'DataImport__c';
+            });
+
+            await flushPromises();
+
+            const DUMMY_CONTACT_ID = '003J000001zoYLGIA2';
+            element.giftInView = {
+                fields: {
+                    'Donation_Amount__c': '0.01',
+                    'Contact1Imported__c': DUMMY_CONTACT_ID,
+                    'Donation_Date__c': '2021-02-23',
+                    'Donation_Donor__c': 'Contact',
+                    'Contact1_Lastname__c': 'DummyLastName'
+                },
+                softCredits: { all: [] }
+            };
+            await flushPromises();
+
+            // simulate getting back data for DUMMY_CONTACT_ID
+            getRecord.emit(getRecordContact1Imported, config => {
+                return config.recordId === DUMMY_CONTACT_ID;
+            });
+            await flushPromises();
+            // resolve form updates before clicking save button
+
+            const saveButton = element.shadowRoot.querySelectorAll('lightning-button')[1];
+            saveButton.click();
+            await flushPromises();
+
+            expect(upsertDataImport).toHaveBeenCalledTimes(1);
+
+            const pageLevelMessage = element.shadowRoot.querySelector('c-util-page-level-message');
+            const pElement = pageLevelMessage.querySelector('p');
+            expect(pElement.innerHTML).toBe('Donation has to be more than $5');
+            const spinner = element.shadowRoot.querySelector('lightning-spinner');
+            expect(spinner).toBeFalsy();
+    });
 });
 
 const traverse = (element, ...selectors) => {
@@ -189,16 +256,5 @@ const traverse = (element, ...selectors) => {
     const nextElement = element.shadowRoot.querySelector(firstSelector);
     return traverse(nextElement, ...rest);
 }
-
-const dispatchFormFieldChange = (element, value, fieldMappingDevName) => {
-    const changeEvent = new CustomEvent('formfieldchange', {
-        detail: {
-            value,
-            "label": value,
-            fieldMappingDevName
-        }
-    });
-    element.dispatchEvent(changeEvent);
-};
 
 

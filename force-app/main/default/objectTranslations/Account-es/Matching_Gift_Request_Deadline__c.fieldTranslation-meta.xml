@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Request_Deadline__c</name>
     <help>Utilice este campo para indicar cualquier restricción de edad que esta empresa aplique en la aptitud para los regalos que igualan.</help>
     <label>Fecha límite de regalo que iguala</label>
-    <name>Matching_Gift_Request_Deadline__c</name>
 </CustomFieldTranslation>

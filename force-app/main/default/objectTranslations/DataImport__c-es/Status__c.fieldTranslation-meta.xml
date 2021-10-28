@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Status__c</name>
     <help>Estado de importación de este registro, como por ejemplo Importado o Fallo.</help>
     <label>Estado</label>
-    <name>Status__c</name>
     <picklistValues>
-        <masterLabel>Dry Run - Error</masterLabel>
-        <translation>Ejecución en seco - Error</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Dry Run - Validated</masterLabel>
-        <translation>Ejecución en seco - Validada</translation>
-    </picklistValues>
-    <picklistValues>
-        <masterLabel>Failed</masterLabel>
-        <translation>Fallo</translation>
+        <masterLabel>Ready to Process</masterLabel>
+        <translation>Listo para procesar</translation>
     </picklistValues>
     <picklistValues>
         <masterLabel>Imported</masterLabel>
         <translation>Importado</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Processing</masterLabel>
-        <translation><!-- Processing --></translation>
+        <masterLabel>Dry Run - Validated</masterLabel>
+        <translation>Ejecución en seco - Validada</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Ready to Process</masterLabel>
-        <translation>Listo para procesar</translation>
+        <masterLabel>Dry Run - Error</masterLabel>
+        <translation>Ejecución en seco - Error</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Failed</masterLabel>
+        <translation>Fallo</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Processing</masterLabel>
+        <translation>Procesando</translation>
     </picklistValues>
 </CustomFieldTranslation>

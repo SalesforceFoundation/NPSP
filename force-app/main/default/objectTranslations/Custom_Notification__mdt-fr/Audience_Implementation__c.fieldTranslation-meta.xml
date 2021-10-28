@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Audience_Implementation__c</name>
+    <label>Implémentation d’audience</label>
+</CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Predecessor__c</name>
     <help>このレコード (親または子) を作成する前に存在している必要のあるデータインポートオブジェクトグループレコード。</help>
     <label>前提要素</label>
-    <name>Predecessor__c</name>
 </CustomFieldTranslation>

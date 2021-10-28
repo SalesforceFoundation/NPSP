@@ -626,9 +626,7 @@ public with sharing class CON_ContactMerge_CTRL {
         standardFieldList.sort();
 
         // Sort the custom fields list by name before creating the list of FieldRow for merge UI
-        List<String> customFieldList = new List<String>();
-        customFieldList.addAll(customFieldMap.keySet());
-        customFieldList.sort();
+        List<String> customFieldList = buildSortedCustomFieldList(customFieldMap);
 
         // Add the first row of type header with contact names as titles
         FieldRow temp = new FieldRow('', '', false, 'header');
@@ -710,6 +708,22 @@ public with sharing class CON_ContactMerge_CTRL {
         // If everything looks good go to "choose winning contact" step
         this.step = 3;
 
+    }
+
+    private List<String> buildSortedCustomFieldList(Map<String, DescribeFieldResult> customFieldMap) {
+        List<String> customFields = new List<String>();
+        String undeliverableFieldName = String.valueOf(Contact.Undeliverable_Address__c).toLowerCase();
+
+        for (String fieldName : customFieldMap.keySet()) {
+            if (fieldName == undeliverableFieldName) {
+                continue;
+            }
+            customFields.add(fieldName);
+        }
+        customFields.sort();
+        customFields.add(0, undeliverableFieldName);
+
+        return customFields;
     }
 
     /***********************************************************************************************

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringType__c</name>
     <help>Selecteer Open voor een doorlopende terugkerende donatie. Selecteer Vast voor een terugkerende donatie die een specifiek aantal termijnen heeft. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
     <label>Type terugkeer</label>
-    <name>RecurringType__c</name>
-    <picklistValues>
-        <masterLabel>Fixed</masterLabel>
-        <translation>Vast</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Open</masterLabel>
         <translation>Open</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Fixed</masterLabel>
+        <translation>Vast</translation>
     </picklistValues>
 </CustomFieldTranslation>

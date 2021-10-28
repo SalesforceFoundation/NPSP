@@ -1,0 +1,57 @@
+<template>
+    <template if:true={hasMoreChanges}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <template for:each={changeLog.changes} for:item='changeEntry'>
+                    <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
+                        <c-rd2-change-entry entry-item={changeEntry}>
+                        </c-rd2-change-entry>
+                    </div>
+                </template>
+            </div>
+            <p slot="footer">
+                <a href="#" onclick={navigateToRelatedList}>{labels.commonViewMore}</a>
+            </p>
+        </lightning-card>
+    </template>
+    <template if:true={hasChanges}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <template for:each={changeLog.changes} for:item='changeEntry'>
+                    <div class='slds-border_top slds-p-vertical_medium' key={changeEntry.id}>
+                        <c-rd2-change-entry entry-item={changeEntry}>
+                        </c-rd2-change-entry>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={hasEmptyList}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration size='small' variant='going-camping' message={labels.rdclNoRecords}></c-util-illustration>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={hasError}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration size='small' title={labels.commonError} message={errorMessage}></c-util-illustration>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={isSettingDisabled}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration title={labels.commonError} size='small' message={labels.rdclDisabled} variant='no-access'></c-util-illustration>
+            </div>
+        </lightning-card>
+    </template>
+    <template if:true={isRd2Disabled}>
+        <lightning-card title={labels.rdclChangeLog} icon-name='action:defer' variant='narrow'>
+            <div class='slds-m-around_medium'>
+                <c-util-illustration title={labels.commonError} size='small' message={labels.rd2DisabledError} variant='no-access'></c-util-illustration>
+            </div>
+        </lightning-card>
+    </template>
+</template>

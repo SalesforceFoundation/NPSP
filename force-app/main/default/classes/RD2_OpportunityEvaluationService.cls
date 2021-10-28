@@ -148,6 +148,19 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /***
+    * @description Recurring Donation Change Log service instance
+    */
+    private RD2_ChangeLogService changeLogService {
+        get {
+            if (changeLogService == null) {
+                changeLogService = new RD2_ChangeLogService();
+            }
+            return changeLogService;
+        }
+        set;
+    }
+
+    /***
     * @description Calculates Current and Next Year Values for a Recurring Donation
     */
     @TestVisible
@@ -212,6 +225,11 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             return rds;
         } set;
     }
+
+    /**
+     * @description Used as a comparison for creating Change Log records
+     */
+    private List<npe03__Recurring_Donation__c> oldRds;
 
     /**
     * @description Contains Ids of new Recurring Donations
@@ -286,6 +304,16 @@ public inherited sharing class RD2_OpportunityEvaluationService {
     }
 
     /**
+     * @description Pass the set of Recurring Donations for comparison when creating Change Logs
+     * @param oldRds Recurring Donations before fields are updated
+     * @return RD2_OpportunityEvaluationService The service instance
+     */
+    public RD2_OpportunityEvaluationService withOldRds(List<npe03__Recurring_Donation__c> oldRds) {
+        this.oldRds = oldRds;
+        return this;
+    }
+
+    /**
      * @description Set Recurring Donation Ids to indicate a changed schedule
      * @param rdIds Recurring Donation Ids for which schedule has been changed
      * @return RD2_OpportunityEvaluationService The service instance
@@ -323,7 +351,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             rd.Status__c != oldRd.Status__c ||
             rd.PaymentMethod__c != oldRd.PaymentMethod__c ||
             rd.npe03__Recurring_Donation_Campaign__c != oldRd.npe03__Recurring_Donation_Campaign__c ||
-            rd.EndDate__c != rd.EndDate__c;
+            rd.EndDate__c != oldRd.EndDate__c;
 
         if (!isChanged && isMultiCurrencyEnabled) {
             isChanged = (String) rd.get(CURRENCY_ISO_CODE_FIELD) != (String) oldRd.get(CURRENCY_ISO_CODE_FIELD);
@@ -350,6 +378,8 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         List<npe03__Recurring_Donation__c> updateOppRDs = new List<npe03__Recurring_Donation__c>();
         List<npe03__Recurring_Donation__c> closeOppRds = new List<npe03__Recurring_Donation__c>();
         List<RD2_RecurringDonation> rdRecords = new List<RD2_RecurringDonation>();
+
+        setOldRdListIfNull();
 
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
@@ -393,6 +423,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             .voidOpenOpportunities(closeOppRds);
 
         handleOutdatedRecurringDonations(rdRecords);
+        createChangeLog(rdRecords);
 
         toggleTriggerState(true);
 
@@ -418,6 +449,7 @@ public inherited sharing class RD2_OpportunityEvaluationService {
             //when Opportunities were evaluated so no need to redo the work
             if (rdRecord
                 .reviseYearValues(yearValueProcessor)
+                .storeAndClearChangeType()
                 .isOutdated()//checks all changed values on the RD
             ) {
                 outdatedRDs.add(rdRecord.getUpdate());
@@ -427,6 +459,27 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         dbService.updateRecords(outdatedRDs);
 
         return this;
+    }
+
+    /**
+     * @description Determine if Recurring Donation Change Log records need to be created, then create them.
+     * @param rdRecords The List of RD records to check for Change Log
+     * @return void
+     */
+    private void createChangeLog(List<RD2_RecurringDonation> rdRecords){
+        if(!RD2_ChangeLogService.isChangeLogEnabled){
+            return;
+        }
+
+        Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
+
+        for (RD2_RecurringDonation rdRecord : rdRecords) {            
+            npe03__Recurring_Donation__c oldRd = oldRdsById.get(rdRecord.getSObject().Id);
+            RD2_RecurringDonation oldRdEntity = new RD2_RecurringDonation(oldRd);
+            changeLogService.handleLogFieldChanged(rdRecord, oldRdEntity);
+        }
+
+        changeLogService.insertChangeLogRecords();
     }
 
     /**
@@ -569,5 +622,14 @@ public inherited sharing class RD2_OpportunityEvaluationService {
         }
 
         return paidInstallmentsByRDId;
+    }
+
+    /**
+    * @description Sets the oldRds List to act as a comparison after fields are changed
+    */
+    private void setOldRdListIfNull(){
+        if(oldRds == null || oldRds.isEmpty()){
+            oldRds = rds.deepClone(true, false, true);
+        }
     }
 }

@@ -3,40 +3,40 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- NPSP Get Started Checklist Item --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הNPSP Get Started Checklist Item --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- NPSP Get Started Checklist Item --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הNPSP Get Started Checklist Item --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
+    <gender/>
     <layouts>
         <layout>GS Checklist Item Layout</layout>
         <sections>
-            <label><!-- Buttons --></label>
+            <label/>
             <section>Buttons</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label/>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Info --></label>
+            <label/>
             <section>Info</section>
         </sections>
         <sections>
-            <label><!-- Link --></label>
+            <label/>
             <section>Link</section>
         </sections>
     </layouts>

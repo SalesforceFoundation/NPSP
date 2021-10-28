@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Donation_Matching_Rule__c</name>
     <help>Bepaalt op welke velden gematcht moet worden bij het matchen van Donaties (Opportunities en Betalingen) met Data import records. Klik op Control of Command om meerdere velden te selecteren.</help>
     <label>Donatieovereenkomstregel</label>
-    <name>Donation_Matching_Rule__c</name>
 </CustomFieldTranslation>

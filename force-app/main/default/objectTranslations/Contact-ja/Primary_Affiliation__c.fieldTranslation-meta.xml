@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>団体アフィリエーションの取引先責任者のリストで「主」とマークされた取引先を追跡するために使用します。</help>
-    <label>主アフィリエーション</label>
     <name>Primary_Affiliation__c</name>
+    <help>団体アフィリエーションの取引先責任者のリストで「主」とマークされた取引先を追跡するために使用します。</help>
     <relationshipLabel>使用しないでください。[団体アフィリエーション] を使用します。</relationshipLabel>
+    <label>主アフィリエーション</label>
 </CustomFieldTranslation>

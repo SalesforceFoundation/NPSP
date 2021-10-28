@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppAutoCreateOption__c</name>
     <help>Especifica el momento en que NPSP creará oportunidades de cuota para Donaciones recurrentes. El valor predeterminado es Crear siempre siguiente cuota.</help>
     <label>Creación automática Oportunidad de cuota</label>
-    <name>InstallmentOppAutoCreateOption__c</name>
 </CustomFieldTranslation>
