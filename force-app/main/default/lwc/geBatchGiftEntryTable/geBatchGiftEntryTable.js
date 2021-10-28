@@ -103,7 +103,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         });
     }
 
-    get title() {
+    get tableTitle() {
         return format(geBatchGiftsHeader, [this.giftBatchState?.name]);
     }
 
@@ -507,4 +507,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return fieldMapping.Source_Field_API_Name === DONATION_RECORD_TYPE_NAME.fieldApiName;
     }
 
+    // Public properties below are deprecated.
+    @api title;
+    @api total;
+    @api expectedTotal;
+    @api count;
+    @api expectedCount;
 }
