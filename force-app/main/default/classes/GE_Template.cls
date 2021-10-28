@@ -38,6 +38,16 @@
 public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
     static final String FIELD_ELEMENT_TYPE = 'field';
+    @TestVisible
+    private static DataImportFieldMappingSelector selector {
+        get {
+            if (selector == null) {
+                selector = DataImportFieldMappingSelector.newInstance();
+            }
+            return selector;
+        }
+        set;
+    }
 
     /**
      * @description This method determines if there is a default template, 
@@ -112,6 +122,7 @@ public with sharing class GE_Template {
      */
     @TestVisible
     private static Form_Template__c buildDefaultTemplate() {
+        //1. Get the Static Resource version of the default template
         Form_Template__c newDefaultTemplate = new Form_Template__c();
         List<StaticResource> defaultTemplateSRList = [SELECT 
                     Id, 
@@ -136,8 +147,8 @@ public with sharing class GE_Template {
         Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
         
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
-        
-        Template defaultTemplate = (Template)JSON.deserialize(defaultTemplateSRJSON, Template.class);
+        FieldMappings f = new FieldMappings(fieldMappingCMTList);
+        Template defaultTemplate = getDefaultTemplate(defaultTemplateSRJSON, f);
         Layout defaultLayout = defaultTemplate.layout;
         List<Section> sectionList = defaultLayout.sections;
 
@@ -203,7 +214,26 @@ public with sharing class GE_Template {
         newDefaultTemplate.Format_Version__c = TEMPLATE_VERSION;
         return newDefaultTemplate;
     }
-    
+
+    private static Template getDefaultTemplate(String defaultTemplateSRJSON,
+            FieldMappings f) {
+        Template t = (Template) JSON.deserialize(defaultTemplateSRJSON, Template.class);
+        t.layout.stripElementsWithoutFieldMappings(f);
+        return t;
+    }
+
+    // Get the org's migrated field mappings.
+    @TestVisible
+    private static List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList {
+        get {
+            if (fieldMappingCMTList == null) {
+                fieldMappingCMTList = selector.getDataImportFieldMappings();
+            }
+            return fieldMappingCMTList;
+        }
+        set;
+    }
+
     /**
      * @description This method builds a mapping of partial dev name to 
      * the full dev name using the org's field mapping custom metadata records. 
@@ -213,17 +243,6 @@ public with sharing class GE_Template {
      */
     private static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap,
         Map<String,String> updatedObjectDevNameMap) {
-
-        // Get the org's migrated field mappings. 
-        List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList = [
-                SELECT Id, 
-                        MasterLabel, 
-                        DeveloperName,
-                        Target_Object_Mapping__r.DeveloperName
-                FROM Data_Import_Field_Mapping__mdt 
-                WHERE Data_Import_Field_Mapping_Set__r.DeveloperName =: 
-                    BDI_MigrationMappingUtility.MIGRATED_CUSTOM_FIELD_MAPPING_SET_RECORD_NAME
-            ];
 
         for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
             String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
@@ -305,6 +324,32 @@ public with sharing class GE_Template {
         public Layout(String fieldMappingSetDevName, Section[] sections) {
             this.fieldMappingSetDevName = fieldMappingSetDevName;
             this.sections = sections;
+        }
+
+        public Boolean containsField(SObjectField sObjectField) {
+            for (Section section : sections) {
+                List<Element> elements = section.elements;
+                for (Element element : elements) {
+                    if (element.fieldApiName == String.valueOf(sObjectField)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void stripElementsWithoutFieldMappings(FieldMappings f) {
+            for (Section section : sections) {
+                List<Element> elements = new List<Element>();
+                for (Element e : section.elements) {
+                    Map<String, List<Data_Import_Field_Mapping__mdt>> mappingsByFieldApiName =
+                            f.getMappingsByFieldApiName();
+                    if (mappingsByFieldApiName.get(e.fieldApiName) != null) {
+                        elements.add(e);
+                    }
+                }
+                section.elements = elements;
+            }
         }
     }
 
