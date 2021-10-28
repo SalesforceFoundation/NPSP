@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollup_N_Day_Value__c</name>
     <help>この値は、N 日間の割り当て積み上げ集計項目でカウントされる日数に影響します。</help>
     <label>N 日間の積み上げ集計値</label>
-    <name>Rollup_N_Day_Value__c</name>
 </CustomFieldTranslation>

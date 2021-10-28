@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
     <help>Le nombre de crédits indirects fermés aux cours des derniers jours tels que définis dans la configuration de NPSP.</help>
     <label>Nbre crédits indirects N derniers jours</label>
-    <name>Number_of_Soft_Credits_Last_N_Days__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Undeliverable__c</name>
+    <help>Geeft aan dat het adres niet geschikt is voor levering.</help>
+    <label>Onleverbaar</label>
+</CustomFieldTranslation>

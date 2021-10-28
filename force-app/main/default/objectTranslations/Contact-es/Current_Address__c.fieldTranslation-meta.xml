@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Consulta del registro de la dirección actual para este contacto. NPSP rellena el campo de dirección postal del contacto con la con la calle, la ciudad, el estado o provincia y el código postal procedentes del registro de la dirección actual.</help>
-    <label>Dirección actual</label>
     <name>Current_Address__c</name>
+    <help>Consulta del registro de la dirección actual para este contacto. NPSP rellena el campo de dirección postal del contacto con la con la calle, la ciudad, el estado o provincia y el código postal procedentes del registro de la dirección actual.</help>
     <relationshipLabel>Contactos (Dirección actual)</relationshipLabel>
+    <label>Dirección actual</label>
 </CustomFieldTranslation>

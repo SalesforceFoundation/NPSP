@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Largest_Allocation__c</name>
     <help>この一般会計単位に対する全期間での最大割り当て。</help>
     <label>最大割り当て</label>
-    <name>Largest_Allocation__c</name>
 </CustomFieldTranslation>

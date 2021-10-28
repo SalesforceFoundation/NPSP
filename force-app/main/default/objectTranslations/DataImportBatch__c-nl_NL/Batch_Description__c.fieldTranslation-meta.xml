@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Batch_Description__c</name>
     <help>Een optionele beschrijving van deze batch.</help>
     <label>Batchomschrijving</label>
-    <name>Batch_Description__c</name>
 </CustomFieldTranslation>

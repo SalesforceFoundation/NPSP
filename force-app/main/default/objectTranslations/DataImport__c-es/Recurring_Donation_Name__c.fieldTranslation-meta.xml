@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Name__c</name>
     <help>Deje en blanco si tiene un Formato de nombre de Donación recurrente seleccionado. En caso contrario, introduzca su propio nombre.</help>
     <label>Nombre de donación recurrente</label>
-    <name>Recurring_Donation_Name__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Amount_Max__c</name>
     <help>El importe máximo que la empresa igualará en un solo regalo.</help>
     <label>Importe máximo de regalo que iguala</label>
-    <name>Matching_Gift_Amount_Max__c</name>
 </CustomFieldTranslation>

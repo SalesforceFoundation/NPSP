@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Do_Not_Contact__c</name>
     <help>Le contact ne souhaite pas que votre org. l’appelle ou lui envoie des e-mails. Utilisez ce champ pour filtrer les contacts dans les listes téléphoniques et d’e-mail. Si cette option est sélectionnée, NPSP exclut ce contact des Confirmations d’opportunité.</help>
     <label>Ne pas contacter</label>
-    <name>Do_Not_Contact__c</name>
 </CustomFieldTranslation>

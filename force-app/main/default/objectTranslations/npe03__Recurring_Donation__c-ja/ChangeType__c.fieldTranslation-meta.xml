@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>ChangeType__c</name>
+    <help>この更新が表す変更の種別 (アップグレード、ダウングレードなど)。</help>
+    <label>変更種別</label>
+    <picklistValues>
+        <masterLabel>Upgrade</masterLabel>
+        <translation>アップグレード</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Downgrade</masterLabel>
+        <translation>ダウングレード</translation>
+    </picklistValues>
+</CustomFieldTranslation>

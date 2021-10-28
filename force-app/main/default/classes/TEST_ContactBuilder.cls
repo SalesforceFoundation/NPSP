@@ -71,4 +71,12 @@ public inherited sharing class TEST_ContactBuilder {
         return new List<Contact>{dummyContactWithId()};
     }
 
+    @TestVisible
+    private static Contact dummyContactWithAddress() {
+        Contact con = dummyContact();
+        con.MailingStreet = '123 Test St.';
+        con.MailingCity = 'Test City';
+        con.MailingPostalCode = '11011';
+        return con;
+    }
 }

@@ -69,6 +69,19 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         set;
     }
 
+    /***
+    * @description Recurring Donation Opportunity Evaluation service instance
+    */
+    private RD2_OpportunityEvaluationService evalService {
+        get {
+            if (evalService == null) {
+                evalService = new RD2_OpportunityEvaluationService();
+            }
+            return evalService;
+        }
+        set;
+    }
+
     /**
      * @description Current date is the cut off date to determine all functionality related a Recurring Donation.
      * Moreover, it is used to calculate the RD end date and can be a past date, today or a future date when testing.
@@ -178,13 +191,19 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd)
                     .revisePlannedInstallments()
+                    .storeAndClearChangeType()
                     .reviseNextDonationDateBeforeInsert(scheduleService);
 
             } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
+
                 RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd, oppsByRDId.get(rd.Id))
                     .revisePlannedInstallments()
                     .reviseStatus(currentDate, scheduleService)
                     .reviseNextDonationDate(scheduleService, schedulesByRdId.get(rd.Id));
+
+                if (!evalService.hasKeyFieldChanged(rd, oldRdsById.get(rd.Id))) {
+                    rdRecord.storeAndClearChangeType();
+                }
 
                 preventScheduleChangeWhenPaused(rdRecord, oldRdsById.get(rd.Id), schedulesByRdId.get(rd.Id));
             }
@@ -327,7 +346,6 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
             rdIds = new Map<Id, npe03__Recurring_Donation__c>(rds).keySet();
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-            RD2_OpportunityEvaluationService evalService = new RD2_OpportunityEvaluationService();
             Map<Id, npe03__Recurring_Donation__c> oldRdsById = new Map<Id, npe03__Recurring_Donation__c>(oldRds);
 
             for (npe03__Recurring_Donation__c rd : rds) {
@@ -350,11 +368,11 @@ public class RD2_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert && shouldEvaluateOppsSynchronouslyOnInsert(rds.size() > 1)) {
-            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged)
+            new RD2_QueueableService.EvaluateInstallmentOpportunities(rdIds, rdIdsWhereScheduleChanged, oldRds)
                 .executeOppEvaluationService();
 
         } else {
-            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged);
+            RD2_QueueableService.enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, oldRds);
         }
     }
 

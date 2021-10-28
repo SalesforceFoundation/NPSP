@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Comments__c</name>
     <help>会社のマッチングギフトプログラムに関する追加メモ。</help>
     <label>マッチングギフト コメント</label>
-    <name>Matching_Gift_Comments__c</name>
 </CustomFieldTranslation>

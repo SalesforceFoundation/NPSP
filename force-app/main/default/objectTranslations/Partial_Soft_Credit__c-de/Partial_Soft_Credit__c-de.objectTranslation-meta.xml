@@ -1,46 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>false</plural>
-        <value>Teilweiser Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Nominative</caseType>
-        <plural>true</plural>
-        <value>Teilweise Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Accusative</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Genitive</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>false</plural>
-        <value>Teilweisen Soft Credit</value>
-    </caseValues>
-    <caseValues>
-        <caseType>Dative</caseType>
-        <plural>true</plural>
-        <value>Teilweisen Soft Credits</value>
-    </caseValues>
-    <gender>Masculine</gender>
+    <webLinks>
+        <name>Manage_Soft_Credits</name>
+        <label>Soft Credits verwalten</label>
+    </webLinks>
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
@@ -49,8 +12,49 @@
         </sections>
     </layouts>
     <nameFieldLabel>Name des teilweisen Soft Credits</nameFieldLabel>
-    <webLinks>
-        <label>Soft Credits verwalten</label>
-        <name>Manage_Soft_Credits</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Name des teilweisen Soft Credits</label>
+    </standardFields>
+    <gender>Masculine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Nominative</caseType>
+        <value>Teilweiser Soft Credit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Accusative</caseType>
+        <value>Teilweisen Soft Credit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Dative</caseType>
+        <value>Teilweisen Soft Credit</value>
+    </caseValues>
+    <caseValues>
+        <plural>false</plural>
+        <caseType>Genitive</caseType>
+        <value>Teilweisen Soft Credits</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Nominative</caseType>
+        <value>Teilweise Soft Credits</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Accusative</caseType>
+        <value>Teilweisen Soft Credits</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Dative</caseType>
+        <value>Teilweisen Soft Credits</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <caseType>Genitive</caseType>
+        <value>Teilweisen Soft Credits</value>
+    </caseValues>
 </CustomObjectTranslation>

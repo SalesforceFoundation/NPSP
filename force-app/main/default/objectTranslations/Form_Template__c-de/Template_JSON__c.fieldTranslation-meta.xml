@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Template_JSON__c</name>
     <help>Die Abschnitte und Felder in dieser Vorlage zusammen mit ihrer Reihenfolge, Anforderungen und Standardwerten. Als JSON gespeichert. Nicht direkt bearbeiten.</help>
     <label>Vorlagen-JSON</label>
-    <name>Template_JSON__c</name>
 </CustomFieldTranslation>

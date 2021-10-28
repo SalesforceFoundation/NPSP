@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Usernames_to_Exclude__c</name>
+    <help>Een lijst met Gebruikersnamen die met een puntkomma zijn gescheiden waarvoor deze Triggerhandler niet zal worden uitgevoerd. Laat dit leeg om te laten uitvoeren voor alle Gebruikers.</help>
+    <label>Uit te sluiten Gebruikersnamen</label>
+</CustomFieldTranslation>

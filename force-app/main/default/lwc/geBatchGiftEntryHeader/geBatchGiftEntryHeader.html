@@ -7,19 +7,19 @@
             <lightning-button-group>
                 <lightning-button label={LABELS.bgeBatchDryRun}
                                   onclick={handleClick}
-                                  disabled={isBatchProcessing}
+                                  disabled={isGiftBatchProcessing}
                                   data-action={ACTIONS.DRY_RUN_BATCH}
                                   data-qa-locator={qaLocatorBatchDryRun}>
                 </lightning-button>
                 <lightning-button label={processBatchButtonName}
                                   onclick={handleClick}
-                                  disabled={isBatchProcessing}
+                                  disabled={isGiftBatchProcessing}
                                   data-action={ACTIONS.PROCESS_BATCH}
                                   data-qa-locator={qaLocatorProcessBatch}>
                 </lightning-button>
                 <lightning-button label={LABELS.geEditBatchInfo}
                                   onclick={handleClick}
-                                  disabled={isBatchProcessing}
+                                  disabled={isGiftBatchProcessing}
                                   data-action={ACTIONS.EDIT_BATCH}
                                   data-qa-locator={qaLocatorEditBatchInfo}>
                 </lightning-button>
@@ -32,7 +32,7 @@
                     {LABELS.commonRecordsProcessed}
                 </p>
                 <p class="slds-text-body_regular">
-                    {batchTotals.processedGiftsCount} / {batchTotals.totalGiftsCount}
+                    {giftBatchState.processedGiftsCount} / {giftBatchState.totalGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
             <c-util-page-header-detail-block>
@@ -40,15 +40,15 @@
                     {LABELS.commonRecordsFailed}
                 </p>
                 <p class="slds-text-body_regular">
-                    {batchTotals.failedGiftsCount}
+                    {giftBatchState.failedGiftsCount}
                 </p>
             </c-util-page-header-detail-block>
-            <c-util-page-header-detail-block if:true={isElevateCustomer}>
+            <c-util-page-header-detail-block if:true={hasFailedPayments}>
                 <p class="slds-text-title">
                     {LABELS.commonPaymentProcessingErrors}
                 </p>
                 <p class="slds-text-body_regular">
-                    {batchTotals.failedPaymentsCount}
+                    {giftBatchState.failedPaymentsCount}
                 </p>
             </c-util-page-header-detail-block>
         </c-util-page-header-detail-row>

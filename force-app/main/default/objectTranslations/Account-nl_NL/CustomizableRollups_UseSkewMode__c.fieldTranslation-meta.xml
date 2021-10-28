@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CustomizableRollups_UseSkewMode__c</name>
     <help>Als Aanpasbare totaliseringen ingeschakeld is, wordt altijd de verschuivingsmodus gebruikt voor het totaliseren van hard credits en soft credits voor deze record.</help>
     <label>Aanp. total.: verschuivingsmodus forc.</label>
-    <name>CustomizableRollups_UseSkewMode__c</name>
 </CustomFieldTranslation>

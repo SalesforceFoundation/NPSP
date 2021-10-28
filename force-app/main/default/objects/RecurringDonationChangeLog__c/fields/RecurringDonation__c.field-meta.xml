@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RecurringDonation__c</fullName>
+    <description>The Recurring Donation related to this Change Log record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The Recurring Donation related to this Change Log record.</inlineHelpText>
+    <label>Recurring Donation</label>
+    <referenceTo>npe03__Recurring_Donation__c</referenceTo>
+    <relationshipLabel>Recurring Donation Change Log</relationshipLabel>
+    <relationshipName>RDChangeLog</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

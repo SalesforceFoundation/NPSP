@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RequireTotalMatch__c</name>
     <help>Wanneer aangevinkt, moet het totale aantal giften en het totale bedrag overeenkomen met de verwachte totalen die voor de batch zijn opgegeven.</help>
     <label>Overeenkomst Verwachte Totalen vereisen</label>
-    <name>RequireTotalMatch__c</name>
 </CustomFieldTranslation>

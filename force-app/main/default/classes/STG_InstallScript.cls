@@ -90,6 +90,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             // Check for advanced mapping setting then create migrated custom field mappings as needed
             executeAction(InstallAction.CREATE_MIGRATED_CUSTOM_FIELD_MAPPINGS, logger);
+
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -103,6 +104,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
+
+        new InstallationNotifications(context).publish();
 
         logger.log();
     }

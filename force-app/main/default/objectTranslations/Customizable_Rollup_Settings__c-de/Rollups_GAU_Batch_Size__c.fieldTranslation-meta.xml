@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_GAU_Batch_Size__c</name>
     <help>Anzahl der Datensätze pro Batch, die bei der Neuberechnung von Spender-Rollups zum Verwendungszweck-Objekt verarbeitet werden.</help>
     <label>Batch-Größe Verwendungszweck</label>
-    <name>Rollups_GAU_Batch_Size__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,40 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="12">
+                <lightning-record-edit-form object-api-name={softCreditObjectApiName}>
+                    <div class="slds-grid slds-grid_vertical-align-start slds-p-vertical_xx-small">
+                        <div class="slds-p-horizontal_x-small slds-col slds-size_3-of-12">
+                            <lightning-input-field field-name={contactFieldApiName}
+                                                   onchange={handleContactIdChange}
+                                                   value={contactValue}
+                                                   class="help-text-hidden slds-m-bottom_none"
+                                                   data-qa-locator={qaLocatorSoftCreditContact}
+                                                   disabled={isReadOnly}>
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-p-horizontal_x-small slds-col slds-size_3-of-12">
+                            <lightning-input-field field-name={roleFieldApiName}
+                                                   onchange={handleRoleChange}
+                                                   value={roleValue}
+                                                   class="help-text-hidden slds-m-bottom_none"
+                                                   data-qa-locator={qaLocatorSoftCreditRole}
+                                                   disabled={isReadOnly}>
+                            </lightning-input-field>
+                        </div>
+                        <div class="slds-p-horizontal_x-small slds-p-top_large slds-col slds-size_6-of-12">
+                            <template if:true={isRemovable}>
+                                <lightning-button-icon class="slds-m-right_xxx-small "
+                                                       icon-name="utility:delete"
+                                                       alternative-text={labelGeAssistiveFormFieldRemove}
+                                                       size="medium"
+                                                       onclick={remove}
+                                                       data-qa-locator={qaLocatorDeleteRow}
+                                                       disabled={isReadOnly}>
+                                </lightning-button-icon>                                
+                            </template>
+                        </div>                   
+                    </div>
+                </lightning-record-edit-form>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

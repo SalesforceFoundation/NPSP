@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Average_Allocation__c</name>
     <help>El promedio de todas las asignaciones a esta cuenta contable general.</help>
     <label>Asignación promedio</label>
-    <name>Average_Allocation__c</name>
 </CustomFieldTranslation>

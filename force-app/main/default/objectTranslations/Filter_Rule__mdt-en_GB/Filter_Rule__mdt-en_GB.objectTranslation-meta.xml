@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>Filter Rule</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>Filter Rules</value>
-    </caseValues>
     <layouts>
         <layout>Filter Rule Layout</layout>
         <sections>
@@ -16,4 +8,12 @@
         </sections>
     </layouts>
     <startsWith>Consonant</startsWith>
+    <caseValues>
+        <plural>false</plural>
+        <value>Filter Rule</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Filter Rules</value>
+    </caseValues>
 </CustomObjectTranslation>

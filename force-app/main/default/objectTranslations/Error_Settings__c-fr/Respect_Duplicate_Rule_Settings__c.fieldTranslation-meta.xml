@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Respect_Duplicate_Rule_Settings__c</name>
     <help>Param. d’une règle de dupl. qui contrôle si les enreg. en double sont autorisés. Lorsque les champs Action sur créer ou Action sur modifier sont définis sur « Autoriser » (dans Règles de dupl. sous Config.), les doubles seront enregistrés.</help>
     <label>Respecter paramètres règle duplication</label>
-    <name>Respect_Duplicate_Rule_Settings__c</name>
 </CustomFieldTranslation>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>この割り当ての対象となる継続支援。継続支援と関連付けられたすべての新規商談は、自動的に同じように割り当てられます。</help>
-    <label>継続支援</label>
     <name>Recurring_Donation__c</name>
+    <help>この割り当ての対象となる継続支援。継続支援と関連付けられたすべての新規商談は、自動的に同じように割り当てられます。</help>
     <relationshipLabel>一般会計単位の割り当て</relationshipLabel>
+    <label>継続支援</label>
 </CustomFieldTranslation>

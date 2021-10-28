@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Opportunity_Name_Format__c</name>
     <help>Het formaat dat gebruikt moet worden voor het benoemen van een Opportunity.</help>
     <label>Formaat van Opportunitynaam</label>
-    <name>Opportunity_Name_Format__c</name>
 </CustomFieldTranslation>

@@ -25,6 +25,7 @@
     <aura:attribute name="hhMerge" type="Object" access="private" />
     <aura:attribute name="isSaveDisabled" type="Boolean" default="false" access="private" />
     <aura:attribute name="allowHouseholdMerge" type="Boolean" default="false" access="private" />
+    <aura:attribute name="fieldLabels" type="Map" access="private" />
 
     <!-- events we fire -->
     <aura:registerEvent name="ContactAfterRemoveEvent" type="c:HH_ContactAfterRemoveEvent" />
@@ -56,8 +57,10 @@
                         <nav role="navigation" class="slds-p-bottom_x-small">
                             <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.c.lblYouAreHere}</p>
                             <ol class="slds-breadcrumb slds-list_horizontal" aria-labelledby="bread-crumb-label">
-                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
-                                <li class="slds-breadcrumb__item slds-text-heading_label"><a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading_label">
+                                    <a href="{!'/' + v.hhTypePrefix}">{!$Label.c.lblHousehold}</a></li>
+                                <li class="slds-breadcrumb__item slds-text-heading_label">
+                                    <a href="{!'/' + v.hhId}">{!v.hh.Name}</a></li>
                             </ol>
                         </nav>
                         <div class="slds-media slds-media_center slds-has-flexi-truncate">
@@ -71,17 +74,14 @@
                     </div>
                     <div class="slds-col slds-no-flex slds-align-middle">
                         <div class="slds-button-group" role="group">
-                            <ui:button class="slds-button slds-button_neutral"
-                                aura:id="buttonCancel"
-                                buttonTitle="{!$Label.c.stgBtnCancel}"
-                                label="{!$Label.c.stgBtnCancel}"
-                                press="{!c.close}" />
-                            <ui:button class="slds-button slds-button_brand"
-                                aura:id="buttonSave"
-                                buttonTitle="{!$Label.c.stgBtnSave}"
-                                label="{!$Label.c.stgBtnSave}"
-                                disabled="{!v.isSaveDisabled}"
-                                press="{!c.save}" />
+                            <lightning:button aura:id="buttonCancel"
+                                              label="{!$Label.c.stgBtnCancel}"
+                                              onclick="{!c.close}" />
+                            <lightning:button class="slds-button slds-button_brand"
+                                              aura:id="buttonSave"
+                                              label="{!$Label.c.stgBtnSave}"
+                                              disabled="{!v.isSaveDisabled}"
+                                              onclick="{!c.save}" />
                         </div>
                     </div>
                 </div>
@@ -107,64 +107,56 @@
                         <div class="slds-col slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdMembers}</div>
                         <div class="slds-col slds-text-align_right slds-p-around_x-small">
                             <!-- the autocomplete component for finding and adding contacts -->
-                            <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}" namespacePrefix="{!v.namespacePrefix}" listCon="{!v.listCon}" />                            
+                            <c:HH_AutoComplete aura:id="HHAutoComplete" hhId="{!v.hhId}"
+                                               namespacePrefix="{!v.namespacePrefix}"
+                                               listCon="{!v.listCon}" />
                         </div>
                     </div>
-                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}" />
+                    <c:HH_Canvas hh="{!v.hh}" listCon="{!v.listCon}"
+                                 contactUndeliverableLabel="{!v.fieldLabels.Undeliverable_Address__c}" />
                 </div>
 
                 <!-- the Address section -->
                 <div class="slds-p-bottom_large">
                     <div class="slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdAddress}</div>
-                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" />
+                    <c:HH_AddressMgr listAddr="{!v.listAddr}" aura:id="addrMgr" addressUndeliverableLabel="{!v.fieldLabels.Undeliverable__c}"/>
                 </div>
 
                 <!-- the section for our 3 special naming & greeting fields -->
                 <div class="slds-text-heading_label slds-p-around_x-small">{!$Label.npo02.HouseholdDetails}</div>
                 <div class="slds-grid slds-grid_align-spread slds-m-around_medium">
                     <div class="slds-form_stacked" style="width:80%" >
-
-                        <ui:inputText value="{!v.hh.Name}" aura:id="txtHHName" class="slds-input" required="true"
-                            label="{!$Label.c.lblHouseholdName}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                        <lightning:input value="{!v.hh.Name}" aura:id="txtHHName" required="true"
+                                         label="{!$Label.c.lblHouseholdName}" onchange="{!c.onTextChange}" />
                         <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
-                                <label class="slds-checkbox">
-                                    <ui:inputCheckbox aura:id="cbxAutoHHName" class="slds-checkbox"
-                                        change="{!c.onCheck}" value="{!v.isAutoName}"/>
-                                    <span class="slds-checkbox_faux"></span>
-                                    <span class="slds-form-element__label" for="exHHName">{!$Label.npo02.AutoName}</span>
-                                </label>
+                                <lightning:input type="checkbox" aura:id="cbxAutoHHName" class="slds-checkbox"
+                                                 label="{!$Label.npo02.AutoName}" onchange="{!c.onCheck}"
+                                                 checked="{!v.isAutoName}"/>
                             </div>
                         </div>
-
-                        <ui:inputText value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting" class="slds-input"
-                            label="{!$Label.c.lblFormalGreeting}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                        <lightning:input value="{!v.hh.npo02__Formal_Greeting__c}" aura:id="txtFormalGreeting"
+                                         label="{!$Label.c.lblFormalGreeting}"
+                                         onchange="{!c.onTextChange}" />
                         <div class="slds-form-element slds-m-bottom_medium">
                             <div class="slds-form-element__control">
-                                <label class="slds-checkbox">
-                                    <ui:inputCheckbox aura:id="cbxAutoFormalGreeting" class="slds-checkbox"
-                                        change="{!c.onCheck}" value="{!v.isAutoFormalGreeting}"/>
-                                    <span class="slds-checkbox_faux" id="fauxCBAutoFormal"></span>
-                                    <span class="slds-form-element__label" for="cbxAutoFormalGreeting">{!$Label.npo02.AutoFormalGreeting}</span>
-                                </label>
+                                    <lightning:input label="{!$Label.npo02.AutoFormalGreeting}" type="checkbox"
+                                                     aura:id="cbxAutoFormalGreeting"
+                                                     class="slds-checkbox"
+                                                     onchange="{!c.onCheck}" checked="{!v.isAutoFormalGreeting}"/>
                             </div>
                         </div>
-
-                        <ui:inputText value="{!v.hh.npo02__Informal_Greeting__c}" aura:id="txtInformalGreeting" class="slds-input"
-                            label="{!$Label.c.lblInformalGreeting}" labelClass="slds-form-element__label" change="{!c.onTextChange}" />
+                        <lightning:input value="{!v.hh.npo02__Informal_Greeting__c}" aura:id="txtInformalGreeting"
+                                         label="{!$Label.c.lblInformalGreeting}" onchange="{!c.onTextChange}" />
                         <div class="slds-form-element">
                             <div class="slds-form-element__control">
-                                <label class="slds-checkbox">
-                                    <ui:inputCheckbox aura:id="cbxAutoInformalGreeting" class="slds-checkbox"
-                                        change="{!c.onCheck}" value="{!v.isAutoInformalGreeting}"/>
-                                    <span class="slds-checkbox_faux" id="fauxCBAutoInformal"></span>
-                                    <span class="slds-form-element__label" for="cbxAutoInformalGreeting">{!$Label.npo02.AutoInformalGreeting}</span>
-                                </label>
+                                <lightning:input type="checkbox" aura:id="cbxAutoInformalGreeting"
+                                                 onchange="{!c.onCheck}" checked="{!v.isAutoInformalGreeting}"
+                                                 label="{!$Label.npo02.AutoInformalGreeting}"/>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
             <!-- REMOVE CONTACT POPUP -->
             <aura:if isTrue="{!v.showRemoveContactPopup}">
@@ -214,21 +206,15 @@
                         </div> <!-- /slds-modal__content -->
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons_horizontal">
-                                <ui:button class="slds-button slds-button_neutral"
-                                    aura:id="btnCancelHHMerge"
-                                    buttonTitle="{!$Label.c.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel}"
-                                    press="{!c.cancelMergeHHPopup}" />
-                                <ui:button class="slds-button slds-button_neutral"
-                                    aura:id="btnAddContact"
-                                    buttonTitle="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
-                                    label="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
-                                    press="{!c.doAddContact}" />
-                                <ui:button class="slds-button slds-button_brand"
-                                    aura:id="btnMergeHH"
-                                    buttonTitle="{!$Label.c.lblBtnAddAllHHMembers}"
-                                    label="{!$Label.c.lblBtnAddAllHHMembers}"
-                                    press="{!c.doMergeHH}" />
+                                <lightning:button aura:id="btnCancelHHMerge"
+                                                  label="{!$Label.c.stgBtnCancel}"
+                                                  onclick="{!c.cancelMergeHHPopup}" />
+                                <lightning:button aura:id="btnAddContact"
+                                                  label="{!format($Label.c.lblBtnAddContact, v.conAdd.FirstName + ' ' + v.conAdd.LastName)}"
+                                                  onclick="{!c.doAddContact}" />
+                                <lightning:button aura:id="btnMergeHH"
+                                                  label="{!$Label.c.lblBtnAddAllHHMembers}"
+                                                  onclick="{!c.doMergeHH}" />
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->
@@ -252,36 +238,32 @@
                             <div aura:id="divUIMessageNewContactPopup" />
                             <div class="slds-form_stacked">
                                 <div class="slds-form-element">
-                                    <ui:inputSelect aura:id="selSalutation" label="{!$Label.c.lblSalutation}"
-                                        change="{!c.onSalutationChange}" class="slds-select slds-input slds-form-element__control" labelClass="slds-form-element__label" >
+                                    <lightning:select aura:id="selSalutation" label="{!$Label.c.lblSalutation}"
+                                                      onchange="{!c.onSalutationChange}" >
                                         <aura:iteration items="{!v.listSalutation}" var="sal">
-                                            <ui:inputSelectOption text="{!sal.value}" label="{!sal.label}"/>
+                                            <option label="{!sal.label}">{!sal.value}</option>
                                         </aura:iteration>
-                                    </ui:inputSelect>
+                                    </lightning:select>
                                 </div>
                                 <div class="slds-form-element">
-                                    <ui:inputText value="{!v.conNew.FirstName}" aura:id="txtFirstName" class="slds-input slds-form-element__control"
-                                                  label="{!$Label.c.lblFirstName}" labelClass="slds-form-element__label" />
+                                    <lightning:input value="{!v.conNew.FirstName}" aura:id="txtFirstName"
+                                                     label="{!$Label.c.lblFirstName}" />
                                 </div>
                                 <div class="slds-form-element">
-                                    <ui:inputText value="{!v.conNew.LastName}" aura:id="txtLastName" class="slds-input slds-form-element__control" required="true"
-                                                  label="{!$Label.c.lblLastName}" labelClass="slds-form-element__label" />
+                                    <lightning:input value="{!v.conNew.LastName}" aura:id="txtLastName" required="true"
+                                                     label="{!$Label.c.lblLastName}" />
                                 </div>
                             </div>
                         </div> <!-- /slds-modal__content -->
 
                         <div class="slds-modal__footer">
                             <div class="slds-x-small-buttons_horizontal">
-                                <ui:button class="slds-button slds-button_neutral"
-                                    aura:id="btnCancelNew"
-                                    buttonTitle="{!$Label.c.stgBtnCancel}"
-                                    label="{!$Label.c.stgBtnCancel}"
-                                    press="{!c.cancelNewContact}" />
-                                <ui:button class="slds-button slds-button_brand"
-                                    aura:id="btnNew"
-                                    buttonTitle="{!$Label.npo02.NewContact}"
-                                    label="{!$Label.npo02.NewContact}"
-                                    press="{!c.doNewContact}" />
+                                <lightning:button aura:id="btnCancelNew"
+                                                  label="{!$Label.c.stgBtnCancel}"
+                                                  onclick="{!c.cancelNewContact}" />
+                                <lightning:button aura:id="btnNew"
+                                                  label="{!$Label.npo02.NewContact}"
+                                                  onclick="{!c.doNewContact}" />
                             </div>
                         </div>
                     </div> <!-- /slds-modal__container -->

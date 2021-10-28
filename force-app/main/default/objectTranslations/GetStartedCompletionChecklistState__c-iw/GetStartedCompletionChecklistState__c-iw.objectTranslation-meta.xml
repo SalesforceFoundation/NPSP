@@ -3,23 +3,23 @@
     <caseValues>
         <article>None</article>
         <plural>false</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>false</plural>
-        <value><!-- הGet Started Completion Checklist State --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>None</article>
         <plural>true</plural>
-        <value><!-- Get Started Completion Checklist State --></value>
+        <value/>
     </caseValues>
     <caseValues>
         <article>Definite</article>
         <plural>true</plural>
-        <value><!-- הGet Started Completion Checklist State --></value>
+        <value/>
     </caseValues>
-    <gender><!-- Masculine --></gender>
-    <nameFieldLabel><!-- Get Started Completion Checklist State N --></nameFieldLabel>
+    <gender/>
+    <nameFieldLabel/>
 </CustomObjectTranslation>

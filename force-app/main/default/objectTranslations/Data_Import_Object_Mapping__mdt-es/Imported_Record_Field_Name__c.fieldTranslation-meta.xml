@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Imported_Record_Field_Name__c</name>
     <help>El nombre de API de campo del objeto Importación de datos de NPSP donde el Id. del registro importado se colocará cuando la importación se realice correctamente. También es donde el código verificará si este registro fue importado o por coincidencia.</help>
     <label>Nombre de campo de registro importado</label>
-    <name>Imported_Record_Field_Name__c</name>
 </CustomFieldTranslation>

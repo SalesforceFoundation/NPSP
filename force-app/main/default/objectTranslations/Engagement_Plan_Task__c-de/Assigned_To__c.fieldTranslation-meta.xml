@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Assigned_To__c</name>
     <help>Nachschlageassistent zu dem Benutzer, dem Sie die Aufgabe zuweisen wollen. Wenn dieses Feld leer gelassen wird, weist NPSP die Aufgabe basierend auf dem Standard-Empfänger der Engagementplan-Vorlage zu.</help>
     <label>Zugewiesen zu</label>
-    <name>Assigned_To__c</name>
-    <relationshipLabel><!-- Engagement Plan Tasks --></relationshipLabel>
 </CustomFieldTranslation>

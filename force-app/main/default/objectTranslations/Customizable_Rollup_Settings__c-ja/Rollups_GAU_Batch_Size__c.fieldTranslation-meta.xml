@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_GAU_Batch_Size__c</name>
     <help>一般取引先単位オブジェクトへの支援者積み上げ集計の再計算における、バッチあたりの処理対象レコード数。</help>
     <label>GAU バッチサイズ</label>
-    <name>Rollups_GAU_Batch_Size__c</name>
 </CustomFieldTranslation>

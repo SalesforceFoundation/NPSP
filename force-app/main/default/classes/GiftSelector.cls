@@ -35,12 +35,64 @@
 
 public with sharing class GiftSelector {
 
-    public List<DataImport__c> getGiftsFor(Id batchId) {
-        return [
-                SELECT Payment_Elevate_Batch_ID__c, Id, Payment_Status__c, Status__c
-                FROM DataImport__c
-                WHERE NPSP_Data_Import_Batch__c =: batchId
-        ];
+    private List<String> additionalGiftsFieldsToQuery;
+    private List<Id> giftIds;
+    private Integer giftsOffset;
+    private Integer giftsLimit;
+
+    public GiftSelector() {}
+
+    public GiftSelector(GiftTemplate giftTemplate) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+    }
+
+    public GiftSelector(GiftTemplate giftTemplate, List<Id> giftIds) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+        this.giftIds = giftIds;
+    }
+
+    public GiftSelector(GiftTemplate giftTemplate, Integer giftsLimit, Integer giftsOffset) {
+        this.additionalGiftsFieldsToQuery = giftTemplate.giftFieldApiNames();
+        this.giftsLimit = giftsLimit;
+        this.giftsOffset = giftsOffset;
+    }
+
+    public List<DataImport__c> getGiftsFor(GiftBatchId giftBatchId) {
+        String dataImportBatchLookup = String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c);
+        Id dataImportBatchId = giftBatchId.value();
+        UTIL_Query query = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fields())
+            .withWhere(dataImportBatchLookup + ' =: dataImportBatchId')
+            .withOrderBy('CreatedDate DESC')
+            .withSecurityEnforced();
+
+        if (this.giftsLimit != null) {
+            query.withLimit(this.giftsLimit);
+        }
+
+        if (this.giftIds != null) {
+            query.withWhere('Ids IN :giftIds');
+        }
+
+        if (this.giftsOffset != null) {
+            query.withOffset(this.giftsOffset);
+        }
+
+        String queryString = query.build();
+        return Database.query(queryString);
+    }
+
+    public DataImport__c getGiftById(Id giftId, GiftTemplate formTemplate) {
+        this.additionalGiftsFieldsToQuery = formTemplate.giftFieldApiNames();
+        String queryString = new UTIL_Query()
+            .withFrom(DataImport__c.SObjectType)
+            .withSelectFields(fields())
+            .withWhere('Id =: giftId')
+            .withSecurityEnforced()
+            .build();
+
+        return Database.query(queryString);
     }
 
     public DataImport__c getGiftById(Id giftId, List<String> fieldsToQuery) {
@@ -53,5 +105,87 @@ public with sharing class GiftSelector {
 
         return Database.query(queryString);
     }
-    
+
+    private List<String> elevateFields() {
+        List<String> elevateFieldApiNames = new List<String>{
+            String.valueOf(DataImport__c.Elevate_Payment_Status__c),
+            String.valueOf(DataImport__c.Payment_Declined_Reason__c),
+            String.valueOf(DataImport__c.Payment_Elevate_Batch_ID__c),
+            String.valueOf(DataImport__c.Payment_Elevate_ID__c)
+        };
+
+        return elevateFieldApiNames;
+    }
+
+    private List<String> coreFields() {
+        List<String> giftEntryFieldApiNames = new List<String> {
+            String.valueOf(DataImport__c.Account1Imported__c),
+            String.valueOf(DataImport__c.Additional_Object_JSON__c),
+            String.valueOf(DataImport__c.Contact1Imported__c),
+            String.valueOf(DataImport__c.DonationImportStatus__c),
+            String.valueOf(DataImport__c.DonationImported__c),
+            String.valueOf(DataImport__c.Donation_Donor__c),
+            String.valueOf(DataImport__c.FailureInformation__c),
+            String.valueOf(DataImport__c.Id),
+            String.valueOf(DataImport__c.NPSP_Data_Import_Batch__c),
+            String.valueOf(DataImport__c.PaymentImportStatus__c),
+            String.valueOf(DataImport__c.PaymentImported__c),
+            String.valueOf(DataImport__c.Payment_Status__c),
+            String.valueOf(DataImport__c.Status__c)
+        };
+
+        return giftEntryFieldApiNames;
+    }
+
+    @TestVisible
+    private List<String> fields() {
+        Set<String> queryFieldAsSet = new Set<String>();
+        queryFieldAsSet.addAll(coreFields());
+        if (this.additionalGiftsFieldsToQuery != null) {
+            queryFieldAsSet.addAll(this.additionalGiftsFieldsToQuery);
+        }
+        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
+            queryFieldAsSet.addAll(elevateFields());
+        }
+
+        List<String> fields = new List<String>();
+        fields.addAll(filterByReadAccess(queryFieldAsSet));
+        fields.addAll(enrichWithLightningDatatablePropertiesForRelationshipFields(fields));
+
+        return fields;
+    }
+
+    private List<String> filterByReadAccess(Set<String> fieldsToValidate) {
+        List<String> hasReadAccessTo = new List<String>();
+        for (String fieldApiName : fieldsToValidate) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            If (fieldDescribe.isAccessible()) {
+                hasReadAccessTo.add(fieldApiName);
+            }
+        }
+
+        return hasReadAccessTo;
+    }
+
+    private List<String> enrichWithLightningDatatablePropertiesForRelationshipFields(List<String> fields) {
+        List<String> relationshipFieldsToAdd = new List<String>();
+
+        for (String fieldApiName : fields) {
+            DescribeFieldResult fieldDescribe =
+                Schema.SObjectType.DataImport__c.fields.getMap().get(fieldApiName).getDescribe();
+
+            if (fieldDescribe.type == Schema.DisplayType.REFERENCE) {
+                String referencedObjectName = fieldDescribe.getReferenceTo()[0].getDescribe().name;
+                String relationshipField =
+                    fieldDescribe.getName().substringBefore('__c') + '__r.'
+                    + UTIL_Describe.getNameField(referencedObjectName);
+
+                relationshipFieldsToAdd.add(relationshipField);
+            }
+        }
+
+        return relationshipFieldsToAdd;
+    }
 }

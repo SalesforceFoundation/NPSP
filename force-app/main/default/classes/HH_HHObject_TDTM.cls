@@ -46,13 +46,13 @@ public class HH_HHObject_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        Households households = new Households(newlist, oldlist);
+        LegacyHouseholds legacyHouseholds = new LegacyHouseholds(newlist, oldlist);
         switch on triggerAction {
             when BeforeUpdate {
-                households.onBeforeUpdate();
+                legacyHouseholds.onBeforeUpdate();
             }
             when AfterUpdate {
-                households.onAfterUpdate();
+                legacyHouseholds.onAfterUpdate();
             }
         }
         return null;

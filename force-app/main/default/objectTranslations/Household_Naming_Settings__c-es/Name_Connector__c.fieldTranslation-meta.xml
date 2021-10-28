@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Name_Connector__c</name>
     <help>La palabra a utilizar para conectar pares en un nombre. Por ejemplo, Juan y María, o Juan &amp; María.</help>
     <label>Conector de nombres</label>
-    <name>Name_Connector__c</name>
 </CustomFieldTranslation>

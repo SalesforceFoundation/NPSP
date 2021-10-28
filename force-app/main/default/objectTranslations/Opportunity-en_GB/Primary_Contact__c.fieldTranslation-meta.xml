@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organisational Donation, NPSP attributes a soft credit to the Primary Contact.</help>
-    <label>Primary Contact</label>
     <name>Primary_Contact__c</name>
+    <help>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organisational Donation, NPSP attributes a soft credit to the Primary Contact.</help>
     <relationshipLabel>Opportunities</relationshipLabel>
+    <label>Primary Contact</label>
 </CustomFieldTranslation>

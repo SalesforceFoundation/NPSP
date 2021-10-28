@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Original_Payment_ID__c</name>
     <help>Nur für Rückerstattungen. Zeigt die ID der ursprünglichen Zahlungstransaktion in Elevate.</help>
     <label>Ursprüngliche Zahlungs-ID in Elevate</label>
-    <name>Elevate_Original_Payment_ID__c</name>
 </CustomFieldTranslation>

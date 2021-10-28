@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppFirstCreateMode__c</name>
     <help>Geeft aan hoe NPSP de eerste termijnopportunity maakt voor terugkerende donaties. De standaardwaarde is Synchroon.</help>
     <label>Asynchroon gedrag termijnopportunity</label>
-    <name>InstallmentOppFirstCreateMode__c</name>
 </CustomFieldTranslation>

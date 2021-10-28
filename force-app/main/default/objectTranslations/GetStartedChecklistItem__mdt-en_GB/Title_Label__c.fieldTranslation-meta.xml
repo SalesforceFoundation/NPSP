@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Title_Label__c</name>
     <help>The API name for the Title label of a section item on the Get Started page. Must match an imported label in the gsLabelMapper LWC.</help>
     <label>Title Label Name</label>
-    <name>Title_Label__c</name>
 </CustomFieldTranslation>

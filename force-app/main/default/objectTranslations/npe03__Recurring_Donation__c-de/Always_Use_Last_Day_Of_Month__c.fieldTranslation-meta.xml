@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Always_Use_Last_Day_Of_Month__c</name>
     <help>Setzt künftige monatl., benutzerdef. monatl. o. vierteljährl. Spendenraten unabh. v. nächsten Spendendatum auf den letzten Tag des Monats. Die Ratenlaufzeit muss monatl. o. vierteljährl. o. eine benutzerdef. Ratenlaufzeit in Monaten sein.</help>
     <label>Immer letzten Tag des Monats verwenden</label>
-    <name>Always_Use_Last_Day_Of_Month__c</name>
 </CustomFieldTranslation>

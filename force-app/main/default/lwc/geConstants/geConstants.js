@@ -23,6 +23,19 @@ const PAYMENT_METHOD_CREDIT_CARD = 'Credit Card';
 const PAYMENT_METHOD_ACH = 'ACH';
 const PAYMENT_UNKNOWN_ERROR_STATUS = 'UNKNOWN ERROR';
 const FAILED = 'Failed';
+const GIFT_STATUSES = {
+    READY_TO_PROCESS: 'Ready to Process',
+    IMPORTED: 'Imported',
+    DRY_RUN_VALIDATED: 'Dry Run - Validated',
+    DRY_RUN_ERROR: 'Dry Run - Error',
+    FAILED: 'Failed',
+    PROCESSING: 'Processing'
+};
+const PAYMENT_STATUSES = {
+    AUTHORIZED: 'AUTHORIZED',
+    PENDING: 'PENDING',
+    UNKNOWN_ERROR: 'UNKNOWN ERROR'
+};
 
 const TOKENIZE_CREDIT_CARD_EVENT_ACTION = 'createToken';
 const TOKENIZE_ACH_EVENT_ACTION = 'createAchToken';
@@ -39,6 +52,8 @@ export {
     ACCOUNT_HOLDER_BANK_TYPES,
     PAYMENT_METHODS,
     PAYMENT_UNKNOWN_ERROR_STATUS,
+    GIFT_STATUSES,
+    PAYMENT_STATUSES,
     FAILED,
     ACH_CODE,
     PAYMENT_METHOD_CREDIT_CARD,

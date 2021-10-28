@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>InstallmentOppStageName__c</name>
     <help>Die Opportunity-Phase, die NPSP auf jede neue Raten-Opportunity anwendet, wenn eine neue wiederkehrende Spende erstellt wird.</help>
     <label>Phasenname für Raten-Opportunities</label>
-    <name>InstallmentOppStageName__c</name>
 </CustomFieldTranslation>

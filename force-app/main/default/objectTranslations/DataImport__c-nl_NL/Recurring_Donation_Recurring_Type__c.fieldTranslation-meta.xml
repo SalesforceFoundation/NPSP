@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Recurring_Type__c</name>
     <help>Open verwijst naar een doorlopende terugkerende donatie en Vast naar een terugkerende donatie met een specifiek aantal termijnen. Bij Vast moet u ook het veld Aantal geplande termijnen invullen.</help>
     <label>Type terugkeer terugkerende donatie</label>
-    <name>Recurring_Donation_Recurring_Type__c</name>
 </CustomFieldTranslation>

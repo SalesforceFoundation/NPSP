@@ -1,27 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <caseValues>
-        <plural>false</plural>
-        <value>NPSP-Gegevensimportbatch</value>
-    </caseValues>
-    <caseValues>
-        <plural>true</plural>
-        <value>NPSP-Gegevensimportbatches</value>
-    </caseValues>
-    <fieldSets>
-        <label><!-- Batch Gift Entry Tab Columns --></label>
-        <name>BatchGiftEntryTabColumns</name>
-    </fieldSets>
-    <gender>Feminine</gender>
+    <webLinks>
+        <name>Process_Batch</name>
+        <label>Batch verwerken</label>
+    </webLinks>
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
             <label>Overeenkomst Contactpersoon en Account</label>
             <section>Contact &amp; Account Matching</section>
-        </sections>
-        <sections>
-            <label>Aangepaste Koppelingen</label>
-            <section>Custom Links</section>
         </sections>
         <sections>
             <label>Donatieovereenkomst</label>
@@ -31,10 +18,23 @@
             <label>Uitbreidbaarheid</label>
             <section>Extensibility</section>
         </sections>
+        <sections>
+            <label>Aangepaste Koppelingen</label>
+            <section>Custom Links</section>
+        </sections>
     </layouts>
     <nameFieldLabel>Batchnaam</nameFieldLabel>
-    <webLinks>
-        <label>Batch verwerken</label>
-        <name>Process_Batch</name>
-    </webLinks>
+    <standardFields>
+        <name>Name</name>
+        <label>Batchnaam</label>
+    </standardFields>
+    <gender>Feminine</gender>
+    <caseValues>
+        <plural>false</plural>
+        <value>NPSP-Gegevensimportbatch</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>NPSP-Gegevensimportbatches</value>
+    </caseValues>
 </CustomObjectTranslation>

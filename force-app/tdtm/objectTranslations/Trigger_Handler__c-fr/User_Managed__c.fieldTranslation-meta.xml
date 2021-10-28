@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>User_Managed__c</name>
+    <help>Une fois sélectionné, NPSP ne transmettra plus les mises à jour à ce gestionnaire de déclencheur. Sélectionnez cette option si vous ne souhaitez pas que les modifications que vous avez apportées soient remplacées par NPSP.</help>
+    <label>Géré par utilisateur</label>
+</CustomFieldTranslation>

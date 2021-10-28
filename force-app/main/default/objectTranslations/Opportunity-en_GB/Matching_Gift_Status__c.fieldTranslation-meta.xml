@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Matching_Gift_Status__c</name>
     <help>The status of the Matching Gift for this Donation, for example, Submitted or Received.</help>
     <label>Matching Gift Status</label>
-    <name>Matching_Gift_Status__c</name>
     <picklistValues>
         <masterLabel>Potential</masterLabel>
         <translation>Potential</translation>
     </picklistValues>
     <picklistValues>
-        <masterLabel>Received</masterLabel>
-        <translation>Received</translation>
-    </picklistValues>
-    <picklistValues>
         <masterLabel>Submitted</masterLabel>
         <translation>Submitted</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Received</masterLabel>
+        <translation>Received</translation>
     </picklistValues>
 </CustomFieldTranslation>
