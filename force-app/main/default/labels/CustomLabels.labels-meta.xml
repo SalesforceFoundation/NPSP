@@ -2808,6 +2808,54 @@
         <value>UnPause requests cannot include Start Date or End Date.</value>
     </labels>
     <labels>
+        <fullName>RDCL_Annual_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Annual Value change field label</shortDescription>
+        <value>Annual Value</value>
+    </labels>
+    <labels>
+        <fullName>RDCL_Change_Log</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header on the Change Log component</shortDescription>
+        <value>Change Log</value>
+    </labels>
+    <labels>
+        <fullName>RDCL_Disabled</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed in the change log component when RDCL is disabled</shortDescription>
+        <value>Recurring Donation Change Log is currently disabled.</value>
+    </labels>
+    <labels>
+        <fullName>RDCL_Expected_Total_Value</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Expected Total Value change field label</shortDescription>
+        <value>Expected Total Value</value>
+    </labels>
+    <labels>
+        <fullName>RDCL_Frequency</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Frequency change field label</shortDescription>
+        <value>Frequency</value>
+    </labels>
+    <labels>
+        <fullName>RDCL_No_Records</fullName>
+        <categories>RD2_ChangeLog</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displayed when no changes are available for a recurring donation</shortDescription>
+        <value>There are no Change Logs for this Recurring Donation.</value>
+    </labels>
+    <labels>
         <fullName>RecurringDonationNameSuffix</fullName>
         <categories>Recurring Donations</categories>
         <language>en_US</language>
@@ -5754,7 +5802,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Recurring-Donations, Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Text to edit elevate payment information</shortDescription>
+        <shortDescription>Text to edit payment information</shortDescription>
         <value>Edit payment information.</value>
     </labels>
     <labels>
@@ -5996,6 +6044,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Contains value for a placeholder on a dropdown field</shortDescription>
         <value>Select an Option</value>
+    </labels>
+    <labels>
+        <fullName>commonSoftCredits</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Common label for Soft Credits</shortDescription>
+        <value>Soft Credits</value>
     </labels>
     <labels>
         <fullName>commonTemplate</fullName>
@@ -6278,6 +6334,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>See Duplicate Contacts</value>
     </labels>
     <labels>
+        <fullName>elevateAdNotificationFor234Body</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Body</shortDescription>
+        <value>With Elevate connected to NPSP, donations from your online forms automatically flow into NPSP. Elevate also processes payments and updates donor records in NPSP.</value>
+    </labels>
+    <labels>
+        <fullName>elevateAdNotificationFor234Title</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Elevate Advert Notification Title</shortDescription>
+        <value>Streamline donation processing with Salesforce.org Elevate and NPSP</value>
+    </labels>
+    <labels>
         <fullName>engagementPlanCantEdit</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -6396,6 +6466,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>GAU Widget: Add New Allocation</shortDescription>
         <value>Add New Allocation</value>
+    </labels>
+    <labels>
+        <fullName>geAddSoftCredit</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
+        <value>Add Soft Credit</value>
     </labels>
     <labels>
         <fullName>geAssistiveActiveSection</fullName>
@@ -7066,6 +7144,46 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Elevate successfully processed the payment, but NPSP didn&apos;t create the record for the transaction in Salesforce. Please correct the errors and resubmit the form to create the Salesforce record.</value>
     </labels>
     <labels>
+        <fullName>geElevateDeleteErrorLog</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error log entry for gift removed from Elevate by not removed from Gift Entry.</shortDescription>
+        <value>Gift deleted from {0}, but Gift Entry cannot delete the gift. Remove the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</value>
+    </labels>
+    <labels>
+        <fullName>geElevateUpdateErrorLog</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error log entry for gift updated in Elevate by not updated in Gift Entry.</shortDescription>
+        <value>Gift updated in {0}, but Gift Entry cannot update the gift. Update the gift&apos;s NPSP Data Import record with ID: {1} from the batch with ID {2} in NPSP Data Import Batches.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorElevateDelete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when gift deleted in Gift Entry but not deleted from Elevate batch.</shortDescription>
+        <value>Cannot delete gift in {0}. We don't recommend processing this batch, as the payment for this gift can still be charged. Refresh and try deleting again.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorElevateUpdate</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when gift updated in Gift Entry but not fixed in Elevate batch.</shortDescription>
+        <value>Cannot update gift in {0}. Refresh and try updating the gift again.</value>
+    </labels>
+    <labels>
+        <fullName>geErrorRecordFailAfterElevateDelete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when gift deleted in Elevate but not deleted from Gift Entry batch.</shortDescription>
+        <value>Gift deleted from {0}, but Gift Entry cannot delete the gift. Contact your Salesforce admin for help.</value>
+    </labels>
+    <labels>
         <fullName>geDonorColumnLabel</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
@@ -7537,7 +7655,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <shortDescription>Title of checklist item Running Reports in Get Started</shortDescription>
         <value>Run Reports on Constituent Data</value>
     </labels>
-     
+
     <labels>
         <fullName>gsChecklistItemSetupContactDesc</fullName>
         <categories>Get Started Page</categories>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Requested_Amount__c</name>
     <help>要求している金額。この金額は、最終的に獲得する金額と異なる可能性があります。</help>
     <label>要求金額</label>
-    <name>Requested_Amount__c</name>
 </CustomFieldTranslation>

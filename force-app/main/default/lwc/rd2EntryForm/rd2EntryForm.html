@@ -114,6 +114,7 @@
                                         <lightning-input-field
                                                 field-name={fields.amount.apiName}
                                                 data-id="amountField"
+                                                onchange={handleDonationValueChange}
                                                 required
                                         >
                                         </lightning-input-field>
@@ -142,6 +143,8 @@
                                         ontypechange={handleRecurringTypeChange}
                                         onperiodchange={handleRecurringPeriodChange}
                                         onperiodtypechange={handleRecurringPeriodTypeChange}
+                                        onfrequencychange={handleDonationValueChange}
+                                        oninstallmentschange={handleDonationValueChange}
                                         if:true={isSettingReady}>
                                 </c-rd2-entry-form-schedule-section>
 
@@ -194,9 +197,22 @@
                                     </template>
 
                                     <lightning-layout-item padding="horizontal-small" size="12" if:true={fields.campaign}>
-                                        <lightning-input-field field-name={fields.campaign.apiName}>
+                                        <lightning-input-field
+                                                data-id="campaignLookup"
+                                                field-name={fields.campaign.apiName}>
                                         </lightning-input-field>
                                     </lightning-layout-item>
+
+                                    <template if:true={showChangeTypeField}>
+                                        <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
+                                            <lightning-input-field
+                                                data-id="changeType"
+                                                field-name={fields.changeType.apiName}
+                                                value={changeType}
+                                            >
+                                            </lightning-input-field>
+                                        </lightning-layout-item>
+                                    </template>
                                 </lightning-layout>
                             </div>
                             <template if:true={hasCustomFields}>

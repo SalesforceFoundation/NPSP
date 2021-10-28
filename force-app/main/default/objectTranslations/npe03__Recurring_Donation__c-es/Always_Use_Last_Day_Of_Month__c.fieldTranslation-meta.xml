@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Always_Use_Last_Day_Of_Month__c</name>
     <help>Establece cuotas mensuales, mensuales personalizadas o trimestrales al último día del mes, independientemente de la Fecha de siguiente donación. El periodo de cuota debe ser Mensual o Trimestral, o un periodo de cuota personalizado empleando meses.</help>
     <label>Utilizar siempre último día del mes</label>
-    <name>Always_Use_Last_Day_Of_Month__c</name>
 </CustomFieldTranslation>

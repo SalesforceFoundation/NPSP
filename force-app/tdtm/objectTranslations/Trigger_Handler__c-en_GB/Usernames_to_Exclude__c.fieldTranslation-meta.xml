@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Usernames_to_Exclude__c</name>
+    <help>A semicolon-separated list of Usernames that this Trigger Handler will not run for. Leave blank to run for all Users.</help>
+    <label>Usernames to Exclude</label>
+</CustomFieldTranslation>

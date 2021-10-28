@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Requirements_Website__c</name>
     <help>Une URL pointant vers les exigences de subvention sur le site Web du pourvoyeur de la subvention.</help>
     <label>Site Web des exigences de subventions</label>
-    <name>Grant_Requirements_Website__c</name>
 </CustomFieldTranslation>

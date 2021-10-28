@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Verified__c</name>
     <help>住所が外部住所検証サービスを使用して検証されているかどうかを示します。</help>
     <label>検証済み</label>
-    <name>Verified__c</name>
 </CustomFieldTranslation>

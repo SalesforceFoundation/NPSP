@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <gender>Feminine</gender>
+    <startsWith>Vowel</startsWith>
     <caseValues>
         <plural>false</plural>
         <value>Étape d&apos;opportunité pour le mappage d&apos;état</value>
@@ -8,6 +10,4 @@
         <plural>true</plural>
         <value>Étapes d&apos;opportunité pour le mappage d&apos;état</value>
     </caseValues>
-    <gender>Feminine</gender>
-    <startsWith>Vowel</startsWith>
 </CustomObjectTranslation>

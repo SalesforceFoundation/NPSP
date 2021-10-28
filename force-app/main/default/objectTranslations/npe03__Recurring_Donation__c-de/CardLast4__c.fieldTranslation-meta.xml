@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>CardLast4__c</name>
     <help>Die letzten vier Stellen der Karte, die für diese wiederkehrende Spende verwendet wurde.</help>
     <label>Letzte 4 Karte</label>
-    <name>CardLast4__c</name>
 </CustomFieldTranslation>

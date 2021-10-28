@@ -13,7 +13,6 @@
                                            medium-device-size='3'>
                         <article class='slds-p-horizontal_small slds-p-vertical_xx-small'>
                             <c-ge-form-field element={element}
-                                             onformfieldchange={handleFormFieldChange}
                                              form-state={formState}>
                             </c-ge-form-field>
                         </article>
@@ -26,7 +25,7 @@
                         <c-ge-form-widget element={element}
                                           widget-config={widgetConfig}
                                           form-state={formState}
-                                          onformwidgetchange={handleFormWidgetChange}>
+                                          gift-in-view={giftInView}>
                         </c-ge-form-widget>
                     </lightning-layout-item>
                 </template>

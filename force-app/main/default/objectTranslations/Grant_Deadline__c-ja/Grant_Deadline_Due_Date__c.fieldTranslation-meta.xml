@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Grant_Deadline_Due_Date__c</name>
     <help>提出書類の期限日。</help>
     <label>提出期限</label>
-    <name>Grant_Deadline_Due_Date__c</name>
 </CustomFieldTranslation>

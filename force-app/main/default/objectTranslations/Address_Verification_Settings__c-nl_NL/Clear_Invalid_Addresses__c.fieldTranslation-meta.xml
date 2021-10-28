@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Clear_Invalid_Addresses__c</name>
     <help>Indien aangevinkt, worden alle accountadressen van de VS die door de dienst als niet-leverbaar worden gemarkeerd, automatisch geleegd. (U kunt het ongeldige gegeven in de Adresrecord bekijken).</help>
     <label>Ongeldige Adressen Wissen-VEROUDERD</label>
-    <name>Clear_Invalid_Addresses__c</name>
 </CustomFieldTranslation>

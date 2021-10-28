@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>In_Kind_Donor_Declared_Value__c</name>
     <help>Geeft aan of de donor de Eerlijke Marktwaarde voor dit In Natura Gift heeft opgegeven.</help>
     <label>Door Donor Aangegeven Waarde In Natura</label>
-    <name>In_Kind_Donor_Declared_Value__c</name>
 </CustomFieldTranslation>

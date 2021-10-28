@@ -36,6 +36,18 @@
 **/
 
 global virtual with sharing class ADV_Adapter {
+
+    @TestVisible
+    private ContactService contactService {
+        get {
+            if (contactService == null) {
+                contactService = new ContactService();
+            }
+            return contactService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger
     * handlers records (since they conflict with HEDA version) and return the rest.
@@ -61,7 +73,7 @@ global virtual with sharing class ADV_Adapter {
             throw new AdapterException(Label.adapterException);
         }
 
-        ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccountId);
+        Households.rollupAccounts(listAccountId);
     }
 
     /*******************************************************************************************************
@@ -77,7 +89,8 @@ global virtual with sharing class ADV_Adapter {
             throw new AdapterException(Label.adapterException);
         }
 
-        ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdNew, mapContactIdAccountIdOld);
+        contactService.moveOppsToNewContactAccount(mapContactIdAccountIdNew,
+                mapContactIdAccountIdOld);
     }
 
     /*******************************************************************************************************
@@ -116,15 +129,15 @@ global virtual with sharing class ADV_Adapter {
 
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
 
-        Accounts accounts = new Accounts(listNew, listOld);
+        AccountAdapter accountsAdapter = new AccountAdapter(listNew, listOld);
         switch on triggerAction {
             when BeforeInsert {
-                accounts.setAccountTypeAndIndividualFieldValues();
+                accountsAdapter.setAccountTypeAndIndividualFieldValues();
             }
 
             when BeforeUpdate {
-                accounts.setAccountTypeAndIndividualFieldValues();
-                accounts.setSystemAccountTypeAndIndividualFieldValues();
+                accountsAdapter.setAccountTypeAndIndividualFieldValues();
+                accountsAdapter.setSystemAccountTypeAndIndividualFieldValues();
             }
         }
     }

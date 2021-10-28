@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Secondary_Button_Label__c</name>
     <help>De API-naam van het label voor de secundaire knop in een sectie-item op de pagina Aan de slag. Moet overeenkomen met een geïmporteerd label in de LWC van gsLabelMapper.</help>
     <label>Naam secundaire-knoplabel</label>
-    <name>Secondary_Button_Label__c</name>
 </CustomFieldTranslation>

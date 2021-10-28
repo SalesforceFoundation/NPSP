@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Payment_Method__c</name>
     <help>The form of payment for this Recurring Donation. NPSP automatically copies the selected value to each related Payment record.</help>
     <label>Recurring Donation Payment Method</label>
-    <name>Recurring_Donation_Payment_Method__c</name>
 </CustomFieldTranslation>

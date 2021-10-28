@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousInstallmentFrequency__c</name>
+    <help>La frecuencia de cuotas anterior para la donación recurrente relacionada.</help>
+    <label>Frecuencia de cuotas anterior</label>
+</CustomFieldTranslation>

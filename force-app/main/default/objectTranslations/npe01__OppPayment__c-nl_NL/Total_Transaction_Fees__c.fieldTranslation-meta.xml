@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Total_Transaction_Fees__c</name>
+    <help>De som van de transactiekosten die in rekening worden gebracht door Elevate in uw betalingsgateaway.</help>
+    <label>Totale transactiekosten</label>
+</CustomFieldTranslation>

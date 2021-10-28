@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringDonations2MigrationState__c</name>
     <help>Enthält die neuesten Ergebnisse zu Testläufen und Datenmigration.</help>
     <label>Status Datenmigration zu EWS</label>
-    <name>RecurringDonations2MigrationState__c</name>
 </CustomFieldTranslation>

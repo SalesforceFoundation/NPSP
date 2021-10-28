@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
     <help>Elevate から取得した、トランザクションが作成された正確な日時 (ミリ秒単位まで)。</help>
     <label>Elevate 支払作成 UTC タイムスタンプ</label>
-    <name>Elevate_Payment_Created_UTC_Timestamp__c</name>
 </CustomFieldTranslation>

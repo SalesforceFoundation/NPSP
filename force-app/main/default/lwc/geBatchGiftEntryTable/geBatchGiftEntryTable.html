@@ -13,7 +13,7 @@
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
                         <div>
-                            <h1 class="slds-text-title_bold">{title}</h1>
+                            <h1 class="slds-text-title_bold">{tableTitle}</h1>
                         </div>
                     </lightning-layout-item>
                     <lightning-layout-item size=2
@@ -38,8 +38,8 @@
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
                         <c-util-progress-bar title={geBatchGiftsCountLabel}
-                                             actual-value={count}
-                                             expected-value={expectedCount}>
+                                             actual-value={giftBatchState.totalGiftsCount}
+                                             expected-value={giftBatchState.expectedCountOfGifts}>
                         </c-util-progress-bar>
                     </lightning-layout-item>
                     <lightning-layout-item size=12
@@ -47,24 +47,31 @@
                                            class="slds-p-top_small"
                                            padding="horizontal-small">
                         <c-util-progress-bar title={geBatchGiftsTotalLabel}
-                                             actual-value={total}
-                                             expected-value={expectedTotal}
+                                             actual-value={giftBatchState.totalDonationsAmount}
+                                             expected-value={giftBatchState.expectedTotalBatchAmount}
                                              format-style="currency"
-                                             currency-code={batchCurrencyISOCode}>
+                                             currency-code={giftBatchState.currencyIsoCode}>
                         </c-util-progress-bar>
                     </lightning-layout-item>
                 </lightning-layout>
 
                 <div style="height: 20rem;">
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text={CUSTOM_LABELS.geAssistiveSpinner}
+                                           variant='brand'
+                                           size='large'>
+                        </lightning-spinner>
+                    </template>
                     <lightning-datatable key-field="Id"
-                                         data={data}
+                                         data={giftsFromView}
                                          errors={tableRowErrors}
                                          columns={columns}
                                          hide-checkbox-column="true"
                                          show-row-number-column="true"
                                          onrowaction={handleRowActions}
                                          enable-infinite-loading
-                                         onloadmore={loadMoreData}
+                                         onloadmore={handleLoadMoreGifts}
+                                         suppress-bottom-bar
                                          data-qa-locator="datatable Batch Gifts">
                     </lightning-datatable>
                 </div>
@@ -72,9 +79,9 @@
             <template if:false={hasData}>
                 <div class='slds-p-around_small'>
                     <c-util-illustration title={CUSTOM_LABELS.bgeGridNoGiftsHeader}
-                                        message={CUSTOM_LABELS.bgeGridNoGiftsBody}
-                                        size='small'
-                                        variant='lake-mountain'>
+                                         message={CUSTOM_LABELS.bgeGridNoGiftsBody}
+                                         size='small'
+                                         variant='lake-mountain'>
                     </c-util-illustration>
                 </div>
             </template>

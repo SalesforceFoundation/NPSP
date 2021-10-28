@@ -36,8 +36,11 @@
 public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
-    @TestVisible private List<DataImport__c> dataImports;
+    @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private GiftSelector giftSelector;
+
+    public Gifts() {}
 
     @TestVisible
     private PS_IntegrationServiceConfig paymentIntegrationServiceConfig {
@@ -51,13 +54,54 @@ public with sharing class Gifts {
     }
 
     public Gifts(List<DataImport__c> dataImports) {
-        this.dataImports = dataImports;
-        setElevateBatchIds(dataImports);
+        populateDataImportsById(dataImports);
+        setElevateBatchIds(dataImportsById.values());
+    }
+
+    public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        init(this.giftSelector.getGiftsFor(giftBatchId));
+    }
+
+    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+        this.giftSelector = giftSelector;
+        init(this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId)));
+    }
+
+    private void init(List<DataImport__c> dataImports) {
+        populateDataImportsById(dataImports);
+        if (GE_PaymentServices.getInstance().isElevateCustomer()) {
+            setElevateBatchIds(dataImports);
+        }
+    }
+
+    public void add(Gift gift) {
+        this.dataImportsById.put(gift.id(), gift.asDataImport());
+    }
+
+    public Gift findBy(GiftId giftId) {
+        DataImport__c matchingDataImport = this.dataImportsById.get(giftId.value());
+        if (matchingDataImport != null) {
+            return new Gift(matchingDataImport);
+        }
+        return null;
+    }
+
+    public List<Gift> all() {
+        List<Gift> gifts = new List<Gift>();
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            gifts.add(new Gift(dataImport));
+        }
+        return gifts;
+    }
+
+    public Integer size() {
+        return this.dataImportsById.values().size();
     }
 
     public List<DataImport__c> authorizedGifts() {
         List<DataImport__c> giftsToReturn = new List<DataImport__c>();
-        for (DataImport__c gift : dataImports) {
+        for (DataImport__c gift : dataImportsById.values()) {
             if (gift.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
                 giftsToReturn.add(gift);
             }
@@ -104,7 +148,7 @@ public with sharing class Gifts {
     }
 
     public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
-        for (DataImport__c gift : dataImports) {
+        for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.hasAuthorizedPayment()) {
@@ -115,8 +159,9 @@ public with sharing class Gifts {
         }
     }
 
+    @TestVisible
     private void giftsToProcessingStatus() {
-        for (DataImport__c gift : dataImports) {
+        for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.isDryRunValidated()) {
@@ -136,7 +181,7 @@ public with sharing class Gifts {
 
     private List<DataImport__c> findGiftsByElevateBatchId(String elevateBatchId) {
         List<DataImport__c> giftsInElevateBatch = new List<DataImport__c>();
-        for (DataImport__c gift : dataImports) {
+        for (DataImport__c gift : dataImportsById.values()) {
             if (gift.Payment_Elevate_Batch_ID__c == elevateBatchId) {
                 giftsInElevateBatch.add(gift);
             }
@@ -146,11 +191,24 @@ public with sharing class Gifts {
 
     private void setElevateBatchIds(List<DataImport__c> dataImports) {
         elevateBatchIds = new Set<String>();
-        for (DataImport__c dataImport : dataImports) {
-            if (dataImport.Status__c == BDI_DataImport_API.bdiDryRunValidated
-                && dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name()) {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            if (authorizedGiftHasCapturableElevateBatchId(dataImport)) {
                 elevateBatchIds.add(dataImport.Payment_Elevate_Batch_ID__c);
             }
+        }
+    }
+
+    private Boolean authorizedGiftHasCapturableElevateBatchId(DataImport__c dataImport) {
+        if (dataImport == null) {
+            return false;
+        }
+        return dataImport?.Status__c == BDI_DataImport_API.bdiDryRunValidated
+            && dataImport?.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name();
+    }
+
+    private void populateDataImportsById(List<DataImport__c> dataImports) {
+        for (DataImport__c dataImport : dataImports) {
+            this.dataImportsById.put(dataImport.Id, dataImport);
         }
     }
 }

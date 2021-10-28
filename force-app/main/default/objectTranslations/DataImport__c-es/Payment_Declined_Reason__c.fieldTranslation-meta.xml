@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Payment_Declined_Reason__c</name>
     <help>Proporciona detalles sobre el motivo por el que se rechazó una transacción.</help>
     <label>Motivo de rechazo de API Elevate de pago</label>
-    <name>Payment_Declined_Reason__c</name>
 </CustomFieldTranslation>

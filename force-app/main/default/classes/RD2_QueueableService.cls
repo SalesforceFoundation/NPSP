@@ -53,7 +53,7 @@ public class RD2_QueueableService {
         if (isScheduleChanged) {
             rdIdsWhereScheduleChanged.add(rdId);
         }
-        enqueueOppEvalService(new Set<Id>{ rdId }, rdIdsWhereScheduleChanged);
+        enqueueOppEvalService(new Set<Id>{ rdId }, rdIdsWhereScheduleChanged, null);
     }
 
     /**
@@ -63,7 +63,7 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds) { 
-        enqueueOppEvalService(rdIds, null);
+        enqueueOppEvalService(rdIds, null, null);
     }
 
     /**
@@ -74,13 +74,26 @@ public class RD2_QueueableService {
      * @return void
      */
     public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged) {
+        enqueueOppEvalService(rdIds, rdIdsWhereScheduleChanged, null);
+    }
+
+    /**
+     * @description Queues up Opp eval service to recalculate Next Donation Date,
+     * Current/Next Year Value and re-evaluate Opportunities on specified Recurring Donations.
+     * @param rdIds Recurring Donation Ids
+     * @param rdIdsWhereScheduleChanged - Ids of Recurring Donation for which a schedule has been changed
+     * @param oldRds - Recurring Donations used as a comparison for creating Change Log records
+     * @return void
+     */
+    public static void enqueueOppEvalService(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged,
+            List<npe03__Recurring_Donation__c> oldRds) {
         Set<Id> toProcess = removeAlreadyEnqueuedRecurringDonations(rdIds);
 
         if (toProcess.size() == 0) {
             return;
         }
 
-        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged);
+        EvaluateInstallmentOpportunities service = new EvaluateInstallmentOpportunities(toProcess, rdIdsWhereScheduleChanged, oldRds);
 
         if (Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
             System.enqueueJob(service);
@@ -122,6 +135,7 @@ public class RD2_QueueableService {
      */
     public class EvaluateInstallmentOpportunities implements Queueable {
         Set<Id> rdIds;
+        List<npe03__Recurring_Donation__c> oldRds;
 
         /**
         * @description Contains Recurring Donation Ids for which schedule has been changed
@@ -154,6 +168,19 @@ public class RD2_QueueableService {
             this.rdIdsWhereScheduleChanged = rdIdsWhereScheduleChanged;
         }
 
+        /***
+         * @description Constructor
+         * @param rdIds - the RD Ids to process in this Queueable action
+         * @param rdIdsWhereScheduleChanged - Ids of Recurring Donations that have a changed schedule
+         * @param oldRds - Recurring Donations used as a comparison for creating Change Log records
+         */
+        public EvaluateInstallmentOpportunities(Set<Id> rdIds, Set<Id> rdIdsWhereScheduleChanged,
+                List<npe03__Recurring_Donation__c> oldRds) {
+            this.rdIds = rdIds;
+            this.rdIdsWhereScheduleChanged = rdIdsWhereScheduleChanged;
+            this.oldRds = oldRds;
+        }
+
         /**
          * @description Execute method called when the Queueable runs. Delegates to the
          * evaluation service
@@ -173,6 +200,7 @@ public class RD2_QueueableService {
         public void executeOppEvaluationService() {
             new RD2_OpportunityEvaluationService()
                 .withRds(rdIds)
+                .withOldRds(oldRds)
                 .withScheduleChanged(rdIdsWhereScheduleChanged)
                 .evaluateOpportunities();
         }

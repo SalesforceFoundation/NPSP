@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Deceased__c</name>
     <help>Cette option marque le contact comme décédé, et l’exclut de la dénomination du foyer (à moins que ce contact soit le seul dans le foyer), des e-mails et des appels téléphoniques.</help>
     <label>Décédé</label>
-    <name>Deceased__c</name>
 </CustomFieldTranslation>

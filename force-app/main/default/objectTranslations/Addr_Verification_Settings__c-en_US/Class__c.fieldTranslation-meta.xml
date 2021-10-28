@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help><!-- Salesforce class responsible for contacting the web service and verifying addresses. --></help>
-    <label><!-- Verification Service --></label>
+    <help/>
+    <label/>
     <name>Class__c</name>
 </CustomFieldTranslation>

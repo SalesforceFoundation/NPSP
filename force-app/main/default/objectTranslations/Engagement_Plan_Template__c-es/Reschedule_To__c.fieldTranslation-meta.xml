@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Reschedule_To__c</name>
     <help>¿Deben las tareas con fechas de vencimiento en un día de fin de semana estar programadas para el viernes antes del fin de semana o el lunes después? Esto sólo se aplica si se selecciona Saltar fines de semana.</help>
     <label>Reprogramar para</label>
-    <name>Reschedule_To__c</name>
-    <picklistValues>
-        <masterLabel>Friday</masterLabel>
-        <translation>Viernes</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Monday</masterLabel>
         <translation>Lunes</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Friday</masterLabel>
+        <translation>Viernes</translation>
     </picklistValues>
 </CustomFieldTranslation>

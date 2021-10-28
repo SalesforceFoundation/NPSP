@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>User_Managed__c</name>
+    <help>Wenn diese Option ausgewählt ist, gibt NPSP keine Updates mehr an diese Auslöserverarbeitung ab. Wählen Sie sie aus, wenn Sie Änderungen vorgenommen haben, die NPSP nicht überschreiben soll.</help>
+    <label>Benutzerverwaltet</label>
+</CustomFieldTranslation>

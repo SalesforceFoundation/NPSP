@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>PreviousPlannedInstallments__c</name>
+    <help>Die vorherige Anzahl der Raten (Spenden), mit deren Eingang Sie rechnen. Nur für befristete wiederkehrende Spenden.</help>
+    <label>Vorherige Anzahl der geplanten Raten</label>
+</CustomFieldTranslation>

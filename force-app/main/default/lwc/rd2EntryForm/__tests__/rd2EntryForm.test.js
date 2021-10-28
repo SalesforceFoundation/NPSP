@@ -498,6 +498,7 @@ describe('c-rd2-entry-form', () => {
                 "CardExpirationMonth__c": null,
                 "CardExpirationYear__c": null,
                 "CardLast4__c": null,
+                "ChangeType__c": "",
                 "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 "Day_of_Month__c": "6",
                 "Id": "a0963000008oxZnAAI",
@@ -553,6 +554,7 @@ describe('c-rd2-entry-form', () => {
                 "CardExpirationMonth__c": "05",
                 "CardExpirationYear__c": "2023",
                 "CardLast4__c": "1111",
+                "ChangeType__c": "",
                 "CommitmentId__c": "ffd252d6-7ffc-46a0-994f-00f7582263d2",
                 "Day_of_Month__c": "6",
                 "Id": "a0963000008pebAAAQ",
@@ -566,6 +568,128 @@ describe('c-rd2-entry-form', () => {
                 "npe03__Date_Established__c": "2021-02-03",
                 "npe03__Installment_Period__c": "Monthly"
             });
+        });
+    });
+
+    describe('open recurring donation upgrade/downgrade picklist', () => {
+
+        let element;
+        let controller;
+
+        beforeEach(async () => {
+            getRecurringData.mockResolvedValue(recurringDataContactResponse);
+            element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            controller = new RD2FormController(element);
+            await flushPromises();
+
+
+            getRecord.emit(rd2WithoutCommitmentCard, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit();
+
+            await flushPromises();
+        });
+
+        it('open donation, when form loads, change type picklist is empty', async () => {
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.value).toBe('');
+        });
+
+        it('open donation, when amount increased, sets change type to upgrade', async () => {
+            controller.amount().changeValue(5);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.value).toBe('Upgrade');
+        });
+
+        it('open donation, when frequency changed from monthly to weekly, sets change type to upgrade', async () => {
+            controller.recurringPeriod().changeValue('Weekly');
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.value).toBe('Upgrade');
+        });
+
+        it('open donation, when amount decreased, sets change type to downgrade', async () => {
+            controller.amount().changeValue(0.25);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.value).toBe('Downgrade');
+        });
+
+        it('open donation, when amount changed and recurring type changed to fixed, blanks change type picklist', async () => {
+            controller.amount().changeValue(5);
+            await flushPromises();
+
+            const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist.value).toBe('Upgrade');
+            controller.recurringType().changeValue('Fixed');
+            await flushPromises();
+
+            expect(changeTypePicklist.value).toBe('');
+        });
+
+    });
+
+    describe('fixed recurring donation upgrade/downgrade picklist', () => {
+
+        let element;
+        let controller;
+
+        beforeEach(async () => {
+            getRecurringData.mockResolvedValue({
+                "DonorType": "Contact",
+                "Period": "Monthly",
+                "Frequency": 1,
+                "RecurringType": "Fixed"
+            });
+            element = createRd2EditForm(FAKE_CARD_RD2_ID);
+            controller = new RD2FormController(element);
+            await flushPromises();
+
+            const fields = {
+                ...rd2WithoutCommitmentCard.fields,
+                "RecurringType__c": { value: "Fixed" },
+                "npe03__Installments__c": { value: 12 }
+            };
+            controller.installments
+
+            getRecord.emit({...rd2WithoutCommitmentCard, fields}, config => {
+                return config.recordId === FAKE_CARD_RD2_ID;
+            });
+            await flushPromises();
+
+            getRecord.emit(contactGetRecord, config => {
+                return config.recordId === '001fakeContactId';
+            });
+
+            await setupWireMocksForElevate();
+            controller.setDefaultInputFieldValuesEdit('Fixed');
+
+            await flushPromises();
+        });
+
+        it('fixed donation, when amount increased, sets change type to upgrade', async () => {
+            controller.amount().changeValue(5);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+
+            expect(changeTypePicklist.value).toBe('Upgrade');
+        });
+
+        it('fixed donation, when number of planned installments decreased, sets change type to downgrade', async () => {
+            controller.plannedInstallments().changeValue(6);
+            await flushPromises();
+            const changeTypePicklist = controller.changeTypePicklist();
+
+            expect(changeTypePicklist.value).toBe('Downgrade');
         });
     });
 });
@@ -686,18 +810,21 @@ class RD2FormController {
         element.submit = mockRecordEditFormSubmit;
     }
 
-    setDefaultInputFieldValues() {
-        this.recurringType().setValue('Open');
+    setDefaultInputFieldValues(recurringType = 'Open') {
+        this.recurringType().setValue(recurringType);
+        if(recurringType === 'Fixed') {
+            this.plannedInstallments().setValue(12);
+        }
         this.recurringPeriod().changeValue('Monthly');
         this.dateEstablished().changeValue('2021-02-03');
         this.startDate().changeValue('2021-02-03');
         this.dayOfMonth().setValue('6');
     }
 
-    setDefaultInputFieldValuesEdit() {
-        this.setDefaultInputFieldValues();
+    setDefaultInputFieldValuesEdit(recurringType = 'Open') {
         this.status().setValue('Active');
         this.amount().setValue(0.50);
+        this.setDefaultInputFieldValues(recurringType);
         this.contactLookup().setValue('001fakeContactId');
     }
 
@@ -781,6 +908,18 @@ class RD2FormController {
         return new RD2FormField(field);
     }
 
+    installmentFrequency() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-combobox[data-id="installmentFrequency"]');
+        return new RD2FormField(field);
+    }
+
+    plannedInstallments() {
+        const scheduleSection = this.scheduleSection();
+        const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="plannedInstallments"]');
+        return new RD2FormField(field);
+    }
+
     startDate() {
         const scheduleSection = this.scheduleSection();
         const field = scheduleSection.shadowRoot.querySelector('lightning-input-field[data-id="startDate"]');
@@ -811,6 +950,10 @@ class RD2FormController {
 
     cancelUpdatePaymentButton() {
         return this.elevateWidget().shadowRoot.querySelector('lightning-button[data-qa-locator="button Cancel Update Payment Information"]');
+    }
+
+    changeTypePicklist() {
+        return this.element.shadowRoot.querySelector('lightning-input-field[data-id="changeType"]');
     }
 
 }

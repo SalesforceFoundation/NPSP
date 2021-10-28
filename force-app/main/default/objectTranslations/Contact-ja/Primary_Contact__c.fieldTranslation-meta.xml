@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Primary_Contact__c</name>
     <help>ユーザがユーザの取引先の主取引先責任者である場合にオンにします。[取引先] で [主取引先責任者] を編集できます。</help>
     <label>主取引先責任者</label>
-    <name>Primary_Contact__c</name>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
     <help>Número de registros por lote para procesar cuando se vuelven a calcular totalizaciones de donantes en el objeto Contacto utilizando el modo Desfase.</help>
     <label>Tamaño lote en modo desfase de contacto</label>
-    <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
 </CustomFieldTranslation>

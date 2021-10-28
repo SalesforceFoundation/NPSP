@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>NextYearValue__c</name>
     <help>Het verwachte totaalbedrag van deze terugkerende donatie voor de volgende kalender of het volgende fiscale jaar (alleen-lezen).</help>
     <label>Waarde voor volgend jaar</label>
-    <name>NextYearValue__c</name>
 </CustomFieldTranslation>

@@ -1,0 +1,31 @@
+<template>
+    <h2 class="slds-text-title_bold slds-p-horizontal_x-small slds-p-top_small slds-p-bottom_xxx-small">
+        {CUSTOM_LABELS.commonSoftCredits}
+    </h2>
+    <template for:each={processedSoftCredits}
+              for:item='processedSoftCredit'
+              for:index='index'>
+        <c-ge-form-widget-soft-credit-row key={processedSoftCredit.Id}
+                                          row={processedSoftCredit}
+                                          row-index={index}>
+        </c-ge-form-widget-soft-credit-row>
+    </template>
+    <template for:each={softCredits}
+              for:item='softCredit'
+              for:index='index'>
+        <c-ge-form-widget-soft-credit-row key={softCredit.key}
+                                          row={softCredit}
+                                          row-index={index}
+                                          onremove={handleRemove}>
+        </c-ge-form-widget-soft-credit-row>
+    </template>
+    <lightning-layout class="slds-p-around_small slds-m-top_x-small">
+        <lightning-layout-item size='3'>
+            <lightning-button if:true={isBelowLimit}
+                              label={CUSTOM_LABELS.geAddSoftCredit}
+                              data-qa-locator={qaLocatorAddNewSoftCredit}
+                              onclick={handleAddRow}>
+            </lightning-button>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

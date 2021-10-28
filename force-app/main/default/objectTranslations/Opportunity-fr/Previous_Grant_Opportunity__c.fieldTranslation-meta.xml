@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
-    <help>Si cette subvention est un renouvellement d’une subvention passée, utilisez ce champ pour relier cet enregistrement au précédent.</help>
-    <label>Opportunité de subvention/don précédente</label>
     <name>Previous_Grant_Opportunity__c</name>
+    <help>Si cette subvention est un renouvellement d’une subvention passée, utilisez ce champ pour relier cet enregistrement au précédent.</help>
     <relationshipLabel>Subventions/dons associés</relationshipLabel>
+    <label>Opportunité de subvention/don précédente</label>
 </CustomFieldTranslation>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>DisableContactRoleAutomation__c</name>
     <help>選択すると、一部の商談取引先責任者の役割の自動化が無効になり、不正なデータや重複データが発生することがあります。詳細は、商品ドキュメントを参照してください。</help>
     <label>自動的な取引先責任者の役割の無効化</label>
-    <name>DisableContactRoleAutomation__c</name>
 </CustomFieldTranslation>

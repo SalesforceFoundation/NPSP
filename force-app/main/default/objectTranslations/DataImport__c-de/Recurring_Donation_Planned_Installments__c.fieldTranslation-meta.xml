@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Recurring_Donation_Planned_Installments__c</name>
     <help>Anzahl der Raten, die Sie erwarten. Wird nur für den Wiederholungstyp &quot;Befristet&quot; verwendet.</help>
     <label>Geplante Raten für wiederkehrende Spende</label>
-    <name>Recurring_Donation_Planned_Installments__c</name>
 </CustomFieldTranslation>

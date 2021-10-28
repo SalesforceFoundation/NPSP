@@ -1,22 +1,15 @@
 import { LightningElement, api, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { deleteRecord } from 'lightning/uiRecordApi';
-
-import getDataImportModel from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportModel';
-import runBatchDryRun from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.runBatchDryRun';
-import getDataImportRows from '@salesforce/apex/BGE_DataImportBatchEntry_CTRL.getDataImportRows';
-import saveAndDryRunDataImport from '@salesforce/apex/GE_GiftEntryController.saveAndDryRunDataImport';
-
-import { handleError } from 'c/utilTemplateBuilder';
-import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty} from 'c/utilCommon';
+import {isNotEmpty, isUndefined, apiNameFor, showToast, hasNestedProperty, deepClone, format} from 'c/utilCommon';
 import GeFormService from 'c/geFormService';
-import { fireEvent, registerListener } from 'c/pubsubNoPageRef';
+import { fireEvent } from 'c/pubsubNoPageRef';
 
 import geDonorColumnLabel from '@salesforce/label/c.geDonorColumnLabel';
 import geDonationColumnLabel from '@salesforce/label/c.geDonationColumnLabel';
 import bgeActionDelete from '@salesforce/label/c.bgeActionDelete';
 import geBatchGiftsCount from '@salesforce/label/c.geBatchGiftsCount';
 import geBatchGiftsTotal from '@salesforce/label/c.geBatchGiftsTotal';
+import geBatchGiftsHeader from '@salesforce/label/c.geBatchGiftsHeader';
 
 import commonOpen from '@salesforce/label/c.commonOpen';
 import bgeGridGiftDeleted from '@salesforce/label/c.bgeGridGiftDeleted';
@@ -29,6 +22,11 @@ import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c
 import PAYMENT_DECLINED_REASON from '@salesforce/schema/DataImport__c.Payment_Declined_Reason__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
 import ELEVATE_PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Elevate_Payment_Status__c';
+import DONATION_IMPORTED from '@salesforce/schema/DataImport__c.DonationImported__c';
+import PAYMENT_IMPORTED from '@salesforce/schema/DataImport__c.PaymentImported__c';
+import CONTACT_IMPORTED from '@salesforce/schema/DataImport__c.Contact1Imported__c';
+import ORGANIZATION_IMPORTED from '@salesforce/schema/DataImport__c.Account1Imported__c';
+import DONATION_DONOR from '@salesforce/schema/DataImport__c.Donation_Donor__c';
 
 const URL_SUFFIX = '_URL';
 const URL_LABEL_SUFFIX = '_URL_LABEL';
@@ -48,16 +46,21 @@ const columnTypeByDescribeType = {
     'PICKLIST': 'text'
 };
 
+const DONOR_LINK = 'donorLink';
+const DONOR_NAME = 'donorName';
+const MATCHED_DONATION_LINK = 'matchedRecordUrl';
+const MATCHED_DONATION_LABEL = 'matchedRecordLabel';
+
 const COLUMNS = [
     { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, type: 'text', editable: true },
     { label: 'Errors', fieldName: FAILURE_INFORMATION_FIELD.fieldApiName, type: 'text' },
     {
-        label: geDonorColumnLabel, fieldName: 'donorLink', type: 'url',
-        typeAttributes: { label: { fieldName: 'donorName' } }
+        label: geDonorColumnLabel, fieldName: DONOR_LINK, type: 'url',
+        typeAttributes: { label: { fieldName: DONOR_NAME } }
     },
     {
-        label: geDonationColumnLabel, fieldName: 'matchedRecordUrl', type: 'url',
-        typeAttributes: { label: { fieldName: 'matchedRecordLabel' } }
+        label: geDonationColumnLabel, fieldName: MATCHED_DONATION_LINK, type: 'url',
+        typeAttributes: { label: { fieldName: MATCHED_DONATION_LABEL } }
     }
 ];
 
@@ -73,11 +76,13 @@ const ACTIONS_COLUMN = {
 };
 
 export default class GeBatchGiftEntryTable extends LightningElement {
+    giftsFromView = [];
+
     @api batchId;
     @api isElevateCustomer = false;
 
     get ready() {
-        return this._columnsLoaded && this._dataImportModel;
+        return this._columnsLoaded && this._batchLoaded;
     }
 
     _columnsLoaded = false;
@@ -85,14 +90,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     CUSTOM_LABELS = GeLabelService.CUSTOM_LABELS;
     _batchLoaded = false;
 
-    @api title;
-    @api total;
-    @api expectedTotal;
-    @api count;
-    @api expectedCount;
     @api userDefinedBatchTableColumnNames;
     @api batchCurrencyIsoCode;
     isLoaded = true;
+    isLoading = false;
 
 
     constructor() {
@@ -102,30 +103,52 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         });
     }
 
-    connectedCallback() {
-        this.loadBatch();
-        registerListener('refreshtable', this.refreshTable, this);
+    get tableTitle() {
+        return format(geBatchGiftsHeader, [this.giftBatchState?.name]);
     }
 
-    refreshTable() {
-        let refreshedRows = [];
-        getDataImportRows({ batchId: this.batchId, offset: 0 })
-            .then(rows => {
-                rows.forEach(row => {
-                    refreshedRows.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = [ ...refreshedRows ];
-            })
-            .catch(error => {
-                handleError(error);
+    get giftBatchState() {
+        return this._giftBatchState;
+    }
+
+    @api
+    set giftBatchState(giftBatchState) {
+        this._giftBatchState = giftBatchState;
+        if (this._dataImportObjectInfo) {
+            this._setTableProperties();
+        }
+    }
+
+    _setTableProperties() {
+        if (this._giftBatchState?.gifts) {
+            this.giftsFromView = [];
+
+            this._giftBatchState.gifts.forEach(gift => {
+                let giftViewAsTableRow = deepClone(gift.state());
+                giftViewAsTableRow = Object.assign(
+                    giftViewAsTableRow.fields,
+                    this.appendUrlColumnProperties.call(
+                        giftViewAsTableRow.fields,
+                        this._dataImportObjectInfo
+                    )
+                );
+                giftViewAsTableRow = this.populateDonorLink(giftViewAsTableRow);
+                giftViewAsTableRow = this.populateMatchedDonationLink(giftViewAsTableRow);
+
+                this.giftsFromView.push(giftViewAsTableRow);
             });
+
+            this.assignDataImportErrorsToTableRows(this.giftsFromView);
+
+            this._count = this._giftBatchState.totalGiftsCount;
+            this._total = this._giftBatchState.totalDonationsAmount;
+            this._batchLoaded = true;
+            this.isLoading = false;
+        }
     }
 
     get hasData() {
-        return this.data.length > 0;
+        return this.giftsFromView.length > 0;
     }
 
     _data = [];
@@ -157,7 +180,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 });
     }
 
-
     getErrorPropertiesToDisplayInRow() {
         return [apiNameFor(FAILURE_INFORMATION_FIELD),
                 apiNameFor(PAYMENT_DECLINED_REASON)];
@@ -165,15 +187,15 @@ export default class GeBatchGiftEntryTable extends LightningElement {
 
     hasDataImportRowError(row) {
         return this.getErrorPropertiesToDisplayInRow().some(errorProperty =>
-                    row.record.hasOwnProperty(errorProperty))
+                    row.hasOwnProperty(errorProperty))
 
     }
 
     getTableRowErrorMessages(dataImportRow) {
         let errorMessages = [];
         this.getErrorPropertiesToDisplayInRow().forEach(errorProperty => {
-            if (dataImportRow.record.hasOwnProperty(errorProperty)) {
-                errorMessages.push(dataImportRow.record[errorProperty]);
+            if (dataImportRow.hasOwnProperty(errorProperty)) {
+                errorMessages.push(dataImportRow[errorProperty]);
             }
         });
         return errorMessages;
@@ -186,42 +208,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     }
     get sections() {
         return this._sections;
-    }
-
-    _dataImportModel;
-    loadBatch() {
-        getDataImportModel({batchId: this.batchId})
-            .then(
-                response => {
-                    this._dataImportModel = JSON.parse(response);
-                    this.setTableProperties();
-                    this._batchLoaded = true;
-                }
-            )
-            .catch(error => handleError(error));
-    }
-
-
-    _propertiesSet = false;
-    setTableProperties() {
-        if (this._propertiesSet) {
-            return;
-        }
-        if (!this._dataImportObjectInfo) {
-            return;
-        }
-        if (!this._dataImportModel) {
-            return;
-        }
-        this._count = this._dataImportModel.totalCountOfRows;
-        this._total = this._dataImportModel.batchTotalRowAmount;
-        this._dataImportModel.dataImportRows.forEach(row => {
-            this.data.push(Object.assign(row,
-                this.appendUrlColumnProperties.call(row.record,
-                    this._dataImportObjectInfo)));
-        });
-        this.data = this.data.slice(0);
-        this._propertiesSet = true;
     }
 
     get columns() {
@@ -302,11 +288,9 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                 this.loadRow(event.detail.row);
                 break;
             case 'delete':
-                deleteRecord(event.detail.row.Id).then(() => {
-                    this.deleteDIRow(event.detail.row);
-                }).catch(error => {
-                    handleError(error);
-                });
+                this.dispatchEvent(new CustomEvent('delete', {
+                    detail: event.detail.row
+                }));
                 break;
         }
     }
@@ -332,58 +316,20 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         );
     }
 
-    loadMoreData(event) {
-        event.target.isLoading = true;
-        const disableInfiniteLoading = function () {
-            this.enableInfiniteLoading = false;
-        }.bind(event.target);
+    handleLoadMoreGifts() {
+        if (this.hasAllExistingGifts() || this.isLoading) {
+            return;
+        }
 
-        const disableIsLoading = function () {
-            this.isLoading = false;
-        }.bind(event.target);
-
-        getDataImportRows({ batchId: this.batchId, offset: this.data.length })
-            .then(rows => {
-                rows.forEach(row => {
-                    this.data.push(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)));
-                });
-                this.data = this.data.splice(0);
-                if (this.data.length >= this.count) {
-                    disableInfiniteLoading();
-                }
-                disableIsLoading();
-            })
-            .catch(error => {
-                handleError(error);
-            });
+        const loadMoreGiftsEvent = new CustomEvent('loadmoregifts', {
+            detail: { giftsOffset: this.giftsFromView.length }
+        });
+        this.dispatchEvent(loadMoreGiftsEvent);
+        this.isLoading = true;
     }
 
-    @api
-    runBatchDryRun(callback) {
-        runBatchDryRun({
-            batchId: this.batchId,
-            numberOfRowsToReturn: this.data.length
-        })
-            .then(result => {
-                const dataImportModel = JSON.parse(result);
-                this._count = dataImportModel.totalCountOfRows;
-                this._total = dataImportModel.batchTotalRowAmount;
-                dataImportModel.dataImportRows.forEach(row => {
-                    this.upsertData(
-                        Object.assign(row,
-                            this.appendUrlColumnProperties.call(row.record,
-                                this._dataImportObjectInfo)), 'Id');
-                });
-            })
-            .catch(error => {
-                handleError(error);
-            })
-            .finally(() => {
-                callback();
-            });
+    hasAllExistingGifts() {
+        return this.giftsFromView.length === this.giftBatchState.totalGiftsCount;
     }
 
     get geBatchGiftsCountLabel() {
@@ -397,27 +343,6 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     loadRow(row) {
         this.dispatchEvent(new CustomEvent('loaddata', {
             detail: row
-        }));
-    }
-
-    /*************************************************************************************
-     * @description Internal setters used to communicate the current count and total
-     *              up to the App, which needs them to keep track of whether the batch's
-     *              expected totals match.
-     */
-    set _count(count) {
-        this.dispatchEvent(new CustomEvent('countchanged', {
-            detail: {
-                value: count
-            }
-        }));
-    }
-
-    set _total(total) {
-        this.dispatchEvent(new CustomEvent('totalchanged', {
-            detail: {
-                value: total
-            }
         }));
     }
 
@@ -462,7 +387,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
                               urlLabelSuffix = URL_LABEL_SUFFIX) {
         Object.keys(this)
             .filter(key =>
-                key.endsWith('__r') || this[key].attributes
+                key.endsWith('__r') || this[key]?.attributes
             )
             .forEach(key => {
                 const referenceObj = this[key];
@@ -490,29 +415,35 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return this;
     }
 
-    get batchCurrencyISOCode() {
-        return this.batchCurrencyIsoCode;
+    populateDonorLink(giftViewAsTableRow) {
+        const donorType = giftViewAsTableRow[DONATION_DONOR.fieldApiName];
+
+        if (donorType === 'Contact1') {
+            giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${CONTACT_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        } else if (donorType === 'Account1') {
+            giftViewAsTableRow[DONOR_LINK] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[DONOR_NAME] = giftViewAsTableRow[`${ORGANIZATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        }
+        return giftViewAsTableRow;
     }
 
-    @api
-    handleSubmit(event) {
-        saveAndDryRunDataImport({
-            batchId: this.batchId,
-            dataImport: event.detail.dataImportRecord
-        }).then(result => {
-            let dataImportModel = JSON.parse(result);
-            let row = dataImportModel.dataImportRows[0];
-            Object.assign(row,
-                this.appendUrlColumnProperties.call(row.record,
-                    this._dataImportObjectInfo));
-            this.upsertData(row, 'Id');
-            this._count = dataImportModel.totalCountOfRows;
-            this._total = dataImportModel.batchTotalRowAmount;
-            event.detail.success(); //Re-enable the Save button
-            this.notifyGiftBatchHeaderOfTableChange();
-        }).catch(error => {
-            event.detail.error(error);
-        });
+    populateMatchedDonationLink(giftViewAsTableRow) {
+        const isMatchedToAPaymentRecord = giftViewAsTableRow[PAYMENT_IMPORTED.fieldApiName];
+        const isMatchedToAnOpportunityRecord = giftViewAsTableRow[DONATION_IMPORTED.fieldApiName];
+
+        if (isMatchedToAPaymentRecord) {
+            giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${PAYMENT_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${PAYMENT_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        } else if (isMatchedToAnOpportunityRecord) {
+            giftViewAsTableRow[MATCHED_DONATION_LINK] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_SUFFIX}`];
+            giftViewAsTableRow[MATCHED_DONATION_LABEL] = giftViewAsTableRow[`${DONATION_IMPORTED.fieldApiName}${URL_LABEL_SUFFIX}`];
+        }
+        return giftViewAsTableRow;
+    }
+
+    get batchCurrencyISOCode() {
+        return this.batchCurrencyIsoCode;
     }
 
     notifyGiftBatchHeaderOfTableChange = () => {
@@ -528,9 +459,7 @@ export default class GeBatchGiftEntryTable extends LightningElement {
     wiredDataImportObjectInfo({error, data}) {
         if (data) {
             this._dataImportObjectInfo = data;
-            if (!this._propertiesSet) {
-                this.setTableProperties();
-            }
+            this._setTableProperties();
         }
     }
 
@@ -578,4 +507,10 @@ export default class GeBatchGiftEntryTable extends LightningElement {
         return fieldMapping.Source_Field_API_Name === DONATION_RECORD_TYPE_NAME.fieldApiName;
     }
 
+    // Public properties below are deprecated.
+    @api title;
+    @api total;
+    @api expectedTotal;
+    @api count;
+    @api expectedCount;
 }

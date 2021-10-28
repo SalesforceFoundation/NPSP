@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Percent__c</name>
     <help>Der Prozentsatz des Opportunity-Betrags, der dem Verwendungszweck dieser Zuweisung zugeordnet ist. Wenn Sie den Opportunity-Betrag später ändern, aktualisiert NPSP den Zuweisungsbetrag im Verwendungszweck.</help>
     <label>Prozent</label>
-    <name>Percent__c</name>
 </CustomFieldTranslation>

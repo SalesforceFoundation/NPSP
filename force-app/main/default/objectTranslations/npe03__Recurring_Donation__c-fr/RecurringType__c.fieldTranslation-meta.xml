@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>RecurringType__c</name>
     <help>Sélectionnez Ouvert pour un Don récurrent en cours. Sélectionnez Fixe pour un Don récurrent qui a un nombre spécifique de versements. Pour Fixe, vous devez également compléter le champ Nombre de versements prévus.</help>
     <label>Type de récurrence</label>
-    <name>RecurringType__c</name>
-    <picklistValues>
-        <masterLabel>Fixed</masterLabel>
-        <translation>Fixe</translation>
-    </picklistValues>
     <picklistValues>
         <masterLabel>Open</masterLabel>
         <translation>Ouvert</translation>
+    </picklistValues>
+    <picklistValues>
+        <masterLabel>Fixed</masterLabel>
+        <translation>Fixe</translation>
     </picklistValues>
 </CustomFieldTranslation>

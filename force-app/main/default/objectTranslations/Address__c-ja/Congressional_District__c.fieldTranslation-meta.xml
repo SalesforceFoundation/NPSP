@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Congressional_District__c</name>
     <help>住所が属する下院選挙区。</help>
     <label>下院選挙区</label>
-    <name>Congressional_District__c</name>
 </CustomFieldTranslation>

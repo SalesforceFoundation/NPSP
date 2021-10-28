@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomFieldTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Number_of_Allocations_Last_Year__c</name>
     <help>Nombre total d’allocations d’opportunités Clôturées/Gagnées au cours de la dernière année. NPSP met à jour ce champ dans une tâche planifiée de nuit.</help>
     <label>Nombre d’allocations de l’année dernière</label>
-    <name>Number_of_Allocations_Last_Year__c</name>
 </CustomFieldTranslation>

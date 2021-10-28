@@ -46,6 +46,11 @@ public inherited sharing class RD2_RecurringDonation {
     private Boolean isNew;
 
     /**
+    * @description Stores the Change Type for this Update, so we can clear the Recurring Donation field
+    */
+    private String changeType;
+
+    /**
     * @description Indicates the converted State of the Recurring Donation from Status To State Mapping 
     */
     private String state {
@@ -145,6 +150,20 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     /**
+    * @description Stores the Change Type in the object, then sets it to null on the Recurring Donation
+    * @return RD2_RecurringDonation This record instance
+    */
+    public RD2_RecurringDonation storeAndClearChangeType() {
+        if(rd.ChangeType__c != null){
+            changeType = rd.ChangeType__c;
+            rd.ChangeType__c = null;
+            changedFields.add(npe03__Recurring_Donation__c.ChangeType__c);
+        }
+        
+        return this;
+    }
+
+    /**
     * @description Revises and modifies the Recurring Donation
     * Current Year Value and Next Year Value fields
     * @param processor Used to calculate current and next year values
@@ -164,6 +183,34 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         return this;
+    }
+
+    /**
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule.
+    * Used to determine if the value of a donation increased or decreased based on changes that were made.
+    * @return Decimal The annual value of this Recurring Donation
+    */
+    public Decimal getAnnualValue(){
+        if(!isOpenEnded()){
+            return null;
+        }
+        Decimal yearlyFrequency = RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY.get(rd.npe03__Installment_Period__c);
+        Decimal annualValue = rd.npe03__Amount__c * (yearlyFrequency / rd.InstallmentFrequency__c);
+        return annualValue.setScale(2);
+    }
+
+    /**
+    * @description Returns the annual value of this Recurring Donation based on the amount and schedule.
+    * Used to determine if the value of a donation increased or decreased based on changes that were made.
+    * @return Decimal The annual value of this Recurring Donation
+    */
+    public Decimal getExpectedTotalValue(){
+        if(isOpenEnded()){
+            return null;
+        }
+        Decimal remainingInstallments = rd.npe03__Installments__c - getPaidInstallments();
+        Decimal expectedValue = getPaidAmount() + remainingInstallments * rd.npe03__Amount__c;
+        return expectedValue.setScale(2);
     }
 
     /**
@@ -254,7 +301,7 @@ public inherited sharing class RD2_RecurringDonation {
 
             if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
-                rd.ClosedReason__c = '';
+                rd.ClosedReason__c = null;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
             }
@@ -393,6 +440,16 @@ public inherited sharing class RD2_RecurringDonation {
             : rd.npe03__Total_Paid_Installments__c.intValue();
     }
 
+    /**
+    * @description Return paid amount on the Recurring Donation, default to 0 when null
+    * @return Decimal
+    */
+    public Decimal getPaidAmount() {
+        return rd.npe03__Paid_Amount__c == null
+            ? 0
+            : rd.npe03__Paid_Amount__c;
+    }
+
     public RecurringDonationSchedule__c getPauseSchedule() {
         if (!hasSchedule()) {
             return null;
@@ -419,6 +476,21 @@ public inherited sharing class RD2_RecurringDonation {
         return state;
     }
 
+    /**
+    * @description Return the Change Type of the Recurring Donation.
+    * @return String 
+    */
+    public String getChangeType() {
+        return changeType;
+    }
+
+    /**
+    * @description Return the Currency of the Recurring Donation.
+    * @return String 
+    */
+    public String getCurrencyIsoCode() {
+        return (String)rd.get('CurrencyIsoCode');
+    }
 
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
@@ -531,4 +603,14 @@ public inherited sharing class RD2_RecurringDonation {
         return paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_CARD ||
                paymentMethod() == RD2_Constants.PAYMENT_PICKLIST_VALUE_ACH;
     }
+
+    /**
+    * @description Return the value of the provided recurring donation field
+    * @param rdField SObjectField to get the value for
+    * @return Object
+    */
+    public Object getValue(SObjectField rdField){
+        return rd.get(rdField);
+    }
+
 }
