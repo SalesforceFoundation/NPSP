@@ -659,7 +659,6 @@ describe('c-rd2-entry-form', () => {
                 "RecurringType__c": { value: "Fixed" },
                 "npe03__Installments__c": { value: 12 }
             };
-            controller.installments
 
             getRecord.emit({...rd2WithoutCommitmentCard, fields}, config => {
                 return config.recordId === FAKE_CARD_RD2_ID;
@@ -810,8 +809,9 @@ class RD2FormController {
         element.submit = mockRecordEditFormSubmit;
     }
 
-    setDefaultInputFieldValues(recurringType = 'Open') {
-        this.recurringType().setValue(recurringType);
+    async setDefaultInputFieldValues(recurringType = 'Open') {
+        this.recurringType().changeValue(recurringType);
+        await flushPromises();
         if(recurringType === 'Fixed') {
             this.plannedInstallments().setValue(12);
         }
