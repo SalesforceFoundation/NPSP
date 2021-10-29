@@ -257,28 +257,21 @@ public with sharing class GE_Template_TEST {
     }
     
     @IsTest
-    static void defaultTemplate() {
-        Form_Template__c t = GE_Template.buildDefaultTemplate();
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + t);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ t ^^^^^^');
-    }
-
-    @IsTest (SeeAllData=true)
     static void defaultTemplateShouldNotIncludeDeletedFieldMappings() {
         // GIVEN a field mapping has been deleted
-        // WHEN the default template is generated
-        // THEN it should not include deleted field mappings
         //Todo: mock the Selector
         List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList =
             DataImportFieldMappingSelector.newInstance().getDataImportFieldMappings();
 
+        // WHEN the default template is generated
         Form_Template__c f = GE_Template.buildDefaultTemplate();
 
+        // THEN it should not include deleted field mappings
         GE_Template.Template t = GE_GiftEntryController.deserializeFormTemplateFromObj(f);
-
         System.assertEquals(false,
                 t.layout.containsField(npe01__OppPayment__c.npe01__Payment_Method__c),
-                'The layout should not include fields that do not have field mappings.');
+                'The layout should not include fields whose field mappings have been ' +
+                        'deleted.');
     }
 
     @IsTest (SeeAllData=true)

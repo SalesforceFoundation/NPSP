@@ -147,7 +147,6 @@ public with sharing class GE_Template {
         Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
 
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
-        FieldMappings f = new FieldMappings(fieldMappingCMTList);
         Template defaultTemplate = getDefaultTemplate(defaultTemplateSRJSON);
         Layout defaultLayout = defaultTemplate.layout;
         List<Section> sectionList = defaultLayout.sections;
@@ -202,7 +201,8 @@ public with sharing class GE_Template {
         // migrated field mappings have been deleted, the call
         // to stripElementsWithDeletedFieldMappings() must happen
         // after the template's dev names have been updated.
-        defaultLayout.stripElementsWithDeletedFieldMappings(f);
+        defaultLayout.stripElementsWithDeletedFieldMappings(
+                new FieldMappings(fieldMappingCMTList));
 
         // Update the batch header fields with the namespace prefix, if necessary
         List<BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
@@ -341,7 +341,7 @@ public with sharing class GE_Template {
             return false;
         }
 
-        private void stripElementsWithDeletedFieldMappings(FieldMappings fieldMappings) {
+        public void stripElementsWithDeletedFieldMappings(FieldMappings fieldMappings) {
             for (Section section : sections) {
                 List<Element> els = new List<Element>();
                 for (Element e : section.elements) {
