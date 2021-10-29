@@ -435,7 +435,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @return PageReference
     */
     public PageReference convertLeadNow() {
-        // TODO: Do we need a save point here?
         Savepoint sp = Database.setSavepoint();
 
         if (!isContactSelected()) {
@@ -443,7 +442,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         }
 
         Database.LeadConvert instanceOfLeadConvert = prepareLeadConversion();
-
         // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
         disableAffiliationTrigger();
         // temporarily disable address management
@@ -452,10 +450,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         try {
             // convert the lead
             Database.LeadConvertResult leadConversionResult = Database.convertLead(instanceOfLeadConvert);
-
             // restore address management
             enabledAddressManagement();
-
             // fix the account that lead conversion created
             if (shouldFixConvertedAccount()) {
                 fixConvertedAccount(leadConversionResult);
@@ -502,19 +498,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
             // if we created a new company acct and the Lead had a company address, set the
             // new acct's address
-            if (leadAccountId == 'NEW' && !String.isBlank(leadToConvert.CompanyStreet__c)) {
-                Account acc = new Account(
-                        Id = leadConversionResult.getAccountId()
-                );
-                //copy address from temporary address__c record, handles state and country
-                // picklists if enabled
-                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.setBillingAddress(npspAddress);
-                UTIL_DMLService.updateRecord(npspHousehold.getRecord());
+            if (shouldUpdateAccountAddress()) {
+                updateAccountAddress(leadConversionResult, tempAddr);
             }
             // handle the optional Affiliation to a new or existing Account.
-            Id afflAccId = null;
+            Id affiliationId = null;
             if (primaryAffiliationId == 'NEW') {
                 Account acc = new Account(
                         Name = leadToConvert.Company
@@ -525,16 +513,16 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
                 npspHousehold.setBillingAddress(npspAddress);
                 UTIL_DMLService.insertRecord(npspHousehold.getRecord());
-                afflAccId = acc.Id;
+                affiliationId = acc.Id;
             } else if (primaryAffiliationId != null && primaryAffiliationId != '') {
-                afflAccId = primaryAffiliationId;
+                affiliationId = primaryAffiliationId;
             }
-            if (afflAccId != null) {
+            if (affiliationId != null) {
                 // Re-Enable the Affilations Trigger for the Contact
                 TDTM_ProcessControl.toggleTriggerState(
                         'Contact', 'AFFL_Affiliations_TDTM', true);
                 AFFL_Affiliations_TDTM.createNonDupeAffiliation(
-                        leadToConvert, leadConversionResult.getContactId(), afflAccId, true);
+                        leadToConvert, leadConversionResult.getContactId(), affiliationId, true);
             }
 
             //// Opportunity Cleanup
@@ -546,7 +534,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
                 // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
                 if (strOppAccChoice == 'AFF_ACC') {
-                    convertedOpp.AccountId = afflAccId;
+                    convertedOpp.AccountId = affiliationId;
                 }
                 String oppName = convertedOpp.Name;
 
@@ -572,6 +560,22 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }
+    }
+
+    private Boolean shouldUpdateAccountAddress() {
+        return leadAccountId == 'NEW' && !String.isBlank(leadToConvert.CompanyStreet__c);
+    }
+
+    private void updateAccountAddress(Database.LeadConvertResult leadConversionResult, Address__c tempAddr) {
+        Account acc = new Account(
+                Id = leadConversionResult.getAccountId()
+        );
+        //copy address from temporary address__c record, handles state and country
+        // picklists if enabled
+        NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+        NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+        npspHousehold.setBillingAddress(npspAddress);
+        UTIL_DMLService.updateRecord(npspHousehold.getRecord());
     }
 
     private void setPrimaryAffiliation(Id accountId) {
