@@ -341,20 +341,6 @@ public with sharing class GE_Template {
             return false;
         }
 
-        private void stripElementsWithoutFieldMappings(FieldMappings f) {
-            for (Section section : sections) {
-                List<Element> elements = new List<Element>();
-                for (Element e : section.elements) {
-                    Map<String, List<Data_Import_Field_Mapping__mdt>> mappingsByFieldApiName =
-                            f.getMappingsByFieldApiName();
-                    if (mappingsByFieldApiName.get(e.fieldApiName) != null) {
-                        elements.add(e);
-                    }
-                }
-                section.elements = elements;
-            }
-        }
-
         private void stripElementsWithDeletedFieldMappings(FieldMappings fieldMappings) {
             for (Section section : sections) {
                 List<Element> els = new List<Element>();
