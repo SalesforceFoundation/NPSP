@@ -61,7 +61,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
             when BeforeUpdate {
                 contactAdapter = new ContactAdapter(newSObjects, oldSObjects);
-                contactAdapter.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+                contactAdapter.onBeforeUpdate();
             }
             when AfterUpdate {
                 contactAdapter = new ContactAdapter(newSObjects, oldSObjects);
