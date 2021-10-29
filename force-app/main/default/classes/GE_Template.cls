@@ -145,10 +145,10 @@ public with sharing class GE_Template {
 
         // This is used for updating the base JSON's object mapping dev names with the org's dev names. 
         Map<String, String> updatedObjectDevNameMap = new Map<String, String>();
-        
+
         populateDevNameMapping(updatedFieldDevNameMap, updatedObjectDevNameMap);
         FieldMappings f = new FieldMappings(fieldMappingCMTList);
-        Template defaultTemplate = getDefaultTemplate(defaultTemplateSRJSON, f);
+        Template defaultTemplate = getDefaultTemplate(defaultTemplateSRJSON);
         Layout defaultLayout = defaultTemplate.layout;
         List<Section> sectionList = defaultLayout.sections;
 
@@ -198,6 +198,12 @@ public with sharing class GE_Template {
             }
         }
 
+        // In order to properly check whether any of the
+        // migrated field mappings have been deleted, the call
+        // to stripElementsWithDeletedFieldMappings() must happen
+        // after the template's dev names have been updated.
+        defaultLayout.stripElementsWithDeletedFieldMappings(f);
+
         // Update the batch header fields with the namespace prefix, if necessary
         List<BatchHeaderField> batchHeaderFieldList = defaultTemplate.batchHeaderFields;
         
@@ -215,11 +221,8 @@ public with sharing class GE_Template {
         return newDefaultTemplate;
     }
 
-    private static Template getDefaultTemplate(String defaultTemplateSRJSON,
-            FieldMappings f) {
-        Template t = (Template) JSON.deserialize(defaultTemplateSRJSON, Template.class);
-        t.layout.stripElementsWithoutFieldMappings(f);
-        return t;
+    private static Template getDefaultTemplate(String defaultTemplateSRJSON) {
+        return (Template) JSON.deserialize(defaultTemplateSRJSON, Template.class);
     }
 
     // Get the org's migrated field mappings.
@@ -351,6 +354,18 @@ public with sharing class GE_Template {
                 section.elements = elements;
             }
         }
+
+        private void stripElementsWithDeletedFieldMappings(FieldMappings fieldMappings) {
+            for (Section section : sections) {
+                List<Element> els = new List<Element>();
+                for (Element e : section.elements) {
+                    if (!fieldMappings.isDeleted(e.fieldMappingDevName())) {
+                        els.add(e);
+                    }
+                }
+                section.elements = els;
+            }
+        }
     }
 
     /**
@@ -429,6 +444,10 @@ public with sharing class GE_Template {
             this.componentName = componentName;
             this.dataImportFieldMappingDevNames = dataImportFieldMappingDevNames;
             this.required = false;
+        }
+
+        private String fieldMappingDevName() {
+            return dataImportFieldMappingDevNames[0];
         }
     }
 
