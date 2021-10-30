@@ -249,18 +249,18 @@ public with sharing class ADDR_Contacts_TEST {
         }
 
         Account testAccount = UTIL_UnitTestData_TEST.buildHouseholdAccount();
-        testAccount.BillingState = 'Test State';
+        testAccount.BillingState = 'Washington';
         testAccount.BillingPostalCode = '12345';
-        testAccount.BillingCountry = 'US';
+        testAccount.BillingCountry = 'United States';
         testAccount.BillingCity = 'Test City';
         testAccount.BillingStreet = 'Test Street';
         testAccount.Undeliverable_Address__c = true;
         insert testAccount;
 
         Contact testContact = UTIL_UnitTestData_TEST.getContact();
-        testContact.MailingState = 'Test State';
+        testContact.MailingState = 'Washington';
         testContact.MailingPostalCode = '12345';
-        testContact.MailingCountry = 'US';
+        testContact.MailingCountry = 'United States';
         testContact.MailingCity = 'Test City';
         testContact.MailingStreet = 'Test Street';
         testContact.AccountId = testAccount.Id;
@@ -337,10 +337,10 @@ public with sharing class ADDR_Contacts_TEST {
 
         Address__c testAddress = new Address__c();
         testAddress.MailingStreet__c = '123 Existing Address';
-        testAddress.MailingCity__c = 'Washington';
+        testAddress.MailingCity__c = 'Seattle';
         testAddress.MailingPostalCode__c = 'ExistingZip';
         testAddress.MailingCountry__c = 'United States';
-        testAddress.MailingState__c = 'Seattle';
+        testAddress.MailingState__c = 'Washington';
         testAddress.Household_Account__c = UTIL_UnitTestData_TEST.listAccT[0].Id;
         testAddress.Undeliverable__c = true;
         insert testAddress;
@@ -395,10 +395,10 @@ public with sharing class ADDR_Contacts_TEST {
 
         Address__c testAddress = new Address__c();
         testAddress.MailingStreet__c = '123 Existing Address';
-        testAddress.MailingCity__c = 'Washington';
+        testAddress.MailingCity__c = 'Seattle';
         testAddress.MailingPostalCode__c = 'ExistingZip';
         testAddress.MailingCountry__c = 'United States';
-        testAddress.MailingState__c = 'Seattle';
+        testAddress.MailingState__c = 'Washington';
         testAddress.Household_Account__c = UTIL_UnitTestData_TEST.listAccT[0].Id;
         insert testAddress;
 
@@ -448,10 +448,10 @@ public with sharing class ADDR_Contacts_TEST {
 
         Address__c testAddress = new Address__c();
         testAddress.MailingStreet__c = '123 Existing Address';
-        testAddress.MailingCity__c = 'Washington';
+        testAddress.MailingCity__c = 'Seattle';
         testAddress.MailingPostalCode__c = 'ExistingZip';
         testAddress.MailingCountry__c = 'United States';
-        testAddress.MailingState__c = 'Seattle';
+        testAddress.MailingState__c = 'Washington';
         testAddress.Household_Account__c = UTIL_UnitTestData_TEST.listAccT[0].Id;
         testAddress.Default_Address__c = true;
         testAddress.Undeliverable__c = true;
@@ -491,9 +491,9 @@ public with sharing class ADDR_Contacts_TEST {
         for (Account account : testAccounts) {
             account.BillingStreet = '123 Household Street';
             account.BillingCity = 'Household City';
-            account.BillingPostalCode = '12345';
-            account.BillingState = 'Household State';
-            account.BillingCountry = 'Household Country';
+            account.BillingPostalCode = '98005';
+            account.BillingState = 'Washington';
+            account.BillingCountry = 'United States';
         }
 
         insert testAccounts;
