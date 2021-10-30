@@ -138,7 +138,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
                 new Contacts(getRecords(), oldMap.values()));
     }
 
-    public void onBeforeUpdate_ACCT_IndividualAccounts_TDTM() {
+    public void onBeforeUpdate_HH_Households_TDTM() {
         NamingExclusions namingExclusions = new NamingExclusions(getRecords(), oldMap);
         namingExclusions.synchronizeNamingExclusionsBeforeUpdate();
     }
