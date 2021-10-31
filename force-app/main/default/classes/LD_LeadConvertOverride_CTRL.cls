@@ -623,18 +623,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }
 
     private void fixConvertedAccount(Database.LeadConvertResult leadConversionResult) {
-        String strSoql = 'SELECT Id, Firstname, Lastname, AccountId,';
-        if (Schema.SObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
-            strSoql += ' RecordTypeId,';
-        }
-        strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
-                'MailingState, MailingPostalCode, MailingCountry, ';
-        if (orgConfig.isStateCountryPicklistsEnabled()) {
-            strSoql += ' MailingStateCode, MailingCountryCode, ';
-        }
-        strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
-        strSoql += ' FROM Contact WHERE Id= \'' + leadConversionResult.getContactId() + '\'';
-        Contact con = Database.query(strSoql);
+        Contact con = new ContactQueryWithoutSharing(leadConversionResult).query();
         Account myAccount = new Account(Id = leadConversionResult.getAccountId());
         npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -764,5 +753,57 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
     private Boolean isContactSelected() {
         return convertedContactId != null;
+    }
+
+    private without sharing class ContactQueryWithoutSharing {
+        @TestVisible
+        private OrgConfig orgConfig {
+            get {
+                if (orgConfig == null) {
+                    orgConfig = new OrgConfig();
+                }
+                return orgConfig;
+            }
+            set;
+        }
+
+        private List<String> selectFields = new List<String> {
+            String.valueOf(Contact.FirstName),
+            String.valueOf(Contact.LastName),
+            String.valueOf(Contact.AccountId),
+            String.valueOf(Contact.npo02__Household__c),
+            String.valueOf(Contact.MailingStreet),
+            String.valueOf(Contact.MailingCity),
+            String.valueOf(Contact.MailingState),
+            String.valueOf(Contact.MailingPostalCode),
+            String.valueOf(Contact.MailingCountry),
+            String.valueOf(Contact.MailingLatitude),
+            String.valueOf(Contact.MailingLongitude),
+            String.valueOf(Contact.HomePhone),
+            String.valueOf(Contact.Email)
+        };
+        private String queryString;
+
+        private ContactQueryWithoutSharing(Database.LeadConvertResult leadConversionResult) {
+            if (Schema.SObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
+                selectFields.add('RecordTypeId');
+            }
+            if (orgConfig.isStateCountryPicklistsEnabled()) {
+                selectFields.addAll(new List<String> {
+                    'MailingStateCode',
+                    'MailingCountryCode'
+                });
+            }
+            UTIL_Query query = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(Contact.SObjectType)
+                .withWhere('Id = \'' + leadConversionResult.getContactId() + '\'');
+
+            queryString = query.build();
+        }
+
+        private Contact query() {
+            return Database.query(queryString);
+        }
     }
 }
