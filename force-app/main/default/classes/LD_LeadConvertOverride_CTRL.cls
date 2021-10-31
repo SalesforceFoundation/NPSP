@@ -462,30 +462,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // before 6/2016 this fix was only applied if merging into an existing contact,
             // but we've run into multiple orgs where they can reproduce the bug when creating new contacts.
             // npsp devs have not been able to reproduce it, but feel this is a safe fix for all.
-            if (!instanceOfLeadConvert.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()) {
-                //get the new OCRs
-                List<OpportunityContactRole> newOpportunityContactRoles = [
-                        SELECT Id, IsPrimary, Role
-                        FROM OpportunityContactRole
-                        WHERE IsPrimary = TRUE
-                        AND OpportunityId = :leadConversionResult.getOpportunityId()
-                        AND ContactId = :leadConversionResult.getContactId()
-                ];
-
-                //if there are more than one delete the extraneous ones
-                if (newOpportunityContactRoles != null && newOpportunityContactRoles.size() > 1) {
-                    deleteDuplicateOpportunityContactRoles(newOpportunityContactRoles);
-
-                    //on delete of one ocr, the other 'isPrimary' is set to false
-                    //so we need to issue an udpate to correct it.
-                    //also make sure it has the correct role
-                    updatePrimaryOpportunityContactRole(newOpportunityContactRoles);
-                }
-            }
+            deleteDuplicateOpportunityContactRoles(instanceOfLeadConvert, leadConversionResult);
 
             // if we created a new company account, affiliate to it.
             if (isConvertedAccountNew()) {
-                setPrimaryAffiliation(leadConversionResult.getAccountId());
+                setPrimaryAffiliationId(leadConversionResult.getAccountId());
             }
 
             Address__c tempAddr = new Address__c(
@@ -502,53 +483,11 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                 updateAccountAddress(leadConversionResult, tempAddr);
             }
             // handle the optional Affiliation to a new or existing Account.
-            Id affiliationId = null;
-            if (primaryAffiliationId == 'NEW') {
-                Account acc = new Account(
-                        Name = leadToConvert.Company
-                );
-                //copy address from temporary address__c record, handles state and country
-                // picklists if enabled
-                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.setBillingAddress(npspAddress);
-                UTIL_DMLService.insertRecord(npspHousehold.getRecord());
-                affiliationId = acc.Id;
-            } else if (primaryAffiliationId != null && primaryAffiliationId != '') {
-                affiliationId = primaryAffiliationId;
-            }
-            if (affiliationId != null) {
-                // Re-Enable the Affilations Trigger for the Contact
-                TDTM_ProcessControl.toggleTriggerState(
-                        'Contact', 'AFFL_Affiliations_TDTM', true);
-                AFFL_Affiliations_TDTM.createNonDupeAffiliation(
-                        leadToConvert, leadConversionResult.getContactId(), affiliationId, true);
-            }
+            Id affiliationId = createAffiliation(tempAddr, leadConversionResult);
 
             //// Opportunity Cleanup
             if(!instanceOfLeadConvert.isDoNotCreateOpportunity()) {
-                Opportunity convertedOpp = new Opportunity(Id = leadConversionResult.getOpportunityId());
-
-                // Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
-                convertedOpp.Primary_Contact__c = leadConversionResult.getContactId();
-
-                // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
-                if (strOppAccChoice == 'AFF_ACC') {
-                    convertedOpp.AccountId = affiliationId;
-                }
-                String oppName = convertedOpp.Name;
-
-                UTIL_DMLService.updateRecord(convertedOpp);
-
-                // refresh opportunity names after update. if no opportunity names are defined,
-                // keeps original name
-                OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{
-                        convertedOpp
-                });
-                // update Opportunity again if refreshed name is different
-                if (convertedOpp.Name != oppName) {
-                    UTIL_DMLService.updateRecord(convertedOpp);
-                }
+                updateOpportunityWithConversionResult(leadConversionResult, affiliationId);
             }
 
             // redirect
@@ -560,6 +499,84 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }
+    }
+
+    private void updateOpportunityWithConversionResult(Database.LeadConvertResult leadConversionResult, Id affiliationId) {
+        Opportunity convertedOpp = new Opportunity(Id = leadConversionResult.getOpportunityId());
+
+        // Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
+        convertedOpp.Primary_Contact__c = leadConversionResult.getContactId();
+
+        // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
+        if (strOppAccChoice == 'AFF_ACC') {
+            convertedOpp.AccountId = affiliationId;
+        }
+        String oppName = convertedOpp.Name;
+
+        UTIL_DMLService.updateRecord(convertedOpp);
+
+        // refresh opportunity names after update. if no opportunity names are defined,
+        // keeps original name
+        OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{
+                convertedOpp
+        });
+        // update Opportunity again if refreshed name is different
+        if (convertedOpp.Name != oppName) {
+            UTIL_DMLService.updateRecord(convertedOpp);
+        }
+    }
+
+    private void deleteDuplicateOpportunityContactRoles(Database.LeadConvert instanceOfLeadConvert, Database.LeadConvertResult leadConversionResult) {
+        if (!instanceOfLeadConvert.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()) {
+            //get the new OCRs
+            List<OpportunityContactRole> newOpportunityContactRoles = [
+                    SELECT Id, IsPrimary, Role
+                    FROM OpportunityContactRole
+                    WHERE IsPrimary = TRUE
+                    AND OpportunityId = :leadConversionResult.getOpportunityId()
+                    AND ContactId = :leadConversionResult.getContactId()
+            ];
+
+            //if there are more than one delete the extraneous ones
+            if (newOpportunityContactRoles != null && newOpportunityContactRoles.size() > 1) {
+                deleteDuplicateOpportunityContactRoles(newOpportunityContactRoles);
+
+                //on delete of one ocr, the other 'isPrimary' is set to false
+                //so we need to issue an udpate to correct it.
+                //also make sure it has the correct role
+                updatePrimaryOpportunityContactRole(newOpportunityContactRoles);
+            }
+        }
+    }
+
+    private Id createAffiliation(Address__c tempAddr, Database.LeadConvertResult leadConversionResult) {
+        Id affiliationId = null;
+        if (isNewPrimaryAffiliation()) {
+            Account acc = new Account(
+                    Name = leadToConvert.Company
+            );
+            //copy address from temporary address__c record, handles state and country
+            // picklists if enabled
+            NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+            npspHousehold.setBillingAddress(npspAddress);
+            UTIL_DMLService.insertRecord(npspHousehold.getRecord());
+            affiliationId = acc.Id;
+        } else if (String.isNotBlank(primaryAffiliationId)) {
+            affiliationId = primaryAffiliationId;
+        }
+        if (affiliationId != null) {
+            // Re-Enable the Affilations Trigger for the Contact
+            TDTM_ProcessControl.toggleTriggerState(
+                    'Contact', 'AFFL_Affiliations_TDTM', true);
+            AFFL_Affiliations_TDTM.createNonDupeAffiliation(
+                    leadToConvert, leadConversionResult.getContactId(), affiliationId, true);
+        }
+        return affiliationId;
+    }
+
+    private Boolean isNewPrimaryAffiliation() {
+        return primaryAffiliationId == 'NEW';
     }
 
     private Boolean shouldUpdateAccountAddress() {
@@ -578,7 +595,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         UTIL_DMLService.updateRecord(npspHousehold.getRecord());
     }
 
-    private void setPrimaryAffiliation(Id accountId) {
+    private void setPrimaryAffiliationId(Id accountId) {
         primaryAffiliationId = accountId;
     }
 
