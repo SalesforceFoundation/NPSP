@@ -80,7 +80,7 @@
                         </div>
                     </div>
 
-                    <apex:outputText rendered="{!NOT(isLegacyAccount) && (convertedContactId == null || convertedContactId=='' || convertedContactId=='NEW_CONTACT')}">
+                    <apex:outputText rendered="{!NOT(isLegacyHousehold) && (convertedContactId == null || convertedContactId=='' || convertedContactId=='NEW_CONTACT')}">
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">
                                 <apex:outputText value="{!$Label.leadConvertAccountName}"/>
@@ -95,7 +95,7 @@
                         </div>
                     </apex:outputText>
 
-                    <apex:outputText rendered="{!NOT(isLegacyAccount)}">
+                    <apex:outputText rendered="{!NOT(isLegacyHousehold)}">
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">
                                 <apex:outputText value="{!$Label.leadConvertAffilationName}"/>

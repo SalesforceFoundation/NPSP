@@ -141,7 +141,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Checks the value of the 'Company' field for values associated with 1x1 or Individual Accounts
     */
-    public Boolean isLegacyAccount {
+    public Boolean isLegacyHousehold {
         get {
             if (leadToConvert == null) {
                 return false;
@@ -278,7 +278,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     listSOAccounts.add(new SelectOption('AUTO', strAcc));
                 }
 
-                if (!isLegacyAccount) {
+                if (!isLegacyHousehold) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values()) {
                         listSOAccounts.add(
@@ -309,7 +309,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             if (listSOAfflAccounts == null) {
                 listSOAfflAccounts = new List<SelectOption>();
                 listSOAfflAccounts.add(new SelectOption('', System.Label.stgLabelNone));
-                if (!isLegacyAccount) {
+                if (!isLegacyHousehold) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values()) {
                         listSOAfflAccounts.add(
@@ -395,7 +395,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         if (conMap.size() == 0) {
             convertedContactId = 'NEW_CONTACT';
         }
-        if (!isLegacyAccount) {
+        if (!isLegacyHousehold) {
             primaryAffiliationId = listSOAfflAccounts[1].getValue();
         } // either the first existing
         // or the new account if none.
@@ -422,7 +422,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public PageReference pickLeadConvertPage() {
         PageReference pageRef = null;
 
-        if (!isLegacyAccount) {
+        if (!isLegacyHousehold) {
             pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' +
                     leadToConvert.Id + '&id=' + leadToConvert.Id + '&nooverride=1');
             pageRef.setRedirect(true);
@@ -619,7 +619,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }
 
     private Boolean shouldFixConvertedAccount() {
-        return convertedContactId == 'NEW_CONTACT' && (isLegacyAccount || isNewLeadAccount());
+        return convertedContactId == 'NEW_CONTACT' && (isLegacyHousehold || isNewLeadAccount());
     }
 
     private void fixConvertedAccount(Database.LeadConvertResult leadConversionResult) {
@@ -739,7 +739,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         } else if (leadAccountId != 'NEW' && leadAccountId != 'AUTO'
                 && leadAccountId != null && leadAccountId != '') {
             instanceOfLeadConvert.setAccountId(leadAccountId);
-        } else if (CAO_Constants.isBucketModel() && (isLegacyAccount || isNewLeadAccount())) {
+        } else if (CAO_Constants.isBucketModel() && (isLegacyHousehold || isNewLeadAccount())) {
             instanceOfLeadConvert.setAccountId(CAO_Constants.getIndividualAccountId());
         }
         return instanceOfLeadConvert;
