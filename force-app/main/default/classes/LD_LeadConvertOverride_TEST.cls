@@ -38,6 +38,42 @@ private class LD_LeadConvertOverride_TEST {
 
     private static final String SPECIAL_ACCOUNT_NAME = 'Self';
 
+    @IsTest
+    static void leadContactQueryShouldNotThrowErrorWhenUserHasNoPermissionToContact() {
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert testContacts;
+
+        System.QueryException queryException;
+
+        System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
+            LD_LeadConvertOverride_CTRL.ContactQueryWithoutSharing contactQuery =
+                    new LD_LeadConvertOverride_CTRL.ContactQueryWithoutSharing(testContacts[0].Id);
+            Test.startTest();
+                try {
+                    Contact testContact = contactQuery.query();
+                    System.assert(testContact != null, 'The contact query should return a contact record');
+                    System.assert(testContacts[0].Id == testContact.Id, 'The contact query should return the correct ' +
+                            'contact record.');
+                } catch(System.QueryException ex) {
+                    queryException = ex;
+                }
+            Test.stopTest();
+
+            String queryExceptionMessage = 'The contact query should not throw an exception when a ' +
+                    'user does not have permission to view the contact record.';
+            if (queryException != null) {
+                queryExceptionMessage += ' Query Exception thrown: ' + queryException.getMessage();
+            }
+            System.assert(queryException == null, queryExceptionMessage);
+        }
+    }
+
+    @IsTest
+    static void newLeadConversion_UserDoesNotOwnLeadRecord() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+    }
+
     /*******************************************************************************************************
     * @description Runs newLead_Conversion_Test with the 1x1 account model
     */

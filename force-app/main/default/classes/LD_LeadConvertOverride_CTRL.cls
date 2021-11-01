@@ -623,7 +623,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }
 
     private void fixConvertedAccount(Database.LeadConvertResult leadConversionResult) {
-        Contact con = new ContactQueryWithoutSharing(leadConversionResult).query();
+        Contact con = new ContactQueryWithoutSharing(leadConversionResult.getContactId()).query();
         Account myAccount = new Account(Id = leadConversionResult.getAccountId());
         npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -755,7 +755,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         return convertedContactId != null;
     }
 
+    @TestVisible
     private without sharing class ContactQueryWithoutSharing {
+
         @TestVisible
         private OrgConfig orgConfig {
             get {
@@ -784,7 +786,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         };
         private String queryString;
 
-        private ContactQueryWithoutSharing(Database.LeadConvertResult leadConversionResult) {
+        @TestVisible
+        private ContactQueryWithoutSharing(Id contactId) {
             if (Schema.SObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
                 selectFields.add('RecordTypeId');
             }
@@ -797,11 +800,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             UTIL_Query query = new UTIL_Query()
                 .withSelectFields(selectFields)
                 .withFrom(Contact.SObjectType)
-                .withWhere('Id = \'' + leadConversionResult.getContactId() + '\'');
+                .withWhere('Id = \'' + contactId + '\'');
 
             queryString = query.build();
         }
 
+        @TestVisible
         private Contact query() {
             return Database.query(queryString);
         }
