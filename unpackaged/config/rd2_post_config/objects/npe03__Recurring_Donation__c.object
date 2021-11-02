@@ -480,6 +480,16 @@
         <trackTrending>false</trackTrending>
         <type>Date</type>
     </fields>
+    <listViews>
+        <fullName>All</fullName>
+        <columns>NAME</columns>
+        <columns>%%%NAMESPACE%%%Status__c</columns>
+        <columns>npe03__Amount__c</columns>
+        <columns>npe03__Installment_Period__c</columns>
+        <columns>npe03__Next_Payment_Date__c</columns>
+        <filterScope>Everything</filterScope>
+        <label>All</label>
+    </listViews>
     <deploymentStatus>Deployed</deploymentStatus>
     <description>Recurring Donations track charitable giving where a donor specifies an amount of money to be given on a regular basis.</description>
     <enableActivities>true</enableActivities>
