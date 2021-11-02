@@ -68,12 +68,6 @@ private class LD_LeadConvertOverride_TEST {
         }
     }
 
-    @IsTest
-    static void newLeadConversion_UserDoesNotOwnLeadRecord() {
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-    }
-
     /*******************************************************************************************************
     * @description Runs newLead_Conversion_Test with the 1x1 account model
     */
