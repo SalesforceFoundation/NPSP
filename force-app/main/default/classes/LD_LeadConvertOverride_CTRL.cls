@@ -444,6 +444,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         Database.LeadConvert instanceOfLeadConvert = prepareLeadConversion();
         // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
         disableAffiliationTrigger();
+
+        Boolean isHouseholdAddressesDisabled = isHouseholdAddressesDisabled();
+        Boolean isOrganizationAddressesDisabled = isOrganizationAddressesEnabled();
+
         // temporarily disable address management
         disableAddressManagement();
 
@@ -451,7 +455,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // convert the lead
             Database.LeadConvertResult leadConversionResult = Database.convertLead(instanceOfLeadConvert);
             // restore address management
-            enabledAddressManagement();
+            restoreAddressManagement(isHouseholdAddressesDisabled, isOrganizationAddressesDisabled);
             // fix the account that lead conversion created
             if (shouldFixConvertedAccount()) {
                 fixConvertedAccount(leadConversionResult);
@@ -680,14 +684,14 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         }
     }
 
-    private void enabledAddressManagement() {
+    private void restoreAddressManagement(Boolean isHouseholdAddressesDisabled, Boolean isOrganizationAccountsEnabled) {
         UTIL_CustomSettingsFacade.getContactsSettings()
-                .Household_Account_Addresses_Disabled__c = isHouseholdAddressesDisabled();
+                .Household_Account_Addresses_Disabled__c = isHouseholdAddressesDisabled;
         UTIL_CustomSettingsFacade.getContactsSettings()
-                .Organizational_Account_Addresses_Enabled__c = isOrganizationAddressesDisabled();
+                .Organizational_Account_Addresses_Enabled__c = isOrganizationAccountsEnabled;
     }
 
-    private Boolean isOrganizationAddressesDisabled() {
+    private Boolean isOrganizationAddressesEnabled() {
         Boolean isOrganizationAddressesDisabled =
                 UTIL_CustomSettingsFacade.getContactsSettings()
                         .Organizational_Account_Addresses_Enabled__c;
