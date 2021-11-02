@@ -28,7 +28,8 @@ import {
     removeFromArray,
     isEmpty,
     hasNestedProperty,
-    apiNameFor
+    apiNameFor,
+    format
 } from 'c/utilCommon';
 
 import geA11ySection from '@salesforce/label/c.geA11ySection';
@@ -992,6 +993,24 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         this.formSections = formSections;
+
+        this.announceFieldAddedToSection(formSection, field);
+    }
+
+    announceFieldAddedToSection(formSection, field) {
+        const formSectionIndex = findIndexByProperty(this.formSections, ID, formSection.id);
+
+        const screenReaderMessage =
+            formSection.label !== '' ?
+                format(geA11yTemplateBuilderAddNamedSection, [field.label, formSection.label])
+                : format(geA11yTemplateBuilderAddUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
+
+        this.screenReaderAnnounce(screenReaderMessage);
+    }
+
+    screenReaderAnnounce(message) {
+        const utilScreenReaderAnnouncement = this.template.querySelector('c-utilscreenreaderannouncement');
+        utilScreenReaderAnnouncement?.announce(message);
     }
 
     addFieldToAvailableBatchTableColumnOptions(field) {
@@ -1036,6 +1055,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
+        const field = section.elements.find(element => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === fieldMappingDeveloperName;
+        });
         const index = section.elements.findIndex((element) => {
             const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
             return name === fieldMappingDeveloperName;
@@ -1045,6 +1068,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.formSections = formSections;
 
         this.removeOptionFromBatchTableColumn(fieldMappingDeveloperName);
+
+        this.announceFieldRemovedFromSection(section, field);
+    }
+
+    announceFieldRemovedFromSection(section, field) {
+        const formSectionIndex = findIndexByProperty(this.formSections, ID, section.id);
+        const screenReaderMessage =
+            section.label !== '' ?
+                format(geA11yTemplateBuilderRemoveNamedSection, [field.label, section.label])
+                : format(geA11yTemplateBuilderRemoveUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
+
+        this.screenReaderAnnounce(screenReaderMessage);
     }
 
     /*******************************************************************************
