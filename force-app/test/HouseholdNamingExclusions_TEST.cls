@@ -97,7 +97,7 @@ private class HouseholdNamingExclusions_TEST {
         }, new List<Contact>{
                 oldContact
         });
-        contactAdapter.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+        contactAdapter.onBeforeUpdate_HH_Households_TDTM();
 
         HouseholdNamingExclusionsString householdNamingExclusionsString =
                 new HouseholdNamingExclusionsString(c);
@@ -145,7 +145,7 @@ private class HouseholdNamingExclusions_TEST {
         }, new List<Contact>{
                 oldContact
         });
-        contactAdapter.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+        contactAdapter.onBeforeUpdate_HH_Households_TDTM();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -182,7 +182,7 @@ private class HouseholdNamingExclusions_TEST {
         }, new List<Contact>{
                 oldContact
         });
-        contactAdapter.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+        contactAdapter.onBeforeUpdate_HH_Households_TDTM();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
@@ -216,7 +216,7 @@ private class HouseholdNamingExclusions_TEST {
         }, new List<Contact>{
                 oldContact
         });
-        contactAdapter.onBeforeUpdate_ACCT_IndividualAccounts_TDTM();
+        contactAdapter.onBeforeUpdate_HH_Households_TDTM();
 
         HouseholdNamingExclusionsCheckboxes exclusionsCheckboxes =
                 new HouseholdNamingExclusionsCheckboxes(c);
