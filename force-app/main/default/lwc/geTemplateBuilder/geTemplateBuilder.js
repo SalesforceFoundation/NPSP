@@ -30,6 +30,13 @@ import {
     hasNestedProperty,
     apiNameFor
 } from 'c/utilCommon';
+
+import geA11ySection from '@salesforce/label/c.geA11ySection';
+import geA11yTemplateBuilderAddNamedSection from '@salesforce/label/c.geA11yTemplateBuilderAddNamedSection';
+import geA11yTemplateBuilderAddUnnamedSection from '@salesforce/label/c.geA11yTemplateBuilderAddUnnamedSection';
+import geA11yTemplateBuilderRemoveNamedSection from '@salesforce/label/c.geA11yTemplateBuilderRemoveNamedSection';
+import geA11yTemplateBuilderRemoveUnnamedSection from '@salesforce/label/c.geA11yTemplateBuilderRemoveUnnamedSection';
+
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
