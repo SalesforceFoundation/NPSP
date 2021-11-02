@@ -1009,8 +1009,8 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
     }
 
     screenReaderAnnounce(message) {
-        const utilScreenReaderAnnouncement = this.template.querySelector('c-utilscreenreaderannouncement');
-        utilScreenReaderAnnouncement?.announce(message);
+        const utilScreenReaderAnnouncer = this.template.querySelector('c-util-screen-reader-announcer');
+        utilScreenReaderAnnouncer?.announce(message);
     }
 
     addFieldToAvailableBatchTableColumnOptions(field) {
