@@ -712,16 +712,20 @@ public with sharing class CON_ContactMerge_CTRL {
 
     private List<String> buildSortedCustomFieldList(Map<String, DescribeFieldResult> customFieldMap) {
         List<String> customFields = new List<String>();
-        String undeliverableFieldName = String.valueOf(Contact.Undeliverable_Address__c).toLowerCase();
+        DescribeFieldResult undeliverableFieldDescribeResult = Contact.Undeliverable_Address__c.getDescribe();
 
         for (String fieldName : customFieldMap.keySet()) {
-            if (fieldName == undeliverableFieldName) {
+            if (fieldName == undeliverableFieldDescribeResult.getName()) {
                 continue;
             }
             customFields.add(fieldName);
         }
+
         customFields.sort();
-        customFields.add(0, undeliverableFieldName);
+        if (UTIL_Permissions.canRead(undeliverableFieldDescribeResult, false) &&
+                UTIL_Permissions.canUpdate(undeliverableFieldDescribeResult, false)) {
+            customFields.add(0, undeliverableFieldDescribeResult.getName().toLowerCase());
+        }
 
         return customFields;
     }
