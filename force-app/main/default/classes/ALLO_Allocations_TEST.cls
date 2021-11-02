@@ -208,10 +208,10 @@ private with sharing class ALLO_Allocations_TEST {
     * @description When Payments are created after the Opportunity and Opportunity Allocations exist,
     * ensure that the payment allocation percentages match those from the Opportunity Allocations, and
     * are not overwritten by additional logic in the trigger.
-    * Also check that allocation rounding works correctly and no amounts are allocated to the Default GAU
+    * Also check that no amounts are allocated to the Default GAU
     ********************************************************************************************************/
     @isTest
-    private static void confirmNewPaymentAllocationsMatchExistingOppAllocationRounding() {
+    private static void confirmNewPaymentAllocationsMatchExistingOppAllocationNotRounding() {
         General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
         insert defaultGau;
 
@@ -255,18 +255,22 @@ private with sharing class ALLO_Allocations_TEST {
         // Check that each allocation has the correct amount and percent
         List<Allocation__c> queryAllo = getAllocationsOrderByPercent(pmt.Id, gau1.Id);
 
+        // We want the unrounded percentages to compare since that is what we are storing.
+        // $25 Fixed amount + $(25% * 100.01) = $50.0025 (Total Amount for GAU 1)
+        Double percentGAU1 = (50.0025/100.01) * 100;
+        Double percentGAU2 = (50.01/100.01) * 100;
+
         // Make sure the percent value carried through to the Payment Allocation
-        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(percentGAU1, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
         System.assertEquals(50, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
 
         queryAllo = getAllocationsOrderByPercent(pmt.Id, gau2.Id);
 
-        System.assertEquals(50, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
+        System.assertEquals(percentGAU2, queryAllo[0].Percent__c, 'The allocation percentage should be 50%.');
         System.assertEquals(50.01, queryAllo[0].Amount__c, 'The amount of the allocation should be calculated based on the parent Opportunity allocation.');
 
         queryAllo = getAllocationsOrderByPercent(pmt.Id, defaultGau.Id);
         System.assertEquals(queryAllo.size(), 0, 'This payment should be fully allocated without the Default GAU');
-
     }
 
 
