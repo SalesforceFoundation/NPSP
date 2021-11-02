@@ -39,10 +39,10 @@ public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
     static final String FIELD_ELEMENT_TYPE = 'field';
     @TestVisible
-    private static DataImportFieldMappingSelector selector {
+    private static FieldMappingSelector selector {
         get {
             if (selector == null) {
-                selector = DataImportFieldMappingSelector.newInstance();
+                selector = FieldMappingSelector.newInstance();
             }
             return selector;
         }
@@ -230,7 +230,7 @@ public with sharing class GE_Template {
     private static List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList {
         get {
             if (fieldMappingCMTList == null) {
-                fieldMappingCMTList = selector.getDataImportFieldMappings();
+                fieldMappingCMTList = selector.getFieldMappings();
             }
             return fieldMappingCMTList;
         }
