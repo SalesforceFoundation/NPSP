@@ -34,7 +34,6 @@
 */
 public with sharing class FieldMappingSelector {
 
-
     public List<Data_Import_Field_Mapping__mdt> getFieldMappings() {
         return [
                 SELECT Id,
