@@ -27,6 +27,7 @@ import {
     removeByProperty,
     removeFromArray,
     isEmpty,
+    isNotEmpty,
     hasNestedProperty,
     apiNameFor,
     format
@@ -1001,7 +1002,7 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         const formSectionIndex = findIndexByProperty(this.formSections, ID, formSection.id);
 
         const screenReaderMessage =
-            formSection.label !== '' ?
+            isNotEmpty(formSection.label) ?
                 format(geA11yTemplateBuilderAddNamedSection, [field.label, formSection.label])
                 : format(geA11yTemplateBuilderAddUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
 
@@ -1072,11 +1073,11 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.announceFieldRemovedFromSection(section, field);
     }
 
-    announceFieldRemovedFromSection(section, field) {
-        const formSectionIndex = findIndexByProperty(this.formSections, ID, section.id);
+    announceFieldRemovedFromSection(formSection, field) {
+        const formSectionIndex = findIndexByProperty(this.formSections, ID, formSection.id);
         const screenReaderMessage =
-            section.label !== '' ?
-                format(geA11yTemplateBuilderRemoveNamedSection, [field.label, section.label])
+            isNotEmpty(formSection.label) ?
+                format(geA11yTemplateBuilderRemoveNamedSection, [field.label, formSection.label])
                 : format(geA11yTemplateBuilderRemoveUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
 
         this.screenReaderAnnounce(screenReaderMessage);
