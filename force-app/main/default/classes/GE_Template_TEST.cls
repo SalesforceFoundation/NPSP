@@ -296,7 +296,7 @@ public with sharing class GE_Template_TEST {
                         String.valueOf(npe01__OppPayment__c.npe01__Payment_Method__c),
                 Is_Deleted__c = true
         );
-        List<Data_Import_Field_Mapping__mdt d = new List<Data_Import_Field_Mapping__mdt>{
+        List<Data_Import_Field_Mapping__mdt> d = new List<Data_Import_Field_Mapping__mdt>{
                 checkNumber,
                 paymentMethod
         };
