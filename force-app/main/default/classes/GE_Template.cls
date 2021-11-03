@@ -38,16 +38,7 @@
 public with sharing class GE_Template {
     static final String TEMPLATE_VERSION = '1.0';
     static final String FIELD_ELEMENT_TYPE = 'field';
-    @TestVisible
-    private static FieldMappingSelector selector {
-        get {
-            if (selector == null) {
-                selector = FieldMappingSelector.newInstance();
-            }
-            return selector;
-        }
-        set;
-    }
+    private static FieldMappings mappings = FieldMappings.newInstance();
 
     /**
      * @description This method determines if there is a default template, 
@@ -124,9 +115,9 @@ public with sharing class GE_Template {
     private static Form_Template__c buildDefaultTemplate() {
         // Get the customized version of the default template
         // updated to use the field mappings present in this Org.
-        Template customizedDefaultTemplate = getCustomizedDefaultTemplate();
+        Template orgSpecificDefaultTemplate = getOrgSpecificDefaultTemplate();
 
-        return getFormTemplateFor(customizedDefaultTemplate);
+        return getFormTemplateFor(orgSpecificDefaultTemplate);
     }
 
     private static Form_Template__c getFormTemplateFor(Template bespokeDefaultTemplate) {
@@ -147,10 +138,9 @@ public with sharing class GE_Template {
         }
     }
 
-    private static void updateLayoutUsingLocalMigratedFieldMappings(
-            Template defaultTemplate) {
-        Layout bespokeLayout = defaultTemplate.layout;
-        List<Section> sectionList = bespokeLayout.sections;
+    private static void updateLayoutUsingLocalMigratedFieldMappings(Template aTemplate) {
+        Layout orgSpecificTemplate = aTemplate.layout;
+        List<Section> sectionList = orgSpecificTemplate.sections;
 
         // Get a mapping of partial dev names to full dev names for this org.
         // Example:
@@ -213,8 +203,7 @@ public with sharing class GE_Template {
         // migrated field mappings have been deleted, the call
         // to stripElementsWithDeletedFieldMappings() must happen
         // after the template's dev names have been updated.
-        bespokeLayout.stripElementsWithDeletedFieldMappings(
-                new FieldMappings(fieldMappingCMTList));
+        orgSpecificTemplate.stripElementsWithDeletedFieldMappings(mappings);
     }
 
     private static String getDefaultTemplateBaseJSON() {
@@ -235,30 +224,18 @@ public with sharing class GE_Template {
         return defaultTemplateSRJSON;
     }
 
-    private static Template getCustomizedDefaultTemplate() {
-        Template customizedDefaultTemplate =
+    private static Template getOrgSpecificDefaultTemplate() {
+        Template orgSpecificDefaultTemplate =
                 (Template) JSON.deserialize(getDefaultTemplateBaseJSON(), Template.class);
 
         // Update the batch header fields with the namespace prefix, if necessary
-        applyNamespaceToBatchHeaderFields(customizedDefaultTemplate);
+        applyNamespaceToBatchHeaderFields(orgSpecificDefaultTemplate);
 
         // Update the Base Template to have it reflect the Developer Names of the
         // migrated Field Mappings that exist in this Org.
-        updateLayoutUsingLocalMigratedFieldMappings(customizedDefaultTemplate);
+        updateLayoutUsingLocalMigratedFieldMappings(orgSpecificDefaultTemplate);
 
-        return customizedDefaultTemplate;
-    }
-
-    // Get the org's migrated field mappings.
-    @TestVisible
-    private static List<Data_Import_Field_Mapping__mdt> fieldMappingCMTList {
-        get {
-            if (fieldMappingCMTList == null) {
-                fieldMappingCMTList = selector.getFieldMappings();
-            }
-            return fieldMappingCMTList;
-        }
-        set;
+        return orgSpecificDefaultTemplate;
     }
 
     /**
@@ -271,7 +248,8 @@ public with sharing class GE_Template {
     private static void populateDevNameMapping(Map<String,String> updatedFieldDevNameMap,
         Map<String,String> updatedObjectDevNameMap) {
 
-        for (Data_Import_Field_Mapping__mdt fieldMapping : fieldMappingCMTList) {
+        for (Data_Import_Field_Mapping__mdt fieldMapping :
+                (List<Data_Import_Field_Mapping__mdt>) mappings.getRecords()) {
             String partialFieldDevName = fieldMapping.DeveloperName.substringBeforeLast('_');
             String partialObjectDevName = 
                 fieldMapping.Target_Object_Mapping__r.DeveloperName.substringBeforeLast('_');

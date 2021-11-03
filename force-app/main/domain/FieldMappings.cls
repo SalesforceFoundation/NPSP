@@ -34,18 +34,34 @@
 */
 public with sharing class FieldMappings extends fflib_SObjects {
 
+    @TestVisible
+    private static FieldMappingSelector mappingSelector {
+        get {
+            if (mappingSelector == null) {
+                mappingSelector = FieldMappingSelector.newInstance();
+            }
+            return mappingSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private static List<Data_Import_Field_Mapping__mdt> mappingRecords {
+        get {
+            if (mappingRecords == null) {
+                mappingRecords = mappingSelector.getFieldMappings();
+            }
+            return mappingRecords;
+        }
+        set;
+    }
+
     public FieldMappings(List<Data_Import_Field_Mapping__mdt> records){
         super(records);
     }
 
-    private Data_Import_Field_Mapping__mdt getMappingByDevName(String devName) {
-        for (Data_Import_Field_Mapping__mdt d :
-                (List<Data_Import_Field_Mapping__mdt>) getRecords()) {
-            if (d.DeveloperName == devName) {
-                return d;
-            }
-        }
-        return null;
+    public static FieldMappings newInstance() {
+        return new FieldMappings(mappingRecords);
     }
 
     /**
@@ -59,5 +75,15 @@ public with sharing class FieldMappings extends fflib_SObjects {
         } else {
             return false;
         }
+    }
+
+    private Data_Import_Field_Mapping__mdt getMappingByDevName(String devName) {
+        for (Data_Import_Field_Mapping__mdt d :
+                (List<Data_Import_Field_Mapping__mdt>) getRecords()) {
+            if (d.DeveloperName == devName) {
+                return d;
+            }
+        }
+        return null;
     }
 }
