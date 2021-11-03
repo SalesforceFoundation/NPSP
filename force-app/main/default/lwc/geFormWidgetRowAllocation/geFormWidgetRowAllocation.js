@@ -1,9 +1,10 @@
-import {LightningElement, api, track} from 'lwc';
+import {LightningElement, api} from 'lwc';
 import GeLabelService from 'c/geLabelService';
 import {
     apiNameFor,
     isEmpty,
-    isNumeric
+    isNumeric,
+    asyncInterval
 } from 'c/utilCommon';
 
 import DI_DONATION_AMOUNT_FIELD from '@salesforce/schema/DataImport__c.Donation_Amount__c';
@@ -20,6 +21,26 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     @api row;
     @api fieldList;
     @api disabled;
+
+    _hasFocusedOnGauLookupOnFirstRender = false;
+
+    async connectedCallback() {
+        if (!this._hasFocusedOnGauLookupOnFirstRender) {
+            await asyncInterval(this.focusOnGauLookup, 50);
+        }
+    }
+
+    focusOnGauLookup = async () => {
+        const gauLookup = this.template.querySelector(`lightning-input-field[data-fieldname='${this.gauFieldApiName}']`);
+        gauLookup.focus();
+
+        const activeElement = this.template.activeElement;
+        if (activeElement && activeElement.getAttribute('data-fieldname') === this.gauFieldApiName) {
+            this._hasFocusedOnGauLookupOnFirstRender = true;
+            return true;
+        }
+        return false;
+    }
 
     _remainingAmount;
     @api
