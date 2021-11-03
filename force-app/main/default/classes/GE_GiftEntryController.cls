@@ -1072,7 +1072,6 @@ public with sharing class GE_GiftEntryController {
     * @description Private helper method for deserializing the JSON stored in a form template record.
     * @param templateObj - The Form_Template__c object with the Template JSON.
     */
-    @TestVisible
     private static GE_Template.Template deserializeFormTemplateFromObj(Form_Template__c templateObj) {
         GE_Template.Template template;
         if (templateObj != null && templateObj.Template_JSON__c != null) {
