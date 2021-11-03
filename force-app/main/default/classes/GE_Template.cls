@@ -113,24 +113,21 @@ public with sharing class GE_Template {
      */
     @TestVisible
     private static Form_Template__c buildDefaultTemplate() {
-        // Get the customized version of the default template
-        // updated to use the field mappings present in this Org.
         Template orgSpecificDefaultTemplate = getOrgSpecificDefaultTemplate();
-
         return getFormTemplateFor(orgSpecificDefaultTemplate);
     }
 
-    private static Form_Template__c getFormTemplateFor(Template bespokeDefaultTemplate) {
-        Form_Template__c newDefaultTemplate = new Form_Template__c();
-        newDefaultTemplate.Name = bespokeDefaultTemplate.name;
-        newDefaultTemplate.Description__c = bespokeDefaultTemplate.description;
-        newDefaultTemplate.Template_JSON__c = JSON.serialize(bespokeDefaultTemplate);
-        newDefaultTemplate.Format_Version__c = TEMPLATE_VERSION;
-        return newDefaultTemplate;
+    private static Form_Template__c getFormTemplateFor(Template aTemplate) {
+        Form_Template__c formTemplate = new Form_Template__c();
+        formTemplate.Name = aTemplate.name;
+        formTemplate.Description__c = aTemplate.description;
+        formTemplate.Template_JSON__c = JSON.serialize(aTemplate);
+        formTemplate.Format_Version__c = TEMPLATE_VERSION;
+        return formTemplate;
     }
 
-    private static void applyNamespaceToBatchHeaderFields(Template baseDefaultTemplate) {
-        List<BatchHeaderField> batchHeaderFieldList = baseDefaultTemplate.batchHeaderFields;
+    private static void applyNamespaceToBatchHeaderFields(Template aTemplate) {
+        List<BatchHeaderField> batchHeaderFieldList = aTemplate.batchHeaderFields;
         for (BatchHeaderField batchHeaderField : batchHeaderFieldList) {
             if (batchHeaderField.apiName.endsWith('__c')) {
                 batchHeaderField.apiName = UTIL_Namespace.StrTokenNSPrefix(batchHeaderField.apiName);
@@ -145,7 +142,6 @@ public with sharing class GE_Template {
         // Get a mapping of partial dev names to full dev names for this org.
         // Example:
         // Account1_Name -> Account1_Name_ee63cf9df
-        //
         // This is used for updating the base JSON's field mapping dev names with the org's dev names.
         Map<String, String> updatedFieldDevNameMap = new Map<String, String>();
 
