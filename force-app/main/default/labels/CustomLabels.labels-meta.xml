@@ -6254,6 +6254,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Stage Complete</value>
     </labels>
     <labels>
+        <fullName>conMergeStageCurrent</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageCurrent</shortDescription>
+        <value>Current Stage</value>
+    </labels>
+    <labels>
+        <fullName>conMergeStageNotStarted</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageNotStarted</shortDescription>
+        <value>Stage Not Started</value>
+    </labels>
+    <labels>
         <fullName>conMergeWinnerAsstText</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
