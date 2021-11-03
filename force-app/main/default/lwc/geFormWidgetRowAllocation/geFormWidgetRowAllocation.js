@@ -25,7 +25,11 @@ export default class GeFormWidgetRowAllocation extends LightningElement {
     _hasFocusedOnGauLookupOnFirstRender = false;
 
     async connectedCallback() {
-        if (!this._hasFocusedOnGauLookupOnFirstRender) {
+        const shouldPlaceFocusOnGauLookup =
+            !this._hasFocusedOnGauLookupOnFirstRender
+            && !this.row?.record[apiNameFor(GAU_FIELD)];
+
+        if (shouldPlaceFocusOnGauLookup) {
             await asyncInterval(this.focusOnGauLookup, 50);
         }
     }
