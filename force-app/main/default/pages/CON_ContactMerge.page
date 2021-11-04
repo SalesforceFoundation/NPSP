@@ -81,6 +81,13 @@
         <apex:variable
                 var="step3class"
                 value="{!IF(step < 3, 'slds-is-incomplete', IF(STEP == 3, 'slds-is-current', 'slds-is-complete'))}"/>
+        <apex:variable var="step1assistivetext" value="{!IF(step == 1, $Label.conMergeStageCurrent, $Label.conMergeStageComplete)}"/>
+        <apex:variable
+                var="step2assistivetext"
+                value="{!IF(step < 2, $Label.conMergeStageNotStarted, IF(step == 2, $Label.conMergeStageCurrent, $Label.conMergeStageComplete))}"/>
+        <apex:variable
+                var="step3assistivetext"
+                value="{!IF(step < 3, $Label.conMergeStageNotStarted, IF(STEP == 3, $Label.conMergeStageCurrent, $Label.conMergeStageComplete))}"/>
         <apex:outputPanel rendered="{!loadMergePage}">
             <div class="slds-m-top_medium slds-m-bottom_large slds-p-horizontal_large">
                 <div class="slds-path" role="application tablist">
@@ -91,7 +98,7 @@
                                     <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                         <path d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                     </svg>
-                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                    <span class="slds-assistive-text">{!step1assistivetext}</span>
                                 </span>
                                 <apex:outputPanel rendered="{!showContactSearch}">
                                     <span class="slds-path__title">{!$Label.npe01__contact_merge_step1}</span>
@@ -107,7 +114,7 @@
                                     <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                         <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                     </svg>
-                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                    <span class="slds-assistive-text">{!step2assistivetext}</span>
                                 </span>
                                 <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step2}</span>
                             </div>
@@ -118,7 +125,7 @@
                                     <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                         <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                     </svg>
-                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                    <span class="slds-assistive-text">{!step3assistivetext}</span>
                                 </span>
                                 <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step3}</span>
                             </div>
@@ -129,7 +136,7 @@
                                     <svg aria-hidden="true" class="slds-icon slds-icon_x-small" viewBox="0 0 24 24">
                                         <path  d="M8.8 19.6L1.2 12c-.3-.3-.3-.8 0-1.1l1-1c.3-.3.8-.3 1 0L9 15.7c.1.2.5.2.6 0L20.9 4.4c.2-.3.7-.3 1 0l1 1c.3.3.3.7 0 1L9.8 19.6c-.2.3-.7.3-1 0z"/>
                                     </svg>
-                                    <span class="slds-assistive-text">{!$Label.conMergeStageComplete}</span>
+                                    <span class="slds-assistive-text">{!$Label.conMergeStageNotStarted}</span>
                                 </span>
                                 <span class="slds-path__title">{!$Label.npe01__Contact_Merge_Step4}</span>
                             </div>
