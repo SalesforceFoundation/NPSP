@@ -493,9 +493,18 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             if(!instanceOfLeadConvert.isDoNotCreateOpportunity()) {
                 updateOpportunityWithConversionResult(leadConversionResult, affiliationId);
             }
+            UserRecordAccess userContactAccess = [SELECT RecordId, HasReadAccess
+                                                 FROM UserRecordAccess
+                                                 WHERE RecordId = :leadConversionResult.getContactId()
+                                                 AND UserId = :UserInfo.getUserId()];
 
-            // redirect
-            return new PageReference('/' + leadConversionResult.getContactId());
+            if (userContactAccess.HasReadAccess) {
+                return new PageReference('/' + leadConversionResult.getContactId());
+            } else {
+                return new PageReference(
+                    '/' + UTIL_Describe.getObjectDescribe(Lead.SObjectType).getKeyPrefix());
+            }
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.LD);
@@ -761,7 +770,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }
 
     @TestVisible
-    private with sharing class AffiliationNonDupeWithoutSharing {
+    private without sharing class AffiliationNonDupeWithoutSharing {
         Lead leadToConvert;
         Id contactId;
         Id affiliationId;
@@ -781,7 +790,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     }
 
     @TestVisible
-    private with sharing class DMLWithoutSharing {
+    private without sharing class DMLWithoutSharing {
         SObject record;
         List<SObject> records;
 
