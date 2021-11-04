@@ -6254,6 +6254,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Stage Complete</value>
     </labels>
     <labels>
+        <fullName>conMergeStageCurrent</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageCurrent</shortDescription>
+        <value>Current Stage</value>
+    </labels>
+    <labels>
+        <fullName>conMergeStageNotStarted</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageNotStarted</shortDescription>
+        <value>Stage Not Started</value>
+    </labels>
+    <labels>
         <fullName>conMergeWinnerAsstText</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
@@ -6474,6 +6490,56 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
         <value>Add Soft Credit</value>
+    </labels>
+    <labels>
+        <fullName>geA11ySection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as a part of a screen reader message when a form section is unnamed.</shortDescription>
+        <value>section</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} added to the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} added to {1} {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} removed from the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} removed from {1} {2}.</value>
     </labels>
     <labels>
         <fullName>geAssistiveActiveSection</fullName>
