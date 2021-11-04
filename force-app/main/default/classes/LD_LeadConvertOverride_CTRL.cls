@@ -517,7 +517,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         }
         String oppName = convertedOpp.Name;
 
-        UTIL_DMLService.updateRecord(convertedOpp);
+        DMLWithoutSharing convertedOpportunityDmlWithoutSharing = new DMLWithoutSharing(convertedOpp);
+        convertedOpportunityDmlWithoutSharing.updateRecord();
 
         // refresh opportunity names after update. if no opportunity names are defined,
         // keeps original name
@@ -526,7 +527,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         });
         // update Opportunity again if refreshed name is different
         if (convertedOpp.Name != oppName) {
-            UTIL_DMLService.updateRecord(convertedOpp);
+            convertedOpportunityDmlWithoutSharing.updateRecord();
         }
     }
 
@@ -564,7 +565,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             NPSP_Address npspAddress = new NPSP_Address(tempAddr);
             NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
             npspHousehold.setBillingAddress(npspAddress);
-            UTIL_DMLService.insertRecord(npspHousehold.getRecord());
+            new DMLWithoutSharing(npspHousehold.getRecord()).insertRecord();
             affiliationId = acc.Id;
         } else if (String.isNotBlank(primaryAffiliationId)) {
             affiliationId = primaryAffiliationId;
@@ -573,8 +574,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // Re-Enable the Affilations Trigger for the Contact
             TDTM_ProcessControl.toggleTriggerState(
                     'Contact', 'AFFL_Affiliations_TDTM', true);
-            AFFL_Affiliations_TDTM.createNonDupeAffiliation(
-                    leadToConvert, leadConversionResult.getContactId(), affiliationId, true);
+            new AffiliationNonDupeWithoutSharing(leadToConvert, leadConversionResult.getContactId(),
+                    affiliationId, true).createNonDupeAffiliation();
         }
         return affiliationId;
     }
@@ -596,7 +597,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         NPSP_Address npspAddress = new NPSP_Address(tempAddr);
         NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
         npspHousehold.setBillingAddress(npspAddress);
-        UTIL_DMLService.updateRecord(npspHousehold.getRecord());
+        new DMLWithoutSharing(npspHousehold.getRecord()).updateRecord();
     }
 
     private void setPrimaryAffiliationId(Id accountId) {
@@ -611,7 +612,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         OpportunityContactRole ocr = ocrList[0];
         ocr.IsPrimary = true;
         ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
-        UTIL_DMLService.updateRecord(ocr);
+        new DMLWithoutSharing(ocr).updateRecord();
     }
 
     private void deleteDuplicateOpportunityContactRoles(List<OpportunityContactRole> ocrList) {
@@ -619,7 +620,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         for (Integer i = 1; i < ocrList.size(); i++) {
             dlist.add(ocrList[i]);
         }
-        delete dlist;
+        new DMLWithoutSharing(dlist).deleteRecords();
     }
 
     private Boolean shouldFixConvertedAccount() {
@@ -655,7 +656,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             }
             myAccount.npe01__SYSTEMIsIndividual__c = true;
             myAccount.npe01__One2OneContact__c = con.Id;
-            UTIL_DMLService.updateRecord(myAccount);
+            new DMLWithoutSharing(myAccount).updateRecord();
         }
 
         // see if we need to create a household object for this contact (1:1 & bucket only)
@@ -667,7 +668,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                                 con
                         });
                 legacyHouseholdContacts.onAfterInsert();
-                UTIL_DMLService.updateRecord(con);
+                new DMLWithoutSharing(con).updateRecord();
             }
         }
 
@@ -680,7 +681,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             npspAddress.getRecord().Latest_Start_Date__c = System.today();
             npspAddress.getRecord().Latest_End_Date__c = null;
             npspAddress.copyFromSObject(con, 'Mailing', null);
-            UTIL_DMLService.insertRecord(npspAddress.getRecord());
+            new DMLWithoutSharing(npspAddress.getRecord()).insertRecord();
         }
     }
 
@@ -757,6 +758,54 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
     private Boolean isContactSelected() {
         return convertedContactId != null;
+    }
+
+    @TestVisible
+    private with sharing class AffiliationNonDupeWithoutSharing {
+        Lead leadToConvert;
+        Id contactId;
+        Id affiliationId;
+        Boolean isPrimary;
+
+        private AffiliationNonDupeWithoutSharing(Lead leadToConvert, Id contactId, Id affiliationId, Boolean
+                isPrimary) {
+            this.leadToConvert = leadToConvert;
+            this.contactId = contactId;
+            this.affiliationId = affiliationId;
+            this.isPrimary = isPrimary;
+        }
+
+        private void createNonDupeAffiliation() {
+            AFFL_Affiliations_TDTM.createNonDupeAffiliation(leadToConvert, contactId, affiliationId, isPrimary);
+        }
+    }
+
+    @TestVisible
+    private with sharing class DMLWithoutSharing {
+        SObject record;
+        List<SObject> records;
+
+        @TestVisible
+        private DMLWithoutSharing(SObject record) {
+            this.record = record;
+        }
+
+        @TestVisible
+        private DMLWithoutSharing(List<SObject> records) {
+            this.records = records;
+        }
+
+        private Database.SaveResult insertRecord() {
+            return UTIL_DMLService.insertRecord(record);
+        }
+
+        private Database.SaveResult updateRecord() {
+            return UTIL_DMLService.updateRecord(record);
+        }
+
+        private void deleteRecords() {
+            delete records;
+        }
     }
 
     @TestVisible
