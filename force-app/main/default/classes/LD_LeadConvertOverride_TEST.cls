@@ -39,6 +39,34 @@ private class LD_LeadConvertOverride_TEST {
     private static final String SPECIAL_ACCOUNT_NAME = 'Self';
 
     @IsTest
+    static void leadConversionWithDifferentOwnerShouldNotThrowError() {
+        Lead testLead = UTIL_UnitTestData_TEST.getLead();
+        testLead.OwnerId = UserInfo.getUserId();
+        testLead.Status = 'Closed - Converted';
+        insert testLead;
+
+        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
+        System.currentPageReference().getParameters().put('id', testLead.Id);
+
+        LD_LeadConvertOverride_CTRL controller = new LD_LeadConvertOverride_CTRL(new ApexPages.StandardController
+                (testLead));
+
+        System.runAs(UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER)) {
+            Test.startTest();
+                controller.convertLeadNow();
+            Test.stopTest();
+        }
+        List<Error__c> recordErrors = [SELECT Error_Type__c, Full_Message__c FROM Error__c LIMIT 1];
+
+        String recordErrorMessage = 'There should be no errors generated from the lead conversion process ' +
+                'when the lead owner differs from the conversion context user.';
+        if (!recordErrors.isEmpty()) {
+            recordErrorMessage += ' Error thrown: ' + recordErrors[0].Full_Message__c;
+        }
+        System.assert(recordErrors.isEmpty(), recordErrorMessage);
+    }
+
+    @IsTest
     static void leadContactQueryShouldNotThrowErrorWhenUserHasNoPermissionToContact() {
         List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
         insert testContacts;
