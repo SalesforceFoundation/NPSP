@@ -33,41 +33,10 @@
 * @group Lead Conversion
 * @description Tests for the lead conversion override page and logic
 */
-@IsTest
+@isTest
 private class LD_LeadConvertOverride_TEST {
 
     private static final String SPECIAL_ACCOUNT_NAME = 'Self';
-
-    @IsTest
-    static void leadConversionWithDifferentOwnerShouldNotThrowError() {
-        Lead testLead = UTIL_UnitTestData_TEST.getLead();
-        insert testLead;
-
-        Database.LeadConvert testLeadConvert = new Database.LeadConvert();
-        testLeadConvert.setLeadId(testLead.Id);
-        testLeadConvert.setOpportunityName('Test Opportunity from Lead Conversion');
-        testLeadConvert.setConvertedStatus('Closed - Converted');
-
-        System.Exception testException;
-
-        System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            Test.startTest();
-                try {
-                    LD_LeadConvertOverride_CTRL.LeadConversionWithoutSharing leadConversionWithoutSharing =
-                            new LD_LeadConvertOverride_CTRL.LeadConversionWithoutSharing(testLeadConvert);
-                    leadConversionWithoutSharing.convertLead();
-                } catch(Exception ex) {
-                    testException = ex;
-                }
-            Test.stopTest();
-        }
-        String exceptionMessage = 'There should be no dml exception thrown when the owner of a lead record ' +
-                'does not have permission to create converted target records.';
-        if (testException != null) {
-            exceptionMessage += ' Exception thrown: ' + testException.getMessage();
-        }
-        System.assert(testException == null, exceptionMessage);
-    }
 
     @IsTest
     static void leadContactQueryShouldNotThrowErrorWhenUserHasNoPermissionToContact() {

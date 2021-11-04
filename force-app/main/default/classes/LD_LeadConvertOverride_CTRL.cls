@@ -359,8 +359,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         }
         set;
     }
-    @TestVisible
-    private LD_LeadConvertOverride_CTRL() {}
 
     /*******************************************************************************************************
     * @description Constructs the page and default values for the Lead, dummy Contact and Opportunity
@@ -377,7 +375,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                         CompanyPostalCode__c, CompanyCountry__c
                 FROM Lead
                 WHERE Id = :controller.getId()
-                WITH SECURITY_ENFORCED
         ];
 
         // dummy contact allows owner selection - use contact as always accessible if user
@@ -456,8 +453,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
         try {
             // convert the lead
-            Database.LeadConvertResult leadConversionResult = new LeadConversionWithoutSharing(instanceOfLeadConvert)
-                    .convertLead();
+            Database.LeadConvertResult leadConversionResult = Database.convertLead(instanceOfLeadConvert);
             // restore address management
             restoreAddressManagement(isHouseholdAddressesDisabled, isOrganizationAddressesDisabled);
             // fix the account that lead conversion created
@@ -725,7 +721,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         return leadAccountId == 'AUTO';
     }
 
-    @TestVisible
     private Database.LeadConvert prepareLeadConversion() {
         Database.LeadConvert instanceOfLeadConvert = new Database.LeadConvert();
         instanceOfLeadConvert.setLeadId(leadToConvert.Id);
@@ -762,21 +757,6 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
     private Boolean isContactSelected() {
         return convertedContactId != null;
-    }
-
-    @TestVisible
-    private without sharing class LeadConversionWithoutSharing {
-        Database.LeadConvert leadToConvert;
-
-        @TestVisible
-        private LeadConversionWithoutSharing(Database.LeadConvert leadToConvert) {
-            this.leadToConvert = leadToConvert;
-        }
-
-        @TestVisible
-        private Database.LeadConvertResult convertLead() {
-           return Database.convertLead(leadToConvert);
-        }
     }
 
     @TestVisible
