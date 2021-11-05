@@ -3,6 +3,11 @@ import rd2EntryFormScheduleSection from 'c/rd2EntryFormScheduleSection';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
+import { mockReset } from 'lightning/inputField';
+
+import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
+import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
+import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 
 const mockGetRecurringSettings = require('./data/getRecurringSettings.json');
 const mockGetRecurringDataFixed = require('./data/getRecurringDataFixed.json');
@@ -10,14 +15,14 @@ const mockDayOfMonthPicklistValues = require('./data/wiredDayOfMonthPicklistValu
 const mockInstallmentPeriodPicklistValues = require('./data/wiredInstallmentPeriodPicklistValues.json');
 const mockRecurringDonationObjectInfo = require('./data/wiredRecurringDonationObjectInfo.json');
 
-import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
-import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
-import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
+const TEST_DATE = new Date(2021, 10, 4);
+const FAKE_RD2_ID = '00A_fake_rd2_id';
 
 const mockHandleFrequencyChange = jest.fn();
 const mockHandleInstallmentsChange = jest.fn();
 const mockHandleCustomPeriodChange = jest.fn();
 const mockHandleAdvancedPeriodChange = jest.fn();
+const mockHandleError = jest.fn();
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings', () => {
     return { default: jest.fn() };
@@ -68,6 +73,26 @@ describe('c-rd2-entry-form-schedule-section', () => {
             const today = new Date().getDay().toString();
             const expectedDay = today === '31' ? 'Last_Day' : today;
             expect(controller.dayOfMonth().value).toBe(expectedDay);
+        });
+
+        it('returnValues returns data from visible fields by field api name', async () => {
+            await flushPromises();
+            controller.recurringType().value = 'Open';
+            controller.startDate().value = TEST_DATE;
+            const values = component.returnValues();
+            expect(values).toMatchObject({
+                "RecurringType__c": "Open",
+                "StartDate__c": TEST_DATE,
+                "npe03__Installment_Period__c": "Monthly",
+            });
+        });
+
+        it('resetValues resets visible lightning-input-fields', async () => {
+            await flushPromises();
+            controller.recurringType().value = 'Open';
+            controller.startDate().value = TEST_DATE;
+            component.resetValues();
+            expect(mockReset).toHaveBeenCalledTimes(3)
         });
 
     });
@@ -147,12 +172,26 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
            expect(mockHandleFrequencyChange).toHaveBeenCalledTimes(1);
         });
+
+        it('returnValues returns data from visible fields by field api name', async () => {
+            await flushPromises();
+            controller.installmentFrequency().value = 2;
+            controller.recurringType().value = 'Open';
+            controller.startDate().value = TEST_DATE;
+            const values = component.returnValues();
+            expect(values).toMatchObject({
+                "InstallmentFrequency__c": 2,
+                "RecurringType__c": "Open",
+                "StartDate__c": TEST_DATE,
+                "npe03__Installment_Period__c": "Weekly",
+            });
+        });
     });
 
     describe('editing an existing record', () => {
         beforeEach(async () => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
-            component.recordId = '00A_fake_rd2_id';
+            component.recordId = FAKE_RD2_ID;;
             controller = new Rd2EntryFormScheduleSectionTestController(component);
         });
 
@@ -177,8 +216,60 @@ describe('c-rd2-entry-form-schedule-section', () => {
             expect(controller.numberOfPlannedInstallments()).toBeFalsy();
         });
 
+    });
+
+    describe('error conditions', () => {
+        beforeEach(() => {
+            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
+            component.recordId = FAKE_RD2_ID;
+            component.addEventListener('errorevent', mockHandleError);
+            controller = new Rd2EntryFormScheduleSectionTestController(component);
+        });
+
+        it('alerts parent component when getRecurringData fails', async () => {
+            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
+            const errorMessage = {
+                "status": 500,
+                "body": {
+                    "message": "List has now rows for assignment to SObject"
+                }
+            };
+            getRecurringData.mockRejectedValue(errorMessage);
+            document.body.appendChild(component);
+            await setupWires();
+            await flushPromises();
+
+            expect(mockHandleError.mock.calls[0][0].detail).toMatchObject({value: errorMessage});
+        });
 
 
+        it('alerts parent component when wiredGetRecurringObjectInfo fails', async () => {
+            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
+            getRecurringData.mockResolvedValue(mockGetRecurringDataFixed);
+            document.body.appendChild(component);
+            const errorMessage = {
+                "status": 403,
+                "body": {
+                    "message": "You don't have access to this record. Ask your administrator for help or to request access.",
+                    "statusCode": 403,
+                    "errorCode": "INSUFFICIENT_ACCESS"
+                },
+            }
+
+            getObjectInfo.emitError(errorMessage, config => {
+                return config.objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
+            });
+            getPicklistValues.emit(mockInstallmentPeriodPicklistValues, config => {
+                return config.fieldApiName?.fieldApiName === FIELD_INSTALLMENT_PERIOD.fieldApiName;
+            });
+
+            getPicklistValues.emit(mockDayOfMonthPicklistValues, config => {
+                return config.fieldApiName?.fieldApiName === FIELD_DAY_OF_MONTH.fieldApiName;
+            });
+            await flushPromises();
+
+            expect(mockHandleError.mock.calls[0][0].detail).toMatchObject({value: errorMessage});
+        });
     });
 });
 
@@ -239,6 +330,10 @@ class Rd2EntryFormScheduleSectionTestController {
 
     dayOfMonth() {
         return this.component.shadowRoot.querySelector('lightning-input-field[data-id="dayOfMonth"]');
+    }
+
+    startDate() {
+        return this.component.shadowRoot.querySelector('lightning-input-field[data-id="startDate"]');
     }
 }
 
