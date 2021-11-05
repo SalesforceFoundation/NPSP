@@ -1,6 +1,6 @@
 <apex:page standardController="Lead"
     extensions="LD_LeadConvertOverride_CTRL"
-    title="{!$Label.leadConvertPageTitle} {!l.Name}"
+    title="{!$Label.leadConvertPageTitle} {!leadToConvert.Name}"
     standardStylesheets="false"
     lightningStylesheets="true"
     docType="html-5.0"
@@ -21,9 +21,9 @@
 
                 <!-- Page Header -->
                 <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Lead"
-                                   parentAction="/00Q" parentRecordName="{!l.Name}"
-                                   parentRecordAction="/{!l.Id}"
-                                   headerLabel="{! $Label.leadConvertSectionTitle }" header="{!l.Name}"
+                                   parentAction="/00Q" parentRecordName="{!leadToConvert.Name}"
+                                   parentRecordAction="/{!leadToConvert.Id}"
+                                   headerLabel="{! $Label.leadConvertSectionTitle }" header="{!leadToConvert.Name}"
                                    icon="lead" iconCategory="standard"
                                    saveAction="{!convertLeadNow}" saveLabel="{!$Label.leadConvertBtnConvert}"
                                    cancelAction="{!cancel}" cancelLabel="{!$Label.leadConvertBtnCancel}"/>
@@ -55,7 +55,7 @@
                         </label>
                         <div class="slds-form-element__control">
                             <div class="slds-select_container">
-                                <apex:selectList value="{!strConId}" size="1" id="conlist" styleClass="slds-select">
+                                <apex:selectList value="{!convertedContactId}" size="1" id="conlist" styleClass="slds-select">
                                     <apex:selectOptions value="{!conList}"/>
                                     <apex:actionSupport rerender="pbEdit" event="onchange" oncomplete="javascript:filterStatus();"/>
                                 </apex:selectList>
@@ -65,7 +65,7 @@
                                     <a href="javascript:viewLink()" data-target="contact_modal" id="view">View</a>
                                         <script type="text/javascript">
                                             function viewLink() {
-                                                var contactId = '{!HTMLENCODE(strConId)}';
+                                                var contactId = '{!HTMLENCODE(convertedContactId)}';
                                                 if (contactId  == null || contactId  == "" ||  contactId  == 'NEW_CONTACT') {
                                                     alert("{!JSENCODE($Label.leadConvertViewContactError)}");
                                                 } else {
@@ -80,14 +80,14 @@
                         </div>
                     </div>
 
-                    <apex:outputText rendered="{!NOT(isSpecialAccount) && (strConId == null || strConId=='' || strConId=='NEW_CONTACT')}">
+                    <apex:outputText rendered="{!NOT(isLegacyHousehold) && (convertedContactId == null || convertedContactId=='' || convertedContactId=='NEW_CONTACT')}">
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">
                                 <apex:outputText value="{!$Label.leadConvertAccountName}"/>
                             </label>
                             <div class="slds-form-element__control">
                                 <div class="slds-select_container">
-                                    <apex:selectList value="{!strAccountId}" size="1" styleClass="slds-select">
+                                    <apex:selectList value="{!leadAccountId}" size="1" styleClass="slds-select">
                                         <apex:selectOptions value="{!listSOAccounts}"/>
                                     </apex:selectList>
                                 </div>
@@ -95,14 +95,14 @@
                         </div>
                     </apex:outputText>
 
-                    <apex:outputText rendered="{!NOT(isSpecialAccount)}">
+                    <apex:outputText rendered="{!NOT(isLegacyHousehold)}">
                         <div class="slds-form-element">
                             <label class="slds-form-element__label">
                                 <apex:outputText value="{!$Label.leadConvertAffilationName}"/>
                             </label>
                             <div class="slds-form-element__control">
                                 <div class="slds-select_container">
-                                    <apex:selectList value="{!strAfflAccountId}" size="1" styleClass="slds-select">
+                                    <apex:selectList value="{!primaryAffiliationId}" size="1" styleClass="slds-select">
                                         <apex:selectOptions value="{!listSOAfflAccounts}"/>
                                     </apex:selectList>
                                 </div>
@@ -150,7 +150,7 @@
 
                     <div class="slds-form-element">
                         <!-- required="true" removed to eliminate redundant asterisk after switch to lightningStylesheets -->
-                        <c:UTIL_FormField sObjType="Lead" sObj="{!l}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" />
+                        <c:UTIL_FormField sObjType="Lead" sObj="{!leadToConvert}" field="Status" labelOverride="{!$Label.leadConvertStatus}" id="leadstatus" />
                     </div>
                 </div>
             </div>
