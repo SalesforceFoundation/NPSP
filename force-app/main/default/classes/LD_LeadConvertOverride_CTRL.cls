@@ -54,7 +54,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Sets the Lead to be converted
     */
-    public Lead l { get; set; }
+    public Lead leadToConvert { get; set; }
     /*******************************************************************************************************
     * @description Provides a dummy Contact to write to - avoids ownership issues when setting owner
     */
@@ -67,12 +67,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Contains the Id or 'NEW' for the Account to use.
     */
-    public String strAccountId { get; set; }
+    public String leadAccountId { get; set; }
 
     /*******************************************************************************************************
     * @description Contains the Id or 'NEW' for the Primary Affiliation to use.
     */
-    public String strAfflAccountId { get; set; }
+    public String primaryAffiliationId { get; set; }
 
     /*******************************************************************************************************
     * @description Determines the account that the created Opportunity will be related to.
@@ -84,7 +84,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Contains the value of the converted-into Contact
     */
-    public String strConId { get; set; }
+    public String convertedContactId { get; set; }
 
     /*******************************************************************************************************
     * @description Constructs the value of the Opportunity name if created
@@ -141,17 +141,17 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Checks the value of the 'Company' field for values associated with 1x1 or Individual Accounts
     */
-    public Boolean isSpecialAccount {
+    public Boolean isLegacyHousehold {
         get {
-            if (l == null) {
+            if (leadToConvert == null) {
                 return false;
             }
             return (
-                l.Company == null ||
-                l.Company == '' ||
-                l.Company.toLowerCase() == 'self' ||
-                l.Company.toLowerCase() == 'individual' ||
-                l.Company.toLowerCase() == l.Name.toLowerCase()
+                leadToConvert.Company == null ||
+                leadToConvert.Company == '' ||
+                leadToConvert.Company.toLowerCase() == 'self' ||
+                leadToConvert.Company.toLowerCase() == 'individual' ||
+                leadToConvert.Company.toLowerCase() == leadToConvert.Name.toLowerCase()
             );
         } private set;
     }
@@ -165,7 +165,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
 
         conList.add( new SelectOption('', System.Label.stgLabelNone) );
         conList.add( new SelectOption('NEW_CONTACT',
-                System.Label.leadConvertCreateNewContact + ' ' + l.Name) );
+                System.Label.leadConvertCreateNewContact + ' ' + leadToConvert.Name) );
 
         for (Contact c : conMap.values()) {
           conList.add( new SelectOption(c.Id,
@@ -208,12 +208,12 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             if (contactFinder == null) {
                 UTIL_Where whereClause = new UTIL_Where().withOr()
                     .add(UTIL_Where.AndGroup()
-                        .add(new UTIL_Where.FieldExpression(Contact.LastName).equals(l.LastName))
-                        .add(new UTIL_Where.FieldExpression(Contact.FirstName).equals(l.FirstName))
+                        .add(new UTIL_Where.FieldExpression(Contact.LastName).equals(leadToConvert.LastName))
+                        .add(new UTIL_Where.FieldExpression(Contact.FirstName).equals(leadToConvert.FirstName))
                     );
-                if (String.isNotBlank(l.Email)) {
+                if (String.isNotBlank(leadToConvert.Email)) {
                     whereClause.add(UTIL_Where.AndGroup()
-                        .add(new UTIL_Where.FieldExpression(Contact.Email).equals(l.Email))
+                        .add(new UTIL_Where.FieldExpression(Contact.Email).equals(leadToConvert.Email))
                     );
                 }
 
@@ -249,8 +249,8 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     * @description Display the selected Contact
     */
     public Contact getSelectedCon() {
-        if (strConId!='NEW_CONTACT' & strConId!=null && conMap.containsKey(strConId)) {
-            selectedCon = conMap.get(strConId);
+        if (convertedContactId !='NEW_CONTACT' & convertedContactId !=null && conMap.containsKey(convertedContactId)) {
+            selectedCon = conMap.get(convertedContactId);
         } else {
             selectedCon = null;
         }
@@ -278,7 +278,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                     listSOAccounts.add(new SelectOption('AUTO', strAcc));
                 }
 
-                if (!isSpecialAccount) {
+                if (!isLegacyHousehold) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values()) {
                         listSOAccounts.add(
@@ -292,7 +292,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                             new SelectOption(
                                     'NEW',
                                     System.Label.leadConvertCreateAccount
-                                            + ' ' + l.Company));
+                                            + ' ' + leadToConvert.Company));
                 }
             }
         return listSOAccounts;
@@ -309,7 +309,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             if (listSOAfflAccounts == null) {
                 listSOAfflAccounts = new List<SelectOption>();
                 listSOAfflAccounts.add(new SelectOption('', System.Label.stgLabelNone));
-                if (!isSpecialAccount) {
+                if (!isLegacyHousehold) {
                     // find Account matches
                     for (Account acc : mapIdAccountMatches.values()) {
                         listSOAfflAccounts.add(
@@ -320,7 +320,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                                 ));
                     }
                     // new Account
-                    listSOAfflAccounts.add(new SelectOption('NEW', System.Label.leadConvertAffiliateNewAccount + ' ' + l.Company));
+                    listSOAfflAccounts.add(new SelectOption('NEW', System.Label.leadConvertAffiliateNewAccount + ' ' + leadToConvert.Company));
                 }
             }
         return listSOAfflAccounts;
@@ -352,7 +352,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
                         .withSelectFields(new Set<Schema.SObjectField>{
                                 Account.Id, Account.Name, Account.BillingCity
                         })
-                        .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(l.Company))
+                        .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(leadToConvert.Company))
                         .withLimit(50);
             }
             return accountFinder;
@@ -369,7 +369,7 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         ContactsSettings = UTIL_CustomSettingsFacade.getContactsSettings();
 
         // get the lead
-        l = [
+        leadToConvert = [
                 SELECT Id, Name, FirstName, LastName, Company, Email, Title, OwnerId, Status,
                         CompanyStreet__c, CompanyCity__c, CompanyState__c,
                         CompanyPostalCode__c, CompanyCountry__c
@@ -380,23 +380,23 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         // dummy contact allows owner selection - use contact as always accessible if user
         // has lead conversion rights
         dummyCon = new Contact(
-                OwnerId = ((((String) (l.OwnerId)).startsWith('005')) ?
-                        l.OwnerId : UserInfo.getUserId())
+                OwnerId = ((((String) (leadToConvert.OwnerId)).startsWith('005')) ?
+                        leadToConvert.OwnerId : UserInfo.getUserId())
         );
 
         // set a default opp name
-        oppName = l.Name;
+        oppName = leadToConvert.Name;
         doNotCreateOpp = !Schema.SObjectType.Opportunity.isCreateable()
                 || !ContactsSettings.npe01__Default_Opp_on_Convert__c;
         sendEmailToOwner = false;
 
         // set reasonable defaults for contact and account.
-        strAccountId = 'AUTO';
+        leadAccountId = 'AUTO';
         if (conMap.size() == 0) {
-            strConId = 'NEW_CONTACT';
+            convertedContactId = 'NEW_CONTACT';
         }
-        if (!isSpecialAccount) {
-            strAfflAccountId = listSOAfflAccounts[1].getValue();
+        if (!isLegacyHousehold) {
+            primaryAffiliationId = listSOAfflAccounts[1].getValue();
         } // either the first existing
         // or the new account if none.
 
@@ -422,9 +422,9 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public PageReference pickLeadConvertPage() {
         PageReference pageRef = null;
 
-        if (!isSpecialAccount) {
+        if (!isLegacyHousehold) {
             pageRef = new PageReference('/lead/leadconvert.jsp?retURL=%2F' +
-                    l.Id + '&id=' + l.Id + '&nooverride=1');
+                    leadToConvert.Id + '&id=' + leadToConvert.Id + '&nooverride=1');
             pageRef.setRedirect(true);
         }
         return pageRef;
@@ -436,133 +436,29 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     */
     public PageReference convertLeadNow() {
         Savepoint sp = Database.setSavepoint();
+
+        if (!isContactSelected()) {
+            return displayNoContactSelectedError();
+        }
+
+        Database.LeadConvert instanceOfLeadConvert = prepareLeadConversion();
+        // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
+        disableAffiliationTrigger();
+
+        Boolean isHouseholdAddressesDisabled = isHouseholdAddressesDisabled();
+        Boolean isOrganizationAddressesDisabled = isOrganizationAddressesEnabled();
+
+        // temporarily disable address management
+        disableAddressManagement();
+
         try {
-            if (strConId == null) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
-                        System.Label.leadConvertContactSelection));
-                return null;
-            }
-
-            // set up the conversion
-            Database.LeadConvert lc = new database.LeadConvert();
-            lc.setLeadId(l.Id);
-            if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) {
-                lc.setOpportunityName(oppName);
-            }
-            lc.setDoNotCreateOpportunity(
-                    !Schema.SObjectType.Opportunity.isCreateable()
-                            || doNotCreateOpp);
-            lc.setConvertedStatus(l.Status);
-            lc.setOwnerId(dummyCon.OwnerId);
-            lc.setSendNotificationEmail(sendEmailToOwner);
-
-            Boolean isIndividualAccount = isSpecialAccount || strAccountId == 'AUTO';
-
-            // is this a merge to existing?
-            if (strConId != 'NEW_CONTACT') {
-                // get this contact's account
-                lc.setContactId(strConId);
-                lc.setAccountId(conMap.get(strConId).AccountId);
-            } else if (strAccountId != 'NEW' && strAccountId != 'AUTO'
-                    && strAccountId != null && strAccountId != '') {
-                lc.setAccountId(strAccountId);
-            } else if (CAO_Constants.isBucketModel() && isIndividualAccount) {
-                lc.setAccountId(CAO_Constants.getIndividualAccountId());
-            }
-
-            // avoid auto-affiliation creation by disabling the Affiliations Trigger for Contacts
-            TDTM_ProcessControl.toggleTriggerState(
-                    'Contact', 'AFFL_Affiliations_TDTM', false);
-
-            // temporarily disable address management
-            Boolean hhAcctAddrDisabled =
-                    UTIL_CustomSettingsFacade.getContactsSettings()
-                            .Household_Account_Addresses_Disabled__c;
-            Boolean orgAcctAddrEnabled =
-                    UTIL_CustomSettingsFacade.getContactsSettings()
-                            .Organizational_Account_Addresses_Enabled__c;
-            UTIL_CustomSettingsFacade.getContactsSettings()
-                    .Household_Account_Addresses_Disabled__c = true;
-            UTIL_CustomSettingsFacade.getContactsSettings()
-                    .Organizational_Account_Addresses_Enabled__c = false;
-
             // convert the lead
-            Database.LeadConvertResult lcr = Database.convertLead(lc);
-
+            Database.LeadConvertResult leadConversionResult = Database.convertLead(instanceOfLeadConvert);
             // restore address management
-            UTIL_CustomSettingsFacade.getContactsSettings()
-                    .Household_Account_Addresses_Disabled__c = hhAcctAddrDisabled;
-            UTIL_CustomSettingsFacade.getContactsSettings()
-                    .Organizational_Account_Addresses_Enabled__c = orgAcctAddrEnabled;
-
+            restoreAddressManagement(isHouseholdAddressesDisabled, isOrganizationAddressesDisabled);
             // fix the account that lead conversion created
-            if (strConId == 'NEW_CONTACT' && isIndividualAccount) {
-                String strSoql = 'SELECT Id, Firstname, Lastname, AccountId,';
-                if (Schema.SObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
-                    strSoql += ' RecordTypeId,';
-                }
-                strSoql += ' npo02__Household__c, MailingStreet, MailingCity, ' +
-                        'MailingState, MailingPostalCode, MailingCountry, ';
-                if (orgConfig.isStateCountryPicklistsEnabled()) {
-                    strSoql += ' MailingStateCode, MailingCountryCode, ';
-                }
-                strSoql += ' MailingLatitude, MailingLongitude, HomePhone, Email';
-                strSoql += ' FROM Contact WHERE Id= \'' + lcr.getContactId() + '\'';
-                Contact con = Database.query(strSoql);
-                Account myAccount = new Account(Id = lcr.getAccountId());
-                npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-                // update the account since it is non-standard
-                if (CAO_Constants.isOneToOne()) {
-                    myAccount.Name = Households.strNameOne2OneAccountForContact(con);
-                    myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                } else if (CAO_Constants.isHHAccountModel()) {
-                    // if custom household naming is on, we need to leave the account name untouched,
-                    // so on update, it will get its correct name.
-                    if (!hs.npo02__Advanced_Household_Naming__c) {
-                        myAccount.Name = Households.strNameHHAccountForContact(con);
-                    } else {
-                        myAccount.Name = System.Label.npo02.NameReplacementText;
-                    }
-                    myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
-                }
-
-                if (!CAO_Constants.isBucketModel()) {
-                    // change its recordtype if specified in settings
-                    Id rtIdAcccount =
-                            ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
-                    if (rtIdAcccount != null) {
-                        myAccount.put('RecordTypeID', rtIdAcccount);
-                    }
-                    myAccount.npe01__SYSTEMIsIndividual__c = true;
-                    myAccount.npe01__One2OneContact__c = con.Id;
-                    UTIL_DMLService.updateRecord(myAccount);
-                }
-
-                // see if we need to create a household object for this contact (1:1 & bucket only)
-                if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
-                    if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
-                       hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
-                        LegacyHouseholdMembers legacyHouseholdContacts =
-                                new LegacyHouseholdMembers(new List<Contact>{
-                                        con
-                                });
-                        legacyHouseholdContacts.onAfterInsert();
-                        UTIL_DMLService.updateRecord(con);
-                    }
-                }
-
-                // now create the address object if appropriate
-                if (CAO_Constants.isHHAccountModel() && !hhAcctAddrDisabled) {
-                    Address__c addr = new Address__c();
-                    NPSP_Address npspAddress = new NPSP_Address(addr);
-                    npspAddress.getRecord().Household_Account__c = myAccount.Id;
-                    npspAddress.getRecord().Default_Address__c = true;
-                    npspAddress.getRecord().Latest_Start_Date__c = System.today();
-                    npspAddress.getRecord().Latest_End_Date__c = null;
-                    npspAddress.copyFromSObject(con, 'Mailing', null);
-                    UTIL_DMLService.insertRecord(npspAddress.getRecord());
-                }
+            if (shouldFixConvertedAccount()) {
+                fixConvertedAccount(leadConversionResult);
             }
 
             //clean up the extra OCR Issue
@@ -570,120 +466,410 @@ public with sharing class LD_LeadConvertOverride_CTRL {
             // before 6/2016 this fix was only applied if merging into an existing contact,
             // but we've run into multiple orgs where they can reproduce the bug when creating new contacts.
             // npsp devs have not been able to reproduce it, but feel this is a safe fix for all.
-            if (!lc.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()) {
-
-                //get the new OCRs
-                List<OpportunityContactRole> ocrList = [
-                        SELECT Id, IsPrimary, Role
-                        FROM OpportunityContactRole
-                        WHERE IsPrimary = TRUE
-                        AND OpportunityId = :lcr.getOpportunityId()
-                        AND ContactId = :lcr.getContactId()
-                ];
-
-                //if there are more than one delete the extraneous ones
-                if (ocrList != null && ocrList.size() > 1) {
-                    List<OpportunityContactRole> dlist = new List<OpportunityContactRole>();
-                    for (Integer i = 1; i < ocrList.size(); i++) {
-                        dlist.add(ocrList[i]);
-                    }
-                    delete dlist;
-
-                    //on delete of one ocr, the other 'isPrimary' is set to false
-                    //so we need to issue an udpate to correct it.
-                    //also make sure it has the correct role
-                    OpportunityContactRole ocr = ocrList[0];
-                    ocr.IsPrimary = true;
-                    ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
-                    UTIL_DMLService.updateRecord(ocr);
-                }
-
-            }
+            deleteDuplicateOpportunityContactRoles(instanceOfLeadConvert, leadConversionResult);
 
             // if we created a new company account, affiliate to it.
-            if (strAccountId == 'NEW') {
-                strAfflAccountId = lcr.getAccountId();
+            if (isConvertedAccountNew()) {
+                setPrimaryAffiliationId(leadConversionResult.getAccountId());
             }
 
             Address__c tempAddr = new Address__c(
-                    MailingStreet__c = l.CompanyStreet__c,
-                    MailingCity__c = l.CompanyCity__c,
-                    MailingState__c = l.CompanyState__c,
-                    MailingPostalCode__c = l.CompanyPostalCode__c,
-                    MailingCountry__c = l.CompanyCountry__c
+                    MailingStreet__c = leadToConvert.CompanyStreet__c,
+                    MailingCity__c = leadToConvert.CompanyCity__c,
+                    MailingState__c = leadToConvert.CompanyState__c,
+                    MailingPostalCode__c = leadToConvert.CompanyPostalCode__c,
+                    MailingCountry__c = leadToConvert.CompanyCountry__c
             );
 
             // if we created a new company acct and the Lead had a company address, set the
             // new acct's address
-            if (strAccountId == 'NEW' && !String.isBlank(l.CompanyStreet__c)) {
-                Account acc = new Account(
-                        Id = lcr.getAccountId()
-                );
-                //copy address from temporary address__c record, handles state and country
-                // picklists if enabled
-                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.setBillingAddress(npspAddress);
-                UTIL_DMLService.updateRecord(npspHousehold.getRecord());
+            if (shouldUpdateAccountAddress()) {
+                updateAccountAddress(leadConversionResult, tempAddr);
             }
             // handle the optional Affiliation to a new or existing Account.
-            Id afflAccId = null;
-            if (strAfflAccountId == 'NEW') {
-                Account acc = new Account(
-                        Name = l.Company
-                );
-                //copy address from temporary address__c record, handles state and country
-                // picklists if enabled
-                NPSP_Address npspAddress = new NPSP_Address(tempAddr);
-                NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
-                npspHousehold.setBillingAddress(npspAddress);
-                UTIL_DMLService.insertRecord(npspHousehold.getRecord());
-                afflAccId = acc.Id;
-            } else if (strAfflAccountId != null && strAfflAccountId != '') {
-                afflAccId = strAfflAccountId;
-            }
-            if (afflAccId != null) {
-                // Re-Enable the Affilations Trigger for the Contact
-                TDTM_ProcessControl.toggleTriggerState(
-                        'Contact', 'AFFL_Affiliations_TDTM', true);
-                AFFL_Affiliations_TDTM.createNonDupeAffiliation(
-                        l, lcr.getContactId(), afflAccId, true);
-            }
+            Id affiliationId = createAffiliation(tempAddr, leadConversionResult);
 
             //// Opportunity Cleanup
-            if(!lc.isDoNotCreateOpportunity()) {
-                Opportunity convertedOpp = new Opportunity(Id = lcr.getOpportunityId());
+            if(!instanceOfLeadConvert.isDoNotCreateOpportunity()) {
+                updateOpportunityWithConversionResult(leadConversionResult, affiliationId);
+            }
+            UserRecordAccess userContactAccess = [SELECT RecordId, HasReadAccess
+                                                 FROM UserRecordAccess
+                                                 WHERE RecordId = :leadConversionResult.getContactId()
+                                                 AND UserId = :UserInfo.getUserId()];
 
-                // Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
-                convertedOpp.Primary_Contact__c = lcr.getContactId();
-
-                // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
-                if (strOppAccChoice == 'AFF_ACC') {
-                    convertedOpp.AccountId = afflAccId;
-                }
-                String oppName = convertedOpp.Name;
-
-                UTIL_DMLService.updateRecord(convertedOpp);
-
-                // refresh opportunity names after update. if no opportunity names are defined,
-                // keeps original name
-                OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{
-                        convertedOpp
-                });
-                // update Opportunity again if refreshed name is different
-                if (convertedOpp.Name != oppName) {
-                    UTIL_DMLService.updateRecord(convertedOpp);
-                }
+            if (userContactAccess.HasReadAccess) {
+                return new PageReference('/' + leadConversionResult.getContactId());
+            } else {
+                return new PageReference(
+                    '/' + UTIL_Describe.getObjectDescribe(Lead.SObjectType).getKeyPrefix());
             }
 
-            // redirect
-            return new PageReference('/' + lcr.getContactId());
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.LD);
             ApexPages.addMessage(
                     new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
+        }
+    }
+
+    private void updateOpportunityWithConversionResult(Database.LeadConvertResult leadConversionResult, Id affiliationId) {
+        Opportunity convertedOpp = new Opportunity(Id = leadConversionResult.getOpportunityId());
+
+        // Set the (a/o 3.45) Opportunity Primary Contact to the converted contact
+        convertedOpp.Primary_Contact__c = leadConversionResult.getContactId();
+
+        // set the Opportunity Account to the Primary Affiliation based on strOppAccChoice
+        if (strOppAccChoice == 'AFF_ACC') {
+            convertedOpp.AccountId = affiliationId;
+        }
+        String oppName = convertedOpp.Name;
+
+        DMLWithoutSharing convertedOpportunityDmlWithoutSharing = new DMLWithoutSharing(convertedOpp);
+        convertedOpportunityDmlWithoutSharing.updateRecord();
+
+        // refresh opportunity names after update. if no opportunity names are defined,
+        // keeps original name
+        OPP_OpportunityNaming.refreshOppNames(new List<Opportunity>{
+                convertedOpp
+        });
+        // update Opportunity again if refreshed name is different
+        if (convertedOpp.Name != oppName) {
+            convertedOpportunityDmlWithoutSharing.updateRecord();
+        }
+    }
+
+    private void deleteDuplicateOpportunityContactRoles(Database.LeadConvert instanceOfLeadConvert, Database.LeadConvertResult leadConversionResult) {
+        if (!instanceOfLeadConvert.isDoNotCreateOpportunity() && !CAO_Constants.isBucketModel()) {
+            //get the new OCRs
+            List<OpportunityContactRole> newOpportunityContactRoles = [
+                    SELECT Id, IsPrimary, Role
+                    FROM OpportunityContactRole
+                    WHERE IsPrimary = TRUE
+                    AND OpportunityId = :leadConversionResult.getOpportunityId()
+                    AND ContactId = :leadConversionResult.getContactId()
+            ];
+
+            //if there are more than one delete the extraneous ones
+            if (newOpportunityContactRoles != null && newOpportunityContactRoles.size() > 1) {
+                deleteDuplicateOpportunityContactRoles(newOpportunityContactRoles);
+
+                //on delete of one ocr, the other 'isPrimary' is set to false
+                //so we need to issue an udpate to correct it.
+                //also make sure it has the correct role
+                updatePrimaryOpportunityContactRole(newOpportunityContactRoles);
+            }
+        }
+    }
+
+    private Id createAffiliation(Address__c tempAddr, Database.LeadConvertResult leadConversionResult) {
+        Id affiliationId = null;
+        if (isNewPrimaryAffiliation()) {
+            Account acc = new Account(
+                    Name = leadToConvert.Company
+            );
+            //copy address from temporary address__c record, handles state and country
+            // picklists if enabled
+            NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+            NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+            npspHousehold.setBillingAddress(npspAddress);
+            new DMLWithoutSharing(npspHousehold.getRecord()).insertRecord();
+            affiliationId = acc.Id;
+        } else if (String.isNotBlank(primaryAffiliationId)) {
+            affiliationId = primaryAffiliationId;
+        }
+        if (affiliationId != null) {
+            // Re-Enable the Affilations Trigger for the Contact
+            TDTM_ProcessControl.toggleTriggerState(
+                    'Contact', 'AFFL_Affiliations_TDTM', true);
+            new AffiliationNonDupeWithoutSharing(leadToConvert, leadConversionResult.getContactId(),
+                    affiliationId, true).createNonDupeAffiliation();
+        }
+        return affiliationId;
+    }
+
+    private Boolean isNewPrimaryAffiliation() {
+        return primaryAffiliationId == 'NEW';
+    }
+
+    private Boolean shouldUpdateAccountAddress() {
+        return leadAccountId == 'NEW' && !String.isBlank(leadToConvert.CompanyStreet__c);
+    }
+
+    private void updateAccountAddress(Database.LeadConvertResult leadConversionResult, Address__c tempAddr) {
+        Account acc = new Account(
+                Id = leadConversionResult.getAccountId()
+        );
+        //copy address from temporary address__c record, handles state and country
+        // picklists if enabled
+        NPSP_Address npspAddress = new NPSP_Address(tempAddr);
+        NPSP_HouseholdAccount npspHousehold = new NPSP_HouseholdAccount(acc);
+        npspHousehold.setBillingAddress(npspAddress);
+        new DMLWithoutSharing(npspHousehold.getRecord()).updateRecord();
+    }
+
+    private void setPrimaryAffiliationId(Id accountId) {
+        primaryAffiliationId = accountId;
+    }
+
+    private Boolean isConvertedAccountNew() {
+        return leadAccountId == 'NEW';
+    }
+
+    private void updatePrimaryOpportunityContactRole(List<OpportunityContactRole> ocrList) {
+        OpportunityContactRole ocr = ocrList[0];
+        ocr.IsPrimary = true;
+        ocr.Role = ContactsSettings.npe01__Opportunity_Contact_Role_Default_role__c;
+        new DMLWithoutSharing(ocr).updateRecord();
+    }
+
+    private void deleteDuplicateOpportunityContactRoles(List<OpportunityContactRole> ocrList) {
+        List<OpportunityContactRole> dlist = new List<OpportunityContactRole>();
+        for (Integer i = 1; i < ocrList.size(); i++) {
+            dlist.add(ocrList[i]);
+        }
+        new DMLWithoutSharing(dlist).deleteRecords();
+    }
+
+    private Boolean shouldFixConvertedAccount() {
+        return convertedContactId == 'NEW_CONTACT' && (isLegacyHousehold || isNewLeadAccount());
+    }
+
+    private void fixConvertedAccount(Database.LeadConvertResult leadConversionResult) {
+        Contact con = new ContactQueryWithoutSharing(leadConversionResult.getContactId()).query();
+        Account myAccount = new Account(Id = leadConversionResult.getAccountId());
+        npo02__Households_Settings__c hs = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+        // update the account since it is non-standard
+        if (CAO_Constants.isOneToOne()) {
+            myAccount.Name = Households.strNameOne2OneAccountForContact(con);
+            myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
+        } else if (CAO_Constants.isHHAccountModel()) {
+            // if custom household naming is on, we need to leave the account name untouched,
+            // so on update, it will get its correct name.
+            if (!hs.npo02__Advanced_Household_Naming__c) {
+                myAccount.Name = Households.strNameHHAccountForContact(con);
+            } else {
+                myAccount.Name = System.Label.npo02.NameReplacementText;
+            }
+            myAccount.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
+        }
+
+        if (!CAO_Constants.isBucketModel()) {
+            // change its recordtype if specified in settings
+            Id rtIdAcccount =
+                    ContactAndOrgSettings.rtIdForAccountModel(CAO_Constants.isHHAccountModel());
+            if (rtIdAcccount != null) {
+                myAccount.put('RecordTypeID', rtIdAcccount);
+            }
+            myAccount.npe01__SYSTEMIsIndividual__c = true;
+            myAccount.npe01__One2OneContact__c = con.Id;
+            new DMLWithoutSharing(myAccount).updateRecord();
+        }
+
+        // see if we need to create a household object for this contact (1:1 & bucket only)
+        if (!CAO_Constants.isHHAccountModel() && con.npo02__Household__c == null) {
+            if (hs.npo02__Household_Rules__c == HH_Households.ALL_PROCESSOR ||
+                    hs.npo02__Household_Rules__c == HH_Households.ALL_INDIVIDUALS_PROCESSOR) {
+                LegacyHouseholdMembers legacyHouseholdContacts =
+                        new LegacyHouseholdMembers(new List<Contact>{
+                                con
+                        });
+                legacyHouseholdContacts.onAfterInsert();
+                new DMLWithoutSharing(con).updateRecord();
+            }
+        }
+
+        // now create the address object if appropriate
+        if (CAO_Constants.isHHAccountModel() && !isHouseholdAddressesDisabled()) {
+            Address__c addr = new Address__c();
+            NPSP_Address npspAddress = new NPSP_Address(addr);
+            npspAddress.getRecord().Household_Account__c = myAccount.Id;
+            npspAddress.getRecord().Default_Address__c = true;
+            npspAddress.getRecord().Latest_Start_Date__c = System.today();
+            npspAddress.getRecord().Latest_End_Date__c = null;
+            npspAddress.copyFromSObject(con, 'Mailing', null);
+            new DMLWithoutSharing(npspAddress.getRecord()).insertRecord();
+        }
+    }
+
+    private void restoreAddressManagement(Boolean isHouseholdAddressesDisabled, Boolean isOrganizationAccountsEnabled) {
+        UTIL_CustomSettingsFacade.getContactsSettings()
+                .Household_Account_Addresses_Disabled__c = isHouseholdAddressesDisabled;
+        UTIL_CustomSettingsFacade.getContactsSettings()
+                .Organizational_Account_Addresses_Enabled__c = isOrganizationAccountsEnabled;
+    }
+
+    private Boolean isOrganizationAddressesEnabled() {
+        Boolean isOrganizationAddressesDisabled =
+                UTIL_CustomSettingsFacade.getContactsSettings()
+                        .Organizational_Account_Addresses_Enabled__c;
+        return isOrganizationAddressesDisabled;
+    }
+
+    private Boolean isHouseholdAddressesDisabled() {
+        Boolean isHouseholdAddressesDisabled =
+                UTIL_CustomSettingsFacade.getContactsSettings()
+                        .Household_Account_Addresses_Disabled__c;
+        return isHouseholdAddressesDisabled;
+    }
+
+    private void disableAffiliationTrigger() {
+        TDTM_ProcessControl.toggleTriggerState(
+                'Contact', 'AFFL_Affiliations_TDTM', false);
+    }
+
+    private void disableAddressManagement() {
+        UTIL_CustomSettingsFacade.getContactsSettings()
+                .Household_Account_Addresses_Disabled__c = true;
+        UTIL_CustomSettingsFacade.getContactsSettings()
+                .Organizational_Account_Addresses_Enabled__c = false;
+    }
+
+    private Boolean isNewLeadAccount() {
+        return leadAccountId == 'AUTO';
+    }
+
+    private Database.LeadConvert prepareLeadConversion() {
+        Database.LeadConvert instanceOfLeadConvert = new Database.LeadConvert();
+        instanceOfLeadConvert.setLeadId(leadToConvert.Id);
+        if (!doNotCreateOpp && Schema.SObjectType.Opportunity.isCreateable()) {
+            instanceOfLeadConvert.setOpportunityName(oppName);
+        }
+        instanceOfLeadConvert.setDoNotCreateOpportunity(
+                !Schema.SObjectType.Opportunity.isCreateable()
+                        || doNotCreateOpp);
+        instanceOfLeadConvert.setConvertedStatus(leadToConvert.Status);
+        instanceOfLeadConvert.setOwnerId(dummyCon.OwnerId);
+        instanceOfLeadConvert.setSendNotificationEmail(sendEmailToOwner);
+
+
+        // is this a merge to existing?
+        if (convertedContactId != 'NEW_CONTACT') {
+            // get this contact's account
+            instanceOfLeadConvert.setContactId(convertedContactId);
+            instanceOfLeadConvert.setAccountId(conMap.get(convertedContactId).AccountId);
+        } else if (leadAccountId != 'NEW' && leadAccountId != 'AUTO'
+                && leadAccountId != null && leadAccountId != '') {
+            instanceOfLeadConvert.setAccountId(leadAccountId);
+        } else if (CAO_Constants.isBucketModel() && (isLegacyHousehold || isNewLeadAccount())) {
+            instanceOfLeadConvert.setAccountId(CAO_Constants.getIndividualAccountId());
+        }
+        return instanceOfLeadConvert;
+    }
+
+    private PageReference displayNoContactSelectedError() {
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR,
+                System.Label.leadConvertContactSelection));
+        return null;
+    }
+
+    private Boolean isContactSelected() {
+        return convertedContactId != null;
+    }
+
+    @TestVisible
+    private without sharing class AffiliationNonDupeWithoutSharing {
+        Lead leadToConvert;
+        Id contactId;
+        Id affiliationId;
+        Boolean isPrimary;
+
+        private AffiliationNonDupeWithoutSharing(Lead leadToConvert, Id contactId, Id affiliationId, Boolean
+                isPrimary) {
+            this.leadToConvert = leadToConvert;
+            this.contactId = contactId;
+            this.affiliationId = affiliationId;
+            this.isPrimary = isPrimary;
+        }
+
+        private void createNonDupeAffiliation() {
+            AFFL_Affiliations_TDTM.createNonDupeAffiliation(leadToConvert, contactId, affiliationId, isPrimary);
+        }
+    }
+
+    @TestVisible
+    private without sharing class DMLWithoutSharing {
+        SObject record;
+        List<SObject> records;
+
+        @TestVisible
+        private DMLWithoutSharing(SObject record) {
+            this.record = record;
+        }
+
+        @TestVisible
+        private DMLWithoutSharing(List<SObject> records) {
+            this.records = records;
+        }
+
+        private Database.SaveResult insertRecord() {
+            return UTIL_DMLService.insertRecord(record);
+        }
+
+        private Database.SaveResult updateRecord() {
+            return UTIL_DMLService.updateRecord(record);
+        }
+
+        private void deleteRecords() {
+            delete records;
+        }
+    }
+
+    @TestVisible
+    private without sharing class ContactQueryWithoutSharing {
+
+        @TestVisible
+        private OrgConfig orgConfig {
+            get {
+                if (orgConfig == null) {
+                    orgConfig = new OrgConfig();
+                }
+                return orgConfig;
+            }
+            set;
+        }
+
+        private List<String> selectFields = new List<String> {
+            String.valueOf(Contact.FirstName),
+            String.valueOf(Contact.LastName),
+            String.valueOf(Contact.AccountId),
+            String.valueOf(Contact.npo02__Household__c),
+            String.valueOf(Contact.MailingStreet),
+            String.valueOf(Contact.MailingCity),
+            String.valueOf(Contact.MailingState),
+            String.valueOf(Contact.MailingPostalCode),
+            String.valueOf(Contact.MailingCountry),
+            String.valueOf(Contact.MailingLatitude),
+            String.valueOf(Contact.MailingLongitude),
+            String.valueOf(Contact.HomePhone),
+            String.valueOf(Contact.Email)
+        };
+        private String queryString;
+
+        @TestVisible
+        private ContactQueryWithoutSharing(Id contactId) {
+            if (Schema.SObjectType.Contact.fields.getMap().get('RecordTypeId') != null) {
+                selectFields.add('RecordTypeId');
+            }
+            if (orgConfig.isStateCountryPicklistsEnabled()) {
+                selectFields.addAll(new List<String> {
+                    'MailingStateCode',
+                    'MailingCountryCode'
+                });
+            }
+            UTIL_Query query = new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(Contact.SObjectType)
+                .withWhere('Id = \'' + contactId + '\'');
+
+            queryString = query.build();
+        }
+
+        @TestVisible
+        private Contact query() {
+            return Database.query(queryString);
         }
     }
 }

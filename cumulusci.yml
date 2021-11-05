@@ -601,7 +601,7 @@ tasks:
                 - "connection was cancelled here"
                 - "None"
             retry_always: True
-            required_org_code_coverage_percent: 86
+            required_org_code_coverage_percent: 85
 
     disable_triggers:
         class_path: cumulusci.tasks.salesforce.trigger_handlers.SetTDTMHandlerStatus
