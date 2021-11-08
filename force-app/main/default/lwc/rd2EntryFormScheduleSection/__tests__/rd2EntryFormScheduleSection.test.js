@@ -70,7 +70,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
         it('day of month picklist defaults to current date', async () => {
             await flushPromises();
-            const today = new Date().getDay().toString();
+            const today = new Date().getDate().toString();
             const expectedDay = today === '31' ? 'Last_Day' : today;
             expect(controller.dayOfMonth().value).toBe(expectedDay);
         });
