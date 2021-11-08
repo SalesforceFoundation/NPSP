@@ -18,7 +18,7 @@ import CONTACT_OBJECT from '@salesforce/schema/Contact';
 
 
 const recurringSettingsResponse = require('./data/getRecurringSettings.json');
-const recurringDonationObjectInfo = require('./data/recurringDonationObjectInfo.json');
+const recurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
 const installmentPeriodPicklistValues = require('./data/installmentPeriodPicklistValues.json');
 const dayOfMonthPicklistValues = require('./data/dayOfMonthPicklistValues.json');
 const contactPartialDescribe = require('./data/contactPartialDescribe.json');

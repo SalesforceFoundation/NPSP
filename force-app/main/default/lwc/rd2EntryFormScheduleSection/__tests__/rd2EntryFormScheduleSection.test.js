@@ -13,7 +13,7 @@ const mockGetRecurringSettings = require('./data/getRecurringSettings.json');
 const mockGetRecurringDataFixed = require('./data/getRecurringDataFixed.json');
 const mockDayOfMonthPicklistValues = require('./data/wiredDayOfMonthPicklistValues.json');
 const mockInstallmentPeriodPicklistValues = require('./data/wiredInstallmentPeriodPicklistValues.json');
-const mockRecurringDonationObjectInfo = require('./data/wiredRecurringDonationObjectInfo.json');
+const mockRecurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
 
 const TEST_DATE = new Date(2021, 10, 4);
 const FAKE_RD2_ID = '00A_fake_rd2_id';
