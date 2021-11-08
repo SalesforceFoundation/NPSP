@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { isEmpty, isNull } from 'c/utilCommon';
-import { PERIOD, RECURRING_PERIOD_ADVANCED } from 'c/rd2Service';
+import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from 'c/rd2Service';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
@@ -24,7 +24,6 @@ import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.St
 
 
 // Constants from RD2_Constants class
-const RECURRING_TYPE_FIXED = 'Fixed';
 const LAST_DAY_OF_MONTH = 'Last_Day';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
@@ -559,6 +558,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                         break;
                 }
             });
+
+        if(data[this.fields.recurringType.apiName] === RECURRING_TYPE_OPEN) {
+            data[this.fields.plannedInstallments.apiName] = null;
+        }
 
         return data;
     }
