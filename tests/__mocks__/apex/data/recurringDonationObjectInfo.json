@@ -1965,7 +1965,7 @@
   "searchable": true,
   "themeInfo": {
     "color": "83c75e",
-    "iconUrl": "https://flow-saas-9551-dev-ed.cs41.my.salesforce.com/img/icon/t4v35/custom/custom40_120.png"
+    "iconUrl": "https://example.org/img/icon/t4v35/custom/custom40_120.png"
   },
   "updateable": true
 }
