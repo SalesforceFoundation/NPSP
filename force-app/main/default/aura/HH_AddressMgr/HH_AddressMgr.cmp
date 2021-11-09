@@ -63,7 +63,9 @@
                                         alternativeText="{!$Label.c.bdiBtnClose}"
                                         tabindex="0"/>
                     </div>
-                    <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
+                    <h2 id="searchPopupLabel" class="slds-text-heading_medium" tabindex="-1">
+                        {!$Label.npo02.ChangeAddress}
+                    </h2>
                 </div>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:accordion aura:id="address_accordion" allowMultipleSectionsOpen="false"

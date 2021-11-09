@@ -31,6 +31,12 @@
     openChangeAddress : function(component /* , event, helper */) {
         component.set('v.showChangeAddressPopup', true);
         component.set('v.isExistingAddrSectionOpen', true);
+        // Focus on Address Modal (the timeout allows this to work consistently)
+        window.setTimeout(
+            $A.getCallback(function() {
+                document.getElementById('searchPopupLabel').focus();
+            }), 0
+        );
     },
 
     /*******************************************************************************************************
