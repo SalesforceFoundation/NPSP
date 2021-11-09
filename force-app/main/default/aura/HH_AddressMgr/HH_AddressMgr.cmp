@@ -41,9 +41,11 @@
             </div> 
             <div class="slds-card__footer">
                 <div class="slds-grid slds-grid_align-center">
+                    <span onkeydown="{!c.openChangeAddress}">
                     <lightning:button aura:id="btnChangeAddress"
                                       label="{!$Label.npo02.ChangeAddress}"
                                       onclick="{!c.openChangeAddress}" />
+                    </span>
                 </div>
             </div>
         </div> <!-- slds-card -->
