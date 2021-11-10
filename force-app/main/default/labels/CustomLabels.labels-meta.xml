@@ -10908,6 +10908,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
     </labels>
     <labels>
         <fullName>lblEmpty</fullName>
+        <categories>Contact Merge</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label to display Empty.</shortDescription>
