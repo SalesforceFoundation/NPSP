@@ -1434,6 +1434,14 @@
         <value>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
     </labels>
     <labels>
+        <fullName>FieldSetRelatedFieldError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when including Related Fields in a managed Field Set</shortDescription>
+        <value>Related field {0} not supported in field set {1}. You can only include fields directly on object {2}.</value>
+    </labels>
+    <labels>
         <fullName>HiddenForSecurity</fullName>
         <categories>settings</categories>
         <language>en_US</language>

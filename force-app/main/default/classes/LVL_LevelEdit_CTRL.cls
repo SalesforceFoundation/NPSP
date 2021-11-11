@@ -155,11 +155,10 @@ public with sharing class LVL_LevelEdit_CTRL {
     */
     public PageReference saveAndNew() {
         try {
-            if (!reportFieldSetErrors()) {
-                upsert lvl;
-            } else {
+            if (reportFieldSetErrors()) {
                 return null;
             }
+            upsert lvl;
             // now fixup lvl to be the new next level
             lvl.Id = null;
             lvl.Name = null;
@@ -179,11 +178,10 @@ public with sharing class LVL_LevelEdit_CTRL {
     */
     public PageReference save() {
         try {
-            if (!reportFieldSetErrors()) {
-                upsert lvl;
-            } else {
+            if (reportFieldSetErrors()) {
                 return null;
             }
+            upsert lvl;
             return new PageReference('/' + lvl.Id);
         } catch (Exception ex) {
             ApexPages.addMessages(ex);            

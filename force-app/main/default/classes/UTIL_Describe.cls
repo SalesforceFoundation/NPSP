@@ -561,9 +561,8 @@ public class UTIL_Describe {
         } else {
             for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
                 if (fieldSetMember.getFieldPath().contains('.')) {
-                    String errorMessage = 'Related field \'' + fieldSetMember.getFieldPath() +
-                            '\' not supported ' + 'in field set \'' + fieldSetName +
-                            '\'.  You can only include fields directly on object \'' + obj + '\'.';
+                    String errorMessage = String.format(Label.FieldSetRelatedFieldError, 
+                        new List<String>{'\''+fieldSetMember.getFieldPath()+'\'', '\''+fieldSetName+'\'', '\''+obj+'\''});
                     throw (new SchemaDescribeException(errorMessage));
                 }
                 if(!onlyRequired || fieldSetMember.getDBRequired() || fieldSetMember.getRequired()){
