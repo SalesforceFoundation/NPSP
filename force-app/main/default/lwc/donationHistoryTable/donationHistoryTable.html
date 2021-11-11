@@ -1,0 +1,12 @@
+<template>   
+    <div style="height: 300px;">
+        <lightning-datatable
+                key-field="id"
+                data={data}
+                columns={columns}
+                enable-infinite-loading
+                onloadmore={loadMoreDonationData}
+                aria-label="Donation History Table">
+        </lightning-datatable>
+    </div>
+</template>
