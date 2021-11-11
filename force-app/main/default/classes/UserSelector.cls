@@ -35,10 +35,13 @@
 
 public with sharing class UserSelector {
 
-   public List<User> getUsers() {
+   public List<User> getActiveStandardUsers() {
       return [
           SELECT Id
-          FROM User LIMIT 10000
+          FROM User
+          WHERE IsActive = TRUE
+          AND UserType = 'Standard'
+          LIMIT 10000
       ];
    }
 }
