@@ -1,0 +1,4 @@
+Opportunity:CRLP_Rollup_TDTM: true
+Opportunity:RD2_RecurringDonationsOpp_TDTM: true
+Opportunity:RLLP_OppRollup_TDTM: true
+npe01__OppPayment__c:CRLP_Rollup_TDTM: true
