@@ -597,8 +597,10 @@
                 searchResultRows[0].focus();
             } else {
                 let noContactsHeading = document.getElementById('noContactsFoundHeading')
-                noContactsHeading.setAttribute('tabindex', '-1');
-                noContactsHeading.focus();
+                if (noContactsHeading) {
+                    noContactsHeading.setAttribute('tabindex', '-1');
+                    noContactsHeading.focus();
+                }
             }
         }
     </script>
