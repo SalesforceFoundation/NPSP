@@ -145,6 +145,7 @@
                             <c:UTIL_FormField field="{!f.fieldPath}"
                                               sObj="{!Level__c}"
                                               sObjType="Level__c"
+                                              overrideRequired="{!f.DBRequired}"
                                               appearRequired="{!f.DBRequired || f.Required}"/>
                         </apex:repeat>
                     </div>
