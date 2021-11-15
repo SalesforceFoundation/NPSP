@@ -118,7 +118,7 @@ private class USNonElevateCustomers_TEST {
             List<Object> listOfArgs) {
 
             switch on (stubbedMethodName) {
-                when 'getUsers' {
+                when 'getActiveStandardUsers' {
                     return new List<User>{
                         new User(Id = UTIL_UnitTestData_TEST.mockId(User.SObjectType))
                     };
