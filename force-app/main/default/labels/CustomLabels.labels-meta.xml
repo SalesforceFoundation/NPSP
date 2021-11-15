@@ -10915,6 +10915,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This component has been deprecated.</value>
     </labels>
     <labels>
+        <fullName>lblEmpty</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to display Empty.</shortDescription>
+        <value>empty</value>
+    </labels>
+    <labels>
         <fullName>lblExtendedStatus</fullName>
         <categories>UTIL_JobProgressLightning</categories>
         <language>en_US</language>
