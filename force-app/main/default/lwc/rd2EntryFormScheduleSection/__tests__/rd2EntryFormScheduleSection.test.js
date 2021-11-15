@@ -36,7 +36,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
         clearDOM();
     });
 
-    describe('default recurring type open', () => {
+    describe('new rd with default recurring type open', () => {
         beforeEach(async () => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
 
@@ -97,7 +97,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     });
 
-    describe('default recurring type fixed', () => {
+    describe('new rd with default recurring type fixed', () => {
         beforeEach(async () => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
             component.addEventListener('installmentschange', mockHandleInstallmentsChange);
@@ -107,7 +107,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
             await setupWires();
         });
 
-        it('number of planned installments is not rendered', async () => {
+        it('number of planned installments is rendered', async () => {
             await flushPromises();
             expect(controller.numberOfPlannedInstallments()).toBeTruthy();
         });
@@ -124,7 +124,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
     });
 
 
-    describe('weekly default recurring period', () => {
+    describe('new rd with default recurring period weekly', () => {
         beforeEach(async () => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
             component.addEventListener('frequencychange', mockHandleFrequencyChange);
