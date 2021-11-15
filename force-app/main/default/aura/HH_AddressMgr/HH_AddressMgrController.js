@@ -33,13 +33,6 @@
         component.set('v.isExistingAddrSectionOpen', true);
     },
 
-    handleChangeAddressToggle : function(component) {
-        if (component.get('v.useDefaultFocus')) {
-            document.getElementById('changeAddressPopup').focus();
-            component.set('v.useDefaultFocus', false);
-        }
-    },
-
     /*******************************************************************************************************
      * @description close the Change Address popup, making no changes.
      */

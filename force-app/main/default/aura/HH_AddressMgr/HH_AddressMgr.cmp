@@ -4,7 +4,6 @@
     <aura:attribute name="listAddr" type="Object[]" access="public"/>
     <aura:attribute name="addrDefault" type="Object" access="public" />
     <aura:attribute name="addressUndeliverableLabel" type="String" access="public" />
-    <aura:attribute name="useDefaultFocus" type="Boolean" default="true" />
 
     <!-- private attributes -->
     <aura:attribute name="addrNew" type="Object" access="private"/>
@@ -53,7 +52,7 @@
     <!-- CHANGE ADDRESS POPUP -->
     <aura:if isTrue="{!v.showChangeAddressPopup}">
         <div id="changeAddressPopup" class="slds-modal slds-fade-in-open" aria-hidden="false"
-             role="dialog" aria-labelledby="searchPopupLabel" tabindex="-1">
+             role="dialog" aria-labelledby="searchPopupLabel">
             <div class="slds-modal__container">
                 <div class="slds-modal__header">
                     <div onclick="{!c.cancelChangeAddress}" tabindex="0"
@@ -66,10 +65,9 @@
                     </div>
                     <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
-                <div class="slds-modal__content slds-p-around_medium" id="accordionContent" tabindex="-1">
+                <div class="slds-modal__content slds-p-around_medium">
                     <lightning:accordion aura:id="address_accordion" allowMultipleSectionsOpen="false"
-                                         activeSectionName="existing-address-section"
-                                        onsectiontoggle="{!c.handleChangeAddressToggle}">
+                                         activeSectionName="existing-address-section">
                         <lightning:accordionSection name="existing-address-section"
                                                     label="{!$Label.npo02.SelectExistingAddress}">
                             <ul class="slds-list_vertical slds-has-dividers_around-space slds-has-list-interactions">
