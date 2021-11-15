@@ -73,8 +73,6 @@ jobs:
           # Escape newlines (replace \n with %0A) so it's a single line of text
           echo "::set-output name=diff::$( echo "$DIFF" | sed ':a;N;$!ba;s/\n/%0A/g' )"
 
-          # echo "Diff Output = ${{ steps.get_pr_diff.outputs.diff }}"
-
       - name: Assign Reviewer if SfdoInstrumentationService is in use
         id: assign_reviewers_if_instrumentation
         if: contains(steps.get_pr_diff.outputs.diff, 'SfdoInstrumentationService')
