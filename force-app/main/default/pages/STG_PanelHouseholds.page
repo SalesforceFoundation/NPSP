@@ -166,7 +166,7 @@
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
                                 <apex:selectOptions value="{!listSOFormalGreetingFormats}"/>
                         </apex:selectList>
-                        <apex:outputLabel value="{!JSENCODE($Label.stgLabelOtherFormalGreetingFormat)}" styleClass="slds-assistive-text" for="txtFormatFG" />
+                        <apex:outputLabel value="{!$Label.stgLabelOtherFormalGreetingFormat}" styleClass="slds-assistive-text" for="txtFormatFG" />
                         <apex:inputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="slds-input txtOther"
                             onchange="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
                             onfocus="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
