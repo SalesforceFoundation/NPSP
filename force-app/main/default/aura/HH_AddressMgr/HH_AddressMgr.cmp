@@ -66,7 +66,7 @@
                     </div>
                     <h2 id="searchPopupLabel" class="slds-text-heading_medium">{!$Label.npo02.ChangeAddress}</h2>
                 </div>
-                <div class="slds-modal__content slds-p-around_medium" id="accordionContent">
+                <div class="slds-modal__content slds-p-around_medium">
                     <lightning:accordion aura:id="address_accordion" allowMultipleSectionsOpen="false"
                                          activeSectionName="existing-address-section"
                                         onsectiontoggle="{!c.handleChangeAddressToggle}">
