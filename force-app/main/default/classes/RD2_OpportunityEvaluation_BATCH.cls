@@ -110,6 +110,18 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     @TestVisible
     private Integer recordsFailed = 0;
 
+    /***
+    * @description Instrumentation: Save the start stamp of the batch execute() method to allow for logging the total duration
+    */
+    @TestVisible
+    private Long jobStartTimeStamp;
+
+    /***
+    * @description Instrumentation: Count the number of DML records (which would include Payment and Allocations records as wel;)
+    */
+    @TestVisible
+    private Integer recordsUpdated = 0;
+
     /**
      * @description Contains current date value so the batch can be executed for a 
      * date referenced in past, today or a future date. Regardless of the value, the current date
@@ -160,6 +172,8 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             throw new BatchException(System.Label.RD2_ErrorEnhancedRDBatchJobCannotBeRun);
         }
 
+        jobStartTimeStamp = System.currentTimeMillis();
+
         validateStatusField();
 
         String query = getRDBatchQuery();
@@ -189,6 +203,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             .evaluateOpportunities();
         
         recordsFailed += evalService.getRecordsFailed();
+        recordsUpdated += Limits.getDmlRows();
     }
 
     /**
@@ -209,8 +224,9 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Finish Method
     */
     public void finish(Database.BatchableContext context) {
+        instrumentJobStatistics();
         new RD2_Settings()
-            .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
+            .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);   
     }
 
     /**
@@ -222,6 +238,34 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
             BatchException ex = new BatchException(System.Label.RD2_PauseStatusMustExist);
             ex.setMessage(System.Label.RD2_PauseStatusMustExist);
             ERR_Handler.processError(ex, ERR_Handler_API.Context.RD);
+        }
+    }
+
+    /**
+     * @description Instrument the job processing statistics to Splunk for aggregate analysis
+     */
+    private void instrumentJobStatistics() {
+        try {
+
+            Integer jobDuration = (Integer)(System.currentTimeMillis() - jobStartTimeStamp);
+            SfdoInstrumentationService.log(SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, 
+                SfdoInstrumentationEnum.Component.Batch,
+                SfdoInstrumentationEnum.Action.Duration, jobDuration);
+            SfdoInstrumentationService.log(SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, 
+                SfdoInstrumentationEnum.Component.Batch,
+                SfdoInstrumentationEnum.Action.ProcessedCount, recordsProcessed);
+            SfdoInstrumentationService.log(SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, 
+                SfdoInstrumentationEnum.Component.Batch,
+                SfdoInstrumentationEnum.Action.DMLCount, recordsUpdated);
+
+            Double jobDurationMinutes = ((Double)jobDuration / 60 / 1000);
+            Double throughput = (recordsProcessed / jobDurationMinutes) * 60;
+            SfdoInstrumentationService.log(SfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, 
+                SfdoInstrumentationEnum.Component.Batch,
+                SfdoInstrumentationEnum.Action.ThroughputPerHour, throughput.intValue());
+
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, 'Instrumentation');
         }
     }
 

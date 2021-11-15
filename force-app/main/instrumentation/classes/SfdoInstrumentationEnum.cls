@@ -114,10 +114,11 @@ public with sharing class SfdoInstrumentationEnum {
         Dml_Undelete,
         /* Batch/ASynchronous Operations */
         Duration,
-        DML_Count,
-        Query_Count,
-        Batch_Count,
-        Processed_Count,
+        DMLCount,
+        QueryCount,
+        BatchCount,
+        ProcessedCount,
+        ThroughputPerHour,
         /* Trigger Operations */
         BeforeInsert, 
         BeforeUpdate, 

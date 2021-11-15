@@ -94,7 +94,7 @@ public with sharing class SfdoInstrumentationService_TEST {
         SfdoInstrumentationService.log(
             SfdoInstrumentationEnum.Feature.Allocations, 
             SfdoInstrumentationEnum.Component.Future,
-            SfdoInstrumentationEnum.Action.Processed_Count, 
+            SfdoInstrumentationEnum.Action.ProcessedCount, 
             new Map<String, Long>{ 'Test' => System.currentTimeMillis()},
             System.currentTimeMillis().intValue());
     }
