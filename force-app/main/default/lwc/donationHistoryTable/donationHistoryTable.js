@@ -1,5 +1,6 @@
 import { LightningElement } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
+//TODO: set custom label for datatable aria label
 
 const columns = [
     { label: 'Date', fieldName: 'date', type: 'date' },
@@ -8,8 +9,6 @@ const columns = [
     { label: 'Payment Method', fieldName: 'paymentMethod', type: 'text', },
 ];
 
-
-//set custom label for datatable aria label
 
 export default class DonationHistoryTable extends LightningElement {
     data = [];
