@@ -1124,6 +1124,26 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         }
     }
 
+    /**
+    * @description Verifies that RD2 batch collects the data used for instrumentation
+    */
+    @isTest
+    private static void shouldCollectInstrumentationData() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        final Date today = START_DATE.addMonths(1).addDays(1);
+        final Date nextCloseDate = START_DATE.addMonths(2);
+        RD2_ScheduleService.currentDate = today;
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder().build();
+        insert rd;
+
+        RD2_OpportunityEvaluation_BATCH batch = executeAndFinishBatch(rd.Id, today);
+
+        System.assertEquals(1, batch.recordsProcessed, 'There should be a single record processed');
+        System.assertNotEquals(0, batch.recordsUpdated, 'There should be more than 1 record updated (includes payments, allocs, rollups, etc.');
+        System.assertNotEquals(null, batch.jobStartTimeStamp, 'The Job start timestamp should be non-null');
+    }
 
     // Helpers
     //////////////
@@ -1156,6 +1176,7 @@ public with sharing class RD2_OpportunityEvaluation_TEST {
         UTIL_BatchJobService_TEST.MockBatchableContext batchContext = new UTIL_BatchJobService_TEST.MockBatchableContext();
         RD2_OpportunityEvaluation_BATCH batch = new RD2_OpportunityEvaluation_BATCH(today);
 
+        batch.jobStartTimeStamp = System.currentTimeMillis();
         batch.execute(batchContext, rdGateway.getRecords(new Set<Id>{ rdId }));
         batch.finish(batchContext);
 
