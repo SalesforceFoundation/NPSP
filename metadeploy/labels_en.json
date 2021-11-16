@@ -17,7 +17,7 @@
             "description": "legal text shown in modal dialog"
         },
         "error_message": {
-            "message": "If you experience an issue with the installation, please post in the [Nonprofit Hub](https://trailhead.salesforce.com/trailblazer-community/groups/0F9300000001ocxCAA?tab=discussion&sort=LAST_MODIFIED_DATE_DESC).",
+            "message": "If you experience an issue with the installation, please post in the [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) group.",
             "description": "shown after failed installation (markdown)"
         }
     },
@@ -31,7 +31,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Hub](https://trailhead.salesforce.com/trailblazer-community/groups/0F9300000001ocxCAA?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) for any questions about NPSP.\n",
+            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) group for any questions about NPSP.\n",
             "description": "shown after successful installation (markdown)"
         }
     },
@@ -139,7 +139,7 @@
             "description": "shown before user starts installation (markdown)"
         },
         "post_install_message": {
-            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Hub](https://trailhead.salesforce.com/trailblazer-community/groups/0F9300000001ocxCAA?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) for any questions about NPSP.\n",
+            "message": "Thanks for installing NPSP.  Please visit the [Nonprofit Success Pack](https://trailhead.salesforce.com/trailblazer-community/groups/0F94S000000kHitSAE?tab=discussion&sort=LAST_MODIFIED_DATE_DESC) group for any questions about NPSP.\n",
             "description": "shown after successful installation (markdown)"
         },
         "error_message": {
