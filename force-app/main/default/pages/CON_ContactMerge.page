@@ -591,12 +591,12 @@
     </div>
     <script>
         function setFocusOnLoad() {
-            let searchResultRows = document.getElementsByClassName('searchResultRow');
+            const searchResultRows = document.getElementsByClassName('searchResultRow');
             if (searchResultRows && searchResultRows.length > 0) {
                 searchResultRows[0].setAttribute('tabindex', '-1');
                 searchResultRows[0].focus();
             } else {
-                let noContactsHeading = document.getElementById('noContactsFoundHeading')
+                const noContactsHeading = document.getElementById('noContactsFoundHeading')
                 if (noContactsHeading) {
                     noContactsHeading.setAttribute('tabindex', '-1');
                     noContactsHeading.focus();
