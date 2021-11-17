@@ -857,6 +857,17 @@ flows:
             3:
                 task: update_admin_profile
 
+    ci_feature_2gp_trial:
+        steps:
+            1: 
+                flow: install_2gp_commit
+            2:
+                flow: config_apextest
+            3:
+                flow: config_trial
+            4:
+                task: run_tests
+
     config_trial:
         steps:
             1:
