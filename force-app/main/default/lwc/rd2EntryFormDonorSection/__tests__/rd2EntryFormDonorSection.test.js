@@ -6,9 +6,9 @@ import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurr
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 
 
-const recurringDataAccountResponse = require('./data/recurringDataAccountResponse.json');
-const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
-const recurringDonationObjectInfo = require('./data/recurringDonationObjectInfo.json');
+const recurringDataAccountResponse = require('../../../../../../tests/__mocks__/apex/data/recurringDataAccountResponse.json');
+const recurringDataContactResponse = require('../../../../../../tests/__mocks__/apex/data/recurringDataContactResponse.json');
+const recurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
 
 const mockHandleContactChange = jest.fn();
 const mockHandleAccountChange = jest.fn();
