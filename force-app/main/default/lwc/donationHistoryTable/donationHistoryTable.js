@@ -19,6 +19,7 @@ export default class DonationHistoryTable extends LightningElement {
     async connectedCallback() {
         const data = MOCK_DATA.slice(0, 50);
         this.data = data;
+        console.log(this.data.length);
     }
 
     loadMoreDonationData(event){
@@ -34,6 +35,7 @@ export default class DonationHistoryTable extends LightningElement {
             //Appends new data to the end of the table
             const newData = currentData.concat(MOCK_DATA.slice(50, 70));
             this.data = newData;
+            console.log(this.data.length);
         }
         event.target.isLoading = false;
     }
