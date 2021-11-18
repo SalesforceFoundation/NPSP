@@ -4,10 +4,11 @@ import {MOCK_DATA} from './donationHistoryTableData';
 
 const columns = [
     { label: 'Date', fieldName: 'date', type: 'date', typeAttributes:{
-        month: "short",
         year: "numeric",
+        month: "short",
         day: "2-digit"
-    }},
+    },
+    cellAttributes: { alignment: 'right' }},
     { label: 'Donor', fieldName: 'donor', type: 'text' },
     { label: 'Amount', fieldName: 'amount', type: 'currency', },
     { label: 'Payment Method', fieldName: 'paymentMethod', type: 'text', },
