@@ -41,7 +41,7 @@ jobs:
       - name: Set Reviewer
         id: set_reviewer
         run: |
-          if [${{ steps.pr_owner.outputs.owner != env.DEFAULT_REVIEWER}}]
+          if [[ "${{ steps.pr_owner.outputs.owner != env.DEFAULT_REVIEWER}}" == "true" ]]
           then
               echo "::set-output name=reviewer::${{ env.DEFAULT_REVIEWER }}"
           else
