@@ -24,7 +24,6 @@ export default class DonationHistoryTable extends LightningElement {
     async connectedCallback() {
         const data = MOCK_DATA.slice(0, 50);
         this.data = data;
-        console.log(this.data.length);
     }
 
     loadMoreDonationData(event){
@@ -32,7 +31,6 @@ export default class DonationHistoryTable extends LightningElement {
         //Display a spinner to signal that data is being loaded
         event.target.isLoading = true;
         if (this.data.length >= this.totalNumberOfRows) {
-            console.log('load all records');
             event.target.enableInfiniteLoading = false;
             this.loadMoreStatus = 'No more data to load';
         } else {
@@ -40,7 +38,6 @@ export default class DonationHistoryTable extends LightningElement {
             //Appends new data to the end of the table
             const newData = currentData.concat(MOCK_DATA.slice(50, 70));
             this.data = newData;
-            console.log(this.data.length);
         }
         event.target.isLoading = false;
     }
