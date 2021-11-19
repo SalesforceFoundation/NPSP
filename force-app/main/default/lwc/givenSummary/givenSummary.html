@@ -1,0 +1,24 @@
+<template>
+    <lightning-card>
+        <lightning-layout multiple-rows="true" horizontal-align="center">
+            <lightning-layout-item size="12">
+                <h2 class="slds-text-heading_small slds-var-p-left_large">{labels.donorsGivenSummary}</h2>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="4" large-device-size="4"
+                class={rowClasses}>
+                <span class="lifetime bolder">$7,000</span><br />
+                <span class="slds-var-m-top_medium">{labels.donorsLifetime}</span>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="4" large-device-size="4"
+                class={rowClasses}>
+                <span class="thisYear bolder">$6,000</span><br />
+                <span>{labels.donorsThisYear}</span>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="4" large-device-size="4"
+                class={lastElementClasses}>
+                <span class="previousYear bolder">$1,000</span><br />
+                <span>{labels.donorsPreviousYear}</span>
+            </lightning-layout-item>
+        </lightning-layout>
+    </lightning-card>
+</template>
