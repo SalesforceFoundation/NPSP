@@ -80,6 +80,28 @@ private class USNonElevateCustomers_TEST {
         System.assert(userIds == null);
     }
 
+    /**
+     * @description Tests that this Custom Notification's Audience
+     * will not include inactive UserIds, which cause a platform
+     * exception and prevent delivery.  This test should remain an
+     * integration test that uses the database, in order to validate
+     * that when this Audience is generated using customer orgs it will
+     * always exclude inactive Users.
+     */
+    @IsTest
+    static void shouldNotIncludeInactiveUserIds(){
+        // GIVEN that an Org contains at least one inactive User
+        User inactiveUser = UTIL_UnitTestData_TEST.createNewInactiveUserForTests
+                (UTIL_UnitTestData_TEST.getRandomUsername());
+
+        // WHEN the USNonElevateCustomers Audience is generated
+        IAudience usNonElevateCustomers = new USNonElevateCustomers();
+
+        // THEN it will not include Ids of the inactive Users
+        System.assertEquals(false,
+                usNonElevateCustomers.audience().values().contains(inactiveUser.Id),
+                'The US Non-Elevate Customers Audience should not include inactive User Ids');
+    }
 
     private class PS_IntegrationServiceConfigMock implements StubProvider {
 
