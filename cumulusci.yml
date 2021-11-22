@@ -600,7 +600,7 @@ tasks:
         class_path: cumulusci.tasks.salesforce.Deploy
         group: Salesforce Metadata
         options:
-            path: unpackaged/pre/core_instrumentation_mock_classes
+            path: unpackaged/config/core_instrumentation_mock_classes
 
     run_tests:
         options:
