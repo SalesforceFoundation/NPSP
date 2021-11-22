@@ -38,7 +38,14 @@ public with sharing class HH_Container_LCTRL {
 
     /** @description our exception object for Field Level & Object Security errors. */
     private class permsException extends Exception {}
-    
+
+    private static Boolean canReadContactUndeliverable = 
+        UTIL_Permissions.canRead(Contact.Undeliverable_Address__c.getDescribe(), false);
+    private static Boolean canReadAccountUndeliverable = 
+        UTIL_Permissions.canRead(Account.Undeliverable_Address__c.getDescribe(), false);
+    private static Boolean canReadAddressUndeliverable = 
+        UTIL_Permissions.canRead(Address__c.Undeliverable__c.getDescribe(), false);
+
     /*******************************************************************************************************
     * @description trick the packaging spider to pickup references to custom labels only used by our
     * lightning components.
@@ -125,8 +132,10 @@ public with sharing class HH_Container_LCTRL {
         if (isHousehold) {
             householdFieldsToEdit.addAll(new Set<String>{
                 'BillingStreet', 'BillingCity', 'BillingState', 'BillingPostalCode',
-                 String.valueOf(Account.Undeliverable_Address__c), 'BillingCountry',
-                'BillingLatitude', 'BillingLongitude'});
+                'BillingCountry', 'BillingLatitude', 'BillingLongitude'});
+            if (canReadAccountUndeliverable) {
+                householdFieldsToEdit.add(String.valueOf(Account.Undeliverable_Address__c));
+            }
         } else {
             householdFieldsToEdit.addAll(new Set<String>{
                 'npo02__MailingStreet__c', 'npo02__MailingCity__c', 'npo02__MailingState__c', 
@@ -252,11 +261,11 @@ public with sharing class HH_Container_LCTRL {
                 'MailingCountry', 
                 'MailingLatitude', 
                 'MailingLongitude', 
-                'CreatedDate',
-                String.valueOf(Contact.Undeliverable_Address__c)
+                'CreatedDate'
             };
 
             addContactMiddleNameField(contactFields);
+            addContactUndeliverableAddressField(contactFields);
 
                 /*** until we support these, we don't want them to interfere with what the user specifies.
                 if (OrgSettings.isStateCountryPicklistsEnabled)
@@ -293,12 +302,24 @@ public with sharing class HH_Container_LCTRL {
             'MailingPostalCode', 
             'MailingCountry', 
             'MailingLatitude', 
-            'MailingLongitude',
-            String.valueOf(Contact.Undeliverable_Address__c)};
+            'MailingLongitude'
+        };
 
         addContactMiddleNameField(setContactFields);
+        addContactUndeliverableAddressField(setContactFields);
 
         return setContactFields;
+    }
+
+    /*******************************************************************************************************
+    * @description Adds Undeliverable Address field into the set of field names
+    * @param fieldNames Set of field names 
+    * @return void
+    */
+    private static void addContactUndeliverableAddressField(Set<String> fieldNames) {   
+        if (canReadContactUndeliverable) {
+            fieldNames.add(String.valueOf(Contact.Undeliverable_Address__c));
+        }
     }
 
     /*******************************************************************************************************
@@ -514,12 +535,16 @@ public with sharing class HH_Container_LCTRL {
 
     @AuraEnabled
     public static Map<String, String> getFieldLabels() {
+        String undeliverableAddressLabel = canReadContactUndeliverable ?
+            UTIL_Describe.getFieldLabel(String.valueOf(Contact.SObjectType), String.valueOf(Contact.Undeliverable_Address__c)) : '';
+        String undeliverableLabel = canReadAddressUndeliverable ?
+            UTIL_Describe.getFieldLabel(String.valueOf(Address__c.SObjectType), String.valueOf(Address__c.Undeliverable__c)) : '';
+
         Map<String, String> fieldLabelsBySObject = new Map<String, String> {
-            String.valueOf(Contact.Undeliverable_Address__c) => UTIL_Describe.getFieldLabel(
-                    String.valueOf(Contact.SObjectType), String.valueOf(Contact.Undeliverable_Address__c)),
-            String.valueOf(Address__c.Undeliverable__c) => UTIL_Describe.getFieldLabel(
-                    String.valueOf(Address__c.SObjectType), String.valueOf(Address__c.Undeliverable__c))
+            'Undeliverable_Address__c' => undeliverableAddressLabel,
+            'Undeliverable__c' => undeliverableLabel
         };
+
         return fieldLabelsBySObject;
     }
 
@@ -615,8 +640,10 @@ public with sharing class HH_Container_LCTRL {
                 address.MailingState__c = (String)household.get('BillingState');
                 address.MailingPostalCode__c = (String)household.get('BillingPostalCode');
                 address.MailingCountry__c = (String)household.get('BillingCountry');
-                address.Undeliverable__c = (Boolean)household.get(
-                    UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'));
+                if (canReadAddressUndeliverable && canReadAccountUndeliverable) {
+                    address.Undeliverable__c = (Boolean)household.get(
+                        UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'));
+                }
             } else {
                 address.MailingStreet__c = (String)household.get('npo02__MailingStreet__c');
                 address.MailingCity__c = (String)household.get('npo02__MailingCity__c');
@@ -644,7 +671,9 @@ public with sharing class HH_Container_LCTRL {
                 address.MailingState__c = con.MailingState;
                 address.MailingPostalCode__c = con.MailingPostalCode;
                 address.MailingCountry__c = con.MailingCountry;
-                address.Undeliverable__c = con.Undeliverable_Address__c;
+                if (canReadAddressUndeliverable && canReadContactUndeliverable) {
+                    address.Undeliverable__c = con.Undeliverable_Address__c;
+                }
                 strKey = new NPSP_Address(address).getAddrKey();
                 if (setAddrKey.add(strKey)) {
                     listAddr.add(address);
@@ -655,8 +684,11 @@ public with sharing class HH_Container_LCTRL {
             if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
 
                 Set<String> setFields = new Set<String>{'MailingStreet__c', 'MailingStreet2__c',
-                        'Undeliverable__c', 'MailingCity__c', 'MailingState__c',
-                        'MailingPostalCode__c', 'MailingCountry__c', 'Default_Address__c'};
+                        'MailingCity__c', 'MailingState__c', 'MailingPostalCode__c', 
+                        'MailingCountry__c', 'Default_Address__c'};
+                if (canReadAddressUndeliverable) {
+                    setFields.add('Undeliverable__c');
+                }
                 String strSoql = 'select ';
                 String strComma = '';
                 
