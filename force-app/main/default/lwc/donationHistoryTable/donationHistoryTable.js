@@ -26,19 +26,24 @@ export default class DonationHistoryTable extends LightningElement {
         this.data = data;
     }
 
+    /**
+     * 
+     * @param {*} event 
+     * handle the scroll event to get more content and concat to the existing table data
+     */
     loadMoreDonationData(event){
         //TODO: add wired service
         //Display a spinner to signal that data is being loaded
         event.target.isLoading = true;
         if (this.data.length >= this.totalNumberOfRows) {
             event.target.enableInfiniteLoading = false;
-            this.loadMoreStatus = 'No more data to load';
-        } else {
-            const currentData = this.data;
-            //Appends new data to the end of the table
-            const newData = currentData.concat(MOCK_DATA.slice(50, 70));
-            this.data = newData;
+            event.target.isLoading = false;
+            return;
         }
+        const currentData = this.data;
+        //Appends new data to the end of the table
+        const newData = currentData.concat(MOCK_DATA.slice(50, 70));
+        this.data = newData;
         event.target.isLoading = false;
     }
 }
