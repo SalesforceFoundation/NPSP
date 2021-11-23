@@ -662,6 +662,53 @@ private class HH_Container_TEST {
         System.assertEquals(2, records.size(), 'Expected records when Contact.Name is encrypted and the search query is valid: ' + records);
     }
 
+    /*********************************************************************************************************
+    * @description Verifies required methods can be run as a User without Undeliverable Address permissions
+    */
+    public static testMethod void testPageLoadsWithoutUndeliverableAddressPermissions() {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        Id adminProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR LIMIT 1].Id;
+        
+        String addressUndeliverableField = 
+            String.valueOf(Address__c.SObjectType) + '.' + String.valueOf(Address__c.Undeliverable__c);
+        String contactUndeliverableField = 
+            String.valueOf(Contact.SObjectType) + '.' + String.valueOf(Contact.Undeliverable_Address__c);
+        String accountUndeliverableField = 
+            String.valueOf(Account.SObjectType) + '.' + String.valueOf(Account.Undeliverable_Address__c);
+        List<FieldPermissions> fieldPermissions = [
+            SELECT Id, PermissionsRead, PermissionsEdit
+            FROM FieldPermissions
+            WHERE Parent.ProfileId = :adminProfileId
+            AND (Field = :addressUndeliverableField
+                OR Field =: contactUndeliverableField
+                OR Field = : accountUndeliverableField
+            )
+        ];
+        for(FieldPermissions fieldPermission : fieldPermissions){
+            fieldPermission.PermissionsRead = false;
+            fieldPermission.PermissionsEdit = false;
+        }
+        update fieldPermissions;
+
+        System.runAs(adminUser) {
+            initTestData();
+
+            Map<String, String> fieldLabels = HH_Container_LCTRL.getFieldLabels();
+            System.assert(String.isBlank(fieldLabels.get('Undeliverable__c')), 'The Label should be blank');
+
+            List<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
+            System.assertEquals(2, listAddrA.size());
+
+            System.assertNotEquals(null, HH_Container_LCTRL.getHousehold(hhA.Id));
+            List<Contact> hhContacts = HH_Container_LCTRL.getContacts(hhA.Id);
+            System.assertEquals(1, hhContacts.size());
+
+            HH_Container_LCTRL.saveHouseholdPage(hhA, hhContacts, new List<Contact>(), null);
+
+            Account[] actualAccounts = getAccounts();
+            System.assertEquals(2, actualAccounts.size(), 'There should still be 2 Accounts');
+        }
+    }
 
     // Helpers
     ////////////
