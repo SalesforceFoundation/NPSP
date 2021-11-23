@@ -453,7 +453,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId Will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, Id gauId, String message) {
+    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Double percentage, Id gauId, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, null, gauId, message);
     }
 
