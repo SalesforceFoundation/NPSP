@@ -1109,6 +1109,12 @@ public class UTIL_UnitTestData_TEST {
         System.assert(randomUsername.equalsIgnoreCase(queriedUser.Username));
     }
 
+    @TestVisible
+    private static String getRandomUsername() {
+        String randomUsername = 'test@test.com.' + getUniqueString();
+        return randomUsername;
+    }
+
     /**
      * @description Verify that a new Inactive User is inserted with the specified Username
      */

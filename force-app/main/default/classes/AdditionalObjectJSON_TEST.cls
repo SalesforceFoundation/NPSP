@@ -34,6 +34,61 @@
 */
 @isTest
 private class AdditionalObjectJSON_TEST {
+
+    @isTest
+    static void shouldReturnUsableDynamicSourceGroupWhenConvertingEmptyCollection() {
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON(null);
+        String widgetDataString = '{"GAU_Allocation_1_6f5a83b87":[]}';
+        String convertedWidgetData = additionalObjectJSON.convertWidgetDataToObjectJSON(widgetDataString);
+        BDI_DynamicSourceGroup dummyDynamicSourceGroup = (BDI_DynamicSourceGroup)
+            JSON.deserialize(convertedWidgetData, BDI_DynamicSourceGroup.class);
+
+        System.assertNotEquals(null, convertedWidgetData);
+        System.assertEquals(
+            dummyDynamicSourceGroup.name,
+            DataImport__c.Additional_Object_JSON__c.getDescribe().getName());
+        System.assertNotEquals(null, dummyDynamicSourceGroup.dynamicSourceByObjMappingDevName);
+    }
+
+    @isTest
+    static void shouldReturnUsableDynamicSourceGroupWhenConvertingEmptyString() {
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON(null);
+        BDI_DynamicSourceGroup dummyDynamicSourceGroup = (BDI_DynamicSourceGroup)
+            JSON.deserialize(additionalObjectJSON.convertWidgetDataToObjectJSON(''), BDI_DynamicSourceGroup.class);
+
+        System.assertEquals(
+            dummyDynamicSourceGroup.name,
+            DataImport__c.Additional_Object_JSON__c.getDescribe().getName());
+        System.assertNotEquals(null, dummyDynamicSourceGroup.dynamicSourceByObjMappingDevName);
+    }
+
+    @isTest
+    static void shouldNotThrowExceptionWhenAdditionalObjectCollectionIsEmpty() {
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON('{"GAU_Allocation_1_6f5a83b87":[]}');
+        String asJSON = additionalObjectJSON.asJSON();
+
+        System.assertEquals(null, asJSON);
+    }
+
+    @isTest
+    static void shouldAddSoftCreditsWhenAllocationsCollectionIsEmpty() {
+        String dummyContactId0 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        String dummyContactId1 = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        List<OpportunityContactRole> dummyOCRs = new List<OpportunityContactRole> {
+            new OpportunityContactRole(Role = 'Influencer', ContactId = dummyContactId0),
+            new OpportunityContactRole(Role = 'Soft Credit', ContactId = dummyContactId1)
+        };
+
+        AdditionalObjectJSON additionalObjectJSON = new AdditionalObjectJSON('{"GAU_Allocation_1_6f5a83b87":[]}');
+
+        SoftCredits dummySoftCredits = new SoftCredits(dummyOCRs);
+        additionalObjectJSON.add(dummySoftCredits);
+
+        String backToJSON = additionalObjectJSON.asJSON();
+        System.assert(backToJSON.contains(dummyContactId0));
+        System.assert(backToJSON.contains(dummyContactId1));
+    }
+
     @isTest
     static void shouldHaveSoftCreditsWithSize2() {
         String additionalObjectString =
