@@ -640,11 +640,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             //Calculate proportional amount for non-percentage based Payment allocations
             if (sObj instanceof npe01__OppPayment__c && allo.Percent__c == null) {
-                // Do not round the percent yet, we want the most accurate Amount value possible
+                // Determine Percentage
                 Decimal alloPercent = allo.Amount__c / wrap.parentAmount * 100;
                 allo.Amount__c = (amount * alloPercent * .01).setScale(2);
-                // Round the visible percentage value to 2 decimal places after the amount is calculated
-                allo.Percent__c = alloPercent.setScale(2, System.RoundingMode.HALF_UP);
+                
+                // Store Percentage as is, so precision is not lost in future calculations
+                allo.Percent__c = alloPercent;
             }
 
             //if this is a multicurrency org, recalculate the amount and set the CurrencyIsoCode
