@@ -193,16 +193,13 @@ public inherited sharing class AdditionalObjectJSON {
 
     @TestVisible
     private String convertWidgetDataToObjectJSON(String widgetData) {
+        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
+        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
+        dynSourceGroup.dynamicSourceByObjMappingDevName = new Map<String, BDI_DynamicSource>();
 
         if (String.isBlank(widgetData)) {
-            return null;
+            return JSON.serialize(dynSourceGroup);
         }
-
-        Map<String, BDI_DynamicSource> dynamicSourceByObjMappingDevName = new Map<String, BDI_DynamicSource>();
-        BDI_DynamicSourceGroup dynSourceGroup = new BDI_DynamicSourceGroup();
-
-        dynSourceGroup.name = DataImport__c.Additional_Object_JSON__c.getDescribe().getName();
-        dynSourceGroup.dynamicSourceByObjMappingDevName = dynamicSourceByObjMappingDevName;
 
         Map<String, Object> objMappingDevNameToObjList;
 
@@ -249,15 +246,11 @@ public inherited sharing class AdditionalObjectJSON {
                     dynSource.fieldMappingSetDevName = mappingService.fieldMappingSetName;
                     dynSource.sourceObj = dynamicDataImport;
 
-                    dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName, dynSource);
+                    dynSourceGroup.dynamicSourceByObjMappingDevName.put(dynSource.objectMappingDevName, dynSource);
                 }
             }
         }
 
-        if (dynSourceGroup.dynamicSourceByObjMappingDevName.size() > 0) {
-            String dynSourceGroupString = JSON.serialize(dynSourceGroup);
-            return dynSourceGroupString;
-        }
-        return null;
+        return JSON.serialize(dynSourceGroup);
     }
 }
