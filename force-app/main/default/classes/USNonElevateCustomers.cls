@@ -41,7 +41,7 @@ public inherited sharing class USNonElevateCustomers implements IAudience {
       UserIds audience;
 
       if (isTargetOrganization()) {
-         audience = new UserIds(new Map<Id, User>(userSelector.getUsers()).keySet());
+         audience = new UserIds(new Map<Id, User>(userSelector.getActiveStandardUsers()).keySet());
       }
       return audience;
    }
