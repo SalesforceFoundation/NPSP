@@ -14,7 +14,7 @@
         action.setParams({
             householdId: hhId
         });
-        let self = this;
+        const self = this;
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -42,6 +42,7 @@
         action.setParams({
             householdId: hhId
         });
+        const self = this;
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (component.isValid() && state === "SUCCESS") {
@@ -102,6 +103,7 @@
             householdId: hhId,
             existingAddresses: null
         });
+        const self = this;
         action.setCallback(this, function (response) {
 
             // tell our visualforce page we are done loading
