@@ -121,6 +121,10 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
                 this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
                 this.hideInstallmentFrequencyField = this.shouldHideField(response.InstallmentFrequencyPermissions);
+
+                let recurringType = this.getRecurringType();
+                recurringType = recurringType != null ? recurringType : response.defaultRecurringType;
+                this.updatePlannedInstallmentsVisibility(recurringType);
             })
             .catch((error) => {
                 // handleError(error);

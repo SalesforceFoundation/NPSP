@@ -453,7 +453,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId Will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, Id gauId, String message) {
+    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Double percentage, Id gauId, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, null, gauId, message);
     }
 
@@ -466,7 +466,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauName Will assert value against General_Accounting_Unit__r.Name
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Decimal percentage, String gauName, String message) {
+    public static void assertOpportunityAllocation(Allocation__c alloc, Id opportunityId, Decimal amount, Double percentage, String gauName, String message) {
         assertAllocation(alloc, opportunityId, null, null, null, amount, percentage, gauName, null, message);
     }
 
@@ -479,7 +479,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauName Will assert value against General_Accounting_Unit__r.Name
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, String gauName, String message) {
+    public static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Double percentage, String gauName, String message) {
         assertAllocation(alloc, null, paymentId, null, null, amount, percentage, gauName, null, message);
     }
 
@@ -492,7 +492,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId Will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Decimal percentage, Id gauId, String message) {
+    public static void assertPaymentAllocation(Allocation__c alloc, Id paymentId, Decimal amount, Double percentage, Id gauId, String message) {
         assertAllocation(alloc, null, paymentId, null, null, amount, percentage, null, gauId, message);
     }
 
@@ -505,7 +505,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauName Will assert value against General_Accounting_Unit__r.Name
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, String gauName, String message) {
+    public static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Double percentage, String gauName, String message) {
         assertAllocation(alloc, null, null, recurringDonationId, null, amount, percentage, gauName, null, message);
     }
 
@@ -518,7 +518,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId Will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Decimal percentage, Id gauId, String message) {
+    public static void assertRecurringDonationAllocation(Allocation__c alloc, Id recurringDonationId, Decimal amount, Double percentage, Id gauId, String message) {
         assertAllocation(alloc, null, null, recurringDonationId, null, amount, percentage, null, gauId, message);
     }
 
@@ -531,7 +531,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauName Will assert value against General_Accounting_Unit__r.Name
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Decimal percentage, String gauName, String message) {
+    public static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Double percentage, String gauName, String message) {
         assertAllocation(alloc, null, null, null, campaignId, amount, percentage, gauName, null, message);
     }
 
@@ -544,7 +544,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId Will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Decimal percentage, Id gauId, String message) {
+    public static void assertCampaignAllocation(Allocation__c alloc, Id campaignId, Decimal amount, Double percentage, Id gauId, String message) {
         assertAllocation(alloc, null, null, null, campaignId, amount, percentage, null, gauId, message);
     }
 
@@ -561,7 +561,7 @@ public class ALLO_UnitTestHelper_TEST {
      * @param gauId If not null, will assert value against General_Accounting_Unit__c
      * @param message The text to put on the front on the assertion message text
      */
-    public static void assertAllocation(Allocation__c alloc, Id opportunityId, Id paymentId, Id recurringDonationId, Id campaignId, Decimal amount, Decimal percentage, String gauName, Id gauId, String message) {
+    public static void assertAllocation(Allocation__c alloc, Id opportunityId, Id paymentId, Id recurringDonationId, Id campaignId, Decimal amount, Double percentage, String gauName, Id gauId, String message) {
         System.assertNotEquals(null, alloc, message + ' - Not Null');
         System.assertEquals(opportunityId, alloc.Opportunity__c, message + ' - Opportunity' );
         System.assertEquals(paymentId, alloc.Payment__c, message + ' - Payment');
