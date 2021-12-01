@@ -28,6 +28,7 @@ public with sharing class ListDonation {
     public static List<DonationHistory> getDonationHistory(){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won'];
         List<DonationHistory> result = verifyCreditCondition(donations);
+        return result;
     }
 
     /** 
