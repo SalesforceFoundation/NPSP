@@ -448,8 +448,9 @@ public with sharing class HH_Container_LCTRL {
             UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, new List<String>(householdFieldsToEdit));
 
             // Update Undeliverable field on Account to ensure correct syncing
-            hhCopy.put(UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'), selectedAddressIsUndeliverable);
-            
+            if (isHHAccount) {
+                hhCopy.put(UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'), selectedAddressIsUndeliverable);
+            }
             // we've already saved the data for the contacts in the household.
             // now we only need to save the account fields an update, and we don't want
             // any of the normal account trigger work to run again.  specifically,
@@ -502,6 +503,7 @@ public with sharing class HH_Container_LCTRL {
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
         // We need to determine if the new Default Address is Undeliverable
         Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
+        defaultAddress.Household_Account__c = hh.Id;
         Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
         if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
             selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
@@ -607,8 +609,14 @@ public with sharing class HH_Container_LCTRL {
         }
     }
 
-    private static Address__c getAddressFromAccount(Id householdId, SObject household){
-        Address__c address = new Address__c(Household_Account__c = householdId);
+    /*******************************************************************************************************
+    * @description Return an Address record with fields copied from the Account
+    * @param householdId The Household Id
+    * @param household An SObject representing the Household
+    * @return Address__c
+    */
+    private static Address__c getAddressFromAccount(Id householdId, SObject household) {
+        Address__c address = new Address__c();
         if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
             // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
             // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
