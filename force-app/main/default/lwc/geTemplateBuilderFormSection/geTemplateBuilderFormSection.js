@@ -112,6 +112,14 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         dispatch(this, 'changeactivesection', this.formSection.id);
     }
 
+    handleKeyUpSelectActiveSection(event) {
+        const spaceKey = event.keyCode === 32;
+        const enterKey = event.keyCode === 13;
+        if (spaceKey || enterKey) {
+            this.handleSelectActiveSection();
+        }
+    }
+
     /*******************************************************************************
     * @description Dispatches an event up to parent component geTemplateBuilderSelectFields
     * to move the FormSection up.

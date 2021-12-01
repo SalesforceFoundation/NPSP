@@ -1,6 +1,8 @@
 <template>
     <article key={formSection.id}
              class={sectionClass}
+             tabindex="0"
+             onkeyup={handleKeyUpSelectActiveSection}
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}
              data-qa-locator={qaLocatorSection}>
