@@ -24,7 +24,8 @@ public with sharing class ListDonation {
     * @date 2021
     * @description method to return Donation History list.
     */
-    public static void getDonationHistory(){
+    @AuraEnabled
+    public static List<DonationHistory> getDonationHistory(){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won'];
         List<DonationHistory> result = verifyCreditCondition(donations);
     }
