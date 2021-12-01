@@ -388,7 +388,7 @@
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
             infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)} ]</a><br />';
-            infoText += '<a href={!URLFOR($Page.REL_RelationshipsViewer)}&id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
+            infoText += '<a href=' + getRelationshipViewerURLForContact(currentContact.id) + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
         }
@@ -418,6 +418,20 @@
                 if (fill) {
                     ctx.fill();
                 }
+            }
+
+            function getRelationshipViewerURLForContact(contactId) {
+                const baseUrl = '{!$Site.BaseUrl}';
+                const pageUrl = '{!URLFOR($Page.REL_RelationshipsViewer)}';
+                let urlObject;
+                if(baseUrl !== '') {
+                    // URLFOR in Sites only returns a relative URL, so we must supply a base URL.
+                    urlObject = new URL(pageUrl, baseUrl);
+                } else {
+                    urlObject = new URL(pageUrl);
+                }
+                urlObject.searchParams.append('id', contactId);
+                return urlObject.href;
             }
         </script>
 
