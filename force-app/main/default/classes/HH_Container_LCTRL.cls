@@ -46,6 +46,7 @@ public with sharing class HH_Container_LCTRL {
     private static Boolean canUpdateAddressUndeliverable = 
         UTIL_Permissions.canRead(Address__c.Undeliverable__c.getDescribe(), false)
             && UTIL_Permissions.canUpdate(Address__c.Undeliverable__c.getDescribe(), false);
+    private static Boolean selectedAddressIsUndeliverable = false; 
 
     /*******************************************************************************************************
     * @description trick the packaging spider to pickup references to custom labels only used by our
@@ -378,6 +379,10 @@ public with sharing class HH_Container_LCTRL {
                 // Due to the complexity of working in both the Household and Account Household models,
                 // we need to skip the security check on the Household field.
                 con2.npo02__Household__c = con.npo02__Household__c;
+                // To perform data syncing, we need to skip the security check on Undeliverable Address
+                if (!con2.is_Address_Override__c) {
+                    con2.Undeliverable_Address__c = selectedAddressIsUndeliverable;
+                }
                 if (con.Id != null) {
                     listUpdate.add(con2);
                 } else {
@@ -417,8 +422,8 @@ public with sharing class HH_Container_LCTRL {
     * @param hh The Household
     * @return void
     */
-    @AuraEnabled
-    public static void updateHousehold(SObject hh) {
+    @TestVisible
+    private static void updateHousehold(SObject hh) {
         try {
             // Check object permissions
             Boolean isHHAccount = UTIL_Describe.isObjectIdThisType(hh.Id, 'Account');
@@ -441,6 +446,9 @@ public with sharing class HH_Container_LCTRL {
             // do FLS and only copy the fields we allow to be touched in our UI
             Set<String> householdFieldsToEdit = getHouseholdFieldsToEdit(isHHAccount, strObject);
             UTIL_Describe.copyObjectFLS(strObject, hh, hhCopy, new List<String>(householdFieldsToEdit));
+
+            // Update Undeliverable field on Account to ensure correct syncing
+            hhCopy.put(UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'), selectedAddressIsUndeliverable);
             
             // we've already saved the data for the contacts in the household.
             // now we only need to save the account fields an update, and we don't want
@@ -492,6 +500,13 @@ public with sharing class HH_Container_LCTRL {
     */
     @AuraEnabled
     public static void saveHouseholdPage(SObject hh, List<Contact> listCon, List<Contact> listConRemove, List<Account>listHHMerge) {
+        // We need to determine if the new Default Address is Undeliverable
+        Address__c defaultAddress = getAddressFromAccount(hh.Id, hh);
+        Map<Address__c, Address__c> addressMatch = Addresses.getExistingAddresses(new List<Address__c>{defaultAddress});
+        if(addressMatch.containsKey(defaultAddress) && addressMatch.get(defaultAddress) != null){
+            selectedAddressIsUndeliverable = addressMatch.get(defaultAddress)?.Undeliverable__c;
+        }
+
         updateHousehold(hh);
         
         // need to merge any households (Accounts only) before we save contacts
@@ -592,6 +607,32 @@ public with sharing class HH_Container_LCTRL {
         }
     }
 
+    private static Address__c getAddressFromAccount(Id householdId, SObject household){
+        Address__c address = new Address__c(Household_Account__c = householdId);
+        if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
+            // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
+            // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
+            //Addresses.copyAddressStdSObjAddr(household, 'Billing', address, null);
+            address.MailingStreet__c = (String)household.get('BillingStreet');
+            Addresses.handleMultilineStreet(address);
+            address.MailingCity__c = (String)household.get('BillingCity');
+            address.MailingState__c = (String)household.get('BillingState');
+            address.MailingPostalCode__c = (String)household.get('BillingPostalCode');
+            address.MailingCountry__c = (String)household.get('BillingCountry');
+            if (canUpdateAddressUndeliverable && canReadAccountUndeliverable) {
+                address.Undeliverable__c = (Boolean)household.get(
+                    UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'));
+            }
+        } else {
+            address.MailingStreet__c = (String)household.get('npo02__MailingStreet__c');
+            address.MailingCity__c = (String)household.get('npo02__MailingCity__c');
+            address.MailingState__c = (String)household.get('npo02__MailingState__c');
+            address.MailingPostalCode__c = (String)household.get('npo02__MailingPostalCode__c');
+            address.MailingCountry__c = (String)household.get('npo02__MailingCountry__c');
+        }
+        return address;
+    }
+
     /*******************************************************************************************************
     * @description returns the Addresses for the given Household.  note that it returns Address objects,
     * even when dealing with Household Objects (in which case it creates in memory address objects for each
@@ -629,29 +670,8 @@ public with sharing class HH_Container_LCTRL {
             List<Contact> listCon = getContacts(householdId);
 
             // copy the household's address
-            Address__c address = new Address__c();
-            if (UTIL_Describe.isObjectIdThisType(householdId, 'Account')) {
-                address = new Address__c();
-                // can't use our utility routine, because we specifically are not querying for StateCode & CountryCode
-                // to avoid those saved codes from interfering with the user's changes (that won't include the codes)
-                //Addresses.copyAddressStdSObjAddr(household, 'Billing', address, null);
-                address.MailingStreet__c = (String)household.get('BillingStreet');
-                Addresses.handleMultilineStreet(address);
-                address.MailingCity__c = (String)household.get('BillingCity');
-                address.MailingState__c = (String)household.get('BillingState');
-                address.MailingPostalCode__c = (String)household.get('BillingPostalCode');
-                address.MailingCountry__c = (String)household.get('BillingCountry');
-                if (canUpdateAddressUndeliverable && canReadAccountUndeliverable) {
-                    address.Undeliverable__c = (Boolean)household.get(
-                        UTIL_Namespace.StrTokenNSPrefix('Undeliverable_Address__c'));
-                }
-            } else {
-                address.MailingStreet__c = (String)household.get('npo02__MailingStreet__c');
-                address.MailingCity__c = (String)household.get('npo02__MailingCity__c');
-                address.MailingState__c = (String)household.get('npo02__MailingState__c');
-                address.MailingPostalCode__c = (String)household.get('npo02__MailingPostalCode__c');
-                address.MailingCountry__c = (String)household.get('npo02__MailingCountry__c');
-            }
+            Address__c address = getAddressFromAccount(householdId, household);
+
             if (existingAddresses == null || existingAddresses.size() == 0) {
                 address.Default_Address__c = true;
             }  // the HH address is the default.

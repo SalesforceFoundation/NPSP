@@ -692,14 +692,17 @@ private class HH_Container_TEST {
 
         System.runAs(adminUser) {
             initTestData();
+            List<Address__c> addresses = buildAddresses(new List<Account>{hhA});
+            insert addresses;
 
             Map<String, String> fieldLabels = HH_Container_LCTRL.getFieldLabels();
             System.assert(String.isBlank(fieldLabels.get('Undeliverable__c')), 'The Label should be blank');
 
             List<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
-            System.assertEquals(2, listAddrA.size());
+            System.assertEquals(3, listAddrA.size());
 
-            System.assertNotEquals(null, HH_Container_LCTRL.getHousehold(hhA.Id));
+            hhA = (Account)HH_Container_LCTRL.getHousehold(hhA.Id);
+            System.assertNotEquals(null, hha);
             List<Contact> hhContacts = HH_Container_LCTRL.getContacts(hhA.Id);
             System.assertEquals(1, hhContacts.size());
 
