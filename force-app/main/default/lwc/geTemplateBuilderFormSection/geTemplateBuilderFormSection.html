@@ -81,6 +81,7 @@
                 </div>
                 <template iterator:it={formSection.elements}>
                     <c-ge-template-builder-form-field key={it.value.id}
+                                                      data-id={it.value.id}
                                                       field={it.value}
                                                       is-first={it.first}
                                                       is-last={it.last}

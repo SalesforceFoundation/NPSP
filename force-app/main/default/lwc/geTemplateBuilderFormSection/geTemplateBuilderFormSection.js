@@ -1,6 +1,8 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
+import { updateFocusFor } from './geTemplateBuilderFormSectionA11yHelpers';
+import { CLICKED_DOWN, CLICKED_UP } from 'c/geConstants';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -146,6 +148,13 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
             fieldName: event.detail
         }
         dispatch(this, 'formelementup', detail);
+
+        setTimeout(() => {
+            const element = this.findElementFor(detail.fieldName);
+            const index = this.findIndexFor(detail.fieldName);
+            const formFieldElement = this.template.querySelector(`[data-id="${element.id}"]`);
+            updateFocusFor(formFieldElement, CLICKED_UP, this.formSection.elements.length, index);
+        }, 0);
     }
 
     /*******************************************************************************
@@ -162,6 +171,27 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
             fieldName: event.detail
         }
         dispatch(this, 'formelementdown', detail);
+
+        setTimeout(() => {
+            const element = this.findElementFor(detail.fieldName);
+            const index = this.findIndexFor(detail.fieldName);
+            const formFieldElement = this.template.querySelector(`[data-id="${element.id}"]`);
+            updateFocusFor(formFieldElement, CLICKED_DOWN, this.formSection.elements.length, index);
+        }, 0);
+    }
+
+    findElementFor(providedName) {
+        return this.formSection.elements.find((element) => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === providedName;
+        });
+    }
+
+    findIndexFor(providedName) {
+        return this.formSection.elements.findIndex((element) => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === providedName;
+        });
     }
 
     /*******************************************************************************

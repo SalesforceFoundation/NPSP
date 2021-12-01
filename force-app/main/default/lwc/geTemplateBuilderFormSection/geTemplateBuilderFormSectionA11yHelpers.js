@@ -1,0 +1,27 @@
+import { CLICKED_DOWN, CLICKED_UP, DOWN, UP } from 'c/geConstants';
+
+const updateFocusFor = (formFieldElement, action, sectionFormFieldsLength, index) => {
+    if (action === CLICKED_DOWN) {
+        const buttonToFocusOn = index < sectionFormFieldsLength - 1
+            ? DOWN
+            : UP;
+            _setFocus(buttonToFocusOn, formFieldElement);
+    }
+
+    if (action === CLICKED_UP) {
+        const buttonToFocusOn = index > 0 ? UP : DOWN;
+        _setFocus(buttonToFocusOn, formFieldElement);
+    }
+}
+
+const _setFocus = (buttonToFocusOn, formFieldElement) => {
+    if (buttonToFocusOn === DOWN) {
+        formFieldElement.focusOnDownButton();
+    }
+
+    if (buttonToFocusOn === UP) {
+        formFieldElement.focusOnUpButton();
+    }
+}
+
+export { updateFocusFor };
