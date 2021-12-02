@@ -4,6 +4,8 @@ import {
     dispatch,
     handleError,
 } from 'c/utilTemplateBuilder';
+import { CLICKED_DOWN, CLICKED_UP } from 'c/geConstants';
+import { updateFocusFor } from './geTemplateBuilderFormFieldsA11yHelpers';
 import { mutable, findIndexByProperty, isEmpty } from 'c/utilCommon';
 import TemplateBuilderService from 'c/geTemplateBuilderService';
 import GeLabelService from 'c/geLabelService';
@@ -640,6 +642,12 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     handleFormSectionUp(event) {
         const sectionId = event.detail;
         dispatch(this, 'formsectionup', sectionId);
+
+        setTimeout(() => {
+            const formSectionIndex = this.findFormSectionIndex(sectionId);
+            const formSectionDomElement = this.template.querySelector(`[data-section-id="${sectionId}"]`);
+            updateFocusFor(formSectionDomElement, CLICKED_UP, this.formSections.length, formSectionIndex);
+        }, 0);
     }
 
     /*******************************************************************************
@@ -652,6 +660,20 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     handleFormSectionDown(event) {
         const sectionId = event.detail;
         dispatch(this, 'formsectiondown', sectionId);
+
+        setTimeout(() => {
+            const formSectionIndex = this.findFormSectionIndex(sectionId);
+            const formSectionDomElement = this.template.querySelector(`[data-section-id="${sectionId}"]`);
+            updateFocusFor(formSectionDomElement, CLICKED_DOWN, this.formSections.length, formSectionIndex);
+        }, 0);
+    }
+
+    findFormSection(sectionId) {
+        return this.formSections.find(section => section.id === sectionId);
+    }
+
+    findFormSectionIndex(sectionId) {
+        return this.formSections.findIndex(section => section.id === sectionId);
     }
 
     /*******************************************************************************

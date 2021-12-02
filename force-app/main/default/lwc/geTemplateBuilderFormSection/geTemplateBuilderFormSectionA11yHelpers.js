@@ -17,10 +17,12 @@ const updateFocusFor = (formFieldElement, action, sectionFormFieldsLength, index
 const _setFocus = (buttonToFocusOn, formFieldElement) => {
     if (buttonToFocusOn === DOWN) {
         formFieldElement.focusOnDownButton();
+        formFieldElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     }
 
     if (buttonToFocusOn === UP) {
         formFieldElement.focusOnUpButton();
+        formFieldElement.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     }
 }
 

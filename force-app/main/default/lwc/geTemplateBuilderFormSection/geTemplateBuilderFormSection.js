@@ -24,7 +24,22 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         if (article) {
             article.focus();
         }
+    }
 
+    @api
+    focusOnDownButton() {
+        const downButton = this.template.querySelector('[data-id="down"]');
+        if (downButton) {
+            downButton.focus();
+        }
+    }
+
+    @api
+    focusOnUpButton() {
+        const upButton = this.template.querySelector('[data-id="up"]');
+        if (upButton) {
+            upButton.focus();
+        }
     }
 
     get isActive() {
