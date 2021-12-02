@@ -386,7 +386,8 @@ public with sharing class HH_Container_LCTRL {
                 // we need to skip the security check on the Household field.
                 con2.npo02__Household__c = con.npo02__Household__c;
                 // To perform data syncing, we need to skip the security check on Undeliverable Address
-                if (!con2.is_Address_Override__c) {
+                // We only want to do this for Contacts without Address Override that are still part of the Household
+                if (!con2.is_Address_Override__c && con2.AccountId != null) {
                     con2.Undeliverable_Address__c = selectedAddressIsUndeliverable;
                 }
                 if (con.Id != null) {
@@ -747,7 +748,7 @@ public with sharing class HH_Container_LCTRL {
                     strKey = new NPSP_Address(addrT).getAddrKey();
                     if (setAddrKey.add(strKey)) {
                         listAddr.add(addrT);
-                    } else if (canUpdateAddressUndeliverable && addrT.Default_Address__c) {
+                    } else if (defaultAddress != null && canUpdateAddressUndeliverable && addrT.Default_Address__c) {
                         // Since the Default address was set via the Household, we need to update it
                         // directly in case the User only has access to the Address Undeliverable field
                         defaultAddress.Undeliverable__c = addrT.Undeliverable__c;

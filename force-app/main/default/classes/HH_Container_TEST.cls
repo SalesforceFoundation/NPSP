@@ -694,7 +694,7 @@ private class HH_Container_TEST {
             initTestData();
             String undeliverableField = UTIL_Namespace.StrTokenNSPrefix('Undeliverable__c');
             Map<String, String> fieldLabels = HH_Container_LCTRL.getFieldLabels();
-            System.assert(String.isBlank(fieldLabels.get(undeliverableField)), 'The Label should be blank');
+            System.assert(!String.isBlank(fieldLabels.get(undeliverableField)), 'The Label should not be blank');
 
             List<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
             System.assertEquals(2, listAddrA.size());
