@@ -108,7 +108,6 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
                 showCloseButton: true,
             }
         };
-        //const detail = { componentName: 'ge-templates', action: 'edit', section: this.formSection };
         dispatch(this, 'togglemodal', detail);
     }
 
