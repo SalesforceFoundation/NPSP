@@ -18,6 +18,14 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @api formSection;
     @api sourceObjectFieldsDescribe;
 
+    @api
+    focus() {
+        const article = this.template.querySelector('article');
+        if (article) {
+            article.focus();
+        }
+
+    }
 
     get isActive() {
         return this.activeFormSectionId === this.formSection.id ? true : false;

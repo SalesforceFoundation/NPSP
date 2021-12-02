@@ -568,6 +568,15 @@ export default class geTemplateBuilderFormFields extends LightningElement {
     */
     addSection(label) {
         dispatch(this, 'addformsection', { label: label });
+
+        setTimeout(() => {
+            const selector = `c-ge-template-builder-form-section[data-section-id="${this.activeFormSectionId}"]`;
+            const activeFormSectionDom = this.template.querySelector(selector);
+            activeFormSectionDom.focus();
+
+            const button = this.template.querySelector('button');
+            button.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+        }, 0);
     }
 
     /*******************************************************************************
