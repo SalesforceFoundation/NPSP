@@ -124,7 +124,10 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
         const spaceKey = event.keyCode === 32;
         const enterKey = event.keyCode === 13;
         if (spaceKey || enterKey) {
-            this.handleSelectActiveSection();
+            const activeElement = this.template.activeElement;
+            if (activeElement && activeElement.getAttribute('data-section-id') === this.formSection.id) {
+                this.handleSelectActiveSection();
+            }
         }
     }
 
