@@ -41,14 +41,13 @@ public with sharing class ListDonation {
     public static List<DonationHistory> verifyCreditCondition(List<OpportunityContactRole> donations){
         List<DonationHistory> donationHistory = new List<DonationHistory>();
         List<DonationHistory> hardCredit = verifyHardCreditCondition(donations);
-        donationHistory.addAll(hardCredit);
-
         List<DonationHistory> softCredit = verifySoftCreditCondition(donations);
-        donationHistory.addAll(softCredit);
-
         List<Id> donationsId = filterVerifiedIds(softCredit, donations);
         List<DonationHistory> partialSoftCredit = verifyPartialSoftCreditCondition(donationsId, donations);
-        donationHistory.addAll(partialSoftCredit);
+        List<DonationHistory> partialAndSoftCredit = verifyPartialAndSoftCreditCondition(softCredit, partialSoftCredit);
+        
+        donationHistory.addAll(hardCredit);
+        donationHistory.addAll(partialAndSoftCredit);
 
         return donationHistory;
     }
@@ -152,5 +151,17 @@ public with sharing class ListDonation {
         system.debug(partialSoftCreditList);
         system.debug(partialSoftCreditList.size());
         return partialSoftCreditList;
+    }
+
+
+    public static List<DonationHistory> verifyPartialAndSoftCreditCondition(List<DonationHistory> soft, List<DonationHistory> partialSoft){
+        List<DonationHistory> partialAndSoftCredit = new List<DonationHistory>();
+        for(DonationHistory opp: soft){
+            if (!partialSoft.contains(opp)) {
+                partialAndSoftCredit.add(opp);
+            }
+        }
+        partialAndSoftCredit.addAll(partialSoft);
+        return partialAndSoftCredit;
     }
 }
