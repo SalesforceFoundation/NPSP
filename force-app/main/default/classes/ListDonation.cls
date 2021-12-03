@@ -27,8 +27,8 @@ public with sharing class ListDonation {
     */
     @AuraEnabled
     public static List<DonationHistory> getDonationHistory(){
-        List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won'];
-        System.debug(donations.size());
+        System.debug('entra');
+        List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won' Limit 50];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
     }
@@ -42,7 +42,7 @@ public with sharing class ListDonation {
         List<DonationHistory> donationHistory = new List<DonationHistory>();
         List<DonationHistory> hardCredit = verifyHardCreditCondition(donations);
         List<DonationHistory> softCredit = verifySoftCreditCondition(donations);
-        List<Id> donationsId = filterVerifiedIds(softCredit, donations);
+        List<Id> donationsId = filterVerifiedIds(softCredit);
         List<DonationHistory> partialSoftCredit = verifyPartialSoftCreditCondition(donationsId, donations);
         List<DonationHistory> partialAndSoftCredit = verifyPartialAndSoftCreditCondition(softCredit, partialSoftCredit);
         
