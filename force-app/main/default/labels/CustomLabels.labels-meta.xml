@@ -9487,6 +9487,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Explore Trailhead</value>
     </labels>
     <labels>
+        <fullName>gseuTrailheadLogoText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component for logo</shortDescription>
+        <value>Trailhead Logo</value>
+    </labels>
+    <labels>
         <fullName>gseuTrailheadText</fullName>
         <categories>End User Get Started Page</categories>
         <language>en_US</language>
