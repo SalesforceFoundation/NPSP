@@ -153,7 +153,11 @@ public with sharing class ListDonation {
         return partialSoftCreditList;
     }
 
-
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to avoid duplicated records for Soft and Partial Soft credits.
+    */
     public static List<DonationHistory> verifyPartialAndSoftCreditCondition(List<DonationHistory> soft, List<DonationHistory> partialSoft){
         List<DonationHistory> partialAndSoftCredit = new List<DonationHistory>();
         for(DonationHistory opp: soft){
