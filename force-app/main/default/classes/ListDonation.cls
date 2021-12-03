@@ -12,6 +12,7 @@ public with sharing class ListDonation {
     public class DonationHistory{
         public Id id { get; set; }
         public String name { get; set; }
+        public Boolean isPrimary { get; set; }
         public Date closeDate { get; set; }
         public String role { get; set; }
         public String creditType { get; set; }
@@ -27,6 +28,7 @@ public with sharing class ListDonation {
     @AuraEnabled
     public static List<DonationHistory> getDonationHistory(){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won'];
+        System.debug(donations.size());
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
     }
@@ -44,7 +46,7 @@ public with sharing class ListDonation {
         List<DonationHistory> softCredit = verifySoftCreditCondition(donations);
         donationHistory.addAll(softCredit);
 
-        List<Id> donationsId = filterVerifiedIds(donationHistory, donations);
+        List<Id> donationsId = filterVerifiedIds(softCredit, donations);
         List<DonationHistory> partialSoftCredit = verifyPartialSoftCreditCondition(donationsId, donations);
         donationHistory.addAll(partialSoftCredit);
 
@@ -63,6 +65,7 @@ public with sharing class ListDonation {
                 DonationHistory hardCredit = new DonationHistory();
                 hardCredit.id = opp.Id;
                 hardCredit.name = opp.Opportunity.Name;
+                hardCredit.isPrimary = opp.isPrimary;
                 hardCredit.closeDate = opp.Opportunity.CloseDate;
                 hardCredit.role = opp.Role;
                 hardCredit.amount = opp.Opportunity.Amount;
@@ -70,6 +73,8 @@ public with sharing class ListDonation {
                 hardCreditList.add(hardCredit);
             }
         }
+        system.debug(hardCreditList);
+        system.debug(hardCreditList.size());
         return hardCreditList;
     }
     
@@ -88,6 +93,7 @@ public with sharing class ListDonation {
                 DonationHistory softCredit = new DonationHistory();
                 softCredit.id = opp.Id;
                 softCredit.name = opp.Opportunity.Name;
+                softCredit.isPrimary = opp.isPrimary;
                 softCredit.closeDate = opp.Opportunity.CloseDate;
                 softCredit.role = opp.Role;
                 softCredit.amount = opp.Opportunity.Amount;
@@ -95,25 +101,22 @@ public with sharing class ListDonation {
                 softCreditList.add(softCredit);
             }
         }
+        system.debug(softCreditList);
+        system.debug(softCreditList.size());
         return softCreditList;
     }
 
     /** 
     * @author Salesforce.org
     * @date 2021
-    * @description Filter for ids already classified.
+    * @description Filter for ids already classified as Soft Credit.
     */
-    public static List<Id> filterVerifiedIds(List<DonationHistory> donationHistory, List<OpportunityContactRole> donations){
+    public static List<Id> filterVerifiedIds(List<DonationHistory> softCredit){
         List<Id> donationsId = new List<Id>();
-        List<Id> donationHistoryList = new List<Id>();
-        for(DonationHistory dh: donationHistory){
-            donationHistoryList.add(dh.id);
+        for(DonationHistory dh: softCredit){
+            donationsId.add(dh.id);
         }
-        for(OpportunityContactRole opp: donations){
-            if (!donationHistoryList.contains(opp.id)) {
-                donationsId.add(opp.Id);
-            }
-        }
+        System.debug(donationsId);
         return donationsId;
     }
 
@@ -125,14 +128,19 @@ public with sharing class ListDonation {
     public static List<DonationHistory> verifyPartialSoftCreditCondition(List<Id> donationsId, List<OpportunityContactRole> donations){
         //search on PartialSoftCredit object for ids filtered before usin IN()
         //only ids with not type of credit defined before
-        List<Partial_Soft_Credit__c> partialSoftCredit = [SELECT id, Amount__c FROM Partial_Soft_Credit__c WHERE Contact_Role_ID__c IN :donationsId];
-        Set<Id> resultIds = (new Map<Id,Partial_Soft_Credit__c>(partialSoftCredit)).keySet();
+        List<Id> partialSoftCreditIds = new List<Id>();
+        List<Partial_Soft_Credit__c> partialSoftCredit = [SELECT id, Amount__c, Contact_Role_ID__c FROM Partial_Soft_Credit__c WHERE Contact_Role_ID__c IN :donationsId];
+        for(Partial_Soft_Credit__c ps: partialSoftCredit){
+            partialSoftCreditIds.add(ps.Contact_Role_ID__c);
+        }
         List<DonationHistory> partialSoftCreditList = new List<DonationHistory>();
+        System.debug(partialSoftCreditIds);
         for(OpportunityContactRole opp: donations){
-            if (resultIds.contains(opp.id)) {
+            if (partialSoftCreditIds.contains(opp.id)) {
                 DonationHistory newPartialSoftCredit = new DonationHistory();
                 newPartialSoftCredit.id = opp.Id;
                 newPartialSoftCredit.name = opp.Opportunity.Name;
+                newPartialSoftCredit.isPrimary = opp.isPrimary;
                 newPartialSoftCredit.closeDate = opp.Opportunity.CloseDate;
                 newPartialSoftCredit.role = opp.Role;
                 newPartialSoftCredit.creditType = PARTIAL_SOFT_CREDIT;
@@ -141,6 +149,8 @@ public with sharing class ListDonation {
                 partialSoftCreditList.add(newPartialSoftCredit);
             }
         }
+        system.debug(partialSoftCreditList);
+        system.debug(partialSoftCreditList.size());
         return partialSoftCreditList;
     }
 }
