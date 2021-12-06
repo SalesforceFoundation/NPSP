@@ -4,14 +4,4 @@
     <isExposed>true</isExposed>
     <masterLabel>Given Summary</masterLabel>
     <description>Component for displaying the given Summary</description>
-    <targets>
-        <target>lightning__RecordPage</target>
-    </targets>
-    <targetConfigs>
-      <targetConfig targets="lightning__RecordPage">
-          <objects>
-              <object>Contact</object>
-          </objects>
-      </targetConfig>
-  </targetConfigs>
 </LightningComponentBundle>

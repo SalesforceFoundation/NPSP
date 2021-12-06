@@ -12,6 +12,8 @@ const FormFactorType = Object.freeze({
     Small: 'Small',
 });
 
+const MOBILE_CLASSES = 'slds-text-align_center slds-border_bottom slds-text-heading_small slds-var-p-around_medium';
+const DESKTOP_CLASSES = 'slds-text-align_center slds-border_right slds-text-heading_small';
 export default class GivingSummary extends LightningElement {
     labels = {
         donorsGivenSummary,
@@ -25,17 +27,20 @@ export default class GivingSummary extends LightningElement {
     previousYear = 0;
 
     @api
-    recordId
+    contactId
 
     formFactor = FORM_FACTOR;
 
     connectedCallback() {
-        getContact({contactId: this.recordId}).then(contact => this.parseContact(contact));
+        getContact({contactId: this.contactId}).then(contact => this.parseContact(contact));
         
     }
 
+    /**
+     * get the contact from the database and populate the filds that are going to be populated.
+     * @param {*} contact theContact to parse
+     */
     parseContact(contact) {
-        console.info(JSON.parse(JSON.stringify(contact)));
         this.lifetimeSummary = contact.npo02__TotalOppAmount__c;
         this.thisYear = contact.npo02__OppAmountThisYear__c;
         this.previousYear = contact.npo02__OppAmountLastYear__c;
@@ -45,9 +50,9 @@ export default class GivingSummary extends LightningElement {
      */
     get rowClasses() {
         if (this.isMobile) {
-            return 'slds-text-align_center slds-border_bottom slds-text-heading_small slds-var-p-around_medium';
+            return MOBILE_CLASSES;
         }
-        return 'slds-text-align_center slds-border_right slds-text-heading_small';
+        return DESKTOP_CLASSES
     }
 
     /**
