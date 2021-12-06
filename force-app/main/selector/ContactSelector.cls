@@ -62,6 +62,25 @@ public inherited sharing class ContactSelector {
         return Database.Query(householdMembersQueryFor(queryHHIds));
     }
 
+    /*********************************
+     * @description Returns the Contact associated with the userId
+     * @param contactId Id of the contact
+     * @returns Contact the contact who is associated with the user
+     */
+    public Contact getContactForUser(Id contactId) {
+        if (!Schema.SObjectType.Contact.isAccessible()) {
+            throw new NoAccessException();
+        }
+
+        return [SELECT ID,
+                       npo02__TotalOppAmount__c,
+                       npo02__OppAmountThisYear__c,
+                       npo02__OppAmountLastYear__c 
+                FROM   Contact
+                WHERE  ID = :contactId WITH SECURITY_ENFORCED 
+                LIMIT 1];
+    }
+
     private String householdMembersQueryFor(Set<Id> queryHHIds) {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order

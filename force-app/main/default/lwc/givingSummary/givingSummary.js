@@ -1,17 +1,18 @@
-import { LightningElement } from 'lwc';
+import { api, LightningElement } from 'lwc';
 import donorsGivenSummary from '@salesforce/label/c.donorsGivenSummary';
 import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
 import FORM_FACTOR from '@salesforce/client/formFactor';
-
+import getContact from '@salesforce/apex/GivingSummaryController.getContactForUser'
+import pscManageSoftCreditsContactMissing from '@salesforce/label/c.pscManageSoftCreditsContactMissing';
 const FormFactorType = Object.freeze({
     Large: 'Large',
     Medium: 'Medium',
     Small: 'Small',
 });
 
-export default class GivenSummary extends LightningElement {
+export default class GivingSummary extends LightningElement {
     labels = {
         donorsGivenSummary,
         donorsLifetime,
@@ -19,8 +20,26 @@ export default class GivenSummary extends LightningElement {
         donorsPreviousYear,
     };
 
+    lifetimeSummary = 0;
+    thisYear = 0;
+    previousYear = 0;
+
+    @api
+    recordId
+
     formFactor = FORM_FACTOR;
 
+    connectedCallback() {
+        getContact({contactId: this.recordId}).then(contact => this.parseContact(contact));
+        
+    }
+
+    parseContact(contact) {
+        console.info(JSON.parse(JSON.stringify(contact)));
+        this.lifetimeSummary = contact.npo02__TotalOppAmount__c;
+        this.thisYear = contact.npo02__OppAmountThisYear__c;
+        this.previousYear = contact.npo02__OppAmountLastYear__c;
+    }
     /**
      * @description Returns the classes to be applied to the rows accordling if it is mobile or desktop
      */

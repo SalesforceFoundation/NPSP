@@ -1362,6 +1362,38 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>donorsGivenSummary</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Component title</shortDescription>
+        <value>Given Summary</value>
+    </labels>
+    <labels>
+        <fullName>donorsLifetime</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for lifetime donations</shortDescription>
+        <value>Lifetime</value>
+    </labels>
+    <labels>
+        <fullName>donorsPreviousYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for previous years donations</shortDescription>
+        <value>Previous Year</value>
+    </labels>
+    <labels>
+        <fullName>donorsThisYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for this years donations</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
         <fullName>EPAddTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
