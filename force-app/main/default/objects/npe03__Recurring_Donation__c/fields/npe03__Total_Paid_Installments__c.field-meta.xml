@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>npe03__Total_Paid_Installments__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Total number of installment Opportunities paid on this Recurring Donation (read only).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Total number of installment Opportunities paid on this Recurring Donation (read only).</inlineHelpText>
+    <label>Number Of Paid Installments</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

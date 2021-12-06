@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Enhanced_Recurring_Donations</fullName>
+    <fields>Name</fields>
+    <fields>npe03__Amount__c</fields>
+    <fields>npe03__Installment_Period__c</fields>
+    <fields>InstallmentFrequency__c</fields>
+    <fields>npe03__Next_Payment_Date__c</fields>
+    <fields>Status__c</fields>
+    <label>Enhanced Recurring Donations</label>
+</CompactLayout>

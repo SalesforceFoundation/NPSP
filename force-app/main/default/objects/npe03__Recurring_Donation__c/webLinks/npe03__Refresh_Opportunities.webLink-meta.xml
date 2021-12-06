@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>npe03__Refresh_Opportunities</fullName>
+    <availability>online</availability>
+    <description>Run the check opp routine for Recurring Donations</description>
+    <displayType>button</displayType>
+    <encodingKey>UTF-8</encodingKey>
+    <linkType>url</linkType>
+    <masterLabel>Refresh Opportunities</masterLabel>
+    <openType>replace</openType>
+    <protected>false</protected>
+    <url>{!URLFOR(&apos;/apex/npsp__RD_AddDonationsBTN?id=&apos; + npe03__Recurring_Donation__c.Id)}</url>
+</WebLink>
