@@ -115,7 +115,6 @@ public with sharing class ListDonation {
         for(DonationHistory dh: softCredit){
             donationsId.add(dh.id);
         }
-        System.debug(donationsId);
         return donationsId;
     }
 
@@ -133,7 +132,6 @@ public with sharing class ListDonation {
             partialSoftCreditIds.add(ps.Contact_Role_ID__c);
         }
         List<DonationHistory> partialSoftCreditList = new List<DonationHistory>();
-        System.debug(partialSoftCreditIds);
         for(OpportunityContactRole opp: donations){
             if (partialSoftCreditIds.contains(opp.id)) {
                 DonationHistory newPartialSoftCredit = new DonationHistory();
