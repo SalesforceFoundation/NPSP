@@ -33,9 +33,9 @@ describe('c-giving-summary', () => {
         return flushPromises().then(() => {
             expect(
                 element.shadowRoot.querySelector('lightning-card')
-            ).toBeTruthy();
+            ).toBeDefined();
             console.info(element.shadowRoot.querySelector('.lifetime').innerHTML);
-            expect(element.shadowRoot.querySelector('.lifetime')).toBeTruthy();
+            expect(element.shadowRoot.querySelector('.lifetime')).toBeDefined();
             const value = element.shadowRoot.querySelector('lightning-formatted-number').value;
             expect(value).toBe('7000');
 
