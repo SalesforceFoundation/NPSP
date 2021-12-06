@@ -181,8 +181,8 @@ public with sharing class ContactService {
      * @param contactId Id the contact id
      * @returns Contact
      */
-    public Contact getContactForUser(Id contactId) {
-        return new ContactSelector().getContactForUser(contactId);
+    public Contact getDonationsSummaryForContacts(Id contactId) {
+        return new ContactSelector().getDonationsSummaryForContact(contactId);
     }
 
     public List<Id> moveOppsForContactsSwitchingAccounts(Contacts contacts) {

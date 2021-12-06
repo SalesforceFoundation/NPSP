@@ -4,8 +4,7 @@ import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
 import FORM_FACTOR from '@salesforce/client/formFactor';
-import getContact from '@salesforce/apex/GivingSummaryController.getContactForUser'
-import pscManageSoftCreditsContactMissing from '@salesforce/label/c.pscManageSoftCreditsContactMissing';
+import getDonationsSummary from '@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact'
 const FormFactorType = Object.freeze({
     Large: 'Large',
     Medium: 'Medium',
@@ -32,7 +31,7 @@ export default class GivingSummary extends LightningElement {
     formFactor = FORM_FACTOR;
 
     connectedCallback() {
-        getContact({contactId: this.contactId}).then(contact => this.parseContact(contact));
+        getDonationsSummary({contactId: this.contactId}).then(contact => this.parseContact(contact));
         
     }
 

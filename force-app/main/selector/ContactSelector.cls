@@ -63,11 +63,11 @@ public inherited sharing class ContactSelector {
     }
 
     /*********************************
-     * @description Returns the Contact associated with the userId
+     * @description Returns a Contact with the donations summary
      * @param contactId Id of the contact
-     * @returns Contact the contact who is associated with the user
+     * @returns Returns a Contact with the donations summary
      */
-    public Contact getContactForUser(Id contactId) {
+    public Contact getDonationsSummaryForContact(Id contactId) {
         if (!Schema.SObjectType.Contact.isAccessible()) {
             throw new NoAccessException();
         }

@@ -1,6 +1,6 @@
 import { createElement } from 'lwc';
 import GivenSummary from '../givingSummary';
-import getContact from '@salesforce/apex/GivingSummaryController.getContactForUser'
+import getDonationsSummary from '@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact'
 
 const THE_RETURNED_CONTACT = {
     npo02__TotalOppAmount__c : "7000",
@@ -8,7 +8,7 @@ const THE_RETURNED_CONTACT = {
     npo02__OppAmountLastYear__c : "1000"
 }
 
-jest.mock('@salesforce/apex/GivingSummaryController.getContactForUser', () => {
+jest.mock('@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact', () => {
     return {
         default: jest.fn()
     };
@@ -27,7 +27,7 @@ describe('c-giving-summary', () => {
     });
 
     it('displays three fields on the component', () => {
-        getContact.mockResolvedValue(THE_RETURNED_CONTACT);
+        getDonationsSummary.mockResolvedValue(THE_RETURNED_CONTACT);
         const element = createElement('c-giving-summary', { is: GivenSummary });
         document.body.appendChild(element);
         return flushPromises().then(() => {
