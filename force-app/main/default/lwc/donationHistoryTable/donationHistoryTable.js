@@ -1,4 +1,5 @@
-import { LightningElement } from 'lwc';
+import ContactId from '@salesforce/schema/Case.ContactId';
+import { api, LightningElement } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 //TODO: set custom label for datatable aria label
 
@@ -16,8 +17,13 @@ const columns = [
 
 
 export default class DonationHistoryTable extends LightningElement {
+    @api
+    contactId;
+
     data = [];
+
     columns = columns;
+    
     totalNumberOfRows = MOCK_DATA.length;
     
     // eslint-disable-next-line @lwc/lwc/no-async-await

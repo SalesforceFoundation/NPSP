@@ -3,8 +3,5 @@
     <apiVersion>52.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Donation History Table</masterLabel>
-    <targets>
-        <target>lightningCommunity__Default</target>
-        <target>lightningCommunity__Page</target>
-    </targets>
+    <description>Component for displaying the history of donations</description>
 </LightningComponentBundle>

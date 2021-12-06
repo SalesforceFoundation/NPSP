@@ -9,10 +9,10 @@ function flushPromises() {
     return new Promise((resolve) => setImmediate(resolve));
   }
   
-  describe('c-my-profile', () => {
+  describe('c-donation-history-table', () => {
     afterEach(()=>{
       // clean mock functions
-      jest.clearAllMocks();
+      clearDOM();
       
       // The jsdom instance is shared across test cases in a single file so reset the DOM
       while(document.body.firstChild) {
