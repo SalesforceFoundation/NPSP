@@ -11,6 +11,8 @@ jest.mock('c/geTemplateBuilderService', () => {
         fieldMappingByDevName: {}
     };
 });
+const scrollIntoViewMock = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = scrollIntoViewMock;
 
 describe('c-ge-template-builder-form-section', () => {
 
