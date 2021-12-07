@@ -154,9 +154,10 @@ public with sharing class ListDonation {
     * @description Method to avoid duplicated records for Soft and Partial Soft credits.
     */
     public static List<DonationHistory> verifyPartialAndSoftCreditCondition(List<DonationHistory> soft, List<DonationHistory> partialSoft){
+        List<Id> partialSoftCreditIds = filterVerifiedIds(partialSoft);
         List<DonationHistory> partialAndSoftCredit = new List<DonationHistory>();
         for(DonationHistory opp: soft){
-            if (!partialSoft.contains(opp)) {
+            if (!partialSoftCreditIds.contains(opp.id)) {
                 partialAndSoftCredit.add(opp);
             }
         }
