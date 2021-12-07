@@ -17,7 +17,7 @@ public with sharing class ListDonation {
         public String role { get; set; }
         public String creditType { get; set; }
         public Decimal amount { get; set; }
-        //public String paymentMethod { get; set; }
+        public String paymentMethod { get; set; }
     }
 
     /** 
@@ -26,9 +26,9 @@ public with sharing class ListDonation {
     * @description method to return Donation History list.
     */
     @AuraEnabled
-    public static List<DonationHistory> getDonationHistory(){
+    public static List<DonationHistory> getDonationHistory(Id contactId){
         System.debug('entra');
-        List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won' order by Opportunity.CloseDate desc Limit 50 ];
+        List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won' AND ContactId =: contactId order by Opportunity.CloseDate desc Limit 50 ];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
     }
@@ -69,11 +69,10 @@ public with sharing class ListDonation {
                 hardCredit.role = opp.Role;
                 hardCredit.amount = opp.Opportunity.Amount;
                 hardCredit.creditType = HARD_CREDIT;
+                hardCredit.paymentMethod = 'Cash';
                 hardCreditList.add(hardCredit);
             }
         }
-        system.debug(hardCreditList);
-        system.debug(hardCreditList.size());
         return hardCreditList;
     }
     
@@ -97,11 +96,10 @@ public with sharing class ListDonation {
                 softCredit.role = opp.Role;
                 softCredit.amount = opp.Opportunity.Amount;
                 softCredit.creditType = SOFT_CREDIT;
+                softCredit.paymentMethod = 'Cash';
                 softCreditList.add(softCredit);
             }
         }
-        system.debug(softCreditList);
-        system.debug(softCreditList.size());
         return softCreditList;
     }
 
@@ -141,13 +139,12 @@ public with sharing class ListDonation {
                 newPartialSoftCredit.closeDate = opp.Opportunity.CloseDate;
                 newPartialSoftCredit.role = opp.Role;
                 newPartialSoftCredit.creditType = PARTIAL_SOFT_CREDIT;
+                newPartialSoftCredit.paymentMethod = 'Cash';
                 //TODO: change for Amount__c get on partialSoftCredit query
                 newPartialSoftCredit.amount = opp.Opportunity.Amount;
                 partialSoftCreditList.add(newPartialSoftCredit);
             }
         }
-        system.debug(partialSoftCreditList);
-        system.debug(partialSoftCreditList.size());
         return partialSoftCreditList;
     }
 
