@@ -34,7 +34,7 @@
 */
 public inherited sharing class HouseholdSelector {
 
-    private List<Account> getAccounts(Set<Id> accountIds) {
+    private List<Account> getHouseholdAccountsWithContactsAndSingleOpp(Set<Id> accountIds) {
         List<Account> accounts = [
                 SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, (
                         SELECT Id, AccountId,
@@ -54,7 +54,7 @@ public inherited sharing class HouseholdSelector {
     }
 
     public List<Account> findByIds(Set<Id> ids){
-        return getAccounts(ids);
+        return getHouseholdAccountsWithContactsAndSingleOpp(ids);
     }
 
 }
