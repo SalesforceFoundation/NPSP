@@ -476,7 +476,10 @@
         con.MailingState = addr.MailingState__c;
         con.MailingPostalCode = addr.MailingPostalCode__c;
         con.MailingCountry = addr.MailingCountry__c;
-        con.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
+        // If Undeliverable Address information was passed from Apex for both objects, show the status
+        if(con.hasOwnProperty('Undeliverable_Address__c') && addr.hasOwnProperty('Undeliverable__c')){
+            con.Undeliverable_Address__c = addr.Undeliverable__c === undefined ? false : addr.Undeliverable__c;
+        }
     },
 
     /*******************************************************************************************************

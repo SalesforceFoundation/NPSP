@@ -325,7 +325,7 @@ public with sharing class HH_Container_LCTRL {
     * @return void
     */
     private static void addContactUndeliverableAddressField(Set<String> fieldNames) {   
-        if (canReadContactUndeliverable) {
+        if (canUpdateAddressUndeliverable && canReadContactUndeliverable) {
             fieldNames.add(undeliverableAddressField);
         }
     }
