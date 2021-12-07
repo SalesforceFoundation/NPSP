@@ -27,7 +27,6 @@ public with sharing class ListDonation {
     */
     @AuraEnabled
     public static List<DonationHistory> getDonationHistory(Id contactId){
-        System.debug('entra');
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary FROM OpportunityContactRole WHERE Opportunity.StageName = 'Closed Won' AND ContactId =: contactId order by Opportunity.CloseDate desc Limit 50 ];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
