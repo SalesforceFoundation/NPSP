@@ -48,6 +48,7 @@ public inherited sharing class HouseholdSelector {
                 )
                 FROM Account
                 WHERE Id IN :accountIds
+                AND npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
         ];
         return accounts;
     }
