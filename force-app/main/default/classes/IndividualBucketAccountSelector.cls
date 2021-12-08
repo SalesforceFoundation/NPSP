@@ -30,33 +30,20 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description The Individual Bucket Account Entity in NPSP.
+* @description The Individual Bucket Account Selector implementation.
 */
-public inherited sharing class IndividualBucketAccount {
+public inherited sharing class IndividualBucketAccountSelector
+        implements IIndividualBucketAccountSelector {
 
-    @TestVisible
-    private static IIndividualBucketAccountSelector selector {
-        get {
-            if (selector == null) {
-                selector = new IndividualBucketAccountSelector();
-            }
-            return selector;
-        }
-        private set;
-    }
-
-    private Account record;
-
-    public static IndividualBucketAccount getInstance() {
-        Account bucketAccount = selector.getIndividualBucketAccount();
-        return new IndividualBucketAccount(bucketAccount);
-    }
-
-    private IndividualBucketAccount(Account anAccount) {
-        this.record = anAccount;
-    }
-
-    public String name() {
-        return record?.Name;
+    public Account getIndividualBucketAccount() {
+        List<Account> accounts = [
+                SELECT Name
+                FROM Account
+                WHERE npe01__SYSTEMIsIndividual__c = TRUE
+                AND npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE
+                LIMIT 1
+        ];
+        Account bucketAccount = (accounts.size() == 1) ? accounts.get(0) : null;
+        return bucketAccount;
     }
 }

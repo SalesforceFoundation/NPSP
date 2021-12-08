@@ -30,33 +30,15 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description The Individual Bucket Account Entity in NPSP.
+* @description Interface defining the selector for the
+* Individual Bucket Account, which is used in conjunction with
+* Legacy Households and the Individual Bucket Account model.
 */
-public inherited sharing class IndividualBucketAccount {
+public interface IIndividualBucketAccountSelector {
 
-    @TestVisible
-    private static IIndividualBucketAccountSelector selector {
-        get {
-            if (selector == null) {
-                selector = new IndividualBucketAccountSelector();
-            }
-            return selector;
-        }
-        private set;
-    }
-
-    private Account record;
-
-    public static IndividualBucketAccount getInstance() {
-        Account bucketAccount = selector.getIndividualBucketAccount();
-        return new IndividualBucketAccount(bucketAccount);
-    }
-
-    private IndividualBucketAccount(Account anAccount) {
-        this.record = anAccount;
-    }
-
-    public String name() {
-        return record?.Name;
-    }
+    /**
+     * @return The Account that is configured to be the
+     * Application's Individual Bucket Account.
+     */
+    Account getIndividualBucketAccount();
 }

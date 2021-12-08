@@ -59,4 +59,16 @@ private class IndividualBucketAccountTests_TEST {
                 bucketAccount.name(),
                 'The name of the Bucket Account should not change after deleting a Contact.');
     }
+
+    @IsTest
+    static void instance_name_property_is_null_when_account_not_yet_created() {
+        // Arrange: GIVEN the Bucket Account does not yet exist
+        // Act: WHEN the name property is referenced
+        String bucketAccountName = IndividualBucketAccount.getInstance().name();
+
+        // Assert: THEN the name is null and a Null Pointer Exception is not encountered
+        System.assertEquals(null, bucketAccountName,
+                'The name of the Bucket Account should be null since the Bucket Account ' +
+                        'does not yet exist.');
+    }
 }
