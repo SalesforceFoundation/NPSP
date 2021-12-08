@@ -43,14 +43,14 @@ private class IndividualBucketAccountTests_TEST {
                         (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
 
         // Arrange: AND the Bucket Account has multiple child Contacts
-        Contact c1 = new Contact(LastName = 'testCon1');
-        Contact c2 = new Contact(LastName = 'testCon2');
+        Contact orgContact1 = new Contact(LastName = 'testCon1');
+        Contact orgContact2 = new Contact(LastName = 'testCon2');
         insert new List<Contact>{
-                c1, c2
+                orgContact1, orgContact2
         };
 
         // Act: WHEN one of the Contacts is deleted
-        delete c2;
+        delete orgContact2;
 
         // Assert: THEN the Individual Bucket Account should not be renamed
         IndividualBucketAccount bucketAccount = IndividualBucketAccount.getInstance();

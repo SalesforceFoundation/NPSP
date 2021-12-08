@@ -36,7 +36,8 @@
 private class OrganizationAccountTests_TEST {
 
     private static Id organizationRecordTypeId =
-            Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get('Organization')
+            Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName()
+                    .get('Organization')
                     .getRecordTypeId();
 
     private static Account orgAccount(String name) {
@@ -51,14 +52,14 @@ private class OrganizationAccountTests_TEST {
         // Arrange: GIVEN an Org Account with multiple child Contacts
         Account orgAccount = orgAccount('testOrgAccount');
         insert orgAccount;
-        Contact c1 = new Contact(LastName = 'testCon1', AccountId = orgAccount.Id);
-        Contact c2 = new Contact(LastName = 'testCon2', AccountId = orgAccount.Id);
+        Contact orgContact1 = new Contact(LastName = 'testCon1', AccountId = orgAccount.Id);
+        Contact orgContact2 = new Contact(LastName = 'testCon2', AccountId = orgAccount.Id);
         insert new List<Contact>{
-                c1, c2
+                orgContact1, orgContact2
         };
 
         // Act: WHEN one of the Contacts is deleted
-        delete c2;
+        delete orgContact2;
 
         // Assert: THEN the Org Account should not be renamed
         List<Account> orgAccounts = getOrgAccounts();
@@ -76,13 +77,12 @@ private class OrganizationAccountTests_TEST {
     }
 
     @IsTest
-    static void merge_a_household_member_should_not_rename_org_account() {
+    static void merge_in_one_household_member_should_not_rename_org_account() {
         // Arrange: GIVEN an Org Account with multiple child Contacts
         Account orgAccount = orgAccount('testOrgAccount');
         insert orgAccount;
         Contact orgContact1 = new Contact(LastName = 'testCon1', AccountId = orgAccount.Id);
         Contact orgContact2 = new Contact(LastName = 'testCon2', AccountId = orgAccount.Id);
-
         // AND a Household Account Member
         Contact householdContact = TEST_ContactBuilder.dummyContact();
         insert new List<Contact>{
@@ -90,14 +90,15 @@ private class OrganizationAccountTests_TEST {
         };
 
         // Act: WHEN the Household Contact is merged into the Org Account via Contact merge
-        CON_ContactMerge.mergeContacts(orgContact1, new List<Contact>{householdContact});
+        CON_ContactMerge.mergeContacts(orgContact1, new List<Contact>{
+                householdContact
+        });
 
         // Assert: THEN the Org Account should not be renamed
         List<Account> orgAccounts = getOrgAccounts();
         System.assertEquals('testOrgAccount', orgAccounts.get(0).Name,
                 'The name of the Org Account should not change after merging in a' +
                         'Household Contact.');
-
         // AND the winning Contact should still be in the same Org Account
         Contact mergeWinnerContact = getContact(orgContact1);
         System.assertEquals(orgAccount.Id, mergeWinnerContact.AccountId,
@@ -105,12 +106,12 @@ private class OrganizationAccountTests_TEST {
     }
 
     private static Contact getContact(Contact c1) {
-        List<Contact> mergeWinnerContacts = [
+        List<Contact> contacts = [
                 SELECT AccountId
                 FROM Contact
                 WHERE Id = :c1.Id
         ];
-        Contact mergeWinnerContact = (mergeWinnerContacts.size() == 1) ? mergeWinnerContacts.get(0) : null;
-        return mergeWinnerContact;
+        Contact queriedContact = (contacts.size() == 1) ? contacts.get(0) : null;
+        return queriedContact;
     }
 }
