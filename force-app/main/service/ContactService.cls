@@ -176,15 +176,6 @@ public with sharing class ContactService {
         }
     }
 
-    /**
-     * @description Returns the Contact for the ContactId
-     * @param contactId Id the contact id
-     * @returns Contact
-     */
-    public Contact getDonationsSummaryForContacts(Id contactId) {
-        return new ContactSelector().getDonationsSummaryForContact(contactId);
-    }
-
     public List<Id> moveOppsForContactsSwitchingAccounts(Contacts contacts) {
         Map<Id, Id> oldHouseholdIdByContactId = new Map<Id, Id>();
         Map<Id, Id> newHouseholdIdByContactId = new Map<Id, Id>();

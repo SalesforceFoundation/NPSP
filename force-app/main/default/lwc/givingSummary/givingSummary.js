@@ -5,6 +5,7 @@ import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
 import FORM_FACTOR from '@salesforce/client/formFactor';
 import getDonationsSummary from '@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact'
+
 const FormFactorType = Object.freeze({
     Large: 'Large',
     Medium: 'Medium',
@@ -13,6 +14,7 @@ const FormFactorType = Object.freeze({
 
 const MOBILE_CLASSES = 'slds-text-align_center slds-border_bottom slds-text-heading_small slds-var-p-around_medium';
 const DESKTOP_CLASSES = 'slds-text-align_center slds-border_right slds-text-heading_small';
+
 export default class GivingSummary extends LightningElement {
     labels = {
         donorsGivenSummary,
@@ -25,8 +27,7 @@ export default class GivingSummary extends LightningElement {
     thisYear = 0;
     previousYear = 0;
 
-    @api
-    contactId
+    @api contactId
 
     formFactor = FORM_FACTOR;
 

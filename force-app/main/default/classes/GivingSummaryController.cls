@@ -36,6 +36,6 @@ public with sharing class GivingSummaryController {
 
     @AuraEnabled
     public static Contact getDonationsSummaryForContact(Id contactId) {
-      return new ContactService().getDonationsSummaryForContacts(contactId);
+      return new ContactSelector().getDonationsSummaryForContact(contactId);
     }
 }

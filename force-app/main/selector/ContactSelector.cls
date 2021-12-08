@@ -62,12 +62,7 @@ public inherited sharing class ContactSelector {
         return Database.Query(householdMembersQueryFor(queryHHIds));
     }
 
-    /*********************************
-     * @description Returns a Contact with the donations summary
-     * @param contactId Id of the contact
-     * @returns Returns a Contact with the donations summary
-     */
-    public Contact getDonationsSummaryForContact(Id contactId) {
+     public Contact getDonationsSummaryForContact(Id contactId) {
         if (!Schema.SObjectType.Contact.isAccessible()) {
             throw new NoAccessException();
         }
