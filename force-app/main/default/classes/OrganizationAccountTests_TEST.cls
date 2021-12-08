@@ -74,4 +74,43 @@ private class OrganizationAccountTests_TEST {
         ];
         return orgAccounts;
     }
+
+    @IsTest
+    static void merge_a_household_member_should_not_rename_org_account() {
+        // Arrange: GIVEN an Org Account with multiple child Contacts
+        Account orgAccount = orgAccount('testOrgAccount');
+        insert orgAccount;
+        Contact orgContact1 = new Contact(LastName = 'testCon1', AccountId = orgAccount.Id);
+        Contact orgContact2 = new Contact(LastName = 'testCon2', AccountId = orgAccount.Id);
+
+        // AND a Household Account Member
+        Contact householdContact = TEST_ContactBuilder.dummyContact();
+        insert new List<Contact>{
+                orgContact1, orgContact2, householdContact
+        };
+
+        // Act: WHEN the Household Contact is merged into the Org Account via Contact merge
+        CON_ContactMerge.mergeContacts(orgContact1, new List<Contact>{householdContact});
+
+        // Assert: THEN the Org Account should not be renamed
+        List<Account> orgAccounts = getOrgAccounts();
+        System.assertEquals('testOrgAccount', orgAccounts.get(0).Name,
+                'The name of the Org Account should not change after merging in a' +
+                        'Household Contact.');
+
+        // AND the winning Contact should still be in the same Org Account
+        Contact mergeWinnerContact = getContact(orgContact1);
+        System.assertEquals(orgAccount.Id, mergeWinnerContact.AccountId,
+                'The winning Contact should not be removed from its Org Account.');
+    }
+
+    private static Contact getContact(Contact c1) {
+        List<Contact> mergeWinnerContacts = [
+                SELECT AccountId
+                FROM Contact
+                WHERE Id = :c1.Id
+        ];
+        Contact mergeWinnerContact = (mergeWinnerContacts.size() == 1) ? mergeWinnerContacts.get(0) : null;
+        return mergeWinnerContact;
+    }
 }
