@@ -199,7 +199,7 @@
                                                 }                                               
                                 
                                                 if (!relatedNode) {
-                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex]})
+                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex], colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName})
                                                 }
                                                 // only add edge ifthe relationship is not already drawn
                                                 if (particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
