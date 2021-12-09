@@ -50,7 +50,9 @@ private class IndividualBucketAccountTests_TEST {
         };
 
         // Act: WHEN one of the Contacts is deleted
+        Test.startTest();
         delete orgContact2;
+        Test.stopTest();
 
         // Assert: THEN the Individual Bucket Account should not be renamed
         IndividualBucketAccount bucketAccount = IndividualBucketAccount.getInstance();

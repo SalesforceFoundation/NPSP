@@ -59,7 +59,9 @@ private class OrganizationAccountTests_TEST {
         };
 
         // Act: WHEN one of the Contacts is deleted
+        Test.startTest();
         delete orgContact2;
+        Test.stopTest();
 
         // Assert: THEN the Org Account should not be renamed
         List<Account> orgAccounts = getOrgAccounts();
@@ -90,9 +92,11 @@ private class OrganizationAccountTests_TEST {
         };
 
         // Act: WHEN the Household Contact is merged into the Org Account via Contact merge
+        Test.startTest();
         CON_ContactMerge.mergeContacts(orgContact1, new List<Contact>{
                 householdContact
         });
+        Test.stopTest();
 
         // Assert: THEN the Org Account should not be renamed
         List<Account> orgAccounts = getOrgAccounts();
