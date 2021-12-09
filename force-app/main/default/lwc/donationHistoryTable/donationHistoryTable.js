@@ -20,6 +20,7 @@ export default class DonationHistoryTable extends LightningElement {
     //verificar esto
     @wire(getObjectInfo, { objectApiName: DataImport__c }) 
     oppInfo({ data, error }) {
+        console.log(data.fields.Payment_Method__c.label);
         if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
     }
     ;
