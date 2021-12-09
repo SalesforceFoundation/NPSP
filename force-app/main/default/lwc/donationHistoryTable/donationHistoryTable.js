@@ -21,19 +21,18 @@ export default class DonationHistoryTable extends LightningElement {
 
     @wire(getObjectInfo, { objectApiName: PAYMENT_LABEL })
     oppInfo({ data, error }) {
-        if(data) {
-            columns = [
-                { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
-                    year: "numeric",
-                    month: "short",
-                    day: "2-digit"
-                },
-                cellAttributes: { alignment: 'right' }},
-                { label: donorLabel, fieldName: 'donor', type: 'text' },
-                { label: commonAmount, fieldName: 'amount', type: 'currency', },
-                { label: data.fields.Payment_Method__c.label, fieldName: 'paymentMethod', type: 'text', },
-            ];
-        }
+        if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
+        columns = [
+            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
+                year: "numeric",
+                month: "short",
+                day: "2-digit"
+            },
+            cellAttributes: { alignment: 'right' }},
+            { label: donorLabel, fieldName: 'donor', type: 'text' },
+            { label: commonAmount, fieldName: 'amount', type: 'currency', },
+            { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
+        ];
     }
 
     
