@@ -788,18 +788,20 @@ public class CON_ContactMerge_TEST {
 
         // Assert: THEN
         //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        System.assertEquals(0, [SELECT COUNT() FROM Contact WHERE Id = :con2.Id]);
+        System.assertEquals(1, [SELECT COUNT() FROM Contact WHERE Id = :con.Id]);
         //second contact's account should not be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
+        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con2.AccountId]);
+        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con.AccountId]);
 
-        Map<Id, Contact> queriedContacts = getContacts(new Set<Id>{con.Id});
+        Map<Id, Contact> queriedContacts = getContacts(new Set<Id>{
+                con.Id
+        });
         Contact mergeWinner = queriedContacts.get(con.Id);
 
-        system.assertEquals(con.accountId, mergeWinner.AccountId,
+        System.assertEquals(con.AccountId, mergeWinner.AccountId,
                 'The winning Contact\'s account id should not have changed');
-        system.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, mergeWinner.Account.Name,
+        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, mergeWinner.Account.Name,
                 'The winning Contact\'s Account\'s Name should not have changed');
     }
 
