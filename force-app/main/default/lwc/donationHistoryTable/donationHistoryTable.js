@@ -22,7 +22,7 @@ export default class DonationHistoryTable extends LightningElement {
     @wire(getObjectInfo, { objectApiName: PAYMENT_LABEL })
     oppInfo({ data, error }) {
         if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
-        columns = [
+        this.columns = [
             { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
                 year: "numeric",
                 month: "short",
