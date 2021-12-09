@@ -1,4 +1,4 @@
-import { api, LightningElement, wire } from 'lwc';
+import { api, LightningElement, track, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
@@ -11,6 +11,8 @@ import donorLabel from '@salesforce/label/c.donorLabel';
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
+    @track paymentMethodLabel;
+
     data = [];
 
     label = {
@@ -19,7 +21,7 @@ export default class DonationHistoryTable extends LightningElement {
 
     @wire(getObjectInfo, { objectApiName: PAYMENT_LABEL })
     oppInfo({ data, error }) {
-        if (data) console.log('CloseDate Label => ', data.fields.Payment_Method.label);
+        if (data)  this.paymentMethodLabel = data.fields.Payment_Method__c.label;
     }
 
     columns = [
@@ -31,7 +33,7 @@ export default class DonationHistoryTable extends LightningElement {
         cellAttributes: { alignment: 'right' }},
         { label: donorLabel, fieldName: 'donor', type: 'text' },
         { label: commonAmount, fieldName: 'amount', type: 'currency', },
-        { label: PAYMENT_LABEL.label, fieldName: 'paymentMethod', type: 'text', },
+        { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
     ];
     
     totalNumberOfRows = MOCK_DATA.length;
