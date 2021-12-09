@@ -4,20 +4,11 @@ const MOCK_DATA = require('./data/donationHistoryTableData.json');
 
 // Helper function to wait until the microtask queue is empty. This is needed for promise
 // timing when calling imperative Apex.
-function flushPromises() {
-    // eslint-disable-next-line no-undef
-    return new Promise((resolve) => setImmediate(resolve));
-  }
   
   describe('c-donation-history-table', () => {
     afterEach(()=>{
       // clean mock functions
       clearDOM();
-      
-      // The jsdom instance is shared across test cases in a single file so reset the DOM
-      while(document.body.firstChild) {
-          document.body.removeChild(document.body.firstChild);
-      }
     });
   
     it('renders table correctly', ()=>{

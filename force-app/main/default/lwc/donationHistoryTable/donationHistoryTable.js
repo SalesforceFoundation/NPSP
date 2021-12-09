@@ -1,28 +1,34 @@
-import ContactId from '@salesforce/schema/Case.ContactId';
-import { api, LightningElement } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
+import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import donationHistoryDatatableAriaLabel from '@salesforce/label/donationHistoryDatatableAriaLabel';
+import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/RD2_ScheduleVisualizerColumnDate';
+import commonAmount from '@salesforce/label/commonAmount';
+import donorLabel from '@salesforce/label/donorLabel';
 //TODO: set custom label for datatable aria label
-
-const columns = [
-    { label: 'Date', fieldName: 'date', type: 'date', typeAttributes:{
-        year: "numeric",
-        month: "short",
-        day: "2-digit"
-    },
-    cellAttributes: { alignment: 'right' }},
-    { label: 'Donor', fieldName: 'donor', type: 'text' },
-    { label: 'Amount', fieldName: 'amount', type: 'currency', },
-    { label: 'Payment Method', fieldName: 'paymentMethod', type: 'text', },
-];
-
-
 export default class DonationHistoryTable extends LightningElement {
-    @api
-    contactId;
+    @api contactId;
 
     data = [];
 
-    columns = columns;
+    label = {
+        donationHistoryDatatableAriaLabel,
+    }
+    //verificar esto
+    @wire(getObjectInfo, { objectApiName: DataImport__c.Payment_Method__c }) 
+    paymentMethodLabel;
+
+    columns = [
+        { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+        },
+        cellAttributes: { alignment: 'right' }},
+        { label: donorLabel, fieldName: 'donor', type: 'text' },
+        { label: commonAmount, fieldName: 'amount', type: 'currency', },
+        { label: paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
+    ];
     
     totalNumberOfRows = MOCK_DATA.length;
     
@@ -30,6 +36,7 @@ export default class DonationHistoryTable extends LightningElement {
     async connectedCallback() {
         const data = MOCK_DATA.slice(0, 50);
         this.data = data;
+        console.log(this.paymentMethodLabel);
     }
 
     /**
