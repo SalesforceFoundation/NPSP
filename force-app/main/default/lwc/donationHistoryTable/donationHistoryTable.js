@@ -1,7 +1,7 @@
 import { api, LightningElement, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import DataImport__c from '@salesforce/schema/DataImport__c';
+import PAYMENT_LABEL from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import commonAmount from '@salesforce/label/c.commonAmount';
@@ -11,19 +11,10 @@ export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
     data = [];
-    
-    paymentMethodLabel;
 
     label = {
         donationHistoryDatatableAriaLabel,
     }
-    //verificar esto
-    @wire(getObjectInfo, { objectApiName: DataImport__c }) 
-    oppInfo({ data, error }) {
-        console.log(data.fields.Payment_Method__c.label);
-        if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
-    }
-    ;
 
     columns = [
         { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
@@ -34,7 +25,7 @@ export default class DonationHistoryTable extends LightningElement {
         cellAttributes: { alignment: 'right' }},
         { label: donorLabel, fieldName: 'donor', type: 'text' },
         { label: commonAmount, fieldName: 'amount', type: 'currency', },
-        { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
+        { label: PAYMENT_LABEL.label, fieldName: 'paymentMethod', type: 'text', },
     ];
     
     totalNumberOfRows = MOCK_DATA.length;
@@ -43,7 +34,7 @@ export default class DonationHistoryTable extends LightningElement {
     async connectedCallback() {
         const data = MOCK_DATA.slice(0, 50);
         this.data = data;
-        console.log(this.paymentMethodLabel);
+        console.log(PAYMENT_LABEL.label);
     }
 
     /**
