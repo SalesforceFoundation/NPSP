@@ -69,15 +69,6 @@ private class OrganizationAccountTests_TEST {
                 'The name of the Org Account should not change after deleting a Contact.');
     }
 
-    private static List<Account> getOrgAccounts() {
-        List<Account> orgAccounts = [
-                SELECT Name
-                FROM Account
-                WHERE RecordTypeId = :organizationRecordTypeId
-        ];
-        return orgAccounts;
-    }
-
     @IsTest
     static void merge_in_one_household_member_should_not_rename_org_account() {
         // Arrange: GIVEN an Org Account with multiple child Contacts
@@ -107,6 +98,15 @@ private class OrganizationAccountTests_TEST {
         Contact mergeWinnerContact = getContact(orgContact1);
         System.assertEquals(orgAccount.Id, mergeWinnerContact.AccountId,
                 'The winning Contact should not be removed from its Org Account.');
+    }
+
+    private static List<Account> getOrgAccounts() {
+        List<Account> orgAccounts = [
+                SELECT Name
+                FROM Account
+                WHERE RecordTypeId = :organizationRecordTypeId
+        ];
+        return orgAccounts;
     }
 
     private static Contact getContact(Contact c1) {
