@@ -7,11 +7,10 @@ import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHisto
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donorLabel from '@salesforce/label/c.donorLabel';
-//TODO: set custom label for datatable aria label
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
-    @track paymentMethodLabel;
+    paymentMethodLabel;
 
     data = [];
 
@@ -19,22 +18,24 @@ export default class DonationHistoryTable extends LightningElement {
         donationHistoryDatatableAriaLabel,
     }
 
+    columns = [];
+
     @wire(getObjectInfo, { objectApiName: PAYMENT_LABEL })
     oppInfo({ data, error }) {
-        if (data)  this.paymentMethodLabel = data.fields.Payment_Method__c.label;
+        columns = [
+            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
+                year: "numeric",
+                month: "short",
+                day: "2-digit"
+            },
+            cellAttributes: { alignment: 'right' }},
+            { label: donorLabel, fieldName: 'donor', type: 'text' },
+            { label: commonAmount, fieldName: 'amount', type: 'currency', },
+            { label: data.fields.Payment_Method__c.label, fieldName: 'paymentMethod', type: 'text', },
+        ];
     }
 
-    columns = [
-        { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
-            year: "numeric",
-            month: "short",
-            day: "2-digit"
-        },
-        cellAttributes: { alignment: 'right' }},
-        { label: donorLabel, fieldName: 'donor', type: 'text' },
-        { label: commonAmount, fieldName: 'amount', type: 'currency', },
-        { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
-    ];
+    
     
     totalNumberOfRows = MOCK_DATA.length;
     
