@@ -10,13 +10,18 @@ export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
     data = [];
+    
+    paymentMethodLabel;
 
     label = {
         donationHistoryDatatableAriaLabel,
     }
     //verificar esto
-    @wire(getObjectInfo, { objectApiName: DataImport__c.Payment_Method__c }) 
-    paymentMethodLabel;
+    @wire(getObjectInfo, { objectApiName: DataImport__c }) 
+    oppInfo({ data, error }) {
+        if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
+    }
+    ;
 
     columns = [
         { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
@@ -27,7 +32,7 @@ export default class DonationHistoryTable extends LightningElement {
         cellAttributes: { alignment: 'right' }},
         { label: donorLabel, fieldName: 'donor', type: 'text' },
         { label: commonAmount, fieldName: 'amount', type: 'currency', },
-        { label: paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
+        { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
     ];
     
     totalNumberOfRows = MOCK_DATA.length;
