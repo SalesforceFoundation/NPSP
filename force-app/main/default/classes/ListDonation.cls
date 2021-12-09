@@ -86,7 +86,7 @@ public with sharing class ListDonation {
         List<String> softCreditRoles = roles.Constant__c.split(';');
         List<DonationHistory> softCreditList = new List<DonationHistory>();
         for(OpportunityContactRole opp: donations){
-            if (softCreditRoles.contains(opp.Role)) {
+            if (softCreditRoles.contains(opp.Role) && opp.isPrimary==false) {
                 DonationHistory softCredit = new DonationHistory();
                 softCredit.id = opp.Id;
                 softCredit.name = opp.Opportunity.Name;
