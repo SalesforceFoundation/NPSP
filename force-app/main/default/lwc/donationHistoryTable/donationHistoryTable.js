@@ -1,7 +1,6 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import OPPORTUNITY_OBJECT from '@salesforce/schema/Opportunity';
 import PAYMENT_LABEL from '@salesforce/schema/DataImport__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
@@ -43,7 +42,6 @@ export default class DonationHistoryTable extends LightningElement {
     async connectedCallback() {
         const data = MOCK_DATA.slice(0, 50);
         this.data = data;
-        console.log(PAYMENT_LABEL.label);
     }
 
     /**
