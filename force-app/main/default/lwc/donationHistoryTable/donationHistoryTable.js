@@ -1,6 +1,7 @@
 import { api, LightningElement, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import DataImport__c from '@salesforce/schema/DataImport__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import commonAmount from '@salesforce/label/c.commonAmount';
