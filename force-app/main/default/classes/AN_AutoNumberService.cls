@@ -202,12 +202,11 @@ public class AN_AutoNumberService {
         }
 
         public String getFormattedNumber(Integer num) {
-            // A change in API version 51 and later causes this to fail, so we're keeping 
-            // this Class at 50 for now.
-            // {000} is no longer a valid pattern for the first match when using String.format
-            return String.format(displayFormat,
+            Integer numberLength = getNumberLength();
+            String singleDigitDisplayFormat = displayFormat.replace('{000}', '{0}');
+            return String.format(singleDigitDisplayFormat,
                     new List<Object>{
-                            String.valueOf(num).leftPad(getNumberLength(), '0')
+                            String.valueOf(num).leftPad(numberLength, '0')
                     }
             );
         }
