@@ -1,10 +1,10 @@
 import { api, LightningElement, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import donationHistoryDatatableAriaLabel from '@salesforce/label/donationHistoryDatatableAriaLabel';
-import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/RD2_ScheduleVisualizerColumnDate';
-import commonAmount from '@salesforce/label/commonAmount';
-import donorLabel from '@salesforce/label/donorLabel';
+import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
+import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
+import commonAmount from '@salesforce/label/c.commonAmount';
+import donorLabel from '@salesforce/label/c.donorLabel';
 //TODO: set custom label for datatable aria label
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
