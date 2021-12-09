@@ -199,7 +199,7 @@
                                                 }                                               
                                 
                                                 if (!relatedNode) {
-                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex]})
+                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex], colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName})
                                                 }
                                                 // only add edge ifthe relationship is not already drawn
                                                 if (particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
@@ -388,7 +388,7 @@
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
             infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)} ]</a><br />';
-            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
+            infoText += '<a href=' + getRelationshipViewerURLForContact(currentContact.id) + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
             infoText +='</strong></p>';     
             return infoText;    
         }
@@ -418,6 +418,20 @@
                 if (fill) {
                     ctx.fill();
                 }
+            }
+
+            function getRelationshipViewerURLForContact(contactId) {
+                const baseUrl = '{!$Site.BaseUrl}';
+                const pageUrl = '{!URLFOR($Page.REL_RelationshipsViewer)}';
+                let urlObject;
+                if(baseUrl !== '') {
+                    // URLFOR in Sites only returns a relative URL, so we must supply a base URL.
+                    urlObject = new URL(pageUrl, baseUrl);
+                } else {
+                    urlObject = new URL(pageUrl);
+                }
+                urlObject.searchParams.append('id', contactId);
+                return urlObject.href;
             }
         </script>
 
