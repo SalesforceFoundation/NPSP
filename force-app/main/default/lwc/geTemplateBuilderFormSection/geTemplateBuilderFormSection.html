@@ -5,12 +5,14 @@
              onkeyup={handleKeyUpSelectActiveSection}
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}
-             data-qa-locator={qaLocatorSection}>
+             data-qa-locator={qaLocatorSection}
+             aria-describedby={formSection.id}>
 
 
         <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
             <div class="slds-media__body">
-                <h2 class="slds-card__header-title">
+                <h2 class="slds-card__header-title"
+                    id={formSection.id}>
                     {formSection.label}
                 </h2>
             </div>
