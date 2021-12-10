@@ -676,11 +676,6 @@
         <field>Form_Template__c.Template_JSON__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
-        <editable>true</editable>
-        <field>npe01__OppPayment__c.Payment_Status__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Manage Gifts</label>
     <objectPermissions>
