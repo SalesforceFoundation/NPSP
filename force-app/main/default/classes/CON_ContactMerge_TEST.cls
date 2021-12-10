@@ -784,7 +784,9 @@ public class CON_ContactMerge_TEST {
         selectMasterRecord(controller, con.id);
 
         // Act: WHEN one Individual Bucket Contact is merged into another Bucket Contact
+        Test.startTest();
         controller.mergeContacts();
+        Test.stopTest();
 
         // Assert: THEN
         //second contact should be deleted
