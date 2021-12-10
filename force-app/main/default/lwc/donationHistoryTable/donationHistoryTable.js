@@ -1,7 +1,7 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import {MOCK_DATA} from './donationHistoryTableData';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import PAYMENT_LABEL from '@salesforce/schema/DataImport__c';
+import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import commonAmount from '@salesforce/label/c.commonAmount';
@@ -19,7 +19,7 @@ export default class DonationHistoryTable extends LightningElement {
 
     columns = [];
 
-    @wire(getObjectInfo, { objectApiName: PAYMENT_LABEL })
+    @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
     oppInfo({ data, error }) {
         if (data) this.paymentMethodLabel = data.fields.Payment_Method__c.label;
         this.columns = [
