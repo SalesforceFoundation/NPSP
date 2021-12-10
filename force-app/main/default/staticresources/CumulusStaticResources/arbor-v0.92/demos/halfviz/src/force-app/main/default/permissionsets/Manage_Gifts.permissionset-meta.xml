@@ -535,12 +535,6 @@
         <field>DataImport__c.NPSP_Data_Import_Batch__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions></fieldPermissions>
-    <fieldPermissions></fieldPermissions>
-    <fieldPermissions></fieldPermissions>
-    <fieldPermissions></fieldPermissions>
-    <fieldPermissions></fieldPermissions>
-    <fieldPermissions></fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
         <field>DataImport__c.PaymentImportStatus__c</field>
