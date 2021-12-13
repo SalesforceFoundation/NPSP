@@ -63,7 +63,7 @@ public inherited sharing class ContactSelector {
     }
 
      public Contact getDonationsSummaryForContact(Id contactId) {
-        if (!Schema.SObjectType.Contact.isAccessible()) {
+        if (!Schema.SObjectType.Contact.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__TotalOppAmount__c.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__OppAmountThisYear__c.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__OppAmountLastYear__c.isAccessible()) {
             throw new NoAccessException();
         }
 

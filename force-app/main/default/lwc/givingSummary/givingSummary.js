@@ -2,6 +2,7 @@ import { api, LightningElement } from 'lwc';
 import donorsGivingSummary from '@salesforce/label/c.donorsGivingSummary';
 import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
+import flsReadAccessError from '@salesforce/label/c.flsReadAccessError';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
 import FORM_FACTOR from '@salesforce/client/formFactor';
 import getDonationsSummary from '@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact'
@@ -21,18 +22,27 @@ export default class GivingSummary extends LightningElement {
         donorsLifetime,
         donorsThisYear,
         donorsPreviousYear,
+        flsReadAccessError
     };
 
     lifetimeSummary = 0;
     thisYear = 0;
     previousYear = 0;
+    
+    error;
+    isAccessible=true;
 
     @api contactId
 
     formFactor = FORM_FACTOR;
 
     connectedCallback() {
-        getDonationsSummary({contactId: this.contactId}).then(contact => this.parseContact(contact));
+        getDonationsSummary({contactId: this.contactId})
+            .then(contact => this.parseContact(contact))
+            .catch((error) => {
+                this.error = error;
+                this.isAccessible=false;
+            });
         
     }
 
