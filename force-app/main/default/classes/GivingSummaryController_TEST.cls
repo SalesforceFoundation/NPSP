@@ -1,6 +1,5 @@
 @isTest
 public with sharing class GivingSummaryController_TEST {
-    
 
     @IsTest
     public static void verifyCorrectContactWithDonationSummaryIsReturned() {

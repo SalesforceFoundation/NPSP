@@ -1,5 +1,5 @@
 import { api, LightningElement } from 'lwc';
-import donorsGivenSummary from '@salesforce/label/c.donorsGivenSummary';
+import donorsGivingSummary from '@salesforce/label/c.donorsGivingSummary';
 import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
@@ -17,7 +17,7 @@ const DESKTOP_CLASSES = 'slds-text-align_center slds-border_right slds-text-head
 
 export default class GivingSummary extends LightningElement {
     labels = {
-        donorsGivenSummary,
+        donorsGivingSummary,
         donorsLifetime,
         donorsThisYear,
         donorsPreviousYear,
@@ -45,6 +45,7 @@ export default class GivingSummary extends LightningElement {
         this.thisYear = contact.npo02__OppAmountThisYear__c;
         this.previousYear = contact.npo02__OppAmountLastYear__c;
     }
+
     /**
      * @description Returns the classes to be applied to the rows accordling if it is mobile or desktop
      */
@@ -64,6 +65,7 @@ export default class GivingSummary extends LightningElement {
         }
         return 'slds-text-align_center slds-text-heading_small';
     }
+
     /**
      * @description Returns wether we are running in mobile or desktop
      * @returns True if it is mobile
@@ -71,4 +73,5 @@ export default class GivingSummary extends LightningElement {
     get isMobile() {
         return this.formFactor === FormFactorType.Small;
     }
+
 }

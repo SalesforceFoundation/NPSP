@@ -1362,12 +1362,12 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
-        <fullName>donorsGivenSummary</fullName>
+        <fullName>donorsGivingSummary</fullName>
         <categories>Donors</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Component title</shortDescription>
-        <value>Given Summary</value>
+        <value>Giving Summary</value>
     </labels>
     <labels>
         <fullName>donorsLifetime</fullName>

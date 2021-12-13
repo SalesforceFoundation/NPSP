@@ -1,5 +1,5 @@
 import { createElement } from 'lwc';
-import GivenSummary from '../givingSummary';
+import GivingSummary from '../givingSummary';
 import getDonationsSummary from '@salesforce/apex/GivingSummaryController.getDonationsSummaryForContact'
 
 const THE_RETURNED_CONTACT = {
@@ -28,7 +28,7 @@ describe('c-giving-summary', () => {
 
     it('displays three fields on the component', () => {
         getDonationsSummary.mockResolvedValue(THE_RETURNED_CONTACT);
-        const element = createElement('c-giving-summary', { is: GivenSummary });
+        const element = createElement('c-giving-summary', { is: GivingSummary });
         document.body.appendChild(element);
         return flushPromises().then(() => {
             expect(
