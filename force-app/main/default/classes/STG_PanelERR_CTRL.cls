@@ -34,7 +34,11 @@
 * @description Controller for the error notifications settings page.
 */
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
-    
+
+    public Boolean getHasCustomizeApplicationSystemPermission() {
+        return USER_UserService.isCustomizeApplicationUser();
+    }
+
     /*******************************************************************************************************
     * @description The panel ID.
     */
