@@ -1,7 +1,7 @@
 <apex:page controller="STG_PanelERR_CTRL" docType="html-5.0" standardStylesheets="false">
     <apex:includeLightning/>
     <script>
-        if ({!NOT(hasCustomizeApplicationSystemPermission)}) {
+        if ({!NOT(isRunningUserIsAdmin)}) {
             $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
                 $Lightning.createComponent("{!namespace}" + ":utilIllustration",
                     {   title : "{!$Label.commonAdminPermissionErrorTitle}",
@@ -16,7 +16,7 @@
             });
         }
     </script>
-    <apex:outputPanel rendered="{!NOT(hasCustomizeApplicationSystemPermission)}">
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
         <div id="stgPanelErrIllustration" />
     </apex:outputPanel>
     <script>
@@ -117,7 +117,7 @@
             }
         });
     </script>
-    <apex:outputPanel rendered="{!NOT(hasCustomizeApplicationSystemPermission)}">
+    <apex:outputPanel rendered="{!(isRunningUserIsAdmin)}">
         <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
             <c:UTIL_PageMessages />
