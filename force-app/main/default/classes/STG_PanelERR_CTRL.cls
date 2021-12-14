@@ -34,6 +34,7 @@
 * @description Controller for the error notifications settings page.
 */
 public with sharing class STG_PanelERR_CTRL extends STG_Panel {
+
     /*******************************************************************************************************
     * @description The panel ID.
     */
