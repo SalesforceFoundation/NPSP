@@ -282,15 +282,39 @@ public class CRLP_RollupUI_TEST {
     */
     @isTest
     public static void shouldIdentifyUserAsNotSystemAdmin() {
-        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
+        User standardUser = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
 
-        System.runAs(sysAdmin) {
+        System.runAs(standardUser) {
             CRLP_RollupUI_SVC.RollupGridModel model =
                 (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
 
             System.assertEquals(false, model.isSystemAdminUser, 'User should be identified as not System Administrator');
         }
     }
+
+    /*********************************************************************************************************
+    * @description Verifies that an exception is thrown when a non-admin user attempts to call setupRollupGrid()
+    */
+    @isTest
+    private static void setupRollupGridThrowsExceptionForNonAdmin() {
+        // Given
+        User standardUser = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
+
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.setupRollupGrid();
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should be thrown if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'An insufficient privileges ' +
+                'generic error message should be returned to the client.');
+    }
+
 
     /********************************************************************************************************
     * Helper Functions
