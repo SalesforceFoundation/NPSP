@@ -6,7 +6,7 @@
           {labels.donorsGivingSummary}
         </h2>
       </lightning-layout-item>
-      <template if:false={isAccessible}>
+      <template if:true={message}>
         <lightning-layout-item
         size="12"
         small-device-size="12"
@@ -14,10 +14,10 @@
         large-device-size="12"
         class={rowClasses}
       >
-        <span class="slds-var-m-top_medium bolder">{labels.flsReadAccessError}</span>
+        <span class="slds-var-m-top_medium bolder">{message}</span>
       </lightning-layout-item>
       </template>
-      <template if:true={isAccessible}>
+      <template if:false={message}>
         <lightning-layout-item
           size="12"
           small-device-size="12"
