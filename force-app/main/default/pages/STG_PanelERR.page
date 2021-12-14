@@ -117,7 +117,7 @@
             }
         });
     </script>
-    <apex:outputPanel rendered="{!(isRunningUserIsAdmin)}">
+    <apex:outputPanel rendered="{!isRunningUserIsAdmin}">
         <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavErrorNotify}" />
             <c:UTIL_PageMessages />
