@@ -1,6 +1,6 @@
 <apex:page controller="STG_PanelOppBatch_CTRL" docType="html-5.0" standardStylesheets="false">
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgNavRollupBatch}" />
         <div class="slds-text-body_small slds-m-around_medium">{!$Label.stgHelpBatchOppRollup}</div>
         <c:UTIL_PageMessages />

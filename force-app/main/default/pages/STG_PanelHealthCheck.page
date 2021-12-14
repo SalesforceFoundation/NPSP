@@ -28,7 +28,7 @@
         }
     </script>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
         <p class="slds-text-body_small slds-m-top_x-small">
             <apex:outputText value="{!$Label.healthLabelIntro}" />
