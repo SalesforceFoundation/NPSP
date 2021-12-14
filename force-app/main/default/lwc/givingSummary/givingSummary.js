@@ -5,6 +5,9 @@ import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import flsReadAccessError from '@salesforce/label/c.flsReadAccessError';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
+import TOTAL_AMOUNT from '@salesforce/schema/Contact.npo02__TotalOppAmount__c';
+import AMOUNT_CURRENT_YEAR from '@salesforce/schema/Contact.npo02__OppAmountThisYear__c';
+import AMOUNT_LAST_YEAR from '@salesforce/schema/Contact.npo02__OppAmountLastYear__c';
 import FORM_FACTOR from '@salesforce/client/formFactor';
 
 const FormFactorType = Object.freeze({
@@ -15,7 +18,7 @@ const FormFactorType = Object.freeze({
 
 const MOBILE_CLASSES = 'slds-text-align_center slds-border_bottom slds-text-heading_small slds-var-p-around_medium';
 const DESKTOP_CLASSES = 'slds-text-align_center slds-border_right slds-text-heading_small';
-const FIELDS = ['Contact.npo02__TotalOppAmount__c', 'Contact.npo02__OppAmountThisYear__c', 'Contact.npo02__OppAmountLastYear__c'];
+const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
 
 export default class GivingSummary extends LightningElement {
     labels = {
