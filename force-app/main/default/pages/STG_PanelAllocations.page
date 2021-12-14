@@ -17,7 +17,7 @@
             margin-right: -30px;
         }
     </style>
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavAllocations}" />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="editAllo" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
