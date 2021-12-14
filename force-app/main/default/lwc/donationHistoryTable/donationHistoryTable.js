@@ -5,6 +5,7 @@ import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
+import getDonationHistory from '@salesforce/apex/ListDonation.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donorLabel from '@salesforce/label/c.donorLabel';
 export default class DonationHistoryTable extends LightningElement {
@@ -26,16 +27,24 @@ export default class DonationHistoryTable extends LightningElement {
             this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label
         };
         this.columns = [
-            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'date', type: 'date', typeAttributes:{
+            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date', typeAttributes:{
                 year: "numeric",
                 month: "short",
                 day: "2-digit"
             },
             cellAttributes: { alignment: 'right' }},
-            { label: donorLabel, fieldName: 'donor', type: 'text' },
+            { label: donorLabel, fieldName: 'name', type: 'text' },
             { label: commonAmount, fieldName: 'amount', type: 'currency', },
             { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
         ];
+    }
+
+    @wire(getDonationHistory, { contactId: '$contactId' })
+    getDonation({ data, error }) {
+        if (data) {
+            console.log(JSON.stringify(data));
+            this.data = data;
+        }
     }
 
     
@@ -44,8 +53,6 @@ export default class DonationHistoryTable extends LightningElement {
     
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        const data = MOCK_DATA.slice(0, 50);
-        this.data = data;
     }
 
     /**
