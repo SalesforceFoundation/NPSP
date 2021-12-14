@@ -144,8 +144,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupGrid() {
-        if (!STG_Panel.runningUserIsAdmin()) throw new AuraHandledException(Label.stgEditPermissionError);
-
         RollupGridModel model = new RollupGridModel();
 
         model.labels = getAppLabels();
@@ -175,8 +173,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
-        if (!STG_Panel.runningUserIsAdmin()) throw new AuraHandledException(Label.stgEditPermissionError);
-
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
 
@@ -331,7 +327,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
-        if (!STG_Panel.runningUserIsAdmin()) throw new AuraHandledException(Label.stgEditPermissionError);
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
