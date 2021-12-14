@@ -62,20 +62,6 @@ public inherited sharing class ContactSelector {
         return Database.Query(householdMembersQueryFor(queryHHIds));
     }
 
-     public Contact getDonationsSummaryForContact(Id contactId) {
-        if (!Schema.SObjectType.Contact.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__TotalOppAmount__c.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__OppAmountThisYear__c.isAccessible() || !Schema.SObjectType.Contact.fields.npo02__OppAmountLastYear__c.isAccessible()) {
-            throw new NoAccessException();
-        }
-
-        return [SELECT ID,
-                       npo02__TotalOppAmount__c,
-                       npo02__OppAmountThisYear__c,
-                       npo02__OppAmountLastYear__c 
-                FROM   Contact
-                WHERE  ID = :contactId WITH SECURITY_ENFORCED 
-                LIMIT 1];
-    }
-
     private String householdMembersQueryFor(Set<Id> queryHHIds) {
         //get all of the contacts and their associated households
         //return them in the order of household and then household naming order

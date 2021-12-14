@@ -3,7 +3,6 @@ import { getRecord } from 'lightning/uiRecordApi';
 import donorsGivingSummary from '@salesforce/label/c.donorsGivingSummary';
 import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
-import flsReadAccessError from '@salesforce/label/c.flsReadAccessError';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
 import TOTAL_AMOUNT from '@salesforce/schema/Contact.npo02__TotalOppAmount__c';
 import AMOUNT_CURRENT_YEAR from '@salesforce/schema/Contact.npo02__OppAmountThisYear__c';
@@ -26,7 +25,6 @@ export default class GivingSummary extends LightningElement {
         donorsLifetime,
         donorsThisYear,
         donorsPreviousYear,
-        flsReadAccessError
     };
 
     lifetimeSummary = 0;
