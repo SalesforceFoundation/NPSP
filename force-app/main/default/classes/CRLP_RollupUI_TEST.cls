@@ -359,6 +359,26 @@ public class CRLP_RollupUI_TEST {
                 'thrown should be an insufficient privileges error.');
     }
 
+    /*********************************************************************************************************
+    * @description Verifies that setupFilterGroupDetail() fails if the user is not an admin
+    */
+    @isTest
+    private static void setupFilterGroupDetailShouldFailForNonAdmin() {
+        // When
+        AuraHandledException auraException;
+        System.runAs(standardUser) {
+            try {
+                CRLP_RollupUI_SVC.setupFilterGroupDetail(null, null);
+            } catch (AuraHandledException ex) {
+                auraException = ex;
+            }
+        }
+        // Then
+        System.assert(auraException != null, 'An AuraHandledException should throw if the user is not an admin.');
+        System.assertEquals(Label.stgEditPermissionError, auraException.getMessage(), 'The aura handled exception ' +
+                'thrown should be an insufficient privileges error.');
+    }
+
     /********************************************************************************************************
     * Helper Functions
     */

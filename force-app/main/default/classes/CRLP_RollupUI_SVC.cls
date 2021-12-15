@@ -293,6 +293,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
 
         List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
@@ -339,6 +340,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
