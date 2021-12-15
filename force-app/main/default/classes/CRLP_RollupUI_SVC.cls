@@ -144,6 +144,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupGrid() {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         RollupGridModel model = new RollupGridModel();
 
         model.labels = getAppLabels();
@@ -163,6 +165,13 @@ public with sharing class CRLP_RollupUI_SVC {
         return modelString;
     }
 
+    private static void throwAuraPermsException() {
+        AuraHandledException auraException = new AuraHandledException(Label.stgEditPermissionError);
+        // Set message so that Apex getMessage() can test the correct message is returned
+        auraException.setMessage(Label.stgEditPermissionError);
+        throw auraException;
+    }
+
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
     * during the init() function to retrieve and set up the LEX page for view/edit
@@ -173,6 +182,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
 
