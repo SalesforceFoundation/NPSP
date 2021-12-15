@@ -397,8 +397,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Rollup operations to fetch all rollup operation values.
     * @return a map of picklist options api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getRollupOperations() {
+    private static Map<String,String> getRollupOperations() {
 
         try {
             Map<String,String> rollupOperations = new Map<String,String>();
