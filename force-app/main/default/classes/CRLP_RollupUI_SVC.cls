@@ -208,6 +208,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<RollupTableItem> getRollupDefinitions() {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
