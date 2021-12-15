@@ -889,7 +889,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param excludedTypes set of types not included in the returned list
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String> excludedTypes) {
+    private static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String>
+            excludedTypes) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
