@@ -60,16 +60,25 @@ public with sharing class ListDonation {
     * @date 2021
     * @description method to return Donation History list.
     */
-    @AuraEnabled
-    public static List<DonationHistory> getDonationHistory(Id contactId){
+    @AuraEnabled(cacheable=true)
+    public static List<DonationHistory> getDonationHistory(Id contactId, Integer offset){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary 
                                                     FROM OpportunityContactRole 
-                                                    WHERE Opportunity.IsWon = TRUE 
-                                                    AND ContactId =: contactId 
+                                                    WHERE Opportunity.IsWon = true 
+                                                    AND ContactId =:contactId 
                                                     ORDER BY Opportunity.CloseDate 
-                                                    DESC Limit 50 ];
+                                                    DESC LIMIT 50 OFFSET :offset];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static List<AggregateResult> getTotalRecords(Id contactId){
+        List<AggregateResult> totalRecords = [SELECT COUNT(Id)
+                                FROM OpportunityContactRole 
+                                WHERE Opportunity.IsWon = true 
+                                AND ContactId =:contactId];
+        return totalRecords;
     }
 
     /** 
