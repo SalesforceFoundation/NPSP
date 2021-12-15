@@ -75,7 +75,7 @@ public class ListDonation_TEST {
 
 		Test.stopTest();
 		
-		List<ListDonation.DonationHistory> donationHistory = ListDonation.getDonationHistory(mockDefaultContact.Id);
+		List<ListDonation.DonationHistory> donationHistory = ListDonation.getDonationHistory(mockDefaultContact.Id, 0);
 		List<ListDonation.DonationHistory> filteredDonationHistory = new List<ListDonation.DonationHistory>();
         
 		for (ListDonation.DonationHistory donation : donationHistory) {
