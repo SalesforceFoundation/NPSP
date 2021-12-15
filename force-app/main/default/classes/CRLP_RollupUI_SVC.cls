@@ -418,8 +418,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Rollup yearly operation types to fetch all yearly operation values.
     * @return a map of picklist yearly operations api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getTimeBoundOperations() {
+    private static Map<String,String> getTimeBoundOperations() {
         try {
             Map<String, String> timeBoundOperations = new Map<String, String>();
             Schema.DescribeFieldResult field = Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe();
