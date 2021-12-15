@@ -30,31 +30,20 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Household Selector class in NPSP.
+* @description The Individual Bucket Account Selector implementation.
 */
-public inherited sharing class HouseholdSelector {
+public inherited sharing class IndividualBucketAccountSelector
+        implements IIndividualBucketAccountSelector {
 
-    private List<Account> getHouseholdAccountsWithContactsAndSingleOpp(Set<Id> accountIds) {
+    public Account getIndividualBucketAccount() {
         List<Account> accounts = [
-                SELECT Id, Type, npe01__SYSTEM_AccountType__c, npe01__One2OneContact__c, (
-                        SELECT Id, AccountId,
-                                Account.npe01__One2OneContact__c,
-                                Current_Address__c
-                        FROM Contacts
-                ), (
-                        SELECT Id
-                        FROM Opportunities
-                        LIMIT 1
-                )
+                SELECT Name
                 FROM Account
-                WHERE Id IN :accountIds
-                AND npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
+                WHERE npe01__SYSTEMIsIndividual__c = TRUE
+                AND npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE
+                LIMIT 1
         ];
-        return accounts;
+        Account bucketAccount = (accounts.size() == 1) ? accounts.get(0) : null;
+        return bucketAccount;
     }
-
-    public List<Account> findByIds(Set<Id> ids){
-        return getHouseholdAccountsWithContactsAndSingleOpp(ids);
-    }
-
 }
