@@ -726,6 +726,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveRollup(String jsonRollup) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
@@ -761,6 +763,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveFilterGroupAndRules(String jsonFilterGroup) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
@@ -803,6 +807,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+
         try {
             Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             if (crs.CMT_API_Status__c != null) {
@@ -856,6 +862,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
+        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
 
         try {
             List<Map<String, String>> optionsList = new List<Map<String, String>>();
