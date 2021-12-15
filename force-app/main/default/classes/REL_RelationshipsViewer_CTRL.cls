@@ -142,6 +142,11 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         }
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<Node> getRelationships(Id contactId) {
+        return getRelationships(contactId, false, new List<String>());
+    }
+
     /*******************************************************************************************************
     * @description constructs the soql String to run a Data Import process with or without a Batch.
     * @param contactId the Id of the Contact
@@ -246,15 +251,15 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     }
 
     global class Node {
-        public String firstName;
-        public String lastName;
-        public String id;
-        public String status;
-        public String type;
-        public String link;
-        public String accountName;
-        public String title;
-        public String relId;
+        @AuraEnabled public String firstName;
+        @AuraEnabled public String lastName;
+        @AuraEnabled public String id;
+        @AuraEnabled public String status;
+        @AuraEnabled public String type;
+        @AuraEnabled public String link;
+        @AuraEnabled public String accountName;
+        @AuraEnabled public String title;
+        @AuraEnabled public String relId;
     }  
     
 }

@@ -1,0 +1,13 @@
+<template>
+  <lightning-card icon-name="standard:contact" title={contactName}>
+    <lightning-datatable
+      data={relationships.data}
+      columns={columns}
+      key-field="relId"
+      onrowaction={handleRowAction}
+      hide-checkbox-column="true"
+      aria-label={tableLabel}
+    >
+    </lightning-datatable>
+  </lightning-card>
+</template>

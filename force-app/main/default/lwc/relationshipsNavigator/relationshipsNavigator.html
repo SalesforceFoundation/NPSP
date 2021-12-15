@@ -1,0 +1,18 @@
+<template>
+  <c-relationships-table
+    contact-id={recordId}
+    onloadrelations={handleLoadRelations}
+    tabindex="0"
+  >
+  </c-relationships-table>
+  <template for:each={contactIds} for:item='contactId'>
+    <c-relationships-table
+      key={contactId}
+      contact-id={contactId}
+      onloadrelations={handleLoadRelations}
+      ontableload={handleTableLoaded}
+      data-contact-id={contactId}
+      tabindex="0"
+    ></c-relationships-table>
+  </template>
+</template>
