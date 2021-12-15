@@ -440,9 +440,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param detailObjectNames list of detail or objects to rollup to query
     * @return a map of strings to string-string maps. Map<String,Map<String,String>>
     */
-
-    @AuraEnabled
-    public static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String> targetObjectNames, List<String> detailObjectNames) {
+    private static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String>
+            targetObjectNames, List<String> detailObjectNames) {
 
         try {
 
