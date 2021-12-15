@@ -105,7 +105,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
 
-        new InstallationNotifications(context).publish();
+        try {
+            new InstallationNotifications(context).publish();
+        } catch (Exception e) {
+            // Silently fail if there are problems encountered while delivering
+            // installation notifications. To prevent upgrade/install failures
+            // that would be solely attributable to the delivery of these notifications.
+        }
 
         logger.log();
     }
