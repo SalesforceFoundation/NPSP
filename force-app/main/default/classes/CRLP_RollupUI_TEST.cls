@@ -278,21 +278,6 @@ public class CRLP_RollupUI_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Verifies that setupRollupGrid() properly identifies user as not System Admin
-    */
-    @isTest
-    public static void shouldIdentifyUserAsNotSystemAdmin() {
-        User sysAdmin = UTIL_UnitTestData_TEST.createUser(UTIL_Profile.PROFILE_STANDARD_USER);
-
-        System.runAs(sysAdmin) {
-            CRLP_RollupUI_SVC.RollupGridModel model =
-                    (CRLP_RollupUI_SVC.RollupGridModel) JSON.deserialize(CRLP_RollupUI_SVC.setupRollupGrid(), CRLP_RollupUI_SVC.RollupGridModel.class);
-
-            System.assertEquals(false, model.isSystemAdminUser, 'User should be identified as not System Administrator');
-        }
-    }
-
-    /*********************************************************************************************************
     * @description Verifies that setupRollupGrid() fails if the user is not an admin
     */
     @isTest
