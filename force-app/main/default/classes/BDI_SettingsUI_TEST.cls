@@ -76,14 +76,15 @@ private with sharing class BDI_SettingsUI_TEST {
         Boolean containsImportedField = false;
 
         for (SelectOption option : ctrl.listSODonationFields) {
-            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
-                    'npsp__donationcampaignimported__c')) {
+
+            String paymentOriginIdField = SObjectType.DataImport__c.fields.Payment_Origin_Id__c.Name.toLowerCase();
+            if (option.getValue() == paymentOriginIdField) {
                 containsImportedField = true;
                 break;
             }
         }
         Test.startTest();
-        System.assert(containsImportedField, 'Help Text Mapping Enabled');
+        System.assert(!containsImportedField, 'Help Text Mapping Enabled');
         Test.stopTest();
     }
 
@@ -98,16 +99,15 @@ private with sharing class BDI_SettingsUI_TEST {
         Boolean containsImportedField = false;
 
         for (SelectOption option : ctrl.listSODonationFields) {
-            if (option.getValue() == UTIL_Namespace.alignSchemaNSWithEnvironment(
-                    'npsp__donationcampaignimported__c')) {
+
+            String paymentOriginIdField = SObjectType.DataImport__c.fields.Payment_Origin_Id__c.Name.toLowerCase();
+            if (option.getValue() == paymentOriginIdField) {
                 containsImportedField = true;
                 break;
             }
         }
         Test.startTest();
-        System.assert(!containsImportedField, 'Advanced Field Mapping Enabled');
+        System.assert(containsImportedField, 'Advanced Field Mapping Enabled');
         Test.stopTest();
     }
-
-
 }
