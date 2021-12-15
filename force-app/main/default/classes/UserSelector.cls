@@ -41,7 +41,7 @@ public with sharing class UserSelector {
           FROM User
           WHERE IsActive = TRUE
           AND UserType = 'Standard'
-          LIMIT 10000
+          LIMIT 500
       ];
    }
 }
