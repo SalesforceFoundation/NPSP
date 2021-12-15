@@ -17,13 +17,7 @@ jest.mock('@salesforce/apex/GivingSummaryController.getDonationsSummaryForContac
 
 describe('c-giving-summary', () => {
     afterEach(() => {
-        // clean mock functions
-        jest.clearAllMocks();
-
-        // The jsdom instance is shared across test cases in a single file so reset the DOM
-        while (document.body.firstChild) {
-            document.body.removeChild(document.body.firstChild);
-        }
+        clearDOM();
     });
 
     it('displays three fields on the component', () => {

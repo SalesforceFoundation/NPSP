@@ -1,6 +1,7 @@
 import { api, LightningElement, wire } from 'lwc';
-import { getRecord } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
 import donorsGivingSummary from '@salesforce/label/c.donorsGivingSummary';
+import commonUnknownError from '@salesforce/label/c.commonUnknownError';
 import donorsLifetime from '@salesforce/label/c.donorsLifetime';
 import donorsThisYear from '@salesforce/label/c.donorsThisYear';
 import donorsPreviousYear from '@salesforce/label/c.donorsPreviousYear';
@@ -25,6 +26,7 @@ export default class GivingSummary extends LightningElement {
         donorsLifetime,
         donorsThisYear,
         donorsPreviousYear,
+        commonUnknownError
     };
 
     lifetimeSummary = 0;
@@ -34,24 +36,19 @@ export default class GivingSummary extends LightningElement {
     contact;
     @api contactId;
 
-    message;
+    errorMessage=false;
     
     formFactor = FORM_FACTOR;
 
     @wire(getRecord, { recordId: '$contactId', fields: FIELDS})
         wiredRecord({ error, data }) {
             if (error) {
-                    this.message = 'Unknown error';
-                if (Array.isArray(error.body)) {
-                    this.message = error.body.map(e => e.message).join(', ');
-                } else if (typeof error.body.message === 'string') {
-                    this.message = error.body.message;
-                }
+                this.errorMessage=true;
             } else if (data) {
                 this.contact = data;
-                this.lifetimeSummary = this.contact.fields.npo02__TotalOppAmount__c.value;
-                this.thisYear = this.contact.fields.npo02__OppAmountThisYear__c.value;
-                this.previousYear = this.contact.fields.npo02__OppAmountLastYear__c.value;
+                this.lifetimeSummary = getFieldValue(this.contact, TOTAL_AMOUNT);
+                this.thisYear = getFieldValue(this.contact, AMOUNT_CURRENT_YEAR);
+                this.previousYear = getFieldValue(this.contact, AMOUNT_LAST_YEAR);
             }
         }
 

@@ -6,7 +6,7 @@
           {labels.donorsGivingSummary}
         </h2>
       </lightning-layout-item>
-      <template if:true={message}>
+      <template if:true={errorMessage}>
         <lightning-layout-item
         size="12"
         small-device-size="12"
@@ -14,10 +14,10 @@
         large-device-size="12"
         class={rowClasses}
       >
-        <span class="slds-var-m-top_medium bolder">{message}</span>
+        <span class="slds-var-m-top_medium bolder">{labels.commonUnknownError}</span>
       </lightning-layout-item>
       </template>
-      <template if:false={message}>
+      <template if:false={errorMessage}>
         <lightning-layout-item
           size="12"
           small-device-size="12"
