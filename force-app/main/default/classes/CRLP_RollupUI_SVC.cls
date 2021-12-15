@@ -320,8 +320,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Queries from the Filter Rule metadata to fetch all operation values.
     * @return a map of picklist options api values to labels
     */
-    @AuraEnabled
-    public static Map<String,String> getFilterRuleOperations() {
+    private static Map<String,String> getFilterRuleOperations() {
 
         Map<String,String> filterRuleOperations = new Map<String,String>();
 
