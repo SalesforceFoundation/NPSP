@@ -100,6 +100,43 @@ private class OrganizationAccountTests_TEST {
                 'The winning Contact should not be removed from its Org Account.');
     }
 
+    @IsTest
+    static void merge_two_org_account_contacts_should_not_rename_either_org_account() {
+        // Arrange: GIVEN multiple Org Accounts with multiple child Contacts
+        Account orgAccount = orgAccount('testOrgAccount');
+        Account orgAccount2 = orgAccount('testOrgAccount2');
+        insert new List<Account>{
+                orgAccount, orgAccount2
+        };
+        Contact orgContact1 = new Contact(LastName = 'testCon1', AccountId = orgAccount.Id);
+        Contact orgContact2 = new Contact(LastName = 'testCon2', AccountId = orgAccount.Id);
+        Contact orgContact3 = new Contact(LastName = 'testCon3', AccountId = orgAccount2.Id);
+        Contact orgContact4 = new Contact(LastName = 'testCon4', AccountId = orgAccount2.Id);
+        insert new List<Contact>{
+                orgContact1, orgContact2, orgContact3, orgContact4
+        };
+
+        // Act: WHEN one Org Contact is merged into the other Org Account via Contact merge
+        Test.startTest();
+        CON_ContactMerge.mergeContacts(orgContact1, new List<Contact>{
+                orgContact3
+        });
+        Test.stopTest();
+
+        // Assert: THEN neither of the Org Accounts should be renamed
+        Map<Id, Account> queriedOrgAccounts = new Map<Id, Account>(getOrgAccounts());
+        System.assertEquals('testOrgAccount', queriedOrgAccounts.get(orgAccount.Id).Name,
+                'The name of the Org Account should not change after merging in an ' +
+                        'Org Contact.');
+        System.assertEquals('testOrgAccount2', queriedOrgAccounts.get(orgAccount2.Id).Name,
+                'The name of the Org Account should not change after merging in an ' +
+                        'Org Contact.');
+        // AND the winning Contact should still be in the same Org Account
+        Contact mergeWinnerContact = getContact(orgContact1);
+        System.assertEquals(orgAccount.Id, mergeWinnerContact.AccountId,
+                'The winning Contact should not be removed from its Org Account.');
+    }
+
     private static List<Account> getOrgAccounts() {
         List<Account> orgAccounts = [
                 SELECT Name
