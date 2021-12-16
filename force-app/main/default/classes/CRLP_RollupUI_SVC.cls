@@ -144,7 +144,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupGrid() {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         RollupGridModel model = new RollupGridModel();
 
@@ -175,7 +175,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
@@ -201,7 +201,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<RollupTableItem> getRollupDefinitions() {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
@@ -286,7 +286,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
@@ -333,7 +333,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
@@ -719,7 +719,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveRollup(String jsonRollup) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -756,7 +756,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveFilterGroupAndRules(String jsonFilterGroup) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -800,7 +800,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
@@ -855,7 +855,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
-        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
+        STG_Panel.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             List<Map<String, String>> optionsList = new List<Map<String, String>>();
