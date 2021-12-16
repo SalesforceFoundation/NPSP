@@ -1,0 +1,12 @@
+<template>
+    <lightning-card icon-name="standard:contact" title={contactName}>
+        <lightning-tree-grid
+            data={relationships}
+            columns={columns}
+            onrowaction={handleRowAction}
+            ontoggle={handleToggle}
+            hide-checkbox-column="true"
+            key-field="relId"
+        ></lightning-tree-grid>
+    </lightning-card>
+</template>

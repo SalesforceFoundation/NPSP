@@ -77,7 +77,8 @@ export default class RelationshipsTable extends NavigationMixin(LightningElement
     wiredRelationships({error, data}) {
         if(data) {
             this.relationships = data.nodes;
-            // this.contactName = `${data.rootNode.firstName} ${data.rootNode.lastName}`;
+            this.contactName = `${data.rootNode.firstName} ${data.rootNode.lastName}`;
+            this.tableLabel = `${this.contactName} Relationships`;
         }
     }
 
