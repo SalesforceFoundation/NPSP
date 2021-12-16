@@ -3,7 +3,7 @@
     <lightning-layout multiple-rows="true" horizontal-align="center">
       <lightning-layout-item size="12">
         <h2 class="slds-text-heading_small slds-var-p-left_large">
-          {labels.donorGSTitle}
+          {labels.donationHistoryGivingSummaryTitle}
         </h2>
       </lightning-layout-item>
       <template if:true={errorMessage}>
@@ -34,7 +34,7 @@
             >
             </lightning-formatted-number> </span
           ><br />
-          <span class="slds-var-m-top_medium">{labels.donorsGSLabelLifetime}</span>
+          <span class="slds-var-m-top_medium">{labels.donationHistoryLabelLifetime}</span>
         </lightning-layout-item>
         <lightning-layout-item
           size="12"
@@ -52,7 +52,7 @@
             >
             </lightning-formatted-number> </span
           ><br />
-          <span>{labels.donorGSLabelThisYear}</span>
+          <span>{labels.donationHistoryLabelThisYear}</span>
         </lightning-layout-item>
         <lightning-layout-item
           size="12"
@@ -69,7 +69,7 @@
             >
             </lightning-formatted-number> </span
           ><br />
-          <span>{labels.donorGSLabelPreviousYear}</span>
+          <span>{labels.donationHistoryLabelPreviousYear}</span>
         </lightning-layout-item>
       </template>
     </lightning-layout>

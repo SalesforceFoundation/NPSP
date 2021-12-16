@@ -1,10 +1,10 @@
 import { api, LightningElement, wire } from 'lwc';
 import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
-import donorGSTitle from '@salesforce/label/c.donorGSTitle';
+import donationHistoryGivingSummaryTitle from '@salesforce/label/c.donationHistoryGivingSummaryTitle';
 import commonUnknownError from '@salesforce/label/c.commonUnknownError';
-import donorsGSLabelLifetime from '@salesforce/label/c.donorsGSLabelLifetime';
-import donorGSLabelThisYear from '@salesforce/label/c.donorGSLabelThisYear';
-import donorGSLabelPreviousYear from '@salesforce/label/c.donorGSLabelPreviousYear';
+import donationHistoryLabelLifetime from '@salesforce/label/c.donationHistoryLabelLifetime';
+import donationHistoryLabelThisYear from '@salesforce/label/c.donationHistoryLabelThisYear';
+import donationHistoryLabelPreviousYear from '@salesforce/label/c.donationHistoryLabelPreviousYear';
 import TOTAL_AMOUNT from '@salesforce/schema/Contact.npo02__TotalOppAmount__c';
 import AMOUNT_CURRENT_YEAR from '@salesforce/schema/Contact.npo02__OppAmountThisYear__c';
 import AMOUNT_LAST_YEAR from '@salesforce/schema/Contact.npo02__OppAmountLastYear__c';
@@ -22,10 +22,10 @@ const FIELDS = [TOTAL_AMOUNT, AMOUNT_CURRENT_YEAR, AMOUNT_LAST_YEAR];
 
 export default class GivingSummary extends LightningElement {
     labels = {
-        donorGSTitle,
-        donorsGSLabelLifetime,
-        donorGSLabelThisYear,
-        donorGSLabelPreviousYear,
+        donationHistoryGivingSummaryTitle,
+        donationHistoryLabelLifetime,
+        donationHistoryLabelThisYear,
+        donationHistoryLabelPreviousYear,
         commonUnknownError
     };
 
