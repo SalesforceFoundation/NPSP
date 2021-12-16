@@ -1,5 +1,5 @@
 @IsTest
-public class ListDonation_TEST {
+public class DonationHistoryController_TEST {
 	@IsTest
 	public static void testGetDonationHistory() {
 		Test.startTest();
@@ -74,12 +74,12 @@ public class ListDonation_TEST {
 		insert partialSoftCredit;
 		Test.stopTest();
 		
-		Test.startTest()
-		List<ListDonation.DonationHistory> donationHistory = ListDonation.getDonationHistory(mockDefaultContact.Id, 0);
-		List<ListDonation.DonationHistory> filteredDonationHistory = new List<ListDonation.DonationHistory>();
+		Test.startTest();
+		List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(mockDefaultContact.Id);
+		List<DonationHistoryController.DonationHistory> filteredDonationHistory = new List<DonationHistoryController.DonationHistory>();
 		Test.stopTest();
 
-		for (ListDonation.DonationHistory donation : donationHistory) {
+		for (DonationHistoryController.DonationHistory donation : donationHistory) {
 			filteredDonationHistory.add(donation);
 		}
 		System.assertEquals(3, donationHistory.size());

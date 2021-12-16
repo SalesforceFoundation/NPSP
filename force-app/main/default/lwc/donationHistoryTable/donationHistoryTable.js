@@ -4,7 +4,7 @@ import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
-import getDonationHistory from '@salesforce/apex/ListDonation.getDonationHistory';
+import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 export default class DonationHistoryTable extends LightningElement {
