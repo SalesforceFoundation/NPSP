@@ -15,6 +15,8 @@ export default class DonationHistoryTable extends LightningElement {
 
     totalNumberOfRows;
 
+    tableElement;
+
     data = [];
 
     label = {
@@ -29,10 +31,10 @@ export default class DonationHistoryTable extends LightningElement {
             this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label
         };
         this.columns = [
-            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date', typeAttributes:{
+            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
                 year: "numeric",
-                month: "short",
-                day: "2-digit"
+                month: "numeric",
+                day: "numeric",
             },
             cellAttributes: { alignment: 'right' }},
             { label: donorLabel, fieldName: 'name', type: 'text' },
@@ -63,15 +65,19 @@ export default class DonationHistoryTable extends LightningElement {
      * handle the scroll event to get more content and concat to the existing table data
      */
     loadMoreDonationData(event){
-        if (this.data.length >= this.totalNumberOfRows) {
-            event.target.enableInfiniteLoading = false;
-            return;
-        }
+        event.target.isLoading = true;
+        this.tableElement = event.target;
         getDonationHistory({contactId: this.contactId, offset: this.data.length})
         .then(data => {
+            if (this.data.length >= this.totalNumberOfRows) {
+                event.target.enableInfiniteLoading = false;
+                return;
+            }
             const currentData = this.data;
             const newData = currentData.concat(data);
             this.data = newData;
+            //this fails for reference
+            this.tableElement.isLoading = false;
         });
     }
 }
