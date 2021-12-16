@@ -5,9 +5,8 @@ import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import getDonationHistory from '@salesforce/apex/ListDonation.getDonationHistory';
-import getTotalRecords from '@salesforce/apex/ListDonation.getTotalRecords';
 import commonAmount from '@salesforce/label/c.commonAmount';
-import donorLabel from '@salesforce/label/c.donorLabel';
+import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
@@ -41,7 +40,7 @@ export default class DonationHistoryTable extends LightningElement {
                 day: "numeric",
             },
             cellAttributes: { alignment: 'right' }},
-            { label: donorLabel, fieldName: 'name', type: 'text' },
+            { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text' },
             { label: commonAmount, fieldName: 'amount', type: 'currency', },
             { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
         ];

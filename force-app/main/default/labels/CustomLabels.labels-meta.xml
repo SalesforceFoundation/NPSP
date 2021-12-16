@@ -15189,7 +15189,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Donation History</value>
     </labels>
     <labels>
-        <fullName>donorLabel</fullName>
+        <fullName>donationHistoryDonorLabel</fullName>
         <categories>Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
