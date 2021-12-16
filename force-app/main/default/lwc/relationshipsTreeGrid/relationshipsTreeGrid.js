@@ -1,11 +1,19 @@
 import { LightningElement, api, track } from "lwc";
 import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
+import { NavigationMixin } from "lightning/navigation";
+import { encodeDefaultFieldValues } from "lightning/pageReferenceUtils";
+import RELATIONSHIP_CONTACT from "@salesforce/schema/npe4__Relationship__c.npe4__Contact__c";
+import RELATIONSHIP_OBJECT from "@salesforce/schema/npe4__Relationship__c";
+
+import REL_View_Contact_Record from "@salesforce/label/c.REL_View_Contact_Record";
+import REL_Create_New_Relationship from "@salesforce/label/c.REL_Create_New_Relationship";
+import REL_RECenter from "@salesforce/label/c.REL_RECenter";
 
 
 const TABLE_ACTIONS = {
-    VIEW_RECORD: "view_record",
     LOAD_RELATIONS: "load_relations",
-    NEW_RELATIONSHIP: "new_relationship"
+    RE_CENTER: "re_center",
+    VIEW_RECORD: "view_record"
 };
 
 const COLUMNS_DEF = [
@@ -39,23 +47,23 @@ const COLUMNS_DEF = [
         typeAttributes: {
             rowActions: [
                 {
-                    label: "View Record",
+                    label: REL_View_Contact_Record,
                     name: TABLE_ACTIONS.VIEW_RECORD
                 },
                 {
-                    label: "Load Relations",
-                    name: TABLE_ACTIONS.LOAD_RELATIONS
+                    label: REL_Create_New_Relationship,
+                    name: TABLE_ACTIONS.NEW_RELATIONSHIP
                 },
                 {
-                    label: "New Relationship",
-                    name: TABLE_ACTIONS.NEW_RELATIONSHIP
-                }
+                    label: REL_RECenter,
+                    name: TABLE_ACTIONS.RE_CENTER
+                },
             ]
         }
     }
 ];
 
-export default class RelationshipsTreeGrid extends LightningElement {
+export default class RelationshipsTreeGrid extends NavigationMixin(LightningElement) {
     @api contactId;
 
     @track relationships;
@@ -120,6 +128,34 @@ export default class RelationshipsTreeGrid extends LightningElement {
         });
     }
 
+    navigateToRecord(recordId) {
+        this[NavigationMixin.Navigate]({
+            type: "standard__recordPage",
+            attributes: {
+                recordId,
+                actionName: "view"
+            }
+        });
+    }
+
+    newRelationship(recordId) {
+
+        const defaultFieldValues = encodeDefaultFieldValues({
+            [RELATIONSHIP_CONTACT.fieldApiName]: recordId
+        });
+
+        const navigateArgs = {
+            type: "standard__objectPage",
+            attributes: {
+                objectApiName: RELATIONSHIP_OBJECT.objectApiName,
+                actionName: "new"
+            },
+            state: { defaultFieldValues }
+        };
+
+        this[NavigationMixin.Navigate](navigateArgs);
+    }
+
     handleRowAction(event) {
         const { action, row } = event.detail;
 
@@ -127,8 +163,8 @@ export default class RelationshipsTreeGrid extends LightningElement {
             case TABLE_ACTIONS.VIEW_RECORD:
                 this.navigateToRecord(row.id);
                 break;
-            case TABLE_ACTIONS.LOAD_RELATIONS:
-                this.loadRelations(row.id);
+            case TABLE_ACTIONS.RE_CENTER:
+                // TODO
                 break;
             case TABLE_ACTIONS.NEW_RELATIONSHIP:
                 this.newRelationship(row.id);
