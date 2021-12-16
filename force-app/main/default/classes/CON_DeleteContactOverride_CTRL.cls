@@ -59,7 +59,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public String sforceNav {get; private set;}
 
     /** @description Boolean that is set to true if user theme is LEx or SF1 */
-    @TestVisible 
+    @TestVisible
     private Boolean lexOrSF1User {
         get {
             return lexOrSF1User = lexOrSF1User == null
@@ -69,12 +69,14 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
-    /** @description Flag to tell the page which operation we're doing. */
-    public Boolean shouldDeleteContactAlone {get;set;}
+    /** @description Flag to tell the page this is the only contact in a Household Account. */
+    public Boolean isOnlyContactInHousehold {get;set;}
     /** @description Flag to tell the page account deletion is permitted. */
-    public Boolean canDeleteAccount {get;set;}
+    public Boolean hasAccountDeleteAccess {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
     private Boolean isDeleteContactLeaveAccount = false;
+    /** @description Flag indicating if only this Contact is in a Household Account. */
+    private Boolean isHouseholdAccount;
 
     /** @description Boolean for disabling the account deletion button if there are errors preventing deletion. */
     public Boolean hasPageMessages {
@@ -84,11 +86,22 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    /**
+     * @description True if the current user has minimum access for Contact deletion with this page.
+     */
+    public Boolean hasMinimumAccess {get;set;}
+
     /*******************************************************************************************************
     * @description Standard controller constructor. Queries for contact, verifies whether the contact or its
     * account should be deleted.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
+        hasMinimumAccess = validateUserAccess();
+        if (!hasMinimumAccess) {
+            return;
+        }
+        hasAccountDeleteAccess = hasAccountDelete();
+
         setNavigationParams(ApexPages.currentPage().getParameters());
 
         queryContact = [
@@ -98,10 +111,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             WHERE Id = :stdController.getId()
         ];
 
-        shouldDeleteContactAlone = true;
-        canDeleteAccount = false;
-
+        isOnlyContactInHousehold = false;
+        isHouseholdAccount = false;
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
+            isHouseholdAccount = true;
+
             accountId = queryContact.AccountId;
             List<AggregateResult> contactsInHousehold = [
                 SELECT COUNT(id) ct
@@ -114,23 +128,20 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             //This contact is alone in a system account, delete the system account and allow the cascading
             //delete to remove the contact
             if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
-                shouldDeleteContactAlone = false;
+                isOnlyContactInHousehold = true;
 
                 String helpDeleteAccountInstead;
-                if (UTIL_Permissions.canRead('Account', 'Name', false)) {
-                    canDeleteAccount = true;
+                if (hasAccountDeleteAccess) {
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteAccount,
                         new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
                     );
                 } else {
-                
                     helpDeleteAccountInstead = String.format(
                         Label.ConfirmDeleteLeaveAccountEmpty,
                         new List<String>{queryContact.Name.escapeHtml4()}
                     );
                 }
-
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
             }
         }
@@ -161,6 +172,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */
     public PageReference processDelete() {
+        if ((isHouseholdAccount && isOnlyContactInHousehold) || !hasMinimumAccess) {
+            return null;
+        }
+
         try {
             return deleteContact();
         } catch (Exception ex){
@@ -225,7 +240,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @return Boolean
     */
     private Boolean isDeleteContactOnly() {
-        return shouldDeleteContactAlone || isDeleteContactLeaveAccount;
+        return (!isOnlyContactInHousehold) || isDeleteContactLeaveAccount;
     }
 
     /*******************************************************************************************************
@@ -425,6 +440,35 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 throw new CascadeDeleteException(errorMessage);
             }
         }
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has minimum access to the Contact object
+    * @return Boolean
+    */
+    public Boolean validateUserAccess() {
+        return  UTIL_Permissions.canRead('Contact', false) &&
+                UTIL_Permissions.canDelete('Contact', false);
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has delete access to the Account object
+    * @return Boolean
+    */
+    public Boolean hasAccountDelete() {
+        return UTIL_Permissions.canDelete('Account', false);
+    }
+
+    /**
+    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
+    * @return String
+    */
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
     }
 
     /*******************************************************************************************************
