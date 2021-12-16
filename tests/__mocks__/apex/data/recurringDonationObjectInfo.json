@@ -2,6 +2,267 @@
   "apiName": "npe03__Recurring_Donation__c",
   "associateEntityType": null,
   "associateParentEntity": null,
+  "childRelationships": [
+    {
+      "childObjectApiName": "ActivityHistory",
+      "fieldName": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ActivityHistories"
+    },
+    {
+      "childObjectApiName": "Allocation__c",
+      "fieldName": "Recurring_Donation__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Allocations__r"
+    },
+    {
+      "childObjectApiName": "AttachedContentDocument",
+      "fieldName": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentDocuments"
+    },
+    {
+      "childObjectApiName": "AttachedContentNote",
+      "fieldName": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "AttachedContentNotes"
+    },
+    {
+      "childObjectApiName": "Attachment",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Attachments"
+    },
+    {
+      "childObjectApiName": "CollaborationGroupRecord",
+      "fieldName": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordAssociatedGroups"
+    },
+    {
+      "childObjectApiName": "CombinedAttachment",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "CombinedAttachments"
+    },
+    {
+      "childObjectApiName": "ContactRequest",
+      "fieldName": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContactRequests"
+    },
+    {
+      "childObjectApiName": "ContentDocumentLink",
+      "fieldName": "LinkedEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ContentDocumentLinks"
+    },
+    {
+      "childObjectApiName": "DataImport__c",
+      "fieldName": "RecurringDonationImported__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NPSP_Data_Imports__r"
+    },
+    {
+      "childObjectApiName": "DuplicateRecordItem",
+      "fieldName": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "DuplicateRecordItems"
+    },
+    {
+      "childObjectApiName": "EmailMessage",
+      "fieldName": "RelatedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Emails"
+    },
+    {
+      "childObjectApiName": "Engagement_Plan__c",
+      "fieldName": "Recurring_Donation__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Action_Plans__r"
+    },
+    {
+      "childObjectApiName": "EntitySubscription",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FeedSubscriptionsForEntity"
+    },
+    {
+      "childObjectApiName": "Event",
+      "fieldName": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Events"
+    },
+    {
+      "childObjectApiName": "FinanceBalanceSnapshot",
+      "fieldName": "LegalEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FinanceBalanceSnapshots"
+    },
+    {
+      "childObjectApiName": "FinanceBalanceSnapshot",
+      "fieldName": "ReferenceEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FinanceBalanceSnapshots"
+    },
+    {
+      "childObjectApiName": "FinanceTransaction",
+      "fieldName": "DestinationEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "DestinationFinanceTransactions"
+    },
+    {
+      "childObjectApiName": "FinanceTransaction",
+      "fieldName": "LegalEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FinanceTransactions"
+    },
+    {
+      "childObjectApiName": "FinanceTransaction",
+      "fieldName": "ParentReferenceEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ParentFinanceTransactions"
+    },
+    {
+      "childObjectApiName": "FinanceTransaction",
+      "fieldName": "ReferenceEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "FinanceTransactions"
+    },
+    {
+      "childObjectApiName": "FinanceTransaction",
+      "fieldName": "SourceEntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "SourceFinanceTransactions"
+    },
+    {
+      "childObjectApiName": "Note",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Notes"
+    },
+    {
+      "childObjectApiName": "NoteAndAttachment",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "NotesAndAttachments"
+    },
+    {
+      "childObjectApiName": "OpenActivity",
+      "fieldName": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "OpenActivities"
+    },
+    {
+      "childObjectApiName": "Opportunity",
+      "fieldName": "npe03__Recurring_Donation__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "npe03__Donations__r"
+    },
+    {
+      "childObjectApiName": "ProcessException",
+      "fieldName": "AttachedToId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessExceptions"
+    },
+    {
+      "childObjectApiName": "ProcessInstance",
+      "fieldName": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessInstances"
+    },
+    {
+      "childObjectApiName": "ProcessInstanceHistory",
+      "fieldName": "TargetObjectId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "ProcessSteps"
+    },
+    {
+      "childObjectApiName": "RecordAction",
+      "fieldName": "RecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActions"
+    },
+    {
+      "childObjectApiName": "RecordActionHistory",
+      "fieldName": "ParentRecordId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecordActionHistories"
+    },
+    {
+      "childObjectApiName": "RecurringDonationChangeLog__c",
+      "fieldName": "RecurringDonation__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RDChangeLog__r"
+    },
+    {
+      "childObjectApiName": "RecurringDonationSchedule__c",
+      "fieldName": "RecurringDonation__c",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "RecurringDonationSchedules__r"
+    },
+    {
+      "childObjectApiName": "Task",
+      "fieldName": "WhatId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Tasks"
+    },
+    {
+      "childObjectApiName": "TopicAssignment",
+      "fieldName": "EntityId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "TopicAssignments"
+    },
+    {
+      "childObjectApiName": "npe03__Recurring_Donation__History",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Histories"
+    },
+    {
+      "childObjectApiName": "npe03__Recurring_Donation__Share",
+      "fieldName": "ParentId",
+      "junctionIdListNames": [],
+      "junctionReferenceTo": [],
+      "relationshipName": "Shares"
+    }
+  ],
   "createable": true,
   "custom": true,
   "defaultRecordTypeId": "012000000000000AAA",
@@ -160,6 +421,39 @@
       "inlineHelpText": "The last four digits of the card used for this Recurring Donation.",
       "label": "Card Last 4",
       "length": 4,
+      "nameField": false,
+      "polymorphicForeignKey": false,
+      "precision": 0,
+      "reference": false,
+      "referenceTargetField": null,
+      "referenceToInfos": [],
+      "relationshipName": null,
+      "required": false,
+      "scale": 0,
+      "searchPrefilterable": false,
+      "sortable": true,
+      "unique": false,
+      "updateable": true
+    },
+    "ChangeType__c": {
+      "apiName": "ChangeType__c",
+      "calculated": false,
+      "compound": false,
+      "compoundComponentName": null,
+      "compoundFieldName": null,
+      "controllerName": null,
+      "controllingFields": [],
+      "createable": true,
+      "custom": true,
+      "dataType": "Picklist",
+      "extraTypeInfo": null,
+      "filterable": true,
+      "filteredLookupInfo": null,
+      "highScaleNumber": false,
+      "htmlFormatted": false,
+      "inlineHelpText": "The type of change (Upgrade, Downgrade, etc.) this Update represents.",
+      "label": "Change Type",
+      "length": 255,
       "nameField": false,
       "polymorphicForeignKey": false,
       "precision": 0,

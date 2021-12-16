@@ -11,7 +11,7 @@
                     <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
                                            flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
-                                               onchange={onHandleRecurringTypeChange}
+                                               onchange={handleRecurringTypeChange}
                                                data-id='{fields.recurringType.apiName}'
                                                required>
                         </lightning-input-field>
@@ -36,7 +36,7 @@
                                 class="advanced-mode-fields rd2-entry-custom-field-padding"
                                 value={customPeriod}
                                 options={customPeriodOptions}
-                                onchange={onHandleRecurringPeriodChange}
+                                onchange={handleRecurringPeriodChange}
                                 field-level-help={customLabels.customPeriodHelpText}
                                 disabled={disablePeriodPicklistField}
                                 data-id="recurringPeriod"
@@ -53,12 +53,13 @@
                                              class="advanced-mode-fields rd2-entry-custom-field-padding"
                                              value={inputFieldInstallmentFrequency}
                                              type="number"
-                                             onchange={onHandleRecurringFrequencyChange}
+                                             onchange={handleRecurringFrequencyChange}
                                              field-level-help={fields.installmentFrequency.inlineHelpText}
                                              step="1"
                                              min="1"
                                              max="20"
                                              disabled={disableInstallmentFrequencyField}
+                                             data-id="installmentFrequency"
                                              required
                             >
                             </lightning-input>
@@ -75,7 +76,7 @@
                                 value={customPeriodAdvancedMode}
                                 field-level-help={fields.period.inlineHelpText}
                                 options={advancedPeriodOptions}
-                                onchange={onHandleAdvancedPeriodChange}
+                                onchange={handleAdvancedPeriodChange}
                                 data-id="installmentPeriod"
                                 disabled={disablePeriodPicklistField}
                                 required>
