@@ -12,6 +12,7 @@
     <body>
     <div class="slds-scope">
         <div class="slds-tabs_default">
+            <apex:outputPanel layout="block" rendered="{!$Site.Name == ''}">
             <ul class="slds-tabs_default__nav" role="tablist">
                 <li id="tab-graphical" class="slds-tabs_default__item slds-is-active" title="Graphical View" role="presentation">
                     <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0" aria-selected="true"
@@ -36,6 +37,7 @@
           </span>Tabular View</a>
                 </li>
             </ul>
+                </apex:outputPanel>
             <div id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel"
                  aria-labelledby="tab-default-1__item">
                 <canvas id="viewport" width="1000" height="600"></canvas>
@@ -48,14 +50,6 @@
     </div>
 
     <script>
-        $Lightning.use("c:REL_RelationshipsApp", function() {
-            $Lightning.createComponent("c:REL_RelationshipsContainer",
-                {
-                    recordId: '{!JSENCODE(CASESAFEID(id))}'
-                },
-                "tabular-lwc");
-        });
-
         var j$ = jQuery.noConflict();
         /*
         these colors are used to show the different levels of relationships
@@ -410,56 +404,67 @@
                     document.getElementById("viewport").style.display = "none";
                 }
 
-                function showTabularView() {
-                    j$('#tab-default-2').removeClass("slds-hide").addClass("slds-show");
-                    j$('#tab-default-1').removeClass("slds-show").addClass("slds-hide");
-                    j$("#tab-tabular").addClass("slds-is-active");
-                    j$("#tab-graphical").removeClass("slds-is-active");
-                    j$('#tab-default-2__item')
-                        .attr("tabindex", "0")
-                        .attr("aria-selected", "true")
-                        .focus();
-                    j$('#tab-default-1__item')
-                        .attr("tabindex", "-1")
-                        .attr("aria-selected", "false")
-                }
+                if({!$Site.Name == ''}) {
 
-                function showGraphicalView() {
-                    j$('#tab-default-1').removeClass("slds-hide").addClass("slds-show");
-                    j$('#tab-default-2').removeClass("slds-show").addClass("slds-hide");
-                    j$("#tab-graphical").addClass("slds-is-active");
-                    j$("#tab-tabular").removeClass("slds-is-active");
-                    j$('#tab-default-1__item')
-                        .attr("tabindex", "0")
-                        .attr("aria-selected", "true")
-                        .focus();
-                    j$('#tab-default-2__item')
-                        .attr("tabindex", "-1")
-                        .attr("aria-selected", "false")
-                }
+                    $Lightning.use("c:REL_RelationshipsApp", function() {
+                        $Lightning.createComponent("c:REL_RelationshipsContainer",
+                            {
+                                recordId: '{!JSENCODE(CASESAFEID(id))}'
+                            },
+                            "tabular-lwc");
+                    });
 
-                const graphicalTab = j$('#tab-default-1__item');
-                const tabularTab = j$("#tab-default-2__item");
-
-                graphicalTab.click(function() {
-                    showGraphicalView();
-                });
-
-                tabularTab.click(function() {
-                    showTabularView();
-                });
-
-                graphicalTab.keydown(function(event) {
-                    if(event.key === 'ArrowRight') {
-                        showTabularView();
+                    function showTabularView() {
+                        j$('#tab-default-2').removeClass("slds-hide").addClass("slds-show");
+                        j$('#tab-default-1').removeClass("slds-show").addClass("slds-hide");
+                        j$("#tab-tabular").addClass("slds-is-active");
+                        j$("#tab-graphical").removeClass("slds-is-active");
+                        j$('#tab-default-2__item')
+                            .attr("tabindex", "0")
+                            .attr("aria-selected", "true")
+                            .focus();
+                        j$('#tab-default-1__item')
+                            .attr("tabindex", "-1")
+                            .attr("aria-selected", "false")
                     }
-                });
 
-                tabularTab.keydown(function(event) {
-                    if(event.key === 'ArrowLeft') {
+                    function showGraphicalView() {
+                        j$('#tab-default-1').removeClass("slds-hide").addClass("slds-show");
+                        j$('#tab-default-2').removeClass("slds-show").addClass("slds-hide");
+                        j$("#tab-graphical").addClass("slds-is-active");
+                        j$("#tab-tabular").removeClass("slds-is-active");
+                        j$('#tab-default-1__item')
+                            .attr("tabindex", "0")
+                            .attr("aria-selected", "true")
+                            .focus();
+                        j$('#tab-default-2__item')
+                            .attr("tabindex", "-1")
+                            .attr("aria-selected", "false")
+                    }
+
+                    const graphicalTab = j$('#tab-default-1__item');
+                    const tabularTab = j$("#tab-default-2__item");
+
+                    graphicalTab.click(function() {
                         showGraphicalView();
-                    }
-                });
+                    });
+
+                    tabularTab.click(function() {
+                        showTabularView();
+                    });
+
+                    graphicalTab.keydown(function(event) {
+                        if (event.key === 'ArrowRight') {
+                            showTabularView();
+                        }
+                    });
+
+                    tabularTab.keydown(function(event) {
+                        if (event.key === 'ArrowLeft') {
+                            showGraphicalView();
+                        }
+                    });
+                }
             })
         })(this.jQuery)
 
