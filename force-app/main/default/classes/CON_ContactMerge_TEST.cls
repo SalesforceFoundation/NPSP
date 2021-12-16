@@ -736,29 +736,30 @@ public class CON_ContactMerge_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        merge2IndividualBucketContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2IndividualsHHAccount(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        merge2IndividualBucketContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     //merge two contacts in the Individual Account
-    //the organization shouldn't be deleted
-    static void merge2Individuals(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
-
+    //the organization shouldn't be deleted or renamed
+    static void merge2IndividualBucketContacts(string strProcessor) {
+        // Arrange: GIVEN two Individual Bucket Contacts exist and are to be merged on the
+        // Contact Merge Visualforce page
         Contact con = UTIL_UnitTestData_TEST.getContact();
-
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
+        Contact[] contacts = new Contact[]{
+                con, con2
+        };
+        insertAsIndividualBucketContacts(contacts);
 
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        Map<Id, Contact> queriedBucketContacts = getContacts(new Set<Id>{con.Id, con2.Id});
+        con = queriedBucketContacts.get(con.Id);
+        con2 = queriedBucketContacts.get(con2.Id);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
 
@@ -782,18 +783,46 @@ public class CON_ContactMerge_TEST {
 
         selectMasterRecord(controller, con.id);
 
-        //merge them
+        // Act: WHEN one Individual Bucket Contact is merged into another Bucket Contact
+        Test.startTest();
         controller.mergeContacts();
+        Test.stopTest();
 
+        // Assert: THEN
         //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
+        System.assertEquals(0, [SELECT COUNT() FROM Contact WHERE Id = :con2.Id]);
+        System.assertEquals(1, [SELECT COUNT() FROM Contact WHERE Id = :con.Id]);
         //second contact's account should not be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
-        //First contact's account id should not have changed
-        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
+        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con2.AccountId]);
+        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con.AccountId]);
+
+        Map<Id, Contact> queriedContacts = getContacts(new Set<Id>{
+                con.Id
+        });
+        Contact mergeWinner = queriedContacts.get(con.Id);
+
+        System.assertEquals(con.AccountId, mergeWinner.AccountId,
+                'The winning Contact\'s account id should not have changed');
+        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, mergeWinner.Account.Name,
+                'The winning Contact\'s Account\'s Name should not have changed');
     }
+
+    private static Map<Id, Contact> getContacts(Set<Id> contactIds) {
+        return new Map<Id, Contact>([
+                Select accountId, FirstName, LastName, MailingStreet, Account.Name
+                from Contact
+                where Id = :contactIds
+        ]);
+    }
+
+    private static void insertAsIndividualBucketContacts(Contact[] contacts) {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (
+                        npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+
+        insert contacts;
+    }
+
     /*
     //merge one contacts in the Individual Account, one in one-to-one model
     //the individual organization shouldn't be deleted
