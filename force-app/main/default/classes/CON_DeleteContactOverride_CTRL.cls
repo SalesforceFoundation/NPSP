@@ -74,7 +74,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description Flag to tell the page account deletion is permitted. */
     public Boolean hasAccountDeleteAccess {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
-    private Boolean isDeleteContactLeaveAccount = false;
+    private Boolean isDeleteContactLeaveAccount;
     /** @description Flag indicating if only this Contact is in a Household Account. */
     private Boolean isHouseholdAccount;
 
@@ -97,10 +97,13 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
         hasMinimumAccess = validateUserAccess();
+        hasAccountDeleteAccess = hasAccountDelete();
+        isOnlyContactInHousehold = false;
+        isHouseholdAccount = false;
+
         if (!hasMinimumAccess) {
             return;
         }
-        hasAccountDeleteAccess = hasAccountDelete();
 
         setNavigationParams(ApexPages.currentPage().getParameters());
 
@@ -111,8 +114,6 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             WHERE Id = :stdController.getId()
         ];
 
-        isOnlyContactInHousehold = false;
-        isHouseholdAccount = false;
         if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
             isHouseholdAccount = true;
 
