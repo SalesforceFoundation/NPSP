@@ -11,11 +11,15 @@ import donorLabel from '@salesforce/label/c.donorLabel';
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
+    recordsToLoad = 50;
+
     paymentMethodLabel;
 
     totalNumberOfRows;
 
     tableElement;
+
+    allData = [];
 
     data = [];
 
@@ -45,16 +49,12 @@ export default class DonationHistoryTable extends LightningElement {
     
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        getTotalRecords({contactId: this.contactId})
-        .then({
-            if(data){
-                this.totalNumberOfRows = data[0].expr0;
-            }
-        });
-        getDonationHistory({contactId: this.contactId, offset: 0})
+        getDonationHistory({contactId: this.contactId})
         .then(data => {
             if (data) {
-                this.data = data;
+                this.allData = data;
+                this.data = data.slice(0, this.recordsToLoad);
+                this.totalNumberOfRows = data.length;
             }
         });
     }
@@ -66,18 +66,17 @@ export default class DonationHistoryTable extends LightningElement {
      */
     loadMoreDonationData(event){
         event.target.isLoading = true;
-        this.tableElement = event.target;
-        getDonationHistory({contactId: this.contactId, offset: this.data.length})
-        .then(data => {
-            if (this.data.length >= this.totalNumberOfRows) {
-                event.target.enableInfiniteLoading = false;
-                return;
-            }
-            const currentData = this.data;
-            const newData = currentData.concat(data);
-            this.data = newData;
-            //this fails for reference
-            this.tableElement.isLoading = false;
-        });
+        if (this.data.length >= this.totalNumberOfRows) {
+            event.target.enableInfiniteLoading = false;
+            event.target.isLoading = false;
+            return;
+        }
+        const current = this.data.length;
+        const offset = current + this.recordsToLoad;
+        const currentData = this.data;
+        //Appends new data to the end of the table
+        const newData = currentData.concat(this.allData.slice(current, offset));
+        this.data = newData;
+        event.target.isLoading = false;
     }
 }

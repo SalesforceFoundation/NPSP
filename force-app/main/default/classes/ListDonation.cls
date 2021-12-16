@@ -61,13 +61,13 @@ public with sharing class ListDonation {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistory> getDonationHistory(Id contactId, Integer offset){
+    public static List<DonationHistory> getDonationHistory(Id contactId){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary 
                                                     FROM OpportunityContactRole 
                                                     WHERE Opportunity.IsWon = true 
                                                     AND ContactId =:contactId 
                                                     ORDER BY Opportunity.CloseDate 
-                                                    DESC LIMIT 50 OFFSET :offset];
+                                                    DESC];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
     }
