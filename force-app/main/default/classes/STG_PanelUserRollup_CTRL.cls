@@ -381,6 +381,19 @@ public with sharing class STG_PanelUserRollup_CTRL extends STG_Panel {
         ApexPages.addMessage(myMsg);
     }
 
+    public static void throwAuraExceptionIfRunningUserNotAdmin() {
+        if(!STG_Panel.runningUserIsAdmin()) {
+            throwAuraPermsException();
+        }
+    }
+
+    private static void throwAuraPermsException() {
+        AuraHandledException auraException = new AuraHandledException(Label.stgEditPermissionError);
+        // Set message so that Apex getMessage() can test the correct message is returned
+        auraException.setMessage(Label.stgEditPermissionError);
+        throw auraException;
+    }
+
     /*********************************************************************************************************
     * @description Class the represents a User Defined Rollup
     */

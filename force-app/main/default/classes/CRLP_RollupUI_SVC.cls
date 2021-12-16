@@ -144,7 +144,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupGrid() {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         RollupGridModel model = new RollupGridModel();
 
@@ -165,13 +165,6 @@ public with sharing class CRLP_RollupUI_SVC {
         return modelString;
     }
 
-    private static void throwAuraPermsException() {
-        AuraHandledException auraException = new AuraHandledException(Label.stgEditPermissionError);
-        // Set message so that Apex getMessage() can test the correct message is returned
-        auraException.setMessage(Label.stgEditPermissionError);
-        throw auraException;
-    }
-
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
     * during the init() function to retrieve and set up the LEX page for view/edit
@@ -182,7 +175,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
@@ -208,7 +201,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<RollupTableItem> getRollupDefinitions() {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
@@ -293,7 +286,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
@@ -340,7 +333,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
@@ -726,7 +719,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveRollup(String jsonRollup) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -763,7 +756,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String saveFilterGroupAndRules(String jsonFilterGroup) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -807,7 +800,7 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
@@ -862,7 +855,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     @AuraEnabled
     public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
-        if (!STG_Panel.runningUserIsAdmin()) throwAuraPermsException();
+        STG_PanelUserRollup_CTRL.throwAuraExceptionIfRunningUserNotAdmin();
 
         try {
             List<Map<String, String>> optionsList = new List<Map<String, String>>();
