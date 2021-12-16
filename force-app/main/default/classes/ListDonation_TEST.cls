@@ -72,11 +72,12 @@ public class ListDonation_TEST {
 			Contact_Role_ID__c=oppCntRolePartialSoftCredit.Id
 		);
 		insert partialSoftCredit;
-
 		Test.stopTest();
 		
+		Test.startTest()
 		List<ListDonation.DonationHistory> donationHistory = ListDonation.getDonationHistory(mockDefaultContact.Id, 0);
 		List<ListDonation.DonationHistory> filteredDonationHistory = new List<ListDonation.DonationHistory>();
+		Test.stopTest();
 
 		for (ListDonation.DonationHistory donation : donationHistory) {
 			filteredDonationHistory.add(donation);

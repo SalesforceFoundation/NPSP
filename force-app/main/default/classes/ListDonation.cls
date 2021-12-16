@@ -67,7 +67,7 @@ public with sharing class ListDonation {
                                                     WHERE Opportunity.IsWon = true 
                                                     AND ContactId =:contactId 
                                                     ORDER BY Opportunity.CloseDate 
-                                                    DESC];
+                                                    DESC LIMI 2000];
         List<DonationHistory> result = verifyCreditCondition(donations);
         return result;
     }
@@ -107,7 +107,7 @@ public with sharing class ListDonation {
     */
     public static List<DonationHistory> verifyHardCreditCondition(List<OpportunityContactRole> donations){
         List<DonationHistory> hardCreditList = new List<DonationHistory>();
-        for(OpportunityContactRole opp: donations){
+        for(OpportunityContactRole ocr: donations){
             if (opp.isPrimary) {
                 DonationHistory hardCredit = new DonationHistory();
                 hardCredit.id = opp.Id;
@@ -134,7 +134,7 @@ public with sharing class ListDonation {
         Filter_Rule__mdt roles = [SELECT Constant__c FROM Filter_Rule__mdt WHERE QualifiedApiName = 'NPSP_OppsSoftCreditRoles'];
         List<String> softCreditRoles = roles.Constant__c.split(';');
         List<DonationHistory> softCreditList = new List<DonationHistory>();
-        for(OpportunityContactRole opp: donations){
+        for(OpportunityContactRole ocr: donations){
             if (softCreditRoles.contains(opp.Role) && opp.isPrimary==false) {
                 DonationHistory softCredit = new DonationHistory();
                 softCredit.id = opp.Id;
@@ -178,7 +178,7 @@ public with sharing class ListDonation {
             partialSoftCreditIds.add(ps.Contact_Role_ID__c);
         }
         List<DonationHistory> partialSoftCreditList = new List<DonationHistory>();
-        for(OpportunityContactRole opp: donations){
+        for(OpportunityContactRole ocr: donations){
             if (partialSoftCreditIds.contains(opp.id)) {
                 DonationHistory newPartialSoftCredit = new DonationHistory();
                 newPartialSoftCredit.id = opp.Id;
