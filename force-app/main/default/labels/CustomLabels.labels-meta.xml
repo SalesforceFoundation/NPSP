@@ -1362,6 +1362,38 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>donationHistoryGivingSummaryTitle</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Component title</shortDescription>
+        <value>Giving Summary</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelLifetime</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for lifetime donations</shortDescription>
+        <value>Lifetime</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelPreviousYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for previous years donations</shortDescription>
+        <value>Previous Year</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelThisYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for this years donations</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
         <fullName>EPAddTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -15189,7 +15221,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Donation History</value>
     </labels>
     <labels>
-        <fullName>donorLabel</fullName>
+        <fullName>donationHistoryDonorLabel</fullName>
         <categories>Donation</categories>
         <language>en_US</language>
         <protected>true</protected>
