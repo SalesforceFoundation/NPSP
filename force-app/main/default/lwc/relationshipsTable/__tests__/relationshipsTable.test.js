@@ -4,15 +4,18 @@ import { getRecord } from 'lightning/uiRecordApi';
 import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
 
 const mockGetRelationships = require("./data/mockGetRelationships.json");
-const mockGetContactRecord = require("./data/mockGetContactRecord.json");
 
-jest.mock("@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships",
-  () => {
-    return {
-      default: jest.fn()
-    };
-  },
-  { virtual: true }
+jest.mock(
+    '@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships',
+    () => {
+      const {
+        createApexTestWireAdapter
+      } = require('@salesforce/sfdx-lwc-jest');
+      return {
+        default: createApexTestWireAdapter(jest.fn())
+      };
+    },
+    { virtual: true }
 );
 
 describe("c-relationships-table", () => {
@@ -20,12 +23,14 @@ describe("c-relationships-table", () => {
     clearDOM();
   });
 
-  it("loads with a list of relationships", () => {
+  it("loads with a list of relationships", async () => {
     const element = createElement("c-relationships-table", { is: RelationshipsTable });
-
+    element.contactId = '003_FAKE_CONTACT_ID';
     document.body.appendChild(element);
     getRelationships.emit(mockGetRelationships);
-    getRecord.emit(mockContactRecord);
+    await flushPromises();
+
+    expect(element).toMatchSnapshot();
   });
 
   it("fires event for loading additional relationships", () => {

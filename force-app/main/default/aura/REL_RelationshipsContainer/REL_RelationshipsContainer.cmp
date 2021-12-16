@@ -1,0 +1,4 @@
+<aura:component description="REL_RelationshipsContainer">
+    <aura:attribute name="recordId" access="public" required="true" description="Id of the initial contact record" type="String"/>
+    <c:relationshipsNavigator recordId="{!v.recordId}"/>
+</aura:component>

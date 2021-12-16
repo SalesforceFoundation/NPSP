@@ -71,9 +71,15 @@ export default class RelationshipsTable extends NavigationMixin(LightningElement
     columns = COLUMNS_DEF;
     contactName;
     tableLabel;
+    relationships
 
     @wire(getRelationships, { contactId: "$contactId" })
-    relationships;
+    wiredRelationships({error, data}) {
+        if(data) {
+            this.relationships = data.nodes;
+            // this.contactName = `${data.rootNode.firstName} ${data.rootNode.lastName}`;
+        }
+    }
 
     @wire(getRecord, { recordId: "$contactId", fields: CONTACT_FIELDS })
     wiredContactName({ error, data }) {
@@ -102,6 +108,12 @@ export default class RelationshipsTable extends NavigationMixin(LightningElement
                 actionName: "view"
             }
         });
+    }
+
+    reCenterOnContact(recordId) {
+        const navigateArgs = {
+
+        }
     }
 
     newRelationship(recordId) {

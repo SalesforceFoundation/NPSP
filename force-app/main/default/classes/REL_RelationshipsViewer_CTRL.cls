@@ -143,8 +143,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Node> getRelationships(Id contactId) {
-        return getRelationships(contactId, false, new List<String>());
+    public static RelationshipsView getRelationships(Id contactId) {
+        List<Node> nodes = getRelationships(contactId, true, new List<String>());
+        RelationshipsView view = new RelationshipsView();
+        view.rootNode = nodes.remove(0);
+        view.nodes = nodes;
+        view.relationshipViewerURL = Page.REL_RelationshipsViewer.getUrl();
+        return view;
     }
 
     /*******************************************************************************************************
@@ -178,7 +183,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             List<Contact> contacts = Database.query(contactQuery);
             Contact primaryContact = null;
             if(!contacts.isEmpty()) {
-                primaryContact = (Contact)Database.query(contactQuery).get(0);
+                primaryContact = contacts[0];
             }
 
             basenode.lastName = primaryContact.LastName;
@@ -260,6 +265,12 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         @AuraEnabled public String accountName;
         @AuraEnabled public String title;
         @AuraEnabled public String relId;
-    }  
+    }
+
+    public class RelationshipsView {
+        @AuraEnabled public List<Node> nodes;
+        @AuraEnabled public Node rootNode;
+        @AuraEnabled public String relationshipViewerURL;
+    }
     
 }
