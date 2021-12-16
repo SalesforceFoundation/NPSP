@@ -9,6 +9,11 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor-tween.js')}" />
 
+    <style>
+        .slds-scope .slds-table tr.slds-hint-parent td, .slds-scope .slds-table tr.slds-hint-parent th {
+            padding: 0.25rem;
+        }
+    </style>
     <body>
     <div class="slds-scope">
         <div class="slds-tabs_default">
