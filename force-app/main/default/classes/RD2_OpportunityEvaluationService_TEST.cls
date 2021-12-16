@@ -87,6 +87,31 @@ private class RD2_OpportunityEvaluationService_TEST {
         System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
     }
 
+
+    @IsTest
+    private static void shouldCreateInstallmentOppForOpenRDWhenPlannedAndPaidInstallmentsAreZero() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationBuilder(getContact())
+                .withDayOfMonth('20')
+                .withPlannedInstallments(0)
+                .withPaidInstallments(0)
+                .withCalculateNextDonationDate()
+                .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        rd = rdGateway.getRecord(rd.Id);
+        List<Opportunity> opps = oppGateway.getRecords(rd);
+
+        System.assertEquals(1, opps.size(), 'The number of returned Opp should match');
+        System.assertEquals(rd.npe03__Amount__c, opps[0].Amount, 'The Opportunity Amount does not match the RD Amount');
+        System.assertEquals(rd.npe03__Contact__c, opps[0].Primary_Contact__c, 'The Opportunity Contact does not match the RD Contact');
+        System.assertEquals(rd.npe03__Next_Payment_Date__c, opps[0].CloseDate, 'The Opportunity CloseDate does not match the RD NextDonationDate');
+    }
+
     /**
      * @description Verifies that creating a new Lapsed Recurring Donation creates an Installment Opportunity
      */
