@@ -464,6 +464,7 @@
         })(this.jQuery)
 
         function drawToolTip(x, y, text) {
+            j$('#tooltip').show();
             j$("#tooltip").css({ top: y + 'px', left: x + 'px' });
             j$("#tooltip").animate({ opacity: 1.0 }, 500);
             j$("#tooltip").html(text);
@@ -481,6 +482,7 @@
                 infoText += '[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]<br />';
                 infoText += '</strong></p>';
                 j$("#tooltip").html(infoText);
+                j$("#tooltip").hide();
             });
             mouseOutComplete = true;
         }
