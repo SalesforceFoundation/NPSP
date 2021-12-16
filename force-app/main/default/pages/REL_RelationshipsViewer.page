@@ -38,11 +38,11 @@
                 </li>
             </ul>
                 </apex:outputPanel>
-            <div id="tab-default-1" class="slds-tabs_default__content slds-show" role="tabpanel"
+            <div id="tab-default-1" class="slds-show" role="tabpanel"
                  aria-labelledby="tab-default-1__item">
                 <canvas id="viewport" width="1000" height="600"></canvas>
             </div>
-            <div id="tab-default-2" class="slds-tabs_default__content slds-hide" role="tabpanel"
+            <div id="tab-default-2" class="slds-hide" role="tabpanel"
                  aria-labelledby="tab-default-2__item">
                 <div id="tabular-lwc"></div>
             </div>
