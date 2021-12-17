@@ -1,11 +1,4 @@
 {
-  "rootnode": {
-    "accountName": "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household",
-    "firstName": "Raymond",
-    "id": "0035400000l7lprAAA",
-    "lastName": "Alvarez",
-    "title": "Research Associate"
-  },
   "nodes": [
     {
       "accountName": "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household",
@@ -71,5 +64,13 @@
       "title": "Quality Engineer",
       "type": "Partner"
     }
-  ]
+  ],
+  "rootNode": {
+    "accountName": "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household",
+    "firstName": "Raymond",
+    "id": "0035400000l7lprAAA",
+    "lastName": "Alvarez",
+    "title": "Research Associate"
+  },
+  "vfPageURL": "/apex/REL_RelationshipsViewer"
 }
