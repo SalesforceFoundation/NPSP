@@ -124,7 +124,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         const { hasChildrenContent, row } = event.detail;
         if (!hasChildrenContent) {
 
-            const relationshipViews = await this.getRelationships(row.id);
+            const relationshipViews = await this.getRelationships(row.contactId);
 
             const filteredChildren = relationshipViews.map(relationship => {
                 if (this.isAlreadyLoaded(relationship.contactId)) {
@@ -153,7 +153,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                 };
             }
 
-            if (relationship.contactId === row.id) {
+            if (relationship.contactId === row.contactId) {
                 delete relationship._children;
             }
 
