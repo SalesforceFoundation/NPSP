@@ -49,7 +49,7 @@ private class REL_Relationships_TEST {
     * @description Helper for test methods, creates a Auto Create Relationship settings and Relationship 
     * Lookup settings.
     */
-    private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs){
+    private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs) {
         
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
