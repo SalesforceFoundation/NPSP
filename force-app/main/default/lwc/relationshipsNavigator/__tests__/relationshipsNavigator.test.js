@@ -7,22 +7,25 @@ const mockGetRelationships = require("../../relationshipsTreeGrid/__tests__/data
 const FAKE_CONTACT_ID = "003_FAKE_CONTACT_ID";
 
 const mockGetRecord = {
-    "apiName": "Contact",
-    "childRelationships": {},
-    "id": FAKE_CONTACT_ID,
-    "recordTypeInfo": null,
-    "fields": {
-        "Name": {
-            "displayValue": null,
-            "value": "FakeFirstName FakeLastName"
-        }
-    }
+    apiName: "Contact",
+    childRelationships: {},
+    id: FAKE_CONTACT_ID,
+    recordTypeInfo: null,
+    fields: {
+        Name: {
+            displayValue: null,
+            value: "FakeFirstName FakeLastName",
+        },
+    },
 };
 
-jest.mock("@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships",
+jest.mock(
+    "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships",
     () => {
         return { default: jest.fn() };
-    }, { virtual: true });
+    },
+    { virtual: true }
+);
 
 describe("c-relationships-navigator", () => {
     beforeEach(() => {
@@ -37,26 +40,25 @@ describe("c-relationships-navigator", () => {
         const element = createElement("c-relationships-navigator", { is: RelationshipsNavigator });
         element.recordId = FAKE_CONTACT_ID;
         document.body.appendChild(element);
-        getRecord.emit(mockGetRecord, config => config.recordId === FAKE_CONTACT_ID);
+        getRecord.emit(mockGetRecord, (config) => config.recordId === FAKE_CONTACT_ID);
     });
 
     it("displays an error when user does not have access", async () => {
         const errorMessage = {
-            "status": 500,
-            "body": {
-                "message": "Insufficient Permissions"
-            }
+            status: 500,
+            body: {
+                message: "Insufficient Permissions",
+            },
         };
         getRelationships.mockRejectedValue(errorMessage);
 
         const element = createElement("c-relationships-navigator", { is: RelationshipsNavigator });
         element.recordId = FAKE_CONTACT_ID;
         document.body.appendChild(element);
-        getRecord.emit(mockGetRecord, config => config.recordId === FAKE_CONTACT_ID);
+        getRecord.emit(mockGetRecord, (config) => config.recordId === FAKE_CONTACT_ID);
         await flushPromises();
 
-        const errorMessageCmp = element.shadowRoot.querySelector('c-util-illustration');
+        const errorMessageCmp = element.shadowRoot.querySelector("c-util-illustration");
         expect(errorMessageCmp).toBeTruthy();
     });
-
 });

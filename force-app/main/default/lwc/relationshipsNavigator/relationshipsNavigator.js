@@ -1,9 +1,8 @@
 import { LightningElement, api, wire } from "lwc";
 import { getFieldValue, getRecord } from "lightning/uiRecordApi";
 import CONTACT_NAME from "@salesforce/schema/Contact.Name";
-import accessDeniedMessage from '@salesforce/label/c.addrCopyConAddBtnFls';
-import insufficientPermissions from '@salesforce/label/c.commonInsufficientPermissions';
-
+import accessDeniedMessage from "@salesforce/label/c.addrCopyConAddBtnFls";
+import insufficientPermissions from "@salesforce/label/c.commonInsufficientPermissions";
 
 export default class RelationshipsNavigator extends LightningElement {
     @api recordId;
@@ -20,10 +19,10 @@ export default class RelationshipsNavigator extends LightningElement {
 
     labels = {
         accessDeniedMessage,
-        insufficientPermissions
+        insufficientPermissions,
     };
 
-    @wire(getRecord, { recordId: '$recordId', fields: [CONTACT_NAME]})
+    @wire(getRecord, { recordId: "$recordId", fields: [CONTACT_NAME] })
     contact;
 
     error;
@@ -33,7 +32,7 @@ export default class RelationshipsNavigator extends LightningElement {
     }
 
     get contactName() {
-        if(this.contact.data) {
+        if (this.contact.data) {
             return getFieldValue(this.contact.data, CONTACT_NAME);
         }
     }
