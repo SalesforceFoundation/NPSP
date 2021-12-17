@@ -11,7 +11,7 @@ import REL_RECenter from "@salesforce/label/c.REL_RECenter";
 
 
 const TABLE_ACTIONS = {
-    LOAD_RELATIONS: "load_relations",
+    NEW_RELATIONSHIP: "new_relationship",
     RE_CENTER: "re_center",
     VIEW_RECORD: "view_record"
 };
@@ -216,6 +216,6 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     }
 
     isAlreadyLoaded(contactId) {
-        return this.contactIdsLoaded.includes(contactId);
+        return this.contactIdsLoaded.includes(contactId) || this.recordId === contactId;
     }
 }
