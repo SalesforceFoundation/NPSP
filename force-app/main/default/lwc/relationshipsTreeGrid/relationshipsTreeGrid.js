@@ -33,8 +33,8 @@ const COLUMNS_DEF = [
         type: "text"
     },
     {
-        label: "Relation",
-        fieldName: "type",
+        label: "Relationship Explanation",
+        fieldName: "explanation",
         type: "text"
     },
     {
@@ -65,9 +65,11 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     columns = COLUMNS_DEF;
     contactName;
     displayedRelationshipIds = [];
+    contactIdsLoaded = [];
 
     async connectedCallback() {
         const relationshipsView = await getRelationships({ contactId: this.contactId });
+
         this.relationships = relationshipsView.nodes.map(relationship => {
             this.displayedRelationshipIds.push(relationship.relId);
             return {
@@ -87,6 +89,12 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             const relationshipsView = await getRelationships({ contactId: row.id });
 
             const filteredChildren = relationshipsView.nodes.map(relationship => {
+                if(this.isAlreadyLoaded(relationship.id)) {
+                    return {
+                        ...relationship,
+                        name: [relationship.firstName, relationship.lastName].join(' ')
+                    };
+                }
                 return {
                     ...relationship,
                     name: [relationship.firstName, relationship.lastName].join(' '),
@@ -118,6 +126,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             if (relationship.relId === row.relId) {
                 if (children.length > 0) {
                     this.displayedRelationshipIds = this.displayedRelationshipIds.concat(children.map(child => child.relId));
+                    this.contactIdsLoaded.push(relationship.id);
                     return {
                         ...relationship,
                         _children: children
@@ -173,5 +182,9 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                 this.newRelationship(row.id);
                 break;
         }
+    }
+
+    isAlreadyLoaded(contactId) {
+        return this.contactIdsLoaded.includes(contactId);
     }
 }
