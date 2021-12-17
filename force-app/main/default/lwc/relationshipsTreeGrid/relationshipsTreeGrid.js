@@ -82,6 +82,14 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                         label: relationshipsListView.labels[column.fieldName]
                     }
                 }
+                if(!relationshipsListView.showCreateRelationshipButton && column.type === 'action') {
+                    return {
+                        ...column,
+                        typeAttributes: {
+                            rowActions: column.typeAttributes.rowActions.filter(({name}) => name !== TABLE_ACTIONS.NEW_RELATIONSHIP)
+                        }
+                    }
+                }
                 return column;
             });
 

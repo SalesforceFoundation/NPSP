@@ -56,6 +56,22 @@ describe("c-relationships-tree-grid", () => {
         expect(treeGrid.columns[3].label).toBe(mockGetInitialView.labels["relationshipExplanation"]);
     });
 
+    it("hides create new relationship action if no create access", async () => {
+        mockGetInitialView.showCreateRelationshipButton = false;
+        getInitialView.mockResolvedValue(mockGetInitialView);
+        const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
+        element.contactId = "003_FAKE_CONTACT_ID";
+        document.body.appendChild(element);
+        await flushPromises();
+
+        const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
+        expect(treeGrid.columns[4].type).toBe('action');
+        const { rowActions } = treeGrid.columns[4].typeAttributes;
+        expect(rowActions.length).toBe(2);
+        expect(rowActions[0].name).toBe("view_record");
+        expect(rowActions[1].name).toBe("re_center");
+    });
+
     it("loads additional relationships on expand of row", () => {
 
     });
