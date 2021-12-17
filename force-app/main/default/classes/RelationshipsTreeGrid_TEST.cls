@@ -52,7 +52,30 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void throwsExceptionWhenInsufficientPerms() {
+        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
+        RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
+        RelationshipsService.getInstance().permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(false, false));
 
+        AuraHandledException caughtException;
+        try {
+            RelationshipsTreeGridController.getRelationships(fakeContactId);
+        } catch (AuraHandledException ex) {
+            caughtException = ex;
+        }
+        System.assertNotEquals(null, caughtException);
+        System.assertEquals(Label.commonInsufficientPermissions, caughtException.getMessage());
+    }
+
+    @IsTest
+    static void whenNoRelationshipCreateAccessHidesCreateButton() {
+        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
+        RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
+        RelationshipsService.getInstance().permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(true, false));
+
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        System.assertEquals(false, listView.showCreateRelationshipButton);
     }
 
     @IsTest
@@ -68,7 +91,7 @@ private class RelationshipsTreeGrid_TEST {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
-        System.assertEquals(null, listView.labels.get('somelabel'));
+        System.assertNotEquals(null, listView.labels.get('Name'));
     }
 
     @IsTest
@@ -83,6 +106,7 @@ private class RelationshipsTreeGrid_TEST {
         System.assertEquals(view.contactId, selectorStub.queryResults[0].npe4__RelatedContact__c);
         System.assertEquals(view.title, selectorStub.queryResults[0].npe4__RelatedContact__r.Title);
         System.assertEquals(view.accountName, selectorStub.queryResults[0].npe4__RelatedContact__r.Account.Name);
+        System.assertEquals(view.contactName, selectorStub.queryResults[0].npe4__RelatedContact__r.Name);
         System.assertEquals(view.relationshipExplanation, selectorStub.queryResults[0].npe4__Relationship_Explanation__c);
         System.assertEquals(view.relationshipId, selectorStub.queryResults[0].Id);
     }
@@ -132,6 +156,38 @@ private class RelationshipsTreeGrid_TEST {
 
         public Object handleMethodCall(Object param1, String param2, Type param3, List<Type> param4, List<String> param5, List<Object> param6) {
             return this.queryResults;
+        }
+    }
+
+
+    private class UTIL_PermissionsMock implements StubProvider {
+
+        Boolean canRead;
+        Boolean canCreate;
+
+        public UTIL_PermissionsMock(Boolean canRead, Boolean canCreate) {
+            this.canCreate = canCreate;
+            this.canRead = canRead;
+        }
+
+        public UTIL_PermissionsMock() {
+            this.canRead = true;
+            this.canCreate = true;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on stubbedMethodName {
+                when 'canRead' {
+                    return this.canRead;
+                }
+                when 'canCreate' {
+                    return this.canCreate;
+                }
+            }
+            return null;
         }
     }
 

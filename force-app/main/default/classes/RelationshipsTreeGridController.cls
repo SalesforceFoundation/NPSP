@@ -37,15 +37,22 @@ public with sharing class RelationshipsTreeGridController {
     @AuraEnabled(Cacheable=true)
     public static RelationshipsListView getRelationships(Id contactId) {
         RelationshipsService service = RelationshipsService.getInstance();
-        try {
-            List<npe4__Relationship__c> relationships = service.getContactRelations(contactId);
-            RelationshipsListView listView = new RelationshipsListView(relationships);
-            listView.vfPageURL = service.getVFPageURL();
-            listView.labels = service.getListUILabels();
+        if(service.hasListViewRequiredPerms()) {
+            try {
+                List<npe4__Relationship__c> relationships = service.getContactRelations(contactId);
+                RelationshipsListView listView = new RelationshipsListView(relationships);
+                listView.vfPageURL = service.getVFPageURL();
+                listView.labels = service.getListUILabels();
+                listView.showCreateRelationshipButton = service.canCreateRelationship();
 
-            return listView;
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+                return listView;
+            } catch (Exception ex) {
+                throw new AuraHandledException(ex.getMessage());
+            }
+        } else {
+            AuraHandledException ex = new AuraHandledException(Label.commonInsufficientPermissions);
+            ex.setMessage(Label.commonInsufficientPermissions);
+            throw ex;
         }
     }
 
@@ -53,6 +60,7 @@ public with sharing class RelationshipsTreeGridController {
         @AuraEnabled public String vfPageURL;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public List<RelationshipView> relations;
+        @AuraEnabled public Boolean showCreateRelationshipButton;
 
         public RelationshipsListView(List<npe4__Relationship__c> relationships) {
             this.relations = new List<RelationshipView>();

@@ -92,6 +92,10 @@ public with sharing class RelationshipsService {
         return true;
     }
 
+    public Boolean canCreateRelationship() {
+        return permissions.canCreate(npe4__Relationship__c.SObjectType);
+    }
+
     public List<npe4__Relationship__c> getContactRelations(Id contactId) {
         return selector.getContactRelations(contactId);
     }
