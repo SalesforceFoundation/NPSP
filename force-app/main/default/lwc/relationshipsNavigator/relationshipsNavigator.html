@@ -1,6 +1,6 @@
 <template>
     <template if:false={error}>
-        <lightning-card icon-name="standard:contact" class="relation-card slds-card_boundary" title={contact.Name}>
+        <lightning-card icon-name="standard:contact" class="relation-card slds-card_boundary" title={contactName}>
             <c-relationships-tree-grid record-id={recordId} onaccesserror={handleAccessError}></c-relationships-tree-grid>
         </lightning-card>
     </template>

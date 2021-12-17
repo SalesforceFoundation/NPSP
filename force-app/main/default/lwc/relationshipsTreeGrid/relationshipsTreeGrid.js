@@ -226,13 +226,13 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
 
         switch (action.name) {
             case TABLE_ACTIONS.VIEW_RECORD:
-                this.navigateToRecord(row.id);
+                this.navigateToRecord(row.contactId);
                 break;
             case TABLE_ACTIONS.RE_CENTER:
-                this.reCenterOnContact(row.id);
+                this.reCenterOnContact(row.contactId);
                 break;
             case TABLE_ACTIONS.NEW_RELATIONSHIP:
-                this.newRelationship(row.id);
+                this.newRelationship(row.contactId);
                 break;
         }
     }
