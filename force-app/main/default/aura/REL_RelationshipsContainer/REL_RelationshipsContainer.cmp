@@ -1,4 +1,5 @@
 <aura:component description="REL_RelationshipsContainer">
     <aura:attribute name="recordId" access="public" required="true" description="Id of the initial contact record" type="String"/>
-    <c:relationshipsNavigator recordId="{!v.recordId}"/>
+    <aura:attribute name="isLightningOut" access="public" description="When true enables lightning out compatibility" type="Boolean"/>
+    <c:relationshipsTreeGrid recordId="{!v.recordId}" isLightningOut="{!v.isLightningOut}"/>
 </aura:component>

@@ -52,34 +52,46 @@ const COLUMNS_DEF = [
                 {
                     label: REL_RECenter,
                     name: TABLE_ACTIONS.RE_CENTER
-                },
+                }
             ]
         }
     }
 ];
 
 export default class RelationshipsTreeGrid extends NavigationMixin(LightningElement) {
-    @api contactId;
+    @api recordId;
+
+    @api
+    set isLightningOut(val) {
+        this._isLightningOut = val;
+    }
+
+    get isLightningOut() {
+        return this._isLightningOut;
+    }
 
     @track relationships;
     columns = COLUMNS_DEF;
     contactName;
     displayedRelationshipIds = [];
     contactIdsLoaded = [];
+    vfPageURL;
+    _isLightningOut = false;
+
 
     async connectedCallback() {
-        const relationshipsView = await getRelationships({ contactId: this.contactId });
-
+        const relationshipsView = await getRelationships({ contactId: this.recordId });
+        this.vfPageURL = relationshipsView.vfPageURL;
         this.relationships = relationshipsView.nodes.map(relationship => {
             this.displayedRelationshipIds.push(relationship.relId);
             return {
                 ...relationship,
-                name: [relationship.firstName, relationship.lastName].join(' '),
+                name: [relationship.firstName, relationship.lastName].join(" "),
                 _children: []
             };
         });
 
-        this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(' ');
+        this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(" ");
     }
 
     async handleToggle(event) {
@@ -89,15 +101,15 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             const relationshipsView = await getRelationships({ contactId: row.id });
 
             const filteredChildren = relationshipsView.nodes.map(relationship => {
-                if(this.isAlreadyLoaded(relationship.id)) {
+                if (this.isAlreadyLoaded(relationship.id)) {
                     return {
                         ...relationship,
-                        name: [relationship.firstName, relationship.lastName].join(' ')
+                        name: [relationship.firstName, relationship.lastName].join(" ")
                     };
                 }
                 return {
                     ...relationship,
-                    name: [relationship.firstName, relationship.lastName].join(' '),
+                    name: [relationship.firstName, relationship.lastName].join(" "),
                     _children: []
                 };
             }).filter(relationship => {
@@ -119,7 +131,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                 };
             }
 
-            if(relationship.id === row.id) {
+            if (relationship.id === row.id) {
                 delete relationship._children;
             }
 
@@ -141,13 +153,17 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     }
 
     navigateToRecord(recordId) {
-        this[NavigationMixin.Navigate]({
-            type: "standard__recordPage",
-            attributes: {
-                recordId,
-                actionName: "view"
-            }
-        });
+        if (this.isLightningOut) {
+            window.location = "/" + recordId;
+        } else {
+            this[NavigationMixin.Navigate]({
+                type: "standard__recordPage",
+                attributes: {
+                    recordId,
+                    actionName: "view"
+                }
+            });
+        }
     }
 
     newRelationship(recordId) {
@@ -168,6 +184,21 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         this[NavigationMixin.Navigate](navigateArgs);
     }
 
+    reCenterOnContact(contactId) {
+        if (this.isLightningOut) {
+            window.location = this.vfPageURL + "?isdtp=p1&id=" + contactId;
+        } else {
+            const navigateArgs = {
+                type: "standard__webPage",
+                attributes: {
+                    url: this.vfPageURL + "?id=" + contactId
+                }
+            };
+
+            this[NavigationMixin.Navigate](navigateArgs);
+        }
+    }
+
     handleRowAction(event) {
         const { action, row } = event.detail;
 
@@ -176,7 +207,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                 this.navigateToRecord(row.id);
                 break;
             case TABLE_ACTIONS.RE_CENTER:
-                // TODO
+                this.reCenterOnContact(row.id);
                 break;
             case TABLE_ACTIONS.NEW_RELATIONSHIP:
                 this.newRelationship(row.id);

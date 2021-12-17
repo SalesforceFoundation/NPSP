@@ -409,12 +409,13 @@
                     document.getElementById("viewport").style.display = "none";
                 }
 
-                if({!$Site.Name == ''}) {
+                if ({!$Site.Name == ''}) {
 
                     $Lightning.use("c:REL_RelationshipsApp", function() {
                         $Lightning.createComponent("c:REL_RelationshipsContainer",
                             {
-                                recordId: '{!JSENCODE(CASESAFEID(id))}'
+                                recordId: '{!JSENCODE(CASESAFEID(id))}',
+                                isLightningOut: true
                             },
                             "tabular-lwc");
                     });

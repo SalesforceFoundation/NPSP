@@ -55,7 +55,8 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         'npe4__RelatedContact__r.Id',
         'npe4__RelatedContact__r.Account.Name',
         'npe4__RelatedContact__r.Title',
-        'npe4__ReciprocalRelationship__r.Id'
+        'npe4__ReciprocalRelationship__r.Id',
+        'npe4__Relationship_Explanation__c'
     };
 
     /*******************************************************************************************************
@@ -148,7 +149,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         RelationshipsView view = new RelationshipsView();
         view.rootNode = nodes.remove(0);
         view.nodes = nodes;
-        view.relationshipViewerURL = Page.REL_RelationshipsViewer.getUrl();
+        view.vfPageURL = Page.REL_RelationshipsViewer.getUrl();
         return view;
     }
 
@@ -219,6 +220,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             n.accountName = currentRelationship.npe4__RelatedContact__r.Account.Name;
             n.title = currentRelationship.npe4__RelatedContact__r.Title;
             n.relId = currentRelationship.Id;
+            n.explanation = currentRelationship.npe4__Relationship_Explanation__c;
             nodes.add(n);
         }
         return nodes;
@@ -265,12 +267,14 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         @AuraEnabled public String accountName;
         @AuraEnabled public String title;
         @AuraEnabled public String relId;
+        @AuraEnabled public String explanation;
     }
 
     public class RelationshipsView {
         @AuraEnabled public List<Node> nodes;
         @AuraEnabled public Node rootNode;
-        @AuraEnabled public String relationshipViewerURL;
+        @AuraEnabled public String vfPageURL;
+        @AuraEnabled public Map<String, String> labels;
     }
     
 }
