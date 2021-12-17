@@ -1,6 +1,27 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" docType="html-5.0" standardStylesheets="false">
-
-<script type="text/javascript">
+    <apex:includeLightning/>
+    <script>
+        if ({!NOT(isRunningUserIsAdmin)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {
+                        title: "{!$Label.commonAdminPermissionErrorTitle}",
+                        message: "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelErrIllustration",
+                    function () {
+                    }
+                );
+            });
+        }
+    </script>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <div id="stgPanelErrIllustration"/>
+    </apex:outputPanel>
+    <script type="text/javascript">
     var strCurrentFormat = '';
 
     // update all our examples strings
@@ -112,7 +133,7 @@
 
 </style>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
@@ -139,15 +160,15 @@
                     <apex:outputText value="{!stgService.stgHN.Household_Name_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
                         <apex:selectList value="{!stgService.stgHN.Household_Name_Format__c}" html-aria-describedby="{!$Component.slstrFormatHHHelp}" styleClass="slds-select"
-                            onchange="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
-                            onfocus="setNameSpec(this, 'txtFormatHH', '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            onchange="setNameSpec(this, 'txtFormatHH', '{!JSENCODE($Label.stgLabelExamplesHHNameFOrmat)}');"
+                            onfocus="setNameSpec(this, 'txtFormatHH', '{!JSENCODE($Label.stgLabelExamplesHHNameFOrmat)}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatHH" >
                                 <apex:selectOptions value="{!listSOHouseholdNameFormats}"/>
                         </apex:selectList>
                         <apex:outputLabel value="{!$Label.stgLabelOtherHHNameFormat}" styleClass="slds-assistive-text" for="txtFormatHH" />
                         <apex:inputText value="{!stgService.stgHN.Household_Name_Format__c}" styleClass="slds-input txtOther"
-                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');"
-                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesHHNameFOrmat}');"
+                            onchange="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesHHNameFOrmat)}');"
+                            onfocus="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesHHNameFOrmat)}');"
                             rendered="{!isEditMode}" id="txtFormatHH" style="display:none;"/>
                     </apex:outputPanel>
                     <apex:outputPanel id="slstrFormatHHHelp" layout="block">
@@ -161,15 +182,15 @@
                     <apex:outputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
                         <apex:selectList value="{!stgService.stgHN.Formal_Greeting_Format__c}" html-aria-describedby="{!$Component.slstrFormatFGHelp}" styleClass="slds-select"
-                            onchange="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
-                            onfocus="setNameSpec(this, 'txtFormatFG', '{!$Label.stgLabelExamplesFGFormat}');"
+                            onchange="setNameSpec(this, 'txtFormatFG', '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
+                            onfocus="setNameSpec(this, 'txtFormatFG', '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatFG" >
                                 <apex:selectOptions value="{!listSOFormalGreetingFormats}"/>
                         </apex:selectList>
                         <apex:outputLabel value="{!$Label.stgLabelOtherFormalGreetingFormat}" styleClass="slds-assistive-text" for="txtFormatFG" />
                         <apex:inputText value="{!stgService.stgHN.Formal_Greeting_Format__c}" styleClass="slds-input txtOther"
-                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');"
-                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesFGFormat}');"
+                            onchange="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
+                            onfocus="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesFGFormat)}');"
                             rendered="{!isEditMode}" id="txtFormatFG" style="display:none;"/>
                     </apex:outputPanel>
                     <apex:outputPanel id="slstrFormatFGHelp" layout="block">
@@ -183,15 +204,15 @@
                     <apex:outputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                     <apex:outputPanel rendered="{!isEditMode}" >
                         <apex:selectList value="{!stgService.stgHN.Informal_Greeting_Format__c}" html-aria-describedby="{!$Component.slstrFormatIGHelp}" styleClass="slds-select"
-                            onchange="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
-                            onfocus="setNameSpec(this, 'txtFormatIG', '{!$Label.stgLabelExamplesIGFormat}');"
+                            onchange="setNameSpec(this, 'txtFormatIG', '{!JSENCODE($Label.stgLabelExamplesIGFormat)}');"
+                            onfocus="setNameSpec(this, 'txtFormatIG', '{!JSENCODE($Label.stgLabelExamplesIGFormat)}');"
                             multiselect="false" size="1" rendered="{!isEditMode}" id="slstrFormatIG" >
                                 <apex:selectOptions value="{!listSOInformalGreetingFormats}"/>
                         </apex:selectList>
                         <apex:outputLabel value="{!$Label.stgLabelOtherInformalGreetingFormat}" styleClass="slds-assistive-text" for="txtFormatIG" />
                         <apex:inputText value="{!stgService.stgHN.Informal_Greeting_Format__c}" styleClass="slds-input txtOther"
-                            onchange="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');"
-                            onfocus="setNameSpec(this, null, '{!$Label.stgLabelExamplesIGFormat}');"
+                            onchange="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesIGFormat)}');"
+                            onfocus="setNameSpec(this, null, '{!JSENCODE($Label.stgLabelExamplesIGFormat)}');"
                             rendered="{!isEditMode}" id="txtFormatIG" style="display:none;"/>
                     </apex:outputPanel>
                     <apex:outputPanel id="slstrFormatIGHelp" layout="block">

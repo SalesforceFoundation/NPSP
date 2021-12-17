@@ -242,9 +242,7 @@ public inherited sharing class RD2_RecurringDonation {
     * @return RD2_RecurringDonation This record instance
     */
     private RD2_RecurringDonation reviseStatusForFixedLength() {
-        if (isFixedLength()
-            && isFixedLengthComplete()
-        ) {
+        if (isFixedLengthComplete()) {
             rd.Status__c = RD2_Constants.STATUS_CLOSED;
             rd.ClosedReason__c = RD2_Constants.FIXED_TYPE_CLOSED_REASON;
             rd.npe03__Next_Payment_Date__c = null;
@@ -417,7 +415,7 @@ public inherited sharing class RD2_RecurringDonation {
      * @return Boolean
      */
     public Boolean isFixedLengthComplete() {
-        return rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
+        return isFixedLength() && rd.npe03__Total_Paid_Installments__c >= rd.npe03__Installments__c;
     }
 
     /**
