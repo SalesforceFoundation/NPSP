@@ -154,7 +154,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
 
     navigateToRecord(recordId) {
         if (this.isLightningOut) {
-            window.location = "/" + recordId;
+            window.open('/' + recordId);
         } else {
             this[NavigationMixin.Navigate]({
                 type: "standard__recordPage",
