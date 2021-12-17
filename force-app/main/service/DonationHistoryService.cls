@@ -4,6 +4,11 @@ public with sharing class DonationHistoryService {
     static final String SOFT_CREDIT = 'Soft Credit';
     static final String PARTIAL_SOFT_CREDIT = 'Partial Soft Credit';
     
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Donation History list.
+    */
     public List<DonationHistoryController.DonationHistory> getDonationHistory(Id contactId){
         List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary 
                                                     FROM OpportunityContactRole 
@@ -15,6 +20,11 @@ public with sharing class DonationHistoryService {
         return result;
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return total number of record
+    */
     public static List<AggregateResult> getTotalRecords(Id contactId){
         List<AggregateResult> totalRecords = [SELECT COUNT(Id)
                                 FROM OpportunityContactRole 
