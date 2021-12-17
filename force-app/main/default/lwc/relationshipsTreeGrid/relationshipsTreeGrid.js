@@ -18,13 +18,8 @@ const TABLE_ACTIONS = {
 
 const COLUMNS_DEF = [
     {
-        label: "First Name",
-        fieldName: "firstName",
-        type: "text"
-    },
-    {
-        label: "Last Name",
-        fieldName: "lastName",
+        label: "Name",
+        fieldName: "name",
         type: "text"
     },
     {
@@ -69,18 +64,20 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     @track relationships;
     columns = COLUMNS_DEF;
     contactName;
+    displayedRelationshipIds = [];
 
     async connectedCallback() {
         const relationshipsView = await getRelationships({ contactId: this.contactId });
         this.relationships = relationshipsView.nodes.map(relationship => {
+            this.displayedRelationshipIds.push(relationship.relId);
             return {
                 ...relationship,
-                ancestors: [this.contactId],
+                name: [relationship.firstName, relationship.lastName].join(' '),
                 _children: []
             };
         });
 
-        this.contactName = `${relationshipsView.rootNode.firstName} ${relationshipsView.rootNode.lastName}`;
+        this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(' ');
     }
 
     async handleToggle(event) {
@@ -92,29 +89,35 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             const filteredChildren = relationshipsView.nodes.map(relationship => {
                 return {
                     ...relationship,
-                    ancestors: [...row.ancestors, row.id],
+                    name: [relationship.firstName, relationship.lastName].join(' '),
                     _children: []
                 };
             }).filter(relationship => {
-                return !row.ancestors.includes(relationship.id);
+                // to prevent circular relationships / cycles, only show each individual relationship once
+                return !this.displayedRelationshipIds.includes(relationship.relId);
             });
 
-            this.relationships = this.addChildrenToRow(this.relationships, filteredChildren, row.relId);
+            this.relationships = this.addChildrenToRow(this.relationships, filteredChildren, row);
         }
     }
 
-    addChildrenToRow(relationships, children, rowId) {
+    addChildrenToRow(relationships, children, row) {
         return relationships.map(relationship => {
             if (relationship._children && relationship._children.length > 0) {
-                const _children = this.addChildrenToRow(relationship._children, children, rowId);
+                const _children = this.addChildrenToRow(relationship._children, children, row);
                 return {
                     ...relationship,
                     _children
                 };
             }
 
-            if (relationship.relId === rowId) {
+            if(relationship.id === row.id) {
+                delete relationship._children;
+            }
+
+            if (relationship.relId === row.relId) {
                 if (children.length > 0) {
+                    this.displayedRelationshipIds = this.displayedRelationshipIds.concat(children.map(child => child.relId));
                     return {
                         ...relationship,
                         _children: children
