@@ -36,7 +36,7 @@ private class RelationshipsTreeGrid_TEST {
     static void whenNoRelationsFoundReturnsEmptyList() {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(0, listView.relations.size());
     }
 
@@ -46,12 +46,22 @@ private class RelationshipsTreeGrid_TEST {
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         selectorStub.setSingleResult(fakeContactId);
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(1, listView.relations.size());
     }
 
     @IsTest
-    static void throwsExceptionWhenInsufficientPerms() {
+    static void canRetrieveAdditionalRelations() {
+        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
+        RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
+        selectorStub.setSingleResult(fakeContactId);
+        List<RelationshipsTreeGridController.RelationshipView> relations = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        System.assertEquals(1, relations.size());
+    }
+
+    @IsTest
+    static void initialViewThrowsExceptionWhenInsufficientPerms() {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
@@ -59,7 +69,7 @@ private class RelationshipsTreeGrid_TEST {
 
         AuraHandledException caughtException;
         try {
-            RelationshipsTreeGridController.getRelationships(fakeContactId);
+            RelationshipsTreeGridController.getInitialView(fakeContactId);
         } catch (AuraHandledException ex) {
             caughtException = ex;
         }
@@ -74,7 +84,7 @@ private class RelationshipsTreeGrid_TEST {
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         RelationshipsService.getInstance().permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(true, false));
 
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(false, listView.showCreateRelationshipButton);
     }
 
@@ -82,7 +92,7 @@ private class RelationshipsTreeGrid_TEST {
     static void responseContainsVFPageURL() {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(Page.REL_RelationshipsViewer.getUrl(), listView.vfPageURL);
     }
 
@@ -90,8 +100,12 @@ private class RelationshipsTreeGrid_TEST {
     static void responseContainsExpectedLabels() {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
-        System.assertNotEquals(null, listView.labels.get('Name'));
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
+        String expectedLabel = UTIL_Describe.getFieldLabel('Contact', 'Name');
+        System.assertEquals(expectedLabel, listView.labels.get('Name'));
+        System.assertNotEquals(null, listView.labels.get('Relationship_Explanation'));
+        System.assertNotEquals(null, listView.labels.get('Title'));
+        System.assertNotEquals(null, listView.labels.get('Account'));
     }
 
     @IsTest
@@ -100,7 +114,7 @@ private class RelationshipsTreeGrid_TEST {
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         selectorStub.setSingleResult(fakeContactId);
-        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         RelationshipsTreeGridController.RelationshipView view = listView.relations[0];
 
         System.assertEquals(view.contactId, selectorStub.queryResults[0].npe4__RelatedContact__c);

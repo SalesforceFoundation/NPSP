@@ -35,15 +35,29 @@
 public with sharing class RelationshipsTreeGridController {
 
     @AuraEnabled(Cacheable=true)
-    public static RelationshipsListView getRelationships(Id contactId) {
+    public static RelationshipsListView getInitialView(Id contactId) {
         RelationshipsService service = RelationshipsService.getInstance();
-        if(service.hasListViewRequiredPerms()) {
+
+        List<RelationshipView> relationships = getRelationshipsWithAccessCheck(contactId);
+        RelationshipsListView initialView = new RelationshipsListView(relationships);
+        initialView.vfPageURL = service.getVFPageURL();
+        initialView.labels = service.getListUILabels();
+        initialView.showCreateRelationshipButton = service.canCreateRelationship();
+
+        return initialView;
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static List<RelationshipView> getRelationships(Id contactId) {
+        return getRelationshipsWithAccessCheck(contactId);
+    }
+
+    private static List<RelationshipView> getRelationshipsWithAccessCheck(Id contactId) {
+        RelationshipsService service = RelationshipsService.getInstance();
+        if (service.hasListViewRequiredPerms()) {
             try {
                 List<npe4__Relationship__c> relationships = service.getContactRelations(contactId);
-                RelationshipsListView listView = new RelationshipsListView(relationships);
-                listView.vfPageURL = service.getVFPageURL();
-                listView.labels = service.getListUILabels();
-                listView.showCreateRelationshipButton = service.canCreateRelationship();
+                List<RelationshipView> listView = mapRelationshipListToViews(relationships);
 
                 return listView;
             } catch (Exception ex) {
@@ -56,17 +70,23 @@ public with sharing class RelationshipsTreeGridController {
         }
     }
 
+    private static List<RelationshipView> mapRelationshipListToViews(List<npe4__Relationship__c> relationships) {
+        List<RelationshipView> relations = new List<RelationshipView>();
+        for (npe4__Relationship__c relationship : relationships) {
+            relations.add(new RelationshipView(relationship));
+        }
+        return relations;
+    }
+
+
     public class RelationshipsListView {
         @AuraEnabled public String vfPageURL;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public List<RelationshipView> relations;
         @AuraEnabled public Boolean showCreateRelationshipButton;
 
-        public RelationshipsListView(List<npe4__Relationship__c> relationships) {
-            this.relations = new List<RelationshipView>();
-            for(npe4__Relationship__c relationship : relationships) {
-                this.relations.add(new RelationshipView(relationship));
-            }
+        public RelationshipsListView(List<RelationshipView> relationshipViews) {
+            this.relations = relationshipViews;
         }
     }
 

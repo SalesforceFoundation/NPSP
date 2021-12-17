@@ -105,6 +105,12 @@ public with sharing class RelationshipsService {
     }
 
     public Map<String, String> getListUILabels() {
-        return new Map<String, String>();
+
+        return new Map<String, String>{
+                'Name' => UTIL_Describe.getFieldLabel('Contact', 'Name'),
+                'Title' => UTIL_Describe.getFieldLabel('Contact', 'Title'),
+                'Account' => UTIL_Describe.getObjectLabel('Account'),
+                'Relationship_Explanation' => UTIL_Describe.getFieldLabel('npe4__Relationship__c', 'npe4__Relationship_Explanation__c')
+        };
     }
 }
