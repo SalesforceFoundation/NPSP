@@ -6,6 +6,42 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
         );
     }
 
+    private enum Action {
+        BeforeInsert,
+        AfterInsert,
+        BeforeUpdate,
+        AfterUpdate,
+        BeforeDelete,
+        AfterDelete,
+        AfterUndelete
+    }
+
+    public void reportHandlersByContextFor(SObjectType sObjectType) {
+        System.debug(LoggingLevel.ERROR, '*** ##### ' + sObjectType + ' ######');
+        for (Action action : Action.values()) {
+            System.debug(LoggingLevel.ERROR, '*** ##### ************************************************* ######');
+            System.debug(LoggingLevel.ERROR, '*** ##### Context: '+action.name()+' ######');
+            for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
+                if (triggerHandler.Object__c == String.valueOf(sObjectType)
+                        && triggerHandler.Trigger_Action__c.contains(action.name())) {
+                    System.debug(LoggingLevel.ERROR, '*** Class:' + triggerHandler.Class__c + 
+                            ': Load Order:' + triggerHandler.Load_Order__c);
+                }
+            }
+        }
+    }
+
+    public void report(SObjectType sObjectType, String context) {
+        System.debug(LoggingLevel.ERROR, '*** ##### ' + sObjectType + ' ######');
+        for (Trigger_Handler__c triggerHandler : (List<Trigger_Handler__c>) getRecords()) {
+            if (triggerHandler.Object__c == String.valueOf(sObjectType)
+                    && triggerHandler.Trigger_Action__c.contains(context)) {
+                System.debug(LoggingLevel.ERROR, '*** triggerHandler.Name: ' +
+                        triggerHandler.Class__c + ': Load Order:' + triggerHandler.Load_Order__c);
+            }
+        }
+    }
+    
     @TestVisible
     private static TriggerHandlerSelector selector {
         get {
