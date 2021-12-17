@@ -1,0 +1,20 @@
+{
+    "apiName": "Contact",
+    "childRelationships": {},
+    "id": "0030U00001MF3ZtQAL",
+    "recordTypeInfo": null,
+    "fields": {
+        "npo02__TotalOppAmount__c": {
+            "displayValue": null,
+            "value": "7000"
+        },
+        "npo02__OppAmountThisYear__c": {
+            "displayValue": null,
+            "value": "6000"
+        },
+        "npo02__OppAmountLastYear__c": {
+            "displayValue": null,
+            "value": "1000"
+        }
+    }
+}
