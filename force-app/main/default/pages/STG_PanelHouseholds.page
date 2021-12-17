@@ -1,6 +1,27 @@
 <apex:page controller="STG_PanelHouseholds_CTRL" docType="html-5.0" standardStylesheets="false">
-
-<script type="text/javascript">
+    <apex:includeLightning/>
+    <script>
+        if ({!NOT(isRunningUserIsAdmin)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {
+                        title: "{!$Label.commonAdminPermissionErrorTitle}",
+                        message: "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelErrIllustration",
+                    function () {
+                    }
+                );
+            });
+        }
+    </script>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <div id="stgPanelErrIllustration"/>
+    </apex:outputPanel>
+    <script type="text/javascript">
     var strCurrentFormat = '';
 
     // update all our examples strings
@@ -112,7 +133,7 @@
 
 </style>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelHHSettings}" />
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
