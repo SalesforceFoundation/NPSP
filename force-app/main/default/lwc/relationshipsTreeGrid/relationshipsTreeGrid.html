@@ -1,12 +1,10 @@
 <template>
-    <lightning-card icon-name="standard:contact" class="relation-card slds-card_boundary" title={contactName}>
-        <lightning-tree-grid
-            data={relationships}
-            columns={columns}
-            onrowaction={handleRowAction}
-            ontoggle={handleToggle}
-            hide-checkbox-column="true"
-            key-field="relId"
-        ></lightning-tree-grid>
-    </lightning-card>
+    <lightning-tree-grid
+        data={relationships}
+        columns={columns}
+        onrowaction={handleRowAction}
+        ontoggle={handleToggle}
+        hide-checkbox-column="true"
+        key-field="relId"
+    ></lightning-tree-grid>
 </template>

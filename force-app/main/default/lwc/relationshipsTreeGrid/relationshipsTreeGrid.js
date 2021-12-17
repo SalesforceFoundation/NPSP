@@ -60,15 +60,7 @@ const COLUMNS_DEF = [
 
 export default class RelationshipsTreeGrid extends NavigationMixin(LightningElement) {
     @api recordId;
-
-    @api
-    set isLightningOut(val) {
-        this._isLightningOut = val;
-    }
-
-    get isLightningOut() {
-        return this._isLightningOut;
-    }
+    @api isLightningOut;
 
     @track relationships;
     columns = COLUMNS_DEF;
@@ -76,29 +68,37 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     displayedRelationshipIds = [];
     contactIdsLoaded = [];
     vfPageURL;
-    _isLightningOut = false;
 
 
     async connectedCallback() {
-        const relationshipsView = await getRelationships({ contactId: this.recordId });
-        this.vfPageURL = relationshipsView.vfPageURL;
-        this.relationships = relationshipsView.nodes.map(relationship => {
-            this.displayedRelationshipIds.push(relationship.relId);
-            return {
-                ...relationship,
-                name: [relationship.firstName, relationship.lastName].join(" "),
-                _children: []
-            };
-        });
+        const relationshipsView = await this.getRelationships(this.recordId);
+        if (relationshipsView) {
+            this.vfPageURL = relationshipsView.vfPageURL;
+            this.relationships = relationshipsView.nodes.map(relationship => {
+                this.displayedRelationshipIds.push(relationship.relId);
+                return {
+                    ...relationship,
+                    name: [relationship.firstName, relationship.lastName].join(" "),
+                    _children: []
+                };
+            });
+            this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(" ");
+        }
+    }
 
-        this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(" ");
+    async getRelationships(contactId) {
+        try {
+            return await getRelationships({contactId});
+        } catch (ex) {
+            this.dispatchEvent(new CustomEvent('accesserror', { detail: ex.body.message }));
+        }
     }
 
     async handleToggle(event) {
-        const { name, isExpanded, hasChildrenContent, row } = event.detail;
+        const { hasChildrenContent, row } = event.detail;
         if (!hasChildrenContent) {
 
-            const relationshipsView = await getRelationships({ contactId: row.id });
+            const relationshipsView = await this.getRelationships(row.id);
 
             const filteredChildren = relationshipsView.nodes.map(relationship => {
                 if (this.isAlreadyLoaded(relationship.id)) {
