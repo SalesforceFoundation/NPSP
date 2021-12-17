@@ -88,6 +88,10 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
 
     buildInitialRelationships(relationship) {
         this.displayedRelationshipIds.push(relationship.relationshipId);
+        return this.buildRowWithEmptyChildren(relationship);
+    }
+
+    buildRowWithEmptyChildren(relationship) {
         return {
             ...relationship,
             _children: [],
@@ -133,56 +137,64 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         if (!hasChildrenContent) {
             const relationshipViews = await this.getRelationships(row.contactId);
 
-            const filteredChildren = relationshipViews
-                .map((relationship) => {
-                    if (this.isAlreadyLoaded(relationship.contactId)) {
-                        return relationship;
-                    }
-                    return {
-                        ...relationship,
-                        _children: [],
-                    };
-                })
-                .filter((relationship) => {
-                    // to prevent circular relationships / cycles, only show each individual relationship once
-                    return !this.displayedRelationshipIds.includes(relationship.relationshipId);
-                });
+            const filteredChildren = this.buildRowsFromViews(relationshipViews);
 
-            this.relationships = this.addChildrenToRow(this.relationships, filteredChildren, row);
+            this.relationships = this.walkRelationshipsToAppendChildren(this.relationships, filteredChildren, row);
         }
     }
 
-    addChildrenToRow(relationships, children, row) {
+    buildRowsFromViews(relationshipViews) {
+        return relationshipViews
+            .map((relationship) => {
+                if (this.isAlreadyLoaded(relationship.contactId)) {
+                    return relationship;
+                }
+                return this.buildRowWithEmptyChildren(relationship);
+            })
+            .filter((relationship) => {
+                // to prevent circular relationships / cycles, only show each individual relationship once
+                return !this.displayedRelationshipIds.includes(relationship.relationshipId);
+            });
+    }
+
+    walkRelationshipsToAppendChildren(relationships, children, row) {
         return relationships.map((relationship) => {
             if (relationship._children && relationship._children.length > 0) {
-                const _children = this.addChildrenToRow(relationship._children, children, row);
+                const _children = this.walkRelationshipsToAppendChildren(relationship._children, children, row);
                 return {
                     ...relationship,
                     _children,
                 };
             }
+            return this.updateRelationshipRow(relationship, row, children);
+        });
+    }
 
-            if (relationship.contactId === row.contactId) {
+    updateRelationshipRow(relationship, row, children) {
+        if (relationship.contactId === row.contactId) {
+            delete relationship._children;
+        }
+
+        if (relationship.relationshipId === row.relationshipId) {
+            if (children.length > 0) {
+                return this.attachChildrenToRow(children, relationship);
+            } else {
                 delete relationship._children;
             }
+        }
 
-            if (relationship.relationshipId === row.relationshipId) {
-                if (children.length > 0) {
-                    this.displayedRelationshipIds = this.displayedRelationshipIds.concat(
-                        children.map((child) => child.relationshipId)
-                    );
-                    this.contactIdsLoaded.push(relationship.contactId);
-                    return {
-                        ...relationship,
-                        _children: children,
-                    };
-                } else {
-                    delete relationship._children;
-                }
-            }
+        return relationship;
+    }
 
-            return relationship;
-        });
+    attachChildrenToRow(children, relationship) {
+        this.displayedRelationshipIds = this.displayedRelationshipIds.concat(
+            children.map((child) => child.relationshipId)
+        );
+        this.contactIdsLoaded.push(relationship.contactId);
+        return {
+            ...relationship,
+            _children: children,
+        };
     }
 
     navigateToRecord(recordId) {
