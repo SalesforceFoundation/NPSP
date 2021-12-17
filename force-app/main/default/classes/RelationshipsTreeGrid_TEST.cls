@@ -71,9 +71,36 @@ private class RelationshipsTreeGrid_TEST {
         System.assertEquals(null, listView.labels.get('somelabel'));
     }
 
+    @IsTest
+    static void mapsFieldsIntoRelationshipView() {
+        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
+        RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
+        selectorStub.setSingleResult(fakeContactId);
+        RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getRelationships(fakeContactId);
+        RelationshipsTreeGridController.RelationshipView view = listView.relations[0];
+
+        System.assertEquals(view.contactId, selectorStub.queryResults[0].npe4__RelatedContact__c);
+        System.assertEquals(view.title, selectorStub.queryResults[0].npe4__RelatedContact__r.Title);
+        System.assertEquals(view.accountName, selectorStub.queryResults[0].npe4__RelatedContact__r.Account.Name);
+        System.assertEquals(view.relationshipExplanation, selectorStub.queryResults[0].npe4__Relationship_Explanation__c);
+        System.assertEquals(view.relationshipId, selectorStub.queryResults[0].Id);
+    }
+
+    static Contact generateContactWithName(String name) {
+        return (Contact) JSON.deserialize('{"Name": "' + name + '"}', Contact.class);
+    }
+
+    static npe4__Relationship__c generateRelationshipWithExplanation(String explanation) {
+        return (npe4__Relationship__c) JSON.deserialize(
+            '{"npe4__Relationship_Explanation__c": "' + explanation + '"}',
+            npe4__Relationship__c.class
+        );
+    }
+
     private class RelationshipsSelectorStub implements System.StubProvider {
 
-        private List<npe4__Relationship__c> queryResults;
+        public List<npe4__Relationship__c> queryResults;
 
         public Type classType = RelationshipSelector.class;
 
@@ -87,11 +114,20 @@ private class RelationshipsTreeGrid_TEST {
 
         public void setSingleResult(Id contactId) {
             Id relationshipId = idGenerator.generate(npe4__Relationship__c.SObjectType);
-            Id relatedContactId = idGenerator.generate(npe4__Relationship__c.SObjectType);
-            npe4__Relationship__c relationship = new npe4__Relationship__c(Id = relationshipId,
-                    npe4__Contact__c = contactId,
-                    npe4__RelatedContact__c = relatedContactId);
-            this.queryResults = new List<npe4__Relationship__c>{relationship};
+            Id relatedContactId = idGenerator.generate(Contact.SObjectType);
+            Contact relatedContact = generateContactWithName('Fake Name');
+            relatedContact.Id = relatedContactId;
+            relatedContact.Title = 'Fake Title';
+            relatedContact.Account = new Account(Name = 'Some Household');
+
+            npe4__Relationship__c relationship = generateRelationshipWithExplanation('Fake Name is Other Person\'s friend');
+            relationship.Id = relationshipId;
+            relationship.npe4__RelatedContact__c = relatedContactId;
+            relationship.npe4__RelatedContact__r = relatedContact;
+
+            this.queryResults = new List<npe4__Relationship__c>{
+                    relationship
+            };
         }
 
         public Object handleMethodCall(Object param1, String param2, Type param3, List<Type> param4, List<String> param5, List<Object> param6) {
