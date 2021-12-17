@@ -1,11 +1,23 @@
 import { createElement } from "lwc";
 import RelationshipsTreeGrid from "c/relationshipsTreeGrid";
-import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
+import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.getInitialView";
+import getRelationships from "@salesforce/apex/RelationshipsTreeGridController.getRelationships";
 
+const mockGetInitialView = require("./data/mockGetInitialView.json");
 const mockGetRelationships = require("./data/mockGetRelationships.json");
 
 jest.mock(
-    '@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships',
+    "@salesforce/apex/RelationshipsTreeGridController.getRelationships",
+    () => {
+        return {
+            default: jest.fn()
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    "@salesforce/apex/RelationshipsTreeGridController.getInitialView",
     () => {
         return {
             default: jest.fn()
@@ -20,14 +32,28 @@ describe("c-relationships-tree-grid", () => {
     });
 
     it("loads with a list of relationships", async () => {
-        getRelationships.mockResolvedValue(mockGetRelationships);
+        getInitialView.mockResolvedValue(mockGetInitialView);
         const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
-        element.contactId = '003_FAKE_CONTACT_ID';
+        element.contactId = "003_FAKE_CONTACT_ID";
         document.body.appendChild(element);
         await flushPromises();
 
-        const treeGrid = element.shadowRoot.querySelector('lightning-tree-grid');
+        const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.data).toHaveLength(6);
+    });
+
+    it("populates column labels from initial view", async () => {
+        getInitialView.mockResolvedValue(mockGetInitialView);
+        const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
+        element.contactId = "003_FAKE_CONTACT_ID";
+        document.body.appendChild(element);
+        await flushPromises();
+
+        const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
+        expect(treeGrid.columns[0].label).toBe(mockGetInitialView.labels["contactName"]);
+        expect(treeGrid.columns[1].label).toBe(mockGetInitialView.labels["title"]);
+        expect(treeGrid.columns[2].label).toBe(mockGetInitialView.labels["accountName"]);
+        expect(treeGrid.columns[3].label).toBe(mockGetInitialView.labels["relationshipExplanation"]);
     });
 
     it("loads additional relationships on expand of row", () => {
@@ -68,7 +94,7 @@ describe("c-relationships-tree-grid", () => {
         it("opens new relationship window for contact", () => {
 
         });
-    })
+    });
 
 
 });

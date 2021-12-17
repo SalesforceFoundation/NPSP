@@ -1,5 +1,6 @@
 import { LightningElement, api, track } from "lwc";
-import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
+import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.getInitialView";
+import getRelationships from "@salesforce/apex/RelationshipsTreeGridController.getRelationships";
 import { NavigationMixin } from "lightning/navigation";
 import { encodeDefaultFieldValues } from "lightning/pageReferenceUtils";
 import RELATIONSHIP_CONTACT from "@salesforce/schema/npe4__Relationship__c.npe4__Contact__c";
@@ -18,8 +19,8 @@ const TABLE_ACTIONS = {
 
 const COLUMNS_DEF = [
     {
-        label: "Name",
-        fieldName: "name",
+        label: "Full Name",
+        fieldName: "contactName",
         type: "text"
     },
     {
@@ -34,7 +35,7 @@ const COLUMNS_DEF = [
     },
     {
         label: "Relationship Explanation",
-        fieldName: "explanation",
+        fieldName: "relationshipExplanation",
         type: "text"
     },
     {
@@ -63,26 +64,43 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     @api isLightningOut;
 
     @track relationships;
-    columns = COLUMNS_DEF;
-    contactName;
+    columns;
     displayedRelationshipIds = [];
     contactIdsLoaded = [];
     vfPageURL;
 
 
     async connectedCallback() {
-        const relationshipsView = await this.getRelationships(this.recordId);
-        if (relationshipsView) {
-            this.vfPageURL = relationshipsView.vfPageURL;
-            this.relationships = relationshipsView.nodes.map(relationship => {
-                this.displayedRelationshipIds.push(relationship.relId);
+        const relationshipsListView = await this.getInitialView(this.recordId);
+
+        if (relationshipsListView) {
+
+            this.columns = COLUMNS_DEF.map(column => {
+                if(column.fieldName) {
+                    return {
+                        ...column,
+                        label: relationshipsListView.labels[column.fieldName]
+                    }
+                }
+                return column;
+            });
+
+            this.vfPageURL = relationshipsListView.vfPageURL;
+            this.relationships = relationshipsListView.relations.map(relationship => {
+                this.displayedRelationshipIds.push(relationship.relationshipId);
                 return {
                     ...relationship,
-                    name: [relationship.firstName, relationship.lastName].join(" "),
                     _children: []
                 };
             });
-            this.contactName = [relationshipsView.rootNode.firstName, relationshipsView.rootNode.lastName].join(" ");
+        }
+    }
+
+    async getInitialView(contactId) {
+        try {
+            return await getInitialView({contactId});
+        } catch (ex) {
+            this.dispatchEvent(new CustomEvent('accesserror', { detail: ex.body.message }));
         }
     }
 
@@ -98,23 +116,19 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         const { hasChildrenContent, row } = event.detail;
         if (!hasChildrenContent) {
 
-            const relationshipsView = await this.getRelationships(row.id);
+            const relationshipViews = await this.getRelationships(row.id);
 
-            const filteredChildren = relationshipsView.nodes.map(relationship => {
-                if (this.isAlreadyLoaded(relationship.id)) {
-                    return {
-                        ...relationship,
-                        name: [relationship.firstName, relationship.lastName].join(" ")
-                    };
+            const filteredChildren = relationshipViews.map(relationship => {
+                if (this.isAlreadyLoaded(relationship.contactId)) {
+                    return relationship;
                 }
                 return {
                     ...relationship,
-                    name: [relationship.firstName, relationship.lastName].join(" "),
                     _children: []
                 };
             }).filter(relationship => {
                 // to prevent circular relationships / cycles, only show each individual relationship once
-                return !this.displayedRelationshipIds.includes(relationship.relId);
+                return !this.displayedRelationshipIds.includes(relationship.relationshipId);
             });
 
             this.relationships = this.addChildrenToRow(this.relationships, filteredChildren, row);
@@ -131,14 +145,14 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
                 };
             }
 
-            if (relationship.id === row.id) {
+            if (relationship.contactId === row.id) {
                 delete relationship._children;
             }
 
-            if (relationship.relId === row.relId) {
+            if (relationship.relationshipId === row.relationshipId) {
                 if (children.length > 0) {
-                    this.displayedRelationshipIds = this.displayedRelationshipIds.concat(children.map(child => child.relId));
-                    this.contactIdsLoaded.push(relationship.id);
+                    this.displayedRelationshipIds = this.displayedRelationshipIds.concat(children.map(child => child.relationshipId));
+                    this.contactIdsLoaded.push(relationship.contactId);
                     return {
                         ...relationship,
                         _children: children

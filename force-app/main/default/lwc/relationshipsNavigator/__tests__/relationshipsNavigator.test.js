@@ -3,7 +3,7 @@ import { getRecord } from "lightning/uiRecordApi";
 import RelationshipsNavigator from "c/relationshipsNavigator";
 import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
 
-const mockGetRelationships = require("../../relationshipsTreeGrid/__tests__/data/mockGetRelationships.json");
+const mockGetRelationships = require("../../relationshipsTreeGrid/__tests__/data/mockGetInitialView.json");
 const FAKE_CONTACT_ID = "003_FAKE_CONTACT_ID";
 
 const mockGetRecord = {

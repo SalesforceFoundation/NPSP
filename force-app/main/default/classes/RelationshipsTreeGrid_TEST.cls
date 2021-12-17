@@ -45,7 +45,7 @@ private class RelationshipsTreeGrid_TEST {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
-        selectorStub.setSingleResult(fakeContactId);
+        selectorStub.setSingleResult();
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(1, listView.relations.size());
     }
@@ -55,7 +55,7 @@ private class RelationshipsTreeGrid_TEST {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
-        selectorStub.setSingleResult(fakeContactId);
+        selectorStub.setSingleResult();
         List<RelationshipsTreeGridController.RelationshipView> relations = RelationshipsTreeGridController.getRelationships(fakeContactId);
         System.assertEquals(1, relations.size());
     }
@@ -102,10 +102,10 @@ private class RelationshipsTreeGrid_TEST {
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         String expectedLabel = UTIL_Describe.getFieldLabel('Contact', 'Name');
-        System.assertEquals(expectedLabel, listView.labels.get('Name'));
-        System.assertNotEquals(null, listView.labels.get('Relationship_Explanation'));
-        System.assertNotEquals(null, listView.labels.get('Title'));
-        System.assertNotEquals(null, listView.labels.get('Account'));
+        System.assertEquals(expectedLabel, listView.labels.get('contactName'));
+        System.assertNotEquals(null, listView.labels.get('relationshipExplanation'));
+        System.assertNotEquals(null, listView.labels.get('title'));
+        System.assertNotEquals(null, listView.labels.get('accountName'));
     }
 
     @IsTest
@@ -113,7 +113,7 @@ private class RelationshipsTreeGrid_TEST {
         Id fakeContactId = idGenerator.generate(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
-        selectorStub.setSingleResult(fakeContactId);
+        selectorStub.setSingleResult();
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         RelationshipsTreeGridController.RelationshipView view = listView.relations[0];
 
@@ -150,7 +150,7 @@ private class RelationshipsTreeGrid_TEST {
             this.queryResults = new List<npe4__Relationship__c>();
         }
 
-        public void setSingleResult(Id contactId) {
+        public void setSingleResult() {
             Id relationshipId = idGenerator.generate(npe4__Relationship__c.SObjectType);
             Id relatedContactId = idGenerator.generate(Contact.SObjectType);
             Contact relatedContact = generateContactWithName('Fake Name');
