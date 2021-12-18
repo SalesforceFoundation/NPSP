@@ -178,8 +178,7 @@ public class TDTM_TriggerHandler {
                 if (classInstance instanceof TDTM_Runnable) {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
                     Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
-                    Boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
-                            thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
+                    Boolean isBefore = isBefore(thisAction);
 
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
@@ -215,6 +214,12 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
+    }
+
+    private static Boolean isBefore(TDTM_Runnable.Action thisAction) {
+        Boolean isBefore = (thisAction == TDTM_Runnable.Action.BeforeInsert ||
+                thisAction == TDTM_Runnable.Action.BeforeUpdate || thisAction == TDTM_Runnable.Action.BeforeDelete);
+        return isBefore;
     }
 
     private static Map<String, Type> typeMap = new Map<String, Type>();
