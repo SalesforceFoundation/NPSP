@@ -166,7 +166,6 @@ public class TDTM_TriggerHandler {
      */
     private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<SObject> newList, List<SObject> oldList,
             TDTM_Runnable.Action thisAction, Schema.DescribeSObjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
-
         if (classToRunRecord == null) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
             continue;
@@ -174,45 +173,45 @@ public class TDTM_TriggerHandler {
 
         TriggerHandler triggerHandler = new TriggerHandler(classToRunRecord);
         Type classType = getTypeForClassNamed(triggerHandler.name());
-
-        if (classType != null) {
-            Object classInstance = classType.newInstance();
-
-            //The objects we create dynamically need to implement the TDTM_Runnable interface
-            if (classInstance instanceof TDTM_Runnable) {
-                TDTM_Runnable classToRun = (TDTM_Runnable) classInstance;
-                TriggerContext context = new TriggerContext(thisAction);
-
-                //A class can only run asynchronously (calling a future) if we have the ids of the
-                //records we want to affect. This means we can only run it for after in insert.
-                //Also,a future cannot be called from a future or batch method.
-                if (triggerHandler.isAsync() && !context.isBefore() && canRunAsync()) {
-                    UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
-                            describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
-                    runAsync(classToRun, triggerHandler.name(), newList, oldList, thisAction, describeObj);
-                } else {
-                    UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
-                            describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
-                    return classToRun.run(newList, oldList, thisAction, describeObj);
-                }
-            } else if (classInstance instanceof TDTM_RunnableMutable) {
-                // alternatively, objects created dynamically can implement the TDTM_RunnableMutable
-                // interface if the class intends to directly modify the global DmlWrappper
-                TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
-                UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
-                        describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
-
-                // we do not check whether class is identified as Asynchronous__c because the
-                // underlying assumption to mutating DmlWrapper is that the class modifies
-                // the collection directly, and TDTM_TriggerHandler.run will perform DML on
-                // whatever exists in the collection after iterating through all classes to run
-                classToRun.run(newList, oldList, thisAction, describeObj, dmlWrapper);
-            } else {
-                UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
-            }
-        } else {
+        if (classType == null) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
+            continue;
         }
+
+        Object classInstance = classType.newInstance();
+        //The objects we create dynamically need to implement the TDTM_Runnable interface
+        if (classInstance instanceof TDTM_Runnable) {
+            TDTM_Runnable classToRun = (TDTM_Runnable) classInstance;
+            TriggerContext context = new TriggerContext(thisAction);
+
+            //A class can only run asynchronously (calling a future) if we have the ids of the
+            //records we want to affect. This means we can only run it for after in insert.
+            //Also,a future cannot be called from a future or batch method.
+            if (triggerHandler.isAsync() && !context.isBefore() && canRunAsync()) {
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
+                        describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
+                runAsync(classToRun, triggerHandler.name(), newList, oldList, thisAction, describeObj);
+            } else {
+                UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+                        describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
+                return classToRun.run(newList, oldList, thisAction, describeObj);
+            }
+        } else if (classInstance instanceof TDTM_RunnableMutable) {
+            // alternatively, objects created dynamically can implement the TDTM_RunnableMutable
+            // interface if the class intends to directly modify the global DmlWrappper
+            TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
+            UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+                    describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
+
+            // we do not check whether class is identified as Asynchronous__c because the
+            // underlying assumption to mutating DmlWrapper is that the class modifies
+            // the collection directly, and TDTM_TriggerHandler.run will perform DML on
+            // whatever exists in the collection after iterating through all classes to run
+            classToRun.run(newList, oldList, thisAction, describeObj, dmlWrapper);
+        } else {
+            UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
+        }
+
         return null;
     }
 
