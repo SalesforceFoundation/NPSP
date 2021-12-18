@@ -177,7 +177,7 @@ public class TDTM_TriggerHandler {
                 //The objects we create dynamically need to implement the TDTM_Runnable interface
                 if (classInstance instanceof TDTM_Runnable) {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
-                    Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
+                    Boolean async = isAsync(classToRunRecord);
                     Boolean isBefore = isBefore(thisAction);
 
                     //A class can only run asynchronously (calling a future) if we have the ids of the
@@ -214,6 +214,11 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
+    }
+
+    private static Boolean isAsync(SObject classToRunRecord) {
+        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
+        return async;
     }
 
     private static Boolean isBefore(TDTM_Runnable.Action thisAction) {
