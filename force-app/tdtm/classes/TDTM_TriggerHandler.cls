@@ -168,14 +168,14 @@ public class TDTM_TriggerHandler {
             TDTM_Runnable.Action thisAction, Schema.DescribeSObjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
         if (classToRunRecord == null) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
-            continue;
+            return dmlWrapper;
         }
 
         TriggerHandler triggerHandler = new TriggerHandler(classToRunRecord);
         Type classType = getTypeForClassNamed(triggerHandler.name());
         if (classType == null) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
-            continue;
+            return dmlWrapper;
         }
 
         Object classInstance = classType.newInstance();
