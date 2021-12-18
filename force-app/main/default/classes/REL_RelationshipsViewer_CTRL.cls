@@ -55,8 +55,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         'npe4__RelatedContact__r.Id',
         'npe4__RelatedContact__r.Account.Name',
         'npe4__RelatedContact__r.Title',
-        'npe4__ReciprocalRelationship__r.Id',
-        'npe4__Relationship_Explanation__c'
+        'npe4__ReciprocalRelationship__r.Id'
     };
 
     /*******************************************************************************************************
@@ -143,16 +142,6 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         }
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static RelationshipsView getRelationships(Id contactId) {
-        List<Node> nodes = getRelationships(contactId, true, new List<String>());
-        RelationshipsView view = new RelationshipsView();
-        view.rootNode = nodes.remove(0);
-        view.nodes = nodes;
-        view.vfPageURL = Page.REL_RelationshipsViewer.getUrl();
-        return view;
-    }
-
     /*******************************************************************************************************
     * @description constructs the soql String to run a Data Import process with or without a Batch.
     * @param contactId the Id of the Contact
@@ -220,7 +209,6 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             n.accountName = currentRelationship.npe4__RelatedContact__r.Account.Name;
             n.title = currentRelationship.npe4__RelatedContact__r.Title;
             n.relId = currentRelationship.Id;
-            n.explanation = currentRelationship.npe4__Relationship_Explanation__c;
             nodes.add(n);
         }
         return nodes;
@@ -258,23 +246,14 @@ global with sharing class REL_RelationshipsViewer_CTRL{
     }
 
     global class Node {
-        @AuraEnabled public String firstName;
-        @AuraEnabled public String lastName;
-        @AuraEnabled public String id;
-        @AuraEnabled public String status;
-        @AuraEnabled public String type;
-        @AuraEnabled public String link;
-        @AuraEnabled public String accountName;
-        @AuraEnabled public String title;
-        @AuraEnabled public String relId;
-        @AuraEnabled public String explanation;
+        public String firstName;
+        public String lastName;
+        public String id;
+        public String status;
+        public String type;
+        public String link;
+        public String accountName;
+        public String title;
+        public String relId;
     }
-
-    public class RelationshipsView {
-        @AuraEnabled public List<Node> nodes;
-        @AuraEnabled public Node rootNode;
-        @AuraEnabled public String vfPageURL;
-        @AuraEnabled public Map<String, String> labels;
-    }
-    
 }
