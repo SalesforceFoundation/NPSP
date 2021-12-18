@@ -177,13 +177,12 @@ public class TDTM_TriggerHandler {
                 //The objects we create dynamically need to implement the TDTM_Runnable interface
                 if (classInstance instanceof TDTM_Runnable) {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
-                    Boolean classToRunIsAsync = triggerHandler.isAsync();
                     Boolean isBefore = isBefore(thisAction);
 
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-                    if (classToRunIsAsync && !isBefore && canRunAsync()) {
+                    if (triggerHandler.isAsync() && !isBefore && canRunAsync()) {
                         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         runAsync(classToRun, triggerHandler.name(), newList, oldList, thisAction, describeObj);
