@@ -168,8 +168,8 @@ public class TDTM_TriggerHandler {
             TDTM_Runnable.Action thisAction, Schema.DescribeSObjectResult describeObj, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         if (classToRunRecord != null) {
-            String classToRunName = String.valueOf(classToRunRecord.get('Class__c'));
-            Type classType = getTypeForClassNamed(classToRunName);
+            TriggerHandler triggerHandler = new TriggerHandler(classToRunRecord);
+            Type classType = getTypeForClassNamed(triggerHandler.name());
 
             if (classType != null) {
                 Object classInstance = classType.newInstance();
@@ -177,18 +177,18 @@ public class TDTM_TriggerHandler {
                 //The objects we create dynamically need to implement the TDTM_Runnable interface
                 if (classInstance instanceof TDTM_Runnable) {
                     TDTM_Runnable classToRun = (TDTM_Runnable)classInstance;
-                    Boolean classToRunIsAsync = isAsync(classToRunRecord);
+                    Boolean classToRunIsAsync = triggerHandler.isAsync();
                     Boolean isBefore = isBefore(thisAction);
 
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
                     if (classToRunIsAsync && !isBefore && canRunAsync()) {
-                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName + ' for ' +
+                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
-                        runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
+                        runAsync(classToRun, triggerHandler.name(), newList, oldList, thisAction, describeObj);
                     } else {
-                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + classToRunName + ' for ' +
+                        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         return classToRun.run(newList, oldList, thisAction, describeObj);
                     }
@@ -196,7 +196,7 @@ public class TDTM_TriggerHandler {
                     // alternatively, objects created dynamically can implement the TDTM_RunnableMutable
                     // interface if the class intends to directly modify the global DmlWrappper
                     TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
-                    UTIL_Debug.debugWithInfo('****Calling synchronously: ' + classToRunName + ' for ' +
+                    UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
                         describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
 
                     // we do not check whether class is identified as Asynchronous__c because the
@@ -218,11 +218,6 @@ public class TDTM_TriggerHandler {
 
     private static Boolean canRunAsync() {
         return (!System.isFuture() && !System.isBatch());
-    }
-
-    private static Boolean isAsync(SObject classToRunRecord) {
-        Boolean async = Boolean.valueOf(classToRunRecord.get('Asynchronous__c'));
-        return async;
     }
 
     private static Boolean isBefore(TDTM_Runnable.Action thisAction) {
