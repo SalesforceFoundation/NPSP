@@ -183,7 +183,7 @@ public class TDTM_TriggerHandler {
                     //A class can only run asynchronously (calling a future) if we have the ids of the
                     //records we want to affect. This means we can only run it for after in insert. 
                     //Also,a future cannot be called from a future or batch method.
-                    if (classToRunIsAsync && !isBefore && !System.isFuture() && !System.isBatch()) {
+                    if (classToRunIsAsync && !isBefore && canRunAsync()) {
                         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + classToRunName + ' for ' +
                                 describeObj.getName() + ': ' + thisAction + ' with ' + (newList != null ? newList : oldList).size() + ' records');
                         runAsync(classToRun, classToRunName, newList, oldList, thisAction, describeObj);
@@ -214,6 +214,10 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
         }
         return null;
+    }
+
+    private static Boolean canRunAsync() {
+        return (!System.isFuture() && !System.isBatch());
     }
 
     private static Boolean isAsync(SObject classToRunRecord) {
