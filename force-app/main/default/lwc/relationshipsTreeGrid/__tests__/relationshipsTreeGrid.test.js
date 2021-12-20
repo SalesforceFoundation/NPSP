@@ -2,9 +2,11 @@ import { createElement } from "lwc";
 import RelationshipsTreeGrid from "c/relationshipsTreeGrid";
 import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.getInitialView";
 import getRelationships from "@salesforce/apex/RelationshipsTreeGridController.getRelationships";
+import { getNavigateCalledWith } from "lightning/navigation";
 
 const mockGetInitialView = require("./data/mockGetInitialView.json");
 const mockGetRelationships = require("./data/mockGetRelationships.json");
+const mockExpandRowWithDuplicates = require("./data/mockExpandRowWithDuplicates.json");
 
 jest.mock(
     "@salesforce/apex/RelationshipsTreeGridController.getRelationships",
@@ -26,28 +28,33 @@ jest.mock(
     { virtual: true }
 );
 
+const mockWindowOpen = jest.fn();
+
+const createTreeGrid = async (isLightningOut = false) => {
+    getInitialView.mockResolvedValueOnce(mockGetInitialView);
+    getRelationships.mockResolvedValue(mockGetRelationships);
+    const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
+    element.contactId = "003_FAKE_CONTACT_ID";
+    element.isLightningOut = isLightningOut;
+    document.body.appendChild(element);
+    await flushPromises();
+    return element;
+};
+
 describe("c-relationships-tree-grid", () => {
     afterEach(() => {
         clearDOM();
     });
 
     it("loads with a list of relationships", async () => {
-        getInitialView.mockResolvedValue(mockGetInitialView);
-        const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
-        element.contactId = "003_FAKE_CONTACT_ID";
-        document.body.appendChild(element);
-        await flushPromises();
+        const element = await createTreeGrid();
 
         const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.data).toHaveLength(6);
     });
 
     it("populates column labels from initial view", async () => {
-        getInitialView.mockResolvedValue(mockGetInitialView);
-        const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
-        element.contactId = "003_FAKE_CONTACT_ID";
-        document.body.appendChild(element);
-        await flushPromises();
+        const element = await createTreeGrid();
 
         const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.columns[0].label).toBe(mockGetInitialView.labels["contactName"]);
@@ -58,11 +65,7 @@ describe("c-relationships-tree-grid", () => {
 
     it("hides create new relationship action if no create access", async () => {
         mockGetInitialView.showCreateRelationshipButton = false;
-        getInitialView.mockResolvedValue(mockGetInitialView);
-        const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
-        element.contactId = "003_FAKE_CONTACT_ID";
-        document.body.appendChild(element);
-        await flushPromises();
+        const element = await createTreeGrid();
 
         const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.columns[4].type).toBe("action");
@@ -72,25 +75,164 @@ describe("c-relationships-tree-grid", () => {
         expect(rowActions[1].name).toBe("re_center");
     });
 
-    it("loads additional relationships on expand of row", () => {});
+    it("loads additional relationships on expand of row", async () => {
+        const element = await createTreeGrid();
 
-    it("if same contact in table twice then only loads children for one", () => {});
+        const controller = new TreeGridTestController(element);
+        controller.toggleRow(controller.data[2]); //rows 0 and 1 are the same contact, Stephanie
 
-    it("when loading child rows, does not load any relationship already present in other row", () => {});
+        await flushPromises();
+
+        expect(getRelationships).toHaveBeenCalledWith({ contactId: controller.data[2].contactId });
+        const { _children } = controller.data[2];
+        expect(_children).toHaveLength(1);
+        expect(_children[0].contactId).toBe(mockGetRelationships[0].contactId);
+    });
+
+    it("if same contact in table twice then only loads children for one", async () => {
+        const element = await createTreeGrid();
+        const controller = new TreeGridTestController(element);
+        controller.toggleRow(controller.data[0]); //rows 0 and 1 are the same contact, Stephanie
+
+        await flushPromises();
+
+        expect(controller.data[0]._children).toHaveLength(1);
+        expect(controller.data[1]._children).toBeFalsy(); // second instance of Stephanie should not have child data
+        expect(controller.data[0]._children[0]._children).toHaveLength(0);
+    });
+
+    it("when loading child rows, does not load any relationship already present in other row", async () => {
+        const element = await createTreeGrid();
+        const controller = new TreeGridTestController(element);
+        controller.toggleRow(controller.data[2]); //rows 0 and 1 are the same contact, Stephanie
+
+        await flushPromises();
+
+        getRelationships.mockResolvedValueOnce(mockExpandRowWithDuplicates); // first entry is a duplicate
+
+        controller.toggleRow(controller.data[3]);
+
+        await flushPromises();
+        expect(element).toMatchSnapshot();
+        expect(controller.data[3]._children).toHaveLength(1);
+        expect(controller.data[3]._children[0]).toMatchObject(mockExpandRowWithDuplicates[1]);
+    });
 
     describe("lex specific behavior", () => {
-        it("navigates to contact detail page", () => {});
+        let controller;
+        beforeEach(async () => {
+            const element = await createTreeGrid();
+            controller = new TreeGridTestController(element);
+        });
 
-        it("re-centers on contact", () => {});
+        it("navigates to contact detail page", async () => {
+            controller.rowAction({ actionName: "view_record", row: controller.data[0] });
+            await flushPromises();
+            const navigateArgs = getNavigateCalledWith();
 
-        it("opens new relationship window for contact", () => {});
+            expect(navigateArgs).toBeTruthy();
+            expect(navigateArgs.pageReference.attributes.recordId).toBe(controller.data[0].contactId);
+        });
+
+        it("re-centers on contact", async () => {
+            controller.rowAction({ actionName: "re_center", row: controller.data[0] });
+            await flushPromises();
+            const navigateArgs = getNavigateCalledWith();
+
+            expect(navigateArgs).toBeTruthy();
+            expect(navigateArgs.pageReference.attributes.url).toBe(
+                "/apex/rel_relationshipsviewer?id=" + controller.data[0].contactId
+            );
+        });
+
+        it("opens new relationship window for contact", async () => {
+            controller.rowAction({ actionName: "new_relationship", row: controller.data[0] });
+            await flushPromises();
+            const navigateArgs = getNavigateCalledWith();
+
+            expect(navigateArgs).toBeTruthy();
+            expect(navigateArgs).toMatchObject({
+                pageReference: {
+                    attributes: {
+                        actionName: "new",
+                        objectApiName: "npe4__Relationship__c",
+                    },
+                    state: {
+                        defaultFieldValues: undefined
+                    },
+                    type: "standard__objectPage"
+                },
+            });
+        });
     });
 
     describe("lighting out specific behavior", () => {
-        it("navigates to contact detail page", () => {});
+        let controller;
+        beforeEach(async () => {
+            const element = await createTreeGrid(true);
+            controller = new TreeGridTestController(element);
+            window.open = mockWindowOpen;
+        });
 
-        it("re-centers on contact", () => {});
+        it("navigates to contact detail page", async () => {
+            controller.rowAction({ actionName: "view_record", row: controller.data[0] });
+            await flushPromises();
+            expect(mockWindowOpen).toHaveBeenCalledWith("/" + controller.data[0].contactId);
+        });
 
-        it("opens new relationship window for contact", () => {});
+        it("re-centers on contact", async () => {
+            let assignMock = jest.fn();
+            Object.defineProperty(window, "location", {
+                set: assignMock,
+            });
+
+            controller.rowAction({ actionName: "re_center", row: controller.data[0] });
+            await flushPromises();
+
+            expect(assignMock).toHaveBeenLastCalledWith(
+                "/apex/rel_relationshipsviewer?isdtp=p1&id=" + controller.data[0].contactId
+            );
+        });
+
+        it("opens new relationship window for contact", async () => {
+            controller.rowAction({ actionName: "new_relationship", row: controller.data[0] });
+            await flushPromises();
+
+            // encodeDefaultFieldValues is not implemented in JEST, so we cannot test params
+            expect(mockWindowOpen).toHaveBeenCalledWith(
+                expect.stringContaining("/lightning/o/npe4__Relationship__c/new?defaultFieldValues=")
+            );
+        });
     });
 });
+
+class TreeGridTestController {
+    treeGrid;
+
+    constructor(element) {
+        this.treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
+    }
+
+    get data() {
+        return this.treeGrid.data;
+    }
+
+    rowAction({ actionName, row }) {
+        this.treeGrid.dispatchEvent(
+            new CustomEvent("rowaction", {
+                detail: { action: { name: actionName }, row },
+            })
+        );
+    }
+
+    toggleRow(rowData) {
+        this.treeGrid.dispatchEvent(
+            new CustomEvent("toggle", {
+                detail: {
+                    row: rowData,
+                    hasChildrenContent: rowData._children && rowData._children.length > 0,
+                },
+            })
+        );
+    }
+}

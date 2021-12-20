@@ -216,16 +216,20 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             [RELATIONSHIP_CONTACT.fieldApiName]: recordId,
         });
 
-        const navigateArgs = {
-            type: "standard__objectPage",
-            attributes: {
-                objectApiName: RELATIONSHIP_OBJECT.objectApiName,
-                actionName: "new",
-            },
-            state: { defaultFieldValues },
-        };
+        if (this.isLightningOut) {
+            window.open("/lightning/o/npe4__Relationship__c/new?defaultFieldValues=" + defaultFieldValues);
+        } else {
+            const navigateArgs = {
+                type: "standard__objectPage",
+                attributes: {
+                    objectApiName: RELATIONSHIP_OBJECT.objectApiName,
+                    actionName: "new",
+                },
+                state: { defaultFieldValues },
+            };
 
-        this[NavigationMixin.Navigate](navigateArgs);
+            this[NavigationMixin.Navigate](navigateArgs);
+        }
     }
 
     reCenterOnContact(contactId) {
