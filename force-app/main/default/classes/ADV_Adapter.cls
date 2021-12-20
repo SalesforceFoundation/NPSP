@@ -127,7 +127,7 @@ global virtual with sharing class ADV_Adapter {
             throw new AdapterException(Label.adapterException);
         }
 
-        TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
+        TDTM_Runnable.Action triggerAction = TDTM_Runnable.getTriggerActionFromName(action);
 
         AccountAdapter accountsAdapter = new AccountAdapter(listNew, listOld);
         switch on triggerAction {

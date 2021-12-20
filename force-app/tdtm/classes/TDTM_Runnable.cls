@@ -80,7 +80,7 @@ global abstract class TDTM_Runnable {
     public static void runFuture(Set<Id> newIds, Set<Id> oldIds, String action, String objectName, String classToRunName) {
         
         Schema.DescribeSObjectResult objResult = UTIL_Describe.getObjectDescribe(objectName);
-        TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
+        TDTM_Runnable.Action triggerAction = getTriggerActionFromName(action);
         
         //Get all fields for the object
         List<Schema.SObjectField> allFields = objResult.fields.getMap().values();
@@ -207,5 +207,30 @@ global abstract class TDTM_Runnable {
         AfterUpdate, 
         AfterDelete,
         AfterUndelete
+    }
+
+    /*******************************************************************************************************
+    * @description Get the TDTM Action from the action name.
+    * @param name Name of the action.
+    * @return TDTM_Runnable.Action The TDTM Action with that name.
+    */
+    public static TDTM_Runnable.Action getTriggerActionFromName(String name) {
+        TDTM_Runnable.Action ta;
+
+        if (name == TDTM_Runnable.Action.BeforeInsert.name())
+            ta = TDTM_Runnable.Action.BeforeInsert;
+        else if(name == TDTM_Runnable.Action.BeforeUpdate.name())
+            ta = TDTM_Runnable.Action.BeforeUpdate;
+        else if(name == TDTM_Runnable.Action.BeforeDelete.name())
+            ta = TDTM_Runnable.Action.BeforeDelete;
+        else if(name == TDTM_Runnable.Action.AfterInsert.name())
+            ta = TDTM_Runnable.Action.AfterInsert;
+        else if(name == TDTM_Runnable.Action.AfterUpdate.name())
+            ta = TDTM_Runnable.Action.AfterUpdate;
+        else if(name == TDTM_Runnable.Action.AfterDelete.name())
+            ta = TDTM_Runnable.Action.AfterDelete;
+        else if(name == TDTM_Runnable.Action.AfterUndelete.name())
+            ta = TDTM_Runnable.Action.AfterUndelete;
+        return ta;
     }
 }
