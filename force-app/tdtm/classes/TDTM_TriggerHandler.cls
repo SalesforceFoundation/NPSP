@@ -122,17 +122,7 @@ public class TDTM_TriggerHandler {
                 try {
                     dmlWrapperResponse = runClass(classToCall, newList, oldList, thisAction, describeObj, dmlWrapper);
                 } catch (Exception ex) {
-                    //use the correct list
-                    List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
-                    //if we're only doing DML on one object and the caught exception is handled,
-                    //trap the error and add the message to the page.
-                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
-                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
-                        populatedList[0].addError(ex);
-                        return;
-                    } else {
-                        throw ex;
-                    }
+                    handleExceptions(newList, oldList, ex);
                 }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
@@ -146,19 +136,23 @@ public class TDTM_TriggerHandler {
                 try {
                     processDML(dmlWrapper);
                 } catch (Exception ex) {
-                    //use the correct list
-                    List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
-                    //if we're only doing DML on one object and the caught exception is handled,
-                    //trap the error and add the message to the page.
-                    if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
-                        ERR_ExceptionHandler.beautifyExceptionMessage(ex);
-                        populatedList[0].addError(ex);
-                        return;
-                    } else {
-                        throw ex;
-                    }
+                    handleExceptions(newList, oldList, ex);
                 }
             }
+        }
+    }
+
+    private static void handleExceptions(List<SObject> newList, List<SObject> oldList, Exception ex) {
+        //use the correct list
+        List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
+        //if we're only doing DML on one object and the caught exception is handled,
+        //trap the error and add the message to the page.
+        if (populatedList.size() == 1 && ERR_ExceptionHandler.isHandledException(ex)) {
+            ERR_ExceptionHandler.beautifyExceptionMessage(ex);
+            populatedList[0].addError(ex);
+            return;
+        } else {
+            throw ex;
         }
     }
 
