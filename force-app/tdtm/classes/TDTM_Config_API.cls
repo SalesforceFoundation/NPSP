@@ -86,10 +86,29 @@ global class TDTM_Config_API {
     * @param describeObj The type of SObject the class runs for.
     * @return void
     */
-    global static void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
-    Boolean isDelete, Boolean isUnDelete, List<SObject> newList, List<SObject> oldList, 
-    Schema.DescribeSObjectResult describeObj) {
-        TDTM_TriggerHandler.run(isBefore, isAfter, isInsert, isUpdate, isDelete, isUnDelete, newList, oldList, describeObj, new TDTM_ObjectDataGateway());
+    global static void run(
+            Boolean isBefore,
+            Boolean isAfter,
+            Boolean isInsert,
+            Boolean isUpdate,
+            Boolean isDelete,
+            Boolean isUnDelete,
+            List<SObject> newList,
+            List<SObject> oldList,
+            Schema.DescribeSObjectResult describeObj
+    ) {
+        TDTM_TriggerHandler.run(
+                isBefore,
+                isAfter,
+                isInsert,
+                isUpdate,
+                isDelete,
+                isUnDelete,
+                newList,
+                oldList,
+                describeObj,
+                new TDTM_ObjectDataGateway()
+        );
     }
 
     /**

@@ -59,9 +59,18 @@ public class TDTM_TriggerHandler {
     * @param dao The class that is going to retrieve all the TDTM records.
     * @return void
     */
-    public static void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
-            Boolean isDelete, Boolean isUnDelete, List<SObject> newList, List<SObject> oldList,
-            Schema.DescribeSObjectResult describeObj, TDTM_iTableDataGateway dao) {
+    public static void run(
+            Boolean isBefore,
+            Boolean isAfter,
+            Boolean isInsert,
+            Boolean isUpdate,
+            Boolean isDelete,
+            Boolean isUnDelete,
+            List<SObject> newList,
+            List<SObject> oldList,
+            Schema.DescribeSObjectResult describeObj,
+            TDTM_iTableDataGateway dao
+    ) {
 
         if (disableTDTM) {
            UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
