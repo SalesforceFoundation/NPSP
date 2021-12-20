@@ -122,7 +122,7 @@ public class TDTM_TriggerHandler {
                 try {
                     dmlWrapperResponse = runClass(classToCall, newList, oldList, thisAction, describeObj, dmlWrapper);
                 } catch (Exception ex) {
-                    handleExceptions(newList, oldList, ex);
+                    handleException(newList, oldList, ex);
                 }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
@@ -136,13 +136,13 @@ public class TDTM_TriggerHandler {
                 try {
                     processDML(dmlWrapper);
                 } catch (Exception ex) {
-                    handleExceptions(newList, oldList, ex);
+                    handleException(newList, oldList, ex);
                 }
             }
         }
     }
 
-    private static void handleExceptions(List<SObject> newList, List<SObject> oldList, Exception ex) {
+    private static void handleException(List<SObject> newList, List<SObject> oldList, Exception ex) {
         //use the correct list
         List<SObject> populatedList = newList == null || newList.isEmpty() ? oldList : newList;
         //if we're only doing DML on one object and the caught exception is handled,
