@@ -4,6 +4,8 @@ import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.get
 import getRelationships from "@salesforce/apex/RelationshipsTreeGridController.getRelationships";
 import { getNavigateCalledWith } from "lightning/navigation";
 
+import REL_No_Relationships from "@salesforce/label/c.REL_No_Relationships";
+
 const mockGetInitialView = require("./data/mockGetInitialView.json");
 const mockGetRelationships = require("./data/mockGetRelationships.json");
 const mockExpandRowWithDuplicates = require("./data/mockExpandRowWithDuplicates.json");
@@ -31,7 +33,7 @@ jest.mock(
 const mockWindowOpen = jest.fn();
 
 const createTreeGrid = async (isLightningOut = false) => {
-    getInitialView.mockResolvedValueOnce(mockGetInitialView);
+    getInitialView.mockResolvedValue(mockGetInitialView);
     getRelationships.mockResolvedValue(mockGetRelationships);
     const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
     element.contactId = "003_FAKE_CONTACT_ID";
@@ -51,6 +53,20 @@ describe("c-relationships-tree-grid", () => {
 
         const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.data).toHaveLength(6);
+    });
+
+    it("displays illustration with message when no relationships found", async () => {
+        getInitialView.mockResolvedValueOnce(
+            {
+                ...mockGetInitialView,
+                relations: []
+            }
+        );
+        const element = await createTreeGrid();
+
+        const illustration = element.shadowRoot.querySelector("c-util-illustration");
+        expect(illustration).toBeTruthy();
+        expect(illustration.message).toBe(REL_No_Relationships);
     });
 
     it("populates column labels from initial view", async () => {

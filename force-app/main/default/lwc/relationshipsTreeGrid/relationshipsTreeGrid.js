@@ -9,6 +9,7 @@ import RELATIONSHIP_OBJECT from "@salesforce/schema/npe4__Relationship__c";
 import REL_View_Contact_Record from "@salesforce/label/c.REL_View_Contact_Record";
 import REL_Create_New_Relationship from "@salesforce/label/c.REL_Create_New_Relationship";
 import REL_RECenter from "@salesforce/label/c.REL_RECenter";
+import REL_No_Relationships from "@salesforce/label/c.REL_No_Relationships";
 
 const TABLE_ACTIONS = {
     NEW_RELATIONSHIP: "new_relationship",
@@ -59,10 +60,17 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     @api isLightningOut;
 
     @track relationships;
+
     columns;
-    displayedRelationshipIds = [];
     contactIdsLoaded = [];
+    displayedRelationshipIds = [];
+    hasData = true;
+    isLoading;
     vfPageURL;
+
+    labels = {
+        REL_No_Relationships,
+    };
 
     async connectedCallback() {
         const relationshipsListView = await this.getInitialView(this.recordId);
@@ -73,6 +81,12 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             this.relationships = relationshipsListView.relations.map((relation) =>
                 this.buildInitialRelationships(relation)
             );
+
+            if (this.relationships.length === 0) {
+                this.hasData = false;
+            }
+
+            this.isLoading = false;
         }
     }
 
