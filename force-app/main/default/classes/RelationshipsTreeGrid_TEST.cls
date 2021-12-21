@@ -125,6 +125,35 @@ private class RelationshipsTreeGrid_TEST {
         System.assertEquals(view.relationshipId, selectorStub.queryResults[0].Id);
     }
 
+    @IsTest
+    static void selectorCanQueryRelationships() {
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createAccountContactTestData(
+                CAO_Constants.HH_ACCOUNT_TYPE,
+                1,
+                2,
+                0
+        );
+
+        npe4__Relationship__c relationship = new npe4__Relationship__c(
+                npe4__Contact__c = contacts[0].Id,
+                npe4__RelatedContact__c = contacts[1].Id,
+                npe4__Type__c = 'Sibling'
+        );
+
+        insert relationship;
+
+        RelationshipsService service = new RelationshipsService();
+        List<npe4__Relationship__c> relationships = service.getContactRelations(contacts[0].Id);
+        System.assertEquals(1, relationships.size());
+
+        // ensure that required fields are being queried, since all tests use a mock of this selector except this one
+        System.assertEquals('Sibling', relationships[0].npe4__Type__c, 'Relationship type field wrong value');
+        System.assertEquals(contacts[1].Id, relationships[0].npe4__RelatedContact__c, 'Related contact field wrong value');
+        System.assertNotEquals(null, relationships[0].npe4__Relationship_Explanation__c, 'Missing relationship explanation field');
+        System.assertNotEquals(null, relationships[0].npe4__RelatedContact__r.Name, 'Misisng related contact name field');
+        System.assertNotEquals(null, relationships[0].npe4__RelatedContact__r.Account.Name, 'Missing Account Name field');
+    }
+
     static Contact generateContactWithName(String name) {
         return (Contact) JSON.deserialize('{"Name": "' + name + '"}', Contact.class);
     }

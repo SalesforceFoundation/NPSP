@@ -461,7 +461,7 @@ public class UTIL_UnitTestData_TEST {
     * @param iUnique the number to start with when naming the contacts and addresses
     * @return  void
     **********************************************************************************************************/
-    public static void createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
+    public static List<Contact> createAccountContactTestData(String accType, Integer cAcc, Integer cCon, Integer iUnique) {
 
         listConT = createMultipleTestContacts(cAcc * cCon);
         listAccT = createMultipleTestAccounts(cAcc, accType);
@@ -481,6 +481,7 @@ public class UTIL_UnitTestData_TEST {
             }
         }
         insert listConT;
+        return listConT;
     }
 
     /**
