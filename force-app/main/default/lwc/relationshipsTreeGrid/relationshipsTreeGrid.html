@@ -1,6 +1,7 @@
 <template>
     <template if:true={hasData}>
         <lightning-tree-grid
+            aria-label={tableLabel}
             data={relationships}
             columns={columns}
             onrowaction={handleRowAction}

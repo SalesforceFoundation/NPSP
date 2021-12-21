@@ -110,7 +110,8 @@ public with sharing class RelationshipsService {
                 'contactName' => UTIL_Describe.getFieldLabel('Contact', 'Name'),
                 'title' => UTIL_Describe.getFieldLabel('Contact', 'Title'),
                 'accountName' => UTIL_Describe.getObjectLabel('Account'),
-                'relationshipExplanation' => UTIL_Describe.getFieldLabel('npe4__Relationship__c', 'npe4__Relationship_Explanation__c')
+                'relationshipExplanation' => UTIL_Describe.getFieldLabel('npe4__Relationship__c', 'npe4__Relationship_Explanation__c'),
+                'relationshipsPlural' => UTIL_Describe.getObjectLabelPlural('npe4__Relationship__c')
         };
     }
 }

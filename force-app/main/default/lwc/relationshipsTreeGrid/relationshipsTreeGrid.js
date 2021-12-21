@@ -54,6 +54,7 @@ const COLUMNS_DEF = [
 export default class RelationshipsTreeGrid extends NavigationMixin(LightningElement) {
     @api recordId;
     @api isLightningOut;
+    @api contactName;
 
     @track relationships;
 
@@ -64,7 +65,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     isLoading;
     vfPageURL;
 
-    labels = {
+    @track labels = {
         REL_No_Relationships,
     };
 
@@ -81,6 +82,8 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
             if (this.relationships.length === 0) {
                 this.hasData = false;
             }
+
+            this.labels.relationshipsPlural = relationshipsListView.labels.relationshipsPlural;
 
             this.isLoading = false;
         }
@@ -272,5 +275,11 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
 
     isAlreadyLoaded(contactId) {
         return this.contactIdsLoaded.includes(contactId) || this.recordId === contactId;
+    }
+
+    get tableLabel() {
+        if(this.contactName && this.labels.relationshipsPlural) {
+            return `${this.labels.relationshipsPlural} - ${this.contactName}`;
+        }
     }
 }

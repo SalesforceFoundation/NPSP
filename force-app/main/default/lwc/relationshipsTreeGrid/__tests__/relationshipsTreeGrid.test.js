@@ -37,6 +37,7 @@ const createTreeGrid = async (isLightningOut = false) => {
     getInitialView.mockResolvedValue(mockGetInitialView);
     getRelationships.mockResolvedValue(mockGetRelationships);
     const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
+    element.contactName = 'FakeFirstName FakeLastName';
     element.contactId = "003_FAKE_CONTACT_ID";
     element.isLightningOut = isLightningOut;
     document.body.appendChild(element);
@@ -68,6 +69,13 @@ describe("c-relationships-tree-grid", () => {
         const illustration = element.shadowRoot.querySelector("c-util-illustration");
         expect(illustration).toBeTruthy();
         expect(illustration.message).toBe(REL_No_Relationships);
+    });
+
+    it("has an accessible table title", async () => {
+        const element = await createTreeGrid();
+        const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
+
+        expect(treeGrid.ariaLabel).toBe("Relationships - FakeFirstName FakeLastName");
     });
 
     it("populates column labels from initial view", async () => {
@@ -137,16 +145,7 @@ describe("c-relationships-tree-grid", () => {
         expect(controller.data[3]._children[0]._children).toHaveLength(0);
     });
 
-    /**
-     * Given Contact A is present in the relationship table and has been expanded to reveal its relationships
-     * and Given Contact B is present in the table, and has not had its rows expanded
-     * and Given Contact B has a relationship record tying it to Contact A
-     * When Contact B is expanded
-     * Then Contact A's second relationship with Contact B will appear (Contact A-2)
-     * And Contact A-2 will not have the option to expand its relationships
-     * because Contact A already has those same relationships underneath it
-     */
-    it("when children load, does not populate grandchildren if a contact's grandchildren are loaded elsewhere", async () => {
+    it("each contact's relationships may load only once even if that contact appears multiple times in the table", async () => {
         const element = await createTreeGrid();
         const controller = new TreeGridTestController(element);
         controller.toggleRow(controller.data[2]); // load Samuel Harrison's relationships

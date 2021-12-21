@@ -106,6 +106,7 @@ private class RelationshipsTreeGrid_TEST {
         System.assertNotEquals(null, listView.labels.get('relationshipExplanation'));
         System.assertNotEquals(null, listView.labels.get('title'));
         System.assertNotEquals(null, listView.labels.get('accountName'));
+        System.assertNotEquals(null, listView.labels.get('relationshipsPlural'));
     }
 
     @IsTest
