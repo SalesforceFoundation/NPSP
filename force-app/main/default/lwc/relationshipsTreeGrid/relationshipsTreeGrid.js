@@ -11,10 +11,19 @@ import REL_Create_New_Relationship from "@salesforce/label/c.REL_Create_New_Rela
 import REL_RECenter from "@salesforce/label/c.REL_RECenter";
 import REL_No_Relationships from "@salesforce/label/c.REL_No_Relationships";
 
-const TABLE_ACTIONS = {
-    NEW_RELATIONSHIP: "new_relationship",
-    RE_CENTER: "re_center",
-    VIEW_RECORD: "view_record",
+const ACTION_DEFS = {
+    NEW_RELATIONSHIP: {
+        label: REL_Create_New_Relationship,
+        name: "new_relationship",
+    },
+    RE_CENTER: {
+        label: REL_RECenter,
+        name: "re_center",
+    },
+    VIEW_RECORD: {
+        label: REL_View_Contact_Record,
+        name: "view_record",
+    },
 };
 
 const COLUMNS_DEF = [
@@ -37,20 +46,7 @@ const COLUMNS_DEF = [
     {
         type: "action",
         typeAttributes: {
-            rowActions: [
-                {
-                    label: REL_View_Contact_Record,
-                    name: TABLE_ACTIONS.VIEW_RECORD,
-                },
-                {
-                    label: REL_Create_New_Relationship,
-                    name: TABLE_ACTIONS.NEW_RELATIONSHIP,
-                },
-                {
-                    label: REL_RECenter,
-                    name: TABLE_ACTIONS.RE_CENTER,
-                },
-            ],
+            rowActions: [],
         },
     },
 ];
@@ -94,8 +90,8 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         if (column.fieldName) {
             return this.addFieldLabelToColumn(column, relationshipsListView);
         }
-        if (!relationshipsListView.showCreateRelationshipButton && column.type === "action") {
-            return this.buildActionsColumn(column);
+        if (column.type === "action") {
+            return this.buildActionsColumn(relationshipsListView);
         }
         return column;
     }
@@ -119,14 +115,20 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         };
     }
 
-    buildActionsColumn(column) {
+    buildActionsColumn(relationshipsListView) {
+        let rowActions = [ACTION_DEFS.VIEW_RECORD];
+
+        if (relationshipsListView.showCreateRelationshipButton) {
+            rowActions.push(ACTION_DEFS.NEW_RELATIONSHIP);
+        }
+
+        if (this.isLightningOut) {
+            rowActions.push(ACTION_DEFS.RE_CENTER);
+        }
+
         return {
-            ...column,
-            typeAttributes: {
-                rowActions: column.typeAttributes.rowActions.filter(
-                    ({ name }) => name !== TABLE_ACTIONS.NEW_RELATIONSHIP
-                ),
-            },
+            type: "action",
+            typeAttributes: { rowActions }
         };
     }
 
@@ -265,13 +267,13 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
         const { action, row } = event.detail;
 
         switch (action.name) {
-            case TABLE_ACTIONS.VIEW_RECORD:
+            case ACTION_DEFS.VIEW_RECORD.name:
                 this.navigateToRecord(row.contactId);
                 break;
-            case TABLE_ACTIONS.RE_CENTER:
+            case ACTION_DEFS.RE_CENTER.name:
                 this.reCenterOnContact(row.contactId);
                 break;
-            case TABLE_ACTIONS.NEW_RELATIONSHIP:
+            case ACTION_DEFS.NEW_RELATIONSHIP.name:
                 this.newRelationship(row.contactId);
                 break;
         }

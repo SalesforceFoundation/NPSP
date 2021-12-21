@@ -80,15 +80,17 @@ describe("c-relationships-tree-grid", () => {
     });
 
     it("hides create new relationship action if no create access", async () => {
-        mockGetInitialView.showCreateRelationshipButton = false;
+        getInitialView.mockResolvedValueOnce({
+            ...mockGetInitialView,
+            showCreateRelationshipButton: false
+        });
         const element = await createTreeGrid();
 
         const treeGrid = element.shadowRoot.querySelector("lightning-tree-grid");
         expect(treeGrid.columns[4].type).toBe("action");
         const { rowActions } = treeGrid.columns[4].typeAttributes;
-        expect(rowActions.length).toBe(2);
+        expect(rowActions.length).toBe(1);
         expect(rowActions[0].name).toBe("view_record");
-        expect(rowActions[1].name).toBe("re_center");
     });
 
     it("loads additional relationships on expand of row", async () => {
@@ -129,7 +131,6 @@ describe("c-relationships-tree-grid", () => {
         controller.toggleRow(controller.data[3]);
 
         await flushPromises();
-        expect(element).toMatchSnapshot();
         expect(controller.data[3]._children).toHaveLength(1);
         expect(controller.data[3]._children[0]).toMatchObject(mockExpandRowWithDuplicates[1]);
     });
@@ -150,15 +151,12 @@ describe("c-relationships-tree-grid", () => {
             expect(navigateArgs.pageReference.attributes.recordId).toBe(controller.data[0].contactId);
         });
 
-        it("re-centers on contact", async () => {
-            controller.rowAction({ actionName: "re_center", row: controller.data[0] });
-            await flushPromises();
-            const navigateArgs = getNavigateCalledWith();
-
-            expect(navigateArgs).toBeTruthy();
-            expect(navigateArgs.pageReference.attributes.url).toBe(
-                "/apex/rel_relationshipsviewer?id=" + controller.data[0].contactId
-            );
+        it("re-center on contact is not present in actions menu", async () => {
+            expect(controller.columns[4].type).toBe("action");
+            const { rowActions } = controller.columns[4].typeAttributes;
+            expect(rowActions.length).toBe(2);
+            expect(rowActions[0].name).toBe("view_record");
+            expect(rowActions[1].name).toBe("new_relationship");
         });
 
         it("opens new relationship window for contact", async () => {
@@ -231,6 +229,10 @@ class TreeGridTestController {
 
     get data() {
         return this.treeGrid.data;
+    }
+
+    get columns() {
+        return this.treeGrid.columns;
     }
 
     rowAction({ actionName, row }) {
