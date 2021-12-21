@@ -71,4 +71,16 @@ describe("c-relationships-navigator", () => {
         const errorMessageCmp = element.shadowRoot.querySelector("c-util-illustration");
         expect(errorMessageCmp).toBeTruthy();
     });
+
+    it("passes isLightningOut value down to tree grid component", async () => {
+        const element = createElement("c-relationships-navigator", { is: RelationshipsNavigator });
+        element.recordId = FAKE_CONTACT_ID;
+        element.isLightningOut = true;
+
+        document.body.appendChild(element);
+
+        const treeGrid = element.shadowRoot.querySelector("c-relationships-tree-grid");
+        expect(treeGrid).toBeTruthy();
+        expect(treeGrid.isLightningOut).toBe(true);
+    });
 });
