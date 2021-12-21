@@ -89,8 +89,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     buildColumn(column, relationshipsListView) {
         if (column.fieldName) {
             return this.addFieldLabelToColumn(column, relationshipsListView);
-        }
-        if (column.type === "action") {
+        } else if(column.type === "action") {
             return this.buildActionsColumn(relationshipsListView);
         }
         return column;
@@ -249,17 +248,9 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     }
 
     reCenterOnContact(contactId) {
+        // action only visible when component is hosted on vf page in lightning out
         if (this.isLightningOut) {
             window.location = this.vfPageURL + "?isdtp=p1&id=" + contactId;
-        } else {
-            const navigateArgs = {
-                type: "standard__webPage",
-                attributes: {
-                    url: this.vfPageURL + "?id=" + contactId,
-                },
-            };
-
-            this[NavigationMixin.Navigate](navigateArgs);
         }
     }
 

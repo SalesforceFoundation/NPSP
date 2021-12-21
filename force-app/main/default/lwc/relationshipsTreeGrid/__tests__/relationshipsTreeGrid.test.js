@@ -9,6 +9,7 @@ import REL_No_Relationships from "@salesforce/label/c.REL_No_Relationships";
 const mockGetInitialView = require("./data/mockGetInitialView.json");
 const mockGetRelationships = require("./data/mockGetRelationships.json");
 const mockExpandRowWithDuplicates = require("./data/mockExpandRowWithDuplicates.json");
+const mockExpandRowChildless = require("./data/mockExpandRowChildless.json");
 
 jest.mock(
     "@salesforce/apex/RelationshipsTreeGridController.getRelationships",
@@ -133,6 +134,36 @@ describe("c-relationships-tree-grid", () => {
         await flushPromises();
         expect(controller.data[3]._children).toHaveLength(1);
         expect(controller.data[3]._children[0]).toMatchObject(mockExpandRowWithDuplicates[1]);
+        expect(controller.data[3]._children[0]._children).toHaveLength(0);
+    });
+
+    /**
+     * Given Contact A is present in the relationship table and has been expanded to reveal its relationships
+     * and Given Contact B is present in the table, and has not had its rows expanded
+     * and Given Contact B has a relationship record tying it to Contact A
+     * When Contact B is expanded
+     * Then Contact A's second relationship with Contact B will appear (Contact A-2)
+     * And Contact A-2 will not have the option to expand its relationships
+     * because Contact A already has those same relationships underneath it
+     */
+    it("when children load, does not populate grandchildren if a contact's grandchildren are loaded elsewhere", async () => {
+        const element = await createTreeGrid();
+        const controller = new TreeGridTestController(element);
+        controller.toggleRow(controller.data[2]); // load Samuel Harrison's relationships
+
+        await flushPromises();
+
+        getRelationships.mockResolvedValueOnce(mockExpandRowChildless);
+
+        controller.toggleRow(controller.data[1]); // load Stephanie Bailey, who has Samuel as a Relationship
+
+        await flushPromises();
+
+        expect(controller.data[1]._children).toBeTruthy();
+        expect(controller.data[1]._children[0]).toMatchObject(mockExpandRowChildless[0]);
+
+        // Samuel will not have a _children property, since his relationships are already loaded
+        expect(controller.data[1]._children[0]._children).toBeFalsy();
     });
 
     describe("lex specific behavior", () => {

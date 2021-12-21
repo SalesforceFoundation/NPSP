@@ -5,7 +5,7 @@ import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.get
 
 const mockGetInitialView = require("../../relationshipsTreeGrid/__tests__/data/mockGetInitialView.json");
 const FAKE_CONTACT_ID = "003_FAKE_CONTACT_ID";
-
+const FAKE_CONTACT_NAME = "FakeFirstName FakeLastName"
 const mockGetRecord = {
     apiName: "Contact",
     childRelationships: {},
@@ -14,7 +14,7 @@ const mockGetRecord = {
     fields: {
         Name: {
             displayValue: null,
-            value: "FakeFirstName FakeLastName",
+            value: FAKE_CONTACT_NAME,
         },
     },
 };
@@ -39,8 +39,18 @@ describe("c-relationships-navigator", () => {
     it("loads a card with a contact name", async () => {
         const element = createElement("c-relationships-navigator", { is: RelationshipsNavigator });
         element.recordId = FAKE_CONTACT_ID;
+
         document.body.appendChild(element);
-        getRecord.emit(mockGetRecord, (config) => config.recordId === FAKE_CONTACT_ID);
+        await flushPromises();
+
+        getRecord.emit(mockGetRecord, (config) => {
+            return config.recordId === FAKE_CONTACT_ID
+        });
+        await flushPromises();
+
+
+        const cardCmp = element.shadowRoot.querySelector('lightning-card');
+        expect(cardCmp.title).toBe(FAKE_CONTACT_NAME);
     });
 
     it("displays an error when user does not have access", async () => {
