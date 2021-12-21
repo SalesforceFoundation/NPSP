@@ -214,11 +214,6 @@ private class RelationshipsTreeGrid_TEST {
             this.canRead = canRead;
         }
 
-        public UTIL_PermissionsMock() {
-            this.canRead = true;
-            this.canCreate = true;
-        }
-
         public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
                 Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
                 List<Object> listOfArgs) {
