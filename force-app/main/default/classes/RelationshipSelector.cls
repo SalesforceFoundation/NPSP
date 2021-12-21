@@ -46,6 +46,7 @@ public with sharing class RelationshipSelector {
                 FROM npe4__Relationship__c
                 WHERE npe4__Contact__c = :contactId
                 WITH SECURITY_ENFORCED
+                ORDER BY npe4__RelatedContact__r.Name
         ];
     }
 }
