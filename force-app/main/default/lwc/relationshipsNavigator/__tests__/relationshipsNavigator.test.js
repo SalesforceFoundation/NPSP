@@ -5,7 +5,7 @@ import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.get
 
 const mockGetInitialView = require("../../relationshipsTreeGrid/__tests__/data/mockGetInitialView.json");
 const FAKE_CONTACT_ID = "003_FAKE_CONTACT_ID";
-const FAKE_CONTACT_NAME = "FakeFirstName FakeLastName"
+const FAKE_CONTACT_NAME = "FakeFirstName FakeLastName";
 const mockGetRecord = {
     apiName: "Contact",
     childRelationships: {},
@@ -44,12 +44,11 @@ describe("c-relationships-navigator", () => {
         await flushPromises();
 
         getRecord.emit(mockGetRecord, (config) => {
-            return config.recordId === FAKE_CONTACT_ID
+            return config.recordId === FAKE_CONTACT_ID;
         });
         await flushPromises();
 
-
-        const cardCmp = element.shadowRoot.querySelector('lightning-card');
+        const cardCmp = element.shadowRoot.querySelector("lightning-card");
         expect(cardCmp.title).toBe(FAKE_CONTACT_NAME);
     });
 

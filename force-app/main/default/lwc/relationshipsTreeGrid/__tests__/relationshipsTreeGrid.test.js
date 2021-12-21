@@ -37,7 +37,7 @@ const createTreeGrid = async (isLightningOut = false) => {
     getInitialView.mockResolvedValue(mockGetInitialView);
     getRelationships.mockResolvedValue(mockGetRelationships);
     const element = createElement("c-relationships-tree-grid", { is: RelationshipsTreeGrid });
-    element.contactName = 'FakeFirstName FakeLastName';
+    element.contactName = "FakeFirstName FakeLastName";
     element.contactId = "003_FAKE_CONTACT_ID";
     element.isLightningOut = isLightningOut;
     document.body.appendChild(element);
@@ -58,12 +58,10 @@ describe("c-relationships-tree-grid", () => {
     });
 
     it("displays illustration with message when no relationships found", async () => {
-        getInitialView.mockResolvedValueOnce(
-            {
-                ...mockGetInitialView,
-                relations: []
-            }
-        );
+        getInitialView.mockResolvedValueOnce({
+            ...mockGetInitialView,
+            relations: [],
+        });
         const element = await createTreeGrid();
 
         const illustration = element.shadowRoot.querySelector("c-util-illustration");
@@ -91,7 +89,7 @@ describe("c-relationships-tree-grid", () => {
     it("hides create new relationship action if no create access", async () => {
         getInitialView.mockResolvedValueOnce({
             ...mockGetInitialView,
-            showCreateRelationshipButton: false
+            showCreateRelationshipButton: false,
         });
         const element = await createTreeGrid();
 
@@ -202,9 +200,9 @@ describe("c-relationships-tree-grid", () => {
                         objectApiName: "npe4__Relationship__c",
                     },
                     state: {
-                        defaultFieldValues: undefined
+                        defaultFieldValues: undefined,
                     },
-                    type: "standard__objectPage"
+                    type: "standard__objectPage",
                 },
             });
         });

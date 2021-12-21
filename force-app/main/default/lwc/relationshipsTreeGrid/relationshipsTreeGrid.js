@@ -92,7 +92,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     buildColumn(column, relationshipsListView) {
         if (column.fieldName) {
             return this.addFieldLabelToColumn(column, relationshipsListView);
-        } else if(column.type === "action") {
+        } else if (column.type === "action") {
             return this.buildActionsColumn(relationshipsListView);
         }
         return column;
@@ -130,7 +130,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
 
         return {
             type: "action",
-            typeAttributes: { rowActions }
+            typeAttributes: { rowActions },
         };
     }
 
@@ -278,7 +278,7 @@ export default class RelationshipsTreeGrid extends NavigationMixin(LightningElem
     }
 
     get tableLabel() {
-        if(this.contactName && this.labels.relationshipsPlural) {
+        if (this.contactName && this.labels.relationshipsPlural) {
             return `${this.labels.relationshipsPlural} - ${this.contactName}`;
         }
     }
