@@ -1,9 +1,9 @@
 import { createElement } from "lwc";
 import { getRecord } from "lightning/uiRecordApi";
 import RelationshipsNavigator from "c/relationshipsNavigator";
-import getRelationships from "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships";
+import getInitialView from "@salesforce/apex/RelationshipsTreeGridController.getInitialView";
 
-const mockGetRelationships = require("../../relationshipsTreeGrid/__tests__/data/mockGetInitialView.json");
+const mockGetInitialView = require("../../relationshipsTreeGrid/__tests__/data/mockGetInitialView.json");
 const FAKE_CONTACT_ID = "003_FAKE_CONTACT_ID";
 
 const mockGetRecord = {
@@ -20,7 +20,7 @@ const mockGetRecord = {
 };
 
 jest.mock(
-    "@salesforce/apex/REL_RelationshipsViewer_CTRL.getRelationships",
+    "@salesforce/apex/RelationshipsTreeGridController.getInitialView",
     () => {
         return { default: jest.fn() };
     },
@@ -29,7 +29,7 @@ jest.mock(
 
 describe("c-relationships-navigator", () => {
     beforeEach(() => {
-        getRelationships.mockResolvedValue(mockGetRelationships);
+        getInitialView.mockResolvedValue(mockGetInitialView);
     });
 
     afterEach(() => {
@@ -50,7 +50,7 @@ describe("c-relationships-navigator", () => {
                 message: "Insufficient Permissions",
             },
         };
-        getRelationships.mockRejectedValue(errorMessage);
+        getInitialView.mockRejectedValue(errorMessage);
 
         const element = createElement("c-relationships-navigator", { is: RelationshipsNavigator });
         element.recordId = FAKE_CONTACT_ID;
