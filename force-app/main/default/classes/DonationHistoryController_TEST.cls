@@ -36,8 +36,7 @@
 @IsTest
 public class DonationHistoryController_TEST {
     @IsTest
-    public static void testGetDonationHistory() {
-        
+    private static void shouldReturnExpectedDonationHistoryResult() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
 
         Account mockDefaultAccount = new Account(Name = 'Default Account');
@@ -80,9 +79,20 @@ public class DonationHistoryController_TEST {
             StageName='Closed Won', 
             CloseDate=myDateTime
         );
-        insert opportunityHardCredit;
-        insert opportunitySoftCredit;
-        insert opportunityPartialSoftCredit;
+        Opportunity opportunityInfluencer = new Opportunity(
+            Name='InfluencerOpportunity', 
+            AccountId=mockDefaultAccount.Id, 
+            Primary_Contact__c=secondaryContact.Id, 
+            Amount=150,
+            StageName='Closed Won', 
+            CloseDate=myDateTime
+        );
+        List<Opportunity> recordsOpp = new List<Opportunity>();
+        recordsOpp.add(opportunityHardCredit);
+        recordsOpp.add(opportunitySoftCredit);
+        recordsOpp.add(opportunityPartialSoftCredit);
+        recordsOpp.add(opportunityInfluencer);
+        insert recordsOpp;
 
         OpportunityContactRole oppCntRoleSoftCredit = new OpportunityContactRole(
             Role='Soft Credit', 
@@ -96,8 +106,17 @@ public class DonationHistoryController_TEST {
             ContactId=mockDefaultContact.Id, 
             isPrimary=false
         );
-        insert oppCntRoleSoftCredit;
-        insert oppCntRolePartialSoftCredit;
+        OpportunityContactRole oppCntRoleInfluencerCredit = new OpportunityContactRole(
+            Role='Influencer', 
+            OpportunityId=opportunityInfluencer.Id, 
+            ContactId=mockDefaultContact.Id, 
+            isPrimary=false
+        );
+        List<OpportunityContactRole> recordsOcr = new List<OpportunityContactRole>();
+        recordsOcr.add(oppCntRoleSoftCredit);
+        recordsOcr.add(oppCntRolePartialSoftCredit);
+        recordsOcr.add(oppCntRoleInfluencerCredit);
+        insert recordsOcr;
 
         Partial_Soft_Credit__c partialSoftCredit = new Partial_Soft_Credit__c (
             Amount__c=50,
@@ -109,12 +128,12 @@ public class DonationHistoryController_TEST {
         
         Test.startTest();
         List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(mockDefaultContact.Id);
-        List<DonationHistoryController.DonationHistory> filteredDonationHistory = new List<DonationHistoryController.DonationHistory>();
         Test.stopTest();
 
-        for (DonationHistoryController.DonationHistory donation : donationHistory) {
-            filteredDonationHistory.add(donation);
+        for(DonationHistoryController.DonationHistory donation : donationHistory){
+            System.assertNotEquals('Influencer', donation.role, 'Must not have an influencer role');
+            System.assert(donation.role == 'Soft Credit' || donation.role == 'Donor', 'Roles must be Soft credit or Donor');
         }
-        System.assertEquals(3, donationHistory.size());
+        System.assertEquals(3, donationHistory.size(), 'Should return only 3 records');
     }
 }
