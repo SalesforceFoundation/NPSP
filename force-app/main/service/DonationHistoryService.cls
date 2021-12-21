@@ -95,15 +95,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> hardCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: donations){
             if (ocr.isPrimary) {
-                DonationHistoryController.DonationHistory hardCredit = new DonationHistoryController.DonationHistory();
-                hardCredit.id = ocr.Id;
-                hardCredit.name = ocr.Opportunity.Name;
-                hardCredit.isPrimary = ocr.isPrimary;
-                hardCredit.closeDate = ocr.Opportunity.CloseDate;
-                hardCredit.role = ocr.Role;
-                hardCredit.amount = ocr.Opportunity.Amount;
-                hardCredit.creditType = HARD_CREDIT;
-                hardCredit.paymentMethod = 'Cash';
+                DonationHistoryController.DonationHistory hardCredit = new DonationHistoryController.DonationHistory(ocr, HARD_CREDIT);
                 hardCreditList.add(hardCredit);
             }
         }
@@ -122,15 +114,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> softCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: donations){
             if (softCreditRoles.contains(ocr.Role) && ocr.isPrimary==false) {
-                DonationHistoryController.DonationHistory softCredit = new DonationHistoryController.DonationHistory();
-                softCredit.id = ocr.Id;
-                softCredit.name = ocr.Opportunity.Name;
-                softCredit.isPrimary = ocr.isPrimary;
-                softCredit.closeDate = ocr.Opportunity.CloseDate;
-                softCredit.role = ocr.Role;
-                softCredit.amount = ocr.Opportunity.Amount;
-                softCredit.creditType = SOFT_CREDIT;
-                softCredit.paymentMethod = 'Cash';
+                DonationHistoryController.DonationHistory softCredit = new DonationHistoryController.DonationHistory(ocr, SOFT_CREDIT);
                 softCreditList.add(softCredit);
             }
         }
@@ -166,16 +150,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> partialSoftCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: donations){
             if (partialSoftCreditIds.contains(ocr.id)) {
-                DonationHistoryController.DonationHistory newPartialSoftCredit = new DonationHistoryController.DonationHistory();
-                newPartialSoftCredit.id = ocr.Id;
-                newPartialSoftCredit.name = ocr.Opportunity.Name;
-                newPartialSoftCredit.isPrimary = ocr.isPrimary;
-                newPartialSoftCredit.closeDate = ocr.Opportunity.CloseDate;
-                newPartialSoftCredit.role = ocr.Role;
-                newPartialSoftCredit.creditType = PARTIAL_SOFT_CREDIT;
-                newPartialSoftCredit.paymentMethod = 'Cash';
-                //TODO: change for Amount__c get on partialSoftCredit query
-                newPartialSoftCredit.amount = ocr.Opportunity.Amount;
+                DonationHistoryController.DonationHistory newPartialSoftCredit = new DonationHistoryController.DonationHistory(ocr, PARTIAL_SOFT_CREDIT);
                 partialSoftCreditList.add(newPartialSoftCredit);
             }
         }

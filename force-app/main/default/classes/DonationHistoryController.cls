@@ -49,6 +49,16 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
+        public DonationHistory(OpportunityContactRole ocr, String type){
+            this.id = ocr.Id;
+            this.name = ocr.Opportunity.Name;
+            this.isPrimary = ocr.isPrimary;
+            this.closeDate = ocr.Opportunity.CloseDate;
+            this.role = ocr.Role;
+            this.amount = ocr.Opportunity.Amount;
+            this.creditType = type;
+            this.paymentMethod = 'Cash';
+        }
     }
 
     /** 
