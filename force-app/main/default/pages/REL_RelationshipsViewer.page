@@ -411,8 +411,8 @@
 
                 if ({!$Site.Name == ''}) {
 
-                    $Lightning.use("c:REL_RelationshipsApp", function() {
-                        $Lightning.createComponent("c:REL_RelationshipsContainer",
+                    $Lightning.use("{!namespace}:REL_RelationshipsApp", function() {
+                        $Lightning.createComponent("{!namespace}:REL_RelationshipsContainer",
                             {
                                 recordId: '{!JSENCODE(CASESAFEID(id))}',
                                 isLightningOut: true

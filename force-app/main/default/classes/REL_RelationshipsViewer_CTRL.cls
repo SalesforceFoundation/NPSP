@@ -223,6 +223,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         return new RelationshipInfo();
     }
 
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
+    }
 
     global class RelationshipInfo {
         String prefix;
