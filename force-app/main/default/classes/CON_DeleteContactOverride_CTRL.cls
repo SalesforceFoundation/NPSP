@@ -46,7 +46,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     private static final String LEX_HOME = 'home';
 
     /** @description The contact record the user is attempting to delete. */
-    private Contact queryContact;
+    private Contact contactRecord;
     /** @description The id of the contact's account. */
     private String accountId;
     /** @description The return URL. */
@@ -97,55 +97,79 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
         hasMinimumAccess = validateUserAccess();
-        hasAccountDeleteAccess = hasAccountDelete();
-        isOnlyContactInHousehold = false;
-        isHouseholdAccount = false;
-
         if (!hasMinimumAccess) {
             return;
         }
 
         setNavigationParams(ApexPages.currentPage().getParameters());
 
-        queryContact = [
+        contactRecord = queryContact(stdController.getId());
+
+        isHouseholdAccount = false;
+        isOnlyContactInHousehold = false;
+        hasAccountDeleteAccess = hasAccountDelete();
+        handleHouseholdAccount();
+    }
+
+    private void handleHouseholdAccount() {
+        if (contactRecord.AccountId == null || !contactRecord.Account.npe01__SYSTEMIsIndividual__c) {
+            return;
+        }
+
+        isHouseholdAccount = true;
+        accountId = contactRecord.AccountId;
+        handleSingleMemberHousehold(contactRecord);
+    }
+
+    // TODO: Needs to support mocking
+    private Contact queryContact(Id contactId) {
+        Contact contactDetails = [
             SELECT Id, Name, FirstName, LastName,
                 AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
             FROM Contact
-            WHERE Id = :stdController.getId()
+            WHERE Id = :contactId
         ];
+        return contactDetails;
+    }
 
-        if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
-            isHouseholdAccount = true;
-
-            accountId = queryContact.AccountId;
-            List<AggregateResult> contactsInHousehold = [
-                SELECT COUNT(id) ct
-                FROM Contact
-                WHERE AccountId = :accountId
-                GROUP BY AccountId
-                HAVING COUNT(id) = 1
-            ];
-
-            //This contact is alone in a system account, delete the system account and allow the cascading
-            //delete to remove the contact
-            if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
-                isOnlyContactInHousehold = true;
-
-                String helpDeleteAccountInstead;
-                if (hasAccountDeleteAccess) {
-                    helpDeleteAccountInstead = String.format(
-                        Label.ConfirmDeleteAccount,
-                        new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
-                    );
-                } else {
-                    helpDeleteAccountInstead = String.format(
-                        Label.ConfirmDeleteLeaveAccountEmpty,
-                        new List<String>{queryContact.Name.escapeHtml4()}
-                    );
-                }
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
-            }
+    private void handleSingleMemberHousehold(Contact contactRecord) {
+        List<AggregateResult> contactsInHousehold = getCountOfContactsInHousehold();
+        if (contactsInHousehold.size() != 1 || !(contactsInHousehold[0].get('ct') == 1)) {
+            return;
         }
+
+        isOnlyContactInHousehold = true;
+        String helpDeleteAccountInstead;
+        if (hasAccountDeleteAccess) {
+            helpDeleteAccountInstead = String.format(
+                Label.ConfirmDeleteAccount,
+                new List<String>{
+                    contactRecord.Name.escapeHtml4(), contactRecord.Account.Name.escapeHtml4()
+                }
+            );
+
+        } else {
+            helpDeleteAccountInstead = String.format(
+                Label.ConfirmDeleteLeaveAccountEmpty,
+                new List<String>{
+                    contactRecord.Name.escapeHtml4()
+                }
+            );
+        }
+
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
+    }
+
+    // TODO: needs to support mocking
+    private List<AggregateResult> getCountOfContactsInHousehold() {
+        List<AggregateResult> contactsInHousehold = [
+            SELECT COUNT(id) ct
+            FROM Contact
+            WHERE AccountId = :accountId
+            GROUP BY AccountId
+            HAVING COUNT(id) = 1
+        ];
+        return contactsInHousehold;
     }
 
     /*******************************************************************************************************
@@ -173,7 +197,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */
     public PageReference processDelete() {
-        if ((isHouseholdAccount && isOnlyContactInHousehold) || !hasMinimumAccess) {
+        if (!hasMinimumAccess || (isHouseholdAccount && isOnlyContactInHousehold)) {
             return null;
         }
 
@@ -218,12 +242,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
-            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(queryContact);
+            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(contactRecord);
             cascadeDelete.validate();
             cascadeDelete.deleteOpportunities();
             cascadeDelete.deleteRecurringDonations();
 
-            delete queryContact;
+            delete contactRecord;
 
 
             if (lexOrSF1User) {
