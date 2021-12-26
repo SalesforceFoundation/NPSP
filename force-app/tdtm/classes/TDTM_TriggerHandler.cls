@@ -210,8 +210,7 @@ public class TDTM_TriggerHandler {
             // underlying assumption to mutating DmlWrapper is that the class modifies
             // the collection directly, and TDTM_TriggerHandler.run will perform DML on
             // whatever exists in the collection after iterating through all classes to run
-            classToRun.run(context.records, context.existingRecords, context.action(), describeObj,
-                    dmlWrapper);
+            classToRun.run(context, describeObj, dmlWrapper);
         } else {
             UTIL_Debug.debug(LoggingLevel.WARN, '****The class does not implement the required interface.');
         }

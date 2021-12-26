@@ -53,4 +53,11 @@ global abstract class TDTM_RunnableMutable {
     */
     global abstract void run(List<SObject> newlist, List<SObject> oldlist, TDTM_Runnable.Action triggerAction,
         Schema.DescribeSObjectResult objResult, TDTM_Runnable.DmlWrapper dmlWrapper);
+
+    public void run(
+            TriggerContext context,
+            Schema.DescribeSObjectResult objResult,
+            TDTM_Runnable.DmlWrapper dmlWrapper) {
+        run(context.records, context.existingRecords, context.action(), objResult, dmlWrapper);
+    }
 }
