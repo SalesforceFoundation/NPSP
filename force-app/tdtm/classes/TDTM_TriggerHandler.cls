@@ -120,8 +120,8 @@ public class TDTM_TriggerHandler {
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
 
                 try {
-                    TriggerContext ctx = new TriggerContext(thisAction, newList, oldList);
-                    dmlWrapperResponse = runClass(classToCall, ctx, describeObj, dmlWrapper);
+                    TriggerContext context = new TriggerContext(thisAction, newList, oldList);
+                    dmlWrapperResponse = runClass(classToCall, context, describeObj, dmlWrapper);
                 } catch (Exception ex) {
                     handleException(newList, oldList, ex);
                 }
