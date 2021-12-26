@@ -130,9 +130,13 @@ global abstract class TDTM_Runnable {
      * @param objectResult The type of SObject the class runs for.
      * @return DmlWrapper A wrapper containing all the records to perform DML on.
      */
-    global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction, 
+    global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction,
         Schema.DescribeSObjectResult objResult);
-    
+
+    public DmlWrapper run(TriggerContext context, Schema.DescribeSObjectResult objResult){
+        return run(context.records, context.existingRecords, context.action(),objResult);
+    }
+
     /*******************************************************************************************************
     * @description Class that wraps records that need to have DML performed on them. One DML operation of each
     * kind will be performed at the end of the transaction.
