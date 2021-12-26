@@ -97,18 +97,23 @@ global class TDTM_Config_API {
             List<SObject> oldList,
             Schema.DescribeSObjectResult describeObj
     ) {
+        TriggerContext context =
+                new TriggerContext(
+                        isBefore,
+                        isAfter,
+                        isInsert,
+                        isUpdate,
+                        isDelete,
+                        isUnDelete,
+                        newList,
+                        oldList);
+
         TDTM_TriggerHandler.run(
-                isBefore,
-                isAfter,
-                isInsert,
-                isUpdate,
-                isDelete,
-                isUnDelete,
+                context,
                 newList,
                 oldList,
                 describeObj,
-                new TDTM_ObjectDataGateway()
-        );
+                new TDTM_ObjectDataGateway());
     }
 
     /**

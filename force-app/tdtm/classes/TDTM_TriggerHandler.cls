@@ -60,12 +60,7 @@ public class TDTM_TriggerHandler {
     * @return void
     */
     public static void run(
-            Boolean isBefore,
-            Boolean isAfter,
-            Boolean isInsert,
-            Boolean isUpdate,
-            Boolean isDelete,
-            Boolean isUnDelete,
+            TriggerContext context,
             List<SObject> newList,
             List<SObject> oldList,
             Schema.DescribeSObjectResult describeObj,
@@ -81,8 +76,7 @@ public class TDTM_TriggerHandler {
            UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
         }
 
-        TDTM_Runnable.Action thisAction = determineTriggerAction(isBefore,
-                                                      isAfter, isInsert, isUpdate, isDelete, isUnDelete);
+        TDTM_Runnable.Action thisAction = context.action();
         UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' + describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -120,7 +114,6 @@ public class TDTM_TriggerHandler {
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
 
                 try {
-                    TriggerContext context = new TriggerContext(thisAction, newList, oldList);
                     dmlWrapperResponse = runClass(classToCall, context, describeObj, dmlWrapper);
                 } catch (Exception ex) {
                     handleException(newList, oldList, ex);
@@ -411,30 +404,5 @@ public class TDTM_TriggerHandler {
         }
 
         return oldList;
-    }
-
-    /*******************************************************************************************************
-    * @description Determines which TDTM action applies, based on the trigger environment.
-    * @param isBefore Are we in a before trigger context.
-    * @param isAfter Are we in an after trigger context.
-    * @param isInsert Are we in an insert trigger context.
-    * @param isUpdate Are we in an update trigger context.
-    * @param isDelete Are we in a delete trigger context.
-    * @param isUndelete Are we in an undelete trigger context.
-    * @return TDTM_Runnable.Action The applicable action, based on the trigger environment.
-    */
-    private static TDTM_Runnable.Action determineTriggerAction(Boolean isBefore, Boolean isAfter,
-            Boolean isInsert,
-            Boolean isUpdate, Boolean isDelete, Boolean isUnDelete) {
-        if (isBefore) {
-            if (isInsert) return TDTM_Runnable.Action.BeforeInsert;
-            else if (isUpdate) return TDTM_Runnable.Action.BeforeUpdate;
-            else return TDTM_Runnable.Action.BeforeDelete;
-        } else {
-            if (isInsert) return TDTM_Runnable.Action.AfterInsert;
-            else if (isUpdate) return TDTM_Runnable.Action.AfterUpdate;
-            else if (isDelete) return TDTM_Runnable.Action.AfterDelete;
-            else return TDTM_Runnable.Action.AfterUndelete;
-        }
     }
 }
