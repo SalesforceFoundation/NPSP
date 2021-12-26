@@ -191,15 +191,12 @@ public class TDTM_TriggerHandler {
             //records we want to affect. This means we can only run it for after in insert.
             //Also,a future cannot be called from a future or batch method.
             if (triggerHandler.isAsync() && !context.isBefore() && canRunAsync()) {
-                UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
-                        describeObj.getName() + ': ' + context.action() + ' with ' +
-                        getRecords(context).size() + ' records');
+                reportDebugMessageAsync(triggerHandler, describeObj, context);
 
                 runAsync(classToRun, triggerHandler.name(), context, describeObj);
             } else {
-                UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
-                        describeObj.getName() + ': ' + context.action() + ' with ' +
-                        getRecords(context).size() + ' records');
+                reportDebugMessageSync(triggerHandler, describeObj, context);
+
                 return classToRun.run(context, describeObj);
             }
         } else if (classInstance instanceof TDTM_RunnableMutable) {
@@ -207,9 +204,7 @@ public class TDTM_TriggerHandler {
             // interface if the class intends to directly modify the global DmlWrappper
             TDTM_RunnableMutable classToRun = (TDTM_RunnableMutable) classInstance;
 
-            UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
-                    describeObj.getName() + ': ' + context.action() + ' with ' + (context.records !=
-                    null ? context.records : context.existingRecords).size() + ' records');
+            reportDebugMessageWithInfo(triggerHandler, describeObj, context);
 
             // we do not check whether class is identified as Asynchronous__c because the
             // underlying assumption to mutating DmlWrapper is that the class modifies
@@ -222,6 +217,24 @@ public class TDTM_TriggerHandler {
         }
 
         return null;
+    }
+
+    private static void reportDebugMessageWithInfo(TriggerHandler triggerHandler, DescribeSObjectResult describeObj, TriggerContext context) {
+        UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+                describeObj.getName() + ': ' + context.action() + ' with ' + (context.records !=
+                null ? context.records : context.existingRecords).size() + ' records');
+    }
+
+    private static void reportDebugMessageSync(TriggerHandler triggerHandler, DescribeSObjectResult describeObj, TriggerContext context) {
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+                describeObj.getName() + ': ' + context.action() + ' with ' +
+                getRecords(context).size() + ' records');
+    }
+
+    private static void reportDebugMessageAsync(TriggerHandler triggerHandler, DescribeSObjectResult describeObj, TriggerContext context) {
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
+                describeObj.getName() + ': ' + context.action() + ' with ' +
+                getRecords(context).size() + ' records');
     }
 
     private static List<SObject> getRecords(TriggerContext context) {
