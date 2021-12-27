@@ -36,8 +36,18 @@
 public class UTIL_Debug {
 
     // Disable debug logs in all tests, otherwise get the setting
-    // August 2018: Previously, debugging was enabled in all tests. Disabling should significantly help with performance.
-    public static Boolean enabled = Test.isRunningTest() ? false : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
+    // August 2018: Previously, debugging was enabled in all tests.
+    // Disabling should significantly help with performance.
+    public static Boolean enabled = Test.isRunningTest()
+            ? false
+            : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
+
+    /**
+     * @description Allows the debug methods in this class to be enabled within
+     * a test method using UTIL_Debug.enabledForTests = true;
+     */
+    @TestVisible
+    private static Boolean enabledForTests = false;
 
     /*******************************************************************************************************
     * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run.
@@ -45,7 +55,7 @@ public class UTIL_Debug {
     * @return void
     */
     public static void debug (string message) {
-        if (enabled) {
+        if (enabled || enabledForTests) {
             system.debug(message);
         }
     }
@@ -58,7 +68,7 @@ public class UTIL_Debug {
     * @return void
     */
     public static void debug (System.LoggingLevel level, string message) {
-        if (enabled) {
+        if (enabled || enabledForTests) {
             system.debug(level, message);
         }
     }
@@ -70,7 +80,7 @@ public class UTIL_Debug {
     * @return void
     */
     public static void debugWithInfo (string message) {
-        if (enabled) {
+        if (enabled || enabledForTests) {
             system.debug(
                 message + 
                 ' Heap:' + Limits.getHeapSize() + '/' + Limits.getLimitHeapSize() +
@@ -90,7 +100,7 @@ public class UTIL_Debug {
     * @return void
     */
     public static void debugWithInfo (System.LoggingLevel level, string message) {
-        if (enabled) {
+        if (enabled || enabledForTests) {
             system.debug(
                 level,
                 message + 
