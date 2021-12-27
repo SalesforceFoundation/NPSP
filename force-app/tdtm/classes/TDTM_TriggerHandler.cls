@@ -43,7 +43,13 @@ public class TDTM_TriggerHandler {
     public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
     public static Boolean disableTDTM = false;
-    
+    private static Map<String, Integer> classNameToTimesCalled =
+            new Map<String, Integer>();
+    private static Map<String, Integer> classNameToNumberOfQueries =
+            new Map<String, Integer>();
+    private static Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
+            new Map<String, Map<String, Integer>>();
+
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
     * design. Figures out which classes need to be called, and calls them.
@@ -111,6 +117,34 @@ public class TDTM_TriggerHandler {
         if (classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
             for (SObject classToCall : classesToCall) {
+                String className = (String) classToCall.get('Class__c');
+                Integer timesCalled = classNameToTimesCalled.get(className);
+                Integer queries = classNameToNumberOfQueries.get(className) == null
+                        ? 0
+                        : classNameToNumberOfQueries.get(className);
+                Integer queriesUsed = Limits.getQueries();
+                Map<String, Integer> timesCalledByContext = classNameToTimesCalledByContext.get(className);
+                if (timesCalledByContext == null) {
+                    classNameToTimesCalledByContext.put(
+                            className,
+                            new Map<String, Integer>{
+                                    thisAction.name() => 1
+                            });
+                } else {
+                    Integer timesForContext = timesCalledByContext.get(thisAction.name());
+                    if (timesForContext == null) {
+                        timesCalledByContext.put(thisAction.name(), 1);
+                    } else {
+                        timesCalledByContext.put(thisAction.name(), timesForContext + 1);
+                    }
+                }
+
+                if (timesCalled == null) {
+                    classNameToTimesCalled.put(className, 1);
+                } else {
+                    classNameToTimesCalled.put(className, timesCalled + 1);
+                }
+
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
 
                 try {
@@ -118,6 +152,10 @@ public class TDTM_TriggerHandler {
                 } catch (Exception ex) {
                     handleException(newList, oldList, ex);
                 }
+
+                classNameToNumberOfQueries.put(
+                        className,
+                        queries + (Limits.getQueries() - queriesUsed));
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
 
@@ -133,7 +171,29 @@ public class TDTM_TriggerHandler {
                     handleException(newList, oldList, ex);
                 }
             }
+            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
+                    'Handler: ' +
+                    JSON.serializePretty(classNameToTimesCalled));
+
+            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
+                    'Handler ' +
+                    'by Context: ' +
+                    JSON.serializePretty(classNameToTimesCalledByContext));
+
+            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
+                    'Handler: ' +
+                    JSON.serializePretty(classNameToNumberOfQueries));
+
+            UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
         }
+    }
+
+    private static Integer totalQueries() {
+        Integer total = 0;
+        for (String str : classNameToNumberOfQueries.keySet()) {
+            total = total + classNameToNumberOfQueries.get(str);
+        }
+        return total;
     }
 
     private static void handleException(List<SObject> newList, List<SObject> oldList, Exception ex) {
@@ -404,5 +464,9 @@ public class TDTM_TriggerHandler {
         }
 
         return oldList;
+    }
+
+    public static Object timesRun(String className, String context) {
+        return classNameToTimesCalledByContext.get(className).get(context);
     }
 }
