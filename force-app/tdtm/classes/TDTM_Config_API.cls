@@ -106,11 +106,12 @@ global class TDTM_Config_API {
                         isDelete,
                         isUnDelete,
                         newList,
-                        oldList);
+                        oldList,
+                        describeObj
+                );
 
         TDTM_TriggerHandler.run(
                 context,
-                describeObj,
                 new TDTM_ObjectDataGateway());
     }
 

@@ -8,6 +8,7 @@ public with sharing class TriggerContext {
     private Boolean isUpdate = false;
     private Boolean isDelete = false;
     private Boolean isUndelete = false;
+    public DescribeSObjectResult describeObj;
 
     public TriggerContext(
             Boolean isBefore,
@@ -17,7 +18,8 @@ public with sharing class TriggerContext {
             Boolean isDelete,
             Boolean isUndelete,
             List<SObject> newList,
-            List<SObject> oldList) {
+            List<SObject> oldList,
+            DescribeSObjectResult describeSObjResult) {
         this.isBefore = isBefore;
         this.isAfter = isAfter;
         this.isInsert = isInsert;
@@ -26,6 +28,7 @@ public with sharing class TriggerContext {
         this.isUndelete = isUndelete;
         this.records = newList;
         this.existingRecords = oldList;
+        this.describeObj = describeSObjResult;
     }
 
     public Boolean isBefore() {

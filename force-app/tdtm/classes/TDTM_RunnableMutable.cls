@@ -56,8 +56,13 @@ global abstract class TDTM_RunnableMutable {
 
     public void run(
             TriggerContext context,
-            Schema.DescribeSObjectResult objResult,
             TDTM_Runnable.DmlWrapper dmlWrapper) {
-        run(context.records, context.existingRecords, context.action(), objResult, dmlWrapper);
+        run(
+                context.records,
+                context.existingRecords,
+                context.action(),
+                context.describeObj,
+                dmlWrapper
+        );
     }
 }

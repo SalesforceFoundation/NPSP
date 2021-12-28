@@ -133,8 +133,8 @@ global abstract class TDTM_Runnable {
     global abstract DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, Action triggerAction,
         Schema.DescribeSObjectResult objResult);
 
-    public DmlWrapper run(TriggerContext context, Schema.DescribeSObjectResult objResult){
-        return run(context.records, context.existingRecords, context.action(),objResult);
+    public DmlWrapper run(TriggerContext context){
+        return run(context.records, context.existingRecords, context.action(), context.describeObj);
     }
 
     /*******************************************************************************************************
