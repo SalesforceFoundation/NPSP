@@ -110,8 +110,6 @@ global class TDTM_Config_API {
 
         TDTM_TriggerHandler.run(
                 context,
-                newList,
-                oldList,
                 describeObj,
                 new TDTM_ObjectDataGateway());
     }

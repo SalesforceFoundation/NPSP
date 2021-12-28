@@ -67,8 +67,6 @@ public class TDTM_TriggerHandler {
     */
     public static void run(
             TriggerContext context,
-            List<SObject> newList,
-            List<SObject> oldList,
             Schema.DescribeSObjectResult describeObj,
             TDTM_iTableDataGateway dao
     ) {
@@ -78,8 +76,8 @@ public class TDTM_TriggerHandler {
            return;
         }
 
-        if (newList != null) {
-           UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + newList.size());
+        if (context.records != null) {
+           UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
         TDTM_Runnable.Action thisAction = context.action();
@@ -112,7 +110,7 @@ public class TDTM_TriggerHandler {
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
         // fixup our trigger lists to deal with workflow rules
-        oldList = fixupOldList(thisAction, newList, oldList, describeObj);
+        context.existingRecords = fixupOldList(thisAction, context.records, context.existingRecords, describeObj);
 
         if (classesToCall != null && classesToCall.size() > 0) {
             //Run the relevant classes
@@ -150,7 +148,7 @@ public class TDTM_TriggerHandler {
                 try {
                     dmlWrapperResponse = runClass(classToCall, context, describeObj, dmlWrapper);
                 } catch (Exception ex) {
-                    handleException(newList, oldList, ex);
+                    handleException(context.records, context.existingRecords, ex);
                 }
 
                 classNameToNumberOfQueries.put(
@@ -168,7 +166,7 @@ public class TDTM_TriggerHandler {
                 try {
                     processDML(dmlWrapper);
                 } catch (Exception ex) {
-                    handleException(newList, oldList, ex);
+                    handleException(context.records, context.existingRecords, ex);
                 }
             }
             logTriggerHandlerInfo();
