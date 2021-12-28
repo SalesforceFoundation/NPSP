@@ -171,21 +171,75 @@ public class TDTM_TriggerHandler {
                     handleException(newList, oldList, ex);
                 }
             }
-            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
-                    'Handler: ' +
-                    JSON.serializePretty(classNameToTimesCalled));
-
-            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
-                    'Handler ' +
-                    'by Context: ' +
-                    JSON.serializePretty(classNameToTimesCalledByContext));
-
-            UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
-                    'Handler: ' +
-                    JSON.serializePretty(classNameToNumberOfQueries));
-
-            UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
+            logTriggerHandlerInfo();
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @return void
+    */
+    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
+        processDMLAllOrNothing(dmlWrapper, true);
+    }
+
+    /*******************************************************************************************************
+    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
+    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
+    * @param dmlWrapper The class that contains the records that need to have DML performed on.
+    * @param allOrNothing whether all objects must save successfully.  if true, and there is an error, an exception
+    * will be thrown.  If false, then inspect the error collection to see what failed
+    * @return Errors Object with list of Error objects
+    */
+
+    public static ERR_Handler.Errors processDMLAllOrNothing(TDTM_Runnable.DmlWrapper dmlWrapper, Boolean allOrNothing) {
+        if (dmlWrapper == null) {
+            return null;
+        }
+
+        dmlWrapper.groupByType(); //sort thyself!
+
+        /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client
+        process of all the errors that occurred in the context **/
+        List<Database.SaveResult> insertResults;
+        if (!dmlWrapper.objectsToInsert.isEmpty()) {
+            insertResults = UTIL_DMLService.insertRecords(dmlWrapper.objectsToInsert, allOrNothing);
+        }
+        List<Database.SaveResult> updateResults;
+        if (!dmlWrapper.objectsToUpdate.isEmpty()) {
+            updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
+        }
+        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);
+        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
+
+        //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.
+        //Also, should we support Database.merge?
+
+        //Process the results.
+        ERR_Handler.Errors errors = ERR_Handler.getErrors(insertResults, updateResults, deleteResults, undeleteResults,
+                dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete,
+                dmlWrapper.objectsToUndelete);
+
+        return errors;
+    }
+
+    private static void logTriggerHandlerInfo() {
+        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
+                'Handler: ' +
+                JSON.serializePretty(classNameToTimesCalled));
+
+        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
+                'Handler ' +
+                'by Context: ' +
+                JSON.serializePretty(classNameToTimesCalledByContext));
+
+        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
+                'Handler: ' +
+                JSON.serializePretty(classNameToNumberOfQueries));
+
+        UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
     }
 
     private static Integer totalQueries() {
@@ -360,56 +414,6 @@ public class TDTM_TriggerHandler {
             dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
         }
     }
-    
-    /*******************************************************************************************************
-    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
-    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
-    * @param dmlWrapper The class that contains the records that need to have DML performed on.
-    * @return void
-    */
-    public static void processDML(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        processDMLAllOrNothing(dmlWrapper, true);
-    }
-
-    /*******************************************************************************************************
-    * @description Performs pending DML operations, on the records stored in the DMLWrapper that it gets as parameter.
-    * We want this method to be static so that it can be called from the future method in TDTM_Runnable.
-    * @param dmlWrapper The class that contains the records that need to have DML performed on.
-    * @param allOrNothing whether all objects must save successfully.  if true, and there is an error, an exception
-    * will be thrown.  If false, then inspect the error collection to see what failed
-    * @return Errors Object with list of Error objects
-    */
-    public static ERR_Handler.Errors processDMLAllOrNothing(TDTM_Runnable.DmlWrapper dmlWrapper, Boolean allOrNothing) {
-        if (dmlWrapper == null) {
-            return null;
-        }
-                    
-        dmlWrapper.groupByType(); //sort thyself!
-
-        /**We keep the Database methods with the opt_allOrNone flag set to false to be able to alert the client
-        process of all the errors that occurred in the context **/
-        List<Database.SaveResult> insertResults;
-        if (!dmlWrapper.objectsToInsert.isEmpty()) {
-            insertResults = UTIL_DMLService.insertRecords(dmlWrapper.objectsToInsert, allOrNothing);
-        }
-        List<Database.SaveResult> updateResults;
-        if (!dmlWrapper.objectsToUpdate.isEmpty()) {
-            updateResults = UTIL_DMLService.updateRecords(dmlWrapper.objectsToUpdate, allOrNothing);
-        }
-        List<Database.DeleteResult> deleteResults = Database.delete(dmlWrapper.objectsToDelete, allOrNothing);        
-        List<Database.UndeleteResult> undeleteResults = Database.undelete(dmlWrapper.objectsToUndelete, allOrNothing); //Not yet using this one, afaik, but no reason not to support it.
-        
-        //@TODO: We cannot support upsert because you cannot do upsert on SObject. You have to specify the actual type.        
-        //Also, should we support Database.merge?
-        
-        //Process the results. 
-        ERR_Handler.Errors errors = ERR_Handler.getErrors(insertResults, updateResults, deleteResults, undeleteResults, 
-            dmlWrapper.objectsToInsert, dmlWrapper.objectsToUpdate, dmlWrapper.objectsToDelete, 
-            dmlWrapper.objectsToUndelete);
-                    
-        return errors;
-    }
-
 
     /*******************************************************************************************************
     * @description a cache of SObject maps for each object type, used by FixupOldList()
@@ -466,7 +470,8 @@ public class TDTM_TriggerHandler {
         return oldList;
     }
 
-    public static Object timesRun(String className, String context) {
+    @TestVisible
+    private static Object timesRun(String className, String context) {
         return classNameToTimesCalledByContext.get(className).get(context);
     }
 }
