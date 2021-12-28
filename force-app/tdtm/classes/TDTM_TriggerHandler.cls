@@ -37,19 +37,20 @@
 * charge of figuring out which of the classes that do the actual work need to be called, and calling them.
 */
 public class TDTM_TriggerHandler {
-    
-    private static Boolean defaultRecordsInserted = false;
-    
-    public static Boolean suppressDebugAssertAfterErrorLogging = false;
 
+    public static Boolean suppressDebugAssertAfterErrorLogging = false;
     public static Boolean disableTDTM = false;
+
+    @TestVisible
+    private static Boolean isCompactLoggingEnabled = true;
+
+    private static Boolean defaultRecordsInserted = false;
     private static Map<String, Integer> classNameToTimesCalled =
             new Map<String, Integer>();
     private static Map<String, Integer> classNameToNumberOfQueries =
             new Map<String, Integer>();
     private static Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
             new Map<String, Map<String, Integer>>();
-    private static Boolean isCompactLoggingEnabled = true;
 
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -226,6 +227,11 @@ public class TDTM_TriggerHandler {
                 dmlWrapper.objectsToUndelete);
 
         return errors;
+    }
+
+    @TestVisible
+    private static Object timesRun(String className, String context) {
+        return classNameToTimesCalledByContext.get(className).get(context);
     }
 
     private static void logTriggerHandlerInfo() {
@@ -480,8 +486,4 @@ public class TDTM_TriggerHandler {
         return oldList;
     }
 
-    @TestVisible
-    private static Object timesRun(String className, String context) {
-        return classNameToTimesCalledByContext.get(className).get(context);
-    }
 }
