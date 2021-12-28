@@ -49,6 +49,7 @@ public class TDTM_TriggerHandler {
             new Map<String, Integer>();
     private static Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
             new Map<String, Map<String, Integer>>();
+    private static Boolean isCompactLoggingEnabled = true;
 
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -226,18 +227,24 @@ public class TDTM_TriggerHandler {
     private static void logTriggerHandlerInfo() {
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
                 'Handler: ' +
-                JSON.serializePretty(classNameToTimesCalled));
+                stringVersionOf(classNameToTimesCalled));
 
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
                 'Handler ' +
                 'by Context: ' +
-                JSON.serializePretty(classNameToTimesCalledByContext));
+                stringVersionOf(classNameToTimesCalledByContext));
 
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
                 'Handler: ' +
-                JSON.serializePretty(classNameToNumberOfQueries));
+                stringVersionOf(classNameToNumberOfQueries));
 
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
+    }
+
+    private static String stringVersionOf(Object o) {
+        return isCompactLoggingEnabled
+        ? JSON.serialize(o)
+        : JSON.serializePretty(o);
     }
 
     private static Integer totalQueries() {
