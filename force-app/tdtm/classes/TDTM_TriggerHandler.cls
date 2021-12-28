@@ -63,13 +63,13 @@ public class TDTM_TriggerHandler {
     * @param newList The records that were passed to the trigger as trigger.new.
     * @param oldList The records that were passed to the trigger as trigger.old.
     * @param describeObj The type of SObject the class runs for.
-    * @param dao The class that is going to retrieve all the TDTM records.
+    * @param triggerHandlerRepo The class that is going to retrieve all the TDTM records.
     * @return void
     */
     public static void run(
             TriggerContext context,
             Schema.DescribeSObjectResult describeObj,
-            TDTM_iTableDataGateway dao
+            TDTM_iTableDataGateway triggerHandlerRepo
     ) {
 
         if (disableTDTM) {
@@ -87,7 +87,7 @@ public class TDTM_TriggerHandler {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         // If there are no records, insert the defaults.
-        if (!defaultRecordsInserted && dao.isEmpty()) {
+        if (!defaultRecordsInserted && triggerHandlerRepo.isEmpty()) {
             // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
             if (describeObj.getsObjectType() == User.sObjectType) {
                 return;
@@ -107,7 +107,7 @@ public class TDTM_TriggerHandler {
 
         // Get the classes to run. Note that we are using the local object name, so it works for objects
         // from Cumulus both in the package and unmanaged dev orgs.
-        List<SObject> classesToCall = dao.getClassesToCallForObject(describeObj.getLocalName(), thisAction);
+        List<SObject> classesToCall = triggerHandlerRepo.getClassesToCallForObject(describeObj.getLocalName(), thisAction);
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + describeObj.getLocalName() + ': ' + JSON.serializePretty(classesToCall));
 
         // fixup our trigger lists to deal with workflow rules
