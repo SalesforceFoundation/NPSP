@@ -46,6 +46,6 @@ trigger TDTM_Contact on Contact (
             Trigger.isUnDelete,
             Trigger.new,
             Trigger.old,
-            Schema.Sobjecttype.Contact
+            UTIL_Describe.getObjectDescribe(Contact.SObjectType)
     );
 }

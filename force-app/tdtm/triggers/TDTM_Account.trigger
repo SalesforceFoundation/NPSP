@@ -39,6 +39,6 @@ trigger TDTM_Account on Account (after delete, after insert, after undelete,
             Trigger.isUnDelete,
             Trigger.new,
             Trigger.old,
-            Schema.Sobjecttype.Account
+            UTIL_Describe.getObjectDescribe(Account.SObjectType)
     );
 }
