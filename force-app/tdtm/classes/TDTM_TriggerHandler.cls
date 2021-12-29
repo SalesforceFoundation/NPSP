@@ -112,44 +112,14 @@ public class TDTM_TriggerHandler {
         if (triggerHandlersToRun.getRecords() != null && triggerHandlersToRun.getRecords().size() > 0) {
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
-                String className = triggerHandler.className();
-                Integer queriesUsedByThisClass = classNameToNumberOfQueries.get(className) == null
-                        ? 0
-                        : classNameToNumberOfQueries.get(className);
-                Integer timesCalled = classNameToTimesCalled.get(className);
-                Map<String, Integer> timesCalledByContext = classNameToTimesCalledByContext.get(className);
-                if (timesCalledByContext == null) {
-                    classNameToTimesCalledByContext.put(
-                            className,
-                            new Map<String, Integer>{
-                                    context.action().name() => 1
-                            });
-                } else {
-                    Integer timesForContext = timesCalledByContext.get(context.action().name());
-                    if (timesForContext == null) {
-                        timesCalledByContext.put(context.action().name(), 1);
-                    } else {
-                        timesCalledByContext.put(context.action().name(), timesForContext + 1);
-                    }
-                }
-
-                if (timesCalled == null) {
-                    classNameToTimesCalled.put(className, 1);
-                } else {
-                    classNameToTimesCalled.put(className, timesCalled + 1);
-                }
-
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
-
                 try {
                     dmlWrapperResponse = runClass(triggerHandler, context, dmlWrapper);
                 } catch (Exception ex) {
                     handleException(context.records, context.existingRecords, ex);
                 }
 
-                classNameToNumberOfQueries.put(
-                        className,
-                        queriesUsedByThisClass + (Limits.getQueries() - Limits.getQueries()));
+                runMonitoringFor(triggerHandler, context);
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
 
@@ -167,6 +137,48 @@ public class TDTM_TriggerHandler {
                 }
             }
             logTriggerHandlerInfo();
+        }
+    }
+
+    private static void runMonitoringFor(TriggerHandler triggerHandler, TriggerContext context) {
+        String className = triggerHandler.className();
+        String actionName = context.action().name();
+        incrementTimesCalledByContext(className, actionName);
+        incrementTimesCalled(className);
+        updateNumberOfQueriesUsed(className);
+    }
+
+    private static void updateNumberOfQueriesUsed(String className) {
+        classNameToNumberOfQueries.put(
+                className,
+                classNameToNumberOfQueries.get(className) == null
+                        ? 0
+                        : classNameToNumberOfQueries.get(className)
+                        + (Limits.getQueries() - Limits.getQueries()));
+    }
+
+    private static void incrementTimesCalled(String className) {
+        if (classNameToTimesCalled.get(className) == null) {
+            classNameToTimesCalled.put(className, 1);
+        } else {
+            classNameToTimesCalled.put(className, classNameToTimesCalled.get(className) + 1);
+        }
+    }
+
+    private static void incrementTimesCalledByContext(String className, String actionName) {
+        if (classNameToTimesCalledByContext.get(className) == null) {
+            classNameToTimesCalledByContext.put(
+                    className,
+                    new Map<String, Integer>{
+                            actionName => 1
+                    });
+        } else {
+            Integer timesForContext = classNameToTimesCalledByContext.get(className).get(actionName);
+            if (timesForContext == null) {
+                classNameToTimesCalledByContext.get(className).put(actionName, 1);
+            } else {
+                classNameToTimesCalledByContext.get(className).put(actionName, timesForContext + 1);
+            }
         }
     }
 
