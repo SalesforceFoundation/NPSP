@@ -130,4 +130,20 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
         }
         rowCount = listTH.size();
     }
+
+    public static void setDefaultTriggerHandlers(TriggerContext triggerContext) {
+        // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
+        if (triggerContext.describeObj.getsObjectType() == User.sObjectType) {
+            return;
+        }
+
+        // Rather than insert the records in unit tests, just populate the static list
+        // However to prevent any conflicts with our customers unit tests, always insert the records
+        // if this is a test running in the full managed package code in a customer org.
+        if (!Test.isRunningTest() || (Test.isRunningTest() && UTIL_Namespace.isCustomerOrg())) {
+            insert TDTM_DefaultConfig.getDefaultRecords();
+        } else {
+            setDefaultHandlers(TDTM_DefaultConfig.getDefaultRecords());
+        }
+    }
 }
