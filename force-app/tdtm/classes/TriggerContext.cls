@@ -72,7 +72,7 @@ public with sharing class TriggerContext {
     private Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
 
     /*******************************************************************************************************
-    * @description Returns the correct old list of objects for the trigger, for the current context.  By
+    * @description Creates the correct old list of objects for the trigger, for the current context.  By
     * caching the newList in all After triggers, it can provide the correct oldList in BeforeUpdate and
     * AfterUpdate, that the system will incorrectly peg to the original execution context, rather than what
     * state those objects are already in from preceding DML in the execution context.  Specifically, works
