@@ -35,11 +35,6 @@ public with sharing class TriggerContext {
         return isBefore;
     }
 
-    public TDTM_Runnable.Action action(){
-        return determineTriggerAction(isBefore
-                , isInsert, isUpdate, isDelete);
-    }
-
     /*******************************************************************************************************
     * @description Determines which TDTM action applies, based on the trigger environment.
     * @param isBefore Are we in a before trigger context.
@@ -49,11 +44,7 @@ public with sharing class TriggerContext {
     * @param isUndelete Are we in an undelete trigger context.
     * @return TDTM_Runnable.Action The applicable action, based on the trigger environment.
     */
-    private static TDTM_Runnable.Action determineTriggerAction(
-            Boolean isBefore,
-            Boolean isInsert,
-            Boolean isUpdate,
-            Boolean isDelete) {
+    public TDTM_Runnable.Action triggerAction() {
         if (isBefore) {
             if (isInsert) return TDTM_Runnable.Action.BeforeInsert;
             else if (isUpdate) return TDTM_Runnable.Action.BeforeUpdate;
@@ -69,7 +60,8 @@ public with sharing class TriggerContext {
     /*******************************************************************************************************
     * @description a cache of SObject maps for each object type, used by FixupOldList()
     */
-    private Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates = new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
+    private Map<Schema.DescribeSobjectResult, Map<Id, SObject>> mapDescObjToMapOldForUpdates =
+            new Map<Schema.DescribeSobjectResult, Map<Id, SObject>>();
 
     /*******************************************************************************************************
     * @description Creates the correct old list of objects for the trigger, for the current context.  By

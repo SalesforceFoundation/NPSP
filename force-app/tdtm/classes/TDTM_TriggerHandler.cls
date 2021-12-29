@@ -47,12 +47,7 @@ public class TDTM_TriggerHandler {
     private static Boolean isMonitoringEnabled = false;
 
     private static Boolean defaultRecordsInserted = false;
-    private static Map<String, Integer> classNameToTimesCalled =
-            new Map<String, Integer>();
-    private static Map<String, Integer> classNameToNumberOfQueries =
-            new Map<String, Integer>();
-    private static Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
-            new Map<String, Map<String, Integer>>();
+    private static TriggerHandlerMonitor monitor;
 
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -83,7 +78,7 @@ public class TDTM_TriggerHandler {
            UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
-        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.action() + ' on ' +
+        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.triggerAction() + ' on ' +
                 context.describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -101,7 +96,7 @@ public class TDTM_TriggerHandler {
                 new TriggerHandlers(
                         triggerHandlerRepo.getClassesToCallForObject(
                                 context.describeObj.getLocalName(),
-                                context.action()
+                                context.triggerAction()
                         )
                 );
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + context.describeObj
@@ -112,6 +107,9 @@ public class TDTM_TriggerHandler {
         context.fixupOldList();
 
         if (triggerHandlersToRun.getRecords() != null && triggerHandlersToRun.getRecords().size() > 0) {
+            if (isMonitoringEnabled) {
+                monitor = new TriggerHandlerMonitor(context, isCompactLoggingEnabled);
+            }
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
@@ -122,16 +120,15 @@ public class TDTM_TriggerHandler {
                 }
 
                 if (isMonitoringEnabled) {
-                    runMonitoringFor(triggerHandler, context);
+                    monitor.runMonitoringFor(triggerHandler);
                 }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
 
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + triggerHandler.className() + ' ' +
                         'for ' +
-                    context.describeObj.getName() + ': ' + context.action());
+                    context.describeObj.getName() + ': ' + context.triggerAction());
             }
-            
             //Process the result
             if (dmlWrapper != null) {
                 try {
@@ -140,48 +137,9 @@ public class TDTM_TriggerHandler {
                     handleException(context.records, context.existingRecords, ex);
                 }
             }
-            logTriggerHandlerInfo();
-        }
-    }
 
-    private static void runMonitoringFor(TriggerHandler triggerHandler, TriggerContext context) {
-        String className = triggerHandler.className();
-        String actionName = context.action().name();
-        incrementTimesCalledByContext(className, actionName);
-        incrementTimesCalled(className);
-        updateNumberOfQueriesUsed(className);
-    }
-
-    private static void updateNumberOfQueriesUsed(String className) {
-        classNameToNumberOfQueries.put(
-                className,
-                classNameToNumberOfQueries.get(className) == null
-                        ? 0
-                        : classNameToNumberOfQueries.get(className)
-                        + (Limits.getQueries() - Limits.getQueries()));
-    }
-
-    private static void incrementTimesCalled(String className) {
-        if (classNameToTimesCalled.get(className) == null) {
-            classNameToTimesCalled.put(className, 1);
-        } else {
-            classNameToTimesCalled.put(className, classNameToTimesCalled.get(className) + 1);
-        }
-    }
-
-    private static void incrementTimesCalledByContext(String className, String actionName) {
-        if (classNameToTimesCalledByContext.get(className) == null) {
-            classNameToTimesCalledByContext.put(
-                    className,
-                    new Map<String, Integer>{
-                            actionName => 1
-                    });
-        } else {
-            Integer timesForContext = classNameToTimesCalledByContext.get(className).get(actionName);
-            if (timesForContext == null) {
-                classNameToTimesCalledByContext.get(className).put(actionName, 1);
-            } else {
-                classNameToTimesCalledByContext.get(className).put(actionName, timesForContext + 1);
+            if (isMonitoringEnabled) {
+                monitor.logTriggerHandlerInfo();
             }
         }
     }
@@ -234,42 +192,6 @@ public class TDTM_TriggerHandler {
                 dmlWrapper.objectsToUndelete);
 
         return errors;
-    }
-
-    @TestVisible
-    private static Object timesRun(String className, String context) {
-        return classNameToTimesCalledByContext.get(className).get(context);
-    }
-
-    private static void logTriggerHandlerInfo() {
-        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
-                'Handler: ' +
-                stringVersionOf(classNameToTimesCalled));
-
-        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
-                'Handler ' +
-                'by Context: ' +
-                stringVersionOf(classNameToTimesCalledByContext));
-
-        UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
-                'Handler: ' +
-                stringVersionOf(classNameToNumberOfQueries));
-
-        UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
-    }
-
-    private static String stringVersionOf(Object o) {
-        return isCompactLoggingEnabled
-        ? JSON.serialize(o)
-        : JSON.serializePretty(o);
-    }
-
-    private static Integer totalQueries() {
-        Integer total = 0;
-        for (String str : classNameToNumberOfQueries.keySet()) {
-            total = total + classNameToNumberOfQueries.get(str);
-        }
-        return total;
     }
 
     private static void handleException(List<SObject> newList, List<SObject> oldList, Exception ex) {
@@ -343,20 +265,20 @@ public class TDTM_TriggerHandler {
 
     private static void reportDebugMessageWithInfo(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' + (context
+                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' + (context
                 .records !=
                 null ? context.records : context.existingRecords).size() + ' records');
     }
 
     private static void reportDebugMessageSync(TriggerHandler triggerHandler,TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' +
+                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' +
                 getRecords(context).size() + ' records');
     }
 
     private static void reportDebugMessageAsync(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' +
+                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' +
                 getRecords(context).size() + ' records');
     }
 
@@ -404,7 +326,7 @@ public class TDTM_TriggerHandler {
            setOldId = new Set<Id>(om.keySet());
        }
        
-       classToRun.runFutureNonStatic(setNewId, setOldId, context.action().name(),
+       classToRun.runFutureNonStatic(setNewId, setOldId, context.triggerAction().name(),
                context.describeObj.getName(), classToRunName);
     }
 

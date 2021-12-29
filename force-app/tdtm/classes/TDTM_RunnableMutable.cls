@@ -60,7 +60,7 @@ global abstract class TDTM_RunnableMutable {
         run(
                 context.records,
                 context.existingRecords,
-                context.action(),
+                context.triggerAction(),
                 context.describeObj,
                 dmlWrapper
         );
