@@ -354,5 +354,8 @@ public class TDTM_TriggerHandler {
         }
     }
 
-
+    @TestVisible
+    private static Integer timesRun(String className, String triggerAction) {
+        return monitor?.timesRun(className, triggerAction);
+    }
 }

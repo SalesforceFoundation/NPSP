@@ -57,8 +57,7 @@ public with sharing class TriggerHandlerMonitor {
         }
     }
 
-    @TestVisible
-    private Object timesRun(String className, String context) {
+    public Integer timesRun(String className, String context) {
         return classNameToTimesCalledByContext.get(className).get(context);
     }
 
