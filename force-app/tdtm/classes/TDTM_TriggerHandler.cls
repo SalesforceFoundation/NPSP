@@ -43,6 +43,8 @@ public class TDTM_TriggerHandler {
 
     @TestVisible
     private static Boolean isCompactLoggingEnabled = true;
+    @TestVisible
+    private static Boolean isMonitoringEnabled = false;
 
     private static Boolean defaultRecordsInserted = false;
     private static Map<String, Integer> classNameToTimesCalled =
@@ -119,7 +121,9 @@ public class TDTM_TriggerHandler {
                     handleException(context.records, context.existingRecords, ex);
                 }
 
-                runMonitoringFor(triggerHandler, context);
+                if (isMonitoringEnabled) {
+                    runMonitoringFor(triggerHandler, context);
+                }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
 
