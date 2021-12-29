@@ -96,7 +96,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        hasMinimumAccess = validateUserAccess();
+        hasMinimumAccess = canDeleteRecord(stdController.getId());
         if (!hasMinimumAccess) {
             return;
         }
@@ -107,7 +107,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
         isHouseholdAccount = false;
         isOnlyContactInHousehold = false;
-        hasAccountDeleteAccess = hasAccountDelete();
+        hasAccountDeleteAccess = canDeleteRecord(contactRecord.AccountId);
         handleHouseholdAccount();
     }
 
@@ -468,20 +468,21 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*********************************************************************************************************
-    * @description Check if the running user has minimum access to the Contact object
+    * @description Check if the running user has minimum access to delete the record
     * @return Boolean
     */
-    public Boolean validateUserAccess() {
-        return  UTIL_Permissions.canRead('Contact', false) &&
-                UTIL_Permissions.canDelete('Contact', false);
-    }
-
-    /*********************************************************************************************************
-    * @description Check if the running user has delete access to the Account object
-    * @return Boolean
-    */
-    public Boolean hasAccountDelete() {
-        return UTIL_Permissions.canDelete('Account', false);
+    public Boolean canDeleteRecord(Id recordId) {
+        UserRecordAccess userAccess = [
+            SELECT RecordId, HasDeleteAccess
+            FROM UserRecordAccess
+            WHERE UserId = :UserInfo.getUserId()
+            AND RecordId = :recordId
+            LIMIT 1
+        ];
+        if (!userAccess.HasDeleteAccess) {
+            return false;
+        }
+        return true;
     }
 
     /**
