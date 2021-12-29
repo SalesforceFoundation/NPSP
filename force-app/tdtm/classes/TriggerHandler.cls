@@ -1,23 +1,17 @@
-/**
- * Created by  on .
- */
-
 public with sharing class TriggerHandler {
 
-    private SObject record;
+    private Trigger_Handler__c record;
 
-    public TriggerHandler(SObject record) {
+    public TriggerHandler(Trigger_Handler__c record) {
         this.record = record;
     }
 
-    public String name() {
-        return String.valueOf(record.get('Class__c'));
+    public String className() {
+        return record.Class__c;
     }
-
 
     public Boolean isAsync() {
-        return Boolean.valueOf(record.get('Asynchronous__c'));
+        return record.Asynchronous__c;
     }
-
 
 }

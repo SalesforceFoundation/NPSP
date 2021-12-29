@@ -135,4 +135,12 @@ public inherited sharing class TriggerHandlers extends fflib_SObjects {
         delete triggerHandlers.getRecords();
         insert TDTM_DefaultConfig.getDefaultRecords();
     }
+
+    public List<TriggerHandler> getTriggerHandlers() {
+        List<TriggerHandler> triggerHandlers = new List<TriggerHandler>();
+        for (Trigger_Handler__c triggerHandlerSObj : (List<Trigger_Handler__c>) getRecords()) {
+            triggerHandlers.add(new TriggerHandler(triggerHandlerSObj));
+        }
+        return triggerHandlers;
+    }
 }

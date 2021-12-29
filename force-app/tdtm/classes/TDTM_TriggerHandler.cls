@@ -81,8 +81,7 @@ public class TDTM_TriggerHandler {
            UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
-        TDTM_Runnable.Action thisAction = context.action();
-        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + thisAction + ' on ' +
+        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.action() + ' on ' +
                 context.describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -106,40 +105,45 @@ public class TDTM_TriggerHandler {
             defaultRecordsInserted = true;
         }
 
-        // Get the classes to run. Note that we are using the local object name, so it works for objects
+        // Get the trigger handlers to run. Note that we are using the local object name, so
+        // it works for objects
         // from Cumulus both in the package and unmanaged dev orgs.
-        List<SObject> classesToCall = triggerHandlerRepo.getClassesToCallForObject(context.describeObj
-                .getLocalName(), thisAction);
+        TriggerHandlers triggerHandlersToRun =
+                new TriggerHandlers(
+                        triggerHandlerRepo.getClassesToCallForObject(
+                                context.describeObj.getLocalName(),
+                                context.action()
+                        )
+                );
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + context.describeObj
 //        .getLocalName()
 //        + ': ' + JSON.serializePretty(classesToCall));
 
         // fixup our trigger lists to deal with workflow rules
-        context.existingRecords = fixupOldList(thisAction, context.records, context
+        context.existingRecords = fixupOldList(context.action(), context.records, context
                 .existingRecords, context.describeObj);
 
-        if (classesToCall != null && classesToCall.size() > 0) {
+        if (triggerHandlersToRun.getRecords() != null && triggerHandlersToRun.getRecords().size() > 0) {
             //Run the relevant classes
-            for (SObject classToCall : classesToCall) {
-                String className = (String) classToCall.get('Class__c');
-                Integer timesCalled = classNameToTimesCalled.get(className);
-                Integer queries = classNameToNumberOfQueries.get(className) == null
+            for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
+                String className = triggerHandler.className();
+                Integer queriesUsedByThisClass = classNameToNumberOfQueries.get(className) == null
                         ? 0
                         : classNameToNumberOfQueries.get(className);
-                Integer queriesUsed = Limits.getQueries();
+                Integer timesCalled = classNameToTimesCalled.get(className);
                 Map<String, Integer> timesCalledByContext = classNameToTimesCalledByContext.get(className);
                 if (timesCalledByContext == null) {
                     classNameToTimesCalledByContext.put(
                             className,
                             new Map<String, Integer>{
-                                    thisAction.name() => 1
+                                    context.action().name() => 1
                             });
                 } else {
-                    Integer timesForContext = timesCalledByContext.get(thisAction.name());
+                    Integer timesForContext = timesCalledByContext.get(context.action().name());
                     if (timesForContext == null) {
-                        timesCalledByContext.put(thisAction.name(), 1);
+                        timesCalledByContext.put(context.action().name(), 1);
                     } else {
-                        timesCalledByContext.put(thisAction.name(), timesForContext + 1);
+                        timesCalledByContext.put(context.action().name(), timesForContext + 1);
                     }
                 }
 
@@ -152,19 +156,20 @@ public class TDTM_TriggerHandler {
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
 
                 try {
-                    dmlWrapperResponse = runClass(classToCall, context, dmlWrapper);
+                    dmlWrapperResponse = runClass(triggerHandler, context, dmlWrapper);
                 } catch (Exception ex) {
                     handleException(context.records, context.existingRecords, ex);
                 }
 
                 classNameToNumberOfQueries.put(
                         className,
-                        queries + (Limits.getQueries() - queriesUsed));
+                        queriesUsedByThisClass + (Limits.getQueries() - Limits.getQueries()));
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
 
-                UTIL_Debug.debugWithInfo('****Finished executing: ' + classToCall.get('Class__c') + ' for ' +
-                    context.describeObj.getName() + ': ' + thisAction);
+                UTIL_Debug.debugWithInfo('****Finished executing: ' + triggerHandler.className() + ' ' +
+                        'for ' +
+                    context.describeObj.getName() + ': ' + context.action());
             }
             
             //Process the result
@@ -290,15 +295,9 @@ public class TDTM_TriggerHandler {
      * @param dmlWrapper The DmlWrapper instance for the current processing
      * @return An updated DML Wrapper instance (or null)
      */
-    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord,
+    private static TDTM_Runnable.DmlWrapper runClass(TriggerHandler triggerHandler,
             TriggerContext context, TDTM_Runnable.DmlWrapper dmlWrapper) {
-        if (classToRunRecord == null) {
-            UTIL_Debug.debug(LoggingLevel.WARN, '****ClassToCall was null');
-            return dmlWrapper;
-        }
-
-        TriggerHandler triggerHandler = new TriggerHandler(classToRunRecord);
-        Type classType = getTypeForClassNamed(triggerHandler.name());
+        Type classType = getTypeForClassNamed(triggerHandler.className());
         if (classType == null) {
             UTIL_Debug.debug(LoggingLevel.WARN, '****ClassType was null.');
             return dmlWrapper;
@@ -315,7 +314,7 @@ public class TDTM_TriggerHandler {
             if (triggerHandler.isAsync() && !context.isBefore() && canRunAsync()) {
                 reportDebugMessageAsync(triggerHandler, context);
 
-                runAsync(classToRun, triggerHandler.name(), context);
+                runAsync(classToRun, triggerHandler.className(), context);
             } else {
                 reportDebugMessageSync(triggerHandler, context);
 
@@ -341,20 +340,20 @@ public class TDTM_TriggerHandler {
     }
 
     private static void reportDebugMessageWithInfo(TriggerHandler triggerHandler, TriggerContext context) {
-        UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+        UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.className() + ' for ' +
                 context.describeObj.getName() + ': ' + context.action() + ' with ' + (context
                 .records !=
                 null ? context.records : context.existingRecords).size() + ' records');
     }
 
     private static void reportDebugMessageSync(TriggerHandler triggerHandler,TriggerContext context) {
-        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.name() + ' for ' +
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.className() + ' for ' +
                 context.describeObj.getName() + ': ' + context.action() + ' with ' +
                 getRecords(context).size() + ' records');
     }
 
     private static void reportDebugMessageAsync(TriggerHandler triggerHandler, TriggerContext context) {
-        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.name() + ' for ' +
+        UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.className() + ' for ' +
                 context.describeObj.getName() + ': ' + context.action() + ' with ' +
                 getRecords(context).size() + ' records');
     }
