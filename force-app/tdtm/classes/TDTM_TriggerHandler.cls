@@ -47,7 +47,15 @@ public class TDTM_TriggerHandler {
     private static Boolean isMonitoringEnabled = false;
 
     private static Boolean defaultRecordsInserted = false;
-    private static TriggerHandlerMonitor monitor;
+    private static TriggerHandlerMonitor monitor {
+        get {
+            if (monitor == null) {
+                monitor = new TriggerHandlerMonitor(isCompactLoggingEnabled);
+            }
+            return monitor;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
@@ -107,9 +115,6 @@ public class TDTM_TriggerHandler {
         context.fixupOldList();
 
         if (triggerHandlersToRun.getRecords() != null && triggerHandlersToRun.getRecords().size() > 0) {
-            if (isMonitoringEnabled) {
-                monitor = new TriggerHandlerMonitor(context, isCompactLoggingEnabled);
-            }
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
@@ -120,7 +125,7 @@ public class TDTM_TriggerHandler {
                 }
 
                 if (isMonitoringEnabled) {
-                    monitor.runMonitoringFor(triggerHandler);
+                    monitor.runMonitoringFor(triggerHandler, context);
                 }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);

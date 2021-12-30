@@ -1,6 +1,5 @@
 public with sharing class TriggerHandlerMonitor {
 
-    private TriggerContext context;
     private Map<String, Integer> classNameToTimesCalled =
             new Map<String, Integer>();
     private Map<String, Integer> classNameToNumberOfQueries =
@@ -9,18 +8,14 @@ public with sharing class TriggerHandlerMonitor {
             new Map<String, Map<String, Integer>>();
     private Boolean isCompactLoggingEnabled = true;
 
-    public TriggerHandlerMonitor(
-            TriggerContext context,
-            Boolean isCompactLogging){
-       this.context = context;
+    public TriggerHandlerMonitor(Boolean isCompactLogging){
        this.isCompactLoggingEnabled = isCompactLogging;
     }
 
-    public void runMonitoringFor(TriggerHandler triggerHandler) {
-        String className = triggerHandler.className();
-        incrementTimesCalledByContext(className, context.triggerAction().name());
-        incrementTimesCalled(className);
-        updateNumberOfQueriesUsed(className);
+    public void runMonitoringFor(TriggerHandler triggerHandler, TriggerContext context) {
+        incrementTimesCalledByContext(triggerHandler.className(), context.triggerAction().name());
+        incrementTimesCalled(triggerHandler.className());
+        updateNumberOfQueriesUsed(triggerHandler.className());
     }
 
     private void updateNumberOfQueriesUsed(String className) {
@@ -58,7 +53,9 @@ public with sharing class TriggerHandlerMonitor {
     }
 
     public Integer timesRun(String className, String context) {
-        return classNameToTimesCalledByContext.get(className).get(context);
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + classNameToTimesCalledByContext);
+        System.debug(LoggingLevel.ERROR, '^^^^^^ classNameToTimesCalledByContext ^^^^^^');
+        return classNameToTimesCalledByContext.get(className)?.get(context);
     }
 
     public void logTriggerHandlerInfo() {
