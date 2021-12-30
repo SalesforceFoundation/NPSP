@@ -96,18 +96,18 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        hasMinimumAccess = canDeleteRecord(stdController.getId());
+        hasMinimumAccess = CON_DeleteContactOverrideSelector.canDeleteRecord(stdController.getId());
         if (!hasMinimumAccess) {
             return;
         }
 
         setNavigationParams(ApexPages.currentPage().getParameters());
 
-        contactRecord = queryContact(stdController.getId());
+        contactRecord = CON_DeleteContactOverrideSelector.queryContact(stdController.getId());
 
         isHouseholdAccount = false;
         isOnlyContactInHousehold = false;
-        hasAccountDeleteAccess = canDeleteRecord(contactRecord.AccountId);
+        hasAccountDeleteAccess = CON_DeleteContactOverrideSelector.canDeleteRecord(contactRecord.AccountId);
         handleHouseholdAccount();
     }
 
@@ -121,19 +121,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         handleSingleMemberHousehold(contactRecord);
     }
 
-    // TODO: Needs to support mocking
-    private Contact queryContact(Id contactId) {
-        Contact contactDetails = [
-            SELECT Id, Name, FirstName, LastName,
-                AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
-            FROM Contact
-            WHERE Id = :contactId
-        ];
-        return contactDetails;
-    }
-
     private void handleSingleMemberHousehold(Contact contactRecord) {
-        List<AggregateResult> contactsInHousehold = getCountOfContactsInHousehold();
+        List<AggregateResult> contactsInHousehold =
+            CON_DeleteContactOverrideSelector.getCountOfContactsInHousehold(contactRecord.AccountId);
         if (contactsInHousehold.size() != 1 || !(contactsInHousehold[0].get('ct') == 1)) {
             return;
         }
@@ -158,18 +148,6 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         }
 
         ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
-    }
-
-    // TODO: needs to support mocking
-    private List<AggregateResult> getCountOfContactsInHousehold() {
-        List<AggregateResult> contactsInHousehold = [
-            SELECT COUNT(id) ct
-            FROM Contact
-            WHERE AccountId = :accountId
-            GROUP BY AccountId
-            HAVING COUNT(id) = 1
-        ];
-        return contactsInHousehold;
     }
 
     /*******************************************************************************************************
@@ -277,7 +255,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteAccount() {
-        Account account =  [SELECT Id, Name FROM Account WHERE Id = :accountId];
+        Account account =  CON_DeleteContactOverrideSelector.getAccountRecord(accountId);
         
         try {
             AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account);
@@ -355,21 +333,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         public ContactCascadeDelete(Contact contactToDelete) {
             this.contactToDelete = contactToDelete;
 
-            relatedCases = [
-                SELECT CaseNumber, ContactId
-                FROM Case
-                WHERE ContactId = :contactToDelete.Id
-            ];
-            relatedOpportunities = [
-                SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
-                FROM Opportunity
-                WHERE Primary_Contact__c = :contactToDelete.Id
-            ];
-            relatedRecurringDonations = [
-                SELECT Name, npe03__Contact__c
-                FROM npe03__Recurring_Donation__c
-                WHERE npe03__Contact__c = :contactToDelete.Id
-            ];
+            relatedCases = CON_DeleteContactOverrideSelector.getCasesRelatedToContact(contactToDelete.Id);
+            relatedOpportunities = CON_DeleteContactOverrideSelector.getOpportunitiesRelatedToContact(contactToDelete.Id);
+            relatedRecurringDonations = CON_DeleteContactOverrideSelector.getRelatedRecurringDonations(contactToDelete.Id);
         }
 
         /*******************************************************************************************************
@@ -432,16 +398,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         public AccountCascadeDelete(Account accountToDelete) {
             this.accountToDelete = accountToDelete;
 
-            relatedCases = [
-                SELECT CaseNumber, AccountId
-                FROM Case
-                WHERE AccountId = :accountToDelete.Id
-            ];
-            relatedOpportunities = [
-                SELECT Name, AccountId, IsWon, IsClosed
-                FROM Opportunity
-                WHERE AccountId = :accountToDelete.Id
-            ];
+            relatedCases = CON_DeleteContactOverrideSelector.getCasesRelatedToAccount(accountToDelete.Id);
+            relatedOpportunities = CON_DeleteContactOverrideSelector.getOpportunitiesRelatedToAccount(accountToDelete.Id);
         }
 
         /*******************************************************************************************************
@@ -465,24 +423,6 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 throw new CascadeDeleteException(errorMessage);
             }
         }
-    }
-
-    /*********************************************************************************************************
-    * @description Check if the running user has minimum access to delete the record
-    * @return Boolean
-    */
-    public Boolean canDeleteRecord(Id recordId) {
-        UserRecordAccess userAccess = [
-            SELECT RecordId, HasDeleteAccess
-            FROM UserRecordAccess
-            WHERE UserId = :UserInfo.getUserId()
-            AND RecordId = :recordId
-            LIMIT 1
-        ];
-        if (!userAccess.HasDeleteAccess) {
-            return false;
-        }
-        return true;
     }
 
     /**
