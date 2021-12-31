@@ -161,7 +161,6 @@ public with sharing class DonationHistoryService {
         //only ids with not type of credit defined before
         List<Id> partialSoftCreditIds = new List<Id>();
         List<Partial_Soft_Credit__c> partialSoftCredit = new DonationHistorySelector().getPartialSoftCredit(softCreditIds);
-        System.debug(partialSoftCredit);
         for(Partial_Soft_Credit__c ps: partialSoftCredit){
             partialSoftCreditIds.add(ps.Contact_Role_ID__c);
         }
