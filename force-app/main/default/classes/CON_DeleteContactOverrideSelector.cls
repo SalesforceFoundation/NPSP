@@ -37,7 +37,7 @@
 public with sharing class CON_DeleteContactOverrideSelector {
 
     // TODO: Needs to support mocking
-    static public Contact queryContact(Id contactId) {
+    public Contact queryContact(Id contactId) {
         Contact contactDetails = [
             SELECT Id, Name, FirstName, LastName,
                 AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
@@ -48,7 +48,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
     }
 
     // TODO: needs to support mocking
-    static public List<AggregateResult> getCountOfContactsInHousehold(Id accountId) {
+    public List<AggregateResult> getCountOfContactsInHousehold(Id accountId) {
         List<AggregateResult> contactsInHousehold = [
             SELECT COUNT(id) ct
             FROM Contact
@@ -63,7 +63,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
     * @description Check if the running user has minimum access to delete the record
     * @return Boolean
     */
-    static public Boolean canDeleteRecord(Id recordId) {
+    public Boolean canDeleteRecord(Id recordId) {
         UserRecordAccess userAccess = [
             SELECT RecordId, HasDeleteAccess
             FROM UserRecordAccess
@@ -77,11 +77,11 @@ public with sharing class CON_DeleteContactOverrideSelector {
         return true;
     }
 
-    static public Account getAccountRecord(Id accountId) {
+    public Account getAccountRecord(Id accountId) {
         return  [SELECT Id, Name FROM Account WHERE Id = :accountId];
     }
 
-    static public List<Case> getCasesRelatedToContact(Id contactId) {
+    public List<Case> getCasesRelatedToContact(Id contactId) {
         return [
             SELECT CaseNumber, ContactId
             FROM Case
@@ -89,7 +89,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
         ];
     }
 
-    static public List<Case> getCasesRelatedToAccount(Id accountId) {
+    public List<Case> getCasesRelatedToAccount(Id accountId) {
         return [
             SELECT CaseNumber, AccountId
             FROM Case
@@ -97,7 +97,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
         ];
     }
 
-    static public List<Opportunity> getOpportunitiesRelatedToContact(Id contactId) {
+    public List<Opportunity> getOpportunitiesRelatedToContact(Id contactId) {
         return [
             SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
             FROM Opportunity
@@ -105,7 +105,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
         ];
     }
 
-    static public List<Opportunity> getOpportunitiesRelatedToAccount(Id accountId) {
+    public List<Opportunity> getOpportunitiesRelatedToAccount(Id accountId) {
         return [
             SELECT Name, AccountId, IsWon, IsClosed
             FROM Opportunity
@@ -113,7 +113,7 @@ public with sharing class CON_DeleteContactOverrideSelector {
         ];
     }
 
-    static public List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Id contactId) {
+    public List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Id contactId) {
         return [
             SELECT Name, npe03__Contact__c
             FROM npe03__Recurring_Donation__c
