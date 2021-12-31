@@ -157,8 +157,6 @@ public with sharing class DonationHistoryService {
     * @description Verify partial soft credit condition.
     */
     private static List<DonationHistoryController.DonationHistory> verifyPartialSoftCreditCondition(List<Id> softCreditIds, List<OpportunityContactRole> credits){
-        //search on PartialSoftCredit object for ids filtered before usin IN()
-        //only ids with not type of credit defined before
         List<Id> partialSoftCreditIds = new List<Id>();
         List<Partial_Soft_Credit__c> partialSoftCredit = new DonationHistorySelector().getPartialSoftCredit(softCreditIds);
         for(Partial_Soft_Credit__c ps: partialSoftCredit){

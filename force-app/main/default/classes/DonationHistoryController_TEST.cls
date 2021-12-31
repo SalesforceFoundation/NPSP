@@ -35,7 +35,12 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-
+    
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to generate Filter rules.
+    */
     static void generateFilterRules() {
         String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
@@ -53,6 +58,11 @@ public class DonationHistoryController_TEST {
                 filterRulesJSON, List<Filter_Rule__mdt>.class);
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to generate test data.
+    */
     @TestSetup
     static void makeData(){
         Date myDateTime = Date.newInstance(2020, 2, 2);
@@ -134,6 +144,11 @@ public class DonationHistoryController_TEST {
         generateFilterRules();
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to test that the results are returned correctly
+    */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
         Contact testContact = [
@@ -162,6 +177,11 @@ public class DonationHistoryController_TEST {
         System.assertEquals(3, donationHistory.size(), 'Should return only 3 records');
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to test case in which data should not be returned.
+    */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
         Contact testContact = [
@@ -178,6 +198,11 @@ public class DonationHistoryController_TEST {
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Method to test validation of user permissions.
+    */
     @IsTest
     private static void shouldThrowAccessException(){
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
