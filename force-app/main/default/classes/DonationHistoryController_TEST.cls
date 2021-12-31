@@ -169,7 +169,7 @@ public class DonationHistoryController_TEST {
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
-    //ASSERT FOR PERMISSION
+
     @IsTest
     private static void shouldThrowAccessException(){
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
@@ -192,5 +192,4 @@ public class DonationHistoryController_TEST {
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
     }
-    //Assert for DonationHistory structure return correctly
 }

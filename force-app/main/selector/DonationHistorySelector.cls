@@ -25,6 +25,7 @@ public inherited sharing class DonationHistorySelector {
                 Contact_Role_ID__c 
             FROM Partial_Soft_Credit__c 
             WHERE Contact_Role_ID__c IN :donationIds
+            WITH SECURITY_ENFORCED
         ];
     }   
 }

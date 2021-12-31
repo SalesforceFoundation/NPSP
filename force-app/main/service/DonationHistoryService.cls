@@ -77,9 +77,7 @@ public with sharing class DonationHistoryService {
     public List<DonationHistoryController.DonationHistory> getDonationHistory(Id contactId){
         if(hasAccessToDonationHistory()){
             List<OpportunityContactRole> credits = new DonationHistorySelector().getOpportunityContactRoleList(contactId);
-            System.debug(credits);
             List<DonationHistoryController.DonationHistory> result = buildDonationHistoryFromOCRs(credits);
-            System.debug(result.size());
             return result;
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
@@ -128,7 +126,7 @@ public with sharing class DonationHistoryService {
     */
     private static List<DonationHistoryController.DonationHistory> buildSoftCreditHistoryFromOCRs(List<OpportunityContactRole> donations){
         //with the list of donations verify if the Role match the filter rule value on the NPSP_ClosedWon_Opps_SC filter group 
-        Filter_Rule__mdt roles = CMT_FilterRule_SEL.getFilterRuleIdByDeveloperName(NPSP_CREDIT_ROLES);
+        Filter_Rule__mdt roles = CMT_FilterRule_SEL.getFilterRuleByDeveloperName(NPSP_CREDIT_ROLES);
         List<String> softCreditRoles = roles.Constant__c.split(';');
         List<DonationHistoryController.DonationHistory> softCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: donations){
