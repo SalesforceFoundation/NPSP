@@ -107,11 +107,11 @@
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
     <tabSettings>
-        <tab>GE_Gift_Entry</tab>
+        <tab>DataImportBatch__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>
     <tabSettings>
-        <tab>DataImportBatch__c</tab>
+        <tab>GE_Gift_Entry</tab>
         <visibility>Visible</visibility>
     </tabSettings>
 </PermissionSet>
