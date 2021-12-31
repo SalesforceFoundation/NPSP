@@ -37,34 +37,53 @@ public with sharing class DonationHistoryService {
     static final String HARD_CREDIT = 'Hard Credit';
     static final String SOFT_CREDIT = 'Soft Credit';
     static final String PARTIAL_SOFT_CREDIT = 'Partial Soft Credit';
+    static final String NPSP_CREDIT_ROLES= 'NPSP_OppsSoftCreditRoles';
     
+    @TestVisible
+    private UTIL_Permissions permissions {
+        get {
+            if(permissions == null) {
+                permissions = new UTIL_Permissions();
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Donation History Access verification.
+    */
+    private Boolean hasAccessToDonationHistory(){
+        return permissions.canRead(Opportunity.SObjectType, new Set<SObjectField>{
+            Opportunity.Amount,
+            Opportunity.CloseDate,
+            Opportunity.Name
+        }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
+            Contact.Email,
+            Contact.Name
+        }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
+            Partial_Soft_Credit__c.Amount__c,
+            Partial_Soft_Credit__c.Contact_Role_ID__c
+        });
+    }
+
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
     */
     public List<DonationHistoryController.DonationHistory> getDonationHistory(Id contactId){
-        List<OpportunityContactRole> donations = [SELECT Id, Opportunity.Name, Opportunity.CloseDate, Opportunity.Amount, Contact.Email, Contact.Name, Role, isPrimary 
-                                                    FROM OpportunityContactRole 
-                                                    WHERE Opportunity.IsWon = true 
-                                                    AND ContactId =:contactId 
-                                                    ORDER BY Opportunity.CloseDate 
-                                                    DESC LIMIT 2000];
-        List<DonationHistoryController.DonationHistory> result = verifyCreditCondition(donations);
-        return result;
-    }
-
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return total number of record
-    */
-    public static List<AggregateResult> getTotalRecords(Id contactId){
-        List<AggregateResult> totalRecords = [SELECT COUNT(Id)
-                                FROM OpportunityContactRole 
-                                WHERE Opportunity.IsWon = true 
-                                AND ContactId =:contactId];
-        return totalRecords;
+        if(hasAccessToDonationHistory()){
+            List<OpportunityContactRole> credits = new DonationHistorySelector().getOpportunityContactRoleList(contactId);
+            System.debug(credits);
+            List<DonationHistoryController.DonationHistory> result = buildDonationHistoryFromOCRs(credits);
+            System.debug(result.size());
+            return result;
+        } else {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+        }
     }
 
     /** 
@@ -72,16 +91,16 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Verify each condition to list Donation.
     */
-    private static List<DonationHistoryController.DonationHistory> verifyCreditCondition(List<OpportunityContactRole> donations){
+    private static List<DonationHistoryController.DonationHistory> buildDonationHistoryFromOCRs(List<OpportunityContactRole> credits){
         List<DonationHistoryController.DonationHistory> donationHistory = new List<DonationHistoryController.DonationHistory>();
-        List<DonationHistoryController.DonationHistory> hardCredit = verifyHardCreditCondition(donations);
-        List<DonationHistoryController.DonationHistory> softCredit = verifySoftCreditCondition(donations);
-        List<Id> donationsId = filterVerifiedIds(softCredit);
-        List<DonationHistoryController.DonationHistory> partialSoftCredit = verifyPartialSoftCreditCondition(donationsId, donations);
-        List<DonationHistoryController.DonationHistory> partialAndSoftCredit = verifyPartialAndSoftCreditCondition(softCredit, partialSoftCredit);
+        List<DonationHistoryController.DonationHistory> hardCredits = buildHardCreditHistoryFromOCRs(credits);
+        List<DonationHistoryController.DonationHistory> softCredits = buildSoftCreditHistoryFromOCRs(credits);
+        List<Id> softCreditIds = filterVerifiedIds(softCredits);
+        List<DonationHistoryController.DonationHistory> partialSoftCredits = verifyPartialSoftCreditCondition(softCreditIds, credits);
+        List<DonationHistoryController.DonationHistory> partialAndSoftCredits = buildPartialAndSoftCreditFromOCRs(softCredits, partialSoftCredits);
         
-        donationHistory.addAll(hardCredit);
-        donationHistory.addAll(partialAndSoftCredit);
+        donationHistory.addAll(hardCredits);
+        donationHistory.addAll(partialAndSoftCredits);
 
         return donationHistory;
     }
@@ -91,9 +110,9 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Verify hard credit condition.
     */
-    private static List<DonationHistoryController.DonationHistory> verifyHardCreditCondition(List<OpportunityContactRole> donations){
+    private static List<DonationHistoryController.DonationHistory> buildHardCreditHistoryFromOCRs(List<OpportunityContactRole> credits){
         List<DonationHistoryController.DonationHistory> hardCreditList = new List<DonationHistoryController.DonationHistory>();
-        for(OpportunityContactRole ocr: donations){
+        for(OpportunityContactRole ocr: credits){
             if (ocr.isPrimary) {
                 DonationHistoryController.DonationHistory hardCredit = new DonationHistoryController.DonationHistory(ocr, HARD_CREDIT);
                 hardCreditList.add(hardCredit);
@@ -107,9 +126,9 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Verify soft credit condition.
     */
-    private static List<DonationHistoryController.DonationHistory> verifySoftCreditCondition(List<OpportunityContactRole> donations){
-        //with the list of donations verify if the Role match the filter rule value on the NPSP_ClosedWon_Opps_SC filter group
-        Filter_Rule__mdt roles = [SELECT Constant__c FROM Filter_Rule__mdt WHERE QualifiedApiName = 'NPSP_OppsSoftCreditRoles'];
+    private static List<DonationHistoryController.DonationHistory> buildSoftCreditHistoryFromOCRs(List<OpportunityContactRole> donations){
+        //with the list of donations verify if the Role match the filter rule value on the NPSP_ClosedWon_Opps_SC filter group 
+        Filter_Rule__mdt roles = CMT_FilterRule_SEL.getFilterRuleIdByDeveloperName(NPSP_CREDIT_ROLES);
         List<String> softCreditRoles = roles.Constant__c.split(';');
         List<DonationHistoryController.DonationHistory> softCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: donations){
@@ -126,12 +145,12 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Filter for ids already classified as Soft Credit.
     */
-    private static List<Id> filterVerifiedIds(List<DonationHistoryController.DonationHistory> softCredit){
-        List<Id> donationsId = new List<Id>();
-        for(DonationHistoryController.DonationHistory dh: softCredit){
-            donationsId.add(dh.id);
+    private static List<Id> filterVerifiedIds(List<DonationHistoryController.DonationHistory> softCredits){
+        List<Id> softCreditIds = new List<Id>();
+        for(DonationHistoryController.DonationHistory dh: softCredits){
+            softCreditIds.add(dh.id);
         }
-        return donationsId;
+        return softCreditIds;
     }
 
     /** 
@@ -139,16 +158,17 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Verify partial soft credit condition.
     */
-    private static List<DonationHistoryController.DonationHistory> verifyPartialSoftCreditCondition(List<Id> donationsId, List<OpportunityContactRole> donations){
+    private static List<DonationHistoryController.DonationHistory> verifyPartialSoftCreditCondition(List<Id> softCreditIds, List<OpportunityContactRole> credits){
         //search on PartialSoftCredit object for ids filtered before usin IN()
         //only ids with not type of credit defined before
         List<Id> partialSoftCreditIds = new List<Id>();
-        List<Partial_Soft_Credit__c> partialSoftCredit = [SELECT id, Amount__c, Contact_Role_ID__c FROM Partial_Soft_Credit__c WHERE Contact_Role_ID__c IN :donationsId];
+        List<Partial_Soft_Credit__c> partialSoftCredit = new DonationHistorySelector().getPartialSoftCredit(softCreditIds);
+        System.debug(partialSoftCredit);
         for(Partial_Soft_Credit__c ps: partialSoftCredit){
             partialSoftCreditIds.add(ps.Contact_Role_ID__c);
         }
         List<DonationHistoryController.DonationHistory> partialSoftCreditList = new List<DonationHistoryController.DonationHistory>();
-        for(OpportunityContactRole ocr: donations){
+        for(OpportunityContactRole ocr: credits){
             if (partialSoftCreditIds.contains(ocr.id)) {
                 DonationHistoryController.DonationHistory newPartialSoftCredit = new DonationHistoryController.DonationHistory(ocr, PARTIAL_SOFT_CREDIT);
                 partialSoftCreditList.add(newPartialSoftCredit);
@@ -162,15 +182,15 @@ public with sharing class DonationHistoryService {
     * @date 2021
     * @description Method to avoid duplicated records for Soft and Partial Soft credits.
     */
-    private static List<DonationHistoryController.DonationHistory> verifyPartialAndSoftCreditCondition(List<DonationHistoryController.DonationHistory> soft, List<DonationHistoryController.DonationHistory> partialSoft){
-        List<Id> partialSoftCreditIds = filterVerifiedIds(partialSoft);
+    private static List<DonationHistoryController.DonationHistory> buildPartialAndSoftCreditFromOCRs(List<DonationHistoryController.DonationHistory> softCredits, List<DonationHistoryController.DonationHistory> partialSoftCredits){
+        List<Id> partialSoftCreditIds = filterVerifiedIds(partialSoftCredits);
         List<DonationHistoryController.DonationHistory> partialAndSoftCredit = new List<DonationHistoryController.DonationHistory>();
-        for(DonationHistoryController.DonationHistory ocr: soft){
+        for(DonationHistoryController.DonationHistory ocr: softCredits){
             if (!partialSoftCreditIds.contains(ocr.id)) {
                 partialAndSoftCredit.add(ocr);
             }
         }
-        partialAndSoftCredit.addAll(partialSoft);
+        partialAndSoftCredit.addAll(partialSoftCredits);
         return partialAndSoftCredit;
     }
 }

@@ -68,11 +68,11 @@ public with sharing class DonationHistoryController {
     */
     @AuraEnabled(cacheable=true)
     public static List<DonationHistory> getDonationHistory(Id contactId){
-        DonationHistoryService service = new DonationHIstoryService();
+        DonationHistoryService service = new DonationHistoryService();
         try {
             return service.getDonationHistory(contactId);
         } catch(Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            throw new UTIL_Permissions.InsufficientPermissionException(ex.getMessage());
         }
     }
 }
