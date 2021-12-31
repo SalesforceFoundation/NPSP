@@ -143,14 +143,22 @@ public class DonationHistoryController_TEST {
             WHERE FirstName = 'TestFirstName10'
             LIMIT 1
         ];        
+        Boolean influencer = false;
+        Boolean role = false;
         Test.startTest();
         List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
 
         for(DonationHistoryController.DonationHistory donation : donationHistory){
-            System.assertNotEquals('Influencer', donation.role, 'Must not have an influencer role');
-            System.assert(donation.role == 'Soft Credit' || donation.role == 'Donor', 'Roles must be Soft credit or Donor');
+            if(donation.role == 'Influencer'){
+                influencer = true;
+            }
+            if(donation.role != 'Soft Credit' && donation.role != 'Donor'){
+                role = true;
+            }
         }
+        System.assertEquals(false, influencer, 'Must not have an influencer role');
+        System.assertEquals(false, role, 'Roles must be Soft credit or Donor');
         System.assertEquals(3, donationHistory.size(), 'Should return only 3 records');
     }
 
