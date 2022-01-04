@@ -144,8 +144,29 @@ public with sharing class DonationHistoryService {
                 partialSoftCreditList.add(newPartialSoftCredit);
             }
         }
-        return partialSoftCreditList;
+		List<DonationHistoryController.DonationHistory> partialListWithModifiedAmount = changeAmountFieldForPartialSoftCredits(partialSoftCreditList, partialSoftCredit);
+        return partialListWithModifiedAmount;
     }
+    
+    private static List<DonationHistoryController.DonationHistory> changeAmountFieldForPartialSoftCredits(List<DonationHistoryController.DonationHistory> partialSoftCreditList, List<Partial_Soft_Credit__c> partialSoftCredits){
+    	List<DonationHistoryController.DonationHistory> partialListWithModifiedAmount = new List<DonationHistoryController.DonationHistory>();
+		List<Id> partialSoftCreditIds = new List<Id>();
+		for(DonationHistoryController.DonationHistory ocr: partialSoftCreditList){
+        	partialSoftCreditIds.add(ocr.Id);
+        }
+        for(DonationHistoryController.DonationHistory ocr: partialSoftCreditList){
+            if(ocr.creditType == PARTIAL_SOFT_CREDIT){
+                for(Partial_Soft_Credit__c psc: partialSoftCredits){
+                    if(ocr.Id == psc.Contact_Role_ID__c){
+                        ocr.Amount = psc.Amount__c;
+                    }
+                }
+                
+            }
+        }
+		return partialListWithModifiedAmount;
+    }
+
 
     private static List<DonationHistoryController.DonationHistory> buildPartialAndSoftCreditFromOCRs(List<DonationHistoryController.DonationHistory> softCredits, List<DonationHistoryController.DonationHistory> partialSoftCredits){
         List<Id> partialSoftCreditIds = filterVerifiedIds(partialSoftCredits);
