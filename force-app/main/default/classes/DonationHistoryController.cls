@@ -67,7 +67,7 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistory> getDonationHistory(Id contactId){
+    public static List<DonationHistory> getDonationHistory(Id contactId) {
         DonationHistoryService service = new DonationHistoryService();
         try {
             return service.getDonationHistory(contactId);

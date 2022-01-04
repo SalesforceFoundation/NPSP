@@ -64,7 +64,7 @@ public class DonationHistoryController_TEST {
     * @description Method to generate test data.
     */
     @TestSetup
-    static void makeData(){
+    static void makeData() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
 
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
@@ -161,7 +161,8 @@ public class DonationHistoryController_TEST {
         Boolean influencer = false;
         Boolean role = false;
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id);
+        List<DonationHistoryController.DonationHistory> donationHistory = 
+        DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
 
         for(DonationHistoryController.DonationHistory donation : donationHistory){
@@ -193,7 +194,8 @@ public class DonationHistoryController_TEST {
         ];
         
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id);
+        List<DonationHistoryController.DonationHistory> donationHistory = 
+        DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
@@ -204,7 +206,7 @@ public class DonationHistoryController_TEST {
     * @description Method to test validation of user permissions.
     */
     @IsTest
-    private static void shouldThrowAccessException(){
+    private static void shouldThrowAccessException() {
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
         Contact testContact = [
             SELECT
@@ -217,7 +219,8 @@ public class DonationHistoryController_TEST {
         try{
             Test.startTest();
             System.runAs(u){
-                List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id); 
+                List<DonationHistoryController.DonationHistory> donationHistory = 
+                DonationHistoryController.getDonationHistory(testContact.Id); 
             }
 	        Test.stopTest();
         } catch(Exception e){
