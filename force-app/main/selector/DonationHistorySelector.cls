@@ -66,6 +66,7 @@ public inherited sharing class DonationHistorySelector {
             SELECT 
                 id, 
                 Amount__c, 
+                Role_Name__c,
                 Contact_Role_ID__c 
             FROM Partial_Soft_Credit__c 
             WHERE Contact_Role_ID__c IN :opportunityContactRoleIds

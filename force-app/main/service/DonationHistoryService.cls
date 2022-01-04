@@ -73,6 +73,7 @@ public with sharing class DonationHistoryService {
         if (hasAccessToDonationHistory()) {
             List<OpportunityContactRole> credits = new DonationHistorySelector().getWonOpportunityContactRolesByContactId(contactId);
             List<DonationHistoryController.DonationHistory> result = buildDonationHistoryFromOCRs(credits);
+            System.debug(result.size());
             return result;
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
