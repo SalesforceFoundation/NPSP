@@ -1,0 +1,56 @@
+{
+  "relations": [
+    {
+      "title" : "Programmer IV",
+      "relationshipId" : "a0F54000005tAzXEAU",
+      "relationshipExplanation" : "Dr Stephanie Bailey  is Dr Raymond Alvarez's Partner",
+      "contactName" : "Stephanie Bailey",
+      "contactId" : "0035400000l7lpsAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }, {
+      "title" : "Programmer IV",
+      "relationshipId" : "a0F54000005tAzYEAU",
+      "relationshipExplanation" : "Dr Stephanie Bailey  is Dr Raymond Alvarez's Employee",
+      "contactName" : "Stephanie Bailey",
+      "contactId" : "0035400000l7lpsAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }, {
+      "title" : "Software Consultant",
+      "relationshipId" : "a0F54000005tAzZEAU",
+      "relationshipExplanation" : "Samuel Harrison  is Dr Raymond Alvarez's Partner",
+      "contactName" : "Samuel Harrison",
+      "contactId" : "0035400000l7lptAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }, {
+      "title" : "Quality Engineer",
+      "relationshipId" : "a0F54000005tAzcEAE",
+      "relationshipExplanation" : "Mrs Chris Medina  is Dr Raymond Alvarez's Partner",
+      "contactName" : "Chris Medina",
+      "contactId" : "0035400000l7lpwAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }, {
+      "title" : "Registered Nurse",
+      "relationshipId" : "a0F54000005tAzdEAE",
+      "relationshipExplanation" : "Ms Barbara Russell  is Dr Raymond Alvarez's Partner",
+      "contactName" : "Barbara Russell",
+      "contactId" : "0035400000l7lpxAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }, {
+      "title" : null,
+      "relationshipId" : "a0F54000005tAzeEAE",
+      "relationshipExplanation" : "Mrs Ernest Smith  is Dr Raymond Alvarez's Partner",
+      "contactName" : "Ernest Smith",
+      "contactId" : "0035400000l7lpyAAA",
+      "accountName" : "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+    }
+  ],
+  "showCreateRelationshipButton": true,
+  "labels": {
+    "relationshipExplanation" : "Relationship Explanation",
+    "accountName" : "Account",
+    "title" : "Title",
+    "contactName" : "Full Name",
+    "relationshipsPlural": "Relationships"
+  },
+  "vfPageURL" : "/apex/rel_relationshipsviewer"
+}
