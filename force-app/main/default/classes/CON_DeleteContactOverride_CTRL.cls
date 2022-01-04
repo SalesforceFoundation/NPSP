@@ -45,6 +45,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description LEx navigation value to go to Contact Home. */
     private static final String LEX_HOME = 'home';
 
+    /** @description Retain Id for passed in contact. */
     private Id contactId;
 
     /** @description The contact record the user is attempting to delete. */
@@ -71,6 +72,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    /** @description Selector class. */
     @TestVisible
     private CON_DeleteContactOverrideSelector contactOverrideSelector {
         get {
@@ -105,14 +107,18 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public Boolean hasMinimumAccess {get;set;}
 
     /*******************************************************************************************************
-    * @description Standard controller constructor. Queries for contact, verifies whether the contact or its
-    * account should be deleted.
+    * @description Standard controller constructor.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
         contactId = stdController.getId();
         setNavigationParams(ApexPages.currentPage().getParameters());
     }
 
+    /*******************************************************************************************************
+    * @description Required processing to check access and establish context. Queries for contact, verifies
+    * whether the contact or its account should be deleted.
+    * @return Boolean
+    */
     public Boolean preProcessDelete() {
         hasMinimumAccess = contactOverrideSelector.canDeleteContactRecord(contactId);
         if (!hasMinimumAccess) {
@@ -129,6 +135,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         return true;
     }
 
+    /*******************************************************************************************************
+    * @description Identifies household accounts.
+    */
     private void handleHouseholdAccount() {
         if (contactRecord.AccountId == null || !contactRecord.Account.npe01__SYSTEMIsIndividual__c) {
             return;
@@ -139,8 +148,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         handleSingleMemberHousehold(contactRecord);
     }
 
+    /*******************************************************************************************************
+    * @description Identifies and handles single contact household accounts.
+    */
     private void handleSingleMemberHousehold(Contact contactRecord) {
-        isOnlyContactInHousehold = contactOverrideSelector.isHouseholdWithSingleContact(contactRecord.AccountId);
+        isOnlyContactInHousehold = contactOverrideSelector.isAccountWithSingleContact(contactRecord.AccountId);
         if (!isOnlyContactInHousehold) {
             return;
         }

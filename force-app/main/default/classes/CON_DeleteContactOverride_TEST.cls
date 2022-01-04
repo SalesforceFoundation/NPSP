@@ -497,6 +497,9 @@ private class CON_DeleteContactOverride_TEST {
         System.assertEquals(0, deletedRelationships.size(), 'The relationships created for Contact should NOT be deleted');
     }
 
+    /*********************************************************************************************************
+    * @description Verifies that minimum access flag is set when contact delete is not allowed.
+    */
     @IsTest
     private static void shouldPreventContactDeletionWithoutContactDeleteAccess() {
         IDGenerator idGenerator = new IDGenerator();
@@ -521,6 +524,9 @@ private class CON_DeleteContactOverride_TEST {
         System.assertEquals(false, ctrl.hasMinimumAccess, 'Controller should have hasMinimumAccess set to false.');
     }
 
+    /*********************************************************************************************************
+    * @description Verifies that missing account delete permission is identified.
+    */
     @IsTest
     private static void shouldConfirmDeleteContactWithoutExposingAccountInfo() {
         IDGenerator idGenerator = new IDGenerator();
@@ -530,7 +536,6 @@ private class CON_DeleteContactOverride_TEST {
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', con.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-        ctrl.preProcessDelete();
 
         CON_DeleteContactOverrideStub contactDeleteStub =
             new CON_DeleteContactOverrideStub(
@@ -549,6 +554,9 @@ private class CON_DeleteContactOverride_TEST {
             'Message should not contain account name.');
     }
 
+    /*********************************************************************************************************
+    * @description Verifies that the presence of account delete permission is identified.
+    */
     @IsTest
     private static void shouldConfirmDeleteContactAndExposeAccountInfo() {
         IDGenerator idGenerator = new IDGenerator();
@@ -558,7 +566,6 @@ private class CON_DeleteContactOverride_TEST {
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', con.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-        ctrl.preProcessDelete();
 
         CON_DeleteContactOverrideStub contactDeleteStub =
             new CON_DeleteContactOverrideStub(
@@ -642,7 +649,7 @@ private class CON_DeleteContactOverride_TEST {
         private Boolean canDeleteContact;
         private Id accountId;
         private Boolean canDeleteAccount;
-        private Boolean isHouseholdWithSingleContact;
+        private Boolean isAccountWithSingleContact;
 
         final public String CONTACT_NAME = 'Test Contact';
         final public String ACCOUNT_NAME = 'Test Account';
@@ -654,7 +661,7 @@ private class CON_DeleteContactOverride_TEST {
             this.canDeleteContact = canDeleteContact;
             this.accountId = accountId;
             this.canDeleteAccount = canDeleteAccount;
-            this.isHouseholdWithSingleContact = isHouseholdWithSingleContact;
+            this.isAccountWithSingleContact = isHouseholdWithSingleContact;
         }
 
         private Contact queryContact() {
@@ -684,8 +691,8 @@ private class CON_DeleteContactOverride_TEST {
                 when 'queryContact' {
                     return this.queryContact();
                 }
-                when 'isHouseholdWithSingleContact' {
-                    return this.isHouseholdWithSingleContact;
+                when 'isAccountWithSingleContact' {
+                    return this.isAccountWithSingleContact;
                 }
             }
             return null;
