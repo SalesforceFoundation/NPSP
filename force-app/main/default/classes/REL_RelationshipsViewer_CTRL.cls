@@ -173,7 +173,7 @@ global with sharing class REL_RelationshipsViewer_CTRL{
             List<Contact> contacts = Database.query(contactQuery);
             Contact primaryContact = null;
             if(!contacts.isEmpty()) {
-                primaryContact = (Contact)Database.query(contactQuery).get(0);
+                primaryContact = contacts[0];
             }
 
             basenode.lastName = primaryContact.LastName;
@@ -223,6 +223,13 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         return new RelationshipInfo();
     }
 
+    public String getNamespace() {
+        String namespace = UTIL_Namespace.getNamespace();
+        if (String.isBlank(namespace)) {
+            return 'c';
+        }
+        return namespace;
+    }
 
     global class RelationshipInfo {
         String prefix;
@@ -255,6 +262,5 @@ global with sharing class REL_RelationshipsViewer_CTRL{
         public String accountName;
         public String title;
         public String relId;
-    }  
-    
+    }
 }
