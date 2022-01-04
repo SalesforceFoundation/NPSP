@@ -197,10 +197,21 @@ public class UTIL_Describe {
     public static string getObjectLabel(String objectName) {
         objectName = objectName.toLowerCase();
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return objectDescribes.get(objectName).getLabel();
+    }
+
+    public static String getObjectLabelPlural(String objectName) {
+        objectName = objectName.toLowerCase();
+        // make sure we have this object's schema mapped
+        if (!objectDescribes.containsKey(objectName)) {
+            fillMapsForObject(objectName);
+        }
+
+        return objectDescribes.get(objectName).getLabelPlural();
     }
 
     /*******************************************************************************************************
