@@ -36,7 +36,6 @@
 */
 public with sharing class CON_DeleteContactOverrideSelector {
 
-    // TODO: Needs to support mocking
     public Contact queryContact(Id contactId) {
         Contact contactDetails = [
             SELECT Id, Name, FirstName, LastName,
@@ -47,7 +46,6 @@ public with sharing class CON_DeleteContactOverrideSelector {
         return contactDetails;
     }
 
-    // TODO: needs to support mocking
     public List<AggregateResult> getCountOfContactsInHousehold(Id accountId) {
         List<AggregateResult> contactsInHousehold = [
             SELECT COUNT(id) ct
@@ -57,6 +55,20 @@ public with sharing class CON_DeleteContactOverrideSelector {
             HAVING COUNT(id) = 1
         ];
         return contactsInHousehold;
+    }
+
+    public Boolean isHouseholdWithSingleContact(Id accountId) {
+        List<AggregateResult> contactsInHousehold = [
+            SELECT COUNT(id) ct
+            FROM Contact
+            WHERE AccountId = :accountId
+            GROUP BY AccountId
+            HAVING COUNT(id) = 1
+        ];
+        if (contactsInHousehold.size() != 1 || !(contactsInHousehold[0].get('ct') == 1)) {
+            return false;
+        }
+        return true;
     }
 
     /*********************************************************************************************************
@@ -75,6 +87,14 @@ public with sharing class CON_DeleteContactOverrideSelector {
             return false;
         }
         return true;
+    }
+
+    public Boolean canDeleteContactRecord(Id contactId) {
+        return canDeleteRecord(contactId);
+    }
+
+    public Boolean canDeleteAccountRecord(Id accountId) {
+        return canDeleteRecord(accountId);
     }
 
     public Account getAccountRecord(Id accountId) {

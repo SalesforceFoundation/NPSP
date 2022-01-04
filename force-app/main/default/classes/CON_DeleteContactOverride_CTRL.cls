@@ -45,6 +45,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description LEx navigation value to go to Contact Home. */
     private static final String LEX_HOME = 'home';
 
+    private Id contactId;
+
     /** @description The contact record the user is attempting to delete. */
     private Contact contactRecord;
     /** @description The id of the contact's account. */
@@ -69,6 +71,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    @TestVisible
     private CON_DeleteContactOverrideSelector contactOverrideSelector {
         get {
             if (contactOverrideSelector == null) {
@@ -106,19 +109,24 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * account should be deleted.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
-        hasMinimumAccess = contactOverrideSelector.canDeleteRecord(stdController.getId());
+        contactId = stdController.getId();
+        setNavigationParams(ApexPages.currentPage().getParameters());
+    }
+
+    public Boolean preProcessDelete() {
+        hasMinimumAccess = contactOverrideSelector.canDeleteContactRecord(contactId);
         if (!hasMinimumAccess) {
-            return;
+            return false;
         }
 
-        setNavigationParams(ApexPages.currentPage().getParameters());
-
-        contactRecord = contactOverrideSelector.queryContact(stdController.getId());
+        contactRecord = contactOverrideSelector.queryContact(contactId);
 
         isHouseholdAccount = false;
         isOnlyContactInHousehold = false;
-        hasAccountDeleteAccess = contactOverrideSelector.canDeleteRecord(contactRecord.AccountId);
+        hasAccountDeleteAccess = contactOverrideSelector.canDeleteAccountRecord(contactRecord.AccountId);
         handleHouseholdAccount();
+
+        return true;
     }
 
     private void handleHouseholdAccount() {
