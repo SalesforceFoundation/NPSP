@@ -262,6 +262,7 @@ private class CON_DeleteContactOverride_TEST {
         insert con;
 
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        ctrl.preProcessDelete(); // constructor logic has been minimized, so need to call what used to be in constructor...
 
         con = getContactList(con.Id)[0];
         System.assertNotEquals(null, con.AccountId, 'The Contact should have an auto-created household.');
@@ -471,6 +472,7 @@ private class CON_DeleteContactOverride_TEST {
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', contact1.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(contact1));
+        ctrl.preProcessDelete(); // constructor logic has been minimized, so need to call what used to be in constructor...
 
         Test.startTest();
         ctrl.deleteAccount();
@@ -493,6 +495,86 @@ private class CON_DeleteContactOverride_TEST {
 
         List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'The relationships created for Contact should NOT be deleted');
+    }
+
+    @IsTest
+    private static void shouldPreventContactDeletionWithoutContactDeleteAccess() {
+        IDGenerator idGenerator = new IDGenerator();
+        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
+        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        ctrl.processDelete();
+
+        CON_DeleteContactOverrideStub contactDeleteStub =
+            new CON_DeleteContactOverrideStub(
+                con.Id, false, acct.Id, true, true
+            );
+
+        ctrl.contactOverrideSelector =
+            (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        ctrl.processDelete();
+
+        System.assertEquals(false, ctrl.hasMinimumAccess, 'Controller should have hasMinimumAccess set to false.');
+    }
+
+    @IsTest
+    private static void shouldConfirmDeleteContactWithoutExposingAccountInfo() {
+        IDGenerator idGenerator = new IDGenerator();
+        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
+        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        ctrl.preProcessDelete();
+
+        CON_DeleteContactOverrideStub contactDeleteStub =
+            new CON_DeleteContactOverrideStub(
+                con.Id, true, acct.Id, false, true
+            );
+        ctrl.contactOverrideSelector =
+            (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        ctrl.processDelete();
+
+        System.assertEquals(true,
+            String.valueOf(ApexPages.getMessages()[0].getDetail()).contains(contactDeleteStub.CONTACT_NAME),
+            'Message should contain contact name.');
+        System.assertEquals(false,
+            String.valueOf(ApexPages.getMessages()[0].getDetail()).contains(contactDeleteStub.ACCOUNT_NAME),
+            'Message should not contain account name.');
+    }
+
+    @IsTest
+    private static void shouldConfirmDeleteContactAndExposeAccountInfo() {
+        IDGenerator idGenerator = new IDGenerator();
+        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
+        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+        ctrl.preProcessDelete();
+
+        CON_DeleteContactOverrideStub contactDeleteStub =
+            new CON_DeleteContactOverrideStub(
+                con.Id, true, acct.Id, true, true
+            );
+        ctrl.contactOverrideSelector =
+            (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        ctrl.processDelete();
+
+        System.assertEquals(true,
+            String.valueOf(ApexPages.getMessages()[0].getDetail()).contains(contactDeleteStub.CONTACT_NAME),
+            'Message should contain contact name.');
+        System.assertEquals(true,
+            String.valueOf(ApexPages.getMessages()[0].getDetail()).contains(contactDeleteStub.ACCOUNT_NAME),
+            'Message should contain account name.');
     }
 
     // Helpers
@@ -552,28 +634,7 @@ private class CON_DeleteContactOverride_TEST {
             .withScheduleTypeMultiplyValue();
     }
 
-    @IsTest
-    private static void boogaBoogaSkeletonWork() {
-        IDGenerator idGenerator = new IDGenerator();
-        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
-        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
-
-        Test.setCurrentPage(Page.CON_DeleteContactOverride);
-        ApexPages.currentPage().getParameters().put('Id', con.Id);
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-
-        BoogaBooga boogaBooga =
-            new BoogaBooga(con.Id, true, acct.Id, false, true);
-//        ctrl.contactOverrideSelector =
-//            (CON_DeleteContactOverrideSelector) Test.createStub(boogaBooga.classType, boogaBooga);
-
-        ctrl.processDelete();
-
-        System.debug(ApexPages.getMessages());
-        System.assertEquals(false, ctrl.hasPageMessages, 'There should be no page messages.');
-    }
-
-    private class BoogaBooga implements System.StubProvider {
+    private class CON_DeleteContactOverrideStub implements System.StubProvider {
 
         public Type classType = CON_DeleteContactOverrideSelector.class;
 
@@ -583,7 +644,10 @@ private class CON_DeleteContactOverride_TEST {
         private Boolean canDeleteAccount;
         private Boolean isHouseholdWithSingleContact;
 
-        BoogaBooga(Id contactId, Boolean canDeleteContact, Id accountId, Boolean canDeleteAccount,
+        final public String CONTACT_NAME = 'Test Contact';
+        final public String ACCOUNT_NAME = 'Test Account';
+
+        CON_DeleteContactOverrideStub(Id contactId, Boolean canDeleteContact, Id accountId, Boolean canDeleteAccount,
             Boolean isHouseholdWithSingleContact)
         {
             this.contactId = contactId;
@@ -594,24 +658,13 @@ private class CON_DeleteContactOverride_TEST {
         }
 
         private Contact queryContact() {
-            /*
-                Contact contactDetails = [
-                    SELECT Id, Name, FirstName, LastName,
-                        AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
-                    FROM Contact
-                    WHERE Id = :contactId
-                ];
-
-                "Account":{"Id":"0011100002B0ssKAAR","Name":"Contact Household","npe01__SYSTEMIsIndividual__c":true}
-
-             */
             Contact contactDetails = (Contact) JSON.deserialize('{' +
                 '"Id": "' + this.contactId + '", ' +
-                '"Name": "' + 'Name' + '", ' +
-                '"FirstName": "' + 'FirstName' + '", ' +
-                '"LastName": "' + 'LastName' + '", ' +
+                '"Name": "' + CONTACT_NAME + '", ' +
+                '"FirstName": "' + 'Test' + '", ' +
+                '"LastName": "' + 'Contact' + '", ' +
                 '"AccountId": "' + this.accountId + '", ' +
-                '"Account": {"Name": "' + 'Account.Name' + '", ' +
+                '"Account": {"Name": "' + ACCOUNT_NAME + '", ' +
                 '"npe01__SYSTEMIsIndividual__c": true}' +
                 '}', Contact.class);
             return contactDetails;
@@ -638,45 +691,6 @@ private class CON_DeleteContactOverride_TEST {
             return null;
         }
     }
-
-// Ben's mocking example...
-//
-//    static Contact generateContactWithName(String name) {
-//        return (Contact) JSON.deserialize('{"Name": "' + name + '"}', Contact.class);
-//    }
-//
-//    static npe4__Relationship__c generateRelationshipWithExplanation(String explanation) {
-//        return (npe4__Relationship__c) JSON.deserialize(
-//            '{"npe4__Relationship_Explanation__c": "' + explanation + '"}',
-//            npe4__Relationship__c.class
-//        );
-//    }
-//
-//    private class UTIL_PermissionsMock implements StubProvider {
-//
-//        Boolean canRead;
-//        Boolean canCreate;
-//
-//        public UTIL_PermissionsMock(Boolean canRead, Boolean canCreate) {
-//            this.canCreate = canCreate;
-//            this.canRead = canRead;
-//        }
-//
-//        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
-//                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
-//                List<Object> listOfArgs) {
-//
-//            switch on stubbedMethodName {
-//                when 'canRead' {
-//                    return this.canRead;
-//                }
-//                when 'canCreate' {
-//                    return this.canCreate;
-//                }
-//            }
-//            return null;
-//        }
-//    }
 
     /**
      * Credit to fflib-apex-mocks fflib_IDGenerator

@@ -933,7 +933,7 @@
         <categories>Error, Delete</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <shortDescription>ConfirmDeleteLeaveAccountEmpty</shortDescription>
         <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>

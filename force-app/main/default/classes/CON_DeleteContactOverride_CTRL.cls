@@ -140,13 +140,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     private void handleSingleMemberHousehold(Contact contactRecord) {
-        List<AggregateResult> contactsInHousehold =
-            contactOverrideSelector.getCountOfContactsInHousehold(contactRecord.AccountId);
-        if (contactsInHousehold.size() != 1 || !(contactsInHousehold[0].get('ct') == 1)) {
+        isOnlyContactInHousehold = contactOverrideSelector.isHouseholdWithSingleContact(contactRecord.AccountId);
+        if (!isOnlyContactInHousehold) {
             return;
         }
 
-        isOnlyContactInHousehold = true;
         String helpDeleteAccountInstead;
         if (hasAccountDeleteAccess) {
             helpDeleteAccountInstead = String.format(
@@ -193,7 +191,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */
     public PageReference processDelete() {
-        if (!hasMinimumAccess || (isHouseholdAccount && isOnlyContactInHousehold)) {
+        if (!preProcessDelete() || (isHouseholdAccount && isOnlyContactInHousehold)) {
             return null;
         }
 
