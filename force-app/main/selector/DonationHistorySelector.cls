@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Donation History Service class in NPSP.
+* @description Donation History Selector class.
 */
 public inherited sharing class DonationHistorySelector {
     /** 
@@ -38,7 +38,7 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-    public List<OpportunityContactRole> getOpportunityContactRoleList(Id contactId) {
+    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
         return [
             SELECT Id, 
                 Opportunity.Name, 
@@ -61,14 +61,14 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return Partial_Soft_Credit__c data.
     */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredit(List<Id> donationIds){
+    public List<Partial_Soft_Credit__c> getPartialSoftCredit(List<Id> opportunityContactRoleIds){
         return [
             SELECT 
                 id, 
                 Amount__c, 
                 Contact_Role_ID__c 
             FROM Partial_Soft_Credit__c 
-            WHERE Contact_Role_ID__c IN :donationIds
+            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
             WITH SECURITY_ENFORCED
         ];
     }   
