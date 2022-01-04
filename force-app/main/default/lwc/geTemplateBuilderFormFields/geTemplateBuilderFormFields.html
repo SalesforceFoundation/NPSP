@@ -257,6 +257,7 @@
                         <c-ge-template-builder-form-section key={it.value.id}
                                                             form-section={it.value}
                                                             active-form-section-id={activeFormSectionId}
+                                                            data-section-id={it.value.id}
                                                             is-first={it.first}
                                                             is-last={it.last}
                                                             source-object-fields-describe={sourceObjectFieldsDescribe}
@@ -269,19 +270,21 @@
                                                             ondeleteformelement={handleDeleteFormElement}
                                                             onupdateformelement={handleUpdateFormElement}
                                                             ontogglemodal={toggleModal}
-                                                            onfieldmetadatavalidation= {handleFieldMetadataValidation}>
+                                                            onfieldmetadatavalidation={handleFieldMetadataValidation}>
                         </c-ge-template-builder-form-section>
                     </template>
 
                 </div>
-                <div class="slds-size_1-of-1">
-                    <button class="slds-button slds-button_neutral slds-button_stretch"
-                            title={CUSTOM_LABELS.geButtonFormFieldsAddSection}
-                            aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
-                            onclick={addSection}
-                            data-qa-locator={qaLocatorAddSection}>
-                        {CUSTOM_LABELS.geButtonFormFieldsAddSection}
-                    </button>
+                <div class="slds-size_1-of-1 slds-p-bottom_x-large slds-m-bottom_x-large">
+                    <div class="slds-p-bottom_large">
+                        <button class="slds-button slds-button_neutral slds-button_stretch"
+                                title={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                                aria-label={CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                                onclick={addSection}
+                                data-qa-locator={qaLocatorAddSection}>
+                            {CUSTOM_LABELS.geButtonFormFieldsAddSection}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
