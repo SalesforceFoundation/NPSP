@@ -71,8 +71,8 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService();
         try {
             return service.getDonationHistory(contactId);
-        } catch(Exception ex) {
-            throw new UTIL_Permissions.InsufficientPermissionException(ex.getMessage());
+        } catch(AuraHandledException ex) {
+            throw new AuraHandledException(ex.getMessage());
         }
     }
 }
