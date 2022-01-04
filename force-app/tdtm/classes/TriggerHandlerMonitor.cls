@@ -7,15 +7,17 @@ public with sharing class TriggerHandlerMonitor {
     private Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
             new Map<String, Map<String, Integer>>();
     private Boolean isCompactLoggingEnabled = true;
+    private Integer queries = 0;
 
     public TriggerHandlerMonitor(Boolean isCompactLogging){
        this.isCompactLoggingEnabled = isCompactLogging;
     }
 
-    public void runMonitoringFor(TriggerHandler triggerHandler, TriggerContext context) {
+    public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
         incrementTimesCalledByContext(triggerHandler.className(), context.triggerAction().name());
         incrementTimesCalled(triggerHandler.className());
         updateNumberOfQueriesUsed(triggerHandler.className());
+        queries = 0;
     }
 
     private void updateNumberOfQueriesUsed(String className) {
@@ -24,7 +26,7 @@ public with sharing class TriggerHandlerMonitor {
                 classNameToNumberOfQueries.get(className) == null
                         ? 0
                         : classNameToNumberOfQueries.get(className)
-                        + (Limits.getQueries() - Limits.getQueries()));
+                        + (Limits.getQueries() - queries));
     }
 
     private void incrementTimesCalled(String className) {
@@ -87,5 +89,12 @@ public with sharing class TriggerHandlerMonitor {
             total = total + classNameToNumberOfQueries.get(str);
         }
         return total;
+    }
+
+    public void startMonitoring(TriggerHandler triggerHandler, TriggerContext triggerContext) {
+        System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
+                triggerHandler.className() + triggerContext.triggerAction().name()+
+                '######');
+        queries = Limits.getQueries();
     }
 }

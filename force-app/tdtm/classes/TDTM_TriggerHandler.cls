@@ -117,6 +117,13 @@ public class TDTM_TriggerHandler {
         if (triggerHandlersToRun.getRecords() != null && triggerHandlersToRun.getRecords().size() > 0) {
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
+                if (isMonitoringEnabled) {
+                //todo: startMonitoring, to log initial value for queries (and maybe
+                // heap/cpu?)
+                // classname to queries by context?
+                    monitor.startMonitoring(triggerHandler, context);
+                }
+
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();
                 try {
                     dmlWrapperResponse = runClass(triggerHandler, context, dmlWrapper);
@@ -125,7 +132,7 @@ public class TDTM_TriggerHandler {
                 }
 
                 if (isMonitoringEnabled) {
-                    monitor.runMonitoringFor(triggerHandler, context);
+                    monitor.stopMonitoring(triggerHandler, context);
                 }
 
                 updateDmlWrapperWithTriggerResponse(dmlWrapper, dmlWrapperResponse);
