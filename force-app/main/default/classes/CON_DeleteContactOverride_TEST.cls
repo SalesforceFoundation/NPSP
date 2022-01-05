@@ -559,7 +559,7 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldConfirmDeleteContactAndExposeAccountInfo() {
-        IDGenerator idGenerator = new IDGenerator();
+        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
         Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
         Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
 

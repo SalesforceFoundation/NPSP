@@ -101,6 +101,17 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    /**  @description Component-friendly NPSP namespace */
+    public String namespace {
+        get {
+            if (namespace == null) {
+                namespace = UTIL_Namespace.getComponentNamespace();
+            }
+            return namespace;
+        }
+        set;
+    }
+
     /**
      * @description True if the current user has minimum access for Contact deletion with this page.
      */
@@ -119,10 +130,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * whether the contact or its account should be deleted.
     * @return Boolean
     */
-    public Boolean preProcessDelete() {
+    public void preProcessDelete() {
         hasMinimumAccess = contactOverrideSelector.canDeleteContactRecord(contactId);
         if (!hasMinimumAccess) {
-            return false;
+            return;
         }
 
         contactRecord = contactOverrideSelector.queryContact(contactId);
@@ -131,8 +142,6 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         isOnlyContactInHousehold = false;
         hasAccountDeleteAccess = contactOverrideSelector.canDeleteAccountRecord(contactRecord.AccountId);
         handleHouseholdAccount();
-
-        return true;
     }
 
     /*******************************************************************************************************
@@ -203,7 +212,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */
     public PageReference processDelete() {
-        if (!preProcessDelete() || (isHouseholdAccount && isOnlyContactInHousehold)) {
+        preProcessDelete();
+        if (!hasMinimumAccess || (isHouseholdAccount && isOnlyContactInHousehold)) {
             return null;
         }
 
@@ -453,18 +463,6 @@ public with sharing class CON_DeleteContactOverride_CTRL {
                 throw new CascadeDeleteException(errorMessage);
             }
         }
-    }
-
-    /**
-    * @description NPSP namespace: an empty string if unmanaged, or 'npsp' if managed
-    * @return String
-    */
-    public String getNamespace() {
-        String namespace = UTIL_Namespace.getNamespace();
-        if (String.isBlank(namespace)) {
-            return 'c';
-        }
-        return namespace;
     }
 
     /*******************************************************************************************************
