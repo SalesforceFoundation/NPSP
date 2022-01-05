@@ -502,7 +502,7 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldPreventContactDeletionWithoutContactDeleteAccess() {
-        IDGenerator idGenerator = new IDGenerator();
+        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
         Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
         Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
 
@@ -529,7 +529,7 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldConfirmDeleteContactWithoutExposingAccountInfo() {
-        IDGenerator idGenerator = new IDGenerator();
+        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
         Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
         Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
 
@@ -696,26 +696,6 @@ private class CON_DeleteContactOverride_TEST {
                 }
             }
             return null;
-        }
-    }
-
-    /**
-     * Credit to fflib-apex-mocks fflib_IDGenerator
-     * https://github.com/apex-enterprise-patterns/fflib-apex-mocks/blob/master/sfdx-source/apex-mocks/main/classes/fflib_IDGenerator.cls
-     */
-
-    private class IDGenerator {
-        private Integer fakeIdCount = 0;
-        private final String ID_PATTERN = '000000000000';
-
-
-        private Id generate(Schema.SObjectType sObjectType) {
-            String keyPrefix = UTIL_Describe.getObjectDescribe(sObjectType).getKeyPrefix();
-            fakeIdCount++;
-
-            String fakeIdPrefix = ID_PATTERN.substring(0, ID_PATTERN.length() - String.valueOf(fakeIdCount).length());
-
-            return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
         }
     }
 }
