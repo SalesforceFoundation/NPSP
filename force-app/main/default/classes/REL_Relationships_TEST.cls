@@ -49,7 +49,7 @@ private class REL_Relationships_TEST {
     * @description Helper for test methods, creates a Auto Create Relationship settings and Relationship 
     * Lookup settings.
     */
-    private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs){
+    private static void setupRelationshipTestData(npe4__Relationship_Settings__c rs) {
         
         //set running user to avoid dml issue            
         System.runAs(new User(id = UserInfo.getUserId())){
@@ -799,7 +799,22 @@ private class REL_Relationships_TEST {
             REL_RelationshipsViewer_CTRL.RelationshipInfo ri = REL_RelationshipsViewer_CTRL.getRelationshipInfo();
             system.assertNotEquals(null, ri);                       
         }
-    }   
+    }
+
+    @IsTest
+    static void controllerProvidesNamespaceInfo() {
+        c1 = new Contact(LastName = 'Test');
+        insert c1;
+        REL_RelationshipsViewer_CTRL controller = new REL_RelationshipsViewer_CTRL(new ApexPages.StandardController(c1));
+
+        Test.startTest();
+        String namespace = controller.getNamespace();
+        Test.stopTest();
+
+        System.assertNotEquals(null, namespace);
+        System.assert(namespace == UTIL_Namespace.HARDCODED_NPSP_NAMESPACE || namespace == 'c',
+                'Namespace should be "c" or "npsp" only');
+    }
 
     /*********************************************************************************************************
     * @description Test method for deletion bug regression.
