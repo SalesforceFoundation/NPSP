@@ -161,11 +161,11 @@ public class DonationHistoryController_TEST {
         Boolean influencer = false;
         Boolean role = false;
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = 
+        List<DonationHistoryController.DonationHistoryView> donationHistory = 
         DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
 
-        for(DonationHistoryController.DonationHistory donation : donationHistory){
+        for(DonationHistoryController.DonationHistoryView donation : donationHistory){
             if(donation.role == 'Influencer'){
                 influencer = true;
             }
@@ -194,7 +194,7 @@ public class DonationHistoryController_TEST {
         ];
         
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = 
+        List<DonationHistoryController.DonationHistoryView> donationHistory = 
         DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
@@ -219,7 +219,7 @@ public class DonationHistoryController_TEST {
         try{
             Test.startTest();
             System.runAs(u){
-                List<DonationHistoryController.DonationHistory> donationHistory = 
+                List<DonationHistoryController.DonationHistoryView> donationHistory = 
                 DonationHistoryController.getDonationHistory(testContact.Id); 
             }
 	        Test.stopTest();

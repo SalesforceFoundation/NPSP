@@ -47,7 +47,7 @@ public inherited sharing class DonationHistorySelector {
                 Contact.Email, 
                 Contact.Name, 
                 Role, 
-                isPrimary 
+                IsPrimary
             FROM OpportunityContactRole 
             WHERE Opportunity.IsWon = true 
             AND ContactId =:contactId 
@@ -61,10 +61,10 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return Partial_Soft_Credit__c data.
     */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredit(List<Id> opportunityContactRoleIds) {
+    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
         return [
             SELECT 
-                id, 
+                Id, 
                 Amount__c, 
                 Role_Name__c,
                 Contact_Role_ID__c 

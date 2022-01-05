@@ -40,7 +40,7 @@ public with sharing class DonationHistoryController {
     * @date 2021
     * @description Donation History inner class.
     */
-    public class DonationHistory{
+    public class DonationHistoryView{
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
         @AuraEnabled public Boolean isPrimary;
@@ -49,7 +49,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistory(OpportunityContactRole ocr, String type){
+        public DonationHistoryView(OpportunityContactRole ocr, String type){
             this.id = ocr.Id;
             this.name = ocr.Opportunity.Name;
             this.isPrimary = ocr.isPrimary;
@@ -67,12 +67,25 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistory> getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService();
+    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
+        DonationHistoryService service = new DonationHistoryService(contactId);
         try {
-            return service.getDonationHistory(contactId);
+            List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
+            service.buildDonationHistory();
+            donationHistories.addAll(buildHistoryFromOCRs(service.getHardCredits(), System.Label.CRLP_HardCredit));
+            donationHistories.addAll(buildHistoryFromOCRs(service.getSoftCredits(), System.Label.CRLP_SoftCredit));
+            donationHistories.addAll(buildHistoryFromOCRs(service.getPartialSoftCredits(), service.getSoftCreditLabel()));
+            return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
+    }
+
+    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles, String type) {
+        List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
+        for(OpportunityContactRole role : contactRoles) {
+            donationHistories.add(new DonationHistoryView(role, type));
+        }
+        return donationHistories;
     }
 }
