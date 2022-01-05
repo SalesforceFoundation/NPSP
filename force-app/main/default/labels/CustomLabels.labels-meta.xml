@@ -3033,6 +3033,22 @@
         <value>View Contact Record</value>
     </labels>
     <labels>
+        <fullName>REL_ViewerGraphical</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading graphical view</shortDescription>
+        <value>Graphical View</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerTabular</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading tabular view</shortDescription>
+        <value>Tabular View</value>
+    </labels>
+    <labels>
         <fullName>RP_CustomerJourneyLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>

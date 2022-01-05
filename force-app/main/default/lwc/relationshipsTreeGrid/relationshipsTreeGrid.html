@@ -1,0 +1,23 @@
+<template>
+    <template if:true={hasData}>
+        <lightning-tree-grid
+            aria-label={tableLabel}
+            data={relationships}
+            columns={columns}
+            onrowaction={handleRowAction}
+            ontoggle={handleToggle}
+            hide-checkbox-column="true"
+            is-loading={isLoading}
+            key-field="relationshipId"
+        ></lightning-tree-grid>
+    </template>
+    <template if:false={hasData}>
+        <div class="slds-p-vertical_medium slds-color__background_gray-1 slds-border_top">
+            <c-util-illustration
+                size="small"
+                variant="going-camping"
+                message={labels.REL_No_Relationships}>
+            </c-util-illustration>
+        </div>
+    </template>
+</template>
