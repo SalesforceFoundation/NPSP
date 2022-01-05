@@ -7,11 +7,11 @@ import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVi
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
+const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
-    recordsToLoad = 50;
-
+    
     paymentMethodLabel;
 
     totalNumberOfRows;
@@ -52,7 +52,7 @@ export default class DonationHistoryTable extends LightningElement {
         .then(data => {
             if (data) {
                 this.allData = data;
-                this.data = data.slice(0, this.recordsToLoad);
+                this.data = data.slice(0, RECORDS_TO_LOAD);
                 this.totalNumberOfRows = data.length;
             }
         });
@@ -71,7 +71,7 @@ export default class DonationHistoryTable extends LightningElement {
             return;
         }
         const current = this.data.length;
-        const offset = current + this.recordsToLoad;
+        const offset = current + RECORDS_TO_LOAD;
         const currentData = this.data;
         //Appends new data to the end of the table
         const newData = currentData.concat(this.allData.slice(current, offset));
