@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Unpackageable permissions for Managing Gifts in Gift Entry.</description>
+    <description>Provides access to the objects and fields required to use NPSP Gift Entry (2 of 2). This permission set is NOT updated by Salesforce.org. Add your custom fields used in Gift Entry to this permission set.</description>
     <fieldPermissions>
         <editable>true</editable>
         <field>Account.BillingAddress</field>
@@ -297,7 +297,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>Nonprofit Cloud Gift Entry Unpackaged</label>
+    <label>NPSP Gift Entry User (unmanaged)</label>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>true</allowDelete>
