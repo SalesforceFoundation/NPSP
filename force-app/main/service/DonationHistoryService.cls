@@ -170,23 +170,15 @@ public with sharing class DonationHistoryService {
 
 
     private List<OpportunityContactRole> buildPartialSoftCredits(List<OpportunityContactRole> credits) {
-        List<Id> partialSoftCreditIds = new List<Id>();
         List<Partial_Soft_Credit__c> partialSoftCredit =
                 selector.getPartialSoftCredits(this.getSoftCreditIds());
+        Set<Id> partialSoftCreditIds = UTIL_SObject.extractIds(partialSoftCredit);
         List<OpportunityContactRole> partialSoftCreditOCRs = new List<OpportunityContactRole>();
-        Filter_Rule__mdt ruleCmt = CMT_FilterRule_SEL.getFilterRuleByDeveloperName(NPSP_CREDIT_ROLES);
-        CMT_FilterRule rule = new CMT_FilterRule(ruleCmt);
-        for(Partial_Soft_Credit__c ps : partialSoftCredit) {
-            if(rule.isIncluded(ps)) {
-                partialSoftCreditIds.add(ps.Contact_Role_ID__c);
-            }
-        }
         for(OpportunityContactRole ocr : credits) {
             if (partialSoftCreditIds.contains(ocr.Id)) {
                 partialSoftCreditOCRs.add(ocr);
             }
         }
         return partialSoftCreditOCRs;
-
     }
 }

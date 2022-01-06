@@ -141,7 +141,6 @@ public class DonationHistoryController_TEST {
             Contact_Role_ID__c=oppCntRolePartialSoftCredit.Id
         );
         insert partialSoftCredit;
-        generateFilterRules();
     }
 
     /** 
@@ -151,6 +150,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
+        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -185,6 +185,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
+        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -207,6 +208,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldThrowAccessException() {
+        generateFilterRules();
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
         Contact testContact = [
             SELECT
