@@ -16,7 +16,7 @@
     </values>
     <values>
         <field>Source_Field_API_Name__c</field>
-        <value xsi:type="xsd:string">npsp__ Recurring_Donation_ACH_Last_4__c</value>
+        <value xsi:type="xsd:string">npsp__Recurring_Donation_ACH_Last_4__c</value>
     </values>
     <values>
         <field>Target_Field_API_Name__c</field>
