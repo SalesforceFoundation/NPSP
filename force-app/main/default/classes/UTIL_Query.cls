@@ -124,7 +124,7 @@ public with sharing class UTIL_Query {
     /**
      * @description Registers an ORDER BY field only if that field is unencrypted and sortable.
      * @param field A reference to the field being sorted on
-     * @param clause The order by clause to add to the query
+     * @param orderByClause The order by clause to add to the query
      *
      * @return UTIL_Query The instance of the Query builder
      */
