@@ -52,16 +52,16 @@ public with sharing class ElevateBatchResponse {
     public Boolean isValidCaptureResponse (DataImport__c dataImport) {
         return id.equals(dataImport.Payment_Elevate_Batch_ID__c)
                 && errors == null
-                && status == BDI_DataImport_API.bdiProcessing;
+                && status == System.Label.BatchProgressStatusProcessing;
     }
 
     public Boolean isValidCaptureResponse() {
-        return errors == null && status == BDI_DataImport_API.bdiProcessing;
+        return errors == null && status == System.Label.BatchProgressStatusProcessing;
     }
 
     public String firstError() {
         if (!isValidCaptureResponse()) {
-            return errors == null ? '' : errors()[0].message;
+            return errors()[0].message;
         }
         return null;
     }

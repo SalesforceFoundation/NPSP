@@ -49,9 +49,6 @@ public with sharing class EP_ManageEPTemplate_CTRL {
     * to perform the functions. */
     public String currentTaskLevel {get; set;}
 
-    /** @description A translated instance of the Task object Name field Label */
-    public String taskNameString = Schema.SObjectType.Task.getLabel().escapeHtml4();
-
     /** @description Is the current context the result of a clone button override?*/
     private Boolean isClone = false;
 
@@ -208,15 +205,11 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             return null;
         }
 
-        Boolean missingTaskSubject = false;
         for (TaskWrapper wrapper : mapTaskWrappers.values()) {
             if (String.isBlank(wrapper.detail.Name)) {
-                wrapper.detail.Name.addError(Label.NameRequired + ' (' + taskNameString + ' ' + wrapper.level + ')');
-                missingTaskSubject = true;
+                wrapper.detail.Name.addError(Label.NameRequired);
+                return null;
             }
-        }
-        if (missingTaskSubject) {
-            return null;
         }
 
         List<Engagement_Plan_Task__c> tasksForInsert = new List<Engagement_Plan_Task__c>();
@@ -467,7 +460,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
         Component.Apex.OutputText boxAndLabel = new Component.Apex.OutputText(value='<div aria-labelledby="task' + wrapper.level +
             '", class="slds-m-left_medium slds-m-top_small"><fieldset class="slds-box slds-theme_default slds-container_fluid '+
             'slds-p-around_small", style="border-left: 6px solid ' + sidebarColors[colorNumber] + '"><legend id="task' + wrapper.level + '"' +
-            ' class="slds-text-heading_small">' + taskNameString + ' ' + wrapper.level +
+            ' class="slds-text-heading_small">' + Schema.SObjectType.Task.getLabel().escapeHtml4() + ' ' + wrapper.level +
             '</legend>', escape=false);
 
         Component.Apex.OutputPanel firstRow = new Component.Apex.OutputPanel(styleClass='slds-grid slds-wrap', layout='block');
@@ -567,7 +560,7 @@ public with sharing class EP_ManageEPTemplate_CTRL {
             field=fieldName,
             sObjType='Engagement_Plan_Task__c',
             styleClass=style,
-            appearRequired=req
+            required=req
         );
         inputField.expressions.sObj = '{!' + accessString + '.detail}';
 

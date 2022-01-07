@@ -81,8 +81,7 @@ private with sharing class LVL_LevelEdit_TEST {
         ctrl.lvl.Name = 'test level2';
         system.assertEquals(200, ctrl.lvl.Minimum_Amount__c);
         system.assertEquals(null, ctrl.lvl.Maximum_Amount__c);
-        PageReference newLevel = ctrl.save();
-        system.assertEquals(true, newLevel.getUrl().contains(ctrl.lvl.Id));
+        stdCtrl.save();
         Test.stopTest();
         
         list<Level__c> listLvl = [Select Id, Name, Target__c from Level__c order by Name];
