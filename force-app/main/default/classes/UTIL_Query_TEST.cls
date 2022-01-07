@@ -448,11 +448,11 @@ private class UTIL_Query_TEST {
 
         query.withFrom(Contact.SObjectType)
                 .withSelectFields(new List<String>{'Id', 'FirstName', 'LastName'})
-                .withOrderByEncryptable(Contact.LastName, 'LastName');
+                .withOrderBy(Contact.LastName, 'LastName');
         String queryStr = query.build();
         System.assert(!queryStr.contains('ORDER BY LastName'));
 
-        query.withOrderByEncryptable(Contact.FirstName, 'FirstName');
+        query.withOrderBy(Contact.FirstName, 'FirstName');
         queryStr = query.build();
         System.assert(queryStr.contains('ORDER BY FirstName'));
     }

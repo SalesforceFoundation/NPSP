@@ -46,7 +46,7 @@ public with sharing class RelationshipSelector {
                 })
                 .withFrom(npe4__Relationship__c.SObjectType)
                 .withWhere('npe4__Contact__c = :contactId')
-                .withOrderByEncryptable(Contact.Name, 'npe4__RelatedContact__r.Name')
+                .withOrderBy(Contact.Name, 'npe4__RelatedContact__r.Name')
                 .withSecurityEnforced();
         return Database.query(query.build());
     }

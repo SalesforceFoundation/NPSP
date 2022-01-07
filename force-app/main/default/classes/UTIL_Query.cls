@@ -128,7 +128,7 @@ public with sharing class UTIL_Query {
      *
      * @return UTIL_Query The instance of the Query builder
      */
-    public UTIL_Query withOrderByEncryptable(Schema.SObjectField field, String orderByClause) {
+    public UTIL_Query withOrderBy(Schema.SObjectField field, String orderByClause) {
         if(describe.isFieldSortable(field)) {
             this.orderBy = orderByClause;
         }
