@@ -38,64 +38,6 @@ private class LD_LeadConvertOverride_TEST {
 
     private static final String SPECIAL_ACCOUNT_NAME = 'Self';
 
-    @IsTest
-    static void leadConversionWithDifferentOwnerShouldNotThrowError() {
-        Lead testLead = UTIL_UnitTestData_TEST.getLead();
-        testLead.OwnerId = UserInfo.getUserId();
-        testLead.Status = 'Closed - Converted';
-        insert testLead;
-
-        Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
-        System.currentPageReference().getParameters().put('id', testLead.Id);
-
-        LD_LeadConvertOverride_CTRL controller = new LD_LeadConvertOverride_CTRL(new ApexPages.StandardController
-                (testLead));
-
-        System.runAs(UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_STANDARD_USER)) {
-            Test.startTest();
-                controller.convertLeadNow();
-            Test.stopTest();
-        }
-        List<Error__c> recordErrors = [SELECT Error_Type__c, Full_Message__c FROM Error__c LIMIT 1];
-
-        String recordErrorMessage = 'There should be no errors generated from the lead conversion process ' +
-                'when the lead owner differs from the conversion context user.';
-        if (!recordErrors.isEmpty()) {
-            recordErrorMessage += ' Error thrown: ' + recordErrors[0].Full_Message__c;
-        }
-        System.assert(recordErrors.isEmpty(), recordErrorMessage);
-    }
-
-    @IsTest
-    static void leadContactQueryShouldNotThrowErrorWhenUserHasNoPermissionToContact() {
-        List<Contact> testContacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-        insert testContacts;
-
-        System.QueryException queryException;
-
-        System.runAs(UTIL_UnitTestData_TEST.createStandardProfileUser()) {
-            LD_LeadConvertOverride_CTRL.ContactQueryWithoutSharing contactQuery =
-                    new LD_LeadConvertOverride_CTRL.ContactQueryWithoutSharing(testContacts[0].Id);
-            Test.startTest();
-                try {
-                    Contact testContact = contactQuery.query();
-                    System.assert(testContact != null, 'The contact query should return a contact record');
-                    System.assert(testContacts[0].Id == testContact.Id, 'The contact query should return the correct ' +
-                            'contact record.');
-                } catch(System.QueryException ex) {
-                    queryException = ex;
-                }
-            Test.stopTest();
-
-            String queryExceptionMessage = 'The contact query should not throw an exception when a ' +
-                    'user does not have permission to view the contact record.';
-            if (queryException != null) {
-                queryExceptionMessage += ' Query Exception thrown: ' + queryException.getMessage();
-            }
-            System.assert(queryException == null, queryExceptionMessage);
-        }
-    }
-
     /*******************************************************************************************************
     * @description Runs newLead_Conversion_Test with the 1x1 account model
     */
@@ -152,12 +94,12 @@ private class LD_LeadConvertOverride_TEST {
         assertNoAccountIsRetrieved(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
 
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -242,11 +184,11 @@ private class LD_LeadConvertOverride_TEST {
         assertNoAccountIsRetrieved(ext);
 
         // this selects the Merge to <contact> option in the Contact box
-        ext.convertedContactId = c.id;
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = c.id;
+        ext.strAccountId = 'AUTO';
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -311,12 +253,12 @@ private class LD_LeadConvertOverride_TEST {
         assertNewOptionAndNoAccountIsRetrieved(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'NEW';
-        ext.primaryAffiliationId = 'NEW';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'NEW';
+        ext.strAfflAccountID = 'NEW';
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -389,11 +331,11 @@ private class LD_LeadConvertOverride_TEST {
         assertAccountIsReturned(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = acc.Id;
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = acc.Id;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -467,12 +409,12 @@ private class LD_LeadConvertOverride_TEST {
         assertAccountIsReturned(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'AUTO';
-        ext.primaryAffiliationId = acc.Id;
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
+        ext.strAfflAccountId = acc.Id;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -542,11 +484,11 @@ private class LD_LeadConvertOverride_TEST {
         assertNoContactIsRetrieved(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -708,11 +650,11 @@ private class LD_LeadConvertOverride_TEST {
         assertNoAccountIsRetrieved(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -800,13 +742,13 @@ private class LD_LeadConvertOverride_TEST {
         assertNoAccountIsRetrieved(ext);
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'AUTO';
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -912,13 +854,13 @@ private class LD_LeadConvertOverride_TEST {
         assertNoAccountIsRetrieved(ext);
 
         // this selects the existing contact option in the Contact box
-        ext.convertedContactId = con.id;
-        ext.leadAccountId = 'AUTO';
+        ext.strConId = con.id;
+        ext.strAccountId = 'AUTO';
         ext.OppName = 'Test Opp';
         ext.doNotCreateOpp = false;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -1013,15 +955,15 @@ private class LD_LeadConvertOverride_TEST {
         System.assertEquals(2, ext.getOppAccChoices().size());
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
+        ext.strConId = 'NEW_CONTACT';
         ext.strOppAccChoice = 'AFF_ACC';
-        ext.leadAccountId = 'AUTO';
+        ext.strAccountId = 'AUTO';
         ext.OppName = 'Test Opp';
-        ext.primaryAffiliationId = 'NEW';
+        ext.strAfflAccountId = 'NEW';
         ext.doNotCreateOpp = false;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }
@@ -1082,12 +1024,12 @@ private class LD_LeadConvertOverride_TEST {
         System.assertEquals(2, ext.getOppAccChoices().size());
 
         // this selects the "New" option in the Contact box
-        ext.convertedContactId = 'NEW_CONTACT';
-        ext.leadAccountId = 'NEW';
+        ext.strConId = 'NEW_CONTACT';
+        ext.strAccountId = 'NEW';
         ext.doNotCreateOpp = true;
         Test.startTest();
         for (SelectOption lcStatus : ext.lcStatuses) {
-            ext.leadToConvert.Status = lcStatus.getValue();
+            ext.l.Status = lcStatus.getValue();
             if (ext.convertLeadNow() != null)
                 break;
         }

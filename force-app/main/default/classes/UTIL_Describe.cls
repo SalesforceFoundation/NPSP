@@ -534,23 +534,12 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description utility to return a list of field names from a field set.
+    * @description utility to return a list of strings from a field set.
     * @param obj the namespaced name of the object
     * @param fieldSet the namespaced name of the object's field set
     * @return a list of strings of field names in the field set
     */
     public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
-        return listStrFromFieldSet(obj, fieldSetName, false);
-    }
-
-    /*******************************************************************************************************
-    * @description utility to return a list of field names from a field set.
-    * @param obj the namespaced name of the object
-    * @param fieldSet the namespaced name of the object's field set
-    * @param onlyRequired if true, only return required fields
-    * @return a list of strings of field names in the field set
-    */
-    public static List<String> listStrFromFieldSet(String obj, String fieldSetName, Boolean onlyRequired) {
         List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
         Schema.SObjectType targetType = gd.get(obj);
@@ -561,13 +550,12 @@ public class UTIL_Describe {
         } else {
             for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
                 if (fieldSetMember.getFieldPath().contains('.')) {
-                    String errorMessage = String.format(Label.FieldSetRelatedFieldError, 
-                        new List<String>{'\''+fieldSetMember.getFieldPath()+'\'', '\''+fieldSetName+'\'', '\''+obj+'\''});
+                    String errorMessage = 'Related field \'' + fieldSetMember.getFieldPath() +
+                            '\' not supported ' + 'in field set \'' + fieldSetName +
+                            '\'.  You can only include fields directly on object \'' + obj + '\'.';
                     throw (new SchemaDescribeException(errorMessage));
                 }
-                if(!onlyRequired || fieldSetMember.getDBRequired() || fieldSetMember.getRequired()){
-                    fieldNames.add(fieldSetMember.getFieldPath());
-                }
+                fieldNames.add(fieldSetMember.getFieldPath());
             }
             return fieldNames;
         }

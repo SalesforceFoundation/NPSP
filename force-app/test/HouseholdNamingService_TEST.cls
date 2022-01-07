@@ -49,8 +49,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description Test method for batch
     */
-    @isTest
-    public static void testBatch() {
+    public static testMethod void testBatch() {
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
@@ -100,8 +99,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description tests FutureUpdateNames
     */
-    @isTest
-    public static void HouseholdNamingTest(){
+    public static testMethod void HouseholdNamingTest(){
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -162,8 +160,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description tests updating and Household object's contact names
     */
-    @isTest
-    public static void HouseholdNamingUpdateTest(){
+    public static testMethod void HouseholdNamingUpdateTest(){
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -244,8 +241,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description tests setting the naming order on Contacts
     */
-    @isTest
-    public static void testNamingOrder() {
+    public static testMethod void testNamingOrder() {
       //settings
       npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
                 new npo02__Households_Settings__c (
@@ -363,8 +359,7 @@ public class HouseholdNamingService_TEST {
     verify:
         Names for specified Account/Households are updated.
     **********************************************************************************************************/
-    @isTest
-    private static void testUpdateNamesIsAppliedToSpecifiedHHsOnly() {
+    private static testMethod void testUpdateNamesIsAppliedToSpecifiedHHsOnly() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -424,8 +419,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description tests that case sensitive name changes on contacts update the Household name and greetings
     */
-    @isTest
-    public static void testCaseChanges() {
+    public static testMethod void testCaseChanges() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -454,8 +448,7 @@ public class HouseholdNamingService_TEST {
     /*********************************************************************************************************
     * @description tests name ordering since we changed to not force primary first
     */
-    @isTest
-    public static void testNamingOrder2() {
+    public static testMethod void testNamingOrder2() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
@@ -490,26 +483,6 @@ public class HouseholdNamingService_TEST {
 
     }
 
-    @IsTest
-    private static void verifyHouseholdMemberCountShouldBeZeroWhenTheLastMemberIsRemoved(){
-        Contact member = new Contact(FirstName='member', LastName='smith');
-        insert member;
-
-        Account household = [SELECT Name, Number_of_Household_Members__c FROM Account LIMIT 1];
-
-        System.assertEquals(1, household.Number_of_Household_Members__c, 'There should be one member in the household');
-
-        Test.startTest();
-        delete member;
-        Test.stopTest();
-
-        household = [SELECT Name, Number_of_Household_Members__c FROM Account LIMIT 1];
-
-        String defaultName = System.Label.npo02.HouseholdAnonymousName + ' ' + System.Label.npo02.DefaultHouseholdName;
-        System.assertEquals(0, household.Number_of_Household_Members__c, 'There should be no member left in the household');
-        System.assertEquals(defaultName, household.Name, 'The Household name should be rename to Anonymous');
-    }
-
     /*********************************************************************************************************
     @description
         Test strContactSelectStmtAllNamingFields property when Household Naming Settings is valid
@@ -518,8 +491,7 @@ public class HouseholdNamingService_TEST {
         Household Naming Settings fields are included in the SOQL.
         No error is raised when the SOQL is executed.
     **********************************************************************************************************/
-    @isTest
-    private static void testSoqlContainsHHNamingFieldsWhenAutomaticHHNamingIsOn() {
+    private static testMethod void testSoqlContainsHHNamingFieldsWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         UTIL_UnitTestData_TEST.setupHHNamingSettings(
@@ -555,8 +527,7 @@ public class HouseholdNamingService_TEST {
         Household Naming Settings fields are not included in the SOQL.
         No error is raised when the SOQL is executed.
     **********************************************************************************************************/
-    @isTest
-    private static void testSoqlDoesNotContainHHNamingFieldsWhenAutomaticHHNamingIsOff() {
+    private static testMethod void testSoqlDoesNotContainHHNamingFieldsWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         UTIL_UnitTestData_TEST.setupHHNamingSettings(
@@ -596,8 +567,7 @@ public class HouseholdNamingService_TEST {
     verify:
         Returned set is empty.
     **********************************************************************************************************/
-    @isTest
-    private static void testNoFieldIsReturnedWhenAutomaticHHNamingIsOff() {
+    private static testMethod void testNoFieldIsReturnedWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupInvalidHHNamingSettings();
 
@@ -613,8 +583,7 @@ public class HouseholdNamingService_TEST {
     verify:
         Returned set contains Contact field names specified in the Household Naming Settings.
     **********************************************************************************************************/
-    @isTest
-    private static void testReturnedFieldsWhenAutomaticHHNamingIsOn() {
+    private static testMethod void testReturnedFieldsWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         UTIL_UnitTestData_TEST.setupHHNamingSettings(
@@ -639,8 +608,7 @@ public class HouseholdNamingService_TEST {
     verify:
         The method returns false.
     **********************************************************************************************************/
-    @isTest
-    private static void testIsAutomaticNamingReturnsFalseWhenAutomaticHHNamingIsOff() {
+    private static testMethod void testIsAutomaticNamingReturnsFalseWhenAutomaticHHNamingIsOff() {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
 
         System.assert(!new HouseholdSettings().isAdvancedHouseholdNaming(), 'Automatic Household Naming should be ' +
@@ -654,8 +622,7 @@ public class HouseholdNamingService_TEST {
     verify:
         The method returns true.
     **********************************************************************************************************/
-    @isTest
-    private static void testIsAutomaticNamingReturnsTrueWhenAutomaticHHNamingIsOn() {
+    private static testMethod void testIsAutomaticNamingReturnsTrueWhenAutomaticHHNamingIsOn() {
         UTIL_UnitTestData_TEST.turnOnAutomaticHHNaming();
 
         System.assert(new HouseholdSettings().isAdvancedHouseholdNaming(), 'Automatic Household Naming should be ' +
@@ -668,8 +635,7 @@ public class HouseholdNamingService_TEST {
     verify:
         An empty list is returned.
     **********************************************************************************************************/
-    @isTest
-    private static void testGetHouseholdContactsReturnsEmptyList() {
+    private static testMethod void testGetHouseholdContactsReturnsEmptyList() {
         // The private Contact should not be returned by the query
         insert new Contact(LastName = 'foo', npe01__Private__c = true);
 
@@ -698,8 +664,7 @@ public class HouseholdNamingService_TEST {
         Contacts with null Account and not referencing the input Household are not selected.
         Contacts with null Account and null Household are not selected.
     **********************************************************************************************************/
-    @isTest
-    private static void testGetHouseholdContactsReturnsDataForSpecifiedHHOnly() {
+    private static testMethod void testGetHouseholdContactsReturnsDataForSpecifiedHHOnly() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 

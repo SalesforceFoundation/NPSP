@@ -2,6 +2,5 @@
   "DonorType": "Contact",
   "Period": "Monthly",
   "Frequency": 1,
-  "RecurringType": "Fixed",
-  "NumInstallments": 9
+  "RecurringType": "Open"
 }

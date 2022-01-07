@@ -125,10 +125,10 @@ public inherited sharing class Households extends fflib_SObjects {
     }
 
     /*******************************************************************************************************
-    * @description Updates the accounts for contacts that have been deleted
+    * @description Updates the accounts for contacts that have been deleted if they have other hh members
     */
     public void handleContactDeletion(TDTM_Runnable.DmlWrapper dmlWrapper) {
-        updateHouseholds(dmlWrapper);
+        householdsWithContactsOrOpportunities().updateHouseholds(dmlWrapper);
     }
 
     public static void insertHouseholdAddressesFor(List<Contact>
@@ -143,6 +143,13 @@ public inherited sharing class Households extends fflib_SObjects {
                 (contactsNeedingAddressesCreated, true);
         TDTM_ProcessControl.toggleTriggerState('Address__c', 'ADDR_Addresses_TDTM',
                 true);
+    }
+
+    private Households householdsWithContactsOrOpportunities() {
+        List<Account> accountsWithContactsOrOpportunities = new List<Account>();
+        accountsWithContactsOrOpportunities.addAll(withContacts());
+        accountsWithContactsOrOpportunities.addAll(withOpportunities());
+        return new Households(accountsWithContactsOrOpportunities);
     }
 
     private List<Account> withOpportunities() {

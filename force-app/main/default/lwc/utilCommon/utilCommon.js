@@ -629,21 +629,6 @@ const nonePicklistOption = () => {
     return createPicklistOption(commonLabelNone, commonLabelNone);
 }
 
-const asyncInterval = async (callback, milliseconds, maxNumberOfIntervals = 5) => {
-    return new Promise((resolve, reject) => {
-        const intervalId = setInterval(async () => {
-            if (await callback()) {
-                resolve();
-                clearInterval(intervalId);
-            } else if (maxNumberOfIntervals <= 1) {
-                reject();
-                clearInterval(intervalId);
-            }
-            maxNumberOfIntervals--;
-        }, milliseconds);
-    });
-}
-
 export {
     apiNameFor,
     buildFieldDescribes,
@@ -683,6 +668,5 @@ export {
     relatedRecordFieldNameFor,
     nonePicklistOption,
     createPicklistOption,
-    UtilDescribe,
-    asyncInterval
+    UtilDescribe
 };
