@@ -1,7 +1,0 @@
-{
-  "status": 500,
-  "body": {
-    "message": "Test exception message."
-  },
-  "headers": {}
-}
