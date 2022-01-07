@@ -122,7 +122,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
                 SfdoInstrumentationEnum.Feature.LegacyRecurringDonations, 
                 SfdoInstrumentationEnum.Component.TriggerAction, 
                 SfdoInstrumentationEnum.Action.Create, 
-                rds.size());
+                newlist.size());
         }
 
         TDTM_TriggerHandler.processDML(dmlWrapper);
