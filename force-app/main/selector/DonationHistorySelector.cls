@@ -41,6 +41,7 @@ public inherited sharing class DonationHistorySelector {
     public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
         return [
             SELECT Id, 
+				Opportunity.Id,
                 Opportunity.Name, 
                 Opportunity.CloseDate, 
                 Opportunity.Amount, 
@@ -56,6 +57,17 @@ public inherited sharing class DonationHistorySelector {
             DESC LIMIT 2000
         ];
     }
+
+    /*public List<npe01__OppPayment__c> getPaymentforOpportunities(List<Id> opportunityIds) {
+        return [
+            SELECT id, npe01__Opportunity__c, npe01__Payment_Method__c
+            FROM npe01__OppPayment__c
+            WHERE npe01__Opportunity__c IN (opportunityIds)
+            WITH SECURITY_ENFORCED
+			LIMIT 2000
+        ];
+    }*/
+    
     /** 
     * @author Salesforce.org
     * @date 2021

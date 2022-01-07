@@ -71,8 +71,23 @@ public with sharing class DonationHistoryService {
     */
     public List<DonationHistoryController.DonationHistory> getDonationHistory(Id contactId){
         if (hasAccessToDonationHistory()) {
-            List<OpportunityContactRole> credits = new DonationHistorySelector().getWonOpportunityContactRolesByContactId(contactId);
+			//add validation for enabled Payments
+			npe01__Contacts_And_Orgs_Settings__c settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+			boolean isPaymentEnabled = settings.npe01__Payments_Enabled__c;
+			System.debug(isPaymentEnabled);
+			List<OpportunityContactRole> credits = new DonationHistorySelector().getWonOpportunityContactRolesByContactId(contactId);
             List<DonationHistoryController.DonationHistory> result = buildDonationHistoryFromOCRs(credits);
+            /*if(isPaymentEnabled){
+            	Set<Id> resultIds = new Map<Id, DonationHistoryController.DonationHistory>(result).keySet();
+				List<npe01__OppPayment__c> paymentsForCredits = DonationHistorySelector().getPaymentforOpportunities(resultIds);
+                for(DonationHistoryController.DonationHistory dH: result){
+                    for(npe01__OppPayment__c payment: paymentsForCredits){
+                        if(dH.opportunityId == payment.npe01__Opportunity__c){
+                            dH.paymentMethod = payment.npe01__Payment_Method__c;
+                        }
+                    }
+                }
+            }*/
             System.debug(result.size());
             return result;
         } else {
@@ -98,7 +113,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> hardCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: credits){
             if (ocr.isPrimary) {
-                DonationHistoryController.DonationHistory hardCredit = new DonationHistoryController.DonationHistory(ocr, HARD_CREDIT);
+                DonationHistoryController.DonationHistory hardCredit = new DonationHistoryController.DonationHistory(ocr, ocr.OpportunityId, HARD_CREDIT, '-');
                 hardCreditList.add(hardCredit);
             }
         }
@@ -112,7 +127,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> softCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: credits){
             if (softCreditRoles.contains(ocr.Role) && !ocr.isPrimary) {
-                DonationHistoryController.DonationHistory softCredit = new DonationHistoryController.DonationHistory(ocr, SOFT_CREDIT);
+                DonationHistoryController.DonationHistory softCredit = new DonationHistoryController.DonationHistory(ocr, ocr.OpportunityId, SOFT_CREDIT, '-');
                 softCreditList.add(softCredit);
             }
         }
@@ -140,7 +155,7 @@ public with sharing class DonationHistoryService {
         List<DonationHistoryController.DonationHistory> partialSoftCreditList = new List<DonationHistoryController.DonationHistory>();
         for(OpportunityContactRole ocr: credits){
             if (partialSoftCreditIds.contains(ocr.id)) {
-                DonationHistoryController.DonationHistory newPartialSoftCredit = new DonationHistoryController.DonationHistory(ocr, PARTIAL_SOFT_CREDIT);
+                DonationHistoryController.DonationHistory newPartialSoftCredit = new DonationHistoryController.DonationHistory(ocr, ocr.OpportunityId, PARTIAL_SOFT_CREDIT, '-');
                 partialSoftCreditList.add(newPartialSoftCredit);
             }
         }

@@ -42,6 +42,7 @@ public with sharing class DonationHistoryController {
     */
     public class DonationHistory{
         @AuraEnabled public Id id;
+		@AuraEnabled public Id opportunityId;
         @AuraEnabled public String name;
         @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
@@ -49,15 +50,16 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistory(OpportunityContactRole ocr, String type){
+        public DonationHistory(OpportunityContactRole ocr, Id opportunityId, String type, String paymentMethod){ //add parameter 'String paymentMethod'//
             this.id = ocr.Id;
+			this.opportunityId = opportunityId;
             this.name = ocr.Opportunity.Name;
             this.isPrimary = ocr.isPrimary;
             this.closeDate = ocr.Opportunity.CloseDate;
             this.role = ocr.Role;
             this.amount = ocr.Opportunity.Amount;
             this.creditType = type;
-            this.paymentMethod = 'Cash';
+            this.paymentMethod = paymentMethod;
         }
     }
 
