@@ -62,29 +62,16 @@ public with sharing class CON_DeleteContactOverrideSelector {
     }
 
     /*********************************************************************************************************
-    * @description Check if the running user has minimum access to delete the record
-    * @return Boolean
+    * @description Query UserRecordAccess for list of records for Id list and user
+    * @return List<UserRecordAccess>
     */
-    public Boolean canDeleteRecord(Id recordId) {
-        UserRecordAccess userAccess = [
+    public List<UserRecordAccess> queryDeleteRecordAccess(List<Id> recordIds) {
+        return [
             SELECT RecordId, HasDeleteAccess
             FROM UserRecordAccess
             WHERE UserId = :UserInfo.getUserId()
-            AND RecordId = :recordId
-            LIMIT 1
+            AND RecordId IN :recordIds
         ];
-        if (!userAccess.HasDeleteAccess) {
-            return false;
-        }
-        return true;
-    }
-
-    public Boolean canDeleteContactRecord(Id contactId) {
-        return canDeleteRecord(contactId);
-    }
-
-    public Boolean canDeleteAccountRecord(Id accountId) {
-        return canDeleteRecord(accountId);
     }
 
     public Account getAccountRecord(Id accountId) {

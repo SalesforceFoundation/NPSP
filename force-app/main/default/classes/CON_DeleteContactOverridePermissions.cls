@@ -27,27 +27,33 @@
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
 */
-
 /**
 * @author Salesforce.org
 * @date 2022
-* @description Utility to generate Ids with SObject awareness.
-* Credit to fflib-apex-mocks fflib_IDGenerator
-* https://github.com/apex-enterprise-patterns/fflib-apex-mocks/blob/master/sfdx-source/apex-mocks/main/classes/fflib_IDGenerator.cls
+* @group Contacts
+* @group-content ../../ApexDocContent/Contacts.htm
+* @description Queries UserRecordAccess for permissions for CON_DeleteContactOverride_CTRL.
 */
 
-@IsTest
-public with sharing class TEST_IDGenerator {
+public with sharing class CON_DeleteContactOverridePermissions {
 
-    private Integer fakeIdCount = 0;
-    private final String ID_PATTERN = '000000000000';
+    private CON_DeleteContactOverrideSelector selector;
 
-    public Id generate(Schema.SObjectType sObjectType) {
-        String keyPrefix = UTIL_Describe.getObjectDescribe(sObjectType).getKeyPrefix();
-        fakeIdCount++;
+    public CON_DeleteContactOverridePermissions(CON_DeleteContactOverrideSelector selector) {
+        this.selector = selector;
+    }
 
-        String fakeIdPrefix = ID_PATTERN.substring(0, ID_PATTERN.length() - String.valueOf(fakeIdCount).length());
+    /*********************************************************************************************************
+    * @description Check if the running user has minimum access to delete the records
+    * @return Map<Id, Boolean>
+    */
+    public Map<Id, Boolean> canDelete(List<Id> recordIds) {
+        Map<Id, Boolean> deleteAccess = new Map<Id, Boolean>();
 
-        return Id.valueOf(keyPrefix + fakeIdPrefix + fakeIdCount);
+        for (UserRecordAccess userAccess : selector.queryDeleteRecordAccess(recordIds)) {
+            deleteAccess.put(userAccess.RecordId, userAccess.HasDeleteAccess);
+        }
+
+        return deleteAccess;
     }
 }

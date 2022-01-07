@@ -51,14 +51,14 @@ private class CON_DeleteContactOverride_TEST {
     * @description Deletes a contact not alone in their household, verifies household is not deleted.
     */
     @isTest static void deleteWithOtherMembers() {
-        Contact con = new Contact(LastName='foo');
+        Contact con = new Contact(LastName = 'foo');
         insert con;
 
         list<Contact> queryCon = getContactList(con.Id);
         system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-build household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
 
-        Contact con2 = new Contact(LastName='foo', FirstName='Mr.', AccountId=querycon[0].AccountId);
+        Contact con2 = new Contact(LastName = 'foo', FirstName = 'Mr.', AccountId = querycon[0].AccountId);
         insert con2;
 
         test.startTest();
@@ -68,13 +68,13 @@ private class CON_DeleteContactOverride_TEST {
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
 
-        system.assertEquals(1,queryAcc.size(),'There should be one account.');
-        system.assertEquals(false, queryacc[0].isDeleted,'Deleted flag should not be set.');
+        system.assertEquals(1, queryAcc.size(), 'There should be one account.');
+        system.assertEquals(false, queryacc[0].isDeleted, 'Deleted flag should not be set.');
 
         queryCon = getContactListAllRows(con.id);
 
-        system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
-        system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
+        system.assertEquals(1, queryCon.size(), 'There should be one deleted contact.');
+        system.assert(queryCon[0].isDeleted, 'Deleted flag should be set.');
 
     }
 
@@ -88,7 +88,7 @@ private class CON_DeleteContactOverride_TEST {
                 npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
             )
         );
-        Contact con = new Contact(LastName='foo');
+        Contact con = new Contact(LastName = 'foo');
         insert con;
 
         list<Contact> queryCon = getContactList(con.Id);
@@ -103,13 +103,13 @@ private class CON_DeleteContactOverride_TEST {
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
 
-        system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
-        system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
+        system.assertEquals(1, queryAcc.size(), 'There should be one deleted account.');
+        system.assert(queryacc[0].isDeleted, 'Deleted flag should be set.');
 
         queryCon = getContactListAllRows(con.id);
 
-        system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
-        system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
+        system.assertEquals(1, queryCon.size(), 'There should be one deleted contact.');
+        system.assert(queryCon[0].isDeleted, 'Deleted flag should be set.');
     }
 
     /*******************************************************************************************************
@@ -117,7 +117,7 @@ private class CON_DeleteContactOverride_TEST {
     * account. Verifies that contact is in the recycle bin and not hard deleted.
     */
     @isTest static void deleteAloneInHousehold() {
-        Contact con = new Contact(LastName='foo');
+        Contact con = new Contact(LastName = 'foo');
         insert con;
 
         list<Contact> queryCon = getContactList(con.Id);
@@ -132,13 +132,13 @@ private class CON_DeleteContactOverride_TEST {
 
         list<account> queryAcc = getAccountListAllRows(queryCon[0].AccountId);
 
-        system.assertEquals(1,queryAcc.size(),'There should be one deleted account.');
-        system.assert(queryacc[0].isDeleted,'Deleted flag should be set.');
+        system.assertEquals(1, queryAcc.size(), 'There should be one deleted account.');
+        system.assert(queryacc[0].isDeleted, 'Deleted flag should be set.');
 
         queryCon = getContactListAllRows(con.Id);
 
-        system.assertEquals(1,queryCon.size(),'There should be one deleted contact.');
-        system.assert(queryCon[0].isDeleted,'Deleted flag should be set.');
+        system.assertEquals(1, queryCon.size(), 'There should be one deleted contact.');
+        system.assert(queryCon[0].isDeleted, 'Deleted flag should be set.');
 
     }
 
@@ -286,7 +286,7 @@ private class CON_DeleteContactOverride_TEST {
     /*********************************************************************************************************
     * @description Attempts to delete contact with closed/won and org opps, verifies correct exception is thrown.
     */
-    static testMethod void testContactDeleteExceptionWithOverride(){
+    static testMethod void testContactDeleteExceptionWithOverride() {
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
         Account account = new Account(Name = 'TEST_ACCOUNT');
         insert account;
@@ -295,11 +295,13 @@ private class CON_DeleteContactOverride_TEST {
         insert contact;
 
         npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
-          .withContact(contact.Id)
-          .build();
+            .withContact(contact.Id)
+            .build();
         insert recurringDonation;
 
-        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{contact});
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{
+            contact
+        });
         insert relationships;
 
         //org account for opportunity attribution
@@ -361,7 +363,7 @@ private class CON_DeleteContactOverride_TEST {
     * @description Attempts to delete contact with Recurring Donation, Opportunities and Relationships,
     * verifies Recurring Donation is deleted.
     */
-    static testMethod void testContactDeleteWithOverride(){
+    static testMethod void testContactDeleteWithOverride() {
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
         Account account = new Account(Name = 'TEST_ACCOUNT');
         insert account;
@@ -369,14 +371,16 @@ private class CON_DeleteContactOverride_TEST {
         Contact contact = new Contact(LastName = 'TEST_CONTACT', AccountId = account.Id);
         insert contact;
 
-        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{contact});
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{
+            contact
+        });
         insert relationships;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
         npe03__Recurring_Donation__c recurringDonation = getRecurringDonationBuilder()
-          .withContact(contact.Id)
-          .build();
+            .withContact(contact.Id)
+            .build();
         insert recurringDonation;
 
         Opportunity orgOpportunity = new Opportunity(
@@ -414,7 +418,7 @@ private class CON_DeleteContactOverride_TEST {
     /*********************************************************************************************************
     * @description Attempts to delete Account with closed/won opp and case, verifies correct exception is thrown.
     */
-    static testMethod void testAccountDeleteExceptionWithOverride(){
+    static testMethod void testAccountDeleteExceptionWithOverride() {
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
         Account account = new Account(
             Name = 'TESTACCOUNT',
@@ -430,7 +434,9 @@ private class CON_DeleteContactOverride_TEST {
             LastName = 'TESTCONTACT2',
             AccountId = account.Id
         );
-        insert new List<Contact>{contact1, contact2};
+        insert new List<Contact>{
+            contact1, contact2
+        };
 
         Opportunity closedWonOpp = new Opportunity(
             Amount = 8,
@@ -458,7 +464,9 @@ private class CON_DeleteContactOverride_TEST {
 
         General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
         insert generalAccountingUnit;
-        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(new List<Account>{account});
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(new List<Account>{
+            account
+        });
         insert opportunities;
 
         List<Allocation__c> allocations = new List<Allocation__c>();
@@ -466,7 +474,9 @@ private class CON_DeleteContactOverride_TEST {
         allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, opportunities));
         insert allocations;
 
-        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{contact1});
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{
+            contact1
+        });
         insert relationships;
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
@@ -502,22 +512,29 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldPreventContactDeletionWithoutContactDeleteAccess() {
-        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
-        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
-        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+        Account acct = new Account(Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType));
+        Contact con = new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType), AccountId = acct.Id);
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', con.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-        ctrl.processDelete();
+
+        Boolean hasContactAccess = false;
+        Boolean hasAccountAccess = true;
 
         CON_DeleteContactOverrideStub contactDeleteStub =
             new CON_DeleteContactOverrideStub(
-                con.Id, false, acct.Id, true, true
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess, true
             );
-
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        PermissionsStub permissionsStub =
+            new PermissionsStub(
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess
+            );
+        ctrl.permissions =
+            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
 
         ctrl.processDelete();
 
@@ -529,20 +546,29 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldConfirmDeleteContactWithoutExposingAccountInfo() {
-        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
-        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
-        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+        Account acct = new Account(Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType));
+        Contact con = new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType), AccountId = acct.Id);
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', con.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
+        Boolean hasContactAccess = true;
+        Boolean hasAccountAccess = false;
+
         CON_DeleteContactOverrideStub contactDeleteStub =
             new CON_DeleteContactOverrideStub(
-                con.Id, true, acct.Id, false, true
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess, true
             );
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        PermissionsStub permissionsStub =
+            new PermissionsStub(
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess
+            );
+        ctrl.permissions =
+            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
 
         ctrl.processDelete();
 
@@ -559,20 +585,29 @@ private class CON_DeleteContactOverride_TEST {
     */
     @IsTest
     private static void shouldConfirmDeleteContactAndExposeAccountInfo() {
-        TEST_IDGenerator idGenerator = new TEST_IDGenerator();
-        Account acct = new Account(Id = idGenerator.generate(Account.SObjectType));
-        Contact con = new Contact(Id = idGenerator.generate(Contact.SObjectType), AccountId = acct.Id);
+        Account acct = new Account(Id = UTIL_UnitTestData_TEST.mockId(Account.SObjectType));
+        Contact con = new Contact(Id = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType), AccountId = acct.Id);
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
         ApexPages.currentPage().getParameters().put('Id', con.Id);
         CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
 
+        Boolean hasContactAccess = true;
+        Boolean hasAccountAccess = true;
+
         CON_DeleteContactOverrideStub contactDeleteStub =
             new CON_DeleteContactOverrideStub(
-                con.Id, true, acct.Id, true, true
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess, true
             );
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
+
+        PermissionsStub permissionsStub =
+            new PermissionsStub(
+                con.Id, hasContactAccess, acct.Id, hasAccountAccess
+            );
+        ctrl.permissions =
+            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
 
         ctrl.processDelete();
 
@@ -655,8 +690,7 @@ private class CON_DeleteContactOverride_TEST {
         final public String ACCOUNT_NAME = 'Test Account';
 
         CON_DeleteContactOverrideStub(Id contactId, Boolean canDeleteContact, Id accountId, Boolean canDeleteAccount,
-            Boolean isHouseholdWithSingleContact)
-        {
+            Boolean isHouseholdWithSingleContact) {
             this.contactId = contactId;
             this.canDeleteContact = canDeleteContact;
             this.accountId = accountId;
@@ -682,17 +716,47 @@ private class CON_DeleteContactOverride_TEST {
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs
         ) {
             switch on stubbedMethodName {
-                when 'canDeleteContactRecord' {
-                    return this.canDeleteContact;
-                }
-                when 'canDeleteAccountRecord' {
-                    return this.canDeleteAccount;
-                }
                 when 'queryContact' {
                     return this.queryContact();
                 }
                 when 'isAccountWithSingleContact' {
                     return this.isAccountWithSingleContact;
+                }
+            }
+            return null;
+        }
+    }
+
+    private class PermissionsStub implements System.StubProvider {
+
+        public Type classType = CON_DeleteContactOverridePermissions.class;
+
+        private Id contactId;
+        private Boolean canDeleteContact;
+        private Id accountId;
+        private Boolean canDeleteAccount;
+
+        public PermissionsStub(Id contactId, Boolean canDeleteContact, Id accountId, Boolean canDeleteAccount) {
+            this.contactId = contactId;
+            this.canDeleteContact = canDeleteContact;
+            this.accountId = accountId;
+            this.canDeleteAccount = canDeleteAccount;
+        }
+
+        private Map<Id, Boolean> canDelete() {
+            return new Map<Id, Boolean>{
+                contactId => canDeleteContact,
+                accountId => canDeleteAccount
+            };
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject, String stubbedMethodName, Type returnType,
+            List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs
+        ) {
+            switch on stubbedMethodName {
+                when 'canDelete' {
+                    return this.canDelete();
                 }
             }
             return null;

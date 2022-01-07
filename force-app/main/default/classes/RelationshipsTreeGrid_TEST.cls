@@ -30,11 +30,9 @@
 @IsTest
 private class RelationshipsTreeGrid_TEST {
 
-    static TEST_IDGenerator idGenerator = new TEST_IDGenerator();
-
     @IsTest
     static void whenNoRelationsFoundReturnsEmptyList() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(0, listView.relations.size());
@@ -42,7 +40,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void whenOneRelationReturnsSingleItem() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         selectorStub.setSingleResult();
@@ -52,7 +50,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void canRetrieveAdditionalRelations() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         selectorStub.setSingleResult();
@@ -62,7 +60,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void initialViewThrowsExceptionWhenInsufficientPerms() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         RelationshipsService.getInstance().permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(false, false));
@@ -79,7 +77,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void whenNoRelationshipCreateAccessHidesCreateButton() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         RelationshipsService.getInstance().permissions = (UTIL_Permissions) Test.createStub(UTIL_Permissions.class, new UTIL_PermissionsMock(true, false));
@@ -90,7 +88,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void responseContainsVFPageURL() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         System.assertEquals(Page.REL_RelationshipsViewer.getUrl(), listView.vfPageURL);
@@ -98,7 +96,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void responseContainsExpectedLabels() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(RelationshipSelector.class, new RelationshipsSelectorStub());
         RelationshipsTreeGridController.RelationshipsListView listView = RelationshipsTreeGridController.getInitialView(fakeContactId);
         String expectedLabel = UTIL_Describe.getFieldLabel('Contact', 'Name');
@@ -111,7 +109,7 @@ private class RelationshipsTreeGrid_TEST {
 
     @IsTest
     static void mapsFieldsIntoRelationshipView() {
-        Id fakeContactId = idGenerator.generate(Contact.SObjectType);
+        Id fakeContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
         RelationshipsSelectorStub selectorStub = new RelationshipsSelectorStub();
         RelationshipsService.getInstance().selector = (RelationshipSelector) Test.createStub(selectorStub.classType, selectorStub);
         selectorStub.setSingleResult();
@@ -181,8 +179,8 @@ private class RelationshipsTreeGrid_TEST {
         }
 
         public void setSingleResult() {
-            Id relationshipId = idGenerator.generate(npe4__Relationship__c.SObjectType);
-            Id relatedContactId = idGenerator.generate(Contact.SObjectType);
+            Id relationshipId = UTIL_UnitTestData_TEST.mockId(npe4__Relationship__c.SObjectType);
+            Id relatedContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
             Contact relatedContact = generateContactWithName('Fake Name');
             relatedContact.Id = relatedContactId;
             relatedContact.Title = 'Fake Title';

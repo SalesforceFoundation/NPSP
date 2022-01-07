@@ -84,6 +84,18 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    /** @description Permissions class. */
+    @TestVisible
+    private CON_DeleteContactOverridePermissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new CON_DeleteContactOverridePermissions(contactOverrideSelector);
+            }
+            return permissions;
+        }
+        set;
+    }
+
     /** @description Flag to tell the page this is the only contact in a Household Account. */
     public Boolean isOnlyContactInHousehold {get;set;}
     /** @description Flag to tell the page account deletion is permitted. */
@@ -128,20 +140,29 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Required processing to check access and establish context. Queries for contact, verifies
     * whether the contact or its account should be deleted.
-    * @return Boolean
     */
     public void preProcessDelete() {
-        hasMinimumAccess = contactOverrideSelector.canDeleteContactRecord(contactId);
+        contactRecord = contactOverrideSelector.queryContact(contactId);
+        validateRecordAccess();
         if (!hasMinimumAccess) {
             return;
         }
 
-        contactRecord = contactOverrideSelector.queryContact(contactId);
-
         isHouseholdAccount = false;
         isOnlyContactInHousehold = false;
-        hasAccountDeleteAccess = contactOverrideSelector.canDeleteAccountRecord(contactRecord.AccountId);
         handleHouseholdAccount();
+    }
+
+    /*******************************************************************************************************
+    * @description Required processing to check access and establish context. Queries for contact, verifies
+    * whether the contact or its account should be deleted.
+    */
+    public void validateRecordAccess() {
+        List<Id> recordIds = new List<Id>{ contactId, contactRecord.AccountId };
+        Map<Id, Boolean> deleteAccess = permissions.canDelete(recordIds);
+
+        hasMinimumAccess = deleteAccess.get(contactId);
+        hasAccountDeleteAccess = deleteAccess.get(contactRecord.AccountId);
     }
 
     /*******************************************************************************************************
@@ -258,7 +279,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
-            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(contactRecord);
+            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(contactRecord, contactOverrideSelector);
             cascadeDelete.validate();
             cascadeDelete.deleteOpportunities();
             cascadeDelete.deleteRecurringDonations();
@@ -296,7 +317,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         Account account =  contactOverrideSelector.getAccountRecord(accountId);
         
         try {
-            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account);
+            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account, contactOverrideSelector);
             cascadeDelete.validate();
 
             delete account;
@@ -368,10 +389,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * Retrieves the Cases, Opportunities and Recurring Donations of the deleted Contacts. 
         * @param Contact The Contact to delete.
         ********************************************************************************************************/
-        public ContactCascadeDelete(Contact contactToDelete) {
+        public ContactCascadeDelete(Contact contactToDelete, CON_DeleteContactOverrideSelector contactOverrideSelector) {
             this.contactToDelete = contactToDelete;
 
-            CON_DeleteContactOverrideSelector contactOverrideSelector = new CON_DeleteContactOverrideSelector();
             relatedCases = contactOverrideSelector.getCasesRelatedToContact(contactToDelete.Id);
             relatedOpportunities = contactOverrideSelector.getOpportunitiesRelatedToContact(contactToDelete.Id);
             relatedRecurringDonations = contactOverrideSelector.getRelatedRecurringDonations(contactToDelete.Id);
@@ -434,10 +454,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * @description AccountCascadeDelete Constructor.
         * @param Account The Account to delete.
         ********************************************************************************************************/
-        public AccountCascadeDelete(Account accountToDelete) {
+        public AccountCascadeDelete(Account accountToDelete, CON_DeleteContactOverrideSelector contactOverrideSelector) {
             this.accountToDelete = accountToDelete;
 
-            CON_DeleteContactOverrideSelector contactOverrideSelector = new CON_DeleteContactOverrideSelector();
             relatedCases = contactOverrideSelector.getCasesRelatedToAccount(accountToDelete.Id);
             relatedOpportunities = contactOverrideSelector.getOpportunitiesRelatedToAccount(accountToDelete.Id);
         }
