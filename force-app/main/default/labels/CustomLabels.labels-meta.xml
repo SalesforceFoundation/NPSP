@@ -5662,6 +5662,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Number Settings</value>
     </labels>
     <labels>
+        <fullName>commonAccessErrorMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the necessary access to perform this action. Please check with your Salesforce Administrator.</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
