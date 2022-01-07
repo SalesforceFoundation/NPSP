@@ -529,13 +529,6 @@ private class CON_DeleteContactOverride_TEST {
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
 
-        PermissionsStub permissionsStub =
-            new PermissionsStub(
-                con.Id, hasContactAccess, acct.Id, hasAccountAccess
-            );
-        ctrl.permissions =
-            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
-
         ctrl.processDelete();
 
         System.assertEquals(false, ctrl.hasMinimumAccess, 'Controller should have hasMinimumAccess set to false.');
@@ -562,13 +555,6 @@ private class CON_DeleteContactOverride_TEST {
             );
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
-
-        PermissionsStub permissionsStub =
-            new PermissionsStub(
-                con.Id, hasContactAccess, acct.Id, hasAccountAccess
-            );
-        ctrl.permissions =
-            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
 
         ctrl.processDelete();
 
@@ -601,13 +587,6 @@ private class CON_DeleteContactOverride_TEST {
             );
         ctrl.contactOverrideSelector =
             (CON_DeleteContactOverrideSelector) Test.createStub(contactDeleteStub.classType, contactDeleteStub);
-
-        PermissionsStub permissionsStub =
-            new PermissionsStub(
-                con.Id, hasContactAccess, acct.Id, hasAccountAccess
-            );
-        ctrl.permissions =
-            (CON_DeleteContactOverridePermissions) Test.createStub(permissionsStub.classType, permissionsStub);
 
         ctrl.processDelete();
 
@@ -711,6 +690,16 @@ private class CON_DeleteContactOverride_TEST {
             return contactDetails;
         }
 
+        private List<UserRecordAccess> queryDeleteRecordAccess() {
+            List<UserRecordAccess> accessRecords = (List<UserRecordAccess>) JSON.deserialize('[' +
+                '{"RecordId": "' + this.contactId + '", ' +
+                '"HasDeleteAccess": "' + this.canDeleteContact + '"}, ' +
+                '{"RecordId": "' + this.accountId + '", ' +
+                '"HasDeleteAccess": "' + this.canDeleteAccount + '"}' +
+                ']', List<UserRecordAccess>.class);
+            return accessRecords;
+        }
+
         public Object handleMethodCall(
             Object stubbedObject, String stubbedMethodName, Type returnType,
             List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs
@@ -722,41 +711,8 @@ private class CON_DeleteContactOverride_TEST {
                 when 'isAccountWithSingleContact' {
                     return this.isAccountWithSingleContact;
                 }
-            }
-            return null;
-        }
-    }
-
-    private class PermissionsStub implements System.StubProvider {
-
-        public Type classType = CON_DeleteContactOverridePermissions.class;
-
-        private Id contactId;
-        private Boolean canDeleteContact;
-        private Id accountId;
-        private Boolean canDeleteAccount;
-
-        public PermissionsStub(Id contactId, Boolean canDeleteContact, Id accountId, Boolean canDeleteAccount) {
-            this.contactId = contactId;
-            this.canDeleteContact = canDeleteContact;
-            this.accountId = accountId;
-            this.canDeleteAccount = canDeleteAccount;
-        }
-
-        private Map<Id, Boolean> canDelete() {
-            return new Map<Id, Boolean>{
-                contactId => canDeleteContact,
-                accountId => canDeleteAccount
-            };
-        }
-
-        public Object handleMethodCall(
-            Object stubbedObject, String stubbedMethodName, Type returnType,
-            List<Type> listOfParamTypes, List<String> listOfParamNames, List<Object> listOfArgs
-        ) {
-            switch on stubbedMethodName {
-                when 'canDelete' {
-                    return this.canDelete();
+                when 'queryDeleteRecordAccess' {
+                    return queryDeleteRecordAccess();
                 }
             }
             return null;
