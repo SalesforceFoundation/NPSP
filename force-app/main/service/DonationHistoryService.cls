@@ -170,12 +170,15 @@ public with sharing class DonationHistoryService {
 
 
     private List<OpportunityContactRole> buildPartialSoftCredits(List<OpportunityContactRole> credits) {
-        List<Partial_Soft_Credit__c> partialSoftCredit =
+        List<Partial_Soft_Credit__c> partialSoftCreditRecords =
                 selector.getPartialSoftCredits(this.getSoftCreditIds());
-        Set<Id> partialSoftCreditIds = UTIL_SObject.extractIds(partialSoftCredit);
+        Set<Id> partialSoftCreditOCRIds = new Set<Id>();
+        for(Partial_Soft_Credit__c partialSoftCreditRecord : partialSoftCreditRecords) {
+            partialSoftCreditOCRIds.add(partialSoftCreditRecord.Contact_Role_ID__c);
+        }
         List<OpportunityContactRole> partialSoftCreditOCRs = new List<OpportunityContactRole>();
         for(OpportunityContactRole ocr : credits) {
-            if (partialSoftCreditIds.contains(ocr.Id)) {
+            if (partialSoftCreditOCRIds.contains(ocr.Id)) {
                 partialSoftCreditOCRs.add(ocr);
             }
         }
