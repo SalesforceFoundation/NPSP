@@ -65,7 +65,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentAction() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Donations, 
             SfdoInstrumentationEnum.Component.Page,
             SfdoInstrumentationEnum.Action.Open);
@@ -73,7 +73,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithValue() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.CustomizableRollups, 
             SfdoInstrumentationEnum.Component.Batch,
             SfdoInstrumentationEnum.Action.Duration, 
@@ -82,7 +82,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithContextMap() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Donations, 
             SfdoInstrumentationEnum.Component.Queueable,
             SfdoInstrumentationEnum.Action.Save, 
@@ -91,7 +91,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithMapAndValue() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Allocations, 
             SfdoInstrumentationEnum.Component.Future,
             SfdoInstrumentationEnum.Action.ProcessedCount, 
@@ -101,7 +101,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithSObjectAndValue() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.TDTM, 
             Account.getSObjectType(),
             SfdoInstrumentationEnum.Action.AfterInsert, 
@@ -110,7 +110,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithSObjectAndContextMap() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.TDTM, 
             General_Accounting_Unit__c.getSObjectType(),
             SfdoInstrumentationEnum.Action.BeforeUpdate, 
@@ -120,7 +120,7 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithSobject() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.RecordMerge, 
             Contact.getSObjectType(),
             SfdoInstrumentationEnum.Action.Dml_Merge);
@@ -128,10 +128,34 @@ public with sharing class SfdoInstrumentationService_TEST {
 
     @IsTest
     private static void shouldInstrumentActionWithSObjectContextMap() {
-        SfdoInstrumentationService.log(
+        SfdoInstrumentationService.getInstance().log(
             SfdoInstrumentationEnum.Feature.Donations, 
             Opportunity.getSObjectType(),
             SfdoInstrumentationEnum.Action.Open,
             new Map<String, Long>{ 'Test' => System.currentTimeMillis()});
     }
+
+    // ================================================================================================
+
+    static void initServiceMock() {
+        SfdoInstrumentationServiceMock serviceMock = new SfdoInstrumentationServiceMock();
+        SfdoInstrumentationService service = (SfdoInstrumentationService) Test.createStub(
+            SfdoInstrumentationService.class,
+            serviceMock);
+        SfdoInstrumentationService.instance = service;
+    }
+
+    private class SfdoInstrumentationServiceMock implements StubProvider {
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            if (stubbedMethodName == 'log') {
+                // pretend it was logged
+            }
+            return null;
+        }
+    }
+
 }

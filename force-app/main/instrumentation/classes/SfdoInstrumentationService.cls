@@ -34,6 +34,21 @@
 */
 public inherited sharing class SfdoInstrumentationService {
 
+    private SfdoInstrumentationService() { }
+
+    @TestVisible
+    private static SfdoInstrumentationService instance;
+
+    /**
+     * @description Return a singleton instance of this class
+     */
+    public static SfdoInstrumentationService getInstance() {
+        if (instance == null) {
+            instance = new SfdoInstrumentationService();
+        }
+        return instance;
+    }
+
     // =============================================================================================================================
     // Primary Logging signatures that accept only valid defined Enums for Feature/Component/Action
     // =============================================================================================================================
@@ -44,7 +59,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context);
     }
 
@@ -55,7 +70,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      * @param value Duration or other value to include in the log
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), context, value);
     }
 
@@ -65,7 +80,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param value Duration or other value to include in the log
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name(), value);
     }
 
@@ -74,7 +89,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param componentName String - defines the underlying component within the feature
      * @param actionName String - define the action of the feature or component
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
+    public void log(SfdoInstrumentationEnum.Feature featureName, SfdoInstrumentationEnum.Component componentName, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), componentName?.name(), actionName?.name());
     }
 
@@ -88,7 +103,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context);
     }
 
@@ -99,7 +114,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param context Map of additional content as context to include in the log (DO NOT INCLUDE PII or NON-GPDR COMPLIANT DATA)
      * @param value Duration or other value to include in the log
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Map<String, Object> context, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), context, value);
     }
 
@@ -109,7 +124,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param actionName String - define the action of the feature or component
      * @param value Duration or other value to include in the log
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
+    public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName, Integer value) { 
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name(), value);
     }
 
@@ -118,7 +133,7 @@ public inherited sharing class SfdoInstrumentationService {
      * @param objType SObjectType - define the SObject as the Component for this log entry
      * @param actionName String - define the action of the feature or component
      */
-    public static void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName) {
+    public void log(SfdoInstrumentationEnum.Feature featureName, SObjectType objType, SfdoInstrumentationEnum.Action actionName) {
         SfdoLogUtils.log(featureName?.name(), String.valueOf(objType), actionName?.name());
     }
 
