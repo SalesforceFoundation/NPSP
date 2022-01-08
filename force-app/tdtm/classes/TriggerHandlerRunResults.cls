@@ -34,13 +34,25 @@ public with sharing class TriggerHandlerRunResults {
     }
 
     public void logStack() {
+        System.debug(LoggingLevel.ERROR, '*** ##### LOG STACK ######');
         integer i = 1;
+        SObjectType currentType;
         for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+            SObjectType sObjectType = triggerHandlerRunResult.getSObjectType();
+            if (currentType != null && sObjectType !=
+                    currentType) {
+                System.debug(LoggingLevel.ERROR, '*** ##### --------------------------- ' +
+                        'SOBJECT SWITCH (--> ' + sObjectType + ') --------------------------- ######');
+            }
+            currentType = sObjectType;
             System.debug(LoggingLevel.ERROR, '*** ##### '+ i +':  ######');
-            System.debug(LoggingLevel.ERROR, '***' + triggerHandlerRunResult.getSObjectType() + ' | ' + triggerHandlerRunResult.triggerContext() + ' | ' + triggerHandlerRunResult.triggerHandlerName());
-            System.debug(LoggingLevel.ERROR, '*** cpu: ' + triggerHandlerRunResult.cpuUsed
-                    () + ' :: queries: ' + triggerHandlerRunResult.queriesUsed() + ' :: ' +
-                    'time:' + triggerHandlerRunResult.timeUsed());
+            System.debug(LoggingLevel.ERROR, '*** ' + sObjectType + ' :: ' +
+                    triggerHandlerRunResult.triggerContext() + ' :: ' +
+                    triggerHandlerRunResult.triggerHandlerName());
+            System.debug(LoggingLevel.ERROR, '*** cpuUsed: ' + triggerHandlerRunResult.cpuUsed
+                    () + ' :: queriesUsed: ' + triggerHandlerRunResult.queriesUsed() + ' ::' +
+                    ' ' +
+                    'timeUsedMillis:' + triggerHandlerRunResult.timeUsed());
             i++;
         }
     }
