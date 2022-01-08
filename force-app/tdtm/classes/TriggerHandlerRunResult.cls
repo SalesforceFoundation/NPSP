@@ -29,7 +29,7 @@ public with sharing class TriggerHandlerRunResult {
         return cpuUsed;
     }
 
-    public Object triggerHandlerName() {
+    public String triggerHandlerName() {
         return triggerHandler.className();
     }
 
@@ -37,7 +37,7 @@ public with sharing class TriggerHandlerRunResult {
         return triggerContext.triggerAction().name();
     }
 
-    public SObjectType sObjectType() {
+    public SObjectType getSObjectType() {
         return triggerContext.describeObj.SObjectType;
     }
 

@@ -47,12 +47,12 @@ public class TDTM_TriggerHandler {
     private static Boolean isMonitoringEnabled = false;
 
     private static Boolean defaultRecordsInserted = false;
-    private static TriggerHandlerMonitor monitor {
+    public static TriggerHandlerMonitor Monitor {
         get {
-            if (monitor == null) {
-                monitor = new TriggerHandlerMonitor(isCompactLoggingEnabled);
+            if (Monitor == null) {
+                Monitor = new TriggerHandlerMonitor(isCompactLoggingEnabled);
             }
-            return monitor;
+            return Monitor;
         }
         set;
     }
@@ -78,12 +78,12 @@ public class TDTM_TriggerHandler {
     ) {
 
         if (disableTDTM) {
-           UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
-           return;
+            UTIL_Debug.debug(LoggingLevel.WARN, '****TDTM Disabled: no triggers will run for this transaction.');
+            return;
         }
 
         if (context.records != null) {
-           UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
+            UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
         UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.triggerAction() + ' on ' +
@@ -118,9 +118,6 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
                 if (isMonitoringEnabled) {
-                //todo: startMonitoring, to log initial value for queries (and maybe
-                // heap/cpu?)
-                // classname to queries by context?
                     monitor.startMonitoring(triggerHandler, context);
                 }
 
@@ -151,7 +148,11 @@ public class TDTM_TriggerHandler {
             }
 
             if (isMonitoringEnabled) {
-                monitor.logTriggerHandlerInfo();
+                TriggerHandlerRunResults results = monitor.getResults();
+                results.isCompactLoggingEnabled = isCompactLoggingEnabled;
+                results.logTriggerHandlerInfo();
+                results.logResults();
+                results.logStack();
             }
         }
     }
@@ -331,13 +332,13 @@ public class TDTM_TriggerHandler {
            Map<Id,SObject> nm = new Map<Id,SObject>(context.records);
            setNewId = new Set<Id>(nm.keySet());
        }
-       
+
        Set<Id> setOldId;
        if (context.existingRecords != null) {
            Map<Id,SObject> om = new Map<Id,SObject>(context.existingRecords);
            setOldId = new Set<Id>(om.keySet());
        }
-       
+
        classToRun.runFutureNonStatic(setNewId, setOldId, context.triggerAction().name(),
                context.describeObj.getName(), classToRunName);
     }
@@ -364,10 +365,5 @@ public class TDTM_TriggerHandler {
         if (dmlWrapperLocal.objectsToUndelete != null && !dmlWrapperLocal.objectsToUndelete.isEmpty()) {
             dmlWrapper.objectsToUndelete.addAll(dmlWrapperLocal.objectsToUndelete);
         }
-    }
-
-    @TestVisible
-    private static Integer timesRun(String className, String triggerAction) {
-        return monitor?.timesRun(className, triggerAction);
     }
 }
