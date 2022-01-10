@@ -202,9 +202,13 @@ public class AN_AutoNumberService {
         }
 
         public String getFormattedNumber(Integer num) {
-            return String.format(displayFormat,
+            Integer numberLength = getNumberLength();
+            String singleDigit = '0';
+            String currentDigitFormat = '{'  + singleDigit.repeat(numberLength) + '}';
+            String singleDigitDisplayFormat = displayFormat.replace(currentDigitFormat, '{0}');
+            return String.format(singleDigitDisplayFormat,
                     new List<Object>{
-                            String.valueOf(num).leftPad(getNumberLength(), '0')
+                            String.valueOf(num).leftPad(numberLength, '0')
                     }
             );
         }
