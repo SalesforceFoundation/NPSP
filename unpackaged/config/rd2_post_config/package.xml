@@ -47,5 +47,5 @@
         <members>npe03__Recurring_Donation__c.All</members>
         <name>ListView</name>
     </types>
-    <version>48.0</version>
+    <version>53.0</version>
 </Package>
