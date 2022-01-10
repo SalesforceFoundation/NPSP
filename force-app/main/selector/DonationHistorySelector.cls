@@ -41,14 +41,14 @@ public inherited sharing class DonationHistorySelector {
     public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
         return [
             SELECT Id, 
-				Opportunity.Id,
+	            Opportunity.Id,
                 Opportunity.Name, 
                 Opportunity.CloseDate, 
                 Opportunity.Amount, 
                 Contact.Email, 
                 Contact.Name, 
                 Role, 
-                isPrimary 
+                IsPrimary
             FROM OpportunityContactRole 
             WHERE Opportunity.IsWon = true 
             AND ContactId =:contactId 
@@ -57,8 +57,8 @@ public inherited sharing class DonationHistorySelector {
             DESC LIMIT 2000
         ];
     }
-
-    /*public List<npe01__OppPayment__c> getPaymentforOpportunities(List<Id> opportunityIds) {
+    
+    /*public List<npe01__OppPayment__c> getPaymentforOpportunities(Set<Id> opportunityIds) {
         return [
             SELECT id, npe01__Opportunity__c, npe01__Payment_Method__c
             FROM npe01__OppPayment__c
@@ -73,10 +73,10 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return Partial_Soft_Credit__c data.
     */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredit(List<Id> opportunityContactRoleIds){
+    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
         return [
             SELECT 
-                id, 
+                Id, 
                 Amount__c, 
                 Role_Name__c,
                 Contact_Role_ID__c 

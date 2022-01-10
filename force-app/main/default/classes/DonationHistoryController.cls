@@ -40,9 +40,8 @@ public with sharing class DonationHistoryController {
     * @date 2021
     * @description Donation History inner class.
     */
-    public class DonationHistory{
+    public class DonationHistoryView{
         @AuraEnabled public Id id;
-		@AuraEnabled public Id opportunityId;
         @AuraEnabled public String name;
         @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
@@ -50,16 +49,15 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistory(OpportunityContactRole ocr, Id opportunityId, String type, String paymentMethod){ //add parameter 'String paymentMethod'//
+        public DonationHistoryView(OpportunityContactRole ocr, String type, String paymentType){
             this.id = ocr.Id;
-			this.opportunityId = opportunityId;
             this.name = ocr.Opportunity.Name;
             this.isPrimary = ocr.isPrimary;
             this.closeDate = ocr.Opportunity.CloseDate;
             this.role = ocr.Role;
             this.amount = ocr.Opportunity.Amount;
             this.creditType = type;
-            this.paymentMethod = paymentMethod;
+            this.paymentMethod = paymentType;
         }
     }
 
@@ -69,12 +67,31 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistory> getDonationHistory(Id contactId){
-        DonationHistoryService service = new DonationHistoryService();
+    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
+        DonationHistoryService service = new DonationHistoryService(contactId);
         try {
-            return service.getDonationHistory(contactId);
-        } catch(Exception ex) {
-            throw new UTIL_Permissions.InsufficientPermissionException(ex.getMessage());
+            List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
+            service.buildDonationHistory();
+            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getHardCredits(), System.Label.CRLP_HardCredit, '-'));
+            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getSoftCredits(), System.Label.CRLP_SoftCredit, '-'));
+            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getPartialSoftCredits(), service.getSoftCreditLabel(), '-'));
+            return donationHistories;
+        } catch(AuraHandledException ex) {
+            throw new AuraHandledException(ex.getMessage());
         }
+    }
+
+    private static List<DonationHistoryView> buildHistoryFromOCRs(Id contactId, List<OpportunityContactRole> contactRoles, String type, String paymentType) {
+        npe01__Contacts_And_Orgs_Settings__c settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
+		boolean isPaymentEnabled = settings.npe01__Payments_Enabled__c;
+        DonationHistoryService service = new DonationHistoryService(contactId);
+        List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
+        if(isPaymentEnabled){
+			//List<Opportunity> paymentMethod = service.getPaymentMethod(contactRoles);
+        }
+        for(OpportunityContactRole role : contactRoles) {
+            donationHistories.add(new DonationHistoryView(role, type, paymentType));
+        }
+        return donationHistories;
     }
 }
