@@ -3033,6 +3033,22 @@
         <value>View Contact Record</value>
     </labels>
     <labels>
+        <fullName>REL_ViewerGraphical</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading graphical view</shortDescription>
+        <value>Graphical View</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerTabular</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading tabular view</shortDescription>
+        <value>Tabular View</value>
+    </labels>
+    <labels>
         <fullName>RP_CustomerJourneyLinkLabel</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -9623,6 +9639,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Learn more label for the application status component</shortDescription>
         <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>gsLearnMoreAriaLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aria Label for the Learn more label for the application status component</shortDescription>
+        <value>Learn More (opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
