@@ -86,8 +86,8 @@ public with sharing class TriggerContext {
     public void fixupOldList() {
 
         // return cached objects if we have them
-        if (action() == TDTM_Runnable.Action.AfterUpdate || action() == TDTM_Runnable.Action
-                .BeforeUpdate) {
+        if (action() == TDTM_Runnable.Action.AfterUpdate
+                || action() == TDTM_Runnable.Action.BeforeUpdate) {
             List<SObject> listSObj = new List<SObject>();
             Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
             if (mapIdToSObj != null) {
@@ -110,8 +110,8 @@ public with sharing class TriggerContext {
         }
 
         // now cache objects for future Update calls
-        if (action() == TDTM_Runnable.Action.AfterInsert || action() == TDTM_Runnable.Action
-                .AfterUpdate) {
+        if (action() == TDTM_Runnable.Action.AfterInsert
+                || action() == TDTM_Runnable.Action.AfterUpdate) {
             mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(records));
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached records: ' + records);
         }
