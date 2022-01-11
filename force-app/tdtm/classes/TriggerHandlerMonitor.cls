@@ -18,17 +18,14 @@ public with sharing class TriggerHandlerMonitor {
     }
 
     public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
-        UsageSnapshot usageSnapshot = new UsageSnapshot(
-                start.timeUsedMillis,
-                start.queriesUsed,
-                start.cpuUsed
-        );
+        UsageSnapshot currentSnapshot = new UsageSnapshot();
+        UsageSnapshot usageIncrement = currentSnapshot.getIncrementFrom(start);
 
         runResults.add(
                 new TriggerHandlerRunResult(
                         context,
                         triggerHandler,
-                        usageSnapshot
+                        usageIncrement
                 )
         );
     }
@@ -37,6 +34,7 @@ public with sharing class TriggerHandlerMonitor {
         System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
                 triggerHandler.className() + triggerContext.action().name()+
                 '######');
+        //Currently, only supporting one service and context at a time.
         start = new UsageSnapshot();
     }
 
