@@ -85,8 +85,7 @@ public with sharing class ContactService {
             if (con1 == null) {
                 con1 = con2;
             }
-            return (!isContactAddressEmpty(con1) ||
-                    con1.npe01__Primary_Address_Type__c != null);
+            return !isContactAddressEmpty(con1);
         }
 
         // both provided, so look for at least one change between address fields
