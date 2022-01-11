@@ -35,6 +35,11 @@ public with sharing class TriggerContext {
         return isBefore;
     }
 
+    public TDTM_Runnable.Action action(){
+        return determineTriggerAction(isBefore
+                , isInsert, isUpdate, isDelete);
+    }
+
     /*******************************************************************************************************
     * @description Determines which TDTM action applies, based on the trigger environment.
     * @param isBefore Are we in a before trigger context.
@@ -44,7 +49,11 @@ public with sharing class TriggerContext {
     * @param isUndelete Are we in an undelete trigger context.
     * @return TDTM_Runnable.Action The applicable action, based on the trigger environment.
     */
-    public TDTM_Runnable.Action triggerAction() {
+    private static TDTM_Runnable.Action determineTriggerAction(
+            Boolean isBefore,
+            Boolean isInsert,
+            Boolean isUpdate,
+            Boolean isDelete) {
         if (isBefore) {
             if (isInsert) return TDTM_Runnable.Action.BeforeInsert;
             else if (isUpdate) return TDTM_Runnable.Action.BeforeUpdate;
