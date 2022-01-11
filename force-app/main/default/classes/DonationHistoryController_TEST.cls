@@ -66,7 +66,7 @@ public class DonationHistoryController_TEST {
     @TestSetup
     static void makeData() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
-
+        Date dateTimeInPast = Date.newInstance(2019, 2, 2);
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
         Account accSrc = UTIL_UnitTestData_TEST.listAccT[0];
         list<Contact> listConSrc = UTIL_UnitTestData_TEST.listConT; 
@@ -93,7 +93,7 @@ public class DonationHistoryController_TEST {
             Primary_Contact__c=listConSrc[1].Id, 
             Amount=150, 
             StageName='Closed Won', 
-            CloseDate=myDateTime
+            CloseDate=dateTimeInPast
         );
         Opportunity opportunityInfluencer = new Opportunity(
             Name='InfluencerOpportunity', 
@@ -162,7 +162,7 @@ public class DonationHistoryController_TEST {
         Boolean role = false;
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id);
+        DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
         Test.stopTest();
 
         for(DonationHistoryController.DonationHistoryView donation : donationHistory){
@@ -196,7 +196,7 @@ public class DonationHistoryController_TEST {
         
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id);
+        DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
@@ -222,12 +222,41 @@ public class DonationHistoryController_TEST {
             Test.startTest();
             System.runAs(u){
                 List<DonationHistoryController.DonationHistoryView> donationHistory = 
-                DonationHistoryController.getDonationHistory(testContact.Id); 
+                DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime'); 
             }
 	        Test.stopTest();
         } catch(Exception e){
             message = e.getMessage();
         }
         System.assertEquals('Insufficient Permissions', message, 'should not have access to donationHistory');
+    }
+
+    @IsTest
+    private static void shouldReturnYearsForFilter () {
+        Contact thecontact = [Select id, Name from contact where FirstName ='TestFirstName11' limit 1];
+       
+        List<String> donationsYears = DonationHistoryController.getYearsWithDonations(thecontact.id);
+        System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
+        System.assertEquals(2, donationsYears.size(), 'donationsYears should have 2 elements');
+        System.assertEquals('2020', donationsYears[0], 'donationsYears should be in descendent order');
+
+    }
+    
+    @IsTest
+    private static void shouldReturnOneElementFor2019(){
+        Contact testContact = [
+            SELECT
+                Id
+            FROM Contact
+            WHERE FirstName = 'TestFirstName11'
+            LIMIT 1
+        ];        
+       
+        Test.startTest();
+        List<DonationHistoryController.DonationHistoryView> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, '2019');
+        Test.stopTest();
+
+        System.assertNotEquals(null, donationHistory, 'Donation History should not be empty');
+        System.assertEquals(1, donationHistory.size(), 'donationHistory should contain only one element');
     }
 }

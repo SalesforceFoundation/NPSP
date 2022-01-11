@@ -67,8 +67,8 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    public static List<DonationHistoryView> getDonationHistory(Id contactId, String filter) {
+        DonationHistoryService service = new DonationHistoryService(contactId, filter);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
             service.buildDonationHistory();
@@ -78,6 +78,20 @@ public with sharing class DonationHistoryController {
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /**
+     * @description returns the years when the contact made at least 1 donation
+     * @param contactId Id id of the contact
+     * @returns List<String>
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<String> getYearsWithDonations(Id contactId){
+        try {
+            return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 

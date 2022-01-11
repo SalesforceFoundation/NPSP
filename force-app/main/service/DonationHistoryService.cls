@@ -39,6 +39,15 @@ public with sharing class DonationHistoryService {
     private List<OpportunityContactRole> softCredits;
     private List<OpportunityContactRole> partialSoftCredits;
     private Id contactId;
+    private String filter;
+
+    public DonationHistoryService(Id contactId, String filter) {
+        this.contactId = contactId;
+        this.filter = filter;
+        this.hardCredits = new List<OpportunityContactRole>();
+        this.softCredits = new List<OpportunityContactRole>();
+        this.partialSoftCredits = new List<OpportunityContactRole>();
+    }
 
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
@@ -90,14 +99,21 @@ public with sharing class DonationHistoryService {
     */
     public void buildDonationHistory() {
         if (hasAccessToDonationHistory()) {
-            List<OpportunityContactRole> credits = 
-                selector.getWonOpportunityContactRolesByContactId(this.contactId);
+            List<OpportunityContactRole> credits = null;
+            if (shouldApplyFilterByYear(filter)) {
+                credits = selector.getWonOpportunityContactRolesByContactIdAndYear(contactId, Integer.valueOf(filter));
+            } else { 
+                credits = selector.getWonOpportunityContactRolesByContactId(contactId);
+            }
             buildDonationHistoryFromOCRs(credits);
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
     }
 
+    private boolean shouldApplyFilterByYear(String filter) {
+        return filter != null && filter.isNumeric();
+    }
 
     public List<OpportunityContactRole> getPartialSoftCredits() {
         return this.partialSoftCredits;
@@ -183,5 +199,29 @@ public with sharing class DonationHistoryService {
             }
         }
         return partialSoftCreditOCRs;
+    }
+
+    /**
+     * @descritpion returns the years where the contact made at least 1 donation.
+     * @param contactId Id the contact id.
+     * @returns List<String>
+     */
+    public List<String> getYearsWithDonationsForContact() {
+        
+        if (!hasAccessToDonationHistory()) {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+        }
+        return convertAggregateResultListInStringList(new DonationHistorySelector().getYearsWithDonationForContact(contactId));
+     }
+
+    /**
+     * @description converts a List<AggregateResult> in a List<String> 
+     */ 
+    private List<String> convertAggregateResultListInStringList(List<AggregateResult> results) {
+        List<String> toReturn = new List<String>();
+        for(AggregateResult result : results) {
+            toReturn.add(String.valueOf(result.get('expr0')));
+        }
+        return toReturn;
     }
 }

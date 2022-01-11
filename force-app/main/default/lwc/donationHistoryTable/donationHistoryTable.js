@@ -1,4 +1,4 @@
-import { api, LightningElement, track, wire } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
@@ -11,6 +11,7 @@ const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
+    _filter;
     
     paymentMethodLabel;
 
@@ -45,14 +46,28 @@ export default class DonationHistoryTable extends LightningElement {
             { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },
         ];
     }
+
+    @api
+    get filter() {
+        return this._filter;
+    }
+
+    set filter(value) {
+        this._filter = value;
+        this.retrieveDonationHistory();
+    }
     
+    connectedCallback() {
+        this.retrieveDonationHistory();
+    }
+
     // eslint-disable-next-line @lwc/lwc/no-async-await
-    async connectedCallback() {
-        getDonationHistory({contactId: this.contactId})
+    async retrieveDonationHistory() {
+        getDonationHistory({contactId: this.contactId, filter : this.filter})
         .then(data => {
             if (data) {
                 this.allData = data;
-                this.data = data.slice(0, RECORDS_TO_LOAD);
+                this.data = data.slice(0, this.recordsToLoad);
                 this.totalNumberOfRows = data.length;
             }
         });
