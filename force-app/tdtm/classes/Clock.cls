@@ -1,4 +1,4 @@
-public without sharing abstract class Clock {
+public without sharing virtual class Clock {
 
     public virtual Datetime timeStamp() {
         return System.now();

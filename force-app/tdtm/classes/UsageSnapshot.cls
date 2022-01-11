@@ -1,6 +1,22 @@
 public with sharing class UsageSnapshot {
 
-    private Clock clock { get; set; }
+    private LimitsMonitor limitsMonitor {
+        get {
+            if (limitsMonitor == null) {
+                limitsMonitor = new LimitsMonitor();
+            } return limitsMonitor;
+        }
+        set;
+    }
+
+    private Clock clock {
+        get {
+            if (clock == null) {
+                clock = new Clock();
+            } return clock;
+        }
+        set;
+    }
 
     private class UsageSnapshotException extends System.Exception {
     }
@@ -12,9 +28,9 @@ public with sharing class UsageSnapshot {
 
     public UsageSnapshot() {
         this.timeUsedMillis = clock.getCurrentTimeMillis();
-        this.queriesUsed = queries();
-        this.cpuUsed = cpuTime();
-        this.dmlRows = dmlRows();
+        this.queriesUsed = limitsMonitor.queries();
+        this.cpuUsed = limitsMonitor.cpuTime();
+        this.dmlRows = limitsMonitor.dmlRows();
         this.timeStamp = clock.timeStamp();
     }
 
@@ -40,22 +56,30 @@ public with sharing class UsageSnapshot {
     public UsageSnapshot getIncrementFrom(UsageSnapshot offsetUsage) {
         return new UsageSnapshot(
             clock.getCurrentTimeMillis() - offsetUsage.timeUsedMillis,
-                queries() - offsetUsage.queriesUsed,
-                cpuTime() - offsetUsage.cpuUsed,
-                dmlRows() - offsetUsage.dmlRows
+                limitsMonitor.queries() - offsetUsage.queriesUsed,
+                limitsMonitor.cpuTime() - offsetUsage.cpuUsed,
+                limitsMonitor.dmlRows() - offsetUsage.dmlRows
         );
     }
 
-    private Integer dmlRows() {
-        return Limits.getDmlRows();
+    public Integer dmlRows() {
+        return dmlRows;
     }
 
-    private Integer cpuTime() {
-        return Limits.getCpuTime();
+    public Integer cpuTime() {
+        return cpuUsed;
     }
 
-    private Integer queries() {
-        return Limits.getQueries();
+    public Integer queries() {
+        return queriesUsed;
+    }
+
+    public Long timeMillis() {
+        return timeUsedMillis;
+    }
+
+    public Datetime timeStamp() {
+        return timeStamp;
     }
 
 }
