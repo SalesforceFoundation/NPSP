@@ -1,4 +1,4 @@
-public with sharing class TriggerHandlerRunResult {
+public without sharing virtual class TriggerHandlerRunResult {
     private TriggerContext triggerContext;
     private TriggerHandler triggerHandler;
     private UsageSnapshot start;
@@ -16,31 +16,35 @@ public with sharing class TriggerHandlerRunResult {
         this.stop = stop;
     }
 
-    public Long timeUsed() {
+    public virtual Long timeUsed() {
         return stop.timeMillis() - start.timeMillis();
     }
 
-    public Integer queriesUsed() {
+    public virtual Integer queriesUsed() {
         return stop.queries() - start.queries();
     }
 
-    public Integer cpuUsed() {
+    public virtual Integer cpuUsed() {
         return stop.cpuTime() - start.cpuTime();
     }
 
-    public Integer dmlRows() {
+    public virtual Integer dmlRows() {
         return stop.dmlRows() - start.dmlRows();
     }
 
-    public String triggerHandlerName() {
+    public virtual String triggerHandlerName() {
         return triggerHandler.className();
     }
 
-    public String triggerContext() {
+    public virtual String triggerContext() {
         return triggerContext.action().name();
     }
 
     public SObjectType getSObjectType() {
         return triggerContext.getSObjectType();
+    }
+
+    public UsageIncrement getUsageIncrement() {
+        return stop.getIncrementFrom(start);
     }
 }
