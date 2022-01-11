@@ -34,7 +34,7 @@ public with sharing class TriggerHandlerRunResult {
     }
 
     public String triggerContext() {
-        return triggerContext.triggerAction().name();
+        return triggerContext.action().name();
     }
 
     public SObjectType getSObjectType() {
