@@ -1,11 +1,17 @@
 public with sharing class TriggerHandlerMonitor {
 
-    private Integer queriesAtStart;
-    private Datetime startTime;
-    private Long startTimeMillis;
-    private Integer cpuAtStart;
     private TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
     private Boolean isCompactLoggingEnabled;
+    private UsageSnapshot start;
+    private Map<String, Set<String>> serviceMonitoringMap {
+        get {
+            if (serviceMonitoringMap == null) {
+                serviceMonitoringMap = new Map<String, Set<String>>();
+            }
+            return serviceMonitoringMap;
+        }
+        set;
+    }
 
     public TriggerHandlerMonitor(Boolean isCompactLogging){
        this.isCompactLoggingEnabled = isCompactLogging;
@@ -13,9 +19,9 @@ public with sharing class TriggerHandlerMonitor {
 
     public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
         UsageSnapshot usageSnapshot = new UsageSnapshot(
-                startTimeMillis,
-                queriesAtStart,
-                cpuAtStart
+                start.timeUsedMillis,
+                start.queriesUsed,
+                start.cpuUsed
         );
 
         runResults.add(
@@ -31,10 +37,7 @@ public with sharing class TriggerHandlerMonitor {
         System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
                 triggerHandler.className() + triggerContext.triggerAction().name()+
                 '######');
-        cpuAtStart = Limits.getCpuTime();
-        queriesAtStart = Limits.getQueries();
-        startTime = System.now();
-        startTimeMillis = System.currentTimeMillis();
+        start = new UsageSnapshot();
     }
 
     public TriggerHandlerRunResults getResults() {
