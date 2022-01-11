@@ -144,7 +144,7 @@ public with sharing class DonationHistoryService {
                             npe01__Payment_Method__c 
                             FROM npe01__OppPayment__r)  
                         FROM Opportunity 
-                        WHERE Id = '0061D00000EZg6cQAD'];
+                        WHERE Id IN :opportunitiesIds ];
     }
 
     private Set<Id> getPartialSoftCreditIds() {
@@ -198,7 +198,6 @@ public with sharing class DonationHistoryService {
         }
 		List<OpportunityContactRole> partialListWithModifiedAmount = changeAmountFieldForPartialSoftCredits(partialSoftCreditOCRs, partialSoftCreditRecords);
         return partialListWithModifiedAmount;
-        //return partialSoftCreditOCRs;
     }
     
     private static List<OpportunityContactRole> changeAmountFieldForPartialSoftCredits(List<OpportunityContactRole> partialSoftCreditList, List<Partial_Soft_Credit__c> partialSoftCredits){
