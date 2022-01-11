@@ -1,4 +1,4 @@
-public with sharing class UsageSnapshot {
+public without sharing virtual class UsageSnapshot {
 
     private LimitsMonitor limitsMonitor {
         get {
@@ -18,13 +18,11 @@ public with sharing class UsageSnapshot {
         set;
     }
 
-    private class UsageSnapshotException extends System.Exception {
-    }
-    private Long timeUsedMillis;
-    private Integer queriesUsed;
-    private Integer cpuUsed;
-    private Integer dmlRows;
-    private Datetime timeStamp;
+    protected Long timeUsedMillis;
+    protected Integer queriesUsed;
+    protected Integer cpuUsed;
+    protected Integer dmlRows;
+    protected Datetime timeStamp;
 
     public UsageSnapshot() {
         this.timeUsedMillis = clock.getCurrentTimeMillis();
@@ -34,52 +32,37 @@ public with sharing class UsageSnapshot {
         this.timeStamp = clock.timeStamp();
     }
 
-    public UsageSnapshot(
-            Long timeMillis,
-            Integer queries,
-            Integer cpu,
-            Integer dml
-    ) {
-        if (timeMillis == null
-                || queries == null
-                || cpu == null
-                || dml == null) {
-            throw new UsageSnapshotException('All parameters are required.');
-        }
-        timeUsedMillis = timeMillis;
-        queriesUsed = queries;
-        cpuUsed = cpu;
-        dmlRows = dml;
-        timeStamp = clock.timeStamp();
-    }
-
-    public UsageSnapshot getIncrementFrom(UsageSnapshot offsetUsage) {
-        return new UsageSnapshot(
-            clock.getCurrentTimeMillis() - offsetUsage.timeUsedMillis,
-                limitsMonitor.queries() - offsetUsage.queriesUsed,
-                limitsMonitor.cpuTime() - offsetUsage.cpuUsed,
-                limitsMonitor.dmlRows() - offsetUsage.dmlRows
+    public UsageIncrement getIncrementFrom(UsageSnapshot offsetUsage) {
+        return new UsageIncrement(
+            timeMillis() - offsetUsage.timeUsedMillis,
+                queries() - offsetUsage.queriesUsed,
+                cpuTime() - offsetUsage.cpuUsed,
+                dmlRows() - offsetUsage.dmlRows
         );
     }
 
-    public Integer dmlRows() {
+    public virtual Integer dmlRows() {
         return dmlRows;
     }
 
-    public Integer cpuTime() {
+    public virtual Integer cpuTime() {
         return cpuUsed;
     }
 
-    public Integer queries() {
+    public virtual Integer queries() {
         return queriesUsed;
     }
 
-    public Long timeMillis() {
+    public virtual Long timeMillis() {
         return timeUsedMillis;
     }
 
-    public Datetime timeStamp() {
+    public virtual Datetime timeStamp() {
         return timeStamp;
+    }
+
+    public Boolean isEqualTo(UsageSnapshot usageSnapshot) {
+        return dmlRows() == usageSnapshot.dmlRows();
     }
 
 }
