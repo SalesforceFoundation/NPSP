@@ -4,6 +4,8 @@ public without sharing virtual class TriggerHandlerRunResult {
     private UsageSnapshot start;
     private UsageSnapshot stop;
 
+    public TriggerHandlerRunResult(){}
+
     public TriggerHandlerRunResult(
             TriggerContext triggerContext,
             TriggerHandler triggerHandler,
