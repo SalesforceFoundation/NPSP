@@ -5667,7 +5667,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Page-level error for database-level security check</shortDescription>
-        <value>You don&apos;t have the necessary access to perform this action. Please check with your Salesforce Administrator.</value>
+        <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>commonActivate</fullName>
