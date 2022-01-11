@@ -1,32 +1,35 @@
 public with sharing class TriggerHandlerRunResult {
     private TriggerContext triggerContext;
     private TriggerHandler triggerHandler;
-    private Long timeUsed;
-    private Integer soqlUsed;
-    private Integer cpuUsed;
+    private UsageSnapshot start;
+    private UsageSnapshot stop;
 
     public TriggerHandlerRunResult(
             TriggerContext triggerContext,
             TriggerHandler triggerHandler,
-            UsageSnapshot usageSnapshot
+            UsageSnapshot start,
+            UsageSnapshot stop
     ) {
         this.triggerContext = triggerContext;
         this.triggerHandler = triggerHandler;
-        this.timeUsed = usageSnapshot.timeUsedMillis;
-        this.soqlUsed = usageSnapshot.queriesUsed;
-        this.cpuUsed = usageSnapshot.cpuUsed;
+        this.start = start;
+        this.stop = stop;
     }
 
     public Long timeUsed() {
-        return timeUsed;
+        return stop.timeMillis() - start.timeMillis();
     }
 
     public Integer queriesUsed() {
-        return soqlUsed;
+        return stop.queries() - start.queries();
     }
 
     public Integer cpuUsed() {
-        return cpuUsed;
+        return stop.cpuTime() - start.cpuTime();
+    }
+
+    public Integer dmlRows() {
+        return stop.dmlRows() - start.dmlRows();
     }
 
     public String triggerHandlerName() {
@@ -39,9 +42,5 @@ public with sharing class TriggerHandlerRunResult {
 
     public SObjectType getSObjectType() {
         return triggerContext.describeObj.SObjectType;
-    }
-
-    public UsageSnapshot usage() {
-        return new UsageSnapshot();
     }
 }

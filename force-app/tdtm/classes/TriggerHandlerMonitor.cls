@@ -13,29 +13,28 @@ public with sharing class TriggerHandlerMonitor {
         set;
     }
 
-    public TriggerHandlerMonitor(Boolean isCompactLogging){
-       this.isCompactLoggingEnabled = isCompactLogging;
-    }
-
-    public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
-        UsageSnapshot currentSnapshot = new UsageSnapshot();
-        UsageSnapshot usageIncrement = currentSnapshot.getIncrementFrom(start);
-
-        runResults.add(
-                new TriggerHandlerRunResult(
-                        context,
-                        triggerHandler,
-                        usageIncrement
-                )
-        );
+    public TriggerHandlerMonitor(Boolean isCompactLogging) {
+        this.isCompactLoggingEnabled = isCompactLogging;
     }
 
     public void startMonitoring(TriggerHandler triggerHandler, TriggerContext triggerContext) {
         System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
-                triggerHandler.className() + triggerContext.action().name()+
+                triggerHandler.className() + triggerContext.action().name() +
                 '######');
         //Currently, only supporting one service and context at a time.
         start = new UsageSnapshot();
+    }
+
+    public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
+        UsageSnapshot stop = new UsageSnapshot();
+        runResults.add(
+                new TriggerHandlerRunResult(
+                        context,
+                        triggerHandler,
+                        start,
+                        stop
+                )
+        );
     }
 
     public TriggerHandlerRunResults getResults() {
