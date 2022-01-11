@@ -44,16 +44,14 @@ public with sharing class CON_DeleteContactOverridePermissions {
     }
 
     /*********************************************************************************************************
-    * @description Check if the running user has minimum access to delete the records
-    * @return Map<Id, Boolean>
+    * @description Check if the running user has minimum access to delete the record
+    * @return Boolean
     */
-    public Map<Id, Boolean> canDelete(List<Id> recordIds) {
-        Map<Id, Boolean> deleteAccess = new Map<Id, Boolean>();
-
-        for (UserRecordAccess userAccess : selector.queryDeleteRecordAccess(recordIds)) {
-            deleteAccess.put(userAccess.RecordId, userAccess.HasDeleteAccess);
+    public Boolean canDelete(Id recordId) {
+        UserRecordAccess recordAccess = selector.queryDeleteRecordAccess(recordId);
+        if (recordAccess != null) {
+            return recordAccess.HasDeleteAccess;
         }
-
-        return deleteAccess;
+        return false;
     }
 }

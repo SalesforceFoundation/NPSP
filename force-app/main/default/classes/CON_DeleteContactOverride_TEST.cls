@@ -690,14 +690,21 @@ private class CON_DeleteContactOverride_TEST {
             return contactDetails;
         }
 
-        private List<UserRecordAccess> queryDeleteRecordAccess() {
-            List<UserRecordAccess> accessRecords = (List<UserRecordAccess>) JSON.deserialize('[' +
-                '{"RecordId": "' + this.contactId + '", ' +
-                '"HasDeleteAccess": "' + this.canDeleteContact + '"}, ' +
-                '{"RecordId": "' + this.accountId + '", ' +
-                '"HasDeleteAccess": "' + this.canDeleteAccount + '"}' +
-                ']', List<UserRecordAccess>.class);
-            return accessRecords;
+        private UserRecordAccess queryDeleteRecordAccess(String recordId) {
+            UserRecordAccess accessRecord;
+
+            if (recordId == contactId) {
+                accessRecord = (UserRecordAccess) JSON.deserialize(
+                    '{"RecordId": "' + this.contactId + '", ' +
+                    '"HasDeleteAccess": "' + this.canDeleteContact + '"}', UserRecordAccess.class);
+
+            } else {
+                accessRecord = (UserRecordAccess) JSON.deserialize(
+                    '{"RecordId": "' + this.accountId + '", ' +
+                        '"HasDeleteAccess": "' + this.canDeleteAccount + '"}', UserRecordAccess.class);
+            }
+
+            return accessRecord;
         }
 
         public Object handleMethodCall(
@@ -712,7 +719,7 @@ private class CON_DeleteContactOverride_TEST {
                     return this.isAccountWithSingleContact;
                 }
                 when 'queryDeleteRecordAccess' {
-                    return queryDeleteRecordAccess();
+                    return queryDeleteRecordAccess((Id) listOfArgs[0]);
                 }
             }
             return null;

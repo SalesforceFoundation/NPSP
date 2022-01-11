@@ -62,15 +62,15 @@ public with sharing class CON_DeleteContactOverrideSelector {
     }
 
     /*********************************************************************************************************
-    * @description Query UserRecordAccess for list of records for Id list and user
-    * @return List<UserRecordAccess>
+    * @description Query UserRecordAccess for record Id and user
+    * @return UserRecordAccess
     */
-    public List<UserRecordAccess> queryDeleteRecordAccess(List<Id> recordIds) {
+    public UserRecordAccess queryDeleteRecordAccess(Id recordId) {
         return [
             SELECT RecordId, HasDeleteAccess
             FROM UserRecordAccess
             WHERE UserId = :UserInfo.getUserId()
-            AND RecordId IN :recordIds
+            AND RecordId = :recordId
         ];
     }
 

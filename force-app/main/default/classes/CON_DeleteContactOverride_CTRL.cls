@@ -142,27 +142,17 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * whether the contact or its account should be deleted.
     */
     public void preProcessDelete() {
-        contactRecord = contactOverrideSelector.queryContact(contactId);
-        validateRecordAccess();
+        hasMinimumAccess = permissions.canDelete(contactId);
         if (!hasMinimumAccess) {
             return;
         }
 
+        contactRecord = contactOverrideSelector.queryContact(contactId);
+        hasAccountDeleteAccess = permissions.canDelete(contactRecord.AccountId);
+
         isHouseholdAccount = false;
         isOnlyContactInHousehold = false;
         handleHouseholdAccount();
-    }
-
-    /*******************************************************************************************************
-    * @description Required processing to check access and establish context. Queries for contact, verifies
-    * whether the contact or its account should be deleted.
-    */
-    public void validateRecordAccess() {
-        List<Id> recordIds = new List<Id>{ contactId, contactRecord.AccountId };
-        Map<Id, Boolean> deleteAccess = permissions.canDelete(recordIds);
-
-        hasMinimumAccess = deleteAccess.get(contactId);
-        hasAccountDeleteAccess = deleteAccess.get(contactRecord.AccountId);
     }
 
     /*******************************************************************************************************
