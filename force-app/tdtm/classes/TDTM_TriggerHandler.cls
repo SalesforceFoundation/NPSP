@@ -86,18 +86,19 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
+        DescribeSObjectResult describeSObjectResult = UTIL_Describe.getObjectDescribe(context.getSObjectType());
         UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.action() + ' on ' +
-                context.describeObj.getLabel());
+                describeSObjectResult.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         // If there are no records, insert the defaults.
         if (!defaultRecordsInserted && triggerHandlerRepo.isEmpty()) {
             // We will not insert the default records when Triggered by the User object to prevent MixedDML errors
-            if (context.describeObj.getsObjectType() == User.sObjectType) {
+            if (context.getSObjectType() == User.sObjectType) {
                 return;
             }
-            
+
             List<Trigger_Handler__c> defaultConfig = TDTM_DefaultConfig.getDefaultRecords();
             // Rather than insert the records in unit tests, just populate the static list
             // However to prevent any conflicts with our customers unit tests, always insert the records
@@ -113,14 +114,16 @@ public class TDTM_TriggerHandler {
         // Get the trigger handlers to run. Note that we are using the local object name, so
         // it works for objects
         // from Cumulus both in the package and unmanaged dev orgs.
+        String objectDescribeLocalName = describeSObjectResult.getLocalName();
         TriggerHandlers triggerHandlersToRun =
                 new TriggerHandlers(
                         triggerHandlerRepo.getClassesToCallForObject(
-                                context.describeObj.getLocalName(),
+                                objectDescribeLocalName,
                                 context.action()
                         )
                 );
-//        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + context.describeObj
+//        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + UTIL_Describe
+//        .getObjectDescribe(context.getSObjectType())
 //        .getLocalName()
 //        + ': ' + JSON.serializePretty(classesToCall));
 
@@ -149,7 +152,7 @@ public class TDTM_TriggerHandler {
 
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + triggerHandler.className() + ' ' +
                         'for ' +
-                    context.describeObj.getName() + ': ' + context.action());
+                    context.getSObjectType() + ': ' + context.action());
             }
             //Process the result
             if (dmlWrapper != null) {
@@ -291,20 +294,26 @@ public class TDTM_TriggerHandler {
 
     private static void reportDebugMessageWithInfo(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' + (context
-                .records !=
-                null ? context.records : context.existingRecords).size() + ' records');
+                context.getSObjectType() + ': ' + context.action() +
+                ' ' +
+                'with ' + (context.records != null ? context.records : context.existingRecords).size() + ' records');
     }
 
     private static void reportDebugMessageSync(TriggerHandler triggerHandler,TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' +
+                context.getSObjectType() + ': ' + context.action() +
+                '' +
+                ' ' +
+                'with ' +
                 getRecords(context).size() + ' records');
     }
 
     private static void reportDebugMessageAsync(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.action() + ' with ' +
+                context.getSObjectType() + ': ' + context.action() +
+                '' +
+                ' ' +
+                'with ' +
                 getRecords(context).size() + ' records');
     }
 
@@ -353,7 +362,7 @@ public class TDTM_TriggerHandler {
        }
 
        classToRun.runFutureNonStatic(setNewId, setOldId, context.action().name(),
-               context.describeObj.getName(), classToRunName);
+               String.valueOf(context.getSObjectType()), classToRunName);
     }
 
     /**

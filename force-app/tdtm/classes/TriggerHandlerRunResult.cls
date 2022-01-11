@@ -41,6 +41,6 @@ public with sharing class TriggerHandlerRunResult {
     }
 
     public SObjectType getSObjectType() {
-        return triggerContext.describeObj.SObjectType;
+        return triggerContext.getSObjectType();
     }
 }

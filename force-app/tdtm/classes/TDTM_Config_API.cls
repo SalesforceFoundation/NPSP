@@ -107,7 +107,7 @@ global class TDTM_Config_API {
                         isUnDelete,
                         newList,
                         oldList,
-                        describeObj
+                        describeObj.getSObjectType()
                 );
 
         TDTM_TriggerHandler.run(

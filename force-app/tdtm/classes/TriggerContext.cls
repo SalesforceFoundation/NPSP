@@ -35,9 +35,13 @@ public with sharing class TriggerContext {
         return isBefore;
     }
 
-    public TDTM_Runnable.Action action(){
-        return determineTriggerAction(isBefore
-                , isInsert, isUpdate, isDelete);
+    public TDTM_Runnable.Action action() {
+        return determineTriggerAction(
+                isBefore,
+                isInsert,
+                isUpdate,
+                isDelete
+        );
     }
 
     /*******************************************************************************************************
@@ -90,7 +94,9 @@ public with sharing class TriggerContext {
         if (action() == TDTM_Runnable.Action.AfterUpdate
                 || action() == TDTM_Runnable.Action.BeforeUpdate) {
             List<SObject> listSObj = new List<SObject>();
-            Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(describeObj);
+            Map<Id, SObject> mapIdToSObj = mapDescObjToMapOldForUpdates.get(
+                    UTIL_Describe.getObjectDescribe(sObjType)
+            );
             if (mapIdToSObj != null) {
 
                 for (SObject sobj : existingRecords) {
@@ -113,7 +119,10 @@ public with sharing class TriggerContext {
         // now cache objects for future Update calls
         if (action() == TDTM_Runnable.Action.AfterInsert
                 || action() == TDTM_Runnable.Action.AfterUpdate) {
-            mapDescObjToMapOldForUpdates.put(describeObj, new Map<Id, SObject>(records));
+            mapDescObjToMapOldForUpdates.put(
+                    UTIL_Describe.getObjectDescribe(sObjType),
+                    new Map<Id, SObject>(records)
+            );
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached records: ' + records);
         }
     }
