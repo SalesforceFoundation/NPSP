@@ -150,7 +150,7 @@ private class AN_AutoNumberService_TEST {
     @IsTest
     static void shouldIncrementStartingNumberZeroCorrectly() {
         Id autoNumberId = utility.setupAutoNumber(true,
-                'ABCZZZ-{000}', 0, true);
+                'ABCZZZ-{0000}', 0, true);
 
         SObject sobj = getSObjectInstance();
         insert sobj;
@@ -161,7 +161,7 @@ private class AN_AutoNumberService_TEST {
 
         System.assertNotEquals(null, sobj.get(autoNumberFieldName),
                 'The SObject should have an AutoNumber applied.');
-        System.assertEquals('ABCZZZ-000', sobj.get(autoNumberFieldName),
+        System.assertEquals('ABCZZZ-0000', sobj.get(autoNumberFieldName),
                 'The starting number 0 should be used for the first record.');
         System.assertEquals(0, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
                 'Max Used Number should be 0 after the first record is inserted when ' +
@@ -176,7 +176,7 @@ private class AN_AutoNumberService_TEST {
 
         System.assertNotEquals(null, sobj1.get(autoNumberFieldName),
                 'The SObject should have an AutoNumber applied.');
-        System.assertEquals('ABCZZZ-001', sobj1.get(autoNumberFieldName),
+        System.assertEquals('ABCZZZ-0001', sobj1.get(autoNumberFieldName),
                 'The number 1 should be used for the next record.');
         System.assertEquals(1, utility.getAutoNumberById(autoNumberId).Max_Used_Number__c,
                 'Max Used Number should be 1 after the second record is inserted when ' +
