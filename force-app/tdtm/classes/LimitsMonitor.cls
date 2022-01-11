@@ -1,15 +1,13 @@
 public without sharing virtual class LimitsMonitor {
-    public Integer queries() {
-        return 0;
+    public virtual Integer queries() {
+        return Limits.getQueries();
     }
 
-    public Integer cpuTime() {
-        return 0;
+    public virtual Integer cpuTime() {
+        return Limits.getCpuTime();
     }
 
-    public Integer dmlRows() {
-        return 0;
+    public virtual Integer dmlRows() {
+        return Limits.getDmlRows();
     }
-
-
 }
