@@ -8,7 +8,7 @@ public with sharing class TriggerContext {
     private Boolean isUpdate = false;
     private Boolean isDelete = false;
     private Boolean isUndelete = false;
-    public DescribeSObjectResult describeObj;
+    private SObjectType sObjType;
 
     public TriggerContext(
             Boolean isBefore,
@@ -19,7 +19,7 @@ public with sharing class TriggerContext {
             Boolean isUndelete,
             List<SObject> newList,
             List<SObject> oldList,
-            DescribeSObjectResult describeSObjResult) {
+            SObjectType sObjType) {
         this.isBefore = isBefore;
         this.isAfter = isAfter;
         this.isInsert = isInsert;
@@ -28,7 +28,7 @@ public with sharing class TriggerContext {
         this.isUndelete = isUndelete;
         this.records = newList;
         this.existingRecords = oldList;
-        this.describeObj = describeSObjResult;
+        this.sObjType = sObjType;
     }
 
     public Boolean isBefore() {
@@ -125,5 +125,9 @@ public with sharing class TriggerContext {
             );
             //UTIL_Debug.debug(LoggingLevel.WARN, '**** cached records: ' + records);
         }
+    }
+
+    public SObjectType getSObjectType() {
+        return sObjType;
     }
 }
