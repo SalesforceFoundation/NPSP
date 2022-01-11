@@ -35,7 +35,7 @@ public with sharing class TriggerHandlerMonitor {
 
     public void startMonitoring(TriggerHandler triggerHandler, TriggerContext triggerContext) {
         System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
-                triggerHandler.className() + triggerContext.triggerAction().name()+
+                triggerHandler.className() + triggerContext.action().name()+
                 '######');
         start = new UsageSnapshot();
     }
