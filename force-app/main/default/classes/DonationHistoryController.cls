@@ -87,11 +87,21 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId);
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         if(isPaymentEnabled){
-			//List<Opportunity> paymentMethod = service.getPaymentMethod(contactRoles);
-        }
-        for(OpportunityContactRole role : contactRoles) {
-            donationHistories.add(new DonationHistoryView(role, type, paymentType));
+			List<Opportunity> paymentMethod = service.getPaymentMethod(contactRoles);
+			System.debug('paymentMethod: ' + paymentMethod);
+            for(OpportunityContactRole role : contactRoles) {
+                for(Opportunity opp : paymentMethod){
+                    if(role.OpportunityId == opp.Id){
+                        donationHistories.add(new DonationHistoryView(role, type, opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c));
+                    }
+                }
+        	}
+        }else{
+            for(OpportunityContactRole role : contactRoles) {
+           		donationHistories.add(new DonationHistoryView(role, type, paymentType));
+        	}
         }
         return donationHistories;
     }
+    
 }

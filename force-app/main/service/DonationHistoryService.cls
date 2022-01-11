@@ -132,18 +132,20 @@ public with sharing class DonationHistoryService {
         this.partialSoftCredits = buildPartialSoftCredits(credits);
     }
 
-	/*public static List<Opportunity> getPaymentMethod(List<OpportunityContactRole> contactRoles){
+	public List<Opportunity> getPaymentMethod(List<OpportunityContactRole> contactRoles){
         //TODO: verificar si funciona
-        for(OpportunityContactRole cr: contactRoles){
-            Set<Id> opportunitiesIds = cr.Opportunity.Id;
+		List<Id> opportunitiesIds = new List<Id>();
+        for(OpportunityContactRole ocr: contactRoles){
+            opportunitiesIds.add(ocr.Opportunity.Id);
         }
+		System.debug('opportunitiesIds: ' + opportunitiesIds);
         //TODO: controlar resultados
         return [SELECT Id, (SELECT 
-                            Id, Payment_Method 
-                            FROM npe01__OppPayment__r) 
+                            npe01__Payment_Method__c 
+                            FROM npe01__OppPayment__r)  
                         FROM Opportunity 
-                        WHERE Id IN :opportunitiesIds];
-    }*/
+                        WHERE Id = '0061D00000EZg6cQAD'];
+    }
 
     private Set<Id> getPartialSoftCreditIds() {
         return UTIL_SObject.extractIds(this.partialSoftCredits);
