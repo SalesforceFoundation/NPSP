@@ -86,7 +86,7 @@ public class TDTM_TriggerHandler {
             UTIL_Debug.debug(LoggingLevel.WARN, '****Trigger.new size: ' + context.records.size());
         }
 
-        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.triggerAction() + ' on ' +
+        UTIL_Debug.debug(LoggingLevel.WARN, '****ACTION: ' + context.action() + ' on ' +
                 context.describeObj.getLabel());
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
@@ -117,7 +117,7 @@ public class TDTM_TriggerHandler {
                 new TriggerHandlers(
                         triggerHandlerRepo.getClassesToCallForObject(
                                 context.describeObj.getLocalName(),
-                                context.triggerAction()
+                                context.action()
                         )
                 );
 //        UTIL_Debug.debug(LoggingLevel.WARN, '****Classes To Call for ' + context.describeObj
@@ -149,7 +149,7 @@ public class TDTM_TriggerHandler {
 
                 UTIL_Debug.debugWithInfo('****Finished executing: ' + triggerHandler.className() + ' ' +
                         'for ' +
-                    context.describeObj.getName() + ': ' + context.triggerAction());
+                    context.describeObj.getName() + ': ' + context.action());
             }
             //Process the result
             if (dmlWrapper != null) {
@@ -291,20 +291,20 @@ public class TDTM_TriggerHandler {
 
     private static void reportDebugMessageWithInfo(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debugWithInfo('****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' + (context
+                context.describeObj.getName() + ': ' + context.action() + ' with ' + (context
                 .records !=
                 null ? context.records : context.existingRecords).size() + ' records');
     }
 
     private static void reportDebugMessageSync(TriggerHandler triggerHandler,TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling synchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' +
+                context.describeObj.getName() + ': ' + context.action() + ' with ' +
                 getRecords(context).size() + ' records');
     }
 
     private static void reportDebugMessageAsync(TriggerHandler triggerHandler, TriggerContext context) {
         UTIL_Debug.debug(LoggingLevel.WARN, '****Calling asynchronously: ' + triggerHandler.className() + ' for ' +
-                context.describeObj.getName() + ': ' + context.triggerAction() + ' with ' +
+                context.describeObj.getName() + ': ' + context.action() + ' with ' +
                 getRecords(context).size() + ' records');
     }
 
@@ -352,7 +352,7 @@ public class TDTM_TriggerHandler {
            setOldId = new Set<Id>(om.keySet());
        }
 
-       classToRun.runFutureNonStatic(setNewId, setOldId, context.triggerAction().name(),
+       classToRun.runFutureNonStatic(setNewId, setOldId, context.action().name(),
                context.describeObj.getName(), classToRunName);
     }
 
