@@ -20,9 +20,9 @@ public with sharing class UsageSnapshot {
 
     private class UsageSnapshotException extends System.Exception {
     }
-    public Long timeUsedMillis;
-    public Integer queriesUsed;
-    public Integer cpuUsed;
+    private Long timeUsedMillis;
+    private Integer queriesUsed;
+    private Integer cpuUsed;
     private Integer dmlRows;
     private Datetime timeStamp;
 
