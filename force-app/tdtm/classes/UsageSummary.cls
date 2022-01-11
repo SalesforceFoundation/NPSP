@@ -38,4 +38,7 @@ public without sharing class UsageSummary {
         return total;
     }
 
+    public Integer timesRun(){
+        return snapshots.size();
+    }
 }
