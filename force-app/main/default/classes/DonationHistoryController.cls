@@ -83,8 +83,8 @@ public with sharing class DonationHistoryController {
 
     /**
      * @description returns the years when the contact made at least 1 donation
-     * @param contactId Id id of the contact
-     * @returns List<String>
+     * @param contactId Id of the contact
+     * @return List<String>
      */
     @AuraEnabled(cacheable=true)
     public static List<String> getYearsWithDonations(Id contactId){

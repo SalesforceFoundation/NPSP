@@ -203,8 +203,8 @@ public with sharing class DonationHistoryService {
 
     /**
      * @descritpion returns the years where the contact made at least 1 donation.
-     * @param contactId Id the contact id.
-     * @returns List<String>
+     * @param contactId the contact id.
+     * @return List<String>
      */
     public List<String> getYearsWithDonationsForContact() {
         
@@ -215,7 +215,9 @@ public with sharing class DonationHistoryService {
      }
 
     /**
-     * @description converts a List<AggregateResult> in a List<String> 
+     * @description converts a List<AggregateResult> in a List<String> .
+     * @param result The list with with the aggregate results from the database.
+     * @return List<String> the list of the values in the expr0 represented as String.
      */ 
     private List<String> convertAggregateResultListInStringList(List<AggregateResult> results) {
         List<String> toReturn = new List<String>();
