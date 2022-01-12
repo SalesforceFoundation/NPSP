@@ -46,7 +46,11 @@ public without sharing virtual class TriggerHandlerRunResult {
         return triggerContext.getSObjectType();
     }
 
-    public UsageIncrement getUsageIncrement() {
-        return stop.getIncrementFrom(start);
+    public UsageSummary usageSummary() {
+        return new UsageSummary(
+                new List<UsageSnapshot>{
+                        stop.getIncrementFrom(start)
+                }
+        );
     }
 }
