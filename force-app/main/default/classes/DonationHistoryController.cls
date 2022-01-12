@@ -49,14 +49,14 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(OpportunityContactRole ocr, String type){
+        public DonationHistoryView(OpportunityContactRole ocr){
             this.id = ocr.Id;
             this.name = ocr.Opportunity.Name;
             this.isPrimary = ocr.isPrimary;
             this.closeDate = ocr.Opportunity.CloseDate;
             this.role = ocr.Role;
             this.amount = ocr.Opportunity.Amount;
-            this.creditType = type;
+            this.creditType = System.Label.CRLP_HardCredit;
             this.paymentMethod = 'Cash';
         }
     }
@@ -71,20 +71,17 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            service.buildDonationHistory();
-            donationHistories.addAll(buildHistoryFromOCRs(service.getHardCredits(), System.Label.CRLP_HardCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getSoftCredits(), System.Label.CRLP_SoftCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getPartialSoftCredits(), service.getSoftCreditLabel()));
+            donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
-    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles, String type) {
+    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for(OpportunityContactRole role : contactRoles) {
-            donationHistories.add(new DonationHistoryView(role, type));
+            donationHistories.add(new DonationHistoryView(role));
         }
         return donationHistories;
     }

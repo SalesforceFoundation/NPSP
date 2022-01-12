@@ -50,27 +50,11 @@ public inherited sharing class DonationHistorySelector {
                 IsPrimary
             FROM OpportunityContactRole 
             WHERE Opportunity.IsWon = true 
+            AND IsPrimary = true
             AND ContactId =:contactId 
             WITH SECURITY_ENFORCED
             ORDER BY Opportunity.CloseDate 
-            DESC LIMIT 2000
+            DESC LIMIT 50
         ];
     }
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return Partial_Soft_Credit__c data.
-    */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
-        return [
-            SELECT 
-                Id, 
-                Amount__c, 
-                Role_Name__c,
-                Contact_Role_ID__c 
-            FROM Partial_Soft_Credit__c 
-            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
-            WITH SECURITY_ENFORCED
-        ];
-    }   
 }
