@@ -477,7 +477,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         for (Integer i = 0; i < getRecords().size(); i++) {
             Contact newRecord = (Contact) getRecords()[i];
 
-            if (contactService.isContactAddressChanged(newRecord, oldVersionOf(newRecord))) {
+            if (new NPSP_Contact(newRecord, oldVersionOf(newRecord)).isAddressChanged()) {
                 UTIL_Address.normalizeLineBreak(newRecord);
             }
         }
