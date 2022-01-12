@@ -8,6 +8,18 @@ private class ContactTests_TEST {
 //        c.FirstName = null;
         insert c;
 
+        TriggerHandlerRunResults triggerHandlerRunResults =
+                TDTM_TriggerHandler.Monitor.getResultsFor(
+                        'ACCT_Accounts_TDTM',
+                        'BeforeUpdate'
+                );
+
+        List<TriggerHandlerRunResult> triggerHandlerRunResults2 =
+                TDTM_TriggerHandler.Monitor.getResults().getRunResults();
+        System.assert(!triggerHandlerRunResults2.isEmpty(),
+                'There should be at least one trigger handler run result.');
+        System.assert(!triggerHandlerRunResults.getRunResults().isEmpty());
+
         //Now you can assert against trigger handler run stats (!)
         // for specific services + actions:
         System.assertEquals(1,
