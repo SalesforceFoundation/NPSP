@@ -37,13 +37,14 @@ private class UsageSummaryTests_TEST {
         );
 
         System.assertEquals(60, usageSummary.totalQueries());
+        System.assertEquals(20, usageSummary.totalDmlRows());
 
     }
 
     @IsTest
     static void format_should_include_values() {
         UsageIncrement usageIncrement =
-                new UsageIncrement(10, 10, 10, 10);
+                new UsageIncrement(10, 10, 10, 90);
 
         UsageSummary usageSummary =
                 new UsageSummary(
@@ -55,6 +56,7 @@ private class UsageSummaryTests_TEST {
         System.debug(LoggingLevel.ERROR, '^^^^^^ usageIncrement.format() ^^^^^^');
 
         System.assert(usageSummary.format().contains('10'));
+        System.assert(usageSummary.format().contains('90'));
     }
 
     @IsTest
