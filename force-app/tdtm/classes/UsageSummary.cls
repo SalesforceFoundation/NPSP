@@ -41,4 +41,17 @@ public without sharing class UsageSummary {
     public Integer timesRun(){
         return snapshots.size();
     }
+
+    public String format() {
+        JSONGenerator jsonGenerator = JSON.createGenerator(true);
+        jsonGenerator.writeStartObject();
+        jsonGenerator.writeNumberField('timesRun', timesRun());
+        jsonGenerator.writeNumberField('timeMillis', totalTimeMillis());
+        jsonGenerator.writeNumberField('queries', totalQueries());
+        jsonGenerator.writeNumberField('cpu', totalCpu());
+        jsonGenerator.writeNumberField('dmlRows', totalDmlRows());
+        jsonGenerator.close();
+        return jsonGenerator.getAsString();
+    }
+
 }
