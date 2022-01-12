@@ -17,5 +17,5 @@
         <members>DataImport__c.custom_picklist__c</members>
         <name>CustomField</name>
     </types>
-    <version>48.0</version>
+    <version>53.0</version>
 </Package>

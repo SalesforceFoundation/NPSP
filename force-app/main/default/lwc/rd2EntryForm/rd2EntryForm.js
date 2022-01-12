@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { Rd2Service, PERIOD } from 'c/rd2Service';
+import { Rd2Service, PERIOD, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN } from 'c/rd2Service';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
 import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
@@ -71,8 +71,6 @@ import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from '@salesforce/schema/Account.npe01_
 const CHANGE_TYPE_UPGRADE = 'Upgrade';
 const CHANGE_TYPE_DOWNGRADE = 'Downgrade';
 
-const RECURRING_TYPE_OPEN = 'Open';
-const RECURRING_TYPE_FIXED = 'Fixed';
 const ELEVATE_SUPPORTED_COUNTRIES = ['US', 'USA', 'United States', 'United States of America'];
 const ELEVATE_SUPPORTED_CURRENCIES = ['USD'];
 

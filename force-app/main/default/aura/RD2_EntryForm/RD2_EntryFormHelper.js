@@ -23,7 +23,7 @@
      * @description: Redirect the page to either parent or RD record
      */
     redirectToPage: function (component, event) {
-        let navigateToId = component.get('v.parentId') || event.getParams('detail').recordId;
+        let navigateToId = event.getParams('detail').recordId || component.get('v.parentId');
 
         let navEvt = this.constructNavigationEvent(navigateToId);
         navEvt.fire();

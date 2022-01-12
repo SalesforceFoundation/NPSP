@@ -15,5 +15,5 @@
         <members>OpportunityStage</members>
         <name>StandardValueSet</name>
     </types>
-    <version>48.0</version>
+    <version>53.0</version>
 </Package>
