@@ -140,11 +140,8 @@ public with sharing class DonationHistoryService {
         }
 		System.debug('opportunitiesIds: ' + opportunitiesIds);
         //TODO: controlar resultados
-        return [SELECT Id, (SELECT 
-                            npe01__Payment_Method__c 
-                            FROM npe01__OppPayment__r)  
-                        FROM Opportunity 
-                        WHERE Id IN :opportunitiesIds ];
+		List<Opportunity> oppList = selector.getOppAndPayment(opportunitiesIds);
+        return oppList;
     }
 
     private Set<Id> getPartialSoftCreditIds() {

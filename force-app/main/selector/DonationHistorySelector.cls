@@ -30,109 +30,59 @@
 /**
 * @author Salesforce.org
 * @date 2021
-* @description Selector class for Opportunities
-*              and its Payments and OpportunityContactRoles in NPSP.
+* @description Donation History Selector class.
 */
-public with sharing class DonationSelector {
+public inherited sharing class DonationHistorySelector {
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return OpportunityContactRole data.
+    */
+    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
+        return [
+            SELECT Id, 
+	            Opportunity.Id,
+                Opportunity.Name, 
+                Opportunity.CloseDate, 
+                Opportunity.Amount, 
+                Contact.Email, 
+                Contact.Name, 
+                Role, 
+                IsPrimary
+            FROM OpportunityContactRole 
+            WHERE Opportunity.IsWon = true 
+            AND ContactId =:contactId 
+            WITH SECURITY_ENFORCED
+            ORDER BY Opportunity.CloseDate 
+            DESC LIMIT 2000
+        ];
+    }
+
+    public List<Opportunity> getOppAndPayment(List<Id> opportunitiesIds){
+        return [SELECT Id, (SELECT 
+                            npe01__Payment_Method__c 
+                            FROM npe01__OppPayment__r 
+                            ORDER BY npe01__Payment_Date__c
+                            LIMIT 1)  
+                        FROM Opportunity 
+                        WHERE Id IN :opportunitiesIds ];
+    }
     
-    public DonationSelector() {}
-
-    public List<Opportunity> getOpenDonations(String relationshipField, Id donorId) {
-        return Database.query(openDonationsQueryString(relationshipField, donorId));
-    }
-
-    public List<Opportunity> getDonation(Id donationId) {
-        List<String> selectFields = new List<String> {
-            opportunityContactRoleSubqueryString()
-        };
-        selectFields.addAll(opportunityFields());
-
-        String soql = new UTIL_Query()
-            .withFrom(Opportunity.SObjectType)
-            .withSelectFields(selectFields)
-            .withWhere('Id = :donationId')
-            .withSecurityEnforced()
-            .build();
-
-        return Database.query(soql);
-    }
-
-    @TestVisible
-    private String openDonationsQueryString(String relationshipField, String donorId) {
-        List<String> opportunityFields = new List<String> {};
-        opportunityFields.addAll(opportunityFields());
-        opportunityFields.add(paymentsSubqueryString());
-        opportunityFields.add(opportunityContactRoleSubqueryString());
-
-        List<String> whereClause = new List<String> {
-            relationshipField +' = :donorId',
-            String.valueOf(Opportunity.IsClosed) + ' = false'
-        };
-
-        String soql = new UTIL_Query()
-            .withFrom(Opportunity.SObjectType)
-            .withSelectFields(opportunityFields)
-            .withWhere(whereClause)
-            .withOrderBy(String.valueOf(Opportunity.CloseDate) + ' ASC')
-            .withSecurityEnforced()
-            .build();
-
-        return soql;
-    }
-
-    private List<String> opportunityFields() {
-        return new List<String> {
-            String.valueOf(Opportunity.Id),
-            String.valueOf(Opportunity.Name),
-            String.valueOf(Opportunity.StageName),
-            String.valueOf(Opportunity.CloseDate),
-            String.valueOf(Opportunity.IsClosed),
-            String.valueOf(Opportunity.Amount),
-            String.valueOf(Opportunity.npe01__Number_of_Payments__c)
-        };
-    }
-
-    private String paymentsSubqueryString() {
-        List<String> paymentFields = new List<String> {
-            String.valueOf(npe01__OppPayment__c.Id),
-            String.valueOf(npe01__OppPayment__c.Name),
-            String.valueOf(npe01__OppPayment__c.npe01__Scheduled_Date__c),
-            'npe01__Opportunity__r.Name',
-            String.valueOf(npe01__OppPayment__c.npe01__Opportunity__c),
-            String.valueOf(npe01__OppPayment__c.npe01__Payment_Amount__c),
-            String.valueOf(npe01__OppPayment__c.npe01__Payment_Date__c),
-            String.valueOf(npe01__OppPayment__c.npe01__Paid__c),
-            String.valueOf(npe01__OppPayment__c.npe01__Written_Off__c),
-            String.valueOf(npe01__OppPayment__c.Elevate_Payment_API_Status__c)
-        };
-
-        List<String> whereClause = new List<String> {
-            String.valueOf(npe01__OppPayment__c.npe01__Written_Off__c) + ' = false',
-            String.valueOf(npe01__OppPayment__c.npe01__Paid__c) + ' = false'
-        };
-
-        String paymentsSubqueryString = new UTIL_Query()
-            .withFrom('npe01__OppPayment__r')
-            .withSelectFields(paymentFields)
-            .withWhere(whereClause)
-            .build();
-
-        return '(' + paymentsSubqueryString + ')';
-    }
-
-    private String opportunityContactRoleSubqueryString() {
-        List<String> opportunityContactRoleFields = new List<String> {
-            String.valueOf(OpportunityContactRole.Id),
-            String.valueOf(OpportunityContactRole.Role),
-            String.valueOf(OpportunityContactRole.ContactId)
-        };
-
-        String opportunityContactRoleSubqueryString = new UTIL_Query()
-            .withFrom('OpportunityContactRoles')
-            .withSelectFields(opportunityContactRoleFields)
-            .withWhere('isPrimary = false')
-            .build();
-
-        return '(' + opportunityContactRoleSubqueryString + ')';
-    }
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Partial_Soft_Credit__c data.
+    */
+    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
+        return [
+            SELECT 
+                Id, 
+                Amount__c, 
+                Role_Name__c,
+                Contact_Role_ID__c 
+            FROM Partial_Soft_Credit__c 
+            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
+            WITH SECURITY_ENFORCED
+        ];
+    }   
 }
