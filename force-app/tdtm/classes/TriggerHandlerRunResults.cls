@@ -29,10 +29,21 @@ public with sharing class TriggerHandlerRunResults {
     }
 
     public void logResults() {
-        System.debug(LoggingLevel.ERROR, '*** ##### LOG RESULTS ######');
-        System.debug(LoggingLevel.ERROR, '*** totalTimeUsedInMillis: ' + totalTimeUsedInMillis);
-        System.debug(LoggingLevel.ERROR, '*** totalQueriesUsed: ' + totalQueriesUsed);
-        System.debug(LoggingLevel.ERROR, '*** totalCpuTimeUsed: ' + totalCpuTimeUsed);
+        UsageSummary usageSummary = new
+                UsageSummary(getUsageIncrements());
+        System.debug(LoggingLevel.ERROR, '*** ##### USAGE SUMMARY: All Results ######');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + usageSummary.format());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ usageSummary.format() ^^^^^^');
+    }
+
+    private List<UsageIncrement> getUsageIncrements() {
+        List<UsageIncrement> usageIncrements = new List<UsageIncrement>();
+        for (TriggerHandlerRunResult runResult : getRunResults()) {
+            usageIncrements.add(
+                    runResult.getUsageIncrement()
+            );
+        }
+        return usageIncrements;
     }
 
     public List<TriggerHandlerRunResult> getRunResults() {
@@ -43,7 +54,7 @@ public with sharing class TriggerHandlerRunResults {
         System.debug(LoggingLevel.ERROR, '*** ##### Printing STACK ######');
         Integer i = 1;
         SObjectType currentType;
-        for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+        for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
             SObjectType sObjectType = triggerHandlerRunResult.getSObjectType();
             if (currentType != null && sObjectType !=
                     currentType) {
@@ -101,11 +112,7 @@ public with sharing class TriggerHandlerRunResults {
     }
 
     private Integer totalQueries() {
-        Integer total = 0;
-        for (String str : classNameToNumberOfQueries.keySet()) {
-            total = total + classNameToNumberOfQueries.get(str);
-        }
-        return total;
+        return new UsageSummary(getUsageIncrements()).totalQueries();
     }
 
     private void updateNumberOfQueriesUsed(String className, Integer queriesUsed) {
@@ -142,32 +149,148 @@ public with sharing class TriggerHandlerRunResults {
         }
     }
 
+    public TriggerHandlerRunResults getRunResultsFor(String serviceName) {
+        TriggerHandlerRunResults serviceContextRunResults = new TriggerHandlerRunResults();
+        for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
+            if (triggerHandlerRunResult.triggerHandlerName() == serviceName) {
+                serviceContextRunResults.add(triggerHandlerRunResult);
+            }
+        }
+        return serviceContextRunResults;
+    }
 
-//    private enum Action {
-//        BeforeInsert,
-//        BeforeUpdate,
-//        BeforeDelete,
-//        AfterInsert,
-//        AfterUpdate,
-//        AfterDelete,
-//        AfterUndelete
-//    }
+    public TriggerHandlerRunResults getRunResultsFor(String serviceName, String context) {
+        TriggerHandlerRunResults serviceContextRunResults = new TriggerHandlerRunResults();
+        for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
+            if (triggerHandlerRunResult.triggerHandlerName() == serviceName
+                    && triggerHandlerRunResult.triggerContext() == context) {
+                serviceContextRunResults.add(triggerHandlerRunResult);
+            }
+        }
+        return serviceContextRunResults;
+    }
+
+    public UsageSummary usageSummary() {
+        return new UsageSummary(usageIncrements());
+    }
+
+    private List<UsageIncrement> usageIncrements() {
+        List<UsageIncrement> usageIncrements = new List<UsageIncrement>();
+        for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+            usageIncrements.add(triggerHandlerRunResult.getUsageIncrement());
+        }
+        return usageIncrements;
+    }
+
+    public void debugMin() {
+        for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+            System.debug(LoggingLevel.ERROR,
+                    triggerHandlerRunResult.triggerHandlerName()
+                            + ' ' + triggerHandlerRunResult.triggerContext()
+                            + ' ' + triggerHandlerRunResult.usageSummary().format());
+        }
+    }
+
+    public UsageSummary usageSummaryFor(String service) {
+        return new UsageSummary(
+                getRunResultsFor(service).getUsageIncrements()
+        );
+    }
+    public UsageSummary usageSummaryFor(String service, String action) {
+        return new UsageSummary(
+                getRunResultsFor(service, action).getUsageIncrements()
+        );
+    }
+
+    public Map<String, UsageSummary> usageSummaryByService() {
+        Map<String, UsageSummary> summariesByStrings = new Map<String, UsageSummary>();
+        for (String handlerName : classNameToTimesCalled.keySet()) {
+            summariesByStrings.put(handlerName, usageSummaryFor(handlerName));
+        }
+        return summariesByStrings;
+    }
+
+    public Map<String, Map<String, UsageSummary>> usageSummaryByServiceByAction() {
+        Map<String, Map<String, UsageSummary>> summaryByServiceByContext =
+                new Map<String, Map<String, UsageSummary>>();
+        for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+            Map<String, UsageSummary> summaryByContext = summaryByServiceByContext.get
+                    (triggerHandlerRunResult.triggerHandlerName());
+            if (summaryByContext == null) {
+                summaryByServiceByContext.put(
+                        triggerHandlerRunResult.triggerHandlerName(),
+                        new Map<String, UsageSummary>{
+                                triggerHandlerRunResult.triggerContext() =>
+                                        usageSummaryFor(
+                                                triggerHandlerRunResult.triggerHandlerName(),
+                                                triggerHandlerRunResult.triggerContext()
+                                        )
+                        }
+                );
+            }
+        }
+
+        return summaryByServiceByContext;
+    }
+
+    public void printUsageSummary() {
+        System.debug(LoggingLevel.ERROR, '*** TriggerHandlerRunResults Usage Summary '
+                + usageSummary().format());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ r.usageSummary() ^^^^^^');
+    }
+
+    public void printUsageSummaryByServiceByContext() {
+
+        System.debug(LoggingLevel.ERROR, '*** ##### USAGE BY SERVICE ######');
+        Map<String, UsageSummary> byService = usageSummaryByService();
+        for (String str : byService.keySet()) {
+            System.debug(LoggingLevel.ERROR, str + ' ' + byService.get(str).format());
+        }
+        //todo: next
+        System.debug(LoggingLevel.ERROR, '*** ##### USAGE BY SERVICE BY ACTION ######');
+        Map<String, Map<String, UsageSummary>> byServiceByAction =
+                usageSummaryByServiceByAction();
+        for (String str : byServiceByAction.keySet()) {
+            System.debug(LoggingLevel.ERROR, '*** variable value: ' + str);
+            Map<String, UsageSummary> contextUsageMap =
+                    byServiceByAction.get(str);
+            for (String str2 : contextUsageMap.keySet()) {
+                System.debug(LoggingLevel.ERROR, '*** variable value: ' + str2);
+                System.debug(LoggingLevel.ERROR, '*** variable value: ' + contextUsageMap.get(str2).format());
+            }
+            System.debug(LoggingLevel.ERROR, str + ' Totals:' + byService.get(str)
+                    .format());
+        }
+    }
+
+    public UsageIncrement getIncrementFrom(UsageIncrement usageIncrement) {
+        UsageSummary usageSummary = usageSummary();
+        return new UsageIncrement(usageSummary.totalTimeMillis() - usageIncrement
+                .timeMillis(),
+                usageSummary.totalQueries() - usageIncrement.queries(),
+                usageSummary.totalCpu() - usageIncrement.cpuTime(),
+                usageSummary.totalDmlRows() - usageIncrement.dmlRows());
+    }
 
 //    public void logBySObjectAndContext(){
+////                          action/context ... UsageSummary
 //        Map<SObjectType, Map<String, UsageSnapshot>> m =
 //                new Map<SObjectType, Map<String, UsageSnapshot>>();
-//        for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
+//
+//        for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
 //            Map<String, UsageSnapshot> usageByContext =
-//                    m.get(triggerHandlerRunResult.sObjectType());
+//                    m.get(triggerHandlerRunResult.getSObjectType());
+//
 //            if (usageByContext == null) {
 //                usageByContext.put(
 //                        triggerHandlerRunResult.triggerContext(),
-//                        triggerHandlerRunResult.usage()
+//                        triggerHandlerRunResult.usageSummary()
 //                );
 //            } else {
+//
 //
 //            }
 //        }
 //    }
-//
+
 }
