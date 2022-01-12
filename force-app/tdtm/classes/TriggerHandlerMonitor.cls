@@ -43,7 +43,7 @@ public with sharing class TriggerHandlerMonitor {
 
     public TriggerHandlerRunResults getResultsFor(String className, String context) {
         TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
-        for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.results) {
+        for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.getRunResults()) {
             if (triggerHandlerRunResult.triggerHandlerName().equals(className) &&
                     triggerHandlerRunResult.triggerContext().equals(context)) {
                 runResults.add(triggerHandlerRunResult);
