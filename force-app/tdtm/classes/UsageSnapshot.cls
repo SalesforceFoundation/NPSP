@@ -13,7 +13,8 @@ public without sharing virtual class UsageSnapshot {
         get {
             if (clock == null) {
                 clock = new Clock();
-            } return clock;
+            }
+            return clock;
         }
         set;
     }
