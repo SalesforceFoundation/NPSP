@@ -44,6 +44,11 @@ private class BDI_RecurringDonations_TEST {
                     Recurring_Donation_Recurring_Type__c = null,
                     Recurring_Donation_Status__c = null,
                     Recurring_Donation_Status_Reason__c = null,	
+                    Recurring_Donation_Card_Expiration_Year__c = '2022',
+                    Recurring_Donation_Card_Expiration_Month__c = '10',
+                    Recurring_Donation_ACH_Last_4__c = '1234',
+                    Recurring_Donation_Elevate_Event_Version__c = 5,
+                    Recurring_Donation_Card_Last_4__c = '1234',
                     Donation_Donor__c = 'Contact1',
                     Donation_Amount__c = 100,
                     Donation_Date__c = System.Date.Today(),
@@ -302,6 +307,11 @@ private class BDI_RecurringDonations_TEST {
                                                         CommitmentId__c,
                                                         StartDate__c,
                                                         npe03__Date_Established__c,
+                                                        LastElevateVersionPlayed__c,
+                                                        ACH_Last_4__c,
+                                                        CardLast4__c,
+                                                        CardExpirationMonth__c,
+                                                        CardExpirationYear__c,
                                                         Day_of_Month__c,
                                                         Status__c,
                                                         npe03__Installments__c,
@@ -329,6 +339,11 @@ private class BDI_RecurringDonations_TEST {
         System.assertEquals(testDIResultA.DonationCampaignImported__c,rdA.npe03__Recurring_Donation_Campaign__c);
         System.assertEquals(testDIResultA.Recurring_Donation_Day_Of_Month__c,rdA.Day_Of_Month__c);
         System.assertEquals(1,rdA.InstallmentFrequency__c);
+        System.assertEquals('2022',rdA.CardExpirationYear__c);
+        System.assertEquals('10',rdA.CardExpirationMonth__c);
+        System.assertEquals('1234',rdA.ACH_Last_4__c);
+        System.assertEquals('1234',rdA.CardLast4__c);
+        System.assertEquals(5,rdA.LastElevateVersionPlayed__c);
 
         System.assertNotEquals(null,rdB);
         System.assertEquals(testDIResultB.Contact1Imported__c, rdB.npe03__Contact__c);

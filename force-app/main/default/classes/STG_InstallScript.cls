@@ -490,6 +490,11 @@ global without sharing class STG_InstallScript implements InstallHandler {
                     'Recurring_Donation_Status',
                     'Recurring_Donation_Status_Reason',
                     'Recurring_Donation_Campaign',
+                    'Recurring_Donation_ACH_Last_4',
+                    'Recurring_Donation_Card_Expiration_Month',
+                    'Recurring_Donation_Card_Expiration_Year',
+                    'Recurring_Donation_Card_Last_4',
+                    'Recurring_Donation_Elevate_Event_Version',
                     'GAU_Allocation_1_Recurring_Donation',
                     'GAU_Allocation_2_Recurring_Donation'
             };
