@@ -12,7 +12,7 @@ public without sharing class UsageIncrement extends UsageSnapshot {
                 || queries == null
                 || cpu == null
                 || dml == null) {
-            throw new UsageIncrementException('All parameters are required.');
+            throw (Exception) new UsageIncrementException('All parameters are required.');
         }
         timeUsedMillis = timeMillis;
         queriesUsed = queries;
