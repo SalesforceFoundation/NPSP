@@ -41,6 +41,17 @@ public with sharing class TriggerHandlerMonitor {
         return runResults;
     }
 
+
+    public TriggerHandlerRunResults getResultsFor(String className) {
+        TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
+        for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.getRunResults()) {
+            if (triggerHandlerRunResult.triggerHandlerName() == className) {
+                runResults.add(triggerHandlerRunResult);
+            }
+        }
+        return runResults;
+    }
+
     public TriggerHandlerRunResults getResultsFor(String className, String context) {
         TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
         for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.getRunResults()) {
