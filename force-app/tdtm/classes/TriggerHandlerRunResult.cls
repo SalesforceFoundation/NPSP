@@ -4,7 +4,8 @@ public without sharing virtual class TriggerHandlerRunResult {
     private UsageSnapshot start;
     private UsageSnapshot stop;
 
-    public TriggerHandlerRunResult(){}
+    public TriggerHandlerRunResult() {
+    }
 
     public TriggerHandlerRunResult(
             TriggerContext triggerContext,
@@ -48,9 +49,13 @@ public without sharing virtual class TriggerHandlerRunResult {
 
     public UsageSummary usageSummary() {
         return new UsageSummary(
-                new List<UsageSnapshot>{
-                        stop.getIncrementFrom(start)
+                new List<UsageIncrement>{
+                        getUsageIncrement()
                 }
         );
+    }
+
+    public virtual UsageIncrement getUsageIncrement() {
+        return stop.getIncrementFrom(start);
     }
 }
