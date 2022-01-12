@@ -11,6 +11,8 @@ public with sharing class TriggerHandlerRunResults {
             new Map<String, Integer>();
     private Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
             new Map<String, Map<String, Integer>>();
+    private Map<String, Map<String, UsageSummary>> classNameToUsageSummaryByContext =
+            new Map<String, Map<String, UsageSummary>>();
 
     private Long totalTimeUsedInMillis = 0;
     private Integer totalQueriesUsed = 0;
@@ -72,7 +74,7 @@ public with sharing class TriggerHandlerRunResults {
     public Integer timesRun(String className, String context) {
         System.debug(LoggingLevel.ERROR, '*** variable value: ' + classNameToTimesCalledByContext);
         System.debug(LoggingLevel.ERROR, '^^^^^^ classNameToTimesCalledByContext ^^^^^^');
-        return classNameToTimesCalledByContext.get(className)?.get(context);
+        return classNameToUsageSummaryByContext.get(className)?.get(context).timesRun();
     }
 
     public void logTriggerHandlerInfo() {
