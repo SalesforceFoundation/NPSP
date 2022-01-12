@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
@@ -26,7 +26,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
+* @date 2022
 * @group Product Instrumentation
 * @description Primary class to enable product instrumentation for adoption and usage aggregation
 * See DOC_LINK_TBD for more information properly using Instrumentation Services
