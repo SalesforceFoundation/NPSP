@@ -168,7 +168,7 @@ public class TDTM_TriggerHandler {
                 results.isCompactLoggingEnabled = isCompactLoggingEnabled;
                 results.logTriggerHandlerInfo();
                 results.logResults();
-                results.logStack();
+                results.printStack();
             }
         }
     }

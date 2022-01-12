@@ -2,7 +2,7 @@ public with sharing class TriggerHandlerRunResults {
     // RunResults holds a collection of TriggerHandlerRunResult and
     // provides summary calculations
 
-    public List<TriggerHandlerRunResult> results = new List<TriggerHandlerRunResult>();
+    protected List<TriggerHandlerRunResult> results = new List<TriggerHandlerRunResult>();
     public Boolean isCompactLoggingEnabled = true;
 
     private Map<String, Integer> classNameToTimesCalled =
@@ -33,26 +33,38 @@ public with sharing class TriggerHandlerRunResults {
         System.debug(LoggingLevel.ERROR, '*** totalCpuTimeUsed: ' + totalCpuTimeUsed);
     }
 
-    public void logStack() {
-        System.debug(LoggingLevel.ERROR, '*** ##### LOG STACK ######');
-        integer i = 1;
+    public List<TriggerHandlerRunResult> getRunResults() {
+        return this.results;
+    }
+
+    public void printStack() {
+        System.debug(LoggingLevel.ERROR, '*** ##### Printing STACK ######');
+        Integer i = 1;
         SObjectType currentType;
         for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
             SObjectType sObjectType = triggerHandlerRunResult.getSObjectType();
             if (currentType != null && sObjectType !=
                     currentType) {
-                System.debug(LoggingLevel.ERROR, '*** ##### --------------------------- ' +
-                        'SOBJECT SWITCH (--> ' + sObjectType + ') --------------------------- ######');
+                System.debug(LoggingLevel.ERROR,
+                        '*** ##### --------------------------- SOBJECT SWITCH ('
+                                + currentType + '--> ' + sObjectType + ') ' +
+                                '--------------------------- ######');
             }
             currentType = sObjectType;
-            System.debug(LoggingLevel.ERROR, '*** ##### '+ i +':  ######');
+            System.debug(LoggingLevel.ERROR, '*** ##### ' + i + ':  ######');
             System.debug(LoggingLevel.ERROR, '*** ' + sObjectType + ' :: ' +
                     triggerHandlerRunResult.triggerContext() + ' :: ' +
                     triggerHandlerRunResult.triggerHandlerName());
-            System.debug(LoggingLevel.ERROR, '*** cpuUsed: ' + triggerHandlerRunResult.cpuUsed
-                    () + ' :: queriesUsed: ' + triggerHandlerRunResult.queriesUsed() + ' ::' +
-                    ' ' +
-                    'timeUsedMillis:' + triggerHandlerRunResult.timeUsed());
+            UsageSummary usageSummary = triggerHandlerRunResult.usageSummary();
+            System.debug(LoggingLevel.ERROR,
+                    '*** cpuUsed: '
+                            + usageSummary.totalCpu()
+                            + ' :: queriesUsed: '
+                            + usageSummary.totalQueries()
+                            + ' :: timeUsedMillis: '
+                            + usageSummary.totalTimeMillis()
+                            + ' :: dmlRows: '
+                            + usageSummary.totalDmlRows());
             i++;
         }
     }
