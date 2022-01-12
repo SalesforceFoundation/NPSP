@@ -51,6 +51,10 @@ sources:
 
 
 tasks:
+    apex_parse:
+      class_path: tasks.apex_parser.ApexParser
+    hackathon:
+      class_path: tasks.hackathon.MetaScoop
     modify_xml_file:
         description: Make changes to an XML file
         group: Salesforce Metadata
