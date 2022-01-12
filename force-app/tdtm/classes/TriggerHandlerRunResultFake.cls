@@ -46,4 +46,8 @@ public without sharing class TriggerHandlerRunResultFake extends TriggerHandlerR
     public override String triggerContext() {
         return action;
     }
+
+    public override UsageIncrement getUsageIncrement() {
+        return new UsageIncrement(timeUsed(), queriesUsed(), cpuUsed(), dmlRows());
+    }
 }
