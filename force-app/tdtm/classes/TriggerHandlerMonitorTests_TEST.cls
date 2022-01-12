@@ -32,9 +32,25 @@ private class TriggerHandlerMonitorTests_TEST {
                         individualAccountsTDTMTypeName,
                         action
                 )
-                .results
+                .getRunResults()
                 .size(),
                 'There should be one run result for this trigger handler and context.'
         );
+    }
+
+    @IsTest
+    static void should_record_dml_rows_used() {
+        TDTM_TriggerHandler.isMonitoringEnabled = true;
+        Contact c = TEST_ContactBuilder.dummyContact();
+//        c.FirstName = null;
+        insert c;
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + Limits.getDmlRows());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ Limits.getDmlRows() ^^^^^^');
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + new LimitsMonitor().dmlRows());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ new LimitsMonitor().dmlRows() ^^^^^^');
+        System.assert(
+                TDTM_TriggerHandler.Monitor.getResults().usageSummary().totalDmlRows() > 0,
+                'The usage summary should show at least one DML row.');
+
     }
 }
