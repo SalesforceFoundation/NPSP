@@ -591,20 +591,6 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description utility to return a comma separated string of field names from a field set
-    * @param strObject the name of the object
-    * @param strFS the name of the object's field set
-    * @return a comma separated string of field names in the field set
-    */
-    public static string strFieldNamesFromFieldSet(string strObject, string strFS) {
-        string strFields = '';
-        for (string str : listStrFromFieldSet(strObject, strFS)) {
-            strFields += str + ',';
-        }
-        return strFields.substring(0, strFields.length()-1);
-    }
-
-    /*******************************************************************************************************
     * @description copies the specified fields, make sure the user has apppropriate permissions
     * @param strObject the name of the object
     * @param src the Source object
