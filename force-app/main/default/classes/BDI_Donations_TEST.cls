@@ -3092,6 +3092,80 @@ public with sharing class BDI_Donations_TEST {
         }
     }
 
+    /**
+     * @description If DI.Donation_Stage__c field has a value, use it for donation status, regardless of the status
+     *              in Contact Setting Payments_Auto_Close_Stage_Name__c
+     */
+    @IsTest
+    static void donationShouldUseDIDonationStage() {
+        String diClosedStatus = 'DIClosed';
+        npe01__Contacts_And_Orgs_Settings__c contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        contactSettings.Payments_Auto_Close_Stage_Name__c = 'csClosed';
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert contacts;
+
+        DataImport__c dataImport = new DataImport__c(Contact1_Firstname__c=contacts[0].FirstName,
+                Contact1_Lastname__c=contacts[0].LastName,
+                Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c);
+        dataImport.Donation_Amount__c = 10;
+        dataImport.Donation_Date__c = Date.today().addMonths(3);
+        dataImport.Donation_Stage__c = diClosedStatus; // this should be the status used
+        insert dataImport;
+
+        Test.startTest();
+        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
+        Database.executeBatch(batch, 10);
+        Test.stopTest();
+
+        List<Opportunity> opps = [SELECT Name, Amount, StageName, IsWon FROM Opportunity];
+        System.debug(opps[0]);
+        System.assertEquals(1, opps.size());
+        System.assertEquals(diClosedStatus, opps[0].StageName); // confirm status is the one in DI
+
+    }
+    /**
+     * @description If Contact Setting Payments_Auto_Close_Stage_Name__c has a value and DI.Donation_Stage__c field
+     *              does not have a value specified, use Payments_Auto_Close_Stage_Name__c as the stageName
+     */
+    @IsTest
+    static void donationShouldUseContactSettingStage() {
+        String csClosed = 'CSClosed';
+        npe01__Contacts_And_Orgs_Settings__c contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+        contactSettings.Payments_Auto_Close_Stage_Name__c = csClosed;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
+                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
+        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+
+        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
+        insert contacts;
+
+        DataImport__c dataImport = new DataImport__c(Contact1_Firstname__c=contacts[0].FirstName,
+                Contact1_Lastname__c=contacts[0].LastName,
+                Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c);
+        dataImport.Donation_Amount__c = 10;
+        dataImport.Donation_Date__c = Date.today().addMonths(3);
+        dataImport.Donation_Stage__c = ''; // no status specified
+        insert dataImport;
+
+        Test.startTest();
+        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
+        Database.executeBatch(batch, 10);
+        Test.stopTest();
+
+        List<Opportunity> opps = [SELECT Name, Amount, StageName, IsWon FROM Opportunity];
+        System.debug(opps[0]);
+        System.assertEquals(1, opps.size());
+        System.assertEquals(csClosed, opps[0].StageName); // confirm stageName is the same as contactSetting name
+
+    }
     private static Opportunity getOpportunityWithPayments(Id oppId) {
         // requery the Opportunity for all fields that we need.
         return [SELECT Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c,

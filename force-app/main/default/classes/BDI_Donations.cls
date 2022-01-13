@@ -62,21 +62,39 @@ public class BDI_Donations {
     private Map<Id, npe01__OppPayment__c> paymentsByDataImportId = new Map<Id, npe01__OppPayment__c>();
     
     /*******************************************************************************************************
+    * @description Contact Settings custom setting
+    */
+    private static npe01__Contacts_And_Orgs_Settings__c contactSettings{
+        get {
+            if (contactSettings == null) {
+                contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
+            }
+            return contactSettings;
+        }
+        set;
+    }
+    /*******************************************************************************************************
     * @description provides a valid Close Won Opportunity Stage
     */
     private static String defaultClosedWonStage {
-        get {   
-            if (defaultClosedWonStage == null){
-                List<OpportunityStage> stages = [
-                    SELECT MasterLabel
-                    FROM OpportunityStage
-                    WHERE IsActive = true
-                        AND IsWon = true
-                ];
-                if (stages.size() > 0) {
-                    defaultClosedWonStage = stages[0].MasterLabel;
+        get {
+            if (defaultClosedWonStage == null) {
+                // contact setting value takes priority
+                if (contactSettings.Payments_Auto_Close_Stage_Name__c != null) {
+                    defaultClosedWonStage = contactSettings.Payments_Auto_Close_Stage_Name__c;
                 } else {
-                    defaultClosedWonStage = '';
+                    // if no field is specified in contact setting, then query for the active isWon value and use that
+                    List<OpportunityStage> stages = [
+                            SELECT MasterLabel
+                            FROM OpportunityStage
+                            WHERE IsActive = TRUE
+                            AND IsWon = TRUE
+                    ];
+                    if (stages.size() > 0) {
+                        defaultClosedWonStage = stages[0].MasterLabel;
+                    } else {
+                        defaultClosedWonStage = '';
+                    }
                 }
             }
             return defaultClosedWonStage;
@@ -255,9 +273,8 @@ public class BDI_Donations {
         }
 
         // when we mark Payments paid, ensure they will close our Opp.
-        npe01__Contacts_And_Orgs_Settings__c cs = UTIL_CustomSettingsFacade.getContactsSettings();
-        if (cs.Payments_Auto_Close_Stage_Name__c == null) {
-            cs.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
+        if (contactSettings.Payments_Auto_Close_Stage_Name__c == null) {
+            contactSettings.Payments_Auto_Close_Stage_Name__c = defaultClosedWonStage;
         }
 
         if (elevateDIs.size() > 0) {
