@@ -1,5 +1,9 @@
 import { isBlank } from 'c/util';
 import { format } from 'c/utilCommon';
+import { nextState } from "./model";
+import * as ACTIONS from './actions';
+
+import getInitialView from '@salesforce/apex/RD2_EntryFormController.getInitialView';
 
 import FIELD_ID from '@salesforce/schema/npe03__Recurring_Donation__c.Id';
 import FIELD_ACH_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
@@ -32,6 +36,26 @@ const RECURRING_TYPE_OPEN = 'Open';
 const RECURRING_TYPE_FIXED = 'Fixed';
 
 class Rd2Service {
+
+    dispatch(state, action) {
+        return nextState(state, action);
+    }
+
+    async loadInitialView(state, recordId, parentId) {
+
+        try {
+            const initialView = getInitialView({recordId, parentId});
+            const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
+            return this.dispatch(state, action);
+        } catch (ex) {
+            // TODO - Dispatch error action
+            return state;
+        }
+    }
+
+    init() {
+        return this.dispatch();
+    }
 
     /***
      * @description Displays errors extracted from the error response
@@ -121,6 +145,7 @@ class Rd2Service {
     }
 }
 
+
 class RecurringDonation {
     record;
 
@@ -200,7 +225,10 @@ class RecurringDonation {
     }
 }
 
+
+
 export { Rd2Service,
+    ACTIONS,
     ELEVATE_PAYMENT_METHODS,
     PERIOD,
     RECURRING_PERIOD_ADVANCED,

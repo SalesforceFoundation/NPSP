@@ -248,21 +248,27 @@ public class UTIL_Describe {
     * @param objectName
     * @return true if the Id is for the given object type, false otherwise.
     */
-    public static boolean isObjectIdThisType(Id salesforceId, String objectName) {
+    public static Boolean isObjectIdThisType(Id salesforceId, String objectName) {
         objectName = objectName.toLowerCase();
 
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         // now grab the requested id prefix
-        boolean ret = false;
+        Boolean ret = false;
         if (salesforceId != null) {
-            string prefix = objectDescribes.get(objectName).getKeyPrefix();
-            if (prefix != null)
-                ret = ((string)(salesforceId)).startsWith(prefix);
+            String prefix = objectDescribes.get(objectName).getKeyPrefix();
+            if (prefix != null) {
+                ret = ((string) (salesforceId)).startsWith(prefix);
+            }
         }
         return ret;
+    }
+
+    public static String objectNameFromId(Id objectId) {
+        return objectId.getSobjectType().getDescribe().getName();
     }
 
     /*******************************************************************************************************

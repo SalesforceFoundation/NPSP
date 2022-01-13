@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import CURRENCY from '@salesforce/i18n/currency';
 import { registerListener } from 'c/pubsubNoPageRef';
-import { Rd2Service, PERIOD, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN } from 'c/rd2Service';
+import { Rd2Service, PERIOD, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN, ACTIONS } from 'c/rd2Service';
 import { isNull, showToast, constructErrorMessage, format, extractFieldInfo, buildFieldDescribes, isEmpty } from 'c/utilCommon';
 import { HTTP_CODES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
@@ -158,6 +158,7 @@ export default class rd2EntryForm extends LightningElement {
     };
 
     rd2Service = new Rd2Service();
+    rd2State = this.rd2Service.init();
 
     @track error = {};
 
@@ -370,7 +371,14 @@ export default class rd2EntryForm extends LightningElement {
             this.contact.MailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
             this.contactLastName = getFieldValue(data, CONTACT_LAST_NAME);
             this.contactFirstName = getFieldValue(data, CONTACT_FIRST_NAME);
-
+            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+                type: ACTIONS.SET_CONTACT_DETAILS,
+                payload: {
+                    contactLastName: this.contactLastName,
+                    contactFirstName: this.contactFirstName,
+                    mailingCountry: this.contact.MailingCountry
+                }
+            });
             this.handleElevateWidgetDisplay();
 
         } else if (error) {
@@ -385,6 +393,13 @@ export default class rd2EntryForm extends LightningElement {
         if(data) {
             this.organizationAccountName = getFieldValue(data, ACCOUNT_NAME);
             this.contactLastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
+            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+                type: ACTIONS.SET_ACCOUNT_DETAILS,
+                payload: {
+                    lastName: this.contactLastName,
+                    accountName: this.organizationAccountName
+                }
+            });
         } else if(error) {
             this.handleError(error);
         }
