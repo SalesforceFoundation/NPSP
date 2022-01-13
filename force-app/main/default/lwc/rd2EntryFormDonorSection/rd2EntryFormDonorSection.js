@@ -105,10 +105,6 @@ export default class rd2EntryFormDonorSection extends LightningElement {
         if (response.data) {
             this.rdObjectInfo = response.data;
             this.setFields(this.rdObjectInfo.fields);
-            this.buildFieldDescribes(
-                this.rdObjectInfo.fields,
-                this.rdObjectInfo.apiName
-            );
             this.isLoading = !this.isEverythingLoaded();
 
         } else if (response.error) {
@@ -212,19 +208,6 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             this.contactRequired = true;
         }
         this.dispatchChangeEvent('contactchange', null);
-    }
-
-    /**
-     * @description Method converts field describe info into objects that the
-     * getRecord method can accept into its 'fields' parameter.
-     */
-    buildFieldDescribes(fields, objectApiName) {
-        return Object.keys(fields).map((fieldApiName) => {
-            return {
-                fieldApiName: fieldApiName,
-                objectApiName: objectApiName
-            }
-        });
     }
 
     /**
