@@ -14871,6 +14871,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Status to State Mapping</value>
     </labels>
     <labels>
+        <fullName>stgNavRD2StatusAutomation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the Status Automation settings</shortDescription>
+        <value>Status Automation</value>
+    </labels>
+    <labels>
         <fullName>stgNavRDBatch</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

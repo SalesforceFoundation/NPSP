@@ -39,8 +39,8 @@
     <apex:form id="form">
         <apex:actionFunction name="refreshPanels" 
             action="{!refreshPanels}" 
-            oncomplete="displayListItem('idPanelRD2StatusMappingNav');return false;" 
-            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap"
+            oncomplete="displayListItem('idPanelRD2StatusMappingNav');displayListItem('idPanelRD2StatusAutomationNav');return false;" 
+            reRender="status, idPanelCustomizableRollup, idPanelRD, idPanelRD2StatusMapping, idPanelRDInstPd, idPanelRDFieldMap, idPanelRD2StatusAutomation"
             status="statusLoad" />
     </apex:form>
 
