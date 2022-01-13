@@ -43,19 +43,15 @@ public with sharing class DonationHistoryController {
     public class DonationHistoryView{
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
-        @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
-        @AuraEnabled public String role;
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(OpportunityContactRole ocr){
+        public DonationHistoryView(Opportunity ocr){
             this.id = ocr.Id;
-            this.name = ocr.Opportunity.Name;
-            this.isPrimary = ocr.isPrimary;
-            this.closeDate = ocr.Opportunity.CloseDate;
-            this.role = ocr.Role;
-            this.amount = ocr.Opportunity.Amount;
+            this.name = ocr.Name;
+            this.closeDate = ocr.CloseDate;
+            this.amount = ocr.Amount;
             this.creditType = System.Label.CRLP_HardCredit;
             this.paymentMethod = 'Cash';
         }
@@ -78,9 +74,9 @@ public with sharing class DonationHistoryController {
         }
     }
 
-    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles) {
+    private static List<DonationHistoryView> buildHistoryFromOCRs(List<Opportunity> contactRoles) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-        for(OpportunityContactRole role : contactRoles) {
+        for(Opportunity role : contactRoles) {
             donationHistories.add(new DonationHistoryView(role));
         }
         return donationHistories;

@@ -35,12 +35,12 @@
 public with sharing class DonationHistoryService {
     
     static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<OpportunityContactRole> credits;
+    private List<Opportunity> credits;
     private Id contactId;
 
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
-        this.credits = new List<OpportunityContactRole>();
+        this.credits = new List<Opportunity>();
     }
 
     @TestVisible
@@ -84,9 +84,9 @@ public with sharing class DonationHistoryService {
     * @description method to return Donation History list.
     * @param contactId contact id which is going to be requested.
     */
-    public List<OpportunityContactRole> getDonationHistory() {
+    public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
-            return selector.getWonOpportunityContactRolesByContactId(this.contactId);
+            return selector.getWonOpportunitiesByContactId(this.contactId);
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }

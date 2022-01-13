@@ -38,22 +38,19 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
+    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
         return [
             SELECT Id, 
-                Opportunity.Name, 
-                Opportunity.CloseDate, 
-                Opportunity.Amount, 
-                Contact.Email, 
-                Contact.Name, 
-                Role, 
-                IsPrimary
-            FROM OpportunityContactRole 
-            WHERE Opportunity.IsWon = true 
-            AND IsPrimary = true
-            AND ContactId =:contactId 
+                Name, 
+                CloseDate, 
+                Amount, 
+                Primary_Contact__r.Email, 
+                Primary_Contact__r.Name
+            FROM Opportunity
+            WHERE IsWon = true 
+            AND Primary_Contact__r.Id =:contactId 
             WITH SECURITY_ENFORCED
-            ORDER BY Opportunity.CloseDate 
+            ORDER BY CloseDate 
             DESC LIMIT 50
         ];
     }
