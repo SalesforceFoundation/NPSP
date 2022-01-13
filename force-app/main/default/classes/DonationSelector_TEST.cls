@@ -36,6 +36,46 @@
 private class DonationSelector_TEST {
 
     @isTest
+    static void shouldReturn1OpportunityWith3SoftCredits() {
+        // Arrange
+        List<Id> opportunityIds = setupTestOpportunitiesWithOpportunityContactRoles(1, 3);
+        DonationSelector donationSelector = new DonationSelector();
+
+        // Act
+        List<Opportunity> opportunities = DonationSelector.getDonation(opportunityIds[0]);
+
+        // Assert
+        System.assertEquals(1, opportunities.size(),
+            'Should return 1 opportunity');
+        System.assertEquals(3, opportunities.get(0).OpportunityContactRoles.size(),
+            'Should return 3 soft credits for opportunity');
+    }
+
+    @isTest
+    static void shouldReturn5OpportunitiesWith2SoftCreditsEach() {
+        // Arrange
+        List<Id> opportunityIds = setupTestOpportunitiesWithOpportunityContactRoles(5, 2);
+        DonationSelector donationSelector = new DonationSelector();
+
+        // Act
+        List<Opportunity> opportunities = donationSelector.getDonations(opportunityIds);
+
+        // Assert
+        System.assertEquals(5, opportunities.size(),
+            'Should return 5 opportunities');
+        System.assertEquals(2, opportunities.get(0).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for first opportunity');
+        System.assertEquals(2, opportunities.get(1).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for second opportunity');
+        System.assertEquals(2, opportunities.get(2).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for third opportunity');
+        System.assertEquals(2, opportunities.get(3).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for fourth opportunity');
+        System.assertEquals(2, opportunities.get(4).OpportunityContactRoles.size(),
+            'Should return 2 soft credits for fifth opportunity');
+    }
+
+    @isTest
     static void shouldReturnCorrectQueryString() {
         DonationSelector selector = new DonationSelector();
 
@@ -91,5 +131,45 @@ private class DonationSelector_TEST {
             relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
         }
         return relationshipField;
+    }
+
+    private static List<Id> setupTestOpportunitiesWithOpportunityContactRoles(
+        Integer opportunityCount, Integer softCreditCount) {
+
+        Contact dummyContact = new Contact(LastName = 'Dummy Last Name', FirstName = 'Dummy First Name');
+        insert dummyContact;
+
+        List<Opportunity> dummyOpportunities = new List<Opportunity>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            Opportunity dummyOpportunity = new Opportunity(
+                Name = 'Test Opportunity ' + i,
+                StageName = 'Prospecting',
+                CloseDate = Date.today(),
+                Amount = 100
+            );
+
+            dummyOpportunities.add(dummyOpportunity);
+        }
+        insert dummyOpportunities;
+
+        List<OpportunityContactRole> dummyOpportunityContactRoles = new List<OpportunityContactRole>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            for (Integer ii = 0; ii < softCreditCount; ii++) {
+                OpportunityContactRole dummyOpportunityContactRole = new OpportunityContactRole(
+                    OpportunityId = dummyOpportunities[i].Id,
+                    ContactId = dummyContact.Id,
+                    Role = 'Soft Credit'
+                );
+                dummyOpportunityContactRoles.add(dummyOpportunityContactRole);
+            }
+        }
+        insert dummyOpportunityContactRoles;
+
+        List<Id> opportunityIds = new List<Id>();
+        for (Integer i = 0; i < opportunityCount; i++) {
+            opportunityIds.add(dummyOpportunities[i].Id);
+        }
+
+        return opportunityIds;
     }
 }
