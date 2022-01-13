@@ -3,20 +3,39 @@ private class ContactInsertTests_TEST {
 
     @IsTest
     static void insert_duplicate_contact_should_not_throw_required_field_missing_error() {
-        // Default TDTM
-        // Account Dupe Rules Ops on Create: Alert:true
-        // Workflow Rules deactivated
-        TDTM_TriggerHandler.isMonitoringEnabled = true;
-        UTIL_Debug.enabledForTests = true;
-        TDTM_TriggerHandler.isCompactLoggingEnabled = false;
-        Contact c = TEST_ContactBuilder.dummyContact();
-        c.MailingStreet = '123 Main';
-        c.MailingCity = 'ABCity';
-        insert c;
+        // Arrange
+        String exceptionMessage;
+        Contact existingContact = TEST_ContactBuilder.dummyContact();
+        existingContact.MailingStreet = '123 Main';
+        existingContact.MailingCity = 'ABCity';
+        insert existingContact;
+        Contact dupeContact = TEST_ContactBuilder.dummyContact();
+        dupeContact.MailingStreet = '123 Main';
+        dupeContact.MailingCity = 'ABCity';
 
-        Contact cInsert2 = TEST_ContactBuilder.dummyContact();
-        cInsert2.MailingStreet = '123 Main';
-        cInsert2.MailingCity = 'ABCity';
-        insert cInsert2;
+        // Act
+        try {
+            // This will succeed or fail depending on the org's duplicate rule configuration.
+            // If it succeeds the test does and should pass.
+            insert dupeContact;
+        } catch (Exception e) {
+            exceptionMessage = e.getMessage();
+        }
+
+        // Assert
+        if (exceptionMessage != null) {
+            // If it fails, assert that it is not due to the required fields missing error
+            System.assertEquals(
+                    false,
+                    exceptionMessage.contains(
+                            'Required fields are missing:Household_Account__c'
+                    ),
+                    'An address should not be created for a new Contact until ' +
+                            'its Household Account has been created.'
+            );
+        } else {
+            // Some other Exception thrown.
+            // 'Required fields are missing:Household_Account__c' exception NOT thrown
+        }
     }
 }
