@@ -63,11 +63,6 @@ public with sharing class Gifts {
         init(this.giftSelector.getGiftsFor(giftBatchId));
     }
 
-    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
-        this.giftSelector = giftSelector;
-        init(this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId)));
-    }
-
     private void init(List<DataImport__c> dataImports) {
         populateDataImportsById(dataImports);
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {

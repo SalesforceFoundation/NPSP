@@ -147,7 +147,9 @@ private class Gifts_TEST {
     @isTest
     static void shouldReturn2Gifts() {
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock(false);
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
+        GiftBatchId mockedGiftBatchId = new GiftBatchId(DUMMY_BATCH_ID);
+
+        Gifts gifts = new Gifts(mockedGiftBatchId, stubFor(giftSelectorMock));
 
         System.assertEquals(2, gifts.size());
         System.assertEquals(2, gifts.all().size());
@@ -156,22 +158,26 @@ private class Gifts_TEST {
     @isTest
     static void shouldReturnGiftsWithExpectedFields() {
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock(true);
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
+        GiftBatchId mockedGiftBatchId = new GiftBatchId(DUMMY_BATCH_ID);
 
+        Gifts gifts = new Gifts(mockedGiftBatchId, stubFor(giftSelectorMock));
         Gift dummyGift0 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_0));
-        System.assertEquals('Dummy First Name 0', dummyGift0.fields().get(CONTACT1_FIRST_NAME));
         Gift dummyGift1 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_1));
+
+        System.assertEquals('Dummy First Name 0', dummyGift0.fields().get(CONTACT1_FIRST_NAME));
         System.assertEquals('Dummy First Name 1', dummyGift1.fields().get(CONTACT1_FIRST_NAME));
     }
 
     @isTest
     static void shouldNotReturnGiftsWithUnexpectedFields() {
         GiftSelectorMock giftSelectorMock = new GiftSelectorMock(false);
-        Gifts gifts = new Gifts(DUMMY_BATCH_ID, stubFor(giftSelectorMock));
+        GiftBatchId mockedGiftBatchId = new GiftBatchId(DUMMY_BATCH_ID);
 
+        Gifts gifts = new Gifts(mockedGiftBatchId, stubFor(giftSelectorMock));
         Gift dummyGift0 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_0));
-        System.assertEquals(null, dummyGift0.fields().get(CONTACT1_FIRST_NAME));
         Gift dummyGift1 = gifts.findBy(new GiftId(DUMMY_GIFT_ID_1));
+
+        System.assertEquals(null, dummyGift0.fields().get(CONTACT1_FIRST_NAME));
         System.assertEquals(null, dummyGift1.fields().get(CONTACT1_FIRST_NAME));
     }
 
