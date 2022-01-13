@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>StatusAutomationClosedStatus__c</fullName>
+    <description>The status Recurring Donation will be set to when the Status Automation determine the Recurring Donation will be Closed.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The status Recurring Donation will be set to when the Status Automation determine the Recurring Donation will be Closed.</label>
+    <label>Status Automation CLosed Status</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
