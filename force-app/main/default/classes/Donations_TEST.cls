@@ -35,19 +35,153 @@
 @IsTest
 private class Donations_TEST {
 
+    @IsTest
     static void shouldReturn3OpenDonationsForContactDonor() {
+        // Arrange:
+        Id dummyContactId = UTIL_UnitTestData_TEST.mockId(Contact.SObjectType);
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(new List<Opportunity> {
+            new Opportunity(),
+            new Opportunity(),
+            new Opportunity()
+        });
+        Donations donations = new Donations(dummyContactId, stubFor(donationSelectorMock));
 
+        // Act:
+        List<Donation> openDonationsForDummyContact = donations.all();
+
+        // Assert:
+        System.assertEquals(3, openDonationsForDummyContact.size(),
+            'Should return 3 open donations for contact donor');
     }
 
+    @IsTest
     static void shouldReturn5OpenDonationsForForAccountDonor() {
+        // Arrange:
+        Id dummyAccountId = UTIL_UnitTestData_TEST.mockId(Account.SObjectType);
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(new List<Opportunity> {
+            new Opportunity(),
+            new Opportunity(),
+            new Opportunity(),
+            new Opportunity(),
+            new Opportunity()
+        });
+        Donations donations = new Donations(dummyAccountId, stubFor(donationSelectorMock));
 
+        // Act:
+        List<Donation> openDonationsForDummyAccount = donations.all();
+
+        // Assert:
+        System.assertEquals(5, openDonationsForDummyAccount.size(),
+            'Should return 5 open donations for account donor');
     }
 
+    @IsTest
     static void shouldReturnDonationsForGivenOpportunities() {
+        // Arrange:
+        List<Id> dummyOpportunityIds = new List<Id> {
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+        };
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(new List<Opportunity> {
+            new Opportunity(Id = dummyOpportunityIds[0]),
+            new Opportunity(Id = dummyOpportunityIds[1]),
+            new Opportunity(Id = dummyOpportunityIds[2])
+        });
+        Donations donations = new Donations(dummyOpportunityIds, stubFor(donationSelectorMock));
 
+        // Act:
+        List<Donation> donationsForDummyOpportunities = donations.all();
+
+        // Assert:
+        System.assertEquals(3, donationsForDummyOpportunities.size(),
+            'Should return 3 donations for the provided opportunities');
     }
 
+    @IsTest
     static void shouldReturnDonationForGivenGift() {
+        // Arrange:
+        List<Id> dummyOpportunityIds = new List<Id> {
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType),
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+        };
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(new List<Opportunity> {
+            new Opportunity(Id = dummyOpportunityIds[0], Amount = 100),
+            new Opportunity(Id = dummyOpportunityIds[1], Amount = 200),
+            new Opportunity(Id = dummyOpportunityIds[2], Amount = 300)
+        });
+        DataImport__c dummyDataImport = new DataImport__c(DonationImported__c = dummyOpportunityIds[1]);
+        Donations donations = new Donations(dummyOpportunityIds, stubFor(donationSelectorMock));
+
+        // Act:
+        Donation secondDonation = donations.getDonationFor(dummyDataImport);
+
+        // Assert:
+        System.assertEquals(200, secondDonation.opportunity().Amount,
+            'Should return 200 as the amount for the second donation');
+        System.assertEquals(dummyOpportunityIds[1], secondDonation.opportunity().Id,
+            'Should return the second opportunity id');
+    }
+
+    @IsTest
+    static void shouldNotReturnDonationForNonExistantGift() {
+        // Arrange:
+        List<Id> dummyOpportunityIds = new List<Id> {
+            UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+        };
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(new List<Opportunity> {
+            new Opportunity(Id = dummyOpportunityIds[0], Amount = 100)
+        });
+        DataImport__c dummyDataImport = new DataImport__c(
+            DonationImported__c = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType)
+        );
+        Donations donations = new Donations(dummyOpportunityIds, stubFor(donationSelectorMock));
+
+        // Act:
+        Donation nonExistantDonation = donations.getDonationFor(dummyDataImport);
+
+        // Assert:
+        System.assertEquals(null, nonExistantDonation,
+            'Should be null for non-existant donation');
+    }
+
+    private class DonationSelectorMock implements StubProvider {
+
+        private List<Opportunity> opportunitiesToReturn;
         
+        public DonationSelectorMock(List<Opportunity> opportunities) {
+            this.opportunitiesToReturn = opportunities;
+        }
+
+        public Object handleMethodCall(
+            Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getOpenDonations' {
+                    return opportunitiesToReturn;
+                }
+                when 'getDonation' {
+                    return opportunitiesToReturn;
+                }
+                when 'getDonations' {
+                    return opportunitiesToReturn;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    private static DonationSelector stubFor(DonationSelectorMock donationSelectorMock) {
+        return (DonationSelector) Test.createStub(
+            DonationSelector.class,
+            donationSelectorMock
+        );
     }
 }
