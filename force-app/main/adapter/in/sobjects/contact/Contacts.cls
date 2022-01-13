@@ -336,4 +336,14 @@ public inherited sharing class Contacts extends fflib_SObjects {
        return getIdFieldValues(Contact.Id);
     }
 
+    public Contacts contactsWithNonNullAccountIds() {
+        List<Contact> contacts = new List<Contact>();
+        for (Contact c :(List<Contact>)  getRecords()) {
+            if (c.AccountId != null) {
+                contacts.add(c);
+            }
+        }
+        return new Contacts(contacts);
+    }
+
 }
