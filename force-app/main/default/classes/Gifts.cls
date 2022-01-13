@@ -107,7 +107,8 @@ public with sharing class Gifts {
     public List<Gift> all() {
         List<Gift> gifts = new List<Gift>();
         for (DataImport__c dataImport : dataImportsById.values()) {
-            gifts.add(new Gift(dataImport));
+            Gift currentGift = toGift(dataImport);
+            gifts.add(currentGift);
         }
         return gifts;
     }
@@ -178,12 +179,11 @@ public with sharing class Gifts {
 
     @TestVisible
     private void giftsToProcessingStatus() {
-        for (DataImport__c gift : dataImportsById.values()) {
-            Gift currentGift = new Gift(gift);
-
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift currentGift = toGift(dataImport);
             if (currentGift.isDryRunValidated()) {
-                gift.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(gift);
+                dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.add(dataImport);
             }
         }
     }
@@ -226,6 +226,14 @@ public with sharing class Gifts {
     private void populateDataImportsById(List<DataImport__c> dataImports) {
         for (DataImport__c dataImport : dataImports) {
             this.dataImportsById.put(dataImport.Id, dataImport);
+        }
+    }
+
+    private Gift toGift(DataImport__c dataImport) {
+        if (dataImport.DonationImported__c != null && donations != null) {
+            return new Gift(dataImport, donations.getDonationFor(dataImport));
+        } else {
+            return new Gift(dataImport);
         }
     }
 }

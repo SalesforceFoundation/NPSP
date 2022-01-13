@@ -31,6 +31,41 @@
 private class Gifts_TEST {
 
     @isTest
+    static void shouldPopulateDonationForGiftsWithDonation() {
+        // Arrange
+        Id dummyGiftId0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyGiftId1 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyGiftId2 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyOppId0 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        Id dummyOppId1 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        Opportunity dummyOpp0 = new Opportunity(Id = dummyOppId0);
+        Opportunity dummyOpp1 = new Opportunity(Id = dummyOppId1);
+        List<DataImport__c> dummyGifts = buildGifts(3, null, null);
+        dummyGifts[0].DonationImported__c = dummyOppId0;
+        dummyGifts[1].DonationImported__c = dummyOppId1;
+        GiftSelectorMock giftSelectorMock =
+            new GiftSelectorMock(dummyGifts);
+        DonationSelectorMock donationSelectorMock =
+            new DonationSelectorMock(new List<Opportunity> { dummyOpp0, dummyOpp1 });
+        Id dummyGiftBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        GiftBatchId mockedGiftBatchId = new GiftBatchId(dummyGiftBatchId);
+        Gifts gifts = new Gifts(mockedGiftBatchId, stubFor(giftSelectorMock), stubFor(donationSelectorMock));
+
+        // Act
+        Gift firstGift = gifts.all()[0];
+        Gift secondGift = gifts.all()[1];
+        Gift thirdGift = gifts.all()[2];
+
+        // Assert
+        System.assertEquals(dummyOppId0, firstGift.donation().opportunity().Id,
+            'Should return a donation for the first gift');
+        System.assertEquals(dummyOppId1, secondGift.donation().opportunity().Id,
+            'Should return a donation for the first gift');
+        System.assertEquals(null, thirdGift.donation(),
+            'Should not return a donation for the third gift');
+    }
+
+    @isTest
     static void shouldReturn3ProcessableGiftsOutOf5TotalWhenElevateDeregistered() {
         List<DataImport__c> dummyGifts = buildGifts(3, null, null);
         List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
@@ -99,6 +134,13 @@ private class Gifts_TEST {
 
     @isTest
     static void shouldReturnCorrectNumberOfGiftCounts() {
+        GE_PaymentServicesMock mockInstance = new GE_PaymentServicesMock();
+        mockInstance.withIsElevateCustomer(true);
+        GE_PaymentServices paymentServicesMock = (GE_PaymentServices) Test.createStub(
+            GE_PaymentServices.class,
+            mockInstance
+        );
+        GE_PaymentServices.setInstance(paymentServicesMock);
         List<DataImport__c> dummyGifts = buildGifts(20, null, null);
         List<DataImport__c> dummyAuthorizedGiftsGroup1 = buildGifts(
             10, ElevateTransactionStatus.AUTHORIZED.name(), 'DUMMY_ELEVATE_ID_1');
@@ -108,6 +150,7 @@ private class Gifts_TEST {
         dummyGifts.addAll(dummyAuthorizedGiftsGroup2);
 
         Gifts gifts = new Gifts(dummyGifts);
+
         System.assertEquals(dummyGifts.size(), gifts.all().size());
         System.assertEquals(2, gifts.elevateBatchIds()?.size());
     }
@@ -247,12 +290,57 @@ private class Gifts_TEST {
         return failReasonByElevateBatchId;
     }
 
+    public class DonationSelectorMock implements StubProvider {
+
+        public Integer numberOfQueriesRan = 0;
+        private List<Opportunity> recordsToReturn;
+
+        public DonationSelectorMock() {
+        }
+        
+        public DonationSelectorMock(List<Opportunity> recordsToReturn) {
+            this.recordsToReturn = recordsToReturn;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'getDonation' {
+                    this.numberOfQueriesRan++;
+
+                    return new List<Opportunity> { new Opportunity(
+                        Amount = 100.00,
+                        StageName = 'Open',
+                        Name = 'Dummy Opportunity From Mocked Selector',
+                        CloseDate = Date.today()
+                    )};
+                }
+                when 'getDonations' {
+                    this.numberOfQueriesRan++;
+                    return recordsToReturn;
+                }
+            }
+
+            return null;
+        }
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Boolean returnWithAdditionalFields = false;
+        private List<DataImport__c> recordsToReturn;
 
         public GiftSelectorMock(Boolean returnWithAdditionalFields) {
             this.returnWithAdditionalFields = returnWithAdditionalFields;
+        }
+
+        public GiftSelectorMock(List<DataImport__c> recordsToReturn) {
+            this.recordsToReturn = recordsToReturn;
         }
 
         public Object handleMethodCall(Object stubbedObject,
@@ -264,6 +352,9 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getGiftsFor' {
+                    if (this.recordsToReturn != null) {
+                        return this.recordsToReturn;
+                    }
                     if (this.returnWithAdditionalFields) {
                         return dummyDataImportsWithContactFirstName;
                     } else {
@@ -298,6 +389,13 @@ private class Gifts_TEST {
 
             return null;
         }
+    }
+
+    private static DonationSelector stubFor(DonationSelectorMock donationSelectorMock) {
+        return (DonationSelector) Test.createStub(
+            DonationSelector.class,
+            donationSelectorMock
+        );
     }
 
     private static GiftSelector stubFor(GiftSelectorMock giftSelectorMock) {
