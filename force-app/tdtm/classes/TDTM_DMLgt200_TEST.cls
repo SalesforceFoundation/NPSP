@@ -363,14 +363,14 @@ private class TDTM_DMLgt200_TEST {
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
         UTIL_UnitTestData_TEST.disableMergeTriggers();
 
-        Test.startTest();
-
         // Create more than 200 Contact records and then validate that all of the Household Accounts were created
         List<Contact> contacts = createMultipleTestContacts(insertCnt);
         insertWithAllowDupes(contacts);
 
         System.assertEquals(insertCnt, [SELECT Count() FROM Account WHERE npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE],
                 'There should be exactly ' + insertCnt.format() + ' Accounts');
+
+        Test.startTest();
 
         // rename all the Contacts
         Integer n = 0;
