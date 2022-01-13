@@ -91,4 +91,12 @@ public with sharing class GiftBatchService {
         GiftBatch giftBatch = new GiftBatch(giftBatchId);
         giftBatch.add(inboundGift.asGift());
     }
+
+    public void validateBatch(Id batchId) {
+        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
+        if (giftBatch.hasAFailedJob()) {
+            giftBatch.failGiftsInAbortedOrFailedBatches('Aborted Job');
+        }
+    }
+
 }

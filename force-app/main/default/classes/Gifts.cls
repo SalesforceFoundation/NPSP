@@ -159,6 +159,18 @@ public with sharing class Gifts {
         }
     }
 
+    public void failGiftsInAbortedOrFailedBatches(String failReason) {
+        for (DataImport__c gift : dataImportsById.values()) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.isProcessing()) {
+                gift.Status__c = BDI_DataImport_API.bdiFailed;
+                gift.FailureInformation__c = failReason;
+                giftsToUpdate.add(gift);
+            }
+        }
+    }
+
     @TestVisible
     private void giftsToProcessingStatus() {
         for (DataImport__c gift : dataImportsById.values()) {

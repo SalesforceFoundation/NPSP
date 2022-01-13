@@ -147,6 +147,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
+        giftBatchService.validateBatch((Id) batchId);
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
 
