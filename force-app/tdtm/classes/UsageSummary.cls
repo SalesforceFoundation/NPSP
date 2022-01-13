@@ -1,45 +1,45 @@
 public without sharing class UsageSummary {
 
-    private List<UsageSnapshot> snapshots;
+    private List<UsageIncrement> increments;
 
-    public UsageSummary(List<UsageSnapshot> usageSnapshots){
-        this.snapshots = usageSnapshots;
+    public UsageSummary(List<UsageIncrement> usageIncrements){
+        this.increments = usageIncrements;
     }
 
     public Integer totalQueries(){
         Integer total = 0;
-        for (UsageSnapshot usageSnapshot : snapshots) {
-            total += usageSnapshot.queries();
+        for (UsageIncrement usageIncrement : increments) {
+            total += usageIncrement.queries();
         }
         return total;
     }
 
     public Integer totalCpu(){
         Integer total = 0;
-        for (UsageSnapshot usageSnapshot : snapshots) {
-            total += usageSnapshot.cpuTime();
+        for (UsageIncrement usageIncrement : increments) {
+            total += usageIncrement.cpuTime();
         }
         return total;
     }
 
     public Integer totalDmlRows(){
         Integer total = 0;
-        for (UsageSnapshot usageSnapshot : snapshots) {
-            total += usageSnapshot.dmlRows();
+        for (UsageIncrement usageIncrement : increments) {
+            total += usageIncrement.dmlRows();
         }
         return total;
     }
 
     public Long totalTimeMillis(){
         Long total = 0;
-        for (UsageSnapshot usageSnapshot : snapshots) {
-            total += usageSnapshot.timeMillis();
+        for (UsageIncrement usageIncrement : increments) {
+            total += usageIncrement.timeMillis();
         }
         return total;
     }
 
     public Integer timesRun(){
-        return snapshots.size();
+        return increments.size();
     }
 
     public String format() {

@@ -3,7 +3,7 @@ private class UsageSummaryTests_TEST {
     @IsTest
     static void should_calculate_time_in_millis_correctly() {
         UsageSummary usageSummary = new UsageSummary(
-                new List<UsageSnapshot>{
+                new List<UsageIncrement>{
                         new UsageIncrement(
                                 0, 0, 0, 0
                         ),
@@ -23,7 +23,7 @@ private class UsageSummaryTests_TEST {
     @IsTest
     static void should_calculate_queries_correctly() {
         UsageSummary usageSummary = new UsageSummary(
-                new List<UsageSnapshot>{
+                new List<UsageIncrement>{
                         new UsageIncrement(
                                 0, 50, 0, 0
                         ),
@@ -48,7 +48,7 @@ private class UsageSummaryTests_TEST {
 
         UsageSummary usageSummary =
                 new UsageSummary(
-                        new List<UsageSnapshot>{
+                        new List<UsageIncrement>{
                                 usageIncrement
                         }
                 );
@@ -68,7 +68,7 @@ private class UsageSummaryTests_TEST {
 
         UsageSummary usageSummary =
                 new UsageSummary(
-                        new List<UsageSnapshot>{
+                        new List<UsageIncrement>{
                                 usageIncrement, usageIncrement2
                         }
                 );

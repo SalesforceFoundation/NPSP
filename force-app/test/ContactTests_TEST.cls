@@ -56,7 +56,7 @@ private class ContactTests_TEST {
         System.debug(LoggingLevel.ERROR, '*** variable value: ' + r.getIncrementFrom
                 (benchmark).toString());
             System.debug(LoggingLevel.ERROR, '*** variable value: ' + new UsageSummary(
-                    new List<UsageSnapshot>{r.getIncrementFrom(benchmark)}).format());
+                    new List<UsageIncrement>{r.getIncrementFrom(benchmark)}).format());
             System.debug(LoggingLevel.ERROR, '^^^^^^ new UsageSummary(new List<UsageSnapshot>{r.getIncrementFrom(benchmark)}).format() ^^^^^^');
         System.debug(LoggingLevel.ERROR, '^^^^^^ r.getIncrementFrom(benchmark) ^^^^^^');
 

@@ -42,4 +42,24 @@ public without sharing virtual class UsageIncrement {
     public virtual Integer dmlRows() {
         return dmlRows;
     }
+
+    public Boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (obj instanceof UsageIncrement) {
+            UsageIncrement other = (UsageIncrement) obj;
+            return timeMillis() == other.timeMillis()
+                    && queries() == other.queries()
+                    && cpuTime() == other.cpuTime()
+                    && dmlRows() == other.dmlRows();
+        } else {
+            return false;
+        }
+    }
+
+    public Integer hashCode() {
+        return (31 * ((Integer) timeMillis() + queries()) + dmlRows()) ^ cpuTime();
+    }
 }
