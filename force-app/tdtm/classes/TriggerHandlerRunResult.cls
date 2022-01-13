@@ -1,8 +1,8 @@
 public without sharing virtual class TriggerHandlerRunResult extends ServiceRunResult {
-    private TriggerContext triggerContext;
-    private TriggerHandler triggerHandler;
+    protected SObjectType sObjType;
 
-    public TriggerHandlerRunResult() {}
+    public TriggerHandlerRunResult() {
+    }
 
     public TriggerHandlerRunResult(
             TriggerContext triggerContext,
@@ -10,33 +10,14 @@ public without sharing virtual class TriggerHandlerRunResult extends ServiceRunR
             UsageSnapshot start,
             UsageSnapshot stop
     ) {
-        this.triggerContext = triggerContext;
-        this.triggerHandler = triggerHandler;
+        this.service = triggerHandler.className();
+        this.action = triggerContext.action().name();
         this.start = start;
         this.stop = stop;
+        this.sObjType = triggerContext.getSObjectType();
     }
 
-    public virtual String triggerHandlerName() {
-        return triggerHandler.className();
-    }
-
-    public virtual String triggerContext() {
-        return triggerContext.action().name();
-    }
-
-    public SObjectType getSObjectType() {
-        return triggerContext.getSObjectType();
-    }
-
-    public UsageSummary usageSummary() {
-        return new UsageSummary(
-                new List<UsageIncrement>{
-                        getUsageIncrement()
-                }
-        );
-    }
-
-    public virtual UsageIncrement getUsageIncrement() {
-        return stop.getIncrementFrom(start);
+    public virtual SObjectType getSObjectType() {
+        return sObjType;
     }
 }

@@ -134,7 +134,7 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
                 if (isMonitoringEnabled) {
-                    monitor.startMonitoring(triggerHandler, context);
+                    monitor.startMonitoring();
                 }
 
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();

@@ -18,22 +18,6 @@ public without sharing virtual class ServiceRunResult {
         this.stop = stop;
     }
 
-    public virtual Long timeUsed() {
-        return stop.timeMillis() - start.timeMillis();
-    }
-
-    public virtual Integer queriesUsed() {
-        return stop.queries() - start.queries();
-    }
-
-    public virtual Integer cpuUsed() {
-        return stop.cpuTime() - start.cpuTime();
-    }
-
-    public virtual Integer dmlRows() {
-        return stop.dmlRows() - start.dmlRows();
-    }
-
     public virtual String service() {
         return service;
     }
@@ -42,4 +26,15 @@ public without sharing virtual class ServiceRunResult {
         return action;
     }
 
+    public virtual UsageSummary usageSummary() {
+        return new UsageSummary(
+                new List<UsageIncrement>{
+                        usageIncrement()
+                }
+        );
+    }
+
+    public virtual UsageIncrement usageIncrement() {
+        return stop.usageIncrement().getIncrementFrom(start.usageIncrement());
+    }
 }

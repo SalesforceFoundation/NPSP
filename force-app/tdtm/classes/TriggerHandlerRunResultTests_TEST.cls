@@ -5,13 +5,12 @@ private class TriggerHandlerRunResultTests_TEST {
         UsageSnapshot start = new UsageSnapshotFake(30);
         UsageSnapshot stop = new UsageSnapshotFake(45);
 
-        UsageSnapshot usageIncrement =
-                stop.getIncrementFrom(start);
+        UsageIncrement usageIncrement =
+                stop.usageIncrement().getIncrementFrom(start.usageIncrement());
 
         UsageSnapshot expectedIncrement =
                 new UsageSnapshotFake(15);
 
-        System.assert(usageIncrement.isEqualTo(expectedIncrement));
-
+        System.assert(usageIncrement.equals(expectedIncrement.usageIncrement()));
     }
 }

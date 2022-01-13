@@ -4,11 +4,11 @@ private class TriggerHandlerRunResultsTests_TEST {
     static void should_return_usage_increments() {
         TriggerHandlerRunResultFake runResultFake =
                 new TriggerHandlerRunResultFake(
-                       'service1', 'action1', 1,1,1,1
+                       'service1', 'action1', Contact.SObjectType
                 );
         TriggerHandlerRunResultFake runResultFake2 =
                 new TriggerHandlerRunResultFake(
-                       'service1', 'action1', 1,1,1,1
+                       'service1', 'action1', Contact.SObjectType
                 );
         TriggerHandlerRunResults runResults =
                 new TriggerHandlerRunResults();

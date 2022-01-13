@@ -20,12 +20,9 @@ public with sharing class TriggerHandlerRunResults {
 
     public void add(TriggerHandlerRunResult result) {
         results.add(result);
-        incrementTimesCalledByContext(result.triggerHandlerName(), result.triggerContext());
-        incrementTimesCalled(result.triggerHandlerName());
-        updateNumberOfQueriesUsed(result.triggerHandlerName(), result.queriesUsed());
-        totalTimeUsedInMillis += result.timeUsed();
-        totalQueriesUsed += result.queriesUsed();
-        totalCpuTimeUsed += result.cpuUsed();
+        incrementTimesCalledByContext(result.service(), result.action());
+        incrementTimesCalled(result.service());
+        updateNumberOfQueriesUsed(result.service(), result.usageIncrement().queries());
     }
 
     public void logResults() {
@@ -40,7 +37,7 @@ public with sharing class TriggerHandlerRunResults {
         List<UsageIncrement> usageIncrements = new List<UsageIncrement>();
         for (TriggerHandlerRunResult runResult : getRunResults()) {
             usageIncrements.add(
-                    runResult.getUsageIncrement()
+                    runResult.usageIncrement()
             );
         }
         return usageIncrements;
@@ -66,8 +63,8 @@ public with sharing class TriggerHandlerRunResults {
             currentType = sObjectType;
             System.debug(LoggingLevel.ERROR, '*** ##### ' + i + ':  ######');
             System.debug(LoggingLevel.ERROR, '*** ' + sObjectType + ' :: ' +
-                    triggerHandlerRunResult.triggerContext() + ' :: ' +
-                    triggerHandlerRunResult.triggerHandlerName());
+                    triggerHandlerRunResult.action() + ' :: ' +
+                    triggerHandlerRunResult.service());
             UsageSummary usageSummary = triggerHandlerRunResult.usageSummary();
             System.debug(LoggingLevel.ERROR,
                     '*** cpuUsed: '
@@ -152,7 +149,7 @@ public with sharing class TriggerHandlerRunResults {
     public TriggerHandlerRunResults getRunResultsFor(String serviceName) {
         TriggerHandlerRunResults serviceContextRunResults = new TriggerHandlerRunResults();
         for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
-            if (triggerHandlerRunResult.triggerHandlerName() == serviceName) {
+            if (triggerHandlerRunResult.service() == serviceName) {
                 serviceContextRunResults.add(triggerHandlerRunResult);
             }
         }
@@ -162,8 +159,8 @@ public with sharing class TriggerHandlerRunResults {
     public TriggerHandlerRunResults getRunResultsFor(String serviceName, String context) {
         TriggerHandlerRunResults serviceContextRunResults = new TriggerHandlerRunResults();
         for (TriggerHandlerRunResult triggerHandlerRunResult : this.results) {
-            if (triggerHandlerRunResult.triggerHandlerName() == serviceName
-                    && triggerHandlerRunResult.triggerContext() == context) {
+            if (triggerHandlerRunResult.service() == serviceName
+                    && triggerHandlerRunResult.action() == context) {
                 serviceContextRunResults.add(triggerHandlerRunResult);
             }
         }
@@ -177,7 +174,7 @@ public with sharing class TriggerHandlerRunResults {
     private List<UsageIncrement> usageIncrements() {
         List<UsageIncrement> usageIncrements = new List<UsageIncrement>();
         for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
-            usageIncrements.add(triggerHandlerRunResult.getUsageIncrement());
+            usageIncrements.add(triggerHandlerRunResult.usageIncrement());
         }
         return usageIncrements;
     }
@@ -185,8 +182,8 @@ public with sharing class TriggerHandlerRunResults {
     public void debugMin() {
         for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
             System.debug(LoggingLevel.ERROR,
-                    triggerHandlerRunResult.triggerHandlerName()
-                            + ' ' + triggerHandlerRunResult.triggerContext()
+                    triggerHandlerRunResult.service()
+                            + ' ' + triggerHandlerRunResult.action()
                             + ' ' + triggerHandlerRunResult.usageSummary().format());
         }
     }
@@ -215,15 +212,15 @@ public with sharing class TriggerHandlerRunResults {
                 new Map<String, Map<String, UsageSummary>>();
         for (TriggerHandlerRunResult triggerHandlerRunResult : results) {
             Map<String, UsageSummary> summaryByContext = summaryByServiceByContext.get
-                    (triggerHandlerRunResult.triggerHandlerName());
+                    (triggerHandlerRunResult.service());
             if (summaryByContext == null) {
                 summaryByServiceByContext.put(
-                        triggerHandlerRunResult.triggerHandlerName(),
+                        triggerHandlerRunResult.service(),
                         new Map<String, UsageSummary>{
-                                triggerHandlerRunResult.triggerContext() =>
+                                triggerHandlerRunResult.action() =>
                                         usageSummaryFor(
-                                                triggerHandlerRunResult.triggerHandlerName(),
-                                                triggerHandlerRunResult.triggerContext()
+                                                triggerHandlerRunResult.service(),
+                                                triggerHandlerRunResult.action()
                                         )
                         }
                 );

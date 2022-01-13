@@ -5,7 +5,8 @@ public without sharing virtual class UsageIncrement {
     protected Integer cpuUsed;
     protected Integer dmlRows;
 
-    private class UsageIncrementException extends System.Exception {}
+    private class UsageIncrementException extends System.Exception {
+    }
 
     public UsageIncrement(
             Long timeMillis,
@@ -61,5 +62,14 @@ public without sharing virtual class UsageIncrement {
 
     public Integer hashCode() {
         return (31 * ((Integer) timeMillis() + queries()) + dmlRows()) ^ cpuTime();
+    }
+
+    public UsageIncrement getIncrementFrom(UsageIncrement other) {
+        return new UsageIncrement(
+                timeMillis() - other.timeMillis(),
+                queries() - other.queries(),
+                cpuTime() - other.cpuTime(),
+                dmlRows() - other.dmlRows()
+        );
     }
 }

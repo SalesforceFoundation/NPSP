@@ -13,20 +13,26 @@ public with sharing class TriggerHandlerMonitor {
         set;
     }
 
+    private LimitsMonitor limitsMonitor {
+        get {
+            if (limitsMonitor == null) {
+                limitsMonitor = new LimitsMonitor();
+            } return limitsMonitor;
+        }
+        set;
+    }
+
     public TriggerHandlerMonitor(Boolean isCompactLogging) {
         this.isCompactLoggingEnabled = isCompactLogging;
     }
 
-    public void startMonitoring(TriggerHandler triggerHandler, TriggerContext triggerContext) {
-        System.debug(LoggingLevel.ERROR, '*** ##### starting monitoring for ' +
-                triggerHandler.className() + triggerContext.action().name() +
-                '######');
+    public void startMonitoring() {
         //Currently, only supporting one service and context at a time.
-        start = new UsageSnapshot();
+        start = limitsMonitor.getUsageSnapshot();
     }
 
     public void stopMonitoring(TriggerHandler triggerHandler, TriggerContext context) {
-        UsageSnapshot stop = new UsageSnapshot();
+        UsageSnapshot stop = limitsMonitor.getUsageSnapshot();
         runResults.add(
                 new TriggerHandlerRunResult(
                         context,
@@ -41,11 +47,10 @@ public with sharing class TriggerHandlerMonitor {
         return runResults;
     }
 
-
     public TriggerHandlerRunResults getResultsFor(String className) {
         TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
         for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.getRunResults()) {
-            if (triggerHandlerRunResult.triggerHandlerName() == className) {
+            if (triggerHandlerRunResult.service() == className) {
                 runResults.add(triggerHandlerRunResult);
             }
         }
@@ -55,8 +60,8 @@ public with sharing class TriggerHandlerMonitor {
     public TriggerHandlerRunResults getResultsFor(String className, String context) {
         TriggerHandlerRunResults runResults = new TriggerHandlerRunResults();
         for (TriggerHandlerRunResult triggerHandlerRunResult : this.runResults.getRunResults()) {
-            if (triggerHandlerRunResult.triggerHandlerName().equals(className) &&
-                    triggerHandlerRunResult.triggerContext().equals(context)) {
+            if (triggerHandlerRunResult.service().equals(className) &&
+                    triggerHandlerRunResult.action().equals(context)) {
                 runResults.add(triggerHandlerRunResult);
             }
         }
