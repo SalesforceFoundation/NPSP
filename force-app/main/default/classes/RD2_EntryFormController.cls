@@ -78,6 +78,16 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
+    private static RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = new RD2_Settings();
+            }
+            return settings;
+        }
+        set;
+    }
+
     /***
     * @description Retrieves the record type id for the household account record type
     */
@@ -190,7 +200,11 @@ public with sharing class RD2_EntryFormController {
     }
 
     private static Map<String, Object> getCustomFieldValues(npe03__Recurring_Donation__c recurringDonation) {
-        return new Map<String, Object>();
+        Map<String, Object> customFieldValues = new Map<String, Object>();
+        for(CustomField field : getCustomFieldSectionFields()) {
+            customFieldValues.put(field.apiName, recurringDonation.get(field.apiName));
+        }
+        return customFieldValues;
     }
 
     /**
@@ -246,17 +260,8 @@ public with sharing class RD2_EntryFormController {
     @TestVisible
     private static List<CustomField> getCustomFieldSectionFields() {
         List<CustomField> fields = new List<CustomField>();
-        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
 
-        for (Schema.FieldSetMember field : fieldSetFields) {
-            if (excludedCustomFields.contains(field.getFieldPath())
-                || field.getFieldPath().startsWith('npsp__')
-                || field.getFieldPath().startsWith('npe03__')
-                || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
-            ) {
-                continue;
-            }
-
+        for (Schema.FieldSetMember field : settings.getCustomFieldSetMembers()) {
             fields.add(new CustomField(field));
         }
 
@@ -542,6 +547,8 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String commitmentId;
         @AuraEnabled public String achLastFour;
         @AuraEnabled public String cardLastFour;
+        @AuraEnabled public String cardExpirationMonth;
+        @AuraEnabled public String cardExpirationYear;
         @AuraEnabled public Map<String, Object> customFieldValues;
 
         public RD2RecordView(npe03__Recurring_Donation__c record) {
@@ -553,19 +560,21 @@ public with sharing class RD2_EntryFormController {
             this.dateEstablished = record.npe03__Date_Established__c;
             this.donationValue = record.npe03__Amount__c;
             this.recurringPeriod = record.npe03__Installment_Period__c;
-            this.recurringFrequency = record.InstallmentFrequency__c.intValue();
+            this.recurringFrequency = record.InstallmentFrequency__c?.intValue();
             this.startDate = record.StartDate__c;
             this.dayOfMonth = record.Day_of_Month__c;
-            this.plannedInstallments = record.npe03__Installments__c.intValue();
+            this.plannedInstallments = record.npe03__Installments__c?.intValue();
             this.recurringType = record.RecurringType__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;
             this.cardLastFour = record.CardLast4__c;
+            this.cardExpirationMonth = record.CardExpirationMonth__c;
+            this.cardExpirationYear = record.CardExpirationYear__c;
             this.customFieldValues = getCustomFieldValues(record);
         }
     }
 
-    class RD2AppView {
+    public class RD2AppView {
 
         @AuraEnabled public Boolean isAutoNamingEnabled; //' => RD2_NamingService.isAutomaticNamingEnabled,
         @AuraEnabled public Boolean isMultiCurrencyEnabled; //' => UserInfo.isMultiCurrencyOrganization(),
@@ -582,12 +591,6 @@ public with sharing class RD2_EntryFormController {
 
         // @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public RD2RecordView record;
-
-        public RD2AppView() {
-            this.InstallmentFrequencyPermissions = new Map<String, Boolean>();
-            this.InstallmentFrequencyPermissions = new Map<String, Boolean>();
-            this.customFieldSets = new List<CustomField>();
-        }
 
         public void withRecord(npe03__Recurring_Donation__c record) {
             this.record = new RD2RecordView(record);

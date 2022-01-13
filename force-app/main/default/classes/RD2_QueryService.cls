@@ -111,6 +111,7 @@ public inherited sharing class RD2_QueryService {
      * @param rdIds Recurring Donation Ids
      * @param startDate offset by the Next Donation Date match days before the year start date
      *      so past Opportunities matching future projected installments are returned.
+     *      See getOpportunitySubQuery() for usage.
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
@@ -146,7 +147,11 @@ public inherited sharing class RD2_QueryService {
         queryFields.addAll(rdFields);
         queryFields.addAll(new Set<String>{
                 'npe03__Organization__r.RecordTypeId',
-                'npe03__Contact__r.Account.RecordTypeId'
+                'npe03__Contact__r.Account.RecordTypeId',
+                String.valueOf(npe03__Recurring_Donation__c.ACH_Last_4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardLast4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c)
         });
         queryFields.addAll(customFieldMapper.getRdFieldNames());
 
