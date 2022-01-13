@@ -11,7 +11,7 @@ import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorL
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
 
-    paymentsAreEnabled = false;
+    //paymentsAreEnabled = false;
 
     recordsToLoad = 50;
 
@@ -36,20 +36,10 @@ export default class DonationHistoryTable extends LightningElement {
         if (data) {
             this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label
         };
-        this.paymentsAreEnabled = arePaymentsEnabled();
-        if(paymentsAreEnabled){
-            this.columns = [
-            { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-            },
-            cellAttributes: { alignment: 'right' }},
-            { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text' },
-            { label: commonAmount, fieldName: 'amount', type: 'currency', },
-            { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },];
-        }else{
-            this.columns = [
+        arePaymentsEnabled().then( (paymentsAreEnabled) => {
+            console.log( JSON.parse(JSON.stringify(paymentsAreEnabled)));
+            if(paymentsAreEnabled){
+                this.columns = [
                 { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
                     year: "numeric",
                     month: "numeric",
@@ -57,8 +47,21 @@ export default class DonationHistoryTable extends LightningElement {
                 },
                 cellAttributes: { alignment: 'right' }},
                 { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text' },
-                { label: commonAmount, fieldName: 'amount', type: 'currency', },];
-        }
+                { label: commonAmount, fieldName: 'amount', type: 'currency', },
+                { label: this.paymentMethodLabel, fieldName: 'paymentMethod', type: 'text', },];
+            }else{
+                this.columns = [
+                    { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                    },
+                    cellAttributes: { alignment: 'right' }},
+                    { label: donationHistoryDonorLabel, fieldName: 'name', type: 'text' },
+                    { label: commonAmount, fieldName: 'amount', type: 'currency', },];
+            }
+        }  );
+        
     }
     
     // eslint-disable-next-line @lwc/lwc/no-async-await
