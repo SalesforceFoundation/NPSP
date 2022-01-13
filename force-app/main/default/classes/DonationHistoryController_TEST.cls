@@ -13,7 +13,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
@@ -35,7 +34,7 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-    
+
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -53,7 +52,7 @@ public class DonationHistoryController_TEST {
                         'Matched Donor;Soft Credit;Household Member') + ']';
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
                 filterGroupsJSON, List<Filter_Group__mdt>.class);
-    
+
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
                 filterRulesJSON, List<Filter_Rule__mdt>.class);
     }
@@ -64,7 +63,7 @@ public class DonationHistoryController_TEST {
     * @description Method to generate test data.
     */
     @TestSetup
-    static void makeData(){
+    static void makeData() {
         Date myDateTime = Date.newInstance(2020, 2, 2);
 
         UTIL_UnitTestData_TEST.createAccountContactTestData(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, 1, 3, 1);
@@ -141,7 +140,6 @@ public class DonationHistoryController_TEST {
             Contact_Role_ID__c=oppCntRolePartialSoftCredit.Id
         );
         insert partialSoftCredit;
-        generateFilterRules();
     }
 
     /** 
@@ -151,6 +149,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
+        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -161,10 +160,11 @@ public class DonationHistoryController_TEST {
         Boolean influencer = false;
         Boolean role = false;
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id);
+        List<DonationHistoryController.DonationHistoryView> donationHistory = 
+        DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
 
-        for(DonationHistoryController.DonationHistory donation : donationHistory){
+        for(DonationHistoryController.DonationHistoryView donation : donationHistory){
             if(donation.role == 'Influencer'){
                 influencer = true;
             }
@@ -184,6 +184,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
+        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -191,9 +192,10 @@ public class DonationHistoryController_TEST {
             WHERE FirstName = 'TestFirstName12'
             LIMIT 1
         ];
-        
+
         Test.startTest();
-        List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id);
+        List<DonationHistoryController.DonationHistoryView> donationHistory = 
+        DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
@@ -204,7 +206,8 @@ public class DonationHistoryController_TEST {
     * @description Method to test validation of user permissions.
     */
     @IsTest
-    private static void shouldThrowAccessException(){
+    private static void shouldThrowAccessException() {
+        generateFilterRules();
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
         Contact testContact = [
             SELECT
@@ -217,7 +220,8 @@ public class DonationHistoryController_TEST {
         try{
             Test.startTest();
             System.runAs(u){
-                List<DonationHistoryController.DonationHistory> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id); 
+                List<DonationHistoryController.DonationHistoryView> donationHistory = 
+                DonationHistoryController.getDonationHistory(testContact.Id); 
             }
 	        Test.stopTest();
         } catch(Exception e){

@@ -80,10 +80,16 @@ public with sharing class DonationHistoryController {
             throw new AuraHandledException(ex.getMessage());
         }
     }
-
-    private static List<DonationHistoryView> buildHistoryFromOCRs(Id contactId, List<OpportunityContactRole> contactRoles, String type, String paymentType) {
+    
+    @AuraEnabled(cacheable=true)
+    public static boolean arePaymentsEnabled(){
         npe01__Contacts_And_Orgs_Settings__c settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
 		boolean isPaymentEnabled = settings.npe01__Payments_Enabled__c;
+		return isPaymentEnabled;
+    }
+
+    private static List<DonationHistoryView> buildHistoryFromOCRs(Id contactId, List<OpportunityContactRole> contactRoles, String type, String paymentType) {
+		boolean isPaymentEnabled = arePaymentsEnabled();
         DonationHistoryService service = new DonationHistoryService(contactId);
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         if(isPaymentEnabled){
