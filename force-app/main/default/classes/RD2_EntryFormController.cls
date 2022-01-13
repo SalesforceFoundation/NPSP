@@ -68,12 +68,62 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
+    private static RD2_QueryService selector {
+        get {
+            if (selector == null) {
+                selector = new RD2_QueryService();
+            }
+            return selector;
+        }
+        set;
+    }
+
+    /***
+    * @description Retrieves the record type id for the household account record type
+    */
+    @TestVisible
+    private static String hhRecordTypeId {
+        get {
+            if (hhRecordTypeId == null) {
+                hhRecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
+            }
+            return hhRecordTypeId;
+        }
+        private set;
+    }
+
+    @AuraEnabled
+    public static RD2AppView getInitialView(Id parentId, Id recordId) {
+        RD2AppView view = new RD2AppView();
+        view.isAutoNamingEnabled = RD2_NamingService.isAutomaticNamingEnabled;
+        view.isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
+        view.parentSObjectType = (parentId == null) ? null : UTIL_Describe.objectNameFromId(parentId);
+        view.InstallmentPeriodPermissions = getFieldPermissionsMap('npe03__Installment_Period__c');
+        view.InstallmentFrequencyPermissions = getFieldPermissionsMap(String.valueOf(npe03__Recurring_Donation__c.InstallmentFrequency__c));
+        view.customFieldSets = getCustomFieldSectionFields();
+        view.isElevateCustomer = RD2_ElevateIntegrationService.isIntegrationEnabled();
+        view.isChangeLogEnabled = RD2_ChangeLogService.isChangeLogEnabled;
+        view.periodToYearlyFrequencyMap = RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY;
+        view.closedStatusValues = new List<String>(RD2_StatusMapper.getInstance().getClosedStatusValues());
+        view.defaultRecurringType = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)
+        );
+
+        if(recordId != null) {
+            npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
+            view.withRecord(rd);
+        }
+
+        return view;
+    }
+
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
     * @return Map<String, Object>
     */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(Cacheable=true)
     public static Map<String, Object> getRecurringSettings(Id parentId) {
         String parentSObjectType = (parentId == null)
             ? null
@@ -112,18 +162,13 @@ public with sharing class RD2_EntryFormController {
         npe03__Recurring_Donation__c rd;
         Map<String, Object> response = new Map<String, Object>();
         try {
-            rd = getRecurringDonation(recordId);
+            rd = selector.getRecurringDonationForUI(recordId);
         } catch (Exception ex) {
             throw new AuraHandledException(ex.getMessage());
         }
 
-        if (rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
-            || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId)
-        ) {
-            response.put('DonorType', 'Contact');
-        } else {
-            response.put('DonorType', 'Account');
-        }
+        String donorType = getDonorType(rd);
+        response.put('DonorType', donorType);
 
         response.put('Period', rd.npe03__Installment_Period__c);
         response.put('Frequency', rd.InstallmentFrequency__c);
@@ -133,12 +178,27 @@ public with sharing class RD2_EntryFormController {
         return response;
     }
 
+    private static String getDonorType(npe03__Recurring_Donation__c rd) {
+        String donorType = isContactDonor(rd) ? 'Contact' : 'Account';
+        return donorType;
+    }
+
+    private static Boolean isContactDonor(npe03__Recurring_Donation__c rd) {
+        Boolean isContactDonor = rd.npe03__Organization__r.RecordTypeId == hhRecordTypeId
+                || (rd.npe03__Organization__c == null && rd.npe03__Contact__r.Account.RecordTypeId == hhRecordTypeId);
+        return isContactDonor;
+    }
+
+    private static Map<String, Object> getCustomFieldValues(npe03__Recurring_Donation__c recurringDonation) {
+        return new Map<String, Object>();
+    }
+
     /**
      * @description Validate that the current user has Read access to a specific set of required fields. If this returns
      * false, the custom UI will display a warning message at the top of the page.
      * @return True if the User has Read access to all required fields in the UI
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(Cacheable=true)
     public static Boolean hasRequiredFieldPermissions() {
         Set<String> requiredFields = new Set<String>{
             'npe03__Amount__c',
@@ -164,51 +224,11 @@ public with sharing class RD2_EntryFormController {
     }
 
     /**
-    * @param recordId RecurringDonation.RecordId
-    * @return Recurring Donation object
-    */
-    private static npe03__Recurring_Donation__c getRecurringDonation(Id recordId) {
-        Set<String> queryFields = new Set<String>{
-            'Id',
-            'RecurringType__c',
-            'npe03__Installment_Period__c',
-            'InstallmentFrequency__c',
-            'npe03__Organization__c',
-            'npe03__Organization__r.RecordTypeId',
-            'npe03__Contact__r.Account.RecordTypeId',
-            'npe03__Installments__c'
-        };
-
-        String soql = new UTIL_Query()
-            .withFrom(npe03__Recurring_Donation__c.SObjectType)
-            .withSelectFields(queryFields)
-            .withWhere('Id = :recordId')
-            .withLimit(1)
-            .build();
-
-        return Database.query(soql);
-    }
-
-    /***
-    * @description Retrieves the record type id for the household account record type
-    */
-    @TestVisible
-    private static String hhRecordTypeId {
-        get {
-            if (hhRecordTypeId == null) {
-                hhRecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
-            }
-            return hhRecordTypeId;
-        }
-        private set;
-    }
-
-    /**
      * @description Build a map of field permissions for use by LWC so it can validate access permission
      * for custom picklist fields without a return trip to server. Fields using lightning-input-field do not
      * require this additional check.
      * @param fieldApiName Field ApiName
-     * @return Map<String, Object> of field permissions
+     * @return Map<String, Boolean> of field permissions
      */
     private static Map<String, Boolean> getFieldPermissionsMap(String fieldApiName) {
         DescribeFieldResult dfr = UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', fieldApiName);
@@ -252,8 +272,7 @@ public with sharing class RD2_EntryFormController {
 
         /***
         * @description Constructor for the CustomField class
-        * @param apiName Api name of the field
-        * @param required Indicate if the field is required
+        * @param field A FieldSetMember reference to the field to be included
         */
         public CustomField(Schema.FieldSetMember field) {
             this.apiName = field.getFieldPath();
@@ -275,7 +294,7 @@ public with sharing class RD2_EntryFormController {
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
 
-            npe03__Recurring_Donation__c oldRd = getOldRecurringDonation(rd.Id);
+            npe03__Recurring_Donation__c oldRd = selector.getRecurringDonationForUI(rd.Id);
 
             commitmentService.adjustAndValidateRD(rd, oldRd);
             UTIL_Http.Response response = commitmentService.handleCommitment(rd, oldRd, paymentMethodToken);
@@ -322,25 +341,6 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static void logError(Id recordId, String errorMessage) {
         commitmentService.logError(recordId, errorMessage);
-    }
-
-
-    /**
-    * @description Retrives Recurring Donation from database
-    * @param recordId Recurring Donation Id
-    * @return npe03__Recurring_Donation__c
-    */
-    private static npe03__Recurring_Donation__c getOldRecurringDonation(Id recordId) {
-        npe03__Recurring_Donation__c oldRd = null;
-
-        if (recordId != null) {
-            List<npe03__Recurring_Donation__c> oldRds = new RD2_QueryService().getRecurringDonationsBase(new Set<Id>{ recordId });
-            if (oldRds != null && !oldRds.isEmpty()) {
-                oldRd = oldRds[0];
-            }
-        }
-
-        return oldRd;
     }
 
     /**
@@ -401,7 +401,6 @@ public with sharing class RD2_EntryFormController {
         * validates user entered values for a new or existing RD record.
         * @param rd Modified Recurring Donation record that is not created/updated in DB yet
         * @param oldRd oldRecurring Donation
-        * @return void
         */
         private void adjustAndValidateRD(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd) {
             // Populate defaults otherwise applied by the DML operation and available in the trigger context
@@ -437,6 +436,7 @@ public with sharing class RD2_EntryFormController {
         * @description Checks if the commitment record should be sent to Elevate
         * @param rd Recurring Donation record
         * @param oldRd oldRecurring Donation
+        * @param paymentMethodToken Token for Elevate requests
         * @return Boolean
         */
         private Boolean shouldSendToElevate(npe03__Recurring_Donation__c rd, npe03__Recurring_Donation__c oldRd, String paymentMethodToken) {
@@ -478,7 +478,6 @@ public with sharing class RD2_EntryFormController {
         * @description Logs an error record on an commitment error response
         * @param rd Recurring Donation record
         * @param response Payments API response
-        * @return void
         */
         private void processResponse(npe03__Recurring_Donation__c rd, UTIL_Http.Response response) {
             if (isCommitmentSuccess(response)) {
@@ -508,7 +507,6 @@ public with sharing class RD2_EntryFormController {
         * @description Creates an error record for the specified record Id and error message
         * @param recordId A Recurring Donation or a donor (Contact/Account) Id
         * @param errorMessage Error message
-        * @return void
         */
         public void logError(Id recordId, String errorMessage) {
             ERR_LogService.Logger logger = new ERR_LogService.Logger(
@@ -526,4 +524,73 @@ public with sharing class RD2_EntryFormController {
         }
     }
 
+    class RD2RecordView {
+        @AuraEnabled public Id recordId;
+        @AuraEnabled public String recurringStatus;
+        @AuraEnabled public Id contactId;
+        @AuraEnabled public Id accountId;
+        @AuraEnabled public String donorType;
+        @AuraEnabled public Date dateEstablished;
+        @AuraEnabled public Decimal donationValue;
+        @AuraEnabled public String recurringPeriod;
+        @AuraEnabled public Integer recurringFrequency;
+        @AuraEnabled public Date startDate;
+        @AuraEnabled public String dayOfMonth;
+        @AuraEnabled public Integer plannedInstallments;
+        @AuraEnabled public String recurringType;
+        @AuraEnabled public String paymentToken;
+        @AuraEnabled public String commitmentId;
+        @AuraEnabled public String achLastFour;
+        @AuraEnabled public String cardLastFour;
+        @AuraEnabled public Map<String, Object> customFieldValues;
+
+        public RD2RecordView(npe03__Recurring_Donation__c record) {
+            this.recordId = record.Id;
+            this.contactId = record.npe03__Contact__c;
+            this.accountId = record.npe03__Organization__c;
+            this.recurringStatus = record.Status__c;
+            this.donorType = getDonorType(record);
+            this.dateEstablished = record.npe03__Date_Established__c;
+            this.donationValue = record.npe03__Amount__c;
+            this.recurringPeriod = record.npe03__Installment_Period__c;
+            this.recurringFrequency = record.InstallmentFrequency__c.intValue();
+            this.startDate = record.StartDate__c;
+            this.dayOfMonth = record.Day_of_Month__c;
+            this.plannedInstallments = record.npe03__Installments__c.intValue();
+            this.recurringType = record.RecurringType__c;
+            this.commitmentId = record.CommitmentId__c;
+            this.achLastFour = record.ACH_Last_4__c;
+            this.cardLastFour = record.CardLast4__c;
+            this.customFieldValues = getCustomFieldValues(record);
+        }
+    }
+
+    class RD2AppView {
+
+        @AuraEnabled public Boolean isAutoNamingEnabled; //' => RD2_NamingService.isAutomaticNamingEnabled,
+        @AuraEnabled public Boolean isMultiCurrencyEnabled; //' => UserInfo.isMultiCurrencyOrganization(),
+        @AuraEnabled public String parentSObjectType; //' => parentSObjectType,
+        @AuraEnabled public Map<String, Boolean> InstallmentPeriodPermissions; //' => getFieldPermissionsMap('npe03__Installment_Period__c'),
+        @AuraEnabled public Map<String, Boolean> InstallmentFrequencyPermissions; //' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
+        @AuraEnabled public List<CustomField> customFieldSets; //' => getCustomFieldSectionFields(),
+        @AuraEnabled public Boolean isElevateCustomer; //' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
+        @AuraEnabled public Boolean isChangeLogEnabled; //' => RD2_ChangeLogService.isChangeLogEnabled,
+        @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap; //' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
+        @AuraEnabled public List<String> closedStatusValues; //' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
+        @AuraEnabled public String defaultRecurringType; //' => defaultRecurringType
+        @AuraEnabled public Id parentId;
+
+        // @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
+        @AuraEnabled public RD2RecordView record;
+
+        public RD2AppView() {
+            this.InstallmentFrequencyPermissions = new Map<String, Boolean>();
+            this.InstallmentFrequencyPermissions = new Map<String, Boolean>();
+            this.customFieldSets = new List<CustomField>();
+        }
+
+        public void withRecord(npe03__Recurring_Donation__c record) {
+            this.record = new RD2RecordView(record);
+        }
+    }
 }
