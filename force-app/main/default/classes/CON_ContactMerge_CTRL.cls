@@ -36,6 +36,31 @@
 */
 public with sharing class CON_ContactMerge_CTRL {
 
+    @TestVisible
+    private ContactMergeSelector mergeSelector {
+        get {
+            if (mergeSelector == null) {
+                mergeSelector = new ContactMergeSelector();
+            }
+            return mergeSelector;
+        }
+        set;
+    }
+
+    /***********************************************************************************************
+    * @description List of DRI fields to be queried
+    */
+    private List<String> driFieldNames {
+        get {
+            if (driFieldNames == null) {
+                driFieldNames = new List<String>();
+                driFieldNames.add('RecordId');
+            }
+            return driFieldNames;
+        }
+        set;
+    }
+
     private static final String MASTER_KEY = '$MASTER$';
 
     /***********************************************************************************************
@@ -52,7 +77,6 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description List of ContactWrapper objects for display in search results pane.
     */
-    @TestVisible
     public List<ContactWrapper> searchResults { get; private set; }
 
     /***********************************************************************************************
@@ -64,12 +88,6 @@ public with sharing class CON_ContactMerge_CTRL {
     * @description Number of selected records.
     */
     public Integer selectedRecordsCount { get; private set; } { this.selectedRecordsCount = 0; }
-
-    /***********************************************************************************************
-    * @description Max number of Contacts returned by a query.
-    */
-    
-    private final Integer SOSL_LIMIT = 100;
 
     /***********************************************************************************************
     * @description Query limit for DRS records query to be displayed
@@ -198,27 +216,6 @@ public with sharing class CON_ContactMerge_CTRL {
             return drsSetController.getPageNumber();
         }
         set;
-    } 
-
-    /***********************************************************************************************
-    * @description The list of contact field names that are used in search and displayed in Found 
-    * Contacts.
-    */
-    private List<String> listStrContactField {
-        get {
-            if (listStrContactField == null) {
-                listStrContactField = UTIL_Describe.listStrFromFieldSet
-                    ('Contact', UTIL_Namespace.StrTokenNSPrefix('ContactMergeFoundFS'));
-                Set<String> setStr = new Set<String>(listStrContactField);
-                // now add additional fields we know we need
-                setStr.add('Id');
-                setStr.add('Name');
-                listStrContactField.clear();
-                listStrContactField.addAll(setStr);
-            }
-            return listStrContactField;
-        }
-        set;
     }
 
     /***********************************************************************************************
@@ -240,20 +237,6 @@ public with sharing class CON_ContactMerge_CTRL {
                 drsFieldNames.addAll(setStr);
             }
             return drsFieldNames;
-        }
-        set;
-    }
-    
-    /***********************************************************************************************
-    * @description List of DRI fields to be queried
-    */
-    private List<String> driFieldNames {
-        get {
-            if (driFieldNames == null) {
-                driFieldNames = new List<String>();
-                driFieldNames.add('RecordId');
-            }
-            return driFieldNames;
         }
         set;
     }
@@ -921,29 +904,11 @@ public with sharing class CON_ContactMerge_CTRL {
     public List<SObject> searchRecords() {
         searchResults.clear();
         if(showContactSearch == true && searchText != null && searchText.length() > 0) {
-            //build the SOSL query and execute - NOTE: * wildcard will only have effect at the 
+            //build the SOSL query and execute - NOTE: * wildcard will only have effect at the
             //middle or end of the search term
-            UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
-                .withSelectFields(listStrContactField)
-                .withSearchQuery(searchText)
-                .withWildcard()
-                .withOrderBy(Contact.LastName)
-                .withLimit(SOSL_LIMIT);
-
-            return finder.executeSearch();
+            return mergeSelector.selectContactsByName(searchText);
         } else {
-            String whereString = new UTIL_Query()
-                .withFrom('DuplicateRecordItem')
-                .withSelectFields(driFieldNames)
-                .withWhere('DuplicateRecordSetId =:drsRecordId')
-                .build();
-            whereString = 'Id IN ('+ whereString + ')';
-            String queryString = new UTIL_Query()
-                .withFrom('Contact')
-                .withSelectFields(listStrContactField)
-                .withWhere(whereString)
-                .build();
-            return Database.query(queryString);
+            return mergeSelector.selectDuplicateRecordSetById(drsRecordId, driFieldNames);
         }
     }
 

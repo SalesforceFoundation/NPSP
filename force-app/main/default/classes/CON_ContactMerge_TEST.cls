@@ -73,7 +73,7 @@ public class CON_ContactMerge_TEST {
     private static void shouldSelectEntireRecordWhenChoosingSelectAll() {
         // given
         CON_ContactMerge_CTRL controller = getController();
-        controller.searchResults = getMockSearchResults(2);
+        controller.search();
         selectSearchResults(controller.searchResults);
 
         //when
@@ -93,7 +93,7 @@ public class CON_ContactMerge_TEST {
 
     private static List<CON_ContactMerge_CTRL.FieldRow> mergeCandidatesShouldDisplayCorrectValues(Contact con2) {
         CON_ContactMerge_CTRL controller = getController();
-        controller.searchResults = getMockSearchResults(2);
+        controller.search();
         selectSearchResults(controller.searchResults);
 
         Test.startTest();
@@ -157,8 +157,9 @@ public class CON_ContactMerge_TEST {
     @IsTest
     private static void contactSearchReturnsResultsWhenMatchFound() {
         CON_ContactMerge_CTRL controller = getController();
-
-        Test.setFixedSearchResults(getFixedSearchResultsForSOSL(3));
+        controller.showContactSearch = true;
+        controller.searchText = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        controller.mergeSelector = stubFor(new ContactMergeSelectorMock(3));
 
         Test.startTest();
             controller.search();
@@ -1231,5 +1232,40 @@ public class CON_ContactMerge_TEST {
                 new CON_ContactMerge_CTRL.ContactWrapper(testContact));
         }
         return searchResults;
+    }
+
+    private static ContactMergeSelector stubFor(StubProvider mock) {
+        return  (ContactMergeSelector) Test.createStub(
+                ContactMergeSelector.class,
+                mock
+        );
+    }
+
+    private class ContactMergeSelectorMock implements StubProvider {
+        Integer numberOfResults;
+
+        public ContactMergeSelectorMock(Integer numberOfResults) {
+            this.numberOfResults = numberOfResults;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'selectContactsByName' {
+                    List<Contact> contacts = UTIL_UnitTestData_TEST.getContacts(numberOfResults);
+                    UTIL_UnitTestData_TEST.setMockIds(contacts);
+
+                    return contacts;
+                }
+
+            }
+
+            return null;
+        }
     }
 }

@@ -158,6 +158,13 @@ public class UTIL_UnitTestData_TEST {
     // =====================================================================================================
     // Data Factory Methods - Contact, Lead, Account, Opportunity, Engagement Plan
     // =====================================================================================================
+    public static List<Contact> getContacts(Integer numberOfContacts) {
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i=0; i < numberOfContacts; i++) {
+            contacts.add(getContact());
+        }
+        return contacts;
+    }
 
     /**
      * @description Return a single Contact SObject for tests with a unique last name
