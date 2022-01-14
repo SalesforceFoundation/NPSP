@@ -72,6 +72,10 @@ private class Gifts_TEST {
             'Should only run 1 query when retrieving gifts');
         System.assertEquals(1, donationSelectorMock.numberOfQueriesRan,
             'Should only run 1 query when retrieving donations');
+        System.assertEquals(3, gifts.all().size(),
+            'Should have 3 gifts');
+        System.assertEquals(2, gifts.donations.all().size(),
+            'Should have 2 donations');
     }
 
     @isTest
