@@ -199,7 +199,7 @@ public with sharing class Gift {
     }
 
     private Boolean hasDonation() {
-        return this.dataImport.DonationImported__c != null || this.donation != null;
+        return this.dataImport.DonationImported__c != null && this.donation != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
