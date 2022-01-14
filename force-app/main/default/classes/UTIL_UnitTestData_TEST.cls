@@ -176,6 +176,7 @@ public class UTIL_UnitTestData_TEST {
         );
     }
 
+
     /**
      * @description Return a list of Contact SObjects for tests with a unique first and last name
      * @param n The number of Contact records to create
@@ -1047,8 +1048,12 @@ public class UTIL_UnitTestData_TEST {
     */
     public static void setMockIds(List<SObject> records) {
         for (SObject record : records) {
-            record.Id = mockId(record.getSObjectType());
+            setMockId(record);
         }
+    }
+
+    public static void setMockId(SObject record) {
+        record.Id = mockId(record.getSObjectType());
     }
 
     /**

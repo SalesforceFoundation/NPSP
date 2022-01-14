@@ -52,6 +52,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description List of ContactWrapper objects for display in search results pane.
     */
+    @TestVisible
     public List<ContactWrapper> searchResults { get; private set; }
 
     /***********************************************************************************************
@@ -526,7 +527,7 @@ public with sharing class CON_ContactMerge_CTRL {
         // Check we have atleast 2 and not more than 3 records selected for merge. 
         // If not throw an error.
         if (mergeCandidates.size() <=1) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error,
                 Label.npe01.Contact_Merge_Error_Too_Few_Contacts));
             return;
         }
