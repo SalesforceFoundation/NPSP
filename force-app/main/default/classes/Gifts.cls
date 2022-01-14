@@ -55,7 +55,8 @@ public with sharing class Gifts {
         set;
     }
 
-    public Gifts(List<DataImport__c> dataImports) {
+    @TestVisible
+    private Gifts(List<DataImport__c> dataImports) {
         this.giftSelector = new GiftSelector();
         this.donationSelector = new DonationSelector();
         init(dataImports);

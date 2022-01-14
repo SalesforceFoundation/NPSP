@@ -31,6 +31,50 @@
 private class Gifts_TEST {
 
     @isTest
+    static void shouldOnlyRun1QueryWhenRetrievingDonationsForGifts() {
+        // Arrange
+        Id dummyDataImportId0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyOpportunityId0 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        Id dummyDataImportId1 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyOpportunityId1 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        Id dummyDataImportId2 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyDataImportBatchId = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.SObjectType);
+        GiftBatchId dummyGiftBatchId = new GiftBatchId(dummyDataImportBatchId);
+        List<DataImport__c> dataImportList = new List<DataImport__c> {
+            new DataImport__c(
+                Id = dummyDataImportId0,
+                DonationImported__c = dummyOpportunityId0
+            ),
+            new DataImport__c(
+                Id = dummyDataImportId1,
+                DonationImported__c = dummyOpportunityId1
+            ),
+            new DataImport__c(
+                Id = dummyDataImportId2
+            )
+        };
+        List<Opportunity> opportunityList = new List<Opportunity> {
+            new Opportunity(
+                Id = dummyOpportunityId0
+            ),
+            new Opportunity(
+                Id = dummyOpportunityId1
+            )
+        };
+        GiftSelectorMock giftSelectorMock = new GiftSelectorMock(dataImportList);
+        DonationSelectorMock donationSelectorMock = new DonationSelectorMock(opportunityList);
+
+        // Act
+        Gifts gifts = new gifts(dummyGiftBatchId, stubFor(giftSelectorMock), stubFor(donationSelectorMock));
+
+        // Assert
+        System.assertEquals(1, giftSelectorMock.numberOfQueriesRan,
+            'Should only run 1 query when retrieving gifts');
+        System.assertEquals(1, donationSelectorMock.numberOfQueriesRan,
+            'Should only run 1 query when retrieving donations');
+    }
+
+    @isTest
     static void shouldPopulateDonationForGiftsWithDonation() {
         // Arrange
         Id dummyGiftId0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
@@ -329,6 +373,7 @@ private class Gifts_TEST {
 
     private class GiftSelectorMock implements StubProvider {
 
+        public Integer numberOfQueriesRan = 0;
         private Boolean returnWithAdditionalFields = false;
         private List<DataImport__c> recordsToReturn;
 
@@ -349,6 +394,7 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getGiftsFor' {
+                    this.numberOfQueriesRan++;
                     if (this.recordsToReturn != null) {
                         return this.recordsToReturn;
                     }
