@@ -128,6 +128,15 @@ public with sharing class RD2_EntryFormController {
         return view;
     }
 
+    public String getDefaultInstallmentPeriod() {
+        return UTIL_Describe.getDefaultSelectOption('npe03__Recurring_Donation__c', 'npe03__Installment_Period__c');
+    }
+
+    public List<Map<String, String>> getInstallmentPeriodPicklistValues() {
+        return UTIL_Describe.getLightningSelectOptions('npe03__Recurring_Donation__c','npe03__Installment_Period__c');
+    }
+
+
     /**
     * @description  Gather the org, object and environment setting for Recurring Donation Entry/Edit Form
     * @param parentId The parentId of the new RD
@@ -587,9 +596,10 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap; //' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
         @AuraEnabled public List<String> closedStatusValues; //' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
         @AuraEnabled public String defaultRecurringType; //' => defaultRecurringType
+        @AuraEnabled public String defaultInstallmentPeriod;
+        @AuraEnabled public List<Map<String, String>> installmentPeriodOptions;
         @AuraEnabled public Id parentId;
 
-        // @AuraEnabled public npe03__Recurring_Donation__c recurringDonation;
         @AuraEnabled public RD2RecordView record;
 
         public void withRecord(npe03__Recurring_Donation__c record) {

@@ -52,6 +52,7 @@
                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.dateEstablished}>
                         <lightning-input-field
                                 field-name={fields.dateEstablished.apiName}
+                                onchange={handleDateEstablishedChange}
                                 required
                                 data-id="dateEstablished"
                         >

@@ -355,6 +355,14 @@ export default class rd2EntryForm extends LightningElement {
         this.accountHolderType = this.rd2Service.accountHolderTypeFor(event.detail);
     }
 
+    handleDateEstablishedChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_DATE_ESTABLISHED,
+                payload: event.target.detail
+            });
+    }
+
     /**
      * @description Retrieves the contact data whenever a contact is changed.
      * Data is not refreshed when the contact Id is null.

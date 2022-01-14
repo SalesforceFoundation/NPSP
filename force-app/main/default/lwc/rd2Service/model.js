@@ -4,8 +4,9 @@ import {
     SET_CONTACT_DETAILS,
     SET_ACCOUNT_DETAILS,
     SET_DONOR_TYPE,
-    SET_DATE_ESTABLISHED
-} from './actions';
+    SET_DATE_ESTABLISHED,
+    INITIAL_VIEW_LOAD
+} from "./actions";
 
 const DEFAULT_INITIAL_STATE = {
     // RD2 Record
@@ -33,6 +34,7 @@ const DEFAULT_INITIAL_STATE = {
 
     //Custom Fields
     customFields: {},
+    customFieldValues: {},
 
     //elevate iframe
     paymentToken: null,
@@ -95,6 +97,15 @@ const setDateEstablished = (state, dateEstablished) => {
     };
 };
 
+const loadInitialView = (state, payload) => {
+    const { record, ...rest } = payload;
+    return {
+        ...state,
+        ...record,
+        ...rest
+    };
+}
+
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
     switch (action.type) {
         case SET_CONTACT_ID:
@@ -109,6 +120,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
             return setDateEstablished(state, action.payload);
+        case INITIAL_VIEW_LOAD:
+            return loadInitialView(state, action.payload);
         default:
             return state;
     }

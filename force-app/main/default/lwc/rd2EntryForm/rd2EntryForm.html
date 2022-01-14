@@ -61,12 +61,14 @@
                                 <c-rd2-entry-form-donor-section
                                         record-id={recordId}
                                         parent-id={parentId}
+                                        rd2-state={rd2State}
                                         parent-s-object-type={rdSettings.parentSObjectType}
                                         data-id="donorComponent"
                                         onerrorevent={handleChildComponentError}
                                         oncontactchange={handleContactChange}
                                         onaccountchange={handleAccountChange}
                                         ondonortypechange={handleDonorTypeChange}
+                                        dateestablishedchange={handleDateEstablishedChange}
                                         if:true={isSettingReady}
                                 >
                                 </c-rd2-entry-form-donor-section>
@@ -160,7 +162,7 @@
                                     <lightning-layout-item size="12" class="slds-p-bottom_small"
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                                            data-qa-locator='widget Elevate'    
+                                            data-qa-locator='widget Elevate'
                                             is-edit-mode={isCommitmentEdit}
                                             rd2-record-id={recordId}
                                             card-exp-date={cardExpDate}

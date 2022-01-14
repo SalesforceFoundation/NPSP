@@ -27,6 +27,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     // These are exposed to the parent component
     @api parentId;
     @api recordId;
+    @api rd2State;
     @api parentSObjectType;
 
     @track isLoading = true;
@@ -186,6 +187,10 @@ export default class rd2EntryFormDonorSection extends LightningElement {
 
     dispatchDonorTypeChange() {
         this.dispatchChangeEvent('donortypechange', this.donorType);
+    }
+
+    handleDateEstablishedChange(event) {
+        this.dispatchChangeEvent('dateestablishedchange', event.target.value);
     }
 
     dispatchChangeEvent(eventName, value) {
