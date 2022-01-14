@@ -47,10 +47,10 @@ public class TDTM_TriggerHandler {
     private static Boolean isMonitoringEnabled = false;
 
     private static Boolean defaultRecordsInserted = false;
-    public static TriggerHandlerMonitor Monitor {
+    public static ServiceMonitor Monitor {
         get {
             if (Monitor == null) {
-                Monitor = new TriggerHandlerMonitor(isCompactLoggingEnabled);
+                Monitor = new ServiceMonitor(isCompactLoggingEnabled);
             }
             return Monitor;
         }
@@ -134,7 +134,7 @@ public class TDTM_TriggerHandler {
             //Run the relevant classes
             for (TriggerHandler triggerHandler : triggerHandlersToRun.getTriggerHandlers()) {
                 if (isMonitoringEnabled) {
-                    monitor.startMonitoring();
+                    monitor.startMonitoring(triggerHandler.className(), context.action().name());
                 }
 
                 TDTM_Runnable.DmlWrapper dmlWrapperResponse = new TDTM_Runnable.DmlWrapper();

@@ -53,6 +53,12 @@ private class ContactTests_TEST {
         UsageIncrement benchmark = new UsageIncrement(
                 1245, 20, 306, 0
         );
+        System.debug(LoggingLevel.ERROR, '*** variable value: ' + benchmark.toString());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ benchmark.toString() ^^^^^^');
+        UsageSummary u = new UsageSummary(new List<UsageIncrement>{benchmark});
+        System.debug(LoggingLevel.ERROR, '*** benchmark as usage summary formatted value: '
+                + u.format());
+        System.debug(LoggingLevel.ERROR, '^^^^^^ u.format() ^^^^^^');
         System.debug(LoggingLevel.ERROR, '*** variable value: ' + r.getIncrementFrom
                 (benchmark).toString());
             System.debug(LoggingLevel.ERROR, '*** variable value: ' + new UsageSummary(

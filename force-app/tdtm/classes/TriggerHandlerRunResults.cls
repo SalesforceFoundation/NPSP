@@ -5,6 +5,7 @@ public with sharing class TriggerHandlerRunResults {
     protected List<TriggerHandlerRunResult> results = new List<TriggerHandlerRunResult>();
     public Boolean isCompactLoggingEnabled = true;
 
+    //todo: remove these once working correctly
     private Map<String, Integer> classNameToTimesCalled =
             new Map<String, Integer>();
     private Map<String, Integer> classNameToNumberOfQueries =
@@ -13,10 +14,6 @@ public with sharing class TriggerHandlerRunResults {
             new Map<String, Map<String, Integer>>();
     private Map<String, Map<String, UsageSummary>> classNameToUsageSummaryByContext =
             new Map<String, Map<String, UsageSummary>>();
-
-    private Long totalTimeUsedInMillis = 0;
-    private Integer totalQueriesUsed = 0;
-    private Integer totalCpuTimeUsed = 0;
 
     public void add(TriggerHandlerRunResult result) {
         results.add(result);
