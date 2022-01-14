@@ -98,10 +98,11 @@ public with sharing class DonationHistoryService {
             } else { 
                 credits = selector.getWonOpportunitiesByContactId(contactId);
             }
+            return credits;
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        return credits;
+        
     }
 
     private boolean shouldApplyFilterByYear(String filter) {
