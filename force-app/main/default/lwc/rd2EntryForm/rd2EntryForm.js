@@ -443,7 +443,7 @@ export default class rd2EntryForm extends LightningElement {
      * - Recurring Type change might hide or display the credit card widget.
      * @param event
      */
-    handleRecurringTypeChange(event) {
+    handleRecurringTypeChange() {
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
     }
@@ -465,7 +465,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Currency change might hide or display the credit card widget
      * @param event
      */
-    handleCurrencyChange(event) {
+    handleCurrencyChange() {
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
     }
@@ -598,13 +598,11 @@ export default class rd2EntryForm extends LightningElement {
         const statusSupported = this.isValidStatusForElevate();
         this.isElevateWidgetEnabled = this.isElevateEditWidgetEnabled
             || (this.isElevateCustomer === true
-            && isValidPaymentMethod
-            && isScheduleSupported
-            && currencySupported
-            && countrySupported
-            && statusSupported);
-
-        this.populateCardHolderName();
+                && isValidPaymentMethod
+                && isScheduleSupported
+                && currencySupported
+                && countrySupported
+                && statusSupported);
     }
 
     isScheduleSupported() {
@@ -656,28 +654,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     /***
-    * @description Prepopulates the card holder name field on the Elevate credit card widget
-    */
-    populateCardHolderName() {
-        if (!this.isElevateWidgetDisplayed()) {
-            return;
-        }
-
-        // TO-DO: Prepopulate the Cardholder Name with the currently selected Contact or Organization Name
-        // when the component first registers, and ideally if the Contact or Org is changed.
-
-        // const creditCardForm = this.creditCardComponent;
-        // creditCardForm.setCardholderName('Test Name');
-
-        // const contactId = event.detail.fields.npe03__Contact__c.value;
-        // const accountId = event.detail.fields.npe03__Organization__c.value;
-        // getCardholderNamesForElevate({ contactId: contactId, accountId: accountId })
-        //     .then(response => {
-        //         this.cardholderName = response;
-        //     });
-    }
-
-    /***
      * @description Returns true if the currency code on the Recurring Donatation
      * is supported by the Elevate credit card widget
      */
@@ -726,7 +702,7 @@ export default class rd2EntryForm extends LightningElement {
      * Collects and validates fields displayed on the form and any integrated LWC
      * and submits them for the record insert or update.
      */
-    handleSubmit(event) {
+    handleSubmit() {
         this.clearError();
         this.isLoading = true;
         this.loadingText = this.customLabels.waitMessage;
