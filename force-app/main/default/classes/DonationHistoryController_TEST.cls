@@ -35,29 +35,6 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-    
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description Method to generate Filter rules.
-    */
-    static void generateFilterRules() {
-        String filterGroupId = CMT_UnitTestData_TEST.getNewRecordId();
-        String filterGroupsJSON = '[' + CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId, 'TestFilterGroup') + ']';
-        String filterRulesJSON = '[' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId,
-                        'NPSP_OppsSoftCreditRoles',
-                        'Partial_Soft_Credit__c',
-                        'Role_Name__c',
-                        'In List',
-                        'Matched Donor;Soft Credit;Household Member') + ']';
-        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(
-                filterGroupsJSON, List<Filter_Group__mdt>.class);
-    
-        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(
-                filterRulesJSON, List<Filter_Rule__mdt>.class);
-    }
-
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -87,60 +64,11 @@ public class DonationHistoryController_TEST {
             StageName='Closed Won', 
             CloseDate=myDateTime
         );
-        Opportunity opportunityPartialSoftCredit = new Opportunity(
-            Name='PartialSoftCredit1', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[1].Id, 
-            Amount=150, 
-            StageName='Closed Won', 
-            CloseDate=myDateTime
-        );
-        Opportunity opportunityInfluencer = new Opportunity(
-            Name='InfluencerOpportunity', 
-            AccountId=accSrc.Id, 
-            Primary_Contact__c=listConSrc[1].Id, 
-            Amount=150,
-            StageName='Closed Won', 
-            CloseDate=myDateTime
-        );
+        
         List<Opportunity> recordsOpp = new List<Opportunity>();
         recordsOpp.add(opportunityHardCredit);
         recordsOpp.add(opportunitySoftCredit);
-        recordsOpp.add(opportunityPartialSoftCredit);
-        recordsOpp.add(opportunityInfluencer);
         insert recordsOpp;
-
-        OpportunityContactRole oppCntRoleSoftCredit = new OpportunityContactRole(
-            Role='Soft Credit', 
-            OpportunityId=opportunitySoftCredit.Id, 
-            ContactId=listConSrc[0].Id, 
-            isPrimary=false
-        );
-        OpportunityContactRole oppCntRolePartialSoftCredit = new OpportunityContactRole(
-            Role='Soft Credit', 
-            OpportunityId=opportunityPartialSoftCredit.Id, 
-            ContactId=listConSrc[0].Id, 
-            isPrimary=false
-        );
-        OpportunityContactRole oppCntRoleInfluencerCredit = new OpportunityContactRole(
-            Role='Influencer', 
-            OpportunityId=opportunityInfluencer.Id, 
-            ContactId=listConSrc[0].Id, 
-            isPrimary=false
-        );
-        List<OpportunityContactRole> recordsOcr = new List<OpportunityContactRole>();
-        recordsOcr.add(oppCntRoleSoftCredit);
-        recordsOcr.add(oppCntRolePartialSoftCredit);
-        recordsOcr.add(oppCntRoleInfluencerCredit);
-        insert recordsOcr;
-
-        Partial_Soft_Credit__c partialSoftCredit = new Partial_Soft_Credit__c (
-            Amount__c=50,
-            Contact__c=listConSrc[0].Id,
-            Opportunity__c=opportunityPartialSoftCredit.Id,
-            Contact_Role_ID__c=oppCntRolePartialSoftCredit.Id
-        );
-        insert partialSoftCredit;
     }
 
     /** 
@@ -150,7 +78,6 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
-        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -165,17 +92,7 @@ public class DonationHistoryController_TEST {
         DonationHistoryController.getDonationHistory(testContact.Id);
         Test.stopTest();
 
-        for(DonationHistoryController.DonationHistoryView donation : donationHistory){
-            if(donation.role == 'Influencer'){
-                influencer = true;
-            }
-            if(donation.role != 'Soft Credit' && donation.role != 'Donor'){
-                role = true;
-            }
-        }
-        System.assertEquals(false, influencer, 'Must not have an influencer role');
-        System.assertEquals(false, role, 'Roles must be Soft credit or Donor');
-        System.assertEquals(3, donationHistory.size(), 'Should return only 3 records');
+        System.assertEquals(1, donationHistory.size(), 'Should return only 1 record');
     }
 
     /** 
@@ -185,7 +102,6 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
-        generateFilterRules();
         Contact testContact = [
             SELECT
                 Id
@@ -208,7 +124,6 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldThrowAccessException() {
-        generateFilterRules();
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
         Contact testContact = [
             SELECT
