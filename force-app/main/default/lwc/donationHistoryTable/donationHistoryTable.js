@@ -67,7 +67,7 @@ export default class DonationHistoryTable extends LightningElement {
         .then(data => {
             if (data) {
                 this.allData = data;
-                this.data = data.slice(0, this.recordsToLoad);
+                this.data = data.slice(0, RECORDS_TO_LOAD);
                 this.totalNumberOfRows = data.length;
             }
         });

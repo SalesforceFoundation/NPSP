@@ -80,14 +80,14 @@ public with sharing class DonationHistoryController {
      * @return List<String>
      */
     @AuraEnabled(cacheable=true)
-    public static List<String> getYearsWithDonations(Id contactId){
+    public static List<String> getYearsWithDonations(Id contactId) {
         try {
             return new DonationHistoryService(contactId).getYearsWithDonationsForContact();
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    
+
     private static List<DonationHistoryView> buildHistoryFromOCRs(List<Opportunity> contactRoles) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for(Opportunity role : contactRoles) {
