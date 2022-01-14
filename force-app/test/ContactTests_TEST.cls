@@ -2,25 +2,33 @@
 private class ContactTests_TEST {
     @IsTest
     static void insert_single_contact() {
-        TDTM_TriggerHandler.isMonitoringEnabled = true;
+        // Enable logging and monitoring for this test method:
         UTIL_Debug.enabledForTests = true;
+        TDTM_TriggerHandler.isMonitoringEnabled = true;
+        TDTM_TriggerHandler.isCompactLoggingEnabled = true;
+
+        // Run test and view debug log output
         Contact c = TEST_ContactBuilder.dummyContact();
+        // Try commenting out these lines to see differences in the log...
 //        c.FirstName = null;
+        c.MailingStreet = '123 ABC Street';
         insert c;
 
-        TriggerHandlerRunResults triggerHandlerRunResults =
+        // Get the run results from the Monitor:
+        List<TriggerHandlerRunResult> allRunResults =
+                TDTM_TriggerHandler.Monitor.getResults().getRunResults();
+        System.assert(!allRunResults.isEmpty(),
+                'There should be at least one trigger handler run result.');
+
+        // Results for a specific handler + context/action:
+        TriggerHandlerRunResults runResultsForEachHandlerAndContext =
                 TDTM_TriggerHandler.Monitor.getResultsFor(
                         'ACCT_Accounts_TDTM',
                         'BeforeUpdate'
                 );
+        System.assert(!runResultsForEachHandlerAndContext.getRunResults().isEmpty());
 
-        List<TriggerHandlerRunResult> triggerHandlerRunResults2 =
-                TDTM_TriggerHandler.Monitor.getResults().getRunResults();
-        System.assert(!triggerHandlerRunResults2.isEmpty(),
-                'There should be at least one trigger handler run result.');
-        System.assert(!triggerHandlerRunResults.getRunResults().isEmpty());
-
-        //Now you can assert against trigger handler run stats (!)
+        // Now you can assert against trigger handler run stats (!)
         // for specific services + actions:
         System.assertEquals(1,
                 TDTM_TriggerHandler.Monitor.getResultsFor(
@@ -44,28 +52,20 @@ private class ContactTests_TEST {
                 'This trigger handler should have at least 1 query in the ' +
                         'after insert context for this test case.');
 
-        // Or for the entire Trigger Handler Run:
+        // Compare Trigger Handler Run usage with a benchmark increment:
         TriggerHandlerRunResults r =
                 TDTM_TriggerHandler.Monitor.getResults();
-        Integer queryBenchmark = 13;
-        UsageSummary rUsageSummary = r.usageSummary();
 
         UsageIncrement benchmark = new UsageIncrement(
                 1245, 20, 306, 0
         );
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + benchmark.toString());
-        System.debug(LoggingLevel.ERROR, '^^^^^^ benchmark.toString() ^^^^^^');
-        UsageSummary u = new UsageSummary(new List<UsageIncrement>{benchmark});
-        System.debug(LoggingLevel.ERROR, '*** benchmark as usage summary formatted value: '
-                + u.format());
-        System.debug(LoggingLevel.ERROR, '^^^^^^ u.format() ^^^^^^');
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + r.getIncrementFrom
-                (benchmark).toString());
-            System.debug(LoggingLevel.ERROR, '*** variable value: ' + new UsageSummary(
-                    new List<UsageIncrement>{r.getIncrementFrom(benchmark)}).format());
-            System.debug(LoggingLevel.ERROR, '^^^^^^ new UsageSummary(new List<UsageSnapshot>{r.getIncrementFrom(benchmark)}).format() ^^^^^^');
-        System.debug(LoggingLevel.ERROR, '^^^^^^ r.getIncrementFrom(benchmark) ^^^^^^');
+        System.debug(LoggingLevel.ERROR, '*** benchmark: ' + benchmark.toString());
+        System.debug(LoggingLevel.ERROR, '*** Usage Increment from benchmark value: ' +
+                        JSON.serializePretty(r.getIncrementFrom(benchmark)));
 
+        // Set a benchmark to assert against if a benchmark limit is reached:
+        Integer queryBenchmark = 13;
+        UsageSummary rUsageSummary = r.usageSummary();
         System.assertEquals(queryBenchmark, rUsageSummary.totalQueries(),
                 'This service is benchmarked at ' + queryBenchmark + ' queries used.');
 

@@ -12,8 +12,15 @@ public with sharing class TriggerHandlerRunResults {
             new Map<String, Integer>();
     private Map<String, Map<String, Integer>> classNameToTimesCalledByContext =
             new Map<String, Map<String, Integer>>();
-    private Map<String, Map<String, UsageSummary>> classNameToUsageSummaryByContext =
-            new Map<String, Map<String, UsageSummary>>();
+    private Map<String, Set<String>> actionsByService {
+        get {
+            if (actionsByService == null) {
+                actionsByService = getActionsByService();
+            }
+            return actionsByService;
+        }
+        set;
+    }
 
     public void add(TriggerHandlerRunResult result) {
         results.add(result);
@@ -27,7 +34,6 @@ public with sharing class TriggerHandlerRunResults {
                 UsageSummary(getUsageIncrements());
         System.debug(LoggingLevel.ERROR, '*** ##### USAGE SUMMARY: All Results ######');
         System.debug(LoggingLevel.ERROR, '*** variable value: ' + usageSummary.format());
-        System.debug(LoggingLevel.ERROR, '^^^^^^ usageSummary.format() ^^^^^^');
     }
 
     private List<UsageIncrement> getUsageIncrements() {
@@ -77,15 +83,24 @@ public with sharing class TriggerHandlerRunResults {
     }
 
     public Integer timesRun(String className, String context) {
-        System.debug(LoggingLevel.ERROR, '*** variable value: ' + classNameToTimesCalledByContext);
-        System.debug(LoggingLevel.ERROR, '^^^^^^ classNameToTimesCalledByContext ^^^^^^');
-        return classNameToUsageSummaryByContext.get(className)?.get(context).timesRun();
+        return getRunResultsFor(className, context).usageSummary().timesRun();
     }
 
     public void logTriggerHandlerInfo() {
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
                 'Handler: ' +
                 stringVersionOf(classNameToTimesCalled));
+
+        System.debug(LoggingLevel.ERROR, '*** ##### USAGE SUMMARY BY ACTION ##### ***');
+        Map<String, Set<String>> actionsByService = getActionsByService();
+        for (String service : actionsByService.keySet()) {
+            for (String action : actionsByService.get(service)) {
+                UsageSummary u = usageSummaryFor(service, action);
+                System.debug(LoggingLevel.ERROR, '*** '+service+'::'+action+ ' ' + u.format());
+            }
+        }
+        System.debug(LoggingLevel.ERROR, '*** ##### END - USAGE SUMMARY BY ACTION - END ' +
+                '##### ***');
 
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Times Run by Trigger ' +
                 'Handler ' +
@@ -95,18 +110,30 @@ public with sharing class TriggerHandlerRunResults {
         UTIL_Debug.debug(LoggingLevel.ERROR, '*** Number of Queries used by Trigger ' +
                 'Handler: ' +
                 stringVersionOf(classNameToNumberOfQueries));
+    }
 
-        UTIL_Debug.debug(LoggingLevel.ERROR, '*** totalQueries(): ' + totalQueries());
+    private Map<String, Set<String>> getActionsByService() {
+        Map<String, Set<String>> actionsByService = new Map<String, Set<String>>();
+        for (TriggerHandlerRunResult runResult : results) {
+            Set<String> m = actionsByService.get(runResult.service());
+            if (m == null) {
+                actionsByService.put(
+                        runResult.service(),
+                        new Set<String>{
+                                runResult.action()
+                        }
+                );
+            } else {
+                m.add(runResult.action());
+            }
+        }
+        return actionsByService;
     }
 
     private String stringVersionOf(Object o) {
         return isCompactLoggingEnabled
                 ? JSON.serialize(o)
                 : JSON.serializePretty(o);
-    }
-
-    private Integer totalQueries() {
-        return new UsageSummary(getUsageIncrements()).totalQueries();
     }
 
     private void updateNumberOfQueriesUsed(String className, Integer queriesUsed) {
@@ -181,7 +208,7 @@ public with sharing class TriggerHandlerRunResults {
             System.debug(LoggingLevel.ERROR,
                     triggerHandlerRunResult.service()
                             + ' ' + triggerHandlerRunResult.action()
-                            + ' ' + triggerHandlerRunResult.usageSummary().format());
+                            + ' ' + triggerHandlerRunResult.usageSummary().toString());
         }
     }
 
