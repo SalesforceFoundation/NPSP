@@ -43,20 +43,16 @@ public with sharing class DonationHistoryController {
     public class DonationHistoryView{
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
-        @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
-        @AuraEnabled public String role;
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(OpportunityContactRole ocr, String type){
+        public DonationHistoryView(Opportunity ocr){
             this.id = ocr.Id;
-            this.name = ocr.Opportunity.Name;
-            this.isPrimary = ocr.isPrimary;
-            this.closeDate = ocr.Opportunity.CloseDate;
-            this.role = ocr.Role;
-            this.amount = ocr.Opportunity.Amount;
-            this.creditType = type;
+            this.name = ocr.Name;
+            this.closeDate = ocr.CloseDate;
+            this.amount = ocr.Amount;
+            this.creditType = System.Label.CRLP_HardCredit;
             this.paymentMethod = 'Cash';
         }
     }
@@ -71,10 +67,7 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId, filter);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            service.buildDonationHistory();
-            donationHistories.addAll(buildHistoryFromOCRs(service.getHardCredits(), System.Label.CRLP_HardCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getSoftCredits(), System.Label.CRLP_SoftCredit));
-            donationHistories.addAll(buildHistoryFromOCRs(service.getPartialSoftCredits(), service.getSoftCreditLabel()));
+            donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -94,11 +87,11 @@ public with sharing class DonationHistoryController {
             throw new AuraHandledException(e.getMessage());
         }
     }
-
-    private static List<DonationHistoryView> buildHistoryFromOCRs(List<OpportunityContactRole> contactRoles, String type) {
+    
+    private static List<DonationHistoryView> buildHistoryFromOCRs(List<Opportunity> contactRoles) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-        for(OpportunityContactRole role : contactRoles) {
-            donationHistories.add(new DonationHistoryView(role, type));
+        for(Opportunity role : contactRoles) {
+            donationHistories.add(new DonationHistoryView(role));
         }
         return donationHistories;
     }

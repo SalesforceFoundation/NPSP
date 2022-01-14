@@ -35,25 +35,18 @@
 public with sharing class DonationHistoryService {
     
     static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<OpportunityContactRole> hardCredits;
-    private List<OpportunityContactRole> softCredits;
-    private List<OpportunityContactRole> partialSoftCredits;
+    private List<Opportunity> credits;
     private Id contactId;
     private String filter;
 
     public DonationHistoryService(Id contactId, String filter) {
         this.contactId = contactId;
         this.filter = filter;
-        this.hardCredits = new List<OpportunityContactRole>();
-        this.softCredits = new List<OpportunityContactRole>();
-        this.partialSoftCredits = new List<OpportunityContactRole>();
     }
 
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
-        this.hardCredits = new List<OpportunityContactRole>();
-        this.softCredits = new List<OpportunityContactRole>();
-        this.partialSoftCredits = new List<OpportunityContactRole>();
+        this.credits = new List<Opportunity>();
     }
 
     @TestVisible
@@ -97,7 +90,7 @@ public with sharing class DonationHistoryService {
     * @description method to return Donation History list.
     * @param contactId contact id which is going to be requested.
     */
-    public void buildDonationHistory() {
+    public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
             List<OpportunityContactRole> credits = null;
             if (shouldApplyFilterByYear(filter)) {
@@ -105,7 +98,6 @@ public with sharing class DonationHistoryService {
             } else { 
                 credits = selector.getWonOpportunityContactRolesByContactId(contactId);
             }
-            buildDonationHistoryFromOCRs(credits);
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
@@ -113,92 +105,6 @@ public with sharing class DonationHistoryService {
 
     private boolean shouldApplyFilterByYear(String filter) {
         return filter != null && filter.isNumeric();
-    }
-
-    public List<OpportunityContactRole> getPartialSoftCredits() {
-        return this.partialSoftCredits;
-    }
-
-
-    public List<OpportunityContactRole> getHardCredits() {
-        return this.hardCredits;
-    }
-
-
-    public List<OpportunityContactRole> getSoftCredits() {
-        List<OpportunityContactRole> filteredSoftCredits = new List<OpportunityContactRole>();
-        Set<Id> partialSoftCreditIds = getPartialSoftCreditIds();
-        for(OpportunityContactRole softCredit : this.softCredits) {
-            if(!partialSoftCreditIds.contains(softCredit.Id)) {
-                filteredSoftCredits.add(softCredit);
-            }
-        }
-        return filteredSoftCredits;
-    }
-
-
-    public String getSoftCreditLabel() {
-        return UTIL_Describe.getObjectLabel(String.valueOf(Partial_Soft_Credit__c.SObjectType));
-    }
-
-
-    private void buildDonationHistoryFromOCRs(List<OpportunityContactRole> credits) {
-        this.hardCredits = buildHardCreditHistoryFromOCRs(credits);
-        this.softCredits = buildSoftCreditHistoryFromOCRs(credits);
-        this.partialSoftCredits = buildPartialSoftCredits(credits);
-    }
-
-
-    private Set<Id> getPartialSoftCreditIds() {
-        return UTIL_SObject.extractIds(this.partialSoftCredits);
-    }
-
-
-    private Set<Id> getSoftCreditIds() {
-        return UTIL_SObject.extractIds(this.softCredits);
-    }
-
-
-    private List<OpportunityContactRole> buildHardCreditHistoryFromOCRs(List<OpportunityContactRole> credits) {
-        List<OpportunityContactRole> hardCreditOCRs = new List<OpportunityContactRole>();
-
-        for(OpportunityContactRole ocr: credits){
-            if (ocr.IsPrimary) {
-                hardCreditOCRs.add(ocr);
-            }
-        }
-        return hardCreditOCRs;
-    }
-
-
-    private List<OpportunityContactRole> buildSoftCreditHistoryFromOCRs(List<OpportunityContactRole> credits) {
-        //with the list of donations verify if the Role match the filter rule value on the NPSP_ClosedWon_Opps_SC filter group 
-        Filter_Rule__mdt filterRule = CMT_FilterRule_SEL.getFilterRuleByDeveloperName(NPSP_CREDIT_ROLES);
-        List<String> softCreditRoles = filterRule.Constant__c.split(';');
-        List<OpportunityContactRole> softCreditOCRs = new List<OpportunityContactRole>();
-        for(OpportunityContactRole ocr : credits) {
-            if (softCreditRoles.contains(ocr.Role) && !ocr.IsPrimary) {
-                softCreditOCRs.add(ocr);
-            }
-        }
-        return softCreditOCRs;
-    }
-
-
-    private List<OpportunityContactRole> buildPartialSoftCredits(List<OpportunityContactRole> credits) {
-        List<Partial_Soft_Credit__c> partialSoftCreditRecords =
-                selector.getPartialSoftCredits(this.getSoftCreditIds());
-        Set<Id> partialSoftCreditOCRIds = new Set<Id>();
-        for(Partial_Soft_Credit__c partialSoftCreditRecord : partialSoftCreditRecords) {
-            partialSoftCreditOCRIds.add(partialSoftCreditRecord.Contact_Role_ID__c);
-        }
-        List<OpportunityContactRole> partialSoftCreditOCRs = new List<OpportunityContactRole>();
-        for(OpportunityContactRole ocr : credits) {
-            if (partialSoftCreditOCRIds.contains(ocr.Id)) {
-                partialSoftCreditOCRs.add(ocr);
-            }
-        }
-        return partialSoftCreditOCRs;
     }
 
     /**

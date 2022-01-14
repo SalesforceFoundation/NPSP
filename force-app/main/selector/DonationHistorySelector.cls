@@ -38,54 +38,21 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
+    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
         return [
             SELECT Id, 
-                Opportunity.Name, 
-                Opportunity.CloseDate, 
-                Opportunity.Amount, 
-                Contact.Email, 
-                Contact.Name, 
-                Role, 
-                IsPrimary
-            FROM OpportunityContactRole 
-            WHERE Opportunity.IsWon = true 
-            AND ContactId =:contactId 
+                Name, 
+                CloseDate, 
+                Amount, 
+                Primary_Contact__r.Email, 
+                Primary_Contact__r.Name
+            FROM Opportunity
+            WHERE IsWon = true 
+            AND Primary_Contact__r.Id =:contactId 
             WITH SECURITY_ENFORCED
-            ORDER BY Opportunity.CloseDate 
-            DESC LIMIT 2000
+            ORDER BY CloseDate 
+            DESC LIMIT 50
         ];
-    }
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return Partial_Soft_Credit__c data.
-    */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
-        return [
-            SELECT 
-                Id, 
-                Amount__c, 
-                Role_Name__c,
-                Contact_Role_ID__c 
-            FROM Partial_Soft_Credit__c 
-            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
-            WITH SECURITY_ENFORCED
-        ];
-    }
-    
-    /**
-     * @description Returns the years in which the contact has made at least 1 donation.
-     * @param contactId the contact id.
-     * @return List<AggregateResult> Selecting the Calendar_Year of the Opportunity.CloseDate
-     */
-    public List<AggregateResult> getYearsWithDonationForContact(Id contactId) {
-        return [SELECT   Calendar_Year(Opportunity.CloseDate)
-                FROM     OpportunityContactRole 
-                WHERE    Opportunity.IsWon = true 
-                AND      ContactId =:contactId 
-                GROUP BY Calendar_YEAR(Opportunity.CloseDate)
-                ORDER BY Calendar_YEAR(Opportunity.CloseDate) DESC];
     }
 
     /**
@@ -96,18 +63,16 @@ public inherited sharing class DonationHistorySelector {
      */
     public List<OpportunityContactRole> getWonOpportunityContactRolesByContactIdAndYear(Id contactId, Integer year) {
         return [
-            SELECT Id, 
-                Opportunity.Name, 
-                Opportunity.CloseDate, 
-                Opportunity.Amount, 
-                Contact.Email, 
-                Contact.Name, 
-                Role, 
-                isPrimary 
-            FROM OpportunityContactRole 
-            WHERE Opportunity.IsWon = true 
-            AND ContactId =:contactId 
-            AND Calendar_Year(Opportunity.CloseDate) = :year
+            SELECT  Id, 
+                    Name, 
+                    CloseDate, 
+                    Amount, 
+                    Primary_Contact__r.Email, 
+                    Primary_Contact__r.Name
+            FROM    Opportunity
+            WHERE   IsWon = true 
+                AND Primary_Contact__r.Id =:contactId 
+                AND Calendar_Year(CloseDate) = :year
             WITH SECURITY_ENFORCED
             ORDER BY Opportunity.CloseDate 
             DESC LIMIT 2000
