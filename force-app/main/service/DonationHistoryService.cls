@@ -92,15 +92,16 @@ public with sharing class DonationHistoryService {
     */
     public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
-            List<OpportunityContactRole> credits = null;
+            List<Opportunity> credits = null;
             if (shouldApplyFilterByYear(filter)) {
-                credits = selector.getWonOpportunityContactRolesByContactIdAndYear(contactId, Integer.valueOf(filter));
+                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, Integer.valueOf(filter));
             } else { 
-                credits = selector.getWonOpportunityContactRolesByContactId(contactId);
+                credits = selector.getWonOpportunitiesByContactId(contactId);
             }
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
+        return credits;
     }
 
     private boolean shouldApplyFilterByYear(String filter) {

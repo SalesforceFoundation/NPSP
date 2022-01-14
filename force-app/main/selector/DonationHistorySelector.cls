@@ -61,7 +61,7 @@ public inherited sharing class DonationHistorySelector {
      * @param year Integer filter of year.
      * @return List<OpportunityContactRole>
      */
-    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactIdAndYear(Id contactId, Integer year) {
+    public List<Opportunity> getWonOpportunitiesByContactIdAndYear(Id contactId, Integer year) {
         return [
             SELECT  Id, 
                     Name, 
@@ -77,5 +77,19 @@ public inherited sharing class DonationHistorySelector {
             ORDER BY Opportunity.CloseDate 
             DESC LIMIT 2000
         ];
+    }
+
+    /**
+     * @description Returns the years in which the contact has made at least 1 donation.
+     * @param contactId Id the contact id.
+     * @returns List<AggregateResult> Selecting the Calenday_Year of the Opportunity.CloseDate
+     */
+    public List<AggregateResult> getYearsWithDonationForContact(Id contactId) {
+        return [SELECT   Calendar_Year(Opportunity.CloseDate)
+                FROM     OpportunityContactRole 
+                WHERE    Opportunity.IsWon = true 
+                AND      ContactId =:contactId 
+                GROUP BY Calendar_YEAR(Opportunity.CloseDate)
+                ORDER BY Calendar_YEAR(Opportunity.CloseDate) DESC];
     }
 }
