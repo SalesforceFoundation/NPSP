@@ -70,11 +70,19 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
-    private static void shouldSelectEntireRecordWhenChoosingSelectAll() {
+    private static void shouldSelectEntireDefaultRecordWhenChoosingSelectAll() {
         // given
         CON_ContactMerge_CTRL controller = getController();
-        controller.search();
-        selectSearchResults(controller.searchResults);
+        List<Contact> mockContactsWithIds = getMockContactsWithIds(5);
+        controller.selectedRecords = new Map<String, Contact>(mockContactsWithIds);
+        controller.fieldRows = getMockFieldRows(new List<SObjectField>{
+            Contact.FirstName,
+            Contact.LastName,
+            Contact.npe01__Preferred_Email__c
+        }, mockContactsWithIds);
+
+        Id defaultRecordId = controller.selectedRecords.get(mockContactsWithIds[0].Id).Id;
+        ApexPages.currentPage().getParameters().put('recordId', defaultRecordId);
 
         //when
         Test.startTest();
@@ -82,19 +90,17 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
 
         //then
-        String recordId = controller.searchResults[1].contactRecord.Id;
-        ApexPages.currentPage().getParameters().put('recordId', recordId);
         for (CON_ContactMerge_CTRL.FieldRow row : controller.fieldRows) {
             if (row.showRadio) {
-                System.assertEquals(recordId, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
+                System.assertEquals(defaultRecordId, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
             }
         }
     }
 
     private static List<CON_ContactMerge_CTRL.FieldRow> mergeCandidatesShouldDisplayCorrectValues(Contact con2) {
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.search();
-        selectSearchResults(controller.searchResults);
+        selectRecords(controller.searchResults);
 
         Test.startTest();
             //todo: full loadMergeCandidates would get called here
@@ -125,7 +131,7 @@ public class CON_ContactMerge_TEST {
 
     @IsTest
     private static void shouldDisplayErrorWhenTooFewContactsSelected() {
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
         // given
         selectSearchResult(controller.searchResults[0]);
 
@@ -148,15 +154,15 @@ public class CON_ContactMerge_TEST {
         searchResult.selected = true;
     }
 
-    private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
+    private static void selectRecords(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
         for (CON_ContactMerge_CTRL.ContactWrapper contactWrapper : searchResults) {
             contactWrapper.selected = true;
         }
     }
 
     @IsTest
-    private static void contactSearchReturnsResultsWhenMatchFound() {
-        CON_ContactMerge_CTRL controller = getController();
+    private static void searchReturnsResultsWhenMatchFound() {
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.showContactSearch = true;
         controller.searchText = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS;
         controller.mergeSelector = stubFor(new ContactMergeSelectorMock(3));
@@ -172,7 +178,7 @@ public class CON_ContactMerge_TEST {
 
     @IsTest
     private static void searchReturnsNoResultsWhenNoMatchesFound() {
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.showContactSearch = true;
         controller.searchText = 'test';
 
@@ -203,7 +209,7 @@ public class CON_ContactMerge_TEST {
         insert new Contact[]{con, con2};
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.showContactSearchPage();
         controller.searchText = 'test';
 
@@ -237,9 +243,18 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
+    private static CON_ContactMerge_CTRL getControllerForSearch() {
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
+        controller.showContactSearch = true;
+        controller.searchText = 'test';
+        return controller;
+    }
+
     private static CON_ContactMerge_CTRL getController() {
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        return new CON_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
+        return controller;
     }
 
     static testMethod void failMergeWithDeletedRecordSelectedOne2One() {
@@ -1222,16 +1237,46 @@ public class CON_ContactMerge_TEST {
         return UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, numberOfResults);
     }
 
-    private static List<CON_ContactMerge_CTRL.ContactWrapper> getMockSearchResults(Integer numberOfResults) {
-        List<CON_ContactMerge_CTRL.ContactWrapper> searchResults = new List<CON_ContactMerge_CTRL.ContactWrapper>();
+    private static List<Contact> getMockContactsWithIds(Integer numberOfResults) {
+        List<Contact> mockContacts = new List<Contact>();
         for (Integer i = 0; i < numberOfResults; i++) {
             Contact testContact = UTIL_UnitTestData_TEST.getContact();
             UTIL_UnitTestData_TEST.setMockId(testContact);
 
-            searchResults.add(
-                new CON_ContactMerge_CTRL.ContactWrapper(testContact));
+            mockContacts.add(testContact);
         }
-        return searchResults;
+        return mockContacts;
+    }
+
+    private static List<CON_ContactMerge_CTRL.FieldRow> getMockFieldRows(List<SObjectField> fieldNames, List<Contact>
+            contacts) {
+        List<CON_ContactMerge_CTRL.FieldRow> mockFieldRows = new List<CON_ContactMerge_CTRL.FieldRow>();
+        for (Integer i=0; i < fieldNames.size(); i++) {
+            CON_ContactMerge_CTRL.FieldRow mockFieldRow = new CON_ContactMerge_CTRL.FieldRow();
+            mockFieldRow.fieldLabel = 'Test Field ' + i;
+            mockFieldRow.fieldName = 'Test_Field_' + i;
+            mockFieldRow.showRadio = true;
+
+            List<CON_ContactMerge_CTRL.Cell> mockCells = new List<CON_ContactMerge_CTRL.Cell>();
+            for (Contact contact : contacts) {
+                CON_ContactMerge_CTRL.Cell mockCell = new CON_ContactMerge_CTRL.Cell(
+                    contact.Id,
+                    String.valueOf(contact.get(fieldNames[i]))
+                );
+                mockCells.add(mockCell);
+            }
+            mockFieldRow.values = mockCells;
+            mockFieldRows.add(mockFieldRow);
+        }
+        return mockFieldRows;
+    }
+    //todo: is this needed?
+    private static Map<String,Map<Id, Object>> getContactRecordValuesByFieldName(List<Contact> contacts) {
+        Map<String, Map<Id, Object>> contactRecordValuesByFieldName = new Map<String, Map<Id, Object>>();
+        for (Contact contact : contacts) {
+            Map<String, Object> valuesByPopulatedField = contact.getPopulatedFieldsAsMap();
+        }
+        return new Map<String,Map<Id, Object>>();
     }
 
     private static ContactMergeSelector stubFor(StubProvider mock) {

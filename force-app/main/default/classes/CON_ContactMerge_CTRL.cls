@@ -82,6 +82,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description Map of the contacts selected for merge.
     */
+    @TestVisible
     private Map<String, Contact> selectedRecords;
 
     /***********************************************************************************************
@@ -320,6 +321,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /***********************************************************************************************
     * @description The rows to merge.
     */
+    @TestVisible
     public List<FieldRow> fieldRows { get; private set; }
 
     /***********************************************************************************************
@@ -330,18 +332,22 @@ public with sharing class CON_ContactMerge_CTRL {
         /*******************************************************************************************
         * @description Stores the field Label.
         */
+        @TestVisible
         public String fieldLabel { get; private set; }
         /*******************************************************************************************
         * @description Stores the field api name.
         */
+        @TestVisible
         public String fieldName { get; private set; }
         /*******************************************************************************************
         * @description Property to tell whether UI must should a radio to select the field value.
         */
+        @TestVisible
         public Boolean showRadio { get; private set; }
         /*******************************************************************************************
         * @description  List of values for each contact record.
         */
+        @TestVisible
         public List<Cell> values { get; private set; }
         /*******************************************************************************************
         * @description Selected record.
