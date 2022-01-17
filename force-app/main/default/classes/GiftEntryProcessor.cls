@@ -41,8 +41,10 @@ public inherited sharing class GiftEntryProcessor {
    }
 
    public void process(){
-      giftBatch.prepareGiftsForProcessing();
-      GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
-      System.enqueueJob(processorQueue);
+      if (giftBatch.canEnqueue()) {
+         giftBatch.prepareGiftsForProcessing();
+         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
+         System.enqueueJob(processorQueue);
+      }
    }
 }
