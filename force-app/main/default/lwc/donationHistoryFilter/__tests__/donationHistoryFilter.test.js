@@ -10,13 +10,13 @@ import getYearsWithDonation from '@salesforce/apex/DonationHistoryController.get
   }, {virtual: true}
   );
 
-  describe('c-donation-history-table', () => {
+  describe('c-donation-history-filter', () => {
     afterEach(()=>{
       // clean mock functions
       clearDOM();
     });
   
-    it('renders the dropbox correctly', ()=>{
+    it('renders the dropbox correctly', () => {
       getYearsWithDonation.mockResolvedValue(["2020", "2018"]);
       const element = createElement('c-donation-history-filter', { is: DonationHistoryFilter});
       

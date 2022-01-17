@@ -97,11 +97,10 @@ public class DonationHistoryController_TEST {
             WHERE FirstName = 'TestFirstName10'
             LIMIT 1
         ];        
-        Boolean influencer = false;
-        Boolean role = false;
+        
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
+            DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
         Test.stopTest();
 
         System.assertEquals(1, donationHistory.size(), 'Should return only 1 record');

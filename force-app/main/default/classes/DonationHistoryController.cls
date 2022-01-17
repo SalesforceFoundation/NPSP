@@ -40,14 +40,14 @@ public with sharing class DonationHistoryController {
     * @date 2021
     * @description Donation History inner class.
     */
-    public class DonationHistoryView{
+    public class DonationHistoryView {
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
         @AuraEnabled public Date closeDate;
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(Opportunity ocr){
+        public DonationHistoryView(Opportunity ocr) {
             this.id = ocr.Id;
             this.name = ocr.Name;
             this.closeDate = ocr.CloseDate;
