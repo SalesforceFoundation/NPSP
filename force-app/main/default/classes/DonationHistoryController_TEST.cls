@@ -90,13 +90,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldReturnExpectedDonationHistoryResult() {
-        Contact testContact = [
-            SELECT
-                Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName10'
-            LIMIT 1
-        ];        
+        Contact testContact = findContactByLastname('TestFirstName10');
         
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
@@ -113,13 +107,7 @@ public class DonationHistoryController_TEST {
     */
     @IsTest
     private static void shouldNotReturnDonationHistory() {
-        Contact testContact = [
-            SELECT
-                Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName12'
-            LIMIT 1
-        ];
+        Contact testContact = findContactByLastname('TestFirstName12');
         
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
@@ -136,13 +124,7 @@ public class DonationHistoryController_TEST {
     @IsTest
     private static void shouldThrowAccessException() {
         User u = UTIL_UnitTestData_TEST.createUser('Minimum Access - Salesforce');
-        Contact testContact = [
-            SELECT
-            Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName10'
-            LIMIT 1
-        ];    
+        Contact testContact = findContactByLastname('TestFirstName10');
         String message = '';
         try{
             Test.startTest();
@@ -159,7 +141,7 @@ public class DonationHistoryController_TEST {
 
     @IsTest
     private static void shouldReturnYearsForFilter () {
-        Contact thecontact = [Select id, Name from contact where FirstName ='TestFirstName11' limit 1];
+        Contact thecontact = findContactByLastname('TestFirstName11');
        
         List<String> donationsYears = DonationHistoryController.getYearsWithDonations(thecontact.id);
         System.assertNotEquals(null, donationsYears, 'donationsYears should not be null');
@@ -173,13 +155,7 @@ public class DonationHistoryController_TEST {
         if (!UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c) {
             return;
         }
-        Contact testContact = [
-            SELECT
-                Id
-            FROM Contact
-            WHERE FirstName = 'TestFirstName11'
-            LIMIT 1
-        ];        
+        Contact testContact =findContactByLastname('TestFirstName11');        
        
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, '2019');
@@ -188,4 +164,15 @@ public class DonationHistoryController_TEST {
         System.assertNotEquals(null, donationHistory, 'Donation History should not be empty');
         System.assertEquals(1, donationHistory.size(), 'donationHistory should contain only one element');
     }
+
+    private static Contact findContactByLastname(String firstname) {
+        for (Contact c : [SELECT ID, Firstname
+                          FROM Contact]) {
+            if (c.Firstname == firstname) {
+                return c;
+            }
+        }
+        return null;
+    }
+    
 }
