@@ -59,8 +59,6 @@ public inherited sharing class GiftBatchSelector {
             .withLimit(1)
             .build();
 
-        System.debug('Query '+ queryString);
-
         return Database.query(queryString);
     }
 
