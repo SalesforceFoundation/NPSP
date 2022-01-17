@@ -63,14 +63,29 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    public static List<DonationHistoryView> getDonationHistory(Id contactId, Integer offset) {
+        DonationHistoryService service = new DonationHistoryService(contactId, offset);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
             donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Number of Donation History records.
+    */
+    @AuraEnabled(cacheable=true)
+    public static List<AggregateResult> getTotalOfRows(Id contactId){
+        DonationHistoryService service = new DonationHistoryService(contactId, 0);
+        try {
+            return service.getTotalNumberOfRecords();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
     }
 

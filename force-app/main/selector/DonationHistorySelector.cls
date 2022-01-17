@@ -38,7 +38,7 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
+    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId, Integer offset) {
         return [
             SELECT Id, 
                 Name, 
@@ -52,6 +52,21 @@ public inherited sharing class DonationHistorySelector {
             WITH SECURITY_ENFORCED
             ORDER BY CloseDate 
             DESC LIMIT 50
+            OFFSET :offset
         ];
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return total number of record
+    */
+    public List<AggregateResult> getTotalNumberOfRecords(Id contactId){
+        List<AggregateResult> totalRecords = [SELECT COUNT(Id)
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
     }
 }

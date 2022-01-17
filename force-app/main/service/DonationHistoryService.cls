@@ -37,9 +37,11 @@ public with sharing class DonationHistoryService {
     static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
     private List<Opportunity> credits;
     private Id contactId;
+    private Integer offset;
 
-    public DonationHistoryService(Id contactId) {
+    public DonationHistoryService(Id contactId, Integer offset) {
         this.contactId = contactId;
+        this.offset = offset;
         this.credits = new List<Opportunity>();
     }
 
@@ -86,9 +88,19 @@ public with sharing class DonationHistoryService {
     */
     public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
-            return selector.getWonOpportunitiesByContactId(this.contactId);
+            return selector.getWonOpportunitiesByContactId(this.contactId, this.offset);
         } else {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
+    }
+    
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Donation History Number of Records for infinite scroll.
+    * @param contactId contact id which is going to be requested.
+    */
+    public List<AggregateResult> getTotalNumberOfRecords() {
+        return selector.getTotalNumberOfRecords(this.contactId);
     }
 }
