@@ -33,56 +33,32 @@
 * @description Donation History Selector class.
 */
 public inherited sharing class DonationHistorySelector {
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return OpportunityContactRole data.
-    */
-    public List<OpportunityContactRole> getWonOpportunityContactRolesByContactId(Id contactId) {
-        return [
-            SELECT Id, 
-	            Opportunity.Id,
-                Opportunity.Name, 
-                Opportunity.CloseDate, 
-                Opportunity.Amount, 
-                Contact.Email, 
-                Contact.Name, 
-                Role, 
-                IsPrimary
-            FROM OpportunityContactRole 
-            WHERE Opportunity.IsWon = true 
-            AND ContactId =:contactId 
-            WITH SECURITY_ENFORCED
-            ORDER BY Opportunity.CloseDate 
-            DESC LIMIT 2000
-        ];
-    }
-
-    public List<Opportunity> getOppAndPayment(List<Id> opportunitiesIds){
-        return [SELECT Id, (SELECT 
-                            npe01__Payment_Method__c 
-                            FROM npe01__OppPayment__r 
-                            ORDER BY npe01__Payment_Date__c
-                            LIMIT 1)  
-                        FROM Opportunity 
-                        WHERE Id IN :opportunitiesIds ];
-    }
-    
-    /** 
-    * @author Salesforce.org
-    * @date 2021
-    * @description method to return Partial_Soft_Credit__c data.
-    */
-    public List<Partial_Soft_Credit__c> getPartialSoftCredits(Set<Id> opportunityContactRoleIds) {
-        return [
-            SELECT 
-                Id, 
-                Amount__c, 
-                Role_Name__c,
-                Contact_Role_ID__c 
-            FROM Partial_Soft_Credit__c 
-            WHERE Contact_Role_ID__c IN :opportunityContactRoleIds
-            WITH SECURITY_ENFORCED
-        ];
-    }   
+  /** 
+  * @author Salesforce.org
+  * @date 2021
+  * @description method to return OpportunityContactRole data.
+  */
+  public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
+      return [
+          SELECT Id, 
+              Name, 
+              CloseDate, 
+              Amount, 
+              Primary_Contact__r.Email, 
+              Primary_Contact__r.Name,
+                  (SELECT 
+                          npe01__Payment_Method__c 
+                          FROM npe01__OppPayment__r 
+                          ORDER BY npe01__Payment_Date__c
+                          LIMIT 1) 
+          FROM Opportunity
+          WHERE IsWon = true 
+          AND Primary_Contact__r.Id =:contactId 
+          WITH SECURITY_ENFORCED
+          ORDER BY CloseDate 
+          DESC LIMIT 50
+      ];
+  }
+  
+  
 }

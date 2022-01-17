@@ -43,21 +43,17 @@ public with sharing class DonationHistoryController {
     public class DonationHistoryView{
         @AuraEnabled public Id id;
         @AuraEnabled public String name;
-        @AuraEnabled public Boolean isPrimary;
         @AuraEnabled public Date closeDate;
-        @AuraEnabled public String role;
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(OpportunityContactRole ocr, String type, String paymentType){
+        public DonationHistoryView(Opportunity ocr, String paymentMethod){
             this.id = ocr.Id;
-            this.name = ocr.Opportunity.Name;
-            this.isPrimary = ocr.isPrimary;
-            this.closeDate = ocr.Opportunity.CloseDate;
-            this.role = ocr.Role;
-            this.amount = ocr.Opportunity.Amount;
-            this.creditType = type;
-            this.paymentMethod = paymentType;
+            this.name = ocr.Name;
+            this.closeDate = ocr.CloseDate;
+            this.amount = ocr.Amount;
+            this.creditType = System.Label.CRLP_HardCredit;
+            this.paymentMethod = paymentMethod;
         }
     }
 
@@ -71,10 +67,7 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            service.buildDonationHistory();
-            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getHardCredits(), System.Label.CRLP_HardCredit, '-'));
-            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getSoftCredits(), System.Label.CRLP_SoftCredit, '-'));
-            donationHistories.addAll(buildHistoryFromOCRs(contactId, service.getPartialSoftCredits(), service.getSoftCreditLabel(), '-'));
+            donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -88,26 +81,18 @@ public with sharing class DonationHistoryController {
 		return isPaymentEnabled;
     }
 
-    private static List<DonationHistoryView> buildHistoryFromOCRs(Id contactId, List<OpportunityContactRole> contactRoles, String type, String paymentType) {
-		boolean isPaymentEnabled = arePaymentsEnabled();
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    private static List<DonationHistoryView> buildHistoryFromOCRs( List<Opportunity> contactRoles) {
+        boolean isPaymentEnabled = arePaymentsEnabled();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         if(isPaymentEnabled){
-			List<Opportunity> paymentMethod = service.getPaymentMethod(contactRoles);
-			System.debug('paymentMethod: ' + paymentMethod);
-            for(OpportunityContactRole role : contactRoles) {
-                for(Opportunity opp : paymentMethod){
-                    if(role.OpportunityId == opp.Id){
-                        donationHistories.add(new DonationHistoryView(role, type, opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c));
-                    }
-                }
+            for(Opportunity role : contactRoles) {
+            	donationHistories.add(new DonationHistoryView(role, role.npe01__OppPayment__r.get(0).npe01__Payment_Method__c));
         	}
         }else{
-            for(OpportunityContactRole role : contactRoles) {
-           		donationHistories.add(new DonationHistoryView(role, type, paymentType));
+            for(Opportunity role : contactRoles) {
+            	donationHistories.add(new DonationHistoryView(role, '-'));
         	}
         }
         return donationHistories;
     }
-    
 }
