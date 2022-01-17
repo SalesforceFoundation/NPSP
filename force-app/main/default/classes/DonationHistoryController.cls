@@ -74,6 +74,12 @@ public with sharing class DonationHistoryController {
         }
     }
     
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return whether or not Payments are enabled in org
+    * @return boolean isPaymentEnabled
+    */
     @AuraEnabled(cacheable=true)
     public static boolean arePaymentsEnabled(){
         npe01__Contacts_And_Orgs_Settings__c settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
@@ -81,6 +87,12 @@ public with sharing class DonationHistoryController {
 		return isPaymentEnabled;
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method creates list of DonationHistoryView to return to LWC
+    * @return List<DonationHistoryView>
+    */
     private static List<DonationHistoryView> buildHistoryFromOCRs( List<Opportunity> contactRoles) {
         boolean isPaymentEnabled = arePaymentsEnabled();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();

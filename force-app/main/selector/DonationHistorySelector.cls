@@ -36,7 +36,7 @@ public inherited sharing class DonationHistorySelector {
   /** 
   * @author Salesforce.org
   * @date 2021
-  * @description method to return OpportunityContactRole data.
+  * @description method to return Opportunity and Payment data.
   */
   public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
       return [

@@ -82,7 +82,7 @@ public with sharing class DonationHistoryService {
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
-    * @param contactId contact id which is going to be requested.
+    * @return List<Opportunity> returns Opportunities and Payment Method for them.
     */
     public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {
