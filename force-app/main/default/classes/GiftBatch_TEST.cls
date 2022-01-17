@@ -210,6 +210,7 @@ private class GiftBatch_TEST {
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
         }
     }
 
@@ -228,6 +229,7 @@ private class GiftBatch_TEST {
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
         }
     }
 
@@ -246,6 +248,7 @@ private class GiftBatch_TEST {
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
+            System.assertNotEquals(null, gift.FailureInformation__c);
         }
     }
 
@@ -264,6 +267,7 @@ private class GiftBatch_TEST {
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiProcessing);
+            System.assertEquals(null, gift.FailureInformation__c);
         }
     }
 

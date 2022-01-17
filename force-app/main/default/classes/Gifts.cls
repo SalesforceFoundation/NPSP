@@ -159,22 +159,28 @@ public with sharing class Gifts {
         }
     }
 
-    public void failGiftsInAbortedOrFailedBatches(String failReason) {
+    public void failWith(String failReason) {
+        for (Gift gift : giftsInProcessing()) {
+            gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
+            gift.asDataImport().FailureInformation__c = failReason;
+            giftsToUpdate.add(gift.asDataImport());
+        }
+    }
+
+    private List<Gift> giftsInProcessing() {
+        List<Gift> processingGifts = new List<Gift>();
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.isProcessing()) {
-                gift.Status__c = BDI_DataImport_API.bdiFailed;
-                gift.FailureInformation__c = failReason;
-                giftsToUpdate.add(gift);
+                processingGifts.add(currentGift);
             }
         }
+        return processingGifts;
     }
 
     @TestVisible
     private void giftsToProcessingStatus() {
-        System.debug('Raw: '+dataImportsById.values().size());
-        System.debug('Before: ' + giftsToUpdate.size());
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
@@ -183,8 +189,6 @@ public with sharing class Gifts {
                 giftsToUpdate.add(gift);
             }
         }
-
-        System.debug('After: '+giftsToUpdate.size());
     }
 
     private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInElevateBatch, String failReason) {

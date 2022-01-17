@@ -97,8 +97,8 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
     }
 
-    public void failGiftsInAbortedOrFailedBatches(String failReason) {
-        gifts.failGiftsInAbortedOrFailedBatches(failReason);
+    public void failGiftsWith(String failReason) {
+        gifts.failWith(failReason);
         gifts.updateRecords();
     }
 
@@ -171,7 +171,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public void validate() {
         if (hasFinishedProcessing()) {
-            failGiftsInAbortedOrFailedBatches(System.Label.geBatchProcessingInComplete);
+            failGiftsWith(System.Label.geBatchProcessingInComplete);
         }
     }
 
