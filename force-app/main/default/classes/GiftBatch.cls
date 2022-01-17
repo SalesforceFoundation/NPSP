@@ -39,6 +39,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible private DataImportBatch__c batch;
     @TestVisible private GiftBatchTotals totals;
     @TestVisible private AsyncApexJob asyncApexJob;
+    private DataImportBatch__c giftBatch;
 
     @TestVisible
     private Gifts gifts = new Gifts();
@@ -46,12 +47,24 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftTemplate giftTemplate;
 
+    @TestVisible
     private GiftBatchSelector giftBatchSelector {
         get {
             if (giftBatchSelector == null) {
                 giftBatchSelector = new GiftBatchSelector();
             }
             return giftBatchSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private AsyncApexJobSelector asyncApexJobSelector {
+        get {
+            if (asyncApexJobSelector == null) {
+                asyncApexJobSelector = new AsyncApexJobSelector();
+            }
+            return asyncApexJobSelector;
         }
         set;
     }
@@ -78,9 +91,10 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         set;
     }
 
-    public Boolean hasAFailedJob() {
+    public Boolean hasFinishedProcessing() {
         return this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.ABORTED.name()
-            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.FAILED.name();
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.FAILED.name()
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
     }
 
     public void failGiftsInAbortedOrFailedBatches(String failReason) {
@@ -96,15 +110,26 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.gifts = gifts;
     }
 
+    public GiftBatch(DataImportBatch__c giftBatch) {
+        this.giftBatch = giftBatch;
+    }
+
+    public GiftBatch(GiftBatchId giftBatchId, List<String> batchFields) {
+        this.giftBatchId = giftBatchId;
+        this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId, batchFields);
+        this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
+        this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
+        this.asyncApexJob = hasBeenProcessed()
+            ? asyncApexJobSelector.selectAsyncJobBy(lastProcessedJobId().value())
+            : null;
+    }
+
     public GiftBatch(GiftBatchId giftBatchId) {
         this.giftBatchId = giftBatchId;
         this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
         this.gifts = new Gifts(giftBatchId, new GiftSelector(giftTemplate));
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
-        this.asyncApexJob = hasBeenProcessed()
-            ? new UTIL_BatchJobService().getAsyncApexJob(lastProcessedJobId().value())
-            : null;
     }
 
     public GiftBatch(GiftBatchId giftBatchId, List<Id> giftIds) {
@@ -136,22 +161,23 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         gifts.failGiftsByElevateBatchIdWithReason(failReasonByElevateBatchId);
     }
 
-    public void processGifts() {
-        gifts.prepareGiftsForProcessing();
+    public void prepareGiftsForProcessing() {
+        gifts.prepareForProcessing();
         updateRecords();
         if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
             captureAuthorizedGifts();
         }
-        GiftEntryProcessor giftEntryProcessor = new GiftEntryProcessor(giftBatchId);
-        AsyncApexJobId asyncApexJobId = giftEntryProcessor.process();
-        updateWith(asyncApexJobId);
     }
 
-    private void updateWith(AsyncApexJobId latestApexJobId) {
-        DataImportBatch__c dataImportBatch =
-            new DataImportBatch__c(Id = giftBatchId.value(),
-                Latest_Apex_Job_Id__c = latestApexJobId.value());
-        unitOfWork.registerDirty(new List<SObject> { dataImportBatch });
+    public void validate() {
+        if (hasFinishedProcessing()) {
+            failGiftsInAbortedOrFailedBatches(System.Label.geBatchProcessingInComplete);
+        }
+    }
+
+    public void updateWith(AsyncApexJobId latestApexJobId) {
+       this.giftBatch.Latest_Apex_Job_Id__c = latestApexJobId.value();
+        unitOfWork.registerDirty(new List<SObject> { giftBatch });
         Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
     }
 

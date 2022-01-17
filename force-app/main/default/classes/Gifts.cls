@@ -109,7 +109,7 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void prepareGiftsForProcessing() {
+    public void prepareForProcessing() {
         giftsToUpdate.clear();
 
         Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
@@ -173,14 +173,18 @@ public with sharing class Gifts {
 
     @TestVisible
     private void giftsToProcessingStatus() {
+        System.debug('Raw: '+dataImportsById.values().size());
+        System.debug('Before: ' + giftsToUpdate.size());
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
-            if (currentGift.isDryRunValidated()) {
+            if (currentGift.canBeProcessed()) {
                 gift.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(gift);
             }
         }
+
+        System.debug('After: '+giftsToUpdate.size());
     }
 
     private void applyFailReasonToGiftsIn(List<DataImport__c> giftsInElevateBatch, String failReason) {

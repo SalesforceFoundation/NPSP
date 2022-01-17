@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,15 +34,15 @@
 */
 public inherited sharing class GiftEntryProcessor {
 
-   private GiftBatchId giftBatchId;
+   @TestVisible private GiftBatch giftBatch;
 
-   public GiftEntryProcessor (GiftBatchId giftBatchId) {
-      this.giftBatchId = giftBatchId;
+   public GiftEntryProcessor (GiftBatch giftBatch) {
+      this.giftBatch = giftBatch;
    }
 
-   public AsyncApexJobId process() {
-      BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
-      String jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
-      return new AsyncApexJobId(Id.valueOf(jobId));
+   public void process(){
+      giftBatch.prepareGiftsForProcessing();
+      GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
+      System.enqueueJob(processorQueue);
    }
 }
