@@ -31,4 +31,22 @@ import getYearsWithDonation from '@salesforce/apex/DonationHistoryController.get
         expect(dropbox.options[3].label).toBe('2018');
       });
     });
+
+    it('triggers the handler when the popup is changed', () => {
+      getYearsWithDonation.mockResolvedValue(["2020", "2018"]);
+      const element = createElement('c-donation-history-filter', { is: DonationHistoryFilter});
+      const handler = jest.fn();
+      element.addEventListener('filter', handler);
+      document.body.appendChild(element);
+
+      return flushPromises().then(()=>{
+        const dropbox = element.shadowRoot.querySelector('.dropbox');
+        dropbox.dispatchEvent(new CustomEvent("change", {
+                    detail: {
+                        value: "2020"
+                    }
+                }));
+        expect(handler).toBeCalled();
+      });
+    });
   });
