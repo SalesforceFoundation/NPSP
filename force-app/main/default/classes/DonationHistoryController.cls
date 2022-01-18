@@ -71,7 +71,7 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
+            donationHistories.addAll(buildHistoryFromOPPs(service.getDonationHistory(), contactId));
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
@@ -85,10 +85,9 @@ public with sharing class DonationHistoryController {
     * @return boolean isPaymentEnabled
     */
     @AuraEnabled(cacheable=true)
-    public static boolean arePaymentsEnabled(){
-        npe01__Contacts_And_Orgs_Settings__c settings = npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults();
-		boolean isPaymentEnabled = settings.npe01__Payments_Enabled__c;
-		return isPaymentEnabled;
+    public static boolean arePaymentsEnabled(Id contactId){
+        DonationHistoryService service = new DonationHistoryService(contactId);
+		return service.checkIfPaymentsAreEnabled();
     }
 
     /** 
@@ -97,18 +96,12 @@ public with sharing class DonationHistoryController {
     * @description method creates list of DonationHistoryView to return to LWC
     * @return List<DonationHistoryView>
     */
-    private static List<DonationHistoryView> buildHistoryFromOCRs( List<Opportunity> contactRoles) {
-        boolean isPaymentEnabled = arePaymentsEnabled();
+    private static List<DonationHistoryView> buildHistoryFromOPPs( List<Opportunity> opportunities, Id contactId) {
+        boolean isPaymentEnabled = arePaymentsEnabled(contactId);
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-        if(isPaymentEnabled){
-            for(Opportunity role : contactRoles) {
-            	donationHistories.add(new DonationHistoryView(role, role.npe01__OppPayment__r.get(0).npe01__Payment_Method__c));
-        	}
-        }else{
-            for(Opportunity role : contactRoles) {
-            	donationHistories.add(new DonationHistoryView(role, EMPTY_PAYMENT_METHOD));
-        	}
-        }
+        for (Opportunity opp : opportunities) {
+			donationHistories.add(new DonationHistoryView(opp, (isPaymentEnabled ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c : EMPTY_PAYMENT_METHOD)));
+		}
         return donationHistories;
     }
 }

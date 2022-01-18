@@ -78,6 +78,10 @@ public with sharing class DonationHistoryService {
         });
     }
 
+    public boolean checkIfPaymentsAreEnabled(){
+        return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
+    }
+    
     /** 
     * @author Salesforce.org
     * @date 2021

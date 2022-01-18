@@ -33,7 +33,7 @@ export default class DonationHistoryTable extends LightningElement {
         if (data) {
             this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label
         };
-        arePaymentsEnabled().then( (paymentsAreEnabled) => {
+        arePaymentsEnabled({contactId: this.contactId}).then( (paymentsAreEnabled) => {
             if(paymentsAreEnabled){
                 this.columns = [
                 { label: RD2_ScheduleVisualizerColumnDate, fieldName: 'closeDate', type: 'date-local', typeAttributes:{
