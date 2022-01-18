@@ -294,8 +294,9 @@ public class UTIL_DMLService {
         return Database.upsert(recordsToUpsert, allOrNone);
     }
 
-    public static List<Database.DeleteResult> deleteRecords(List<SObject> recordsToDelete, Boolean allOrNone) {
-        return Database.delete(recordsToDelete, allOrNone);
+    //todo: add test coverage
+    public static List<Database.MergeResult> mergeRecords(SObject masterRecord, List<SObject> duplicateRecords) {
+        return Database.merge(masterRecord, duplicateRecords);
     }
 
     /***

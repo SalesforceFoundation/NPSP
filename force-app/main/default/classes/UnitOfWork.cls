@@ -40,10 +40,11 @@ public inherited sharing class UnitOfWork {
     private List<SObject> objectsToUpdate = new List<SObject>();
     @TestVisible
     private List<SObject> objectsToDelete = new List<SObject>();
+    @TestVisible
+    private Map<SObject, List<SObject>> objectsToMergeByMasterRecord = new Map<SObject, List<SObject>>();
 
     public Database.SaveResult[] save() {
         List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-        List<Database.DeleteResult> deleteResults = new List<Database.DeleteResult>();
 
         if (!objectsToInsert.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
@@ -51,20 +52,28 @@ public inherited sharing class UnitOfWork {
         if (!objectsToUpdate.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
         }
-        //todo: update test coverage for delete
-        if (!objectsToDelete.isEmpty()) {
-            deleteResults.addAll(UTIL_DMLService.deleteRecords(objectsToDelete, false));
-        }
 
         return saveResults;
     }
 
-    public void registerNew(List<SObject> sObjects) {
-        objectsToInsert.addAll(sObjects);
+    public void registerMerge(SObject masterRecord, List<SObject> duplicateRecords) {
+        objectsToMergeByMasterRecord.put(masterRecord, duplicateRecords);
     }
 
-    public void registerDelete(List<SObject> sObjects) {
-        objectsToDelete.addAll(sObjects);
+    //todo: update test coverage for merge
+    public List<Database.MergeResult> mergeRecords() {
+        List<Database.MergeResult> mergeResults = new List<Database.MergeResult>();
+
+        for (SObject masterRecord : objectsToMergeByMasterRecord.keySet()) {
+            mergeResults.addAll(UTIL_DMLService.mergeRecords(masterRecord,
+                objectsToMergeByMasterRecord.get(masterRecord)));
+        }
+
+        return mergeResults;
+    }
+
+    public void registerNew(List<SObject> sObjects) {
+        objectsToInsert.addAll(sObjects);
     }
 
     public void registerDirty(List<SObject> sObjects) {
