@@ -31,45 +31,29 @@
 * @author Salesforce.org
 * @date 2022
 * @group Recurring Donations
-* @description Stores and retrieves Recurring Donation Status Automation Settings
+* @description Lightning Web Component combo-box wrapper class
 */
-public with sharing class RD2_StatusAutomationSettings_CTRL {
+    public with sharing class Option {
+        @AuraEnabled public String value;
+        @AuraEnabled public String label;
 
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
-    }
+        /**
+         * @description Sets the option value
+         * @param value The option value
+         * @return Option This option instance
+         */
+        public Option withValue(String value) {
+            this.value = value;
+            return this;
+        }
 
-    @AuraEnabled
-    public static RD2_StatusAutomationView getAutomationSettings() {
-        try {
-            if (!STG_Panel.runningUserIsAdmin()) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonPermissionErrorMessage);
-            }
-            RD2_StatusAutomationService service = new RD2_StatusAutomationService();
-
-            return service.getStatusAutomationView();
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+        /**
+         * @description Sets the option label
+         * @param label The option label
+         * @return Option This option instance
+         */
+        public Option withLabel(String label) {
+            this.label = label;
+            return this;
         }
     }
-
-    @AuraEnabled
-    public static RD2_StatusAutomationView saveStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
-        try {
-            RD2_StatusAutomationService service = new RD2_StatusAutomationService();
-
-            String errorString = service.validateSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
-
-            if (String.isNotBlank(errorString)) {
-                throw new StatusAutomationException(errorString);
-            }
-
-            service.saveSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
-            return getAutomationSettings();
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
-    public class StatusAutomationException extends Exception {}
-}

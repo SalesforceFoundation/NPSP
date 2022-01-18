@@ -48,6 +48,10 @@ public with sharing class RD2_Settings {
         set;
     }
 
+    public void reloadSetting() {
+        settings = null;
+    }
+
     /***
     * @description The installment Opportunity Stage
     */
@@ -235,4 +239,57 @@ public with sharing class RD2_Settings {
             upsert settings;
         }
     }
+
+    public Boolean isStatusAutomationForClosedEnabled() {
+        return settings.StatusAutomationDaysForClosed__c != null;
+    }
+
+    public Boolean isStatusAutomationForLapsedEnabled() {
+        return settings.StatusAutomationDaysForLapsed__c != null;
+    }
+
+    public String statusAutomationClosedStatus {
+        get {
+            if (statusAutomationClosedStatus == null) {
+                statusAutomationClosedStatus = settings.StatusAutomationClosedStatus__c;
+            }
+            return statusAutomationClosedStatus;
+        }
+        private set;
+    }
+
+    public String statusAutomationLapsedStatus {
+        get {
+            if (statusAutomationLapsedStatus == null) {
+                statusAutomationLapsedStatus = settings.StatusAutomationLapsedStatus__c;
+            }
+            return statusAutomationLapsedStatus;
+        }
+        private set;
+    }
+
+    public Integer statusAutomationNumberOfDaysForClosed {
+        get {
+            if (statusAutomationNumberOfDaysForClosed == null) {
+                statusAutomationNumberOfDaysForClosed = (settings.StatusAutomationDaysForClosed__c == null)
+                    ? null
+                    : Integer.valueOf(settings.StatusAutomationDaysForClosed__c);
+            }
+            return statusAutomationNumberOfDaysForClosed;
+        }
+        private set;
+    }
+
+    public Integer statusAutomationNumberOfDaysForLapsed {
+        get {
+            if (statusAutomationNumberOfDaysForLapsed == null) {
+                statusAutomationNumberOfDaysForLapsed = (settings.StatusAutomationDaysForLapsed__c == null)
+                    ? null
+                    : Integer.valueOf(settings.StatusAutomationDaysForLapsed__c);
+            }
+            return statusAutomationNumberOfDaysForLapsed;
+        }
+        private set;
+    }
+
 }

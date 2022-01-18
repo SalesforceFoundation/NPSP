@@ -33,43 +33,12 @@
 * @group Recurring Donations
 * @description Stores and retrieves Recurring Donation Status Automation Settings
 */
-public with sharing class RD2_StatusAutomationSettings_CTRL {
-
-    public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
-    }
-
-    @AuraEnabled
-    public static RD2_StatusAutomationView getAutomationSettings() {
-        try {
-            if (!STG_Panel.runningUserIsAdmin()) {
-                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonPermissionErrorMessage);
-            }
-            RD2_StatusAutomationService service = new RD2_StatusAutomationService();
-
-            return service.getStatusAutomationView();
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
-    @AuraEnabled
-    public static RD2_StatusAutomationView saveStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
-        try {
-            RD2_StatusAutomationService service = new RD2_StatusAutomationService();
-
-            String errorString = service.validateSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
-
-            if (String.isNotBlank(errorString)) {
-                throw new StatusAutomationException(errorString);
-            }
-
-            service.saveSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
-            return getAutomationSettings();
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-    }
-
-    public class StatusAutomationException extends Exception {}
+public with sharing class RD2_StatusAutomationView {
+    @AuraEnabled public Integer numberOfDaysForClosed;
+    @AuraEnabled public Integer numberOfDaysForLapsed;
+    @AuraEnabled public String closedStatus;
+    @AuraEnabled public String lapsedStatus;
+    @AuraEnabled public List<Option> lapsedStatusOption;
+    @AuraEnabled public List<Option> closedStatusOption;
+    @AuraEnabled public Boolean rd2Enabled;
 }

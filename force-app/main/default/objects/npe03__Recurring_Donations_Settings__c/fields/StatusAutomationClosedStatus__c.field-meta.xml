@@ -4,7 +4,7 @@
     <description>The status Recurring Donation will be set to when the Status Automation determine the Recurring Donation will be Closed.</description>
     <externalId>false</externalId>
     <inlineHelpText>The status Recurring Donation will be set to when the Status Automation determine the Recurring Donation will be Closed.</label>
-    <label>Status Automation CLosed Status</label>
+    <label>Status Automation Closed Status</label>
     <length>255</length>
     <required>false</required>
     <trackTrending>false</trackTrending>
