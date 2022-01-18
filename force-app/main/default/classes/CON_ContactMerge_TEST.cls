@@ -1029,7 +1029,8 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
     //todo: first happy path merge test.
-    static testMethod void testMergeContact() {
+    @IsTest
+    static void testMergeContact() {
         // given
 //        getDuplicateSetOfRecords(15);
         CON_ContactMerge_CTRL controller = getController();
@@ -1347,6 +1348,7 @@ public class CON_ContactMerge_TEST {
 
     private class UnitOfWorkMock implements StubProvider {
         List<Contact> contactsToUpdate;
+        List<Contact> contactsToDelete;
         Boolean saveCalled = false;
 
         public Object handleMethodCall(Object stubbedObject,
@@ -1359,6 +1361,9 @@ public class CON_ContactMerge_TEST {
             switch on (stubbedMethodName) {
                 when 'registerDirty' {
                     contactsToUpdate = (List<Contact>)listOfArgs;
+                }
+                when 'registerDelete' {
+                    contactsToDelete = (List<Contact>)listOfArgs;
                 }
                 when 'save' {
                     saveCalled = true;
