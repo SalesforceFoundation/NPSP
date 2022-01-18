@@ -176,13 +176,19 @@ public without sharing class HouseholdNamingService {
     public void setAllMembersDeceasedFlag(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
         for (SObject household : householdsOrAccounts) {
             Boolean originalDeceased = (Boolean)household.get(UTIL_Namespace.StrTokenNSPrefix('All_Members_Deceased__c'));
-            Boolean allMembersDeceased = true;
+            Boolean allMembersDeceased;
 
             List<Contact> members = membersByHouseholdId.get(idFor(household));
-            for (Contact member : members) {
-                if (member.Deceased__c == false) {
-                    allMembersDeceased = false;
-                    break;
+            if (members == null) {
+                allMembersDeceased = false;
+
+            } else {
+                allMembersDeceased = true;
+                for (Contact member : members) {
+                    if (member.Deceased__c == false) {
+                        allMembersDeceased = false;
+                        break;
+                    }
                 }
             }
 
