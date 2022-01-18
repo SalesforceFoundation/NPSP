@@ -33,16 +33,13 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-    
-    static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<Opportunity> credits;
+
     private Id contactId;
     private Integer offset;
 
     public DonationHistoryService(Id contactId, Integer offset) {
         this.contactId = contactId;
         this.offset = offset;
-        this.credits = new List<Opportunity>();
     }
 
     @TestVisible
