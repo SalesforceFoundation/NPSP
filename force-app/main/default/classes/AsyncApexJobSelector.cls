@@ -38,13 +38,13 @@ public with sharing class AsyncApexJobSelector {
    private static final String JOB_TYPE_BATCH = 'BatchApex';
 
    public AsyncApexJob selectAsyncJobBy(Id jobId) {
-      return [
+      List<AsyncApexJob> apexJobs = [
           SELECT
-              Status,
-              ExtendedStatus
+              Status
           FROM AsyncApexJob
           WHERE Id =:jobId
           AND JobType =: JOB_TYPE_BATCH
-      ][0];
+      ];
+      return apexJobs.isEmpty() ? null : apexJobs[0];
    }
 }
