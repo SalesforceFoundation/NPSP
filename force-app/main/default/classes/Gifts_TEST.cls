@@ -31,7 +31,7 @@
 private class Gifts_TEST {
 
     @isTest
-    static void shouldOnlyRun1QueryWhenRetrievingDonationsForGifts() {
+    static void shouldOnlyCallSelectorMethodsOnceEachWhenRetrievingDonationsForGifts() {
         // Arrange
         Id dummyDataImportId0 = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
         Id dummyOpportunityId0 = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
@@ -68,9 +68,9 @@ private class Gifts_TEST {
         Gifts gifts = new gifts(dummyGiftBatchId, stubFor(giftSelectorMock), stubFor(donationSelectorMock));
 
         // Assert
-        System.assertEquals(1, giftSelectorMock.numberOfQueriesRan,
+        System.assertEquals(1, giftSelectorMock.selectorMethodCallCount,
             'Should only run 1 query when retrieving gifts');
-        System.assertEquals(1, donationSelectorMock.numberOfQueriesRan,
+        System.assertEquals(1, donationSelectorMock.selectorMethodCallCount,
             'Should only run 1 query when retrieving donations');
         System.assertEquals(3, gifts.all().size(),
             'Should have 3 gifts');
@@ -340,7 +340,7 @@ private class Gifts_TEST {
 
     public class DonationSelectorMock implements StubProvider {
 
-        public Integer numberOfQueriesRan = 0;
+        public Integer selectorMethodCallCount = 0;
         private List<Opportunity> recordsToReturn;
 
         public DonationSelectorMock(List<Opportunity> recordsToReturn) {
@@ -356,7 +356,7 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getDonation' {
-                    this.numberOfQueriesRan++;
+                    this.selectorMethodCallCount++;
 
                     return new List<Opportunity> { new Opportunity(
                         Amount = 100.00,
@@ -366,7 +366,7 @@ private class Gifts_TEST {
                     )};
                 }
                 when 'getDonations' {
-                    this.numberOfQueriesRan++;
+                    this.selectorMethodCallCount++;
                     return recordsToReturn;
                 }
             }
@@ -377,7 +377,7 @@ private class Gifts_TEST {
 
     private class GiftSelectorMock implements StubProvider {
 
-        public Integer numberOfQueriesRan = 0;
+        public Integer selectorMethodCallCount = 0;
         private Boolean returnWithAdditionalFields = false;
         private List<DataImport__c> recordsToReturn;
 
@@ -398,7 +398,7 @@ private class Gifts_TEST {
 
             switch on (stubbedMethodName) {
                 when 'getGiftsFor' {
-                    this.numberOfQueriesRan++;
+                    this.selectorMethodCallCount++;
                     if (this.recordsToReturn != null) {
                         return this.recordsToReturn;
                     }
