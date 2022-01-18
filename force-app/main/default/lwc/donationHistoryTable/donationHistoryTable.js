@@ -5,7 +5,7 @@ import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
-import getTotalOfRows from '@salesforce/apex/DonationHistoryController.getTotalOfRows';
+import getTotalNumberOfRecords from '@salesforce/apex/DonationHistoryController.getTotalNumberOfRecords';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 const RECORDS_TO_LOAD = 50;
@@ -48,7 +48,7 @@ export default class DonationHistoryTable extends LightningElement {
     
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        getTotalOfRows({contactId: this.contactId})
+        getTotalNumberOfRecords({contactId: this.contactId})
         .then(data => {
             if(data){
                 this.totalNumberOfRows = data[0].expr0;
