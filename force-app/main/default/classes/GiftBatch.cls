@@ -164,14 +164,16 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         gifts.failWith(failReason);
     }
 
-    public Boolean canEnqueue() {
+    public Boolean canBeEnqueued() {
         return this.asyncApexJob == null || hasFinishedProcessing();
     }
 
-    public void validate() {
-        if (hasFinishedProcessing()) {
-            failGiftsWith(System.Label.geBatchProcessingInComplete);
-        }
+    public Boolean hasGiftsToResolve() {
+        return hasFinishedProcessing() && hasGiftsRemainingInProcessing();
+    }
+
+    public void resolveGiftsRemainingInProcessing() {
+        failGiftsWith(System.Label.geBatchProcessingInComplete);
     }
 
     public void updateWith(AsyncApexJobId latestApexJobId) {
@@ -271,5 +273,9 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     private AsyncApexJobId lastProcessedJobId() {
         return new AsyncApexJobId(this.batch.Latest_Apex_Job_Id__c);
+    }
+
+    private Boolean hasGiftsRemainingInProcessing() {
+        return this.gifts.inProcessing();
     }
 }

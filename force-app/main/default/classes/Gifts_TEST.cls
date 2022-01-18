@@ -43,7 +43,6 @@ private class Gifts_TEST {
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
         gifts.prepareForProcessing();
-        System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;

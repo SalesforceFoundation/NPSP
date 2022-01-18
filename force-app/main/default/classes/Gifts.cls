@@ -167,6 +167,10 @@ public with sharing class Gifts {
         }
     }
 
+    public Boolean inProcessing() {
+        return giftsInProcessing().size() > 0;
+    }
+
     private List<Gift> giftsInProcessing() {
         List<Gift> processingGifts = new List<Gift>();
         for (DataImport__c gift : dataImportsById.values()) {
@@ -184,7 +188,7 @@ public with sharing class Gifts {
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
 
-            if (currentGift.canBeProcessed()) {
+            if (currentGift.isDryRunValidated()) {
                 gift.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(gift);
             }

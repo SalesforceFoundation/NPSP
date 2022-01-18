@@ -206,7 +206,9 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.ABORTED.name())
             .build();
 
-        giftBatch.validate();
+        System.assert(giftBatch.hasGiftsToResolve());
+
+        giftBatch.resolveGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -227,7 +229,9 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.FAILED.name())
             .build();
 
-        giftBatch.validate();
+        System.assert(giftBatch.hasGiftsToResolve());
+
+        giftBatch.resolveGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -248,7 +252,9 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.COMPLETED.name())
             .build();
 
-        giftBatch.validate();
+        System.assert(giftBatch.hasGiftsToResolve());
+
+        giftBatch.resolveGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -269,9 +275,7 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.PROCESSING.name())
             .build();
 
-        giftBatch.validate();
-
-        System.assertEquals(0, giftBatch.gifts.giftsToUpdate.size());
+        System.assert(!giftBatch.hasGiftsToResolve());
     }
 
 

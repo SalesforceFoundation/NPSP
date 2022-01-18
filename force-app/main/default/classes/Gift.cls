@@ -148,19 +148,6 @@ public with sharing class Gift {
         this.dataImport.Additional_Object_JSON__c = additionalObjectJSONHelper.asJSON();
     }
 
-    public Boolean canBeProcessed(){
-        return !(isFailed() && hasAuthorizedPayment() && isImported());
-    }
-
-    private Boolean isFailed() {
-        return this.status() == BDI_DataImport_API.bdiFailed;
-    }
-
-    private Boolean isImported() {
-        return this.status() == BDI_DataImport_API.bdiImported;
-    }
-
-
     public Boolean isProcessing() {
         return this.status() == BDI_DataImport_API.bdiProcessing;
     }

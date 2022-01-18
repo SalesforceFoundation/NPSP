@@ -41,7 +41,7 @@ public inherited sharing class GiftEntryProcessor {
    }
 
    public void process(){
-      if (giftBatch.canEnqueue()) {
+      if (giftBatch.canBeEnqueued()) {
          giftBatch.prepareGiftsForProcessing();
          GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
          System.enqueueJob(processorQueue);
