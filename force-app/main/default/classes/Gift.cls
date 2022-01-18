@@ -149,9 +149,17 @@ public with sharing class Gift {
     }
 
     public Boolean canBeProcessed(){
-        return !(this.status() == BDI_DataImport_API.bdiFailed && this.hasAuthorizedPayment())
-            && this.status() != BDI_DataImport_API.bdiImported;
+        return !(isFailed() && hasAuthorizedPayment() && isImported());
     }
+
+    private Boolean isFailed() {
+        return this.status() == BDI_DataImport_API.bdiFailed;
+    }
+
+    private Boolean isImported() {
+        return this.status() == BDI_DataImport_API.bdiImported;
+    }
+
 
     public Boolean isProcessing() {
         return this.status() == BDI_DataImport_API.bdiProcessing;
