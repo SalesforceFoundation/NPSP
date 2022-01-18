@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,35 +29,29 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Donation History Selector class.
+* @date 2022
+* @group Contacts
+* @group-content ../../ApexDocContent/Contacts.htm
+* @description Queries UserRecordAccess for permissions for CON_DeleteContactOverride_CTRL.
 */
-public inherited sharing class DonationHistorySelector {
-  /** 
-  * @author Salesforce.org
-  * @date 2021
-  * @description method to return Opportunity and Payment data.
-  */
-  public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
-      return [
-          SELECT Id, 
-              Name, 
-              CloseDate, 
-              Amount, 
-              Primary_Contact__r.Email, 
-              Primary_Contact__r.Name,
-                  (SELECT 
-                          npe01__Payment_Method__c 
-                          FROM npe01__OppPayment__r 
-                          ORDER BY npe01__Payment_Date__c
-                          LIMIT 1) 
-          FROM Opportunity
-          WHERE IsWon = true 
-          AND Primary_Contact__r.Id =:contactId 
-          WITH SECURITY_ENFORCED
-          ORDER BY CloseDate 
-          DESC LIMIT 50
-      ];
-  }
-  
+
+public with sharing class CON_DeleteContactOverridePermissions {
+
+    private CON_DeleteContactOverrideSelector selector;
+
+    public CON_DeleteContactOverridePermissions(CON_DeleteContactOverrideSelector selector) {
+        this.selector = selector;
+    }
+
+    /*********************************************************************************************************
+    * @description Check if the running user has minimum access to delete the record
+    * @return Boolean
+    */
+    public Boolean canDelete(Id recordId) {
+        UserRecordAccess recordAccess = selector.queryDeleteRecordAccess(recordId);
+        if (recordAccess != null) {
+            return recordAccess.HasDeleteAccess;
+        }
+        return false;
+    }
 }

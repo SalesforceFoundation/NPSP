@@ -91,5 +91,5 @@ public with sharing class DonationHistoryService {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
     }
-    
+
 }
