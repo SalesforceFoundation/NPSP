@@ -56,6 +56,8 @@ public with sharing class DonationHistoryController {
             this.paymentMethod = paymentMethod;
         }
     }
+    
+    private static String EMPTY_PAYMENT_METHOD = '-';
 
     /** 
     * @author Salesforce.org
@@ -102,7 +104,7 @@ public with sharing class DonationHistoryController {
         	}
         }else{
             for(Opportunity role : contactRoles) {
-            	donationHistories.add(new DonationHistoryView(role, '-'));
+            	donationHistories.add(new DonationHistoryView(role, EMPTY_PAYMENT_METHOD));
         	}
         }
         return donationHistories;
