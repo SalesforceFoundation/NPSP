@@ -72,7 +72,7 @@ public with sharing class ContactMergeSelector {
         String whereString = new UTIL_Query()
                 .withFrom('DuplicateRecordItem')
                 .withSelectFields(drsFieldNames)
-                .withWhere('DuplicateRecordSetId =:drsRecordId')
+                .withWhere('DuplicateRecordSetId =:duplicateRecordSetId')
                 .build();
         whereString = 'Id IN ('+ whereString + ')';
         String queryString = new UTIL_Query()

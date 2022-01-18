@@ -61,6 +61,7 @@ public with sharing class CON_ContactMerge_CTRL {
         set;
     }
 
+    @TestVisible
     private static final String MASTER_KEY = '$MASTER$';
 
     /***********************************************************************************************
