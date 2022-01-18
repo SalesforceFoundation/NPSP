@@ -200,7 +200,6 @@ public class CON_ContactMerge {
         }
         unitOfWork.save();
 
-        UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);
         if (loserAccountsToBeDeleted.size() > 0) {
             delete loserAccountsToBeDeleted;
         }
