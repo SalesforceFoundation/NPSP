@@ -42,6 +42,7 @@ private class GiftEntryProcessorQueue_TEST {
         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
         GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
         processorQueue.giftBatchService = stubFor(giftBatchServiceMock);
+
         Test.startTest();
         processorQueue.execute(null);
         Test.stopTest();
