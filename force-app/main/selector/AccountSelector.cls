@@ -50,22 +50,19 @@ public with sharing class AccountSelector {
     }
 
     public List<Account> getHouseholdAndOrgAccountsFor(Set<Id> accountIds) {
-        return Database.query(buildHouseholdAndOrgAccountsSoql(accountIds));
-    }
-
-    @TestVisible
-    private String buildHouseholdAndOrgAccountsSoql(Set<Id> accountIds) {
-        List<String> selectFields = getAccountFields();
-        String whereClause = 'Id IN :accountIds AND npe01__SYSTEM_AccountType__c =' +
-            ':CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE OR (\n' +
-                'npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE \n' +
-                'AND Number_of_Household_Members__c = 1 \n' +
-                ')';
-        return new UTIL_Query()
-                .withSelectFields(selectFields)
-                .withFrom(String.valueOf(Account.SObjectType))
-                .withWhere(whereClause)
-                .build();
+        return [
+                SELECT Id, npe01__SYSTEMIsIndividual__c, npe01__SYSTEM_AccountType__c, Name
+                FROM Account a
+                WHERE
+                Id IN :accountIds
+                AND (
+                        npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                        OR (
+                                npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
+                                AND Number_of_Household_Members__c = 1
+                        )
+                )
+        ];
     }
 
     @TestVisible
