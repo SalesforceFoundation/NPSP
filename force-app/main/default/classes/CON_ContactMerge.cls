@@ -189,6 +189,7 @@ public class CON_ContactMerge {
 
         //todo: how to mock merge?
         unitOfWork.registerMerge(winnerMakePrivate, losers);
+        unitOfWork.mergeRecords();
 //        merge winnerMakePrivate losers;
 
         //set the contact Account Id back to the winning Account Id
