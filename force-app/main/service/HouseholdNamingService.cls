@@ -124,6 +124,11 @@ public without sharing class HouseholdNamingService {
             setHouseholdNameFieldValues(householdsOrAccounts, membersByHouseholdId);
         }
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
+
+        if (householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType) {
+            setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
+        }
+
         unitOfWork.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
@@ -164,6 +169,26 @@ public without sharing class HouseholdNamingService {
                 return currentNumberOfHouseholdMembersValue != householdMembers.size();
             } else {
                 return true;
+            }
+        }
+    }
+
+    public void setAllMembersDeceasedFlag(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
+        for (SObject household : householdsOrAccounts) {
+            Boolean originalDeceased = (Boolean)household.get(UTIL_Namespace.StrTokenNSPrefix('All_Members_Deceased__c'));
+            Boolean allMembersDeceased = true;
+
+            List<Contact> members = membersByHouseholdId.get(idFor(household));
+            for (Contact member : members) {
+                if (member.Deceased__c == false) {
+                    allMembersDeceased = false;
+                    break;
+                }
+            }
+
+            if (originalDeceased != allMembersDeceased) {
+                household.put(UTIL_Namespace.StrTokenNSPrefix('All_Members_Deceased__c'), allMembersDeceased);
+                unitOfWork.registerDirty(new List<SObject>{household});
             }
         }
     }
@@ -219,7 +244,8 @@ public without sharing class HouseholdNamingService {
     private List<SObject> getAccountsFor(List<Id> hhids) {
         return [
                 SELECT Id, Name, npo02__SYSTEM_CUSTOM_NAMING__c, npo02__Formal_Greeting__c,
-                        npo02__Informal_Greeting__c, Number_of_Household_Members__c
+                        npo02__Informal_Greeting__c, Number_of_Household_Members__c,
+                        All_Members_Deceased__c
                 FROM Account
                 WHERE Id IN :hhids
         ];
