@@ -46,30 +46,6 @@ public class CON_ContactMerge_TEST {
         }
     }
 
-    static testMethod void exerciseUIOne2One(){
-        exerciseUI(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    //todo: whats different between the two account models?
-    static testMethod void exerciseUIHHAccount(){
-        exerciseUI(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //exercise the many UI variables
-    static void exerciseUI(string strProcessor) {
-//        // todo: is this used?
-//        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-//
-//        //set up 3 contacts for the merge interface to work with
-//        Contact con = UTIL_UnitTestData_TEST.getContact();
-//
-//        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-//        con2.LastName = '2Contact_forTests_Merge';
-//
-//        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-//        con3.LastName = '3Contact_forTests_Merge';
-//
-//        insert new Contact[]{con, con2, con3};
-    }
-
     @IsTest
     private static void searchReturnsResultsWhenMatchFound() {
         CON_ContactMerge_CTRL controller = getControllerForSearch();
