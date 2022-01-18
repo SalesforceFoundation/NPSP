@@ -179,23 +179,25 @@ public class CON_ContactMerge {
         }
             
         //set the account to null and mark private so that trigger won't reset the Account
-        if (winningAccountId!=null && winnerAccountIsOneToOne){         
-            UTIL_DMLService.updateRecord(winnerMakePrivate);
+        if (winningAccountId!=null && winnerAccountIsOneToOne){
+            unitOfWork.registerDirty(new List<SObject> {winnerMakePrivate});
         }
         
         if(losersMakePrivate.size()>0){
-            UTIL_DMLService.updateRecords(losersMakePrivate);
+            unitOfWork.registerDirty(losersMakePrivate);
         }
 
+        //todo: how to mock merge?
         merge winnerMakePrivate losers;
-        
+
         //set the contact Account Id back to the winning Account Id
         if (winnerAccountIsOneToOne){
             winnerMakePrivate.AccountId = winningAccountId;
             winnerMakePrivate.npe01__Private__c = false;
-            UTIL_DMLService.updateRecord(winnerMakePrivate);
-        }       
-        
+            unitOfWork.registerDirty(new List<SObject>{winnerMakePrivate});
+        }
+        unitOfWork.save();
+
         UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);
         if (loserAccountsToBeDeleted.size() > 0) {
             delete loserAccountsToBeDeleted;
