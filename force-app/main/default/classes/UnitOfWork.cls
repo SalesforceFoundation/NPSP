@@ -38,20 +38,33 @@ public inherited sharing class UnitOfWork {
     private List<SObject> objectsToInsert = new List<SObject>();
     @TestVisible
     private List<SObject> objectsToUpdate = new List<SObject>();
+    @TestVisible
+    private List<SObject> objectsToDelete = new List<SObject>();
 
     public Database.SaveResult[] save() {
         List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
+        List<Database.DeleteResult> deleteResults = new List<Database.DeleteResult>();
+
         if (!objectsToInsert.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
         }
         if (!objectsToUpdate.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
         }
+        //todo: update test coverage for delete
+        if (!objectsToDelete.isEmpty()) {
+            deleteResults.addAll(UTIL_DMLService.deleteRecords(objectsToDelete, false));
+        }
+
         return saveResults;
     }
 
     public void registerNew(List<SObject> sObjects) {
         objectsToInsert.addAll(sObjects);
+    }
+
+    public void registerDelete(List<SObject> sObjects) {
+        objectsToDelete.addAll(sObjects);
     }
 
     public void registerDirty(List<SObject> sObjects) {

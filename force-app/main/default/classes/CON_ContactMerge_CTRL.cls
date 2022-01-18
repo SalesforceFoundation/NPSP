@@ -37,6 +37,17 @@
 public with sharing class CON_ContactMerge_CTRL {
 
     @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
+    }
+
+    @TestVisible
     private ContactMergeSelector mergeSelector {
         get {
             if (mergeSelector == null) {
@@ -1056,8 +1067,11 @@ public with sharing class CON_ContactMerge_CTRL {
         Database.DMLOptions dml = new Database.DMLOptions();
         dml.DuplicateRuleHeader.AllowSave = true;
 
-        Database.SaveResult saveResult = UTIL_DMLService.updateRecord(winningContact, dml);
-        handleDMLError(saveResult);
+        unitOfWork.registerDirty(new List<SObject>{winningContact});
+        unitOfWork.save();
+
+        List<Database.SaveResult> saveResults = unitOfWork.save();
+        handleDMLError(saveResults[0]);
     }
 
     private void handleDMLError(Database.SaveResult saveResult) {

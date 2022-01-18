@@ -294,6 +294,10 @@ public class UTIL_DMLService {
         return Database.upsert(recordsToUpsert, allOrNone);
     }
 
+    public static List<Database.DeleteResult> deleteRecords(List<SObject> recordsToDelete, Boolean allOrNone) {
+        return Database.delete(recordsToDelete, allOrNone);
+    }
+
     /***
     * @description Handles record DML deletion of records combined with error handling.
     * @param records The records to be deleted

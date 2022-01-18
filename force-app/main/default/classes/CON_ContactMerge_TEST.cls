@@ -1345,7 +1345,30 @@ public class CON_ContactMerge_TEST {
         );
     }
 
+    private class UnitOfWorkMock implements StubProvider {
+        List<Contact> contactsToUpdate;
+        Boolean saveCalled = false;
 
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'registerDirty' {
+                    contactsToUpdate = (List<Contact>)listOfArgs;
+                }
+                when 'save' {
+                    saveCalled = true;
+                    return new List<Database.SaveResult>();
+                }
+            }
+
+            return null;
+        }
+    }
 
     private class ContactMergeSelectorMock implements StubProvider {
         Integer numberOfResults;
