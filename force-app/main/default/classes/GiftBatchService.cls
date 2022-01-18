@@ -52,8 +52,8 @@ public with sharing class GiftBatchService {
         return groupedTotals.totalsFor(batchId);
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
+    public void processGiftsFor(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
         giftEntryProcessor = new GiftEntryProcessor(giftBatch);
         giftEntryProcessor.process();
     }
@@ -100,8 +100,8 @@ public with sharing class GiftBatchService {
         giftBatch.add(inboundGift.asGift());
     }
 
-    public void validateBatch(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId),
+    public void validateBatch(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId,
             new List<String>{String.valueOf(DataImportBatch__c.Latest_Apex_Job_Id__c),
                 UTIL_Namespace.StrTokenNSPrefix('Form_Template__r')
                     + '.'
