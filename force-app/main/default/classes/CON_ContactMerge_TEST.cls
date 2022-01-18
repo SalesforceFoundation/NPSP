@@ -1256,8 +1256,8 @@ public class CON_ContactMerge_TEST {
                 mockFieldRow.fieldLabel = 'Master Record';
                 mockFieldRow.showRadio = true;
             } else {
-                mockFieldRow.fieldLabel = 'Test Field ' + i;
-                mockFieldRow.fieldName = 'Test_Field_' + i;
+                mockFieldRow.fieldLabel = 'Test Field';
+                mockFieldRow.fieldName = fieldNames[i];
                 mockFieldRow.showRadio = true;
             }
 

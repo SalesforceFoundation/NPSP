@@ -38,17 +38,6 @@
 public class CON_ContactMerge {
 
     @TestVisible
-    private UnitOfWork unitOfWork {
-        get {
-            if (unitOfWork == null) {
-                unitOfWork = new UnitOfWork();
-            }
-            return unitOfWork;
-        }
-        set;
-    }
-
-    @TestVisible
     private ContactSelector contactSelector {
         get {
             if (contactSelector == null) {
@@ -180,28 +169,25 @@ public class CON_ContactMerge {
             
         //set the account to null and mark private so that trigger won't reset the Account
         if (winningAccountId!=null && winnerAccountIsOneToOne){
-            unitOfWork.registerDirty(new List<SObject> {winnerMakePrivate});
+            UTIL_DMLService.updateRecord(winnerMakePrivate);
         }
         
         if(losersMakePrivate.size()>0){
-            unitOfWork.registerDirty(losersMakePrivate);
+            UTIL_DMLService.updateRecords(losersMakePrivate);
         }
 
-        //todo: how to mock merge?
-        unitOfWork.registerMerge(winnerMakePrivate, losers);
-        unitOfWork.mergeRecords();
+        merge winnerMakePrivate losers;
 
         //set the contact Account Id back to the winning Account Id
         if (winnerAccountIsOneToOne){
             winnerMakePrivate.AccountId = winningAccountId;
             winnerMakePrivate.npe01__Private__c = false;
-            unitOfWork.registerDirty(new List<SObject>{winnerMakePrivate});
+            UTIL_DMLService.updateRecord(winnerMakePrivate);
         }
-        unitOfWork.save();
 
+        UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);
         if (loserAccountsToBeDeleted.size() > 0) {
-            unitOfWork.registerDelete(loserAccountsToBeDeleted);
-            unitOfWork.deleteRecords();
+            delete loserAccountsToBeDeleted;
         }
         successfulMerge = true;
         return successfulMerge;

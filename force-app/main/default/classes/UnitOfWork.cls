@@ -38,10 +38,6 @@ public inherited sharing class UnitOfWork {
     private List<SObject> objectsToInsert = new List<SObject>();
     @TestVisible
     private List<SObject> objectsToUpdate = new List<SObject>();
-    @TestVisible
-    private List<SObject> objectsToDelete = new List<SObject>();
-    @TestVisible
-    private Map<SObject, List<SObject>> objectsToMergeByMasterRecord = new Map<SObject, List<SObject>>();
 
     public Database.SaveResult[] save() {
         List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
@@ -54,22 +50,6 @@ public inherited sharing class UnitOfWork {
         }
 
         return saveResults;
-    }
-
-    public void registerMerge(SObject masterRecord, List<SObject> duplicateRecords) {
-        objectsToMergeByMasterRecord.put(masterRecord, duplicateRecords);
-    }
-
-    //todo: update test coverage for merge
-    public List<Database.MergeResult> mergeRecords() {
-        List<Database.MergeResult> mergeResults = new List<Database.MergeResult>();
-
-        for (SObject masterRecord : objectsToMergeByMasterRecord.keySet()) {
-            mergeResults.addAll(UTIL_DMLService.mergeRecords(masterRecord,
-                objectsToMergeByMasterRecord.get(masterRecord)));
-        }
-
-        return mergeResults;
     }
 
     public void registerNew(List<SObject> sObjects) {
@@ -106,19 +86,4 @@ public inherited sharing class UnitOfWork {
             }
         }
     }
-
-    public void registerDelete(List<SObject> sObjects) {
-        objectsToDelete.addAll(sObjects);
-    }
-
-    public List<Database.DeleteResult> deleteRecords() {
-        List<Database.DeleteResult> deleteResults = new List<Database.DeleteResult>();
-
-        if (!objectsToDelete.isEmpty()) {
-            deleteResults.addAll(UTIL_DMLService.deleteRecords(objectsToDelete, false));
-        }
-
-        return deleteResults;
-    }
-
 }
