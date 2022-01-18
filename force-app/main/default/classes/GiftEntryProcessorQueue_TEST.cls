@@ -45,6 +45,7 @@ private class GiftEntryProcessorQueue_TEST {
         Test.startTest();
         processorQueue.execute(null);
         Test.stopTest();
+
         System.assert(giftBatchServiceMock.updateGiftBatchWithWasCalled);
     }
 
