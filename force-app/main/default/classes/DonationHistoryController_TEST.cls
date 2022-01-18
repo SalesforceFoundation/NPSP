@@ -89,7 +89,7 @@ public class DonationHistoryController_TEST {
         Boolean role = false;
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id);
+        DonationHistoryController.getDonationHistory(testContact.Id, 0);
         Test.stopTest();
 
         System.assertEquals(1, donationHistory.size(), 'Should return only 1 record');
@@ -112,7 +112,7 @@ public class DonationHistoryController_TEST {
         
         Test.startTest();
         List<DonationHistoryController.DonationHistoryView> donationHistory = 
-        DonationHistoryController.getDonationHistory(testContact.Id);
+        DonationHistoryController.getDonationHistory(testContact.Id, 0);
         Test.stopTest();
         System.assertEquals(0, donationHistory.size(), 'Should not return records');
     }
@@ -137,7 +137,7 @@ public class DonationHistoryController_TEST {
             Test.startTest();
             System.runAs(u){
                 List<DonationHistoryController.DonationHistoryView> donationHistory = 
-                DonationHistoryController.getDonationHistory(testContact.Id); 
+                DonationHistoryController.getDonationHistory(testContact.Id, 0); 
             }
 	        Test.stopTest();
         } catch(Exception e){
