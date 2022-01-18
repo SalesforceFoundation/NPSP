@@ -36,6 +36,39 @@
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
 public class CON_ContactMerge {
+
+    @TestVisible
+    private UnitOfWork unitOfWork {
+        get {
+            if (unitOfWork == null) {
+                unitOfWork = new UnitOfWork();
+            }
+            return unitOfWork;
+        }
+        set;
+    }
+
+    @TestVisible
+    private ContactSelector contactSelector {
+        get {
+            if (contactSelector == null) {
+                contactSelector = new ContactSelector();
+            }
+            return contactSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private AccountSelector accountSelector {
+        get {
+            if (accountSelector == null) {
+                accountSelector = new AccountSelector();
+            }
+            return accountSelector;
+        }
+        set;
+    }
     
     /*******************************************************************************************************
     * @description Min number of contacts that can be merged.
@@ -68,7 +101,7 @@ public class CON_ContactMerge {
     * @param losers The loser records.
     * @return Boolean Whether the merge was successful.
     */
-    public static Boolean mergeContacts(Contact winningContact, List<Contact> losers) {
+    public Boolean mergeContacts(Contact winningContact, List<Contact> losers) {
         boolean successfulMerge = false;
 
         List<Account> winnerAccount = new List<Account>();
@@ -79,23 +112,16 @@ public class CON_ContactMerge {
     
         Id winningAccountId = null;
         Boolean winnerAccountIsOneToOne = false;
-        Contact winner = [SELECT AccountId,Account.npe01__SYSTEM_AccountType__c FROM Contact WHERE Id =:winningContact.Id];
+        Contact winner = contactSelector.getContactsWithAccountAndAddressFields(new List<Contact>{winningContact})[0];
 
         // detect PersonAccounts
-        boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
-        
+        Boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
         //get winner contact Account
         if (winner.AccountId!=null){
-            ID winnerAccId = winner.AccountId;
-	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name';
-	        if (isPAEnabled)
-	            strSoql += ', PersonContactId ';  // note: we originally used isPersonAccount, but having the field in the sobject caused merge to fail.
-	        strSoql += ' from Account where Id=:winnerAccId';
-	        winnerAccount = database.query(strSoql);
+	        winnerAccount = accountSelector.getAccountsFor(new Set<Id>{winner.AccountId});
         }
             
         if (winnerAccount.size()>0) {
-            
             winningAccountId = winnerAccount[0].Id;
             
             if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
@@ -105,13 +131,9 @@ public class CON_ContactMerge {
             if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
         }
-           
-        string strSoql = 'Select Account.Id,Account.npe01__SYSTEM_AccountType__c ';
-        if (isPAEnabled)
-            strSoql += ', isPersonAccount ';
-        strSoql += ' from Contact where Id IN :losers ORDER BY Id ASC';
-        losers = database.query(strSoql);
-        
+
+        losers = contactSelector.getContactsWithAccountFields(new List<Contact>(losers));
+
         for (Contact thisloserContact : losers) {
             if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);

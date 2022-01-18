@@ -984,8 +984,9 @@ public with sharing class CON_ContactMerge_CTRL {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, true);
             updateAndHandleWinningContact(winningContact);
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.AFFL_doNotRunForContacts, false);
-            
-            CON_ContactMerge.mergeContacts(winningContact, losingContacts);
+
+            CON_ContactMerge contactMerge = new CON_ContactMerge();
+            contactMerge.mergeContacts(winningContact, losingContacts);
 
             updateContactWithOnlyUniqueFields(winningContact.Id);
 

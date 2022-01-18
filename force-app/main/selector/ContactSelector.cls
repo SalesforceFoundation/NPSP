@@ -133,11 +133,16 @@ public inherited sharing class ContactSelector {
             selectFields.add('OtherCountryCode');
             selectFields.add('OtherStateCode');
         }
+
         return selectFields;
     }
 
     public List<Contact> getContactsWithAccountAndAddressFields(List<Contact> contacts) {
         return Database.query(buildContactSoql(contacts));
+    }
+
+    public List<Contact> getContactsWithAccountFields(List<Contact> contacts) {
+        return Database.query(buildContactSoqlOrderById(contacts));
     }
 
     public static List<Contact> getContactOverridesForAddressesIn(Set<Id> addressIds) {
@@ -167,6 +172,18 @@ public inherited sharing class ContactSelector {
                 .build();
     }
 
+    @TestVisible
+    private String buildContactSoqlOrderById(List<Contact> contacts) {
+        List<String> selectFields = getContactSelectionFields();
+
+        return new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Contact.SObjectType))
+                .withWhere('Id IN :contacts')
+                .withOrderBy('Id')
+                .build();
+    }
+
     private List<String> getContactSelectionFields() {
         List<String> selectFields = new List<String>{
                 'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
@@ -187,6 +204,11 @@ public inherited sharing class ContactSelector {
             selectFields.add('OtherCountryCode');
             selectFields.add('OtherStateCode');
         }
+
+        if (orgConfig.isPersonAccountsEnabled()) {
+            selectFields.add('isPersonAccount');
+        }
+
         return selectFields;
     }
 
