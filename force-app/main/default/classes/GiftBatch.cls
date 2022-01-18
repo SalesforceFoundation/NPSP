@@ -39,7 +39,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible private DataImportBatch__c batch;
     @TestVisible private GiftBatchTotals totals;
     @TestVisible private AsyncApexJob asyncApexJob;
-    private DataImportBatch__c giftBatch;
 
     @TestVisible
     private Gifts gifts = new Gifts();
@@ -114,7 +113,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public GiftBatch(DataImportBatch__c giftBatch) {
-        this.giftBatch = giftBatch;
+        this.batch = giftBatch;
     }
 
     public GiftBatch(GiftBatchId giftBatchId, List<String> batchFields) {
@@ -184,8 +183,8 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void updateWith(AsyncApexJobId latestApexJobId) {
-       this.giftBatch.Latest_Apex_Job_Id__c = latestApexJobId.value();
-        unitOfWork.registerDirty(new List<SObject> { giftBatch });
+        this.batch.Latest_Apex_Job_Id__c = latestApexJobId.value();
+        unitOfWork.registerDirty(new List<SObject> { this.batch });
         Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
     }
 
@@ -220,7 +219,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public String name() {
-        return this.batch.name;
+        return this.batch.Name;
     }
 
     public Gifts gifts() {
