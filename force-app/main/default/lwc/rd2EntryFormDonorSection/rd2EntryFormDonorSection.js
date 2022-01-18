@@ -1,8 +1,5 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
-import { isNull } from 'c/utilCommon';
-
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -17,28 +14,19 @@ import donorTypeHelpText from '@salesforce/label/c.RD2_EntryFormDonorTypeHelpTex
 
 export default class rd2EntryFormDonorSection extends LightningElement {
 
-    DEFAULT_DONOR_TYPE = 'Contact';
-
     customLabels = Object.freeze({
         donorTypeLabel,
         donorTypeHelpText
     });
 
     // These are exposed to the parent component
-    @api parentId;
-    @api recordId;
     @api rd2State;
-    @api parentSObjectType;
 
-    @track isLoading = true;
+    isLoading = true;
     isRecordReady = false;
 
-    @track contactId;
-    @track accountId;
-
-    @track donorType;
-    @track accountRequired = true;
-    @track contactRequired = true;
+    accountRequired = true;
+    contactRequired = true;
 
     @track fields = {};
     rdObjectInfo;
@@ -46,56 +34,11 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     contactLabel;
 
     /**
-     * @description Init function
-     */
-    connectedCallback() {
-        this.init();
-    }
-
-    /**
-    * @description If editing an existing record retrieve the Donor Type from the record so it can default the custom
-    * picklist field accordingly.
-    */
-    init() {
-        if (!isNull(this.recordId)) {
-            getRecurringData({ recordId: this.recordId })
-                .then(response => {
-                    this.changeDonorType(response.DonorType);
-                })
-                .catch((error) => {
-                    this.dispatchEvent(new CustomEvent('errorevent', { detail: error }));
-                });
-        } else {
-            this.changeDonorType(this.DEFAULT_DONOR_TYPE);
-            this.handleParentIdType(this.parentSObjectType);
-        }
-    }
-
-    /**
      * @description Set isLoading to false only after all wired actions have fully completed
      * @returns True (All Done) or False (Still Loading)
      */
     isEverythingLoaded() {
         return (this.isRecordReady === true && this.rdObjectInfo !== null);
-    }
-
-    /**
-     * @description Determine the parentId Sobject Type if creating a new record from an Account or Contact
-     */
-    handleParentIdType(parentSObjType) {
-        if (isNull(parentSObjType)) {
-            return;
-        }
-
-        if (parentSObjType === ACCOUNT_OBJECT.objectApiName) {
-            this.accountId = this.parentId;
-            this.changeDonorType('Account');
-            this.dispatchChangeEvent('accountchange', this.accountId);
-        } else if (parentSObjType === CONTACT_OBJECT.objectApiName) {
-            this.contactId = this.parentId;
-            this.changeDonorType('Contact');
-            this.dispatchChangeEvent('contactchange', this.contactId);
-        }
     }
 
     /**
@@ -148,7 +91,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @returns {boolean}
      */
     get isContactDonor() {
-        return (this.donorType === 'Contact');
+        return (this.rd2State.donorType === 'Contact');
     }
 
     /**
@@ -156,7 +99,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @returns {boolean}
      */
     get isAccountDonor() {
-        return (this.donorType === 'Account');
+        return (this.rd2State.donorType === 'Account');
     }
 
     /**
@@ -164,7 +107,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      */
     handleDonorTypeChange(event) {
         this.changeDonorType(event.target.value);
-        this.updateDonorFields(this.donorType);
+        this.updateDonorFields(event.target.value);
     }
 
     changeDonorType(donorType) {
@@ -204,8 +147,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @description Update the properties to configure the Donor Type fields visibility and requirement settings
      * based on the value of the DonorType picklist.
      */
-    updateDonorFields() {
-        if (this.donorType === 'Account') {
+    updateDonorFields(donorType) {
+        if (donorType === 'Account') {
             this.accountRequired = true;
             this.contactRequired = false;
         } else {

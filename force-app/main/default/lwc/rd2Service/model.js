@@ -19,7 +19,7 @@ const DEFAULT_INITIAL_STATE = {
     contactFirstName: null,
     contactLastName: null,
     accountId: null,
-    donorType: null,
+    donorType: 'Contact',
     dateEstablished: null,
     mailingCountry: null,
 
@@ -65,6 +65,10 @@ const setContactId = (state, contactId) => {
         contactId
     };
 };
+
+const getDonorType = (state) => {
+    return state.donorType;
+}
 
 const setContactDetails = (state, {firstName, lastName, mailingCountry}) => {
     return {

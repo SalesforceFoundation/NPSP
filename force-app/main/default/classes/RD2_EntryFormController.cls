@@ -119,11 +119,19 @@ public with sharing class RD2_EntryFormController {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.RecurringType__c)
         );
+        view.defaultInstallmentPeriod = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c)
+        );
 
-        if(recordId != null) {
+        if (recordId != null) {
             npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
             view.withRecord(rd);
+        } else if (parentId != null) {
+            view.withParentId(parentId);
         }
+
+        view.setRecordCreateDefaults();
 
         return view;
     }
@@ -560,7 +568,15 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String cardExpirationYear;
         @AuraEnabled public Map<String, Object> customFieldValues;
 
+        public RD2RecordView() {
+
+        }
+
         public RD2RecordView(npe03__Recurring_Donation__c record) {
+            this.withRecord(record);
+        }
+
+        public RD2RecordView withRecord(npe03__Recurring_Donation__c record) {
             this.recordId = record.Id;
             this.contactId = record.npe03__Contact__c;
             this.accountId = record.npe03__Organization__c;
@@ -580,6 +596,7 @@ public with sharing class RD2_EntryFormController {
             this.cardExpirationMonth = record.CardExpirationMonth__c;
             this.cardExpirationYear = record.CardExpirationYear__c;
             this.customFieldValues = getCustomFieldValues(record);
+            return this;
         }
     }
 
@@ -602,8 +619,33 @@ public with sharing class RD2_EntryFormController {
 
         @AuraEnabled public RD2RecordView record;
 
+
+        public RD2AppView() {
+            this.record = new RD2RecordView();
+        }
+
         public void withRecord(npe03__Recurring_Donation__c record) {
             this.record = new RD2RecordView(record);
+        }
+
+        public void withParentId(Id parentId) {
+            this.record = new RD2RecordView();
+            SObjectType parentSobjectType = parentId.getSobjectType();
+            if(parentSobjectType == Account.SObjectType) {
+                this.record.accountId = parentId;
+            } else if(parentSobjectType == Contact.SObjectType) {
+                this.record.contactId = parentId;
+            }
+        }
+
+        private void setRecordCreateDefaults() {
+            if (this.defaultInstallmentPeriod != null && this.record.recurringPeriod == null) {
+                this.record.recurringPeriod = this.defaultInstallmentPeriod;
+            }
+
+            if(this.defaultRecurringType != null && this.record.recurringType == null) {
+                this.record.recurringType = this.defaultRecurringType;
+            }
         }
     }
 }

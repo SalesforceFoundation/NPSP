@@ -59,16 +59,13 @@
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
                                 <c-rd2-entry-form-donor-section
-                                        record-id={recordId}
-                                        parent-id={parentId}
                                         rd2-state={rd2State}
-                                        parent-s-object-type={rdSettings.parentSObjectType}
                                         data-id="donorComponent"
                                         onerrorevent={handleChildComponentError}
                                         oncontactchange={handleContactChange}
                                         onaccountchange={handleAccountChange}
                                         ondonortypechange={handleDonorTypeChange}
-                                        dateestablishedchange={handleDateEstablishedChange}
+                                        ondateestablishedchange={handleDateEstablishedChange}
                                         if:true={isSettingReady}
                                 >
                                 </c-rd2-entry-form-donor-section>

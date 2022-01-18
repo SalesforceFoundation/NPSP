@@ -44,11 +44,12 @@ class Rd2Service {
     async loadInitialView(state, recordId, parentId) {
 
         try {
-            const initialView = getInitialView({recordId, parentId});
+            const initialView = await getInitialView({recordId, parentId});
             const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
             return this.dispatch(state, action);
         } catch (ex) {
             // TODO - Dispatch error action
+            console.log("Error: ", ex);
             return state;
         }
     }
