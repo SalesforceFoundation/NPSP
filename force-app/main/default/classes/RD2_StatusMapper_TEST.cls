@@ -217,10 +217,10 @@ public with sharing class RD2_StatusMapper_TEST {
         mapper.gateway = new TestMappingGateway();
         mapper.statusLabelByValue = getDefaultStatusLabelByValue();
 
-        List<String> closedStatus = new List<String>(mapper.getLapsedStatusValues());
+        List<String> lapsedStatus = new List<String>(mapper.getLapsedStatusValues());
 
-        System.assertEquals(1, closedStatus.size(), 'Only 1 closed Status should be return');
-        System.assertEquals(RD2_Constants.STATUS_LAPSED, closedStatus[0], 'Closed Status should be return');
+        System.assertEquals(1, lapsedStatus.size(), 'Only 1 closed Status should be return');
+        System.assertEquals(RD2_Constants.STATUS_LAPSED, lapsedStatus[0], 'Closed Status should be return');
     }
 
     // Helpers
