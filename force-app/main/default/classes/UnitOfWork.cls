@@ -107,4 +107,18 @@ public inherited sharing class UnitOfWork {
         }
     }
 
+    public void registerDelete(List<SObject> sObjects) {
+        objectsToDelete.addAll(sObjects);
+    }
+
+    public List<Database.DeleteResult> deleteRecords() {
+        List<Database.DeleteResult> deleteResults = new List<Database.DeleteResult>();
+
+        if (!objectsToDelete.isEmpty()) {
+            deleteResults.addAll(UTIL_DMLService.deleteRecords(objectsToDelete, false));
+        }
+
+        return deleteResults;
+    }
+
 }

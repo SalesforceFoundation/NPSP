@@ -293,6 +293,10 @@ public class UTIL_DMLService {
         // AllowSave handling not added because Database.upsert(...) does not support Database.DMLOptions
         return Database.upsert(recordsToUpsert, allOrNone);
     }
+    //todo: add test coverage
+    public static List<Database.DeleteResult> deleteRecords(List<SObject> recordsToDelete, Boolean allOrNone) {
+        return Database.delete(recordsToDelete, allOrNone);
+    }
 
     //todo: add test coverage
     public static List<Database.MergeResult> mergeRecords(SObject masterRecord, List<SObject> duplicateRecords) {
