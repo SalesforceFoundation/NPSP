@@ -90,20 +90,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         set;
     }
 
-    public Boolean hasFinishedProcessing() {
-        return this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.ABORTED.name()
-            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.FAILED.name()
-            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
-    }
-
-    public void failGiftsWith(String failReason) {
-        gifts.failWith(failReason);
-    }
-
-    public Boolean canEnqueue() {
-        return this.asyncApexJob == null || hasFinishedProcessing();
-    }
-
     @TestVisible
     private GiftBatch() {}
 
@@ -174,9 +160,15 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         }
     }
 
+    public void failGiftsWith(String failReason) {
+        gifts.failWith(failReason);
+    }
+
+    public Boolean canEnqueue() {
+        return this.asyncApexJob == null || hasFinishedProcessing();
+    }
+
     public void validate() {
-        System.debug('hasFinishedProcessing '+ hasFinishedProcessing());
-        System.debug('asyncJob '+ this.asyncApexJob);
         if (hasFinishedProcessing()) {
             failGiftsWith(System.Label.geBatchProcessingInComplete);
         }
@@ -186,14 +178,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.batch.Latest_Apex_Job_Id__c = latestApexJobId.value();
         unitOfWork.registerDirty(new List<SObject> { this.batch });
         Database.SaveResult[] giftBatchSaveResults = unitOfWork.save();
-    }
-
-    private Boolean hasBeenProcessed() {
-        return this.batch?.Latest_Apex_Job_Id__c != null;
-    }
-
-    private AsyncApexJobId lastProcessedJobId() {
-        return new AsyncApexJobId(this.batch.Latest_Apex_Job_Id__c);
     }
 
     public void updateRecords() {
@@ -273,5 +257,19 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             return unitOfWork;
         }
         set;
+    }
+
+    private Boolean hasFinishedProcessing() {
+        return this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.ABORTED.name()
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.FAILED.name()
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
+    }
+
+    private Boolean hasBeenProcessed() {
+        return this.batch?.Latest_Apex_Job_Id__c != null;
+    }
+
+    private AsyncApexJobId lastProcessedJobId() {
+        return new AsyncApexJobId(this.batch.Latest_Apex_Job_Id__c);
     }
 }
