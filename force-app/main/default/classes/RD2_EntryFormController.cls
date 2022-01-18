@@ -546,7 +546,7 @@ public with sharing class RD2_EntryFormController {
         }
     }
 
-    class RD2RecordView {
+    public class RD2RecordView {
         @AuraEnabled public Id recordId;
         @AuraEnabled public String recurringStatus;
         @AuraEnabled public Id contactId;

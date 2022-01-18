@@ -89,7 +89,9 @@ const setAccountDetails = (state, {accountName, lastName}) => {
 const setDonorType = (state, donorType) => {
     return {
         ...state,
-        donorType
+        donorType,
+        accountId: null,
+        contactId: null
     };
 };
 

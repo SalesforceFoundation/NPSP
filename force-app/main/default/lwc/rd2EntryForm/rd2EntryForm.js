@@ -361,7 +361,11 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleDonorTypeChange(event) {
-        this.accountHolderType = this.rd2Service.accountHolderTypeFor(event.detail);
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_DONOR_TYPE,
+                payload: event.detail
+            });
     }
 
     handleDateEstablishedChange(event) {
