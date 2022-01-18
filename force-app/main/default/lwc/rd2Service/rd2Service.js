@@ -34,6 +34,8 @@ const PERIOD = {
 
 const RECURRING_TYPE_OPEN = 'Open';
 const RECURRING_TYPE_FIXED = 'Fixed';
+const ACCOUNT_DONOR_TYPE = 'Account';
+const CONTACT_DONOR_TYPE = 'Contact';
 
 class Rd2Service {
 
@@ -234,5 +236,7 @@ export { Rd2Service,
     PERIOD,
     RECURRING_PERIOD_ADVANCED,
     RECURRING_TYPE_FIXED,
-    RECURRING_TYPE_OPEN
+    RECURRING_TYPE_OPEN,
+    ACCOUNT_DONOR_TYPE,
+    CONTACT_DONOR_TYPE
 };

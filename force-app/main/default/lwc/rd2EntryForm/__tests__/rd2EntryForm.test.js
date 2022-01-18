@@ -4,6 +4,7 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
@@ -31,6 +32,11 @@ const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json')
 const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
 const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
+const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
+
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
+    () => ({ default: jest.fn() }),
+    { virtual: true });
 
 const mockScrollIntoView = jest.fn();
 const mockRecordEditFormSubmit = jest.fn();
@@ -85,6 +91,7 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
 describe('c-rd2-entry-form', () => {
 
     beforeEach(() => {
+        getInitialView.mockResolvedValue(initialViewResponse);
         getRecurringSettings.mockResolvedValue(recurringSettingsResponse);
         hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
@@ -103,7 +110,7 @@ describe('c-rd2-entry-form', () => {
 
             await flushPromises();
 
-            expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
+            expect(mockScrollIntoView).toHaveBeenCalled();
 
             const saveButton = controller.saveButton();
             expect(saveButton.disabled).toBe(true);

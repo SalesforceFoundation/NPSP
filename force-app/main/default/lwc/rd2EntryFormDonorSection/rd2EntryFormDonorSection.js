@@ -1,5 +1,6 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
+import { ACCOUNT_DONOR_TYPE, CONTACT_DONOR_TYPE } from "c/rd2Service";
 
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
 import ACCOUNT_OBJECT from '@salesforce/schema/Account';
@@ -81,8 +82,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      */
     get donorTypeOptions() {
         return [
-            { label: this.accountLabel, value: 'Account' },
-            { label: this.contactLabel, value: 'Contact' },
+            { label: this.accountLabel, value: ACCOUNT_DONOR_TYPE },
+            { label: this.contactLabel, value: CONTACT_DONOR_TYPE },
         ];
     }
 
@@ -91,7 +92,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @returns {boolean}
      */
     get isContactDonor() {
-        return (this.rd2State.donorType === 'Contact');
+        return (this.rd2State.donorType === CONTACT_DONOR_TYPE);
     }
 
     /**
@@ -99,22 +100,16 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * @returns {boolean}
      */
     get isAccountDonor() {
-        return (this.rd2State.donorType === 'Account');
+        return (this.rd2State.donorType === ACCOUNT_DONOR_TYPE);
     }
 
     /**
      * @description Handles the page updates when the Donor Type picklist is updated
      */
     handleDonorTypeChange(event) {
-        this.changeDonorType(event.target.value);
+        this.dispatchDonorTypeChange(event.target.value);
         this.updateDonorFields(event.target.value);
     }
-
-    changeDonorType(donorType) {
-        this.donorType = donorType;
-        this.dispatchDonorTypeChange();
-    }
-
     /**
      * @description Dispatches an event to the encompassing parent component 
      * when the contact value changes either due to the Donor Type change or
@@ -128,8 +123,8 @@ export default class rd2EntryFormDonorSection extends LightningElement {
         this.dispatchChangeEvent('accountchange', event.target.value);
     }
 
-    dispatchDonorTypeChange() {
-        this.dispatchChangeEvent('donortypechange', this.donorType);
+    dispatchDonorTypeChange(donorType) {
+        this.dispatchChangeEvent('donortypechange', donorType);
     }
 
     handleDateEstablishedChange(event) {

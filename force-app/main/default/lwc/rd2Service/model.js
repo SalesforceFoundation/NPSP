@@ -19,6 +19,7 @@ const DEFAULT_INITIAL_STATE = {
     contactFirstName: null,
     contactLastName: null,
     accountId: null,
+    accountName: null,
     donorType: 'Contact',
     dateEstablished: null,
     mailingCountry: null,
@@ -41,6 +42,8 @@ const DEFAULT_INITIAL_STATE = {
     commitmentId: null,
     achLastFour: null,
     cardLastFour: null,
+    cardExpirationMonth: null,
+    cardExpirationYear: null,
 
     //Recurring Settings
     isAutoNamingEnabled: null,
@@ -65,10 +68,6 @@ const setContactId = (state, contactId) => {
         contactId
     };
 };
-
-const getDonorType = (state) => {
-    return state.donorType;
-}
 
 const setContactDetails = (state, {firstName, lastName, mailingCountry}) => {
     return {
