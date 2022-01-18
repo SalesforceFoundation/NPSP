@@ -208,6 +208,8 @@ private class GiftBatch_TEST {
 
         giftBatch.validate();
 
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
+
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
             System.assertNotEquals(null, gift.FailureInformation__c);
@@ -218,7 +220,7 @@ private class GiftBatch_TEST {
     static void shouldUpdateProcessingGiftsInFailedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
-        giftBatch.gifts = stubFor(new GiftsMock());
+        giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
@@ -226,6 +228,8 @@ private class GiftBatch_TEST {
             .build();
 
         giftBatch.validate();
+
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
@@ -237,7 +241,6 @@ private class GiftBatch_TEST {
     static void shouldUpdateProcessingGiftsInCompletedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
-        giftBatch.gifts = stubFor(new GiftsMock());
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
@@ -245,6 +248,8 @@ private class GiftBatch_TEST {
             .build();
 
         giftBatch.validate();
+
+        System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
         for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
@@ -256,7 +261,6 @@ private class GiftBatch_TEST {
     static void shouldNotUpdateProcessingGiftsInUnfinishedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
-        giftBatch.gifts = stubFor(new GiftsMock());
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
@@ -265,10 +269,7 @@ private class GiftBatch_TEST {
 
         giftBatch.validate();
 
-        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
-            System.assert(gift.Status__c == BDI_DataImport_API.bdiProcessing);
-            System.assertEquals(null, gift.FailureInformation__c);
-        }
+        System.assertEquals(0, giftBatch.gifts.giftsToUpdate.size());
     }
 
 
@@ -395,9 +396,6 @@ private class GiftBatch_TEST {
             List<String> listOfParamNames,
             List<Object> listOfArgs) {
 
-            switch on (stubbedMethodName) {
-                when 'updateRecords' { }
-            }
             return null;
         }
     }

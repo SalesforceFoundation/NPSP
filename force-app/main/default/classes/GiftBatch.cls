@@ -99,7 +99,6 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     public void failGiftsWith(String failReason) {
         gifts.failWith(failReason);
-        gifts.updateRecords();
     }
 
     public Boolean canEnqueue() {
@@ -177,6 +176,8 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void validate() {
+        System.debug('hasFinishedProcessing '+ hasFinishedProcessing());
+        System.debug('asyncJob '+ this.asyncApexJob);
         if (hasFinishedProcessing()) {
             failGiftsWith(System.Label.geBatchProcessingInComplete);
         }

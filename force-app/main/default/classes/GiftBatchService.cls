@@ -108,6 +108,7 @@ public with sharing class GiftBatchService {
                     + String.valueOf(Form_Template__c.Template_JSON__c)
             });
         giftBatch.validate();
+        giftBatch.updateRecords();
     }
 
 }
