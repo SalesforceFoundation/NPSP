@@ -199,7 +199,7 @@ private class GiftBatch_TEST {
     static void shouldUpdateProcessingGiftsInAbortedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
-        giftBatch.gifts = stubFor(new GiftsMock());
+        giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
@@ -240,6 +240,7 @@ private class GiftBatch_TEST {
     @IsTest
     static void shouldUpdateProcessingGiftsInCompletedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
@@ -260,6 +261,7 @@ private class GiftBatch_TEST {
     @IsTest
     static void shouldNotUpdateProcessingGiftsInUnfinishedBatchesToFailed() {
         GiftBatch giftBatch = new GiftBatch();
+        giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
         giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
