@@ -46,13 +46,13 @@
                                 <template if:false={isEdit}>
                                     <lightning-layout-item size="4" padding="around-medium">
                                         <div class="slds-form-element slds-form-element">
-                                            <span class="slds-form-element__label">{labels.daysForLapsed}</span>
-                                            <div class="slds-form-element__control">
+                                            <span class="slds-form-element__label" >{labels.daysForLapsed}</span>
+                                            <div class="slds-form-element__control" data-id="daysForLapsed">
                                                 {numberOfDaysForLapsed}
                                             </div>
                                         </div>
                                         <div class="slds-form-element slds-form-element">
-                                            <span class="slds-form-element__label">{labels.setLapsedStatus}</span>
+                                            <span class="slds-form-element__label" data-id="lapsedStatus">{labels.setLapsedStatus}</span>
                                             <div class="slds-form-element__control">
                                                 {lapsedStatus}
                                             </div>
@@ -68,7 +68,8 @@
                                             label={labels.daysForLapsed}
                                             value={inputDaysForLapsed}
                                             onchange={handleDaysForLapsedChanged}
-                                            message-when-range-overflow={labels.daysForLapsedTooLarge}>
+                                            message-when-range-overflow={labels.daysForLapsedTooLarge}
+                                            data-id="lapsedDaysInput">
                                         </lightning-input>
                                         <lightning-combobox name="lapsedStatus"
                                             label={labels.setLapsedStatus}
@@ -90,13 +91,13 @@
                                     <template if:false={isEdit}>
                                         <lightning-layout-item size="4" padding="around-medium">
                                             <div class="slds-form-element slds-form-element">
-                                                <span class="slds-form-element__label">{labels.daysForClosed}</span>
+                                                <span class="slds-form-element__label" data-id="daysForClosed">{labels.daysForClosed}</span>
                                                 <div class="slds-form-element__control">
                                                     {numberOfDaysForClosed}
                                                 </div>
                                             </div>
                                             <div class="slds-form-element slds-form-element">
-                                                <span class="slds-form-element__label">{labels.setClosedStatus}</span>
+                                                <span class="slds-form-element__label" data-id="closedStatus">{labels.setClosedStatus}</span>
                                                 <div class="slds-form-element__control">
                                                     {closedStatus}
                                                 </div>
@@ -135,13 +136,13 @@
             <lightning-layout-item size="12">
                 <div class="slds-align_absolute-center">
                     <template if:false={isEdit}>
-                        <lightning-button label={labels.editButtonLabel} title={labels.editButtonLabel} onclick={handleEdit} >
+                        <lightning-button label={labels.editButtonLabel} title={labels.editButtonLabel} onclick={handleEdit} data-id="editButton">
                         </lightning-button>
                     </template>
                     <template if:true={isEdit}>
-                        <lightning-button variant="brand" label={labels.saveButtonLabel} title={labels.saveButtonLabel} onclick={handleSave} class="slds-p-right_small">
+                        <lightning-button variant="brand" label={labels.saveButtonLabel} title={labels.saveButtonLabel} onclick={handleSave} class="slds-p-right_small" data-id="saveButton">
                         </lightning-button>
-                        <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel} onclick={handleCancel} >
+                        <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel} onclick={handleCancel} data-id="cancelButton">
                         </lightning-button>
                     </template>
                 </div>
