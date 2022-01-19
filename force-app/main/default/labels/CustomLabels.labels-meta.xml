@@ -6046,12 +6046,12 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>These required fields must be completed: {0}</value>
     </labels>
     <labels>
-        <fullName>commonNoneSpecific</fullName>
+        <fullName>commonNoneSpecified</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>None Specific</shortDescription>
-        <value>None Specific</value>
+        <shortDescription>None specified</shortDescription>
+        <value>None specified</value>
     </labels>
     <labels>
         <fullName>commonNewGift</fullName>

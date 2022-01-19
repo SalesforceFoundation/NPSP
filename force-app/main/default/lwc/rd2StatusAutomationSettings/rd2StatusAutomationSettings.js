@@ -16,7 +16,7 @@ import editButtonLabel from '@salesforce/label/c.stgBtnEdit';
 import cancelButtonLabel from '@salesforce/label/c.stgBtnCancel';
 import saveButtonLabel from '@salesforce/label/c.stgBtnSave';
 import commonError from '@salesforce/label/c.commonError';
-import commonNoneSpecific from '@salesforce/label/c.commonNoneSpecific';
+import commonNoneSpecified from '@salesforce/label/c.commonNoneSpecified';
 import rd2DisabledError from '@salesforce/label/c.RD2_ScheduleVisualizerErrorInvalidUsage';
 import daysForClosedTooSmall from '@salesforce/label/c.RD2_StatusAutomationInvalidNumberOfDaysForClosed';
 import daysForLapsedTooLarge from '@salesforce/label/c.RD2_StatusAutomationInvalidNumberOfDaysForLapsed';
@@ -43,7 +43,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
         saveButtonLabel,
         rd2DisabledError,
         commonError,
-        commonNoneSpecific,
+        commonNoneSpecified,
         daysForClosedTooSmall,
         daysForLapsedTooLarge
     };
@@ -90,12 +90,12 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     assignSettings(automationSettings) {
         this.numberOfDaysForClosed = (automationSettings.numberOfDaysForClosed) 
             ? automationSettings.numberOfDaysForClosed
-            : this.labels.commonNoneSpecific;
+            : this.labels.commonNoneSpecified;
         this.inputDaysForClosed = automationSettings.numberOfDaysForClosed;
 
         this.numberOfDaysForLapsed = (automationSettings.numberOfDaysForLapsed)
             ? automationSettings.numberOfDaysForLapsed
-            : this.labels.commonNoneSpecific;
+            : this.labels.commonNoneSpecified;
         this.inputDaysForLapsed = automationSettings.numberOfDaysForLapsed;
 
         this.assignInputDaysThreshold();
