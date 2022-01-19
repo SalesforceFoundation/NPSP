@@ -193,7 +193,7 @@ public without sharing class HouseholdNamingService {
             }
 
             if (originalDeceased != allMembersDeceased) {
-                household.put('All_Members_Deceased__c', allMembersDeceased);
+                household.put(UTIL_Namespace.StrTokenNSPrefix('All_Members_Deceased__c'), allMembersDeceased);
                 unitOfWork.registerDirty(new List<SObject>{household});
             }
         }
