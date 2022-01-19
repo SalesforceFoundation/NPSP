@@ -49,7 +49,7 @@ public with sharing class RD2_StatusAutomationService_TEST {
             new npe03__Recurring_Donations_Settings__c(
                     IsRecurringDonations2Enabled__c = true,
                     StatusAutomationDaysForLapsed__c = DAYS_FOR_LAPSED,
-                    StatusAutomationDaysForClosed__c =DAYS_FOR_CLOSED,
+                    StatusAutomationDaysForClosed__c = DAYS_FOR_CLOSED,
                     StatusAutomationLapsedStatus__c = RD2_Constants.STATUS_LAPSED,
                     StatusAutomationClosedStatus__c = RD2_Constants.STATUS_CLOSED
             )
