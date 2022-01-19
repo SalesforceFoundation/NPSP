@@ -178,10 +178,11 @@ public inherited sharing class Contacts extends fflib_SObjects {
         set;
     }
 
-    public List<Contact> contactsWithoutAccounts() {
+    public List<Contact> nonPrivateContactsWithNonNullAccountIds() {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
         for (Contact contactRecord : (List<Contact>) getRecords()) {
-            if (isMissingAccount(contactRecord)) {
+            if (contactRecord.AccountId == null
+                    && contactRecord.npe01__Private__c != true) {
                 contactsWithoutAccounts.add(contactRecord);
             }
         }

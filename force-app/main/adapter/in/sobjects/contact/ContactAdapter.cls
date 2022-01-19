@@ -102,7 +102,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
         if (CAO_Constants.isHHAccountModel()) {
             householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
-                    contacts.contactsWithoutAccounts());
+                    contacts.nonPrivateContactsWithNonNullAccountIds());
         } else {
             if (CAO_Constants.isOneToOne()) {
                 householdServiceInstance.createOneToOneAndHouseholdAccountsFor(
@@ -112,7 +112,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
             if (CAO_Constants.isBucketModel()) {
                 LegacyHouseholds.attachToBucketAccount(
-                        contacts.contactsWithoutAccounts());
+                        contacts.nonPrivateContactsWithNonNullAccountIds());
             }
         }
 
@@ -238,7 +238,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
 
         if (contactAndOrgSettingsInst.isBucketAccountEnabled()) {
             LegacyHouseholds.attachToBucketAccount(
-                    contacts.contactsWithoutAccounts()
+                    contacts.nonPrivateContactsWithNonNullAccountIds()
             );
         }
     }
@@ -896,7 +896,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
         List<Contact> contactsWithoutAccounts = new List<Contact>();
 
         if (contactAndOrgSettingsInst.isHouseholdAccountModelEnabled()) {
-            contactsWithoutAccounts.addAll(contacts.contactsWithoutAccounts());
+            contactsWithoutAccounts.addAll(contacts.nonPrivateContactsWithNonNullAccountIds());
         }
 
         if (contactAndOrgSettingsInst.isOneToOneAccountsEnabled()) {
