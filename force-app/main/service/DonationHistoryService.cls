@@ -33,9 +33,6 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-    
-    static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<Opportunity> credits;
     private Id contactId;
     private String filter;
 
@@ -46,7 +43,6 @@ public with sharing class DonationHistoryService {
 
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
-        this.credits = new List<Opportunity>();
     }
 
     @TestVisible
@@ -119,7 +115,7 @@ public with sharing class DonationHistoryService {
         if (!hasAccessToDonationHistory()) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        return convertAggregateResultListInStringList(selector.getYearsWithDonationForContact(contactId));
+        return convertAggregateResultListToStringList(selector.getYearsWithDonationForContact(contactId));
      }
 
     /**
@@ -130,8 +126,8 @@ public with sharing class DonationHistoryService {
     private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
         List<String> aggregateResultsAsStrings = new List<String>();
         for(AggregateResult result : results) {
-            toReturn.add(String.valueOf(result.get('expr0')));
+            aggregateResultsAsStrings.add(String.valueOf(result.get('expr0')));
         }
-        return toReturn;
+        return aggregateResultsAsStrings;
     }
 }
