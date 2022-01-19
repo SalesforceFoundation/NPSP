@@ -33,13 +33,13 @@
 * @group Recurring Donations
 * @description Test class for RD2_StatusAutomationSettings_CTRL
 */
-@isTest
-public with sharing class RD2_StatusAutomationSettings_TEST {
+@IsTest
+private class RD2_StatusAutomationSettings_TEST {
     private static final Integer DAYS_FOR_LAPSED = 15;
     private static final Integer DAYS_FOR_CLOSED = 20;
 
-    @isTest
-    public static void verifyStatusAutomationSettingsRetrieveCorrectData() {
+    @IsTest
+    private static void verifyStatusAutomationSettingsRetrieveCorrectData() {
         RD2_enablementService_TEST.setRecurringDonations2Enabled();
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
@@ -73,8 +73,8 @@ public with sharing class RD2_StatusAutomationSettings_TEST {
             'The Closed status picklist option should include Closed Status');
     }
 
-    @isTest
-    public static void verifyStatusAutomationIsCorrectlySave() {
+    @IsTest
+    private static void verifyStatusAutomationIsCorrectlySave() {
         RD2_enablementService_TEST.setRecurringDonations2Enabled();
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
@@ -104,5 +104,40 @@ public with sharing class RD2_StatusAutomationSettings_TEST {
         }
 
         System.assert(String.isBlank(errorMessage), 'The save operation should go through successfully without any exception');
+    }
+
+    @IsTest
+    private static void userWithoutAdminPermissionCannotRetrieveStatusAutomationSettings() {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+            String errorMessage;
+           try {
+                RD2_StatusAutomationView automationView = RD2_StatusAutomationSettings_CTRL.getAutomationSettings();
+            } catch (AuraHandledException ex) {
+                errorMessage = ex.getMessage();
+            }
+            
+            System.assertEquals(System.Label.commonPermissionErrorMessage, errorMessage,
+                'Insufficient Permission error should be thrown when non admin user tries to access the settings.');
+        }
+    }
+
+    @IsTest
+    private static void userWithoutAdminPermissionCannotUpdateStatusAutomationSettings() {
+        User standardUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.PROFILE_READ_ONLY);
+
+        System.runAs(standardUser) {
+            String errorMessage;
+           try {
+                RD2_StatusAutomationView automationView =
+                    RD2_StatusAutomationSettings_CTRL.saveStatusAutomationSettings(null, null, null, null);
+            } catch (AuraHandledException ex) {
+                errorMessage = ex.getMessage();
+            }
+            
+            System.assertEquals(System.Label.commonPermissionErrorMessage, errorMessage,
+                'Insufficient Permission error should be thrown when non admin user tries to update the settings.');
+        }
     }
 }

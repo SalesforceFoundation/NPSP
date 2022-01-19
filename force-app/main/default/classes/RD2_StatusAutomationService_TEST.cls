@@ -33,13 +33,13 @@
 * @group Recurring Donations
 * @description Test class for RD2_StatusAutomationService
 */
-@isTest
-public with sharing class RD2_StatusAutomationService_TEST {
+@IsTest
+private class RD2_StatusAutomationService_TEST {
     private static final Integer DAYS_FOR_LAPSED = 15;
     private static final Integer DAYS_FOR_CLOSED = 20;
 
-    @isTest
-    public static void verifyCorrectViewIsRetrieve() {
+    @IsTest
+    private static void verifyCorrectViewIsRetrieve() {
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
@@ -75,8 +75,8 @@ public with sharing class RD2_StatusAutomationService_TEST {
             'The Closed status picklist option should include Closed Status');
     }
 
-    @isTest
-    public static void verifyDaysForLapsedCannotBeLargerThanDaysForClosed() {
+    @IsTest
+    private static void verifyDaysForLapsedCannotBeLargerThanDaysForClosed() {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
@@ -87,8 +87,8 @@ public with sharing class RD2_StatusAutomationService_TEST {
         'Invalid Number of Days message should be returned.');
     }
 
-    @isTest
-    public static void verifyClosedStatusShouldMappedToClosedState() {
+    @IsTest
+    private static void verifyClosedStatusShouldMappedToClosedState() {
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
@@ -103,8 +103,8 @@ public with sharing class RD2_StatusAutomationService_TEST {
         'Invalid Closed Status error message should be returned.');
     }
 
-    @isTest
-    public static void verifyLapsedStatusShouldMappedToLapsedState() {
+    @IsTest
+    private static void verifyLapsedStatusShouldMappedToLapsedState() {
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
@@ -119,8 +119,8 @@ public with sharing class RD2_StatusAutomationService_TEST {
         'Invalid Lapsed Status error message should be returned.');
     }
 
-    @isTest
-    public static void verifyEmptyNumberOfDaysWillNotGetValidated() {
+    @IsTest
+    private static void verifyEmptyNumberOfDaysWillNotGetValidated() {
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
             new RD2_StatusMapper_TEST.Stub().withDefaultMapping()

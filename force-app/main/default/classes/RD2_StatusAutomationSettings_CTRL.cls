@@ -48,14 +48,21 @@ public with sharing class RD2_StatusAutomationSettings_CTRL {
             RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
             return service.getStatusAutomationView();
+
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            throwAuraHandledException(ex.getMessage());
         }
+
+        return null;
     }
 
     @AuraEnabled
     public static RD2_StatusAutomationView saveStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
         try {
+            if (!STG_Panel.runningUserIsAdmin()) {
+                throw new UTIL_Permissions.InsufficientPermissionException(System.Label.commonPermissionErrorMessage);
+            }
+
             RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
             String errorString = service.validateSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
@@ -66,9 +73,18 @@ public with sharing class RD2_StatusAutomationSettings_CTRL {
 
             service.saveSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
             return getAutomationSettings();
+
         } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
+            throwAuraHandledException(ex.getMessage());
         }
+
+        return null;
+    }
+
+    private static void throwAuraHandledException(String errMessage) {
+        AuraHandledException e = new AuraHandledException(errMessage);
+        e.setMessage(errMessage);
+        throw e;
     }
 
     public class StatusAutomationException extends Exception {}
