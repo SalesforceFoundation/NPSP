@@ -40,8 +40,8 @@ public with sharing class DonationHistoryController {
     * @description Donation History App view inner class.
     */
     public class DonationHistoryAppView {
-        @AuraEnabled List<DonationHistoryView> donations;
-        @AuraEnabled Integer totalNumberOfRecords;
+        @AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public Integer totalNumberOfRecords;
       }
 
     /** 
@@ -72,11 +72,11 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryAppView> getDonationHistory(Id contactId, Integer offset) {
+    public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset) {
         DonationHistoryService service = new DonationHistoryService(contactId, offset);
         try {
-            List<DonationHistoryAppView> donationHistories = new List<DonationHistoryAppView>();
-            donationHistories.donations.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
+            DonationHistoryAppView donationHistories = new DonationHistoryAppView();
+            donationHistories.donations = buildHistoryFromOCRs(service.getDonationHistory());
             donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
             return donationHistories;
         } catch(AuraHandledException ex) {

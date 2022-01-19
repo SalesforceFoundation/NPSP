@@ -15,6 +15,10 @@ export default class DonationHistoryTable extends LightningElement {
 
     totalNumberOfRecords;
 
+    isLoading = false;
+
+    enableInfiniteLoading = true;
+
     tableElement;
 
     allData = [];
@@ -62,13 +66,14 @@ export default class DonationHistoryTable extends LightningElement {
      * handle the scroll event to get more content and concat to the existing table data
      */
     loadMoreDonationData(event){
-        event.target.isLoading = true;
-        this.tableElement = event.target;
+        this.isLoading = true;
+        /* event.target.isLoading = true;
+        this.tableElement = event.target; */
         getDonationHistory({contactId: this.contactId, offset: this.data.length})
         .then(data => {
                 if (this.data.length >= this.totalNumberOfRecords) {
-                    this.tableElement.isLoading = false;
-                    this.tableElement.enableInfiniteLoading = false;
+                    this.isLoading = false;
+                    this.enableInfiniteLoading = false;
                     return;
                 }
                 const currentData = this.data;

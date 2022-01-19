@@ -61,8 +61,8 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return total number of record
     */
-    public List<AggregateResult> getTotalNumberOfRecords( Id contactId ) {
-        List<AggregateResult> totalRecords = [SELECT COUNT(Id) total
+    public Integer getTotalNumberOfRecords( Id contactId ) {
+        Integer totalRecords = [SELECT COUNT()
                                 FROM Opportunity
                                 WHERE IsWon = true
                                 AND Primary_Contact__r.Id =:contactId

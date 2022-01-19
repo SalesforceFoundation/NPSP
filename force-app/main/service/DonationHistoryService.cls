@@ -98,6 +98,6 @@ public with sharing class DonationHistoryService {
     * @param contactId contact id which is going to be requested.
     */
     public Integer getTotalNumberOfRecords() {
-        return selector.getTotalNumberOfRecords(this.contactId)[0].get('total');
+        return selector.getTotalNumberOfRecords(this.contactId);
     }
 }
