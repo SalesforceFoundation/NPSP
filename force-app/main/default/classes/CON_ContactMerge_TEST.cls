@@ -57,6 +57,25 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
+    private static void shouldDisplayErrorWhenTooFewContactsSelected() {
+        // given
+        List<Contact> testContacts = getTestContacts(1);
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+
+        // when
+        controller.loadMergeCandidates(getSetOfIds(testContacts));
+
+        // then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'Selecting only one contact should display one ' +
+                'page-level error message.');
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, pageMessage.getSeverity(), 'The error thrown should be an error' +
+                ' severity.');
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Few_Contacts, pageMessage.getDetail(), 'The correct ' +
+                'error message should be displayed.');
+    }
+
+    @IsTest
     private static void searchReturnsResultsWhenMatchFound() {
         CON_ContactMerge_CTRL controller = getControllerForSearch();
         controller.showContactSearch = true;
@@ -114,88 +133,31 @@ public class CON_ContactMerge_TEST {
         }
     }
 
-    //todo: not finished
-    @IsTest
-    private static void shouldDisplayErrorWhenTooFewContactsSelected() {
-        List<Contact> testContacts = getTestContacts(1);
-        CON_ContactMerge_CTRL controller = getControllerForSearch();
-
-        // when
-        controller.loadMergeCandidates((new Map<Id,Contact>(testContacts)).keySet());
-
-        // then
-        System.assertEquals(1, ApexPages.getMessages().size(), 'Selecting only one contact should display one ' +
-                'page-level error message.');
-        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, pageMessage.getSeverity(), 'The error thrown should be an error' +
-                ' severity.');
-        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Few_Contacts, pageMessage.getDetail(), 'The correct ' +
-                'error message should be displayed.');
-    }
-
-    private static void selectSearchResult(CON_ContactMerge_CTRL.ContactWrapper searchResult) {
-        searchResult.selected = true;
-    }
-
     private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
         for (CON_ContactMerge_CTRL.ContactWrapper contactWrapper : searchResults) {
             contactWrapper.selected = true;
         }
     }
 
-    static testMethod void failNextStepWithDeletedRecordSelectedOne2One() {
-        failNextStepWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void failNextStepWithDeletedRecordSelectedHHAccount(){
-        failNextStepWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
+    @IsTest
+    static void loadMergeCandidatesFailsWhenContactIsDeleted() {
+        //given
+        // Contact ids are mock ids which will simulate missing contacts on the database
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(2);
 
-    //todo: next step fails when deleted contact selected as the winner
-    static void failNextStepWithDeletedRecordSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 2 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = getControllerForSearch();
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-
+        // when
         Test.startTest();
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        //there should be 2 Contacts returned
-        system.assertEquals(2,controller.searchResults.size());
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        // delete 1 contact
-        delete con;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
-        System.assertEquals(2, controller.step); // We are on step 2 "select contacts"
-
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
         Test.stopTest();
+
+        //then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'An error should be thrown when all merge candidates ' +
+                'were not successfully queried.');
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Query_Failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
+
     }
 
     static testMethod void failMergeWithDeletedRecordSelectedOne2One() {
@@ -204,10 +166,13 @@ public class CON_ContactMerge_TEST {
     static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
         failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
-        // Try selecting a deleted record for merge
-    static void failMergeWithDeletedRecordSelected(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+    /***********************************************************************************************
+    * @description Integration test to test the scenario when a deleted contact record is merged
+    */
+    static void failMergeWithDeletedRecordSelected(String strProcessor) {
+
+        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         //set up 2 contacts for the merge interface to work with
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -1200,6 +1165,11 @@ public class CON_ContactMerge_TEST {
         );
     }
 
+    /*** Helper methods ***/
+    private static Set<Id> getSetOfIds(List<SObject> records) {
+        return (new Map<Id,SObject>(records)).keySet();
+    }
+
     private static List<Id> getFixedSearchResultsForSOSL(Integer numberOfResults) {
         return UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, numberOfResults);
     }
@@ -1226,11 +1196,11 @@ public class CON_ContactMerge_TEST {
         return testContacts;
     }
 
-    private static List<Contact> getTestContacts(Integer limit) {
+    private static List<Contact> getTestContacts(Integer numberOfContacts) {
         return [
             SELECT FirstName, LastName, npe01__Preferred_Email__c
             FROM Contact
-            LIMIT :limit
+            LIMIT :numberOfContacts
         ];
     }
 
