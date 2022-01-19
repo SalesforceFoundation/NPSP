@@ -52,9 +52,9 @@ describe('c-rd2-status-automation-settings', () => {
         expect(cancelButton(component)).toBeTruthy();
         expect(cancelButton(component).title).toBe('c.stgBtnCancel');
         expect(allReadOnlyValue(component)).toHaveLength(1);
-        expect(daysInput(component)).toHaveLength(2);
-        expect(daysInput(component)[0].label).toBe('c.RD2_StatusAutomationDaysForLapsed');
-        expect(daysInput(component)[1].label).toBe('c.RD2_StatusAutomationDaysForClosed');
+        expect(lapsedDaysInput(component)).toBeTruthy();
+        expect(lapsedDaysInput(component).label).toBe('c.RD2_StatusAutomationDaysForLapsed');
+        expect(closedDaysInput(component).label).toBe('c.RD2_StatusAutomationDaysForClosed');
     });
 
     it('When editing and cancel button is clicked, edit button should reappear', async () => {
@@ -75,7 +75,8 @@ describe('c-rd2-status-automation-settings', () => {
         expect(header.textContent).toBe('c.RD2_StatusAutomationConfigurationSection');
         expect(editButton(component).title).toBe('c.stgBtnEdit');
         expect(allReadOnlyValue(component)).toHaveLength(5);
-        expect(daysInput(component)).toHaveLength(0);
+        expect(lapsedDaysInput(component)).toBeFalsy;
+        expect(closedDaysInput(component)).toBeFalsy;
     });
 
     it('After saving, edit button should reappear', async () => {
@@ -96,7 +97,8 @@ describe('c-rd2-status-automation-settings', () => {
         expect(header.textContent).toBe('c.RD2_StatusAutomationConfigurationSection');
         expect(editButton(component).title).toBe('c.stgBtnEdit');
         expect(allReadOnlyValue(component)).toHaveLength(5);
-        expect(daysInput(component)).toHaveLength(0);
+        expect(lapsedDaysInput(component)).toBeFalsy;
+        expect(closedDaysInput(component)).toBeFalsy;
     });
 
 
@@ -130,6 +132,10 @@ const allReadOnlyValue = (component) => {
     return component.shadowRoot.querySelectorAll('span');
 }
 
-const daysInput = (component) => {
-    return component.shadowRoot.querySelectorAll('.daysInput');
+const lapsedDaysInput = (component) => {
+    return component.shadowRoot.querySelector("lightning-input[data-id=lapsedDaysInput]");
+}
+
+const closedDaysInput = (component) => {
+    return component.shadowRoot.querySelector("lightning-input[data-id=closedDaysInput]")
 }
