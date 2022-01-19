@@ -140,7 +140,7 @@ public class DonationHistoryController_TEST {
     }
 
     @IsTest
-    private static void shouldReturnYearsForFilter () {
+    private static void shouldReturnYearsForFilter() {
         Contact thecontact = findContactByLastname('TestFirstName11');
        
         List<String> donationsYears = DonationHistoryController.getYearsWithDonations(thecontact.id);
