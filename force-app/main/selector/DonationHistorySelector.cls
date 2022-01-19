@@ -69,8 +69,8 @@ public inherited sharing class DonationHistorySelector {
                     Amount, 
                     Primary_Contact__r.Email, 
                     Primary_Contact__r.Name
-            FROM    Opportunity
-            WHERE   IsWon = true 
+            FROM Opportunity
+            WHERE IsWon = true 
                 AND Primary_Contact__r.Id =:contactId 
                 AND Calendar_Year(CloseDate) = :year
             WITH SECURITY_ENFORCED

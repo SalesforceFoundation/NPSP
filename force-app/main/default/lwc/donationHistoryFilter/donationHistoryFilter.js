@@ -6,6 +6,10 @@ import getYearsWithDonation from '@salesforce/apex/DonationHistoryController.get
 const LIFETIME_VALUE = 'lifetime';
 export default class DonationHistoryFilter extends LightningElement {
     
+    @track options = [];
+
+    @api contactId;
+
     labels = {
         lifetime : donationHistoryLabelLifetime,
         donationHistoryFilterSelectAYear : donationHistoryFilterSelectAYear
@@ -13,9 +17,6 @@ export default class DonationHistoryFilter extends LightningElement {
 
     value = LIFETIME_VALUE;
     
-    @track options = [];
-
-    @api contactId
     connectedCallback() {
         getYearsWithDonation({contactId : this.contactId})
         .then(
