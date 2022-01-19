@@ -30,14 +30,16 @@
                         variant="brand-outline"
                         onclick={onClickSecondaryBtn}
                         title={item.secondaryBtn.label}
-                        label={item.secondaryBtn.label}>
+                        label={item.secondaryBtn.label}
+                        aria-label={secondaryBtnLabel}>
                     </lightning-button>
                     <lightning-button if:true={hasPrimaryBtn}
                         variant="brand"
                         class="slds-m-left_x-small"
                         onclick={onClickPrimaryBtn}
                         title={item.primaryBtn.label}
-                        label={item.primaryBtn.label}>
+                        label={item.primaryBtn.label}
+                        aria-label={primaryBtnLabel}>
                     </lightning-button>
                 </div>
             </div>
