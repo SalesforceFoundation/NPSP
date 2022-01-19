@@ -166,7 +166,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     }
 
     assignInputDaysThreshold() {
-        this.maximumDaysForLapsed = (this.inputDaysForClosed == null)
+        this.maximumDaysForLapsed = (this.inputDaysForClosed === null)
             ? null
             : parseInt(this.inputDaysForClosed) - 1;
         

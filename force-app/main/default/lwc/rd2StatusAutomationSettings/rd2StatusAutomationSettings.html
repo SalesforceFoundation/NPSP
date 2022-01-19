@@ -1,14 +1,18 @@
 <template>
     <template if:true={hasError}>
-        <c-util-page-level-message title={labels.commonError}
-                                variant="error"
-                                icon-name="utility:error" icon-size="x-small" icon-variant="inverse" data-id="error"
-                                data-qa-locator="error">
-
-                                <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
-                                    <lightning-formatted-text value={errorMessage}></lightning-formatted-text>
-                                </p>
-                            </c-util-page-level-message>
+        <c-util-page-level-message 
+            title={labels.commonError}
+            variant="error"
+            icon-name="utility:error"
+            icon-size="x-small"
+            icon-variant="inverse"
+            data-id="error"
+            data-qa-locator="error"
+        >
+        <p slot="body" class="slds-p-horizontal_medium slds-p-vertical_xx-small slds-text-color_error">
+            <lightning-formatted-text value={errorMessage}></lightning-formatted-text>
+        </p>
+    </c-util-page-level-message>
     </template>
     <lightning-layout multiple-rows="true" vertical-align="start">
         <lightning-layout-item class="slds-p-left_large slds-p-top_medium" size="12">
@@ -61,7 +65,8 @@
                                 </template>
                                 <template if:true={isEdit}>
                                     <lightning-layout-item size="4" padding="around-medium">
-                                        <lightning-input type="number"
+                                        <lightning-input 
+                                            type="number"
                                             name="daysForLapsed"
                                             min="0"
                                             max={maximumDaysForLapsed}
@@ -69,13 +74,16 @@
                                             value={inputDaysForLapsed}
                                             onchange={handleDaysForLapsedChanged}
                                             message-when-range-overflow={labels.daysForLapsedTooLarge}
-                                            data-id="lapsedDaysInput">
+                                            data-id="lapsedDaysInput"
+                                        >
                                         </lightning-input>
-                                        <lightning-combobox name="lapsedStatus"
+                                        <lightning-combobox
+                                            name="lapsedStatus"
                                             label={labels.setLapsedStatus}
                                             options={lapsedStatusOption}
                                             value={inputLapsedStatus}
-                                            onchange={handleLapsedStatusChanged}>
+                                            onchange={handleLapsedStatusChanged}
+                                        >
                                         </lightning-combobox>
                                     </lightning-layout-item>
                                 </template>
@@ -107,20 +115,24 @@
                                 </template>
                                 <template if:true={isEdit}>
                                     <lightning-layout-item size="4" padding="around-medium">
-                                        <lightning-input type="number"
+                                        <lightning-input
+                                            type="number"
                                             name="daysForClosed"
                                             min={minimumDaysForClosed}
                                             label={labels.daysForClosed}
                                             value={inputDaysForClosed}
                                             onchange={handleDaysForClosedChanged}
                                             message-when-range-underflow={labels.daysForClosedTooSmall}
-                                            data-id="closedDaysInput">
+                                            data-id="closedDaysInput"
+                                        >
                                         </lightning-input>
-                                        <lightning-combobox name="closedStatus"
+                                        <lightning-combobox
+                                            name="closedStatus"
                                             label={labels.setClosedStatus}
                                             options={closedStatusOption}
                                             value={inputClosedStatus}
-                                            onchange={handleClosedStatusChanged}>
+                                            onchange={handleClosedStatusChanged}
+                                        >
                                         </lightning-combobox>
                                     </lightning-layout-item>
                                 </template>
@@ -137,13 +149,30 @@
             <lightning-layout-item size="12">
                 <div class="slds-align_absolute-center">
                     <template if:false={isEdit}>
-                        <lightning-button label={labels.editButtonLabel} title={labels.editButtonLabel} onclick={handleEdit} data-id="editButton">
+                        <lightning-button
+                            label={labels.editButtonLabel}
+                            title={labels.editButtonLabel}
+                            onclick={handleEdit}
+                            data-id="editButton"
+                        >
                         </lightning-button>
                     </template>
                     <template if:true={isEdit}>
-                        <lightning-button variant="brand" label={labels.saveButtonLabel} title={labels.saveButtonLabel} onclick={handleSave} class="slds-p-right_small" data-id="saveButton">
+                        <lightning-button
+                            variant="brand"
+                            label={labels.saveButtonLabel}
+                            title={labels.saveButtonLabel}
+                            onclick={handleSave}
+                            class="slds-p-right_small"
+                            data-id="saveButton"
+                        >
                         </lightning-button>
-                        <lightning-button label={labels.cancelButtonLabel} title={labels.cancelButtonLabel} onclick={handleCancel} data-id="cancelButton">
+                        <lightning-button
+                            label={labels.cancelButtonLabel}
+                            title={labels.cancelButtonLabel}
+                            onclick={handleCancel}
+                            data-id="cancelButton"
+                        >
                         </lightning-button>
                     </template>
                 </div>
