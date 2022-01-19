@@ -38,13 +38,8 @@
 public class CON_ContactMerge_TEST {
     @TestSetup
     private static void createTestData() {
-        createTestContacts(3);
-
-        Contact differingContact = UTIL_UnitTestData_TEST.getContact();
-        differingContact.LastName = 'Differing';
-        differingContact.HomePhone = '7771232345';
-        differingContact.MailingStreet = '123 Test St';
-        insert differingContact;
+        createGenericTestContacts(3);
+        createUniqueContact();
 
         UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
     }
@@ -252,156 +247,72 @@ public class CON_ContactMerge_TEST {
             }
         Test.stopTest();
     }
-
-    static testMethod void merge2OneToOneOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2OneToOneHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
-    static void merge2OneToOne(string strProcessor) {
-
-        Test.startTest();  
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests =
-            UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(npe01__Account_Processor__c = strProcessor));
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[] {con, con2};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = 
-            new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-            
-        Test.stopTest();          
-            
-        con = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con.id];
-        con2 = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con2.id];
-      
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con2.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //first contact should be deleted
-        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con.id]);
-        //first contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
-        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-        //Second contact's account id should not have changed
-        system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
-    }
-
-    static testMethod void merge2OneToOneOppsOne2One(){
+    @IsTest
+    private static void mergingTwoContactsDeletesCorrectDuplicateAndAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2OneToOneOppsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getTestContacts(2);
+        setupMockDataForMerge(controller, testContacts);
 
-        merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //merge two contacts that are both in the one-to-one account model
-    //the second contact's org shouldn't be deleted because it has open opportunities
-    static void merge2OneToOneOpps(string strProcessor) {
-
-        TDTM_DefaultConfig.startTestDataInit();
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-        insert o;
-
-        //select the second as winner
-        controller.nextStep();
-
-        selectMasterRecord(controller, con2.id);
-
-        //merge them
-        TDTM_DefaultConfig.stopTestDataInit();
+        //when
         Test.startTest();
-        controller.mergeContacts();
+            controller.mergeContacts();
         Test.stopTest();
 
-        //first contact should be deleted
-        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con.id]);
-        //first contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
-        } else {
-            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
-            system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
-        }
+        List<Contact> winningContact = getWinningContact(testContacts);
+        List<Contact> losingContact = getLosingContact(testContacts);
 
-        //Second contact's account id should not have changed
-        system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
+        //then
+        System.assert(!winningContact.isEmpty(), 'The winning contact should not be deleted.');
+        System.assert(losingContact.isEmpty(), 'The losing contact should be deleted.');
+        System.assertEquals(testContacts[0].AccountId, testContacts[0].AccountId, 'The winning contacts account ' +
+                'should not have changed.');
+
+        List<Account> winningTestAccount = getTestAccountFor(testContacts[0].AccountId);
+        List<Account> losingTestAccount = getTestAccountFor(testContacts[1].AccountId);
+
+        System.assert(!winningTestAccount.isEmpty(), 'The winning contacts account should not be deleted.');
+        System.assert(losingTestAccount.isEmpty(), 'The losing contacts account should be deleted.');
+
+    }
+
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org shouldn't be deleted because it has open opportunities
+    @IsTest
+    private static void mergingTwoContactsDoesNotDeleteDuplicateAccountWithOpportunities() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = new List<Contact>();
+        Contact uniqueContact = getUniqueContact();
+        testContacts.add(uniqueContact);
+        testContacts.addAll(getTestContacts(1));
+        setupMockDataForMerge(controller, testContacts);
+
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> winningContact = getWinningContact(testContacts);
+        List<Contact> losingContact = getLosingContact(testContacts);
+
+        System.assert(!winningContact.isEmpty(), 'The winning contact should not be deleted.');
+        System.assert(losingContact.isEmpty(), 'The losing contact should be deleted.');
+        System.assertEquals(0,[SELECT COUNT() FROM Account WHERE Id = :losingContact[0].AccountId], 'The duplicate ' +
+            'contacts account should be deleted.');
+        System.assertEquals(1,[SELECT COUNT() FROM Opportunity WHERE AccountId =:winningContact[0].AccountId], 'The ' +
+                'winning contacts opportunities should not be deleted when it has open opportunities associated to ' +
+                'its account.');
+        System.assertEquals(0,[SELECT COUNT() FROM Opportunity WHERE AccountId = :losingContact[0].AccountId]);
+        System.assertEquals(testContacts[0].AccountId, winningContact[0].AccountId, 'The winning contacts account ' +
+                'should not have changed.');
     }
 
     static testMethod void merge2OrganizationsOne2One(){
@@ -1003,6 +914,20 @@ public class CON_ContactMerge_TEST {
     }
 
     /*** Helper methods ***/
+    private static List<Contact> getLosingContact(List<Contact> testContacts) {
+        List<Contact> losingContact = [SELECT AccountId FROM Contact WHERE Id = :testContacts[1].Id];
+        return losingContact;
+    }
+
+    private static List<Contact> getWinningContact(List<Contact> testContacts) {
+        List<Contact> winningContact = [SELECT AccountId FROM Contact WHERE Id = :testContacts[0].Id];
+        return winningContact;
+    }
+
+    private static List<Account> getTestAccountFor(Id accountId) {
+        return [SELECT Id FROM Account WHERE Id = :accountId];
+    }
+
     private static Set<Id> getSetOfIds(List<SObject> records) {
         return (new Map<Id,SObject>(records)).keySet();
     }
@@ -1028,7 +953,7 @@ public class CON_ContactMerge_TEST {
         return mockContacts;
     }
 
-    private static List<Contact> createTestContacts(Integer numberOfContacts) {
+    private static List<Contact> createGenericTestContacts(Integer numberOfContacts) {
         List<Contact> testContacts = new List<Contact>();
         for (Integer i = 0; i < numberOfContacts; i++) {
             Contact testContact = UTIL_UnitTestData_TEST.getContact();
@@ -1039,11 +964,34 @@ public class CON_ContactMerge_TEST {
         return testContacts;
     }
 
+    private static void createUniqueContact() {
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
+        UTIL_UnitTestData_TEST.oppsForAccountList(testAccounts, null,
+            UTIL_UnitTestData_TEST.getOpenStage(), null, Double.valueOf(10.00),
+            null, null);
+
+        Contact differingContact = UTIL_UnitTestData_TEST.getContact();
+        differingContact.LastName = 'Differing';
+        differingContact.HomePhone = '7771232345';
+        differingContact.MailingStreet = '123 Test St';
+        differingContact.AccountId = testAccounts[0].Id;
+        insert differingContact;
+    }
+
     private static List<Contact> getTestContacts(Integer numberOfContacts) {
         return [
-            SELECT FirstName, LastName, npe01__Preferred_Email__c
+            SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
             FROM Contact
             LIMIT :numberOfContacts
+        ];
+    }
+
+    private static Contact getUniqueContact() {
+        return [            SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+        FROM Contact
+        WHERE LastName = 'Differing'
+        LIMIT 1
+
         ];
     }
 
