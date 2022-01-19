@@ -121,6 +121,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
     };
 
     rd2Service = new Rd2Service();
+    rd2State = this.rd2Service.init();
 
     isLoading = true;
     isElevateCustomer = false;
@@ -163,6 +164,7 @@ export default class rd2ElevateInformation extends NavigationMixin(LightningElem
         if (this.recordId) {
             this.populateAppConfigurationData();
             this.populateRecurringData();
+            this.rd2State = this.rd2Service.loadInitialView(this.rd2State, this.recordId);
         }
     }
 
