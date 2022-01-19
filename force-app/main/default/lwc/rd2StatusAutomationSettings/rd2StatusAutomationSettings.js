@@ -65,7 +65,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     inputDaysForClosed;
 
     maximumDaysForLapsed;
-    minimunDaysForClosed;
+    minimumDaysForClosed;
 
     inputClosedStatus;
     inputLapsedStatus;
@@ -100,7 +100,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
             ? automationSettings.numberOfDaysForLapsed
             : this.labels.commonNoneSpecific
         this.inputDaysForLapsed = automationSettings.numberOfDaysForLapsed;
-        this.minimunDaysForClosed = (this.numberOfDaysForLapsed == null)
+        this.minimumDaysForClosed = (this.numberOfDaysForLapsed == null)
             ? null
             : parseInt(this.numberOfDaysForLapsed) + 1;
 
@@ -149,7 +149,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
         this.inputDaysForLapsed = (event.detail.value == '')
             ? null
             : event.detail.value;
-        this.minimunDaysForClosed = (this.inputDaysForLapsed == null)
+        this.minimumDaysForClosed = (this.inputDaysForLapsed == null)
             ? null
             : parseInt(this.inputDaysForLapsed) + 1;
 
