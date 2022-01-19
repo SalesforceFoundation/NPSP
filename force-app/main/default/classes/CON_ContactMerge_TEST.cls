@@ -167,6 +167,31 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
+    private static void loadMergePageFailsWhenTooManyContactsAreSelected() {
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(4);
+        setupMockDataForMerge(controller, mockContacts);
+
+        Test.startTest();
+        controller.loadMergeCandidates(getSetOfIds(mockContacts));
+        Test.stopTest();
+
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        System.assertNotEquals(0, pageMessages.size(), 'Error should be thrown if more than 3 contacts are selected ' +
+                'for merge.');
+
+        Boolean messageFound = false;
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.ERROR
+                    && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
+                messageFound = true;
+            }
+        }
+        System.assert(messageFound);
+    }
+
+    @IsTest
     private static void loadingMergePageFailsWhenContactIsMissing() {
         //given
         // Contact ids are mock ids which will simulate missing contacts on the database
@@ -730,39 +755,6 @@ public class CON_ContactMerge_TEST {
         System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
     }
 
-
-    //When one contact is selected on the page
-    static testMethod void testOneContactSelectedToMerge() {
-        
-        getDuplicateSetOfRecords(15);        
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        Test.startTest();
-        controller.showDuplicateRecordSets();
-        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
-        // now select  2 contacts from the contactwrapper to proceed for merge
-        controller.searchResults[0].selected = true;
-        Id contactId = controller.searchResults[0].contactRecord.Id; 
-        controller.nextStep();
-        
-        apexPages.Message[] pageMessages = ApexPages.getMessages();
-        System.assertNotEquals(0, pageMessages.size());
-        Boolean messageFound = false;
-        for (ApexPages.Message message : pageMessages) {
-            if ( message.getSeverity() == ApexPages.Severity.Error
-              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Few_Contacts) {
-                messageFound = true;
-            }
-        }
-        System.assert(messageFound);
-        //Exception is thrown hence the selectedRecordsCount is not populated.
-        System.assertEquals(controller.selectedRecordsCount, 0 );
-
-        Test.stopTest();
-    }
-
     /*******************************************************************************************************
      * @description Integration test to test full load merge candidates flow.
      */
@@ -794,70 +786,6 @@ public class CON_ContactMerge_TEST {
                 System.assertEquals(differingContact.Id, row.selectedValue);
             }
         }
-    }
-
-    //todo: this is also UI
-    //Test if more than 3 contacts are selected for merge
-    static testMethod void testFourContactSelectedToMerge() {
-        
-        DuplicateRule dR = [
-                            SELECT 
-                                Id
-                            FROM 
-                                DuplicateRule
-                            Where
-                                SobjectType = 'Contact'
-                            LIMIT 1
-                            ];
-        Test.startTest();
-        
-        //Create Original Contacts
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        Contact con4 = UTIL_UnitTestData_TEST.getContact();
-        
-        insert new Contact[]{con, con2, con3, con4};
-        
-        //Create Duplicate Record Set
-        List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , 1);
-        insert dupRSList;
-        
-        //Create Duplicate Record Items
-        List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con2.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con3.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con4.Id));
-        insert duplicateRecordItems;
-
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        controller.showDuplicateRecordSets();
-        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
-        // now select 4 contacts from the contactwrapper to proceed for merge
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        controller.searchResults[2].selected = true;
-        controller.searchResults[3].selected = true;
-        Id contactId = controller.searchResults[0].contactRecord.Id; 
-
-        controller.nextStep();
-        apexPages.Message[] pageMessages = ApexPages.getMessages();
-        System.assertNotEquals(0, pageMessages.size());
-        Boolean messageFound = false;
-        for (ApexPages.Message message : pageMessages) {
-            if ( message.getSeverity() == ApexPages.Severity.Error
-              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
-                messageFound = true;
-            }
-        }
-        System.assert(messageFound);
-        //Exception is thrown hence the selectedRecordsCount is not populated.
-        System.assertEquals(controller.selectedRecordsCount, 0 );
-
-        Test.stopTest();
     }
 
     public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
