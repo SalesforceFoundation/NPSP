@@ -3093,78 +3093,49 @@ public with sharing class BDI_Donations_TEST {
     }
 
     /**
-     * @description If DI.Donation_Stage__c field has a value, use it for donation status, regardless of the status
-     *              in Contact Setting Payments_Auto_Close_Stage_Name__c
-     */
+    * @description If DI.Donation_Stage__c field has a value, use it for donation status, otherwise use the status
+    *              in Contact Setting Payments_Auto_Close_Stage_Name__c
+    */
     @IsTest
-    static void donationShouldUseDIDonationStage() {
+    static void donationStageNameTests() {
         String diClosedStatus = 'DIClosed';
+        String contactSettingClosedStatus = 'CSClosed';
+        // set Contact Setting Closed Status
         npe01__Contacts_And_Orgs_Settings__c contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        contactSettings.Payments_Auto_Close_Stage_Name__c = 'csClosed';
+        contactSettings.Payments_Auto_Close_Stage_Name__c = contactSettingClosedStatus;
 
-        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
-        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
+        // create DI setting to be used for processing
+        Data_Import_Settings__c dis = UTIL_CustomSettingsFacade.getDataImportSettings();
+        dis.Field_Mapping_Method__c = BDI_DataImportService.FM_DATA_IMPORT_FIELD_MAPPING;
+        dis.Default_Data_Import_Field_Mapping_Set__c =
+                BDI_MappingServiceAdvanced.DEFAULT_DATA_IMPORT_FIELD_MAPPING_SET_NAME;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dis);
 
-        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-        insert contacts;
+        // create a DI to test for Opportunity Stage should be value from Contact Setting
+        DataImport__c testDI1 = new DataImport__c(Contact1_Firstname__c = 'Jane',
+                Contact1_Lastname__c = 'Smith',
+                Contact1_Personal_Email__c = 'js@fakeDI.com',
+                Donation_Amount__c = 100,
+                Donation_Stage__c = null);
 
-        DataImport__c dataImport = new DataImport__c(Contact1_Firstname__c=contacts[0].FirstName,
-                Contact1_Lastname__c=contacts[0].LastName,
-                Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c);
-        dataImport.Donation_Amount__c = 10;
-        dataImport.Donation_Date__c = Date.today().addMonths(3);
-        dataImport.Donation_Stage__c = diClosedStatus; // this should be the status used
-        insert dataImport;
+        // create a DI to test for Opportunity Stage should be value from DI
+        DataImport__c testDI2 = new DataImport__c(Contact1_Firstname__c = 'John',
+                Contact1_Lastname__c = 'Doe',
+                Contact1_Personal_Email__c = 'jd@fakeDI.com',
+                Donation_Amount__c = 100,
+                Donation_Stage__c = diClosedStatus);
+
+        DataImport__c[] testDIs = new DataImport__c[]{testDI1,testDI2};
+        insert testDIs;
 
         Test.startTest();
-        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
-        Database.executeBatch(batch, 10);
+        BDI_DataImport_API.processDataImportRecords(dis, testDIs,false);
         Test.stopTest();
 
         List<Opportunity> opps = [SELECT Name, Amount, StageName, IsWon FROM Opportunity];
-        System.debug(opps[0]);
-        System.assertEquals(1, opps.size());
-        System.assertEquals(diClosedStatus, opps[0].StageName); // confirm status is the one in DI
-
-    }
-    /**
-     * @description If Contact Setting Payments_Auto_Close_Stage_Name__c has a value and DI.Donation_Stage__c field
-     *              does not have a value specified, use Payments_Auto_Close_Stage_Name__c as the stageName
-     */
-    @IsTest
-    static void donationShouldUseContactSettingStage() {
-        String csClosed = 'CSClosed';
-        npe01__Contacts_And_Orgs_Settings__c contactSettings = UTIL_CustomSettingsFacade.getContactsSettings();
-        contactSettings.Payments_Auto_Close_Stage_Name__c = csClosed;
-
-        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-        diSettings.Donation_Matching_Rule__c = UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c') + ';' +
-                UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c');
-        diSettings.Donation_Matching_Behavior__c = BDI_DataImport_API.ExactMatchOrCreate;
-
-        List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(1);
-        insert contacts;
-
-        DataImport__c dataImport = new DataImport__c(Contact1_Firstname__c=contacts[0].FirstName,
-                Contact1_Lastname__c=contacts[0].LastName,
-                Contact1_Work_Email__c=contacts[0].npe01__WorkEmail__c);
-        dataImport.Donation_Amount__c = 10;
-        dataImport.Donation_Date__c = Date.today().addMonths(3);
-        dataImport.Donation_Stage__c = ''; // no status specified
-        insert dataImport;
-
-        Test.startTest();
-        BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH();
-        Database.executeBatch(batch, 10);
-        Test.stopTest();
-
-        List<Opportunity> opps = [SELECT Name, Amount, StageName, IsWon FROM Opportunity];
-        System.debug(opps[0]);
-        System.assertEquals(1, opps.size());
-        System.assertEquals(csClosed, opps[0].StageName); // confirm stageName is the same as contactSetting name
-
+        System.assertEquals(2, opps.size());
+        System.assertEquals(contactSettingClosedStatus, opps[0].StageName); // confirm status is the one in CS
+        System.assertEquals(diClosedStatus, opps[1].StageName); // confirm status is the one in DI
     }
     private static Opportunity getOpportunityWithPayments(Id oppId) {
         // requery the Opportunity for all fields that we need.

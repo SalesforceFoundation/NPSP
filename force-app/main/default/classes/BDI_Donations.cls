@@ -83,18 +83,15 @@ public class BDI_Donations {
                 if (contactSettings.Payments_Auto_Close_Stage_Name__c != null) {
                     defaultClosedWonStage = contactSettings.Payments_Auto_Close_Stage_Name__c;
                 } else {
-                    // if no field is specified in contact setting, then query for the active isWon value and use that
+                    // if no stage name is specified in Contact Setting
+                    // then query for the active isWon value and use that
                     List<OpportunityStage> stages = [
                             SELECT MasterLabel
                             FROM OpportunityStage
                             WHERE IsActive = TRUE
                             AND IsWon = TRUE
                     ];
-                    if (stages.size() > 0) {
-                        defaultClosedWonStage = stages[0].MasterLabel;
-                    } else {
-                        defaultClosedWonStage = '';
-                    }
+                    defaultClosedWonStage = stages.size()>0 ? stages[0].MasterLabel : '';
                 }
             }
             return defaultClosedWonStage;
