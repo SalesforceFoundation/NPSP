@@ -95,14 +95,14 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
 
     /**
      * @description Returns the state value and label select options
-     * @return List<Option>
+     * @return List<PicklistOptionView>
      */
     @AuraEnabled(cacheable=true)
-    public static List<Option> getStateOptions() {
-        List<Option> options = new List<Option>();
+    public static List<PicklistOptionView> getStateOptions() {
+        List<PicklistOptionView> options = new List<PicklistOptionView>();
         for (String value : stateLabelByValue.keySet()) {
             options.add(
-                new Option()
+                new PicklistOptionView()
                     .withValue(value)
                     .withLabel(stateLabelByValue.get(value))
             );
@@ -311,34 +311,6 @@ public with sharing class RD2_StatusMappingSettings_CTRL {
         AuraHandledException e = new AuraHandledException(errMessage);
         e.setMessage(errMessage);
         throw e;
-    }
-
-    /**
-     * @description Contains custom select option
-     */
-    public class Option {
-        @AuraEnabled public String value;
-        @AuraEnabled public String label;
-
-        /**
-         * @description Sets the option value
-         * @param value The option value
-         * @return Option This option instance
-         */
-        public Option withValue(String value) {
-            this.value = value;
-            return this;
-        }
-
-        /**
-         * @description Sets the option label
-         * @param label The option label
-         * @return Option This option instance
-         */
-        public Option withLabel(String label) {
-            this.label = label;
-            return this;
-        }
     }
 
     /**

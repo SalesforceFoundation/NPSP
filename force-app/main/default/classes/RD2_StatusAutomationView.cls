@@ -38,7 +38,7 @@ public with sharing class RD2_StatusAutomationView {
     @AuraEnabled public Integer numberOfDaysForLapsed;
     @AuraEnabled public String closedStatus;
     @AuraEnabled public String lapsedStatus;
-    @AuraEnabled public List<Option> lapsedStatusOption;
-    @AuraEnabled public List<Option> closedStatusOption;
+    @AuraEnabled public List<PicklistOptionView> lapsedStatusOption;
+    @AuraEnabled public List<PicklistOptionView> closedStatusOption;
     @AuraEnabled public Boolean rd2Enabled;
 }

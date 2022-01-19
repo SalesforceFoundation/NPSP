@@ -125,11 +125,11 @@ public with sharing class RD2_StatusAutomationService {
         }
     }
 
-    private List<Option> createStatusOption(List<String> statusValues) {
-        List<Option> options = new List<Option>();
+    private List<PicklistOptionView> createStatusOption(List<String> statusValues) {
+        List<PicklistOptionView> options = new List<PicklistOptionView>();
         for (String status : statusValues) {
               options.add(
-                 new Option()
+                 new PicklistOptionView()
                     .withLabel(status)
                     .withValue(status)
             );

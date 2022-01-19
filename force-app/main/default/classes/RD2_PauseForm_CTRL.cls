@@ -145,17 +145,17 @@ public with sharing class RD2_PauseForm_CTRL {
 
     /**
      * @description Returns the Paused Reason field select options
-     * @return List<Option>
+     * @return List<PicklistOptionView>
      */
     @TestVisible
-    private static List<Option> getPausedReasonOptions() {
-        List<Option> options = new List<Option>();
+    private static List<PicklistOptionView> getPausedReasonOptions() {
+        List<PicklistOptionView> options = new List<PicklistOptionView>();
         List<Schema.PicklistEntry> entries = npe03__Recurring_Donation__c.ClosedReason__c.getDescribe().getPicklistValues();
 
         for (Schema.PicklistEntry entry : entries) {
             if (entry.isActive()) {                
                 options.add(
-                    new Option()
+                    new PicklistOptionView()
                         .withValue(entry.getValue())
                         .withLabel(entry.getLabel())
                 );
@@ -261,37 +261,7 @@ public with sharing class RD2_PauseForm_CTRL {
     public class PausedReason {
         public String value;
         public String label;
-        public List<Option> options;
+        public List<PicklistOptionView> options;
         public String placeholder;
     }
-
-    /**
-     * @description Contains custom select option
-     */
-    public class Option {
-        @AuraEnabled public String value;
-        @AuraEnabled public String label;
-
-        /**
-         * @description Sets the option value
-         * @param value The option value
-         * @return Option This option instance
-         */
-        public Option withValue(String value) {
-            this.value = value;
-            return this;
-        }
-
-        /**
-         * @description Sets the option label
-         * @param label The option label
-         * @return Option This option instance
-         */
-        public Option withLabel(String label) {
-            this.label = label;
-            return this;
-        }
-    }
-
-
 }

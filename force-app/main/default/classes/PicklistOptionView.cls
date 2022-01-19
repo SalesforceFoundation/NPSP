@@ -30,30 +30,30 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @group Recurring Donations
-* @description Lightning Web Component combo-box wrapper class
+* @group LWC View, Picklist
+* @description Lightning Web Component combo-box and Picklist wrapper class
 */
-    public with sharing class Option {
-        @AuraEnabled public String value;
-        @AuraEnabled public String label;
+public with sharing class PicklistOptionView {
+    @AuraEnabled public String value;
+    @AuraEnabled public String label;
 
-        /**
-         * @description Sets the option value
-         * @param value The option value
-         * @return Option This option instance
-         */
-        public Option withValue(String value) {
-            this.value = value;
-            return this;
-        }
-
-        /**
-         * @description Sets the option label
-         * @param label The option label
-         * @return Option This option instance
-         */
-        public Option withLabel(String label) {
-            this.label = label;
-            return this;
-        }
+    /**
+     * @description Sets the option value
+     * @param value The option value
+     * @return Option This option instance
+     */
+    public PicklistOptionView withValue(String value) {
+        this.value = value;
+        return this;
     }
+
+    /**
+     * @description Sets the option label
+     * @param label The option label
+     * @return Option This option instance
+     */
+    public PicklistOptionView withLabel(String label) {
+        this.label = label;
+        return this;
+    }
+}
