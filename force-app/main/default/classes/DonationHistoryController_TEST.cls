@@ -165,7 +165,7 @@ public class DonationHistoryController_TEST {
         System.assertEquals(1, donationHistory.size(), 'donationHistory should contain only one element');
     }
 
-    private static Contact findContactByLastname(String firstname) {
+    private static Contact findContactByFirstName(String firstName) {
         for (Contact c : [SELECT ID, Firstname
                           FROM Contact]) {
             if (c.Firstname == firstname) {
