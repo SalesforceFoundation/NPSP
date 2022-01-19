@@ -125,7 +125,7 @@ public without sharing class HouseholdNamingService {
         }
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
 
-        if (householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType) {
+        if (!householdsOrAccounts.isEmpty() && householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType) {
             setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
         }
 
