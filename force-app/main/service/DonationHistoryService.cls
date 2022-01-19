@@ -119,7 +119,7 @@ public with sharing class DonationHistoryService {
         if (!hasAccessToDonationHistory()) {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
-        return convertAggregateResultListInStringList(new DonationHistorySelector().getYearsWithDonationForContact(contactId));
+        return convertAggregateResultListInStringList(selector.getYearsWithDonationForContact(contactId));
      }
 
     /**
