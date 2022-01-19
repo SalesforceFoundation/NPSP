@@ -160,66 +160,26 @@ public class CON_ContactMerge_TEST {
 
     }
 
-    static testMethod void failMergeWithDeletedRecordSelectedOne2One() {
-        failMergeWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
-        failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-
     /***********************************************************************************************
     * @description Integration test to test the scenario when a deleted contact record is merged
     */
-    static void failMergeWithDeletedRecordSelected(String strProcessor) {
+    @IsTest
+    static void failMergeWithDeletedRecordSelected() {
+        //given
+        // Contact ids are mock ids which will simulate missing contacts on the database
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, getMockContactsWithIds(2));
 
-        npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 2 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
+        //when
         Test.startTest();
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-
-        //call the search method, which will return the bogus SOSL results
-
-        controller.search();
-
-        //there should be 2 Contacts returned
-        system.assertEquals(2,controller.searchResults.size());
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        // delete 1 contact
-        delete con;
-
-        controller.mergeContacts();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Lock_failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
-
+            controller.mergeContacts();
         Test.stopTest();
 
+        //then
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
     }
 
     static testMethod void tooFewContactsSelectedOne2One(){
