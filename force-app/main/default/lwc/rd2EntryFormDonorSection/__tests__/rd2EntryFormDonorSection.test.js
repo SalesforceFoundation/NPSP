@@ -24,6 +24,7 @@ const FAKE_RD_ID = "fake-rd-record-id";
 const FAKE_ACCOUNT_ID = "fake-account-record-id";
 const UPDATED_FAKE_ACCOUNT_ID = "updated-fake-account-record-id";
 const FAKE_CONTACT_ID = "fake-contact-record-id";
+const UPDATED_FAKE_CONTACT_ID = "updated-fake-contact-record-id";
 
 jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
     () => ({ default: jest.fn() }),
@@ -255,9 +256,12 @@ describe("new donation from contact", () => {
         clearDOM();
     });
 
-    it("alerts parent component of contactId", () => {
+    it("alerts parent component of changes to contact lookup", () => {
+        const contactLookup = getContactLookup(element);
+        changeField(contactLookup, UPDATED_FAKE_CONTACT_ID);
+
         const lastEventDetail = getLastEventDetail(mockHandleContactChange);
-        expect(lastEventDetail).toBe(FAKE_CONTACT_ID);
+        expect(lastEventDetail).toBe(UPDATED_FAKE_CONTACT_ID);
     });
 
     it("alerts parent component of date established changes", () => {
@@ -279,6 +283,10 @@ describe("new donation from contact", () => {
 
     it("when donor type changed to account, contact lookup cleared", async () => {
         changeDonorType(element, "Account");
+        const rd2Service = new Rd2Service();
+        const rd2State = rd2Service.dispatch(element.rd2State, { type: SET_DONOR_TYPE, payload: "Account"});
+        element.rd2State = rd2State;
+
         await flushPromises();
         const contactLookup = getContactLookup(element);
 
