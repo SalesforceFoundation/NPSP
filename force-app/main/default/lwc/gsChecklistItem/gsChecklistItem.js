@@ -3,6 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 import CumulusStaticResources from '@salesforce/resourceUrl/CumulusStaticResources';
 import updateCheckItem from '@salesforce/apex/GS_ChecklistSetup.updateCheckItem'
 import getNamespace from '@salesforce/apex/GS_ChecklistSetup.getNamespace';
+import opensInNewLink from '@salesforce/label/c.opensInNewLink'
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 const gsAssetsImage = CumulusStaticResources + '/gsAssets/step';
 
@@ -21,6 +22,10 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     primaryBtnLabel;
     secondaryBtnLabel;
 
+    labels = {
+        opensInNewLink,
+    }
+
     /**
     * @description package namespace to used in navigation
     * @type string
@@ -33,11 +38,14 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                 if (data) {
                     this.namespace = data;
                 }
-                const opensInNewWindowText = ' (opens in a new window)';
-                this.linkLabel = ( this.item.link.label + opensInNewWindowText);
+                this.linkLabel = ( this.item.link.label + ' ' + this.labels.opensInNewLink);
                 console.log(JSON.parse(JSON.stringify(this.item)));
-                this.primaryBtnLabel = (this.item.primaryBtn.label + opensInNewWindowText);
-                this.secondaryBtnLabel = (this.item.secondaryBtn.label + opensInNewWindowText);
+                if( !(this.item.primaryBtn) === undefined){
+                    this.primaryBtnLabel = (this.item.primaryBtn.label + ' ' + this.labels.opensInNewLink);
+                }
+                if( !(this.item.secondaryBtn) === undefined){
+                    this.secondaryBtnLabel = (this.item.secondaryBtn.label + ' ' + this.labels.opensInNewLink);
+                }
             });
     }
 
