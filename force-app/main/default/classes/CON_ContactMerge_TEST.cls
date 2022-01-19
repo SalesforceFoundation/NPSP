@@ -133,10 +133,40 @@ public class CON_ContactMerge_TEST {
         }
     }
 
-    private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
-        for (CON_ContactMerge_CTRL.ContactWrapper contactWrapper : searchResults) {
-            contactWrapper.selected = true;
-        }
+    @IsTest
+    private static void mergeFailsWhenContactIsMissing() {
+        //given
+        // Contact ids are mock ids which will simulate missing contacts on the database
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, getMockContactsWithIds(2));
+
+        //when
+        Test.startTest();
+        controller.mergeContacts();
+        Test.stopTest();
+
+        //then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'Contact merge should from the controller should fail ' +
+                'if a contact chosen for merge has been deleted.'); // Selecting a deleted record must throw an error
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
+    }
+
+    @IsTest
+    private static void loadingMergePageFailsWhenTooFewContactsSelected() {
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(1);
+        setupMockDataForMerge(controller, mockContacts);
+
+        Test.startTest();
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
+        Test.stopTest();
+
+        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Few_Contacts, pageMessage.getDetail());
     }
 
     @IsTest
@@ -161,112 +191,21 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
-    private static void mergeFailsWhenContactIsMissing() {
-        //given
-        // Contact ids are mock ids which will simulate missing contacts on the database
+    private static void loadingMergePageFailsWhenTooManyContactsSelected() {
         CON_ContactMerge_CTRL controller = getController();
-        setupMockDataForMerge(controller, getMockContactsWithIds(2));
+        List<Contact> mockContacts = getMockContactsWithIds(4);
+        setupMockDataForMerge(controller, mockContacts);
 
-        //when
         Test.startTest();
-            controller.mergeContacts();
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
         Test.stopTest();
 
-        //then
-        System.assertEquals(1, ApexPages.getMessages().size(), 'Contact merge should from the controller should fail ' +
-                'if a contact chosen for merge has been deleted.'); // Selecting a deleted record must throw an error
+        System.assertEquals(1, ApexPages.getMessages().size(), 'An error should be thrown when more than 3 contacts ' +
+                'are selected for merge.'); // Selecting too many records for merge should throw
+        // an error.
         ApexPages.Message pageMessage = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
-        System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
-    }
-
-    static testMethod void tooFewContactsSelectedOne2One(){
-        tooFewContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void tooFewContactsSelectedHHAccount(){
-        tooFewContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    static void tooFewContactsSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 1 contact for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[1];
-        fixedSearchResults[0]=con.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        controller.searchResults[0].selected = true;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
-    }
-
-
-    static testMethod void tooManyContactsSelectedOne2One(){
-        tooManyContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void tooManyContactsSelectedHHAccount(){
-        tooManyContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    static void tooManyContactsSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 4 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        con3.LastName = '3Contact_forTests_Merge';
-
-        Contact con4 = UTIL_UnitTestData_TEST.getContact();
-        con4.LastName = '4Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2, con3, con4};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[4];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-        fixedSearchResults[2]=con3.Id;
-        fixedSearchResults[3]=con4.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        controller.searchResults[2].selected = true;
-        controller.searchResults[3].selected = true;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting too many records for merge should throw an error.
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Many_Contacts, pageMessage.getDetail());
     }
 
     /**
@@ -1128,8 +1067,10 @@ public class CON_ContactMerge_TEST {
         return (new Map<Id,SObject>(records)).keySet();
     }
 
-    private static List<Id> getFixedSearchResultsForSOSL(Integer numberOfResults) {
-        return UTIL_UnitTestData_TEST.mockIds(Contact.SObjectType, numberOfResults);
+    private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
+        for (CON_ContactMerge_CTRL.ContactWrapper contactWrapper : searchResults) {
+            contactWrapper.selected = true;
+        }
     }
 
     private static List<Contact> getMockContactsWithIds(Integer numberOfResults) {
