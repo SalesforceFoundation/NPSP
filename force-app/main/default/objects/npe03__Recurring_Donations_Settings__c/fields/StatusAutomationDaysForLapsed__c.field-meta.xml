@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>StatusAutomationDaysForLapsed__c</fullName>
-    <description>The number of days plus the expected installment date exceeds to update the Recurring Donation Status&apos;s to Lapsed</description>
+    <description>After the specified number of days, NPSP updates the Recurring Donation Status to the Status Automation Lapsed Value if donations aren&apos;t being received as expected.</description>
     <externalId>false</externalId>
-    <inlineHelpText>The number of days plus the expected installment date exceeds to update the Recurring Donation Status&apos;s to Lapsed</inlineHelpText>
+    <inlineHelpText>After the specified number of days, NPSP updates the Recurring Donation Status to the Status Automation Lapsed Value if donations aren&apos;t being received as expected.</inlineHelpText>
     <label>Status Automation Days for Lapsed</label>
     <precision>18</precision>
     <required>false</required>

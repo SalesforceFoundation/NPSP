@@ -2842,7 +2842,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation Closed Status Label</shortDescription>
-        <value>SClosed Status Value</value>
+        <value>Closed Status Value</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationSetLapsedStatus</fullName>
