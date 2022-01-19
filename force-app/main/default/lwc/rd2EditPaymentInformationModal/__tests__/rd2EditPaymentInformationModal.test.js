@@ -235,7 +235,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
 
         it('sets donor information on rd2 credit card form after load', async () => {
             const widget = getElevateWidget(component);
-            expect(widget.achAccountType).toBe(ACCOUNT_HOLDER_TYPES.INDIVIDUAL);
+            expect(widget.rd2State.donorType).toBe(CONTACT_DONOR_TYPE);
         });
 
         it('saves successfully after swapping to ACH', async () => {
