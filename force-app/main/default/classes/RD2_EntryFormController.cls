@@ -584,17 +584,17 @@ public with sharing class RD2_EntryFormController {
 
     public class RD2AppView {
 
-        @AuraEnabled public Boolean isAutoNamingEnabled; //' => RD2_NamingService.isAutomaticNamingEnabled,
-        @AuraEnabled public Boolean isMultiCurrencyEnabled; //' => UserInfo.isMultiCurrencyOrganization(),
-        @AuraEnabled public String parentSObjectType; //' => parentSObjectType,
-        @AuraEnabled public Map<String, Boolean> InstallmentPeriodPermissions; //' => getFieldPermissionsMap('npe03__Installment_Period__c'),
-        @AuraEnabled public Map<String, Boolean> InstallmentFrequencyPermissions; //' => getFieldPermissionsMap(UTIL_Namespace.StrTokenNSPrefix('InstallmentFrequency__c')),
-        @AuraEnabled public List<CustomField> customFieldSets; //' => getCustomFieldSectionFields(),
-        @AuraEnabled public Boolean isElevateCustomer; //' => RD2_ElevateIntegrationService.isIntegrationEnabled(),
-        @AuraEnabled public Boolean isChangeLogEnabled; //' => RD2_ChangeLogService.isChangeLogEnabled,
-        @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap; //' => RD2_Constants.PERIOD_TO_YEARLY_FREQUENCY,
-        @AuraEnabled public List<String> closedStatusValues; //' => RD2_StatusMapper.getInstance().getClosedStatusValues(),
-        @AuraEnabled public String defaultRecurringType; //' => defaultRecurringType
+        @AuraEnabled public Boolean isAutoNamingEnabled;
+        @AuraEnabled public Boolean isMultiCurrencyEnabled;
+        @AuraEnabled public String parentSObjectType;
+        @AuraEnabled public Map<String, Boolean> InstallmentPeriodPermissions;
+        @AuraEnabled public Map<String, Boolean> InstallmentFrequencyPermissions;
+        @AuraEnabled public List<CustomField> customFieldSets;
+        @AuraEnabled public Boolean isElevateCustomer;
+        @AuraEnabled public Boolean isChangeLogEnabled;
+        @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap;
+        @AuraEnabled public List<String> closedStatusValues;
+        @AuraEnabled public String defaultRecurringType;
         @AuraEnabled public String defaultInstallmentPeriod;
         @AuraEnabled public List<Map<String, String>> installmentPeriodOptions;
         @AuraEnabled public Id parentId;

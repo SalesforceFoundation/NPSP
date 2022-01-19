@@ -136,11 +136,6 @@ private with sharing class RD2_EntryFormController_TEST {
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
-        Map<String, Object> recurringSettings = RD2_EntryFormController.getRecurringSettings(a.Id);
-        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
-        System.debug(JSON.serializePretty(view));
-        System.debug(JSON.serializePretty(response));
-        System.debug(JSON.serializePretty(recurringSettings));
         String donorType = (String)response.get('DonorType');
         String period = (String)response.get('Period');
         Test.stopTest();
