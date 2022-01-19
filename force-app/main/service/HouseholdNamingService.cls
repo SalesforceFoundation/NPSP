@@ -178,7 +178,7 @@ public without sharing class HouseholdNamingService {
             Boolean originalDeceased = household.All_Members_Deceased__c;
             Boolean allMembersDeceased;
 
-            List<Contact> members = membersByHouseholdId.get(household.Id);
+            List<Contact> members = membersByHouseholdId?.get(household.Id);
             if (members == null) {
                 allMembersDeceased = false;
 
