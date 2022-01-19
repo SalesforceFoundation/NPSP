@@ -42,21 +42,37 @@ private class GiftEntryProcessorQueueFinalizer_TEST {
             new GiftEntryProcessorQueueFinalizer(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
         GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
         processorQueueFinalizer.giftBatchService = stubFor(giftBatchServiceMock);
-        processorQueueFinalizer.execute((FinalizerContext) new MockFinalizerContext());
+        processorQueueFinalizer.execute((FinalizerContext) new MockFinalizerContext(ParentJobResult.UNHANDLED_EXCEPTION));
         System.assert(giftBatchServiceMock.validateBatchWithWasCalled);
+    }
+
+    @IsTest
+    static void shouldNotFailGiftsInASuccessfulQueue() {
+        Id DUMMY_GIFT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftEntryProcessorQueueFinalizer processorQueueFinalizer =
+            new GiftEntryProcessorQueueFinalizer(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
+        GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
+        processorQueueFinalizer.giftBatchService = stubFor(giftBatchServiceMock);
+        processorQueueFinalizer.execute((FinalizerContext) new MockFinalizerContext(ParentJobResult.SUCCESS));
+        System.assert(!giftBatchServiceMock.validateBatchWithWasCalled);
     }
 
     private class GiftEntryProcessorQueueFinalizerException extends Exception {}
 
     private class MockFinalizerContext implements System.FinalizerContext {
-        public MockFinalizerContext() { }
+
+        private ParentJobResult jobResult;
+
+        public MockFinalizerContext(ParentJobResult jobResult) {
+            this.jobResult = jobResult;
+        }
 
         public ParentJobResult getResult() {
-            return ParentJobResult.UNHANDLED_EXCEPTION;
+            return this.jobResult;
         }
 
         public Id getRequestId() {
-            return '';
+            return null;
         }
 
         public Exception getException() {
