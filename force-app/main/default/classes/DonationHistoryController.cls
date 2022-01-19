@@ -61,8 +61,8 @@ public with sharing class DonationHistoryController {
     }
 
     public class DonationHistoryAppView {
-  		@AuraEnabled public Boolean isPaymentsEnabled;
-  		@AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public Boolean isPaymentsEnabled;
+        @AuraEnabled public List<DonationHistoryView> donations;
         @AuraEnabled public String paymentMethodLabel;
 	}
     
