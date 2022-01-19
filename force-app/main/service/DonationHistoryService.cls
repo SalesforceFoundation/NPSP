@@ -128,7 +128,7 @@ public with sharing class DonationHistoryService {
      * @return List<String> the list of the values in the expr0 represented as String.
      */ 
     private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
-        List<String> toReturn = new List<String>();
+        List<String> aggregateResultsAsStrings = new List<String>();
         for(AggregateResult result : results) {
             toReturn.add(String.valueOf(result.get('expr0')));
         }
