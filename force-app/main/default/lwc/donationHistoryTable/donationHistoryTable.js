@@ -1,16 +1,13 @@
-import { api, LightningElement, track, wire } from "lwc";
-import { getObjectInfo } from "lightning/uiObjectInfoApi";
-import DATA_IMPORT from "@salesforce/schema/DataImport__c";
-import PAYMENT_FIELD from "@salesforce/schema/DataImport__c.Payment_Method__c";
+import { api, LightningElement, track } from "lwc";
 import donationHistoryDatatableAriaLabel from "@salesforce/label/c.donationHistoryDatatableAriaLabel";
 import RD2_ScheduleVisualizerColumnDate from "@salesforce/label/c.RD2_ScheduleVisualizerColumnDate";
 import getDonationHistory from "@salesforce/apex/DonationHistoryController.getDonationHistory";
-import arePaymentsEnabled from "@salesforce/apex/DonationHistoryController.arePaymentsEnabled";
 import commonAmount from "@salesforce/label/c.commonAmount";
 import donationHistoryDonorLabel from "@salesforce/label/c.donationHistoryDonorLabel";
 const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
-  @api contactId;
+  
+    @api contactId;
 
   paymentMethodLabel;
 
@@ -26,17 +23,22 @@ export default class DonationHistoryTable extends LightningElement {
     donationHistoryDatatableAriaLabel,
   };
 
+  arePaymentsEnabled = false;
+
   @track
   columns = [];
 
-  @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
-  oppInfo({ data, error }) {
-    if (data) {
-      this.paymentMethodLabel = data.fields[PAYMENT_FIELD.fieldApiName].label;
-    }
-    arePaymentsEnabled( { contactId: this.contactId } ).then(
-      (paymentsAreEnabled) => {
-        console.log(paymentsAreEnabled);
+  // eslint-disable-next-line @lwc/lwc/no-async-await
+  async connectedCallback() {
+    getDonationHistory({ contactId: this.contactId }).then((data) => {
+      if (data) {
+        console.log(data);
+        this.allData = data.donations;
+        this.data = data.donations.slice(0, RECORDS_TO_LOAD);
+        this.totalNumberOfRows = data.donations.length;
+        this.paymentMethodLabel = data.paymentMethodLabel;
+        this.arePaymentsEnabled = data.isPaymentsEnabled;
+
         this.columns = [
             {
               label: RD2_ScheduleVisualizerColumnDate,
@@ -56,22 +58,11 @@ export default class DonationHistoryTable extends LightningElement {
             },
             { label: commonAmount, fieldName: "amount", type: "currency" },
         ];
-        if (paymentsAreEnabled) {
+        if (this.arePaymentsEnabled) {
             this.columns.push(
                 { label: this.paymentMethodLabel, fieldName: "paymentMethod", type: "text", },
             );
         }
-      }
-    );
-  }
-
-  // eslint-disable-next-line @lwc/lwc/no-async-await
-  async connectedCallback() {
-    getDonationHistory({ contactId: this.contactId }).then((data) => {
-      if (data) {
-        this.allData = data;
-        this.data = data.slice(0, RECORDS_TO_LOAD);
-        this.totalNumberOfRows = data.length;
       }
     });
   }

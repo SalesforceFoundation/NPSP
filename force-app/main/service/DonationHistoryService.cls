@@ -81,6 +81,10 @@ public with sharing class DonationHistoryService {
     public boolean checkIfPaymentsAreEnabled(){
         return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
     }
+
+    public String getPaymentMethodLabel(){
+        return Schema.DataImport__c.Payment_Method__c.getDescribe().getLabel();
+    }
     
     /** 
     * @author Salesforce.org

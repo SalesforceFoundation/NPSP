@@ -60,18 +60,29 @@ public with sharing class DonationHistoryController {
         }
     }
 
+    public class DonationHistoryAppView {
+  		@AuraEnabled public Boolean isPaymentsEnabled;
+  		@AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public String paymentMethodLabel;
+	}
+    
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
+    public static DonationHistoryAppView getDonationHistory(Id contactId) {
         DonationHistoryService service = new DonationHistoryService(contactId);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            donationHistories.addAll(buildHistoryFromOPPs(service.getDonationHistory(), contactId));
-            return donationHistories;
+            donationHistories.addAll(buildHistoryFromOpportunities(service.getDonationHistory(), contactId));
+            
+            DonationHistoryAppView appView = new DonationHistoryAppView();
+            appView.donations = donationHistories;
+            appView.isPaymentsEnabled = service.checkIfPaymentsAreEnabled();
+            appView.paymentMethodLabel = service.getPaymentMethodLabel();
+            return appView;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
@@ -80,23 +91,12 @@ public with sharing class DonationHistoryController {
     /** 
     * @author Salesforce.org
     * @date 2021
-    * @description method to return whether or not Payments are enabled in org
-    * @return boolean isPaymentEnabled
-    */
-    @AuraEnabled(cacheable=true)
-    public static boolean arePaymentsEnabled(Id contactId){
-        DonationHistoryService service = new DonationHistoryService(contactId);
-		return service.checkIfPaymentsAreEnabled();
-    }
-
-    /** 
-    * @author Salesforce.org
-    * @date 2021
     * @description method creates list of DonationHistoryView to return to LWC
     * @return List<DonationHistoryView>
     */
-    private static List<DonationHistoryView> buildHistoryFromOPPs( List<Opportunity> opportunities, Id contactId) {
-        boolean isPaymentEnabled = arePaymentsEnabled(contactId);
+    private static List<DonationHistoryView> buildHistoryFromOpportunities( List<Opportunity> opportunities, Id contactId) {
+        DonationHistoryService service = new DonationHistoryService(contactId);
+        boolean isPaymentEnabled = service.checkIfPaymentsAreEnabled();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for (Opportunity opp : opportunities) {
 			donationHistories.add(new DonationHistoryView(opp, (isPaymentEnabled ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c : EMPTY_PAYMENT_METHOD)));
