@@ -199,6 +199,33 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return newOwnerContactById;
     }
 
+    public Set<Id> ids() {
+        return getIdFieldValues(Contact.Id);
+    }
+
+    public Set<Id> accountIds() {
+        Set<Id> setAccountId = new Set<Id>();
+        for (Integer i = 0; i < getRecords().size(); i++) {
+            Contact newRecord = (Contact) getRecords()[i];
+
+            // need to query account fields we need to look at
+            if (newRecord.AccountId != null) {
+                setAccountId.add(newRecord.AccountId);
+            }
+        }
+        return setAccountId;
+    }
+
+    public Contacts contactsWithNonNullAccountIds() {
+        List<Contact> contactsWithNonNullAccountId = new List<Contact>();
+        for (Contact contact :(List<Contact>)  getRecords()) {
+            if (contact.AccountId != null) {
+                contactsWithNonNullAccountId.add(contact);
+            }
+        }
+        return new Contacts(contactsWithNonNullAccountId);
+    }
+
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
     * @param contactRecord the new version of the Contact
@@ -234,19 +261,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 contactRecord.OtherCountry != oldContact.OtherCountry ||
                 contactRecord.Phone != oldContact.Phone ||
                 contactRecord.Fax != oldContact.Fax);
-    }
-
-    public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
     }
 
     /*******************************************************************************************************
@@ -309,8 +323,6 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return false;
     }
 
-
-
     private Boolean isMissingAccount(Contact contactRecord) {
         return contactRecord.AccountId == null && contactRecord.npe01__Private__c != true;
     }
@@ -331,19 +343,4 @@ public inherited sharing class Contacts extends fflib_SObjects {
                 WHERE Id IN :accountIds
         ]);
     }
-
-    public Set<Id> ids() {
-       return getIdFieldValues(Contact.Id);
-    }
-
-    public Contacts contactsWithNonNullAccountIds() {
-        List<Contact> contacts = new List<Contact>();
-        for (Contact c :(List<Contact>)  getRecords()) {
-            if (c.AccountId != null) {
-                contacts.add(c);
-            }
-        }
-        return new Contacts(contacts);
-    }
-
 }
