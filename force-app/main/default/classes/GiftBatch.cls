@@ -173,7 +173,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void resolveGiftsRemainingInProcessing() {
-        failGiftsWith(System.Label.geBatchProcessingInComplete);
+        failGiftsWith(System.Label.geBatchProcessingIncomplete);
     }
 
     public void updateWith(AsyncApexJobId latestApexJobId) {
