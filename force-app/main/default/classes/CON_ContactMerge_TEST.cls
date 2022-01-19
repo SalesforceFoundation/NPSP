@@ -288,34 +288,58 @@ public class CON_ContactMerge_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        // given
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = new List<Contact>();
-        Contact uniqueContact = getUniqueContact();
-        testContacts.add(uniqueContact);
-        testContacts.addAll(getTestContacts(1));
+        List<Contact> testContacts = getTestContacts(1);
+        testContacts.add(getUniqueContact());
         setupMockDataForMerge(controller, testContacts);
 
+        selectMasterRecord(controller, testContacts[1].Id);
+
+        Contact losingContact = testContacts[0];
+        Contact winningContact = testContacts[1];
+
+        Opportunity testOpportunity = new Opportunity(AccountId =losingContact.AccountId,
+                Amount=500, Name='test',StageName='Closed Won',CloseDate=System.today());
+        insert testOpportunity;
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        //merge them
         Test.startTest();
             controller.mergeContacts();
         Test.stopTest();
 
-        List<Contact> winningContact = getWinningContact(testContacts);
-        List<Contact> losingContact = getLosingContact(testContacts);
+        List<Contact> updatedWinningContact = getTestContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getTestContacts(new List<Contact>{losingContact});
 
-        System.assert(!winningContact.isEmpty(), 'The winning contact should not be deleted.');
-        System.assert(losingContact.isEmpty(), 'The losing contact should be deleted.');
-        System.assertEquals(0,[SELECT COUNT() FROM Account WHERE Id = :losingContact[0].AccountId], 'The duplicate ' +
-            'contacts account should be deleted.');
-        System.assertEquals(1,[SELECT COUNT() FROM Opportunity WHERE AccountId =:winningContact[0].AccountId], 'The ' +
-                'winning contacts opportunities should not be deleted when it has open opportunities associated to ' +
-                'its account.');
-        System.assertEquals(0,[SELECT COUNT() FROM Opportunity WHERE AccountId = :losingContact[0].AccountId]);
-        System.assertEquals(testContacts[0].AccountId, winningContact[0].AccountId, 'The winning contacts account ' +
-                'should not have changed.');
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(losingAccount.isEmpty(), 'The losing contact acount should be deleted.');
+
+        List<Opportunity> updatedWinningOpportunity = [SELECT Id FROM Opportunity WHERE AccountId =
+                :updatedWinningContact[0].AccountId];
+        List<Opportunity> updatedLosingOpportunity = [SELECT Id FROM Opportunity WHERE AccountId = :losingContact
+                .AccountId];
+
+        System.assert(!updatedWinningOpportunity.isEmpty(), 'The winning account should not be deleted since it' +
+                ' has opportunities associated.');
+        System.assert(updatedLosingOpportunity.isEmpty(), 'The losing account opportunities should be deleted.');
+
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
     }
 
-    static testMethod void merge2OrganizationsOne2One(){
+    private static List<Contact> getAccountForId(Contact winningContact) {
+        List<Contact> updatedWinningContact = [SELECT AccountId From Contact WHERE Id = :winningContact.Id];
+        return updatedWinningContact;
+    }
+
+    static testMethod void merge2OrganizationsOne2One() {
         merge2Organizations(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OrganizationsHHAccount(){
@@ -965,9 +989,9 @@ public class CON_ContactMerge_TEST {
     }
 
     private static void createUniqueContact() {
-        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, null);
-        UTIL_UnitTestData_TEST.oppsForAccountList(testAccounts, null,
-            UTIL_UnitTestData_TEST.getOpenStage(), null, Double.valueOf(10.00),
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE);
+        UTIL_UnitTestData_TEST.oppsForAccountList(new List<Account> {testAccounts[0]}, null,
+            UTIL_UnitTestData_TEST.getClosedWonStage(), null, Double.valueOf(10.00),
             null, null);
 
         Contact differingContact = UTIL_UnitTestData_TEST.getContact();
@@ -986,12 +1010,19 @@ public class CON_ContactMerge_TEST {
         ];
     }
 
-    private static Contact getUniqueContact() {
-        return [            SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
-        FROM Contact
-        WHERE LastName = 'Differing'
-        LIMIT 1
+    private static List<Contact> getTestContacts(List<Contact> contacts) {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE Id IN :contacts
+        ];
+    }
 
+    private static Contact getUniqueContact() {
+        return [SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE LastName = 'Differing'
+                LIMIT 1
         ];
     }
 
