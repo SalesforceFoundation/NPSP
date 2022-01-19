@@ -125,13 +125,20 @@ public without sharing class HouseholdNamingService {
         }
         setNumberOfHouseholdMembers(householdsOrAccounts, membersByHouseholdId);
 
-        if (!householdsOrAccounts.isEmpty() && householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType) {
+        if (isListOfAccountIds(householdsOrAccounts)) {
             setAllMembersDeceasedFlag(householdsOrAccounts, membersByHouseholdId);
         }
 
         unitOfWork.save();
 
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.HH, false);
+    }
+
+    private Boolean isListOfAccountIds(List<SObject> householdsOrAccounts) {
+        if (householdsOrAccounts.isEmpty()) {
+            return false;
+        }
+        return householdsOrAccounts?.get(0).getSObjectType() == Account.SObjectType;
     }
 
     private void save(List<SObject> householdsOrAccounts) {
@@ -173,8 +180,8 @@ public without sharing class HouseholdNamingService {
         }
     }
 
-    public void setAllMembersDeceasedFlag(List<SObject> householdsOrAccounts, Map<Id, List<Contact>> membersByHouseholdId) {
-        for (Account household : (List<Account>)householdsOrAccounts) {
+    public void setAllMembersDeceasedFlag(List<Account> accounts, Map<Id, List<Contact>> membersByHouseholdId) {
+        for (Account household : accounts) {
             Boolean originalDeceased = household.All_Members_Deceased__c;
             Boolean allMembersDeceased;
 
