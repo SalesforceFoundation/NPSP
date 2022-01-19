@@ -97,7 +97,7 @@ public with sharing class DonationHistoryService {
     * @description method to return Donation History Number of Records for infinite scroll.
     * @param contactId contact id which is going to be requested.
     */
-    public List<AggregateResult> getTotalNumberOfRecords() {
-        return selector.getTotalNumberOfRecords(this.contactId);
+    public Integer getTotalNumberOfRecords() {
+        return selector.getTotalNumberOfRecords(this.contactId)[0].get('total');
     }
 }

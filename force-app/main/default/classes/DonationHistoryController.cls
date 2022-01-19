@@ -80,7 +80,7 @@ public with sharing class DonationHistoryController {
     * @description method to return Number of Donation History records.
     */
     @AuraEnabled(cacheable=true)
-    public static List<AggregateResult> getTotalNumberOfRecords(Id contactId){
+    public static Integer getTotalNumberOfRecords(Id contactId){
         DonationHistoryService service = new DonationHistoryService(contactId, 0);
         try {
             return service.getTotalNumberOfRecords();

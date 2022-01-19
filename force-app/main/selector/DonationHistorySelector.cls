@@ -38,7 +38,7 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId, Integer offset) {
+    public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
         return [
             SELECT Id, 
                 Name, 
@@ -61,8 +61,8 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return total number of record
     */
-    public List<AggregateResult> getTotalNumberOfRecords(Id contactId){
-        List<AggregateResult> totalRecords = [SELECT COUNT(Id)
+    public List<AggregateResult> getTotalNumberOfRecords( Id contactId ) {
+        List<AggregateResult> totalRecords = [SELECT COUNT(Id) total
                                 FROM Opportunity
                                 WHERE IsWon = true
                                 AND Primary_Contact__r.Id =:contactId
