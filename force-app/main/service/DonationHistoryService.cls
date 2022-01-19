@@ -33,7 +33,8 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-
+    private Id contactId;
+    
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
     }
