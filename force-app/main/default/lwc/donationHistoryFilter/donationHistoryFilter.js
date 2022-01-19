@@ -13,8 +13,7 @@ export default class DonationHistoryFilter extends LightningElement {
 
     value = LIFETIME_VALUE;
     
-    @track
-    options = [];
+    @track options = [];
 
     @api contactId
     connectedCallback() {
