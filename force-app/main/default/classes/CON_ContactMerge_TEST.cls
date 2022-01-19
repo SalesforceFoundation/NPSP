@@ -319,8 +319,6 @@ public class CON_ContactMerge_TEST {
         testContacts.add(getUniqueContact());
         setupMockDataForMerge(controller, testContacts);
 
-        selectMasterRecord(controller, testContacts[1].Id);
-
         Contact losingContact = testContacts[0];
         Contact winningContact = testContacts[1];
 
@@ -358,11 +356,6 @@ public class CON_ContactMerge_TEST {
 
         System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
                 'account should not have changed.');
-    }
-
-    private static List<Contact> getAccountForId(Contact winningContact) {
-        List<Contact> updatedWinningContact = [SELECT AccountId From Contact WHERE Id = :winningContact.Id];
-        return updatedWinningContact;
     }
 
     static testMethod void merge2OrganizationsOne2One() {
@@ -1055,8 +1048,6 @@ public class CON_ContactMerge_TEST {
     private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
         setMockFieldRows(controller, contactsToMerge);
         setSelectedRecordsForMerge(controller, contactsToMerge);
-        setWinningContact(
-                getMasterRecordRow(controller.fieldRows), contactsToMerge[0].Id);
     }
 
     private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
