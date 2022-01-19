@@ -214,14 +214,6 @@ export default class rd2EntryFormDonorSection extends LightningElement {
     }
 
     /**
-    * @description run init function 
-    */
-    @api
-    forceRefresh() {
-       this.init();
-    }
-
-    /**
     * @description reset all lighning-input-field value 
     */
     @api

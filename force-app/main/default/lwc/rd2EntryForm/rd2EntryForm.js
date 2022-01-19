@@ -954,7 +954,6 @@ export default class rd2EntryForm extends LightningElement {
 
         if (!isNull(this.donorComponent)) {
             this.donorComponent.resetValues();
-            this.donorComponent.forceRefresh();
         }
         if (!isNull(this.scheduleComponent)) {
             this.scheduleComponent.resetValues();
