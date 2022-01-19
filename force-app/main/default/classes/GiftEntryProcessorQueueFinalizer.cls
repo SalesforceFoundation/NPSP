@@ -30,31 +30,30 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @description Processor Queue for all gifts entered and processed through the Gift Entry App.
+* @description Processor Queue Finalizer to act on finalized queueables.
 */
 
-public with sharing class GiftEntryProcessorQueue implements Queueable, Database.AllowsCallouts{
+public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer{
 
+   @TestVisible
+   private GiftBatchService giftBatchService {
+      get {
+         if (giftBatchService == null) {
+            giftBatchService = new GiftBatchService();
+         }
+         return giftBatchService;
+      }
+      set;
+   }
    private GiftBatchId giftBatchId;
-   private String jobId;
-   @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
 
-   public GiftEntryProcessorQueue (GiftBatchId giftBatchId){
+   public GiftEntryProcessorQueueFinalizer (GiftBatchId giftBatchId) {
       this.giftBatchId = giftBatchId;
    }
 
-   public void execute(QueueableContext queueableContext) {
-      System.attachFinalizer(new GiftEntryProcessorQueueFinalizer(this.giftBatchId));
-      if (Test.isRunningTest()){
-         jobId = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.getSObjectType());
-      } else {
-         BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
-         jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
+   public void execute(FinalizerContext finalizerContext) {
+      if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
+         giftBatchService.validateBatch(this.giftBatchId);
       }
-      updateGiftBatchWith(new AsyncApexJobId(jobId));
-   }
-
-   private void updateGiftBatchWith(AsyncApexJobId asyncApexJobId) {
-      giftBatchService.updateGiftBatchWith(giftBatchId, asyncApexJobId);
    }
 }
