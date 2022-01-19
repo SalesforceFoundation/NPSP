@@ -6,6 +6,7 @@ import { getObjectInfo } from "lightning/uiObjectInfoApi";
 import getRecurringData from "@salesforce/apex/RD2_EntryFormController.getRecurringData";
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
+import { SET_DONOR_TYPE } from "../../rd2Service/actions";
 
 
 const recurringDataAccountResponse = require("../../../../../../tests/__mocks__/apex/data/recurringDataAccountResponse.json");
@@ -55,13 +56,19 @@ describe("new recurring donation", () => {
 
 
     it("when set to Account, then account lookup appears", async () => {
-
+        const rd2Service = new Rd2Service();
         const donorTypeField = getDonorTypeField(element);
-        donorTypeField.value = "Account";
-        donorTypeField.dispatchEvent(new CustomEvent("change", { detail: { value: "Account" } }));
+        const newDonorType = "Account";
+        donorTypeField.value = newDonorType;
+        donorTypeField.dispatchEvent(new CustomEvent("change", { detail: { value: newDonorType } }));
+
+        // simulate rd2EntryForm's handling of a donor type change to update rd2State
+        element.rd2State = rd2Service.dispatch(element.rd2State, { type: SET_DONOR_TYPE, payload: newDonorType });
+
         await flushPromises();
         const lastEventDetail = getLastEventDetail(mockHandleDonorTypeChange);
-        expect(lastEventDetail).toBe("Account");
+
+        expect(lastEventDetail).toBe(newDonorType);
 
         const accountLookup = getAccountLookup(element);
         expect(accountLookup).toBeTruthy();
