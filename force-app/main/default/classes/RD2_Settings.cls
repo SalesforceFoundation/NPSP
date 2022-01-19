@@ -248,22 +248,22 @@ public with sharing class RD2_Settings {
         return settings.StatusAutomationDaysForLapsed__c != null;
     }
 
-    public String statusAutomationClosedStatus {
+    public String statusAutomationClosedValue {
         get {
-            if (statusAutomationClosedStatus == null) {
-                statusAutomationClosedStatus = settings.StatusAutomationClosedStatus__c;
+            if (statusAutomationClosedValue == null) {
+                statusAutomationClosedValue = settings.StatusAutomationClosedValue__c;
             }
-            return statusAutomationClosedStatus;
+            return statusAutomationClosedValue;
         }
         private set;
     }
 
-    public String statusAutomationLapsedStatus {
+    public String statusAutomationLapsedValue {
         get {
-            if (statusAutomationLapsedStatus == null) {
-                statusAutomationLapsedStatus = settings.StatusAutomationLapsedStatus__c;
+            if (statusAutomationLapsedValue == null) {
+                statusAutomationLapsedValue = settings.StatusAutomationLapsedValue__c;
             }
-            return statusAutomationLapsedStatus;
+            return statusAutomationLapsedValue;
         }
         private set;
     }

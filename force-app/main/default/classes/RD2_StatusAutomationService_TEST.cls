@@ -50,8 +50,8 @@ private class RD2_StatusAutomationService_TEST {
                     IsRecurringDonations2Enabled__c = true,
                     StatusAutomationDaysForLapsed__c = DAYS_FOR_LAPSED,
                     StatusAutomationDaysForClosed__c = DAYS_FOR_CLOSED,
-                    StatusAutomationLapsedStatus__c = RD2_Constants.STATUS_LAPSED,
-                    StatusAutomationClosedStatus__c = RD2_Constants.STATUS_CLOSED
+                    StatusAutomationLapsedValue__c = RD2_Constants.STATUS_LAPSED,
+                    StatusAutomationClosedValue__c = RD2_Constants.STATUS_CLOSED
             )
         );
 

@@ -60,8 +60,8 @@ public with sharing class RD2_StatusAutomationService {
         rd2Settings.reloadSetting();
         RD2_StatusAutomationView view = new RD2_StatusAutomationView();
 
-        view.closedStatus = rd2Settings.statusAutomationClosedStatus;
-        view.lapsedStatus = rd2Settings.statusAutomationLapsedStatus;
+        view.closedStatus = rd2Settings.statusAutomationClosedValue;
+        view.lapsedStatus = rd2Settings.statusAutomationLapsedValue;
         view.numberOfDaysForClosed = rd2Settings.statusAutomationNumberOfDaysForClosed;
         view.numberOfDaysForLapsed = rd2Settings.statusAutomationNumberOfDaysForLapsed;
         view.closedStatusOption = createStatusOption(
@@ -81,8 +81,8 @@ public with sharing class RD2_StatusAutomationService {
         
         settings.StatusAutomationDaysForLapsed__c = daysForLapsed;
         settings.StatusAutomationDaysForClosed__c = daysForClosed;
-        settings.StatusAutomationLapsedStatus__c = lapsedStatus;
-        settings.StatusAutomationClosedStatus__c = closedStatus;
+        settings.StatusAutomationLapsedValue__c = lapsedStatus;
+        settings.StatusAutomationClosedValue__c = closedStatus;
 
         if (!Test.isRunningTest()) {
             update settings;

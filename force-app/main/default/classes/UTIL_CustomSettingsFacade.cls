@@ -913,8 +913,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.EnableChangeLog__c = settings.EnableChangeLog__c;
         recurringDonationsSettings.StatusAutomationDaysForLapsed__c = settings.StatusAutomationDaysForLapsed__c;
         recurringDonationsSettings.StatusAutomationDaysForClosed__c = settings.StatusAutomationDaysForClosed__c;
-        recurringDonationsSettings.StatusAutomationLapsedStatus__c = settings.StatusAutomationLapsedStatus__c;
-        recurringDonationsSettings.StatusAutomationClosedStatus__c = settings.StatusAutomationClosedStatus__c;
+        recurringDonationsSettings.StatusAutomationLapsedValue__c = settings.StatusAutomationLapsedValue__c;
+        recurringDonationsSettings.StatusAutomationClosedValue__c = settings.StatusAutomationClosedValue__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 
