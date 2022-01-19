@@ -140,7 +140,7 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
-    static void loadMergeCandidatesFailsWhenContactIsDeleted() {
+    private static void loadingMergePageFailsWhenContactIsMissing() {
         //given
         // Contact ids are mock ids which will simulate missing contacts on the database
         CON_ContactMerge_CTRL controller = getController();
@@ -160,11 +160,8 @@ public class CON_ContactMerge_TEST {
 
     }
 
-    /***********************************************************************************************
-    * @description Integration test to test the scenario when a deleted contact record is merged
-    */
     @IsTest
-    static void failMergeWithDeletedRecordSelected() {
+    private static void mergeFailsWhenContactIsMissing() {
         //given
         // Contact ids are mock ids which will simulate missing contacts on the database
         CON_ContactMerge_CTRL controller = getController();
@@ -176,7 +173,8 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
 
         //then
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
+        System.assertEquals(1, ApexPages.getMessages().size(), 'Contact merge should from the controller should fail ' +
+                'if a contact chosen for merge has been deleted.'); // Selecting a deleted record must throw an error
         ApexPages.Message pageMessage = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
         System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
