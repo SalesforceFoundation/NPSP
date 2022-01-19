@@ -39,7 +39,6 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                     this.namespace = data;
                 }
                 this.linkLabel = ( this.item.link.label + ' ' + this.labels.opensInNewLink);
-                console.log(JSON.parse(JSON.stringify(this.item)));
                 if( !(this.item.primaryBtn) === undefined){
                     this.primaryBtnLabel = (this.item.primaryBtn.label + ' ' + this.labels.opensInNewLink);
                 }

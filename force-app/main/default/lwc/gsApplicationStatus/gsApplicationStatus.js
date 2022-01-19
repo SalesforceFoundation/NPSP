@@ -41,6 +41,8 @@ export default class GsApplicationStatus extends LightningElement {
     }
 
     learnMoreAriaLabel;
+    applyForFreeLicensesAriaLabel;
+    checkStatusAriaLabel;
 
     /**
      * Initialized the component with the data retrieved from Salesforce
@@ -56,6 +58,8 @@ export default class GsApplicationStatus extends LightningElement {
             this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
             this.learnMoreAriaLabel = this.labels.gsLearnMore + ' ' + this.labels.opensInNewLink;
+            this.applyForFreeLicensesAriaLabel = this.labels.gsApplyForFreeLicenses + ' ' + this.labels.opensInNewLink;
+            this.checkStatusAriaLabel = this.labels.gsCheckStatus + ' ' + this.labels.opensInNewLink;
         })
         .catch(error => {
             this.errorMessage = error;
