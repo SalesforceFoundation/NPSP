@@ -136,6 +136,11 @@ private with sharing class RD2_EntryFormController_TEST {
 
         Test.startTest();
         Map<String, Object> response = RD2_EntryFormController.getRecurringData(rd.Id);
+        Map<String, Object> recurringSettings = RD2_EntryFormController.getRecurringSettings(a.Id);
+        RD2_EntryFormController.RD2AppView view = RD2_EntryFormController.getInitialView(a.Id, rd.Id);
+        System.debug(JSON.serializePretty(view));
+        System.debug(JSON.serializePretty(response));
+        System.debug(JSON.serializePretty(recurringSettings));
         String donorType = (String)response.get('DonorType');
         String period = (String)response.get('Period');
         Test.stopTest();
@@ -211,7 +216,7 @@ private with sharing class RD2_EntryFormController_TEST {
     @isTest
     private static void shouldReturnRD2CustomFieldsWithoutNPSPNameSpaceAndExcludedFields() {
         Test.startTest();
-        List<RD2_EntryFormController.CustomField> customFields = RD2_entryFormController.getCustomFieldSectionFields();
+        List<RD2_EntryFormController.CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
         for (RD2_EntryFormController.CustomField field : customFields) {
@@ -258,6 +263,12 @@ private with sharing class RD2_EntryFormController_TEST {
         PS_IntegrationService.setConfiguration(PS_IntegrationServiceConfig_TEST.testConfig);
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
+
+        RD2_QueryService selectorStub = (RD2_QueryService)Test.createStub(
+                RD2_QueryService.class,
+                new RD2_QueryServiceMock(rd.clone())
+        );
+        RD2_EntryFormController.selector = selectorStub;
 
         Test.startTest();
         UTIL_Http_TEST.mockBadRequestCalloutResponse();
@@ -515,6 +526,11 @@ private with sharing class RD2_EntryFormController_TEST {
         );
 
         npe03__Recurring_Donation__c rd = buildRecurringDonation();
+        RD2_QueryService selectorStub = (RD2_QueryService)Test.createStub(
+                RD2_QueryService.class,
+                new RD2_QueryServiceMock(rd.clone())
+        );
+        RD2_EntryFormController.selector = selectorStub;
 
         rd.CommitmentId__c = COMMITMENT_ID;
         rd.npe03__Amount__c = 0.9;
@@ -696,4 +712,22 @@ private with sharing class RD2_EntryFormController_TEST {
             .build();
     }
 
+    public class RD2_QueryServiceMock implements StubProvider {
+
+        npe03__Recurring_Donation__c rd;
+
+        public RD2_QueryServiceMock(npe03__Recurring_Donation__c rd) {
+            this.rd = rd;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs
+        ) {
+            return this.rd;
+        }
+    }
 }

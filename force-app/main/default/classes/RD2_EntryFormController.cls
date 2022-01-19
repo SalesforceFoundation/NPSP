@@ -68,6 +68,7 @@ public with sharing class RD2_EntryFormController {
         set;
     }
 
+    @TestVisible
     private static RD2_QueryService selector {
         get {
             if (selector == null) {
@@ -312,7 +313,7 @@ public with sharing class RD2_EntryFormController {
     @AuraEnabled
     public static String handleCommitment(String jsonRecord, String paymentMethodToken) {
         try {
-            npe03__Recurring_Donation__c rd =  (npe03__Recurring_Donation__c) JSON.deserialize(
+            npe03__Recurring_Donation__c rd = (npe03__Recurring_Donation__c) JSON.deserialize(
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
 
