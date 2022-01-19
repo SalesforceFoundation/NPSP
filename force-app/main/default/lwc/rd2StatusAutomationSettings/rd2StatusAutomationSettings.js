@@ -92,17 +92,13 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
             ? automationSettings.numberOfDaysForClosed
             : this.labels.commonNoneSpecific;
         this.inputDaysForClosed = automationSettings.numberOfDaysForClosed;
-        this.maximumDaysForLapsed = (this.numberOfDaysForClosed == null)
-            ? null
-            : parseInt(this.numberOfDaysForClosed) - 1;
-    
+
         this.numberOfDaysForLapsed = (automationSettings.numberOfDaysForLapsed)
             ? automationSettings.numberOfDaysForLapsed
-            : this.labels.commonNoneSpecific
+            : this.labels.commonNoneSpecific;
         this.inputDaysForLapsed = automationSettings.numberOfDaysForLapsed;
-        this.minimumDaysForClosed = (this.numberOfDaysForLapsed == null)
-            ? null
-            : parseInt(this.numberOfDaysForLapsed) + 1;
+
+        this.assignInputDaysThreshold();
 
         this.closedStatus = automationSettings.closedStatus;
         this.inputClosedStatus = automationSettings.closedStatus;
@@ -146,25 +142,14 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     }
 
     handleDaysForLapsedChanged(event) {
-        this.inputDaysForLapsed = (event.detail.value == '')
-            ? null
-            : event.detail.value;
-        this.minimumDaysForClosed = (this.inputDaysForLapsed == null)
-            ? null
-            : parseInt(this.inputDaysForLapsed) + 1;
-
+        this.inputDaysForLapsed = this.getConvertedDays(event.detail.value);
+        this.assignInputDaysThreshold();
         this.validateNumberOfDays();
     }
 
     handleDaysForClosedChanged(event) {
-        this.inputDaysForClosed = (event.detail.value == '')
-            ? null
-            : event.detail.value;
-
-            this.maximumDaysForLapsed = (this.inputDaysForClosed == null)
-            ? null
-            : parseInt(this.inputDaysForClosed) - 1;
-
+        this.inputDaysForClosed = this.getConvertedDays(event.detail.value);
+        this.assignInputDaysThreshold();
         this.validateNumberOfDays();
     }
 
@@ -174,6 +159,20 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
             that.lapsedDaysInputField().reportValidity(); 
             that.closedDaysInputField().reportValidity();
         }, 0);
+    }
+
+    getConvertedDays(value) {
+        return (value === '') ? null : value;
+    }
+
+    assignInputDaysThreshold() {
+        this.maximumDaysForLapsed = (this.inputDaysForClosed == null)
+            ? null
+            : parseInt(this.inputDaysForClosed) - 1;
+        
+        this.minimumDaysForClosed = (this.inputDaysForLapsed === null)
+            ? null
+            : parseInt(this.inputDaysForLapsed) + 1;
     }
 
     handleLapsedStatusChanged(event) {
