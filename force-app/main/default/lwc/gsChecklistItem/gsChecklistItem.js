@@ -17,6 +17,8 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     */
     @api item = {}
 
+    linkLabel;
+
     /**
     * @description package namespace to used in navigation
     * @type string
@@ -29,6 +31,9 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                 if (data) {
                     this.namespace = data;
                 }
+                const opensInNewWindowText = ' (opens in a new window)';
+                this.linkLabel = ( this.item.link.label + opensInNewWindowText);
+                console.log(JSON.parse(JSON.stringify(this.item)));
             });
     }
 

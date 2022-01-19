@@ -20,7 +20,8 @@
                 <a if:true={hasLink} 
                    class="slds-m-right_x-small"
                    href={item.link.href} 
-                   target="_blank">
+                   target="_blank"
+                   aria-label={linkLabel}>
                     {item.link.label}
                 </a>
                 <div class="content-footer-aux"
