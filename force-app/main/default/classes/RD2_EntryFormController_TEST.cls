@@ -219,8 +219,10 @@ private with sharing class RD2_EntryFormController_TEST {
         List<RD2_EntryFormController.CustomField> customFields = RD2_EntryFormController.getCustomFieldSectionFields();
         Test.stopTest();
 
+        Set<String> excludedCustomFields = RD2_Settings.getExcludedCustomFields();
+
         for (RD2_EntryFormController.CustomField field : customFields) {
-            System.assert(!RD2_EntryFormController.excludedCustomFields.contains(field.apiName),
+            System.assert(!excludedCustomFields.contains(field.apiName),
                 'Excluded fields should not be return:' + field.apiName);
             System.assert(!field.apiName.startsWith('npsp__'),
                 'NPSP package field should not be return:' + field.apiName);

@@ -37,25 +37,6 @@
 public with sharing class RD2_EntryFormController {
 
     /**
-    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
-    */
-    @TestVisible
-    private static Set<String> excludedCustomFields = new Set<String> {
-        'CreatedById',
-        'CreatedDate',
-        'CurrencyIsoCode',
-        'Id',
-        'IsDeleted',
-        'LastModifiedById',
-        'LastModifiedDate',
-        'LastReferencedDate',
-        'LastViewedDate',
-        'Name',
-        'OwnerId',
-        'SystemModStamp'
-    };
-
-    /**
     * @description Handles commitment request creation, response parsing and RD Commitment Id update
     */
     private static CommitmentService commitmentService {

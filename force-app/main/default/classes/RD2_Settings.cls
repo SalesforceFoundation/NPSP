@@ -116,20 +116,7 @@ public with sharing class RD2_Settings {
     * @return List<Schema.FieldSetMember>
     */
     public List<Schema.FieldSetMember> getCustomFieldSetMembers() {
-        Set<String> excludedCustomFields = new Set<String> {
-                'CreatedById',
-                'CreatedDate',
-                'CurrencyIsoCode',
-                'Id',
-                'IsDeleted',
-                'LastModifiedById',
-                'LastModifiedDate',
-                'LastReferencedDate',
-                'LastViewedDate',
-                'Name',
-                'OwnerId',
-                'SystemModStamp'
-        };
+        Set<String> excludedCustomFields = getExcludedCustomFields();
 
         List<Schema.FieldSetMember> fields = new List<Schema.FieldSetMember>();
         List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
@@ -273,5 +260,26 @@ public with sharing class RD2_Settings {
         if (!Test.isRunningTest()) {
             upsert settings;
         }
+    }
+
+    /**
+    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
+    */
+    @TestVisible
+    private static Set<String> getExcludedCustomFields() {
+        return new Set<String> {
+                'CreatedById',
+                'CreatedDate',
+                'CurrencyIsoCode',
+                'Id',
+                'IsDeleted',
+                'LastModifiedById',
+                'LastModifiedDate',
+                'LastReferencedDate',
+                'LastViewedDate',
+                'Name',
+                'OwnerId',
+                'SystemModStamp'
+        };
     }
 }
