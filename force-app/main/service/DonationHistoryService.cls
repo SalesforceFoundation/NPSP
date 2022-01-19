@@ -34,11 +34,8 @@
 */
 public with sharing class DonationHistoryService {
 
-    private List<Opportunity> credits;
-
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
-        this.credits = new List<Opportunity>();
     }
 
     @TestVisible
