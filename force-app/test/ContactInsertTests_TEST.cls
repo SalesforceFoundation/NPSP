@@ -2,7 +2,8 @@
 private class ContactInsertTests_TEST {
 
     @IsTest
-    static void insert_duplicate_contact_should_not_throw_required_field_missing_error() {
+    static void
+    insert_duplicate_contact_should_not_throw_required_field_missing_household_account_error() {
         // Arrange
         String exceptionMessage;
         Contact existingContact = TEST_ContactBuilder.dummyContact();
@@ -34,8 +35,10 @@ private class ContactInsertTests_TEST {
                             'its Household Account has been created.'
             );
         } else {
-            // Some other Exception thrown.
-            // 'Required fields are missing:Household_Account__c' exception NOT thrown
+            // 'Required fields are missing:Household_Account__c' exception NOT thrown.
+            // Some other Exception thrown.  The test should pass in this case.
+            // This test should pass when a different exception is thrown here to allow
+            // For duplicate rule exceptions, custom customer validation rules etc.
         }
     }
 }
