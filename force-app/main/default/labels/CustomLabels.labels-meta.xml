@@ -2762,7 +2762,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation Closed definition</shortDescription>
-        <value>NPSP automatically updates the Recurring Donation Status to Closed after the specified number of days if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create any new installment Opportunities for Closed Recurring Donations.</value>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create installment Opportunities for Closed Recurring Donations.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationDaysForClosed</fullName>
@@ -2786,7 +2786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation introduction</shortDescription>
-        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;Using these settings, NPSP updates the Recurring Donation&apos;s Status when the current date exceeds the Last Donation Date plus the future expected installment date and the Number of Days for Lapsed or Number of Days for Closed.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Payments are not included in this automation.</value>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;Using these settings, NPSP updates the Recurring Donation&apos;s Status when the current date exceeds the Last Donation Date plus the future expected installment date and the Number of Days for Lapsed or Number of Days for Closed.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
@@ -2834,7 +2834,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation Lapsed definition</shortDescription>
-        <value>NPSP automatically updates the Recurring Donation Status to Lapsed after the specified number of days if donations aren&apos;t being received as expected. NPSP still creates installment Opportunities for Lapsed Recurring Donations as defined by the schedule.</value>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create installment Opportunities for Lapsed Recurring Donations as defined by the schedule.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationSetClosedStatus</fullName>
@@ -2842,7 +2842,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation Closed Status Label</shortDescription>
-        <value>Set Closed Status as</value>
+        <value>SClosed Status Value</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationSetLapsedStatus</fullName>
@@ -2850,7 +2850,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Status Automation Lapsed Status Label</shortDescription>
-        <value>Set Lapsed Status as</value>
+        <value>Lapsed Status Value</value>
     </labels>
     <labels>
         <fullName>RD2_StatusMappingColumnState</fullName>
