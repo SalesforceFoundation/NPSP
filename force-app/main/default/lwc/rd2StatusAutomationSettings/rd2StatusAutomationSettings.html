@@ -61,7 +61,7 @@
                                 </template>
                                 <template if:true={isEdit}>
                                     <lightning-layout-item size="4" padding="around-medium">
-                                        <lightning-input class="daysInput" type="number"
+                                        <lightning-input type="number"
                                             name="daysForLapsed"
                                             min="0"
                                             max={maximumDaysForLapsed}
@@ -107,13 +107,14 @@
                                 </template>
                                 <template if:true={isEdit}>
                                     <lightning-layout-item size="4" padding="around-medium">
-                                        <lightning-input class="daysInput" type="number"
+                                        <lightning-input type="number"
                                             name="daysForClosed"
                                             min={minimumDaysForClosed}
                                             label={labels.daysForClosed}
                                             value={inputDaysForClosed}
                                             onchange={handleDaysForClosedChanged}
-                                            message-when-range-underflow={labels.daysForClosedTooSmall}>
+                                            message-when-range-underflow={labels.daysForClosedTooSmall}
+                                            data-id="closedDaysInput">
                                         </lightning-input>
                                         <lightning-combobox name="closedStatus"
                                             label={labels.setClosedStatus}

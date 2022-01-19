@@ -171,12 +171,9 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     validateNumberOfDays() {
         let that = this;
         setTimeout(() => {
-            that.template.querySelectorAll('.daysInput').forEach(element => {
-                element.reportValidity();
-            });
+            that.lapsedDaysInputField().reportValidity(); 
+            that.closedDaysInputField().reportValidity();
         }, 0);
-        
-
     }
 
     handleLapsedStatusChanged(event) {
@@ -201,5 +198,13 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
 
     get isRd2Disabled() {
         return this.displayState === STATES.RD2_DISABLED;
+    }
+
+    lapsedDaysInputField() {
+        return this.template.querySelector("lightning-input[data-id=lapsedDaysInput]");
+    }
+
+    closedDaysInputField() {
+        return this.template.querySelector("lightning-input[data-id=closedDaysInput]")
     }
 }
