@@ -298,7 +298,10 @@ public with sharing class RD2_EntryFormController {
                 jsonRecord, npe03__Recurring_Donation__c.class
             );
 
-            npe03__Recurring_Donation__c oldRd = selector.getRecurringDonationForUI(rd.Id);
+            npe03__Recurring_Donation__c oldRd;
+            if (rd.Id != null) {
+                 oldRd = selector.getRecurringDonationForUI(rd.Id);
+            }
 
             commitmentService.adjustAndValidateRD(rd, oldRd);
             UTIL_Http.Response response = commitmentService.handleCommitment(rd, oldRd, paymentMethodToken);
