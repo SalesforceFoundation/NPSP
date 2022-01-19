@@ -214,13 +214,14 @@ public class CON_ContactMerge_TEST {
      */
     @isTest
     private static void shouldDisplayErrorWithNoDeletePermission() {
-        // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
+        //given
         User readOnlyUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
 
-        // Verify that controller detects the User doesn't have delete permissions on the Contact object
         Test.startTest();
             System.runAs(readOnlyUser) {
+                //when
                 CON_ContactMerge_CTRL controller = getController();
+                //then
                 UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteObjPermission);
             }
         Test.stopTest();
