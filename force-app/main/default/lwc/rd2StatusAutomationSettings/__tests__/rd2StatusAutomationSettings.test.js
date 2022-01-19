@@ -57,7 +57,7 @@ describe('c-rd2-status-automation-settings', () => {
         expect(daysInput(component)[1].label).toBe('c.RD2_StatusAutomationDaysForClosed');
     });
 
-    it('Should exist edit mode when cancel button is clicked', async () => {
+    it('When editing and cancel button is clicked, edit button should reappear', async () => {
         const component = createElement('c-rd2-status-automation-settings', { is: rd2StatusAutomationSettings });
         saveStatusAutomationSettings.mockResolvedValue(mockStatusAutomationView);
         getAutomationSettings.mockResolvedValue(mockStatusAutomationView);
@@ -78,7 +78,7 @@ describe('c-rd2-status-automation-settings', () => {
         expect(daysInput(component)).toHaveLength(0);
     });
 
-    it('Should exist edit mode when save button is clicked', async () => {
+    it('After saving, edit button should reappear', async () => {
         const component = createElement('c-rd2-status-automation-settings', { is: rd2StatusAutomationSettings });
         saveStatusAutomationSettings.mockResolvedValue(mockStatusAutomationView);
         getAutomationSettings.mockResolvedValue(mockStatusAutomationView);
