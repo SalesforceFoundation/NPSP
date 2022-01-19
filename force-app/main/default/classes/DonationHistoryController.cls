@@ -35,6 +35,8 @@
 */
 public with sharing class DonationHistoryController {
 
+    private static final String EMPTY_PAYMENT_METHOD = '-';
+    
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -57,9 +59,6 @@ public with sharing class DonationHistoryController {
             this.paymentMethod = paymentMethod;
         }
     }
-    
-    private static String EMPTY_PAYMENT_METHOD = '-';
-
 
     /** 
     * @author Salesforce.org
