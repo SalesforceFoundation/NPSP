@@ -191,6 +191,30 @@ public class CON_ContactMerge_TEST {
         System.assert(messageFound);
     }
 
+    /**
+     * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
+       gets a pageErrorMessage doing the contact merge.
+     */
+    @isTest
+    private static void loadMergePageFailsWithNoDeleteRecordAccess() {
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getTestContacts(2);
+        setupMockDataForMerge(controller, testContacts);
+
+        //given
+        User readOnlyUser = getReadOnlyUser();
+        assignDeletePermissionSet(readOnlyUser.Id);
+
+        Test.startTest();
+        System.runAs(readOnlyUser) {
+            //when
+            controller.loadMergeCandidates(getSetOfIds(testContacts));
+            //then
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
+        }
+        Test.stopTest();
+    }
+
     @IsTest
     private static void loadingMergePageFailsWhenContactIsMissing() {
         //given
@@ -249,29 +273,6 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
-    /**
-     * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
-       gets a pageErrorMessage doing the contact merge.
-     */
-    @isTest
-    private static void loadMergePageFailsWithNoDeleteRecordAccess() {
-        CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts(2);
-        setupMockDataForMerge(controller, testContacts);
-
-        //given
-        User readOnlyUser = getReadOnlyUser();
-        assignDeletePermissionSet(readOnlyUser.Id);
-
-        Test.startTest();
-            System.runAs(readOnlyUser) {
-                //when
-                controller.loadMergeCandidates(getSetOfIds(testContacts));
-                //then
-                UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
-            }
-        Test.stopTest();
-    }
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
     @IsTest
