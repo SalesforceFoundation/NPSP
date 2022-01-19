@@ -5,7 +5,6 @@ import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
 import donationHistoryDatatableAriaLabel from '@salesforce/label/c.donationHistoryDatatableAriaLabel';
 import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVisualizerColumnDate';
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
-import getTotalNumberOfRecords from '@salesforce/apex/DonationHistoryController.getTotalNumberOfRecords';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
 const RECORDS_TO_LOAD = 50;
@@ -14,7 +13,7 @@ export default class DonationHistoryTable extends LightningElement {
 
     paymentMethodLabel;
 
-    totalNumberOfRows;
+    totalNumberOfRecords;
 
     tableElement;
 
@@ -48,17 +47,11 @@ export default class DonationHistoryTable extends LightningElement {
     
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        getTotalNumberOfRecords({contactId: this.contactId})
-        .then(data => {
-            if(data){
-                this.totalNumberOfRows = data;
-            }
-        });
         getDonationHistory({contactId: this.contactId, offset: 0})
         .then(data => {
             if (data) {
-                this.allData = data;
-                this.data = data.slice(0, RECORDS_TO_LOAD);
+                this.totalNumberOfRecords = data.totalNumberOfRecords;
+                this.data = data.donations;
             }
         });
     }
@@ -73,13 +66,13 @@ export default class DonationHistoryTable extends LightningElement {
         this.tableElement = event.target;
         getDonationHistory({contactId: this.contactId, offset: this.data.length})
         .then(data => {
-                if (this.data.length >= this.totalNumberOfRows) {
+                if (this.data.length >= this.totalNumberOfRecords) {
                     this.tableElement.isLoading = false;
                     this.tableElement.enableInfiniteLoading = false;
                     return;
                 }
                 const currentData = this.data;
-                const newData = currentData.concat(data);
+                const newData = currentData.concat(data.donations);
                 this.data = newData;
                 //this fails for reference
                 this.tableElement.isLoading = false;
