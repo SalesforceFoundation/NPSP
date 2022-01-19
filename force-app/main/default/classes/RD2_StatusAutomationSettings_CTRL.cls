@@ -36,7 +36,7 @@
 public with sharing class RD2_StatusAutomationSettings_CTRL {
 
     public String getNamespace() {
-        return UTIL_Namespace.getNamespace();
+        return UTIL_Namespace.getComponentNamespace();
     }
 
     @AuraEnabled
