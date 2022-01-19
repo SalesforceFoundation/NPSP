@@ -4,7 +4,7 @@
     <defaultValue>false</defaultValue>
     <description>If selected, all members of this household are deceased. Do not update this field manually. It's updated automatically by NPSP as a result of updates to the Deceased checkbox on household member Contacts.</description>
     <externalId>false</externalId>
-    <inlineHelpText>All members of this household are deceased. This field should not be directly updated. It is updated automatically as a result of updates to the Deceased checkbox on member Contacts.</inlineHelpText>
+    <inlineHelpText>If selected, all members of this household are deceased. Do not update this field manually. It&apos;s updated automatically by NPSP as a result of updates to the Deceased checkbox on household member Contacts.</inlineHelpText>
     <label>All Household Members Deceased</label>
     <trackFeedHistory>false</trackFeedHistory>
     <type>Checkbox</type>
