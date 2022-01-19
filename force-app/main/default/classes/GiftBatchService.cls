@@ -34,6 +34,8 @@
 */
 public with sharing class GiftBatchService {
 
+    @TestVisible private GiftEntryProcessor giftEntryProcessor;
+
     public static final List<String> PAYMENT_INTEGRATION_FIELDS = new List<String>{
         String.valueOf(DataImport__c.Donation_Amount__c), 
         String.valueOf(DataImport__c.Donation_Date__c), 
@@ -50,15 +52,21 @@ public with sharing class GiftBatchService {
         return groupedTotals.totalsFor(batchId);
     }
 
-    public void processGiftsFor(Id batchId) {
-        GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
-        giftBatch.processGifts();
+    public void processGiftsFor(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId);
+        giftEntryProcessor = new GiftEntryProcessor(giftBatch);
+        giftEntryProcessor.process();
     }
 
     public void giftsFailedCaptureFor(Id batchId, Map<String, String> failReasonByElevateBatchId) {
         GiftBatch giftBatch = new GiftBatch(new GiftBatchId(batchId));
         giftBatch.failGiftsWithReason(failReasonByElevateBatchId);
         giftBatch.updateRecords();
+    }
+
+    public void updateGiftBatchWith(GiftBatchId giftBatchId, AsyncApexJobId asyncApexJobId) {
+        GiftBatch giftBatch = new GiftBatch(new DataImportBatch__c(Id = giftBatchId.value()));
+        giftBatch.updateWith(asyncApexJobId);
     }
 
     public GiftBatchView viewModelFrom(GiftBatchId giftBatchId) {
@@ -91,4 +99,20 @@ public with sharing class GiftBatchService {
         GiftBatch giftBatch = new GiftBatch(giftBatchId);
         giftBatch.add(inboundGift.asGift());
     }
+
+    public void validateBatch(GiftBatchId giftBatchId) {
+        GiftBatch giftBatch = new GiftBatch(giftBatchId,
+            new List<String>{String.valueOf(DataImportBatch__c.Latest_Apex_Job_Id__c),
+                UTIL_Namespace.StrTokenNSPrefix('Form_Template__r')
+                    + '.'
+                    + String.valueOf(Form_Template__c.Template_JSON__c)
+            });
+
+        if (giftBatch.hasGiftsToResolve()) {
+            giftBatch.resolveGiftsRemainingInProcessing();
+            giftBatch.updateRecords();
+        }
+
+    }
+
 }

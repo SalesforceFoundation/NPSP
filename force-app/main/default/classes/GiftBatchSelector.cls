@@ -34,9 +34,17 @@
 */
 public inherited sharing class GiftBatchSelector {
 
+    private List<String> giftBatchFields = new List<String>();
+
+
+    public DataImportBatch__c selectGiftBatchBy(GiftBatchId giftBatchId, List<String> giftBatchFields) {
+        this.giftBatchFields = giftBatchFields;
+        return selectGiftBatchBy(giftBatchId);
+    }
+
     public DataImportBatch__c selectGiftBatchBy(GiftBatchId giftBatchId) {
         Id dataImportBatchId = giftBatchId.value();
-        List<String> giftBatchFields = giftBatchFields();
+        List<String> giftBatchFields = !this.giftBatchFields.isEmpty() ? this.giftBatchFields : giftBatchFields();
 
         Boolean isMultiCurrencyEnabled = UserInfo.isMultiCurrencyOrganization();
         if (isMultiCurrencyEnabled) {
@@ -116,6 +124,7 @@ public inherited sharing class GiftBatchSelector {
             String.valueOf(DataImportBatch__c.RequireTotalMatch__c),
             String.valueOf(DataImportBatch__c.Batch_Table_Columns__c),
             String.valueOf(DataImportBatch__c.LastModifiedDate),
+            String.valueOf(DataImportBatch__c.Latest_Apex_Job_Id__c),
             UTIL_Namespace.StrTokenNSPrefix('Form_Template__r')
             + '.'
             + String.valueOf(Form_Template__c.Template_JSON__c)

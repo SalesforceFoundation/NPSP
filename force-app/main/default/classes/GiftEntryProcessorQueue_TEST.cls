@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,52 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description GiftEntry Processor Queue test class.
 */
-public with sharing class GiftService {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
+@IsTest
+private class GiftEntryProcessorQueue_TEST {
+
+    @IsTest
+    static void shouldStampApexJobIdAfterEnqueuingABatchJob() {
+        Id DUMMY_GIFT_BATCH_ID = UTIL_UnitTestData_TEST.mockId(DataImportBatch__c.getSObjectType());
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(DUMMY_GIFT_BATCH_ID));
+        GiftBatchServiceMock giftBatchServiceMock = new GiftBatchServiceMock();
+        processorQueue.giftBatchService = stubFor(giftBatchServiceMock);
+
+        Test.startTest();
+        processorQueue.execute(null);
+        Test.stopTest();
+
+        System.assert(giftBatchServiceMock.updateGiftBatchWithWasCalled);
     }
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
+
+    public class GiftBatchServiceMock implements StubProvider {
+        public Boolean updateGiftBatchWithWasCalled = false;
+
+        public Object handleMethodCall(Object stubbedObject,
+            String stubbedMethodName,
+            Type returnType,
+            List<Type> listOfParamTypes,
+            List<String> listOfParamNames,
+            List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'updateGiftBatchWith' {
+                    updateGiftBatchWithWasCalled = true;
+                }
+            }
+            return null;
+        }
     }
+
+    private static GiftBatchService stubFor(GiftBatchServiceMock giftBatchServiceMock) {
+        return (GiftBatchService) Test.createStub(
+            GiftBatchService.class,
+            giftBatchServiceMock
+        );
+    }
+
 }

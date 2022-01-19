@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,22 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description Selector for Apex Jobs.
 */
-public with sharing class GiftService {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
-    }
+public with sharing class AsyncApexJobSelector {
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
-    }
+   private static final String JOB_TYPE_BATCH = 'BatchApex';
+
+   public AsyncApexJob selectAsyncJobBy(Id jobId) {
+      List<AsyncApexJob> apexJobs = [
+          SELECT
+              Status
+          FROM AsyncApexJob
+          WHERE Id =:jobId
+          AND JobType =: JOB_TYPE_BATCH
+      ];
+      return apexJobs.isEmpty() ? null : apexJobs[0];
+   }
 }

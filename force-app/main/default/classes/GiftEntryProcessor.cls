@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,22 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description Processor for all gifts entered through the Gift Entry App.
 */
-public with sharing class GiftService {
+public inherited sharing class GiftEntryProcessor {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
-    }
+   @TestVisible private GiftBatch giftBatch;
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
-    }
+   public GiftEntryProcessor (GiftBatch giftBatch) {
+      this.giftBatch = giftBatch;
+   }
+
+   public void process(){
+      if (giftBatch.canBeEnqueued()) {
+         giftBatch.prepareGiftsForProcessing();
+         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
+         System.enqueueJob(processorQueue);
+      }
+   }
 }

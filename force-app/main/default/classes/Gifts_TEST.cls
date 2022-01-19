@@ -125,8 +125,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(false);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareGiftsForProcessing();
-        System.assertEquals(5, gifts.giftsToUpdate.size());
+        gifts.prepareForProcessing();
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
@@ -161,7 +160,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(true);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareGiftsForProcessing();
+        gifts.prepareForProcessing();
         System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;

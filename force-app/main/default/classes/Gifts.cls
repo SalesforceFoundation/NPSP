@@ -128,7 +128,7 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void prepareGiftsForProcessing() {
+    public void prepareForProcessing() {
         giftsToUpdate.clear();
 
         Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
@@ -176,6 +176,30 @@ public with sharing class Gifts {
                 giftsToUpdate.add(gift);
             }
         }
+    }
+
+    public void failWith(String failReason) {
+        for (Gift gift : giftsInProcessing()) {
+            gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
+            gift.asDataImport().FailureInformation__c = failReason;
+            giftsToUpdate.add(gift.asDataImport());
+        }
+    }
+
+    public Boolean inProcessing() {
+        return giftsInProcessing().size() > 0;
+    }
+
+    private List<Gift> giftsInProcessing() {
+        List<Gift> processingGifts = new List<Gift>();
+        for (DataImport__c gift : dataImportsById.values()) {
+            Gift currentGift = new Gift(gift);
+
+            if (currentGift.isProcessing()) {
+                processingGifts.add(currentGift);
+            }
+        }
+        return processingGifts;
     }
 
     @TestVisible
