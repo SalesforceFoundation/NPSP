@@ -100,7 +100,7 @@ public with sharing class RD2_StatusAutomationService_TEST {
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidClosedStatus, errorMessage,
-        'Invalid Closed Status error messageshould be returned.');
+        'Invalid Closed Status error message should be returned.');
     }
 
     @isTest
@@ -116,7 +116,7 @@ public with sharing class RD2_StatusAutomationService_TEST {
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidLapsedStatus, errorMessage,
-        'Invalid Lapsed Status error messageshould be returned.');
+        'Invalid Lapsed Status error message should be returned.');
     }
 
     @isTest
