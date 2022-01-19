@@ -74,22 +74,22 @@ public with sharing class RD2_StatusAutomationService {
         return view;
     }
 
-    public void saveSetting(Integer daysForLapsed, Integer daysForClosed, String LapsedStatus, String ClosedStatus) {
+    public void saveSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
         validateUpdatePermission();
         npe03__Recurring_Donations_Settings__c settings = 
             UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
         
         settings.StatusAutomationDaysForLapsed__c = daysForLapsed;
         settings.StatusAutomationDaysForClosed__c = daysForClosed;
-        settings.StatusAutomationLapsedStatus__c = LapsedStatus;
-        settings.StatusAutomationClosedStatus__c = ClosedStatus;
+        settings.StatusAutomationLapsedStatus__c = lapsedStatus;
+        settings.StatusAutomationClosedStatus__c = closedStatus;
 
         if (!Test.isRunningTest()) {
             update settings;
         }
     }
 
-    public String validateSetting(Integer daysForLapsed, Integer daysForClosed, String LapsedStatus, String ClosedStatus) {
+    public String validateSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
         if (daysForLapsed != null && daysForClosed != null) {
             if (daysForLapsed >= daysForClosed) {
                 return System.label.RD2_StatusAutomationInvalidNumberOfDays;
@@ -97,13 +97,13 @@ public with sharing class RD2_StatusAutomationService {
         }
 
         if (daysForLapsed != null) {
-            if (statusMapper.getState(LapsedStatus) != RD2_Constants.STATUS_LAPSED) {
+            if (statusMapper.getState(lapsedStatus) != RD2_Constants.STATUS_LAPSED) {
                 return System.label.RD2_StatusAutomationInvalidLapsedStatus;
             }
         }
 
         if (daysForClosed != null) {
-            if (statusMapper.getState(ClosedStatus) != RD2_Constants.STATUS_Closed) {
+            if (statusMapper.getState(closedStatus) != RD2_Constants.STATUS_Closed) {
                 return System.label.RD2_StatusAutomationInvalidClosedStatus;
             }
         }
