@@ -36,10 +36,15 @@
 */
 @isTest
 public class CON_ContactMerge_TEST {
-
     @TestSetup
     private static void createTestData() {
         createTestContacts(3);
+
+        Contact differingContact = UTIL_UnitTestData_TEST.getContact();
+        differingContact.LastName = 'Differing';
+        differingContact.HomePhone = '7771232345';
+        differingContact.MailingStreet = '123 Test St';
+        insert differingContact;
     }
 
     //todo: this is public and used outside of this test class.
@@ -59,7 +64,7 @@ public class CON_ContactMerge_TEST {
         controller.mergeSelector = stubFor(new ContactMergeSelectorMock(3));
 
         Test.startTest();
-        controller.search();
+            controller.search();
         Test.stopTest();
 
         System.assert(!controller.searchResults.isEmpty(), 'Search results should not be empty.');
@@ -109,55 +114,16 @@ public class CON_ContactMerge_TEST {
         }
     }
 
-    private static Map<String, Contact> getMockSelectedRecordsForMerge(List<Contact> mockContactsWithIds) {
-        return new Map<String, Contact>(mockContactsWithIds);
-    }
-    //todo: not finished
-    private static List<CON_ContactMerge_CTRL.FieldRow> mergeCandidatesShouldDisplayCorrectValues(Contact con2) {
-        CON_ContactMerge_CTRL controller = getControllerForSearch();
-        controller.search();
-        selectSearchResults(controller.searchResults);
-
-        Test.startTest();
-            //todo: full loadMergeCandidates would get called here
-            controller.nextStep();
-        Test.stopTest();
-
-        System.assertEquals(3, controller.step); // We are now on step 3, "choose winning contact"
-
-        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
-
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-            if (row.fieldName.equals('Master')) {
-                System.assert(row.showRadio);
-                System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
-            }
-
-            if (row.fieldName.equalsIgnoreCase('MailingStreet')) {
-                System.assert(!row.showRadio); // Since both records have the same value, we dont need to show the radio
-            }
-
-            if (row.fieldName.equalsIgnoreCase('homephone')) {
-                System.assert(row.showRadio);
-                System.assertEquals(con2.id, row.selectedValue); // Since contact 1 has a null homephone while contact 2 has a non-null homephone, the contact 2 should be selected here.
-            }
-        }
-        return fieldRows;
-    }
-
     //todo: not finished
     @IsTest
     private static void shouldDisplayErrorWhenTooFewContactsSelected() {
+        List<Contact> testContacts = getTestContacts(1);
         CON_ContactMerge_CTRL controller = getControllerForSearch();
-        // given
-        selectSearchResult(controller.searchResults[0]);
 
         // when
-        // todo: moves into loadMergeCandidates() but exits the logic so not much to gain here
-        controller.nextStep();
+        controller.loadMergeCandidates((new Map<Id,Contact>(testContacts)).keySet());
 
         // then
-        // todo: Asserts whether or not error is thrown when loading merge page
         System.assertEquals(1, ApexPages.getMessages().size(), 'Selecting only one contact should display one ' +
                 'page-level error message.');
         ApexPages.Message pageMessage = ApexPages.getMessages()[0];
@@ -1009,12 +975,12 @@ public class CON_ContactMerge_TEST {
             'All 15 Duplicate Record Sets should not be visible');
         Test.stopTest();
     }
-    //todo: first happy path merge test.
+
     @IsTest
     static void mergeShouldReturnCorrectPageReference() {
         // given
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts();
+        List<Contact> testContacts = getTestContacts(2);
         setupMockDataForMerge(controller, testContacts);
 
         // when
@@ -1027,41 +993,6 @@ public class CON_ContactMerge_TEST {
         System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
     }
 
-    private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
-        setMockFieldRows(controller, contactsToMerge);
-        setSelectedRecordsForMerge(controller, contactsToMerge);
-        setWinningContact(
-            getMasterRecordRow(controller.fieldRows), contactsToMerge[0].Id);
-    }
-
-    private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
-        controller.fieldRows = getMockFieldRows(new List<String>{
-                CON_ContactMerge_CTRL.MASTER_KEY,
-                String.valueOf(Contact.FirstName),
-                String.valueOf(Contact.LastName),
-                String.valueOf(Contact.npe01__Preferred_Email__c)
-        }, contactsToMerge);
-    }
-
-    private static void setSelectedRecordsForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
-        controller.selectedRecords = getMockSelectedRecordsForMerge(contactsToMerge);
-    }
-
-    private static CON_ContactMerge_CTRL.FieldRow getMasterRecordRow(List<CON_ContactMerge_CTRL.FieldRow> fieldRows) {
-        CON_ContactMerge_CTRL.FieldRow masterRecordRow;
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-            if (row.showRadio && isMasterRecordField(row.fieldName)) {
-                masterRecordRow = row;
-            }
-        }
-        return masterRecordRow;
-    }
-
-    private static Id setWinningContact(CON_ContactMerge_CTRL.FieldRow masterRecordRow, Id winningContactIdToSet) {
-        masterRecordRow.selectedValue = winningContactIdToSet;
-
-        return winningContactIdToSet;
-    }
 
     //When one contact is selected on the page
     static testMethod void testOneContactSelectedToMerge() {
@@ -1095,6 +1026,40 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
+    /*******************************************************************************************************
+     * @description Integration test to test full load merge candidates flow.
+     */
+    @IsTest
+    private static void selectedMergeCandidatesShouldDisplayCorrectValues() {
+        Contact differingContact = [SELECT HomePhone FROM Contact WHERE LastName = 'Differing' LIMIT 1];
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+        controller.search();
+        selectSearchResults(controller.searchResults);
+
+        Test.startTest();
+            controller.nextStep();
+        Test.stopTest();
+
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
+
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.fieldName.equals(CON_ContactMerge_CTRL.MASTER_KEY)) {
+                System.assert(row.showRadio);
+                System.assert(row.selectedValue != null);
+            }
+
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.FirstName))) {
+                System.assert(!row.showRadio, 'The field should not be shown when both records have the same value.');
+            }
+
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.HomePhone))) {
+                System.assert(row.showRadio);
+                System.assertEquals(differingContact.Id, row.selectedValue);
+            }
+        }
+    }
+
+    //todo: this is also UI
     //Test if more than 3 contacts are selected for merge
     static testMethod void testFourContactSelectedToMerge() {
         
@@ -1261,12 +1226,16 @@ public class CON_ContactMerge_TEST {
         return testContacts;
     }
 
-    private static List<Contact> getTestContacts() {
+    private static List<Contact> getTestContacts(Integer limit) {
         return [
             SELECT FirstName, LastName, npe01__Preferred_Email__c
             FROM Contact
-            LIMIT 3
+            LIMIT :limit
         ];
+    }
+
+    private static Map<String, Contact> getMockSelectedRecordsForMerge(List<Contact> mockContactsWithIds) {
+        return new Map<String, Contact>(mockContactsWithIds);
     }
 
     private static List<CON_ContactMerge_CTRL.FieldRow> getMockFieldRows(List<String> fieldNames,
@@ -1332,40 +1301,47 @@ public class CON_ContactMerge_TEST {
         return controller;
     }
 
+    private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        setMockFieldRows(controller, contactsToMerge);
+        setSelectedRecordsForMerge(controller, contactsToMerge);
+        setWinningContact(
+                getMasterRecordRow(controller.fieldRows), contactsToMerge[0].Id);
+    }
+
+    private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        controller.fieldRows = getMockFieldRows(new List<String>{
+                CON_ContactMerge_CTRL.MASTER_KEY,
+                String.valueOf(Contact.FirstName),
+                String.valueOf(Contact.LastName),
+                String.valueOf(Contact.npe01__Preferred_Email__c)
+        }, contactsToMerge);
+    }
+
+    private static void setSelectedRecordsForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        controller.selectedRecords = getMockSelectedRecordsForMerge(contactsToMerge);
+    }
+
+    private static CON_ContactMerge_CTRL.FieldRow getMasterRecordRow(List<CON_ContactMerge_CTRL.FieldRow> fieldRows) {
+        CON_ContactMerge_CTRL.FieldRow masterRecordRow;
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.showRadio && isMasterRecordField(row.fieldName)) {
+                masterRecordRow = row;
+            }
+        }
+        return masterRecordRow;
+    }
+
+    private static Id setWinningContact(CON_ContactMerge_CTRL.FieldRow masterRecordRow, Id winningContactIdToSet) {
+        masterRecordRow.selectedValue = winningContactIdToSet;
+
+        return winningContactIdToSet;
+    }
+
     private static ContactMergeSelector stubFor(StubProvider mock) {
         return  (ContactMergeSelector) Test.createStub(
                 ContactMergeSelector.class,
                 mock
         );
-    }
-
-    private class UnitOfWorkMock implements StubProvider {
-        List<Contact> contactsToUpdate;
-        List<Contact> contactsToDelete;
-        Boolean saveCalled = false;
-
-        public Object handleMethodCall(Object stubbedObject,
-                String stubbedMethodName,
-                Type returnType,
-                List<Type> listOfParamTypes,
-                List<String> listOfParamNames,
-                List<Object> listOfArgs) {
-
-            switch on (stubbedMethodName) {
-                when 'registerDirty' {
-                    contactsToUpdate = (List<Contact>)listOfArgs;
-                }
-                when 'registerDelete' {
-                    contactsToDelete = (List<Contact>)listOfArgs;
-                }
-                when 'save' {
-                    saveCalled = true;
-                    return new List<Database.SaveResult>();
-                }
-            }
-
-            return null;
-        }
     }
 
     private class ContactMergeSelectorMock implements StubProvider {

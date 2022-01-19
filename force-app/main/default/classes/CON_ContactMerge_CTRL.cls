@@ -512,6 +512,7 @@ public with sharing class CON_ContactMerge_CTRL {
     * @description Shows the next step of the wizard where user can see the diff of the records 
     * before merge.
     */
+    @TestVisible
     private void loadMergeCandidates(Set<Id> mergeCandidates) {
 
         // Check we have atleast 2 and not more than 3 records selected for merge. 
