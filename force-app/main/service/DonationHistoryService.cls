@@ -35,9 +35,11 @@
 public with sharing class DonationHistoryService {
 
     private Id contactId;
+    private Integer offset;
     
-    public DonationHistoryService(Id contactId) {
+    public DonationHistoryService(Id contactId, Integer offset) {
         this.contactId = contactId;
+        this.offset    = offset;
     }
 
     @TestVisible
