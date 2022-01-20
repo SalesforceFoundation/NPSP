@@ -50,7 +50,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
 
-        public DonationHistoryView(Opportunity ocr, String paymentMethod){
+        public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
             this.name = ocr.Name;
             this.closeDate = ocr.CloseDate;
@@ -64,7 +64,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public Boolean isPaymentsEnabled;
         @AuraEnabled public List<DonationHistoryView> donations;
         @AuraEnabled public String paymentMethodLabel;
-	}
+    }
     
     /** 
     * @author Salesforce.org
@@ -99,8 +99,8 @@ public with sharing class DonationHistoryController {
         boolean isPaymentEnabled = service.checkIfPaymentsAreEnabled();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for (Opportunity opp : opportunities) {
-			donationHistories.add(new DonationHistoryView(opp, (isPaymentEnabled ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c : EMPTY_PAYMENT_METHOD)));
-		}
+            donationHistories.add(new DonationHistoryView(opp, (isPaymentEnabled ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c : EMPTY_PAYMENT_METHOD)));
+        }
         return donationHistories;
     }
 }

@@ -75,14 +75,18 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
             Partial_Soft_Credit__c.Amount__c,
             Partial_Soft_Credit__c.Contact_Role_ID__c
+        })
+            && permissions.canRead(	npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
+            npe01__OppPayment__c.npe01__Payment_Method__c,
+            npe01__OppPayment__c.npe01__Opportunity__c
         });
     }
 
-    public boolean checkIfPaymentsAreEnabled(){
+    public boolean checkIfPaymentsAreEnabled() {
         return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
     }
 
-    public String getPaymentMethodLabel(){
+    public String getPaymentMethodLabel() {
         return Schema.DataImport__c.Payment_Method__c.getDescribe().getLabel();
     }
     
