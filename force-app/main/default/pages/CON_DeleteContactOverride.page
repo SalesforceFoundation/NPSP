@@ -1,58 +1,83 @@
 <apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}" id="delContactPage">
     <apex:slds />
+    <apex:includeLightning />
+
+    <script>
+        if ({!NOT(hasMinimumAccess)}) {
+           $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function() {
+               $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                   {   title : "{!$Label.commonAdminPermissionErrorTitle}",
+                       message : "{!$Label.commonAccessErrorMessage}",
+                       size: 'small',
+                       variant: 'no-access',
+                       illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                   },
+                   "deleteContactIllustration",
+                   function () { }
+               );
+           });
+        }
+    </script>
+
     <apex:form styleclass="slds-scope" id="delForm">
-        <apex:outputPanel rendered="{!sforceNav == null}" id="display">
-            <!-- PAGE HEADER -->
-            <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"
-                header="{!Contact.Name}"
-                icon="contact" iconCategory="standard"
-                showSaveBtn="false" 
-                cancelLabel="{!$Label.bdiBtnClose}"
-                cancelAction="{!onCancel}"
-                cancelReRender="delForm"
-            />
-
-            <!-- PAGE MESSAGE -->
-            <c:UTIL_PageMessages allowClose="false" id="msgs" escMsg="false"/>
-            
-            <div class="slds-p-around_small" id="btnDiv">
-                <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}"
-                    id="delContactOnlyBtn"
-                    action="{!deleteContactOnly}" 
-                    rendered="{!NOT(shouldDeleteContactAlone)}"
-                    rerender="delForm"
-                    styleClass="slds-button slds-button_neutral"
-                />
-
-                <apex:outputLink target="_self"
-                    id="viewContactLink"
-                    title="{!$Label.REL_View_Contact_Record}"
-                    value="/{!$CurrentPage.parameters.id}"
-                    styleClass="slds-button slds-button_neutral {!IF(shouldDeleteContactAlone, 'slds-m-right_x-small', '')}">
-                    {!$Label.REL_View_Contact_Record}
-                </apex:outputLink>
-
-                <apex:commandButton value="{!$Label.DeleteAccount}"
-                    id="delAccountBtn"
-                    action="{!deleteAccount}"
-                    rendered="{!canDeleteAccount}"
-                    rerender="delForm"
-                    styleClass="slds-button slds-button_brand"
-                />
-            </div>
+        <apex:outputPanel rendered="{!NOT(hasMinimumAccess)}">
+            <div id="deleteContactIllustration" />
         </apex:outputPanel>
 
-        <apex:outputPanel rendered="{!sforceNav != null}" id="navigator">
-            <script type="text/javascript">
-                (function() {
-                    var sforceNav = '{!sforceNav}';
-                    if (sforceNav === 'back') {
-                        sforce.one.back(true);
-                    } else {
-                        sforce.one.navigateToURL('{!URLFOR($Action.Contact.Tab, $ObjectType.Contact)}', true);
-                    }
-                })();
-            </script>
+        <apex:outputPanel rendered="{!hasMinimumAccess}">
+            <apex:outputPanel rendered="{!sforceNav == null}" id="display">
+                <!-- PAGE HEADER -->
+                <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"
+                    header="{!Contact.Name}"
+                    icon="contact" iconCategory="standard"
+                    showSaveBtn="false"
+                    cancelLabel="{!$Label.bdiBtnClose}"
+                    cancelAction="{!onCancel}"
+                    cancelReRender="delForm"
+                />
+
+                <!-- PAGE MESSAGE -->
+                <c:UTIL_PageMessages allowClose="false" id="msgs" escMsg="false"/>
+
+                <div class="slds-p-around_small" id="btnDiv">
+                    <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}"
+                                        id="delContactOnlyBtn"
+                                        action="{!deleteContactOnly}"
+                                        rendered="{!isOnlyContactInHousehold}"
+                                        rerender="delForm"
+                                        styleClass="slds-button {!IF((hasAccountDeleteAccess), 'slds-button_neutral', 'slds-button_brand')}"
+                    />
+
+                    <apex:outputLink target="_self"
+                                     id="viewContactLink"
+                                     title="{!$Label.REL_View_Contact_Record}"
+                                     value="/{!$CurrentPage.parameters.id}"
+                                     styleClass="slds-button slds-button_neutral {!IF(isOnlyContactInHousehold, 'slds-m-right_x-small', '')}">
+                        {!$Label.REL_View_Contact_Record}
+                    </apex:outputLink>
+
+                    <apex:commandButton value="{!$Label.DeleteAccount}"
+                                        id="delAccountBtn"
+                                        action="{!deleteAccount}"
+                                        rendered="{!AND(hasAccountDeleteAccess, isOnlyContactInHousehold)}"
+                                        rerender="delForm"
+                                        styleClass="slds-button {!IF(hasAccountDeleteAccess, 'slds-button_brand', 'slds-button_neutral')}"
+                    />
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{!sforceNav != null}" id="navigator">
+                <script type="text/javascript">
+                    (function() {
+                        var sforceNav = '{!sforceNav}';
+                        if (sforceNav === 'back') {
+                            sforce.one.back(true);
+                        } else {
+                            sforce.one.navigateToURL('{!URLFOR($Action.Contact.Tab, $ObjectType.Contact)}', true);
+                        }
+                    })();
+                </script>
+            </apex:outputPanel>
         </apex:outputPanel>
     </apex:form>
 </apex:page>

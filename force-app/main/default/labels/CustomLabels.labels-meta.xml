@@ -933,7 +933,7 @@
         <categories>Error, Delete</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <shortDescription>ConfirmDeleteLeaveAccountEmpty</shortDescription>
         <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
@@ -5660,6 +5660,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for batch number settings in NPSP Settings</shortDescription>
         <value>Batch Number Settings</value>
+    </labels>
+    <labels>
+        <fullName>commonAccessErrorMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
     </labels>
     <labels>
         <fullName>commonActivate</fullName>
