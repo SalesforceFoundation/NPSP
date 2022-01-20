@@ -749,6 +749,71 @@ public class HouseholdNamingService_TEST {
         System.assert(expectedContactIds.containsAll(hhContactIds), 'Expected Contacts do not match returned list: ' + hhContacts);
     }
 
+    /*********************************************************************************************************
+    @description 2 contacts with deceased true should result in account with all deceased true
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldSetAllDeceasedTrueWhenAllContactsDeceased() {
+        HouseholdNamingService service = new HouseholdNamingService();
+
+        Account household = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        household.Id = UTIL_UnitTestData_TEST.mockId(household.getSObjectType());
+        household.All_Members_Deceased__c = false;
+
+        Map<Id, List<Contact>> contactsByIds = new Map<Id, List<Contact>>{
+            household.Id => new List<Contact>{
+                new Contact(Deceased__c = true),
+                new Contact(Deceased__c = true)
+            }
+        };
+
+        service.setAllMembersDeceasedFlag(new List<SObject>{ household }, contactsByIds);
+
+        Account updatedAccount = (Account)service.unitOfWork.objectsToUpdate[0];
+        System.assertEquals(true, updatedAccount.All_Members_Deceased__c, 'All Members Deceased should be true.');
+    }
+
+    /*********************************************************************************************************
+    @description 1 contact with deceased false should result in account with all deceased false
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldSetAllDeceasedFalseWhenNotAllContactsDeceased() {
+        HouseholdNamingService service = new HouseholdNamingService();
+
+        Account household = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        household.Id = UTIL_UnitTestData_TEST.mockId(household.getSObjectType());
+        household.All_Members_Deceased__c = true;
+
+        Map<Id, List<Contact>> contactsByIds = new Map<Id, List<Contact>>{
+            household.Id => new List<Contact>{
+                new Contact(Deceased__c = true),
+                new Contact(Deceased__c = false)
+            }
+        };
+
+        service.setAllMembersDeceasedFlag(new List<SObject>{ household }, contactsByIds);
+
+        Account updatedAccount = (Account)service.unitOfWork.objectsToUpdate[0];
+        System.assertEquals(false, updatedAccount.All_Members_Deceased__c, 'All Members Deceased should be false.');
+    }
+
+    /*********************************************************************************************************
+    @description Empty contact list should result in account with all deceased false
+    **********************************************************************************************************/
+    @IsTest
+    private static void shouldSetAllDeceasedFalseWhenNoContacts() {
+        HouseholdNamingService service = new HouseholdNamingService();
+
+        Account household = UTIL_UnitTestData_TEST.buildHouseholdAccount();
+        household.Id = UTIL_UnitTestData_TEST.mockId(household.getSObjectType());
+        household.All_Members_Deceased__c = true;
+
+        service.setAllMembersDeceasedFlag(new List<SObject>{ household }, null);
+
+        Account updatedAccount = (Account)service.unitOfWork.objectsToUpdate[0];
+        System.assertEquals(false, updatedAccount.All_Members_Deceased__c, 'All Members Deceased should be false.');
+    }
+
 
     // Helpers
     ////////////
