@@ -32,6 +32,32 @@
 private class Gift_Test {
 
     @isTest
+    static void shouldPopulateDonationInGift(){
+        // Arrange
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        Id dummyOpportunityId = UTIL_UnitTestData_TEST.mockId(Opportunity.SObjectType);
+        DataImport__c dummyDataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 3.00,
+            Donation_Date__c = Date.today()
+        );
+        Opportunity dummyOpportunity = new Opportunity(
+            Id = dummyOpportunityId,
+            Amount = 100.00,
+            StageName = 'Open'
+        );
+        Donation dummyDonation = new Donation(dummyOpportunity);
+        Gift gift = new Gift(dummyDataImport, dummyDonation);
+
+        // Act
+        Donation retrievedDonation = gift.donation();
+
+        // Assert
+        System.assertEquals(dummyOpportunityId, retrievedDonation.opportunity().Id,
+            'Should return the donation associated with the gift.');
+    }
+
+    @isTest
     static void validateThatGiftNeedsToBeReauthorized() {
         DataImport__c dataImport = new DataImport__c(
             Payment_Status__c = ElevateTransactionStatus.AUTHORIZED.name(),
