@@ -38,23 +38,12 @@
 public class CON_ContactMerge {
 
     @TestVisible
-    private ContactSelector contactSelector {
+    private ContactMergeSelector contactMergeSelector {
         get {
-            if (contactSelector == null) {
-                contactSelector = new ContactSelector();
+            if (contactMergeSelector == null) {
+                contactMergeSelector = new ContactMergeSelector();
             }
-            return contactSelector;
-        }
-        set;
-    }
-
-    @TestVisible
-    private AccountSelector accountSelector {
-        get {
-            if (accountSelector == null) {
-                accountSelector = new AccountSelector();
-            }
-            return accountSelector;
+            return contactMergeSelector;
         }
         set;
     }
@@ -101,13 +90,13 @@ public class CON_ContactMerge {
     
         Id winningAccountId = null;
         Boolean winnerAccountIsOneToOne = false;
-        Contact winner = contactSelector.getContactsWithAccountAndAddressFields(new List<Contact>{winningContact})[0];
+        Contact winner = contactMergeSelector.getContactsWithAccountFields(new List<Contact>{winningContact})[0];
 
         // detect PersonAccounts
         Boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
         //get winner contact Account
         if (winner.AccountId!=null){
-	        winnerAccount = accountSelector.getAccountsFor(new Set<Id>{winner.AccountId});
+	        winnerAccount = contactMergeSelector.getAccountsFor(new Set<Id>{winner.AccountId});
         }
             
         if (winnerAccount.size()>0) {
@@ -121,7 +110,7 @@ public class CON_ContactMerge {
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
         }
 
-        losers = contactSelector.getContactsWithAccountFields(new List<Contact>(losers));
+        losers = contactMergeSelector.getContactsWithAccountFields(new List<Contact>(losers));
 
         for (Contact thisloserContact : losers) {
             if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
@@ -137,7 +126,7 @@ public class CON_ContactMerge {
         
         //get loser contact Accounts that should be merged out.  This includes
         // One2One accounts and Solo Household Accounts
-        loserAccountsToBeMerged = accountSelector.getHouseholdAndOrgAccountsFor(loserAccountIds);
+        loserAccountsToBeMerged = contactMergeSelector.getHouseholdAndOrgAccountsFor(loserAccountIds);
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
         //we merge the Accounts first, if there are any one-to-one Accounts or Solo Household Accounts in the mix
         if (loserAccountsToBeMerged.size() > 0) {

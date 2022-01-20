@@ -36,6 +36,17 @@ public with sharing class ContactMergeSelector {
 
     private final Integer SOSL_LIMIT = 100;
 
+    @TestVisible
+    private static OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
+
     /***********************************************************************************************
     * @description The list of contact field names that are used in search and displayed in Found
     * Contacts.
@@ -81,5 +92,93 @@ public with sharing class ContactMergeSelector {
                 .withWhere(whereString)
                 .build();
         return Database.query(queryString);
+    }
+
+    public List<Account> getAccountsFor(Set<Id> accountIds) {
+        return Database.query(buildAccountSoql(accountIds));
+    }
+
+    public List<Account> getHouseholdAndOrgAccountsFor(Set<Id> accountIds) {
+        return [
+                SELECT Id, npe01__SYSTEMIsIndividual__c, npe01__SYSTEM_AccountType__c, Name
+                FROM Account a
+                WHERE
+                Id IN :accountIds
+                AND (
+                        npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                        OR (
+                                npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
+                                AND Number_of_Household_Members__c = 1
+                        )
+                )
+        ];
+    }
+
+    @TestVisible
+    private String buildAccountSoql(Set<Id> accountIds) {
+        List<String> selectFields = getAccountFields();
+
+        return new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Account.SObjectType))
+                .withWhere('Id IN :accountIds')
+                .build();
+    }
+
+    public List<String> getAccountFields() {
+        List<String> selectFields = new List<String> {
+                String.valueOf(Account.Name),
+                String.valueOf(Account.npe01__SYSTEM_AccountType__c)
+        };
+
+        if (orgConfig.isPersonAccountsEnabled()) {
+            selectFields.add(String.valueOf('PersonContactId'));
+        }
+
+        return selectFields;
+    }
+
+    public List<Contact> getContactsWithAccountFields(List<Contact> contacts) {
+        return Database.query(buildContactSoqlOrderById(contacts));
+    }
+
+    @TestVisible
+    private String buildContactSoqlOrderById(List<Contact> contacts) {
+        List<String> selectFields = getContactSelectionFields();
+
+        return new UTIL_Query()
+                .withSelectFields(selectFields)
+                .withFrom(String.valueOf(Contact.SObjectType))
+                .withWhere('Id IN :contacts')
+                .withOrderBy('Id')
+                .build();
+    }
+
+    private List<String> getContactSelectionFields() {
+        List<String> selectFields = new List<String>{
+                'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
+                'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c',
+                'npe01__Organization_Type__c', 'Account.Name',
+                'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c',
+                'npo02__Household_Naming_Order__c',
+                'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode',
+                'MailingCountry', 'MailingLatitude', 'MailingLongitude',
+                'OtherStreet', 'OtherCity', 'OtherState', 'OtherPostalCode',
+                'OtherCountry', 'OtherLatitude', 'OtherLongitude',
+                'Phone', 'Fax'
+        };
+
+        if (orgConfig.isStateCountryPicklistsEnabled()) {
+            selectFields.add('MailingCountryCode');
+            selectFields.add('MailingStateCode');
+            selectFields.add('OtherCountryCode');
+            selectFields.add('OtherStateCode');
+        }
+
+        if (orgConfig.isPersonAccountsEnabled()) {
+            selectFields.add('isPersonAccount');
+        }
+
+        return selectFields;
     }
 }

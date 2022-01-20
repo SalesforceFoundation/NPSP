@@ -141,10 +141,6 @@ public inherited sharing class ContactSelector {
         return Database.query(buildContactSoql(contacts));
     }
 
-    public List<Contact> getContactsWithAccountFields(List<Contact> contacts) {
-        return Database.query(buildContactSoqlOrderById(contacts));
-    }
-
     public static List<Contact> getContactOverridesForAddressesIn(Set<Id> addressIds) {
         return [
                 SELECT Current_Address__c
@@ -203,10 +199,6 @@ public inherited sharing class ContactSelector {
             selectFields.add('MailingStateCode');
             selectFields.add('OtherCountryCode');
             selectFields.add('OtherStateCode');
-        }
-
-        if (orgConfig.isPersonAccountsEnabled()) {
-            selectFields.add('isPersonAccount');
         }
 
         return selectFields;
