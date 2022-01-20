@@ -2813,14 +2813,6 @@
         <value>Number of Days for Closed must be higher than the Number of Days for Lapsed.</value>
     </labels>
     <labels>
-        <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error when Number of Days for Lapsed or Number of Days for Closed is negative.</shortDescription>
-        <value>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</value>
-    </labels>
-    <labels>
         <fullName>RD2_StatusAutomationInvalidNumberOfDaysForClosed</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -2835,6 +2827,14 @@
         <protected>true</protected>
         <shortDescription>Error when Number of Days for Lapsed is too large</shortDescription>
         <value>Must be smaller than Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed or Number of Days for Closed is negative.</shortDescription>
+        <value>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationLapsedDefinition</fullName>
