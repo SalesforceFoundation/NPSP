@@ -5,7 +5,7 @@ project:
     package:
         name: Nonprofit Success Pack
         namespace: npsp
-        api_version: 48.0
+        api_version: 53.0
         install_class: STG_InstallScript
         uninstall_class: STG_UninstallScript
     git:
@@ -112,6 +112,14 @@ tasks:
         group: Salesforce Metadata
         options:
             path: unpackaged/config/qa
+            namespace_inject: $project_config.project__package__namespace
+
+    deploy_gift_entry_unmanaged:
+        description: Deploys additional metadata for use with Gift Entry
+        class_path: cumulusci.tasks.salesforce.Deploy
+        group: Salesforce Metadata
+        options:
+            path: unpackaged/gift_entry
             namespace_inject: $project_config.project__package__namespace
 
     retrieve_qa_config:
@@ -856,6 +864,17 @@ flows:
                 flow: config_regression
             3:
                 task: update_admin_profile
+
+    ci_feature_2gp_trial:
+        steps:
+            1: 
+                flow: install_2gp_commit
+            2:
+                flow: config_apextest
+            3:
+                flow: config_trial
+            4:
+                task: run_tests
 
     config_trial:
         steps:

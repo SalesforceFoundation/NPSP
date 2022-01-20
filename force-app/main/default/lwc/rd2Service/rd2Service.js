@@ -28,6 +28,9 @@ const PERIOD = {
     FIRST_AND_FIFTEENTH: '1st and 15th'
 };
 
+const RECURRING_TYPE_OPEN = 'Open';
+const RECURRING_TYPE_FIXED = 'Fixed';
+
 class Rd2Service {
 
     /***
@@ -197,4 +200,10 @@ class RecurringDonation {
     }
 }
 
-export { Rd2Service, ELEVATE_PAYMENT_METHODS, PERIOD, RECURRING_PERIOD_ADVANCED }
+export { Rd2Service,
+    ELEVATE_PAYMENT_METHODS,
+    PERIOD,
+    RECURRING_PERIOD_ADVANCED,
+    RECURRING_TYPE_FIXED,
+    RECURRING_TYPE_OPEN
+};

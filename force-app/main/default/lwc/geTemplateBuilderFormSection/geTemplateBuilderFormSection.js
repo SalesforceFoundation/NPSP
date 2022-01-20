@@ -1,6 +1,8 @@
 import { LightningElement, api } from 'lwc';
 import { dispatch } from 'c/utilTemplateBuilder';
 import GeLabelService from 'c/geLabelService';
+import { updateFocusFor } from './geTemplateBuilderFormSectionA11yHelpers';
+import { CLICKED_DOWN, CLICKED_UP } from 'c/geConstants';
 
 const activeSectionClass = 'slds-card slds-card_extension slds-card_extension_active slds-m-vertical_small';
 const inactiveSectionClass = 'slds-card slds-card_extension slds-m-vertical_small';
@@ -16,6 +18,29 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     @api formSection;
     @api sourceObjectFieldsDescribe;
 
+    @api
+    focus() {
+        const article = this.template.querySelector('article');
+        if (article) {
+            article.focus();
+        }
+    }
+
+    @api
+    focusOnDownButton() {
+        const downButton = this.template.querySelector('[data-id="down"]');
+        if (downButton) {
+            downButton.focus();
+        }
+    }
+
+    @api
+    focusOnUpButton() {
+        const upButton = this.template.querySelector('[data-id="up"]');
+        if (upButton) {
+            upButton.focus();
+        }
+    }
 
     get isActive() {
         return this.activeFormSectionId === this.formSection.id ? true : false;
@@ -98,7 +123,6 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
                 showCloseButton: true,
             }
         };
-        //const detail = { componentName: 'ge-templates', action: 'edit', section: this.formSection };
         dispatch(this, 'togglemodal', detail);
     }
 
@@ -108,6 +132,17 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
     */
     handleSelectActiveSection() {
         dispatch(this, 'changeactivesection', this.formSection.id);
+    }
+
+    handleKeyUpSelectActiveSection(event) {
+        const spaceKey = event.keyCode === 32;
+        const enterKey = event.keyCode === 13;
+        if (spaceKey || enterKey) {
+            const activeElement = this.template.activeElement;
+            if (activeElement && activeElement.getAttribute('data-section-id') === this.formSection.id) {
+                this.handleSelectActiveSection();
+            }
+        }
     }
 
     /*******************************************************************************
@@ -146,6 +181,13 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
             fieldName: event.detail
         }
         dispatch(this, 'formelementup', detail);
+
+        setTimeout(() => {
+            const element = this.findElementFor(detail.fieldName);
+            const index = this.findIndexFor(detail.fieldName);
+            const formFieldElement = this.template.querySelector(`[data-id="${element.id}"]`);
+            updateFocusFor(formFieldElement, CLICKED_UP, this.formSection.elements.length, index);
+        }, 0);
     }
 
     /*******************************************************************************
@@ -162,6 +204,27 @@ export default class GeTemplateBuilderFormSection extends LightningElement {
             fieldName: event.detail
         }
         dispatch(this, 'formelementdown', detail);
+
+        setTimeout(() => {
+            const element = this.findElementFor(detail.fieldName);
+            const index = this.findIndexFor(detail.fieldName);
+            const formFieldElement = this.template.querySelector(`[data-id="${element.id}"]`);
+            updateFocusFor(formFieldElement, CLICKED_DOWN, this.formSection.elements.length, index);
+        }, 0);
+    }
+
+    findElementFor(providedName) {
+        return this.formSection.elements.find((element) => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === providedName;
+        });
+    }
+
+    findIndexFor(providedName) {
+        return this.formSection.elements.findIndex((element) => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === providedName;
+        });
     }
 
     /*******************************************************************************

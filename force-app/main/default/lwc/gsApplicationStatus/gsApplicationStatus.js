@@ -3,6 +3,7 @@ import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 import gsNoApplicationSubmitted from '@salesforce/label/c.gsNoApplicationSubmitted'
 import gsLearnMore from '@salesforce/label/c.gsLearnMore'
+import gsLearnMoreAriaLabel from '@salesforce/label/c.gsLearnMoreAriaLabel'
 import gsDaysRemainingInFreeTrial from '@salesforce/label/c.gsDaysRemainingInFreeTrial'
 import gsApplyForFreeLicenses from '@salesforce/label/c.gsApplyForFreeLicenses'
 import gsApplicationStatus from '@salesforce/label/c.gsApplicationStatus'
@@ -12,8 +13,9 @@ import gsCheckStatus from '@salesforce/label/c.gsCheckStatus'
 import gsApplicationStatusModalHeader from '@salesforce/label/c.gsApplicationStatusModalHeader'
 import gsClose from '@salesforce/label/c.commonClose'
 import gsFollowUpApplicationStatus from '@salesforce/label/c.gsFollowUpApplicationStatus'
+
 export default class GsApplicationStatus extends LightningElement {
-    
+
     @track errorMessage = "";
     @track diffInDays = null;
     @track isApplicationSubmitted = false;
@@ -34,7 +36,8 @@ export default class GsApplicationStatus extends LightningElement {
         gsCheckStatus,
         gsApplicationStatusModalHeader,
         gsClose,
-        gsFollowUpApplicationStatus
+        gsFollowUpApplicationStatus,
+        gsLearnMoreAriaLabel
     }
 
     /**

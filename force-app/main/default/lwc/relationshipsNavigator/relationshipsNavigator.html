@@ -1,0 +1,19 @@
+<template>
+    <template if:false={error}>
+        <lightning-card icon-name="standard:contact" class="relation-card slds-card_boundary" title={contactName}>
+            <c-relationships-tree-grid
+                contact-name={contactName}
+                record-id={recordId}
+                is-lightning-out={isLightningOut}
+                onaccesserror={handleAccessError}>
+            </c-relationships-tree-grid>
+        </lightning-card>
+    </template>
+    <template if:true={error}>
+        <c-util-illustration heading={labels.insufficientPermissions}
+                             message={labels.accessDeniedMessage}
+                             size="small"
+                             variant="no-access">
+        </c-util-illustration>
+    </template>
+</template>

@@ -1,5 +1,26 @@
 <apex:page controller="STG_PanelHealthCheck_CTRL" docType="html-5.0" standardStylesheets="false" >
-
+    <apex:includeLightning/>
+    <script>
+        if ({!NOT(isRunningUserIsAdmin)}) {
+            $Lightning.use("{!namespace}" + ":RD2_EnablementApp", function () {
+                $Lightning.createComponent("{!namespace}" + ":utilIllustration",
+                    {
+                        title: "{!$Label.commonAdminPermissionErrorTitle}",
+                        message: "{!$Label.commonPermissionErrorMessage}",
+                        size: 'small',
+                        variant: 'no-access',
+                        illustrationClass: "slds-p-top_x-large slds-m-top_x-large"
+                    },
+                    "stgPanelErrIllustration",
+                    function () {
+                    }
+                );
+            });
+        }
+    </script>
+    <apex:outputPanel rendered="{!NOT(isRunningUserIsAdmin)}">
+        <div id="stgPanelErrIllustration"/>
+    </apex:outputPanel>
     <style>
         .clsDRDetails {
             font-size: 12px;
@@ -28,7 +49,7 @@
         }
     </script>
 
-    <apex:form id="form" styleClass="slds-m-around_x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large" rendered="{!isRunningUserIsAdmin}">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavHealthCheck}" />
         <p class="slds-text-body_small slds-m-top_x-small">
             <apex:outputText value="{!$Label.healthLabelIntro}" />

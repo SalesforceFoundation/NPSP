@@ -662,6 +662,112 @@ private class HH_Container_TEST {
         System.assertEquals(2, records.size(), 'Expected records when Contact.Name is encrypted and the search query is valid: ' + records);
     }
 
+    /*********************************************************************************************************
+    * @description Verifies required methods can be run as a User without Undeliverable Address permissions
+    */
+    public static testMethod void testPageLoadsWithoutUndeliverableAddressPermissions() {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        Id adminProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR LIMIT 1].Id;
+        
+        String addressUndeliverableField = 
+            String.valueOf(Address__c.SObjectType) + '.' + String.valueOf(Address__c.Undeliverable__c);
+        String contactUndeliverableField = 
+            String.valueOf(Contact.SObjectType) + '.' + String.valueOf(Contact.Undeliverable_Address__c);
+        String accountUndeliverableField = 
+            String.valueOf(Account.SObjectType) + '.' + String.valueOf(Account.Undeliverable_Address__c);
+        List<FieldPermissions> fieldPermissions = [
+            SELECT Id, PermissionsRead, PermissionsEdit
+            FROM FieldPermissions
+            WHERE Parent.ProfileId = :adminProfileId
+            AND (Field = :addressUndeliverableField
+                OR Field =: contactUndeliverableField
+                OR Field = : accountUndeliverableField
+            )
+        ];
+        for(FieldPermissions fieldPermission : fieldPermissions){
+            fieldPermission.PermissionsRead = false;
+            fieldPermission.PermissionsEdit = false;
+        }
+        update fieldPermissions;
+
+        System.runAs(adminUser) {
+            initTestData();
+            String undeliverableField = UTIL_Namespace.StrTokenNSPrefix('Undeliverable__c');
+            Map<String, String> fieldLabels = HH_Container_LCTRL.getFieldLabels();
+            System.assert(!String.isBlank(fieldLabels.get(undeliverableField)), 'The Label should not be blank');
+
+            List<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
+            System.assertEquals(2, listAddrA.size());
+
+            hhA = (Account)HH_Container_LCTRL.getHousehold(hhA.Id);
+            System.assertNotEquals(null, hha);
+            List<Contact> hhContacts = HH_Container_LCTRL.getContacts(hhA.Id);
+            System.assertEquals(1, hhContacts.size());
+
+            HH_Container_LCTRL.saveHouseholdPage(hhA, hhContacts, new List<Contact>(), null);
+
+            Account[] actualAccounts = getAccounts();
+            System.assertEquals(2, actualAccounts.size(), 'There should still be 2 Accounts');
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies Undeliverable status syncs correctly as a User without Undeliverable Address permissions
+    */
+    public static testMethod void testSyncWithoutUndeliverableAddressPermissions() {
+        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        Id adminProfileId = [SELECT Id FROM Profile WHERE Name = :UTIL_Profile.SYSTEM_ADMINISTRATOR LIMIT 1].Id;
+        
+        String addressUndeliverableField = 
+            String.valueOf(Address__c.SObjectType) + '.' + String.valueOf(Address__c.Undeliverable__c);
+        String contactUndeliverableField = 
+            String.valueOf(Contact.SObjectType) + '.' + String.valueOf(Contact.Undeliverable_Address__c);
+        List<FieldPermissions> fieldPermissions = [
+            SELECT Id, PermissionsRead, PermissionsEdit
+            FROM FieldPermissions
+            WHERE Parent.ProfileId = :adminProfileId
+            AND (Field = :addressUndeliverableField
+                OR Field =: contactUndeliverableField
+            )
+        ];
+        for(FieldPermissions fieldPermission : fieldPermissions){
+            fieldPermission.PermissionsRead = false;
+            fieldPermission.PermissionsEdit = false;
+        }
+        update fieldPermissions;
+
+        System.runAs(adminUser) {
+            initTestData();
+
+            String strUndeliverable = 'Undeliverable';
+            List<Address__c> addresses = buildAddresses(new List<Account>{hhA});
+            Address__c newDefaultAddress = addresses[0];
+            Address__c newUndeliverableAddress = newDefaultAddress.clone();
+            newUndeliverableAddress.Undeliverable__c = true;
+            newUndeliverableAddress.Default_Address__c = false;
+            newUndeliverableAddress.MailingCity__c = strUndeliverable;
+            addresses.add(newUndeliverableAddress);
+            insert addresses;
+
+            List<Address__c> listAddrA = HH_Container_LCTRL.getAddresses(hhA.Id, null);
+            System.assertEquals(4, listAddrA.size());
+
+            hhA = (Account)HH_Container_LCTRL.getHousehold(hhA.Id);
+            System.assertNotEquals(null, hha);
+            List<Contact> hhContacts = HH_Container_LCTRL.getContacts(hhA.Id);
+            System.assertEquals(1, hhContacts.size());
+
+            // Simulate setting a new Default Address that is Undeliverable
+            copyAddressToAccount(newUndeliverableAddress, hhA);
+            copyAddressToContact(newUndeliverableAddress, hhContacts[0]);
+            HH_Container_LCTRL.saveHouseholdPage(hhA, hhContacts, new List<Contact>(), null);
+        }
+
+        hhA = (Account)HH_Container_LCTRL.getHousehold(hhA.Id);
+        System.assertEquals(true, hhA.get(String.valueOf(Account.Undeliverable_Address__c)), 
+            'The Household should now be set as Undeliverable');
+
+    }
 
     // Helpers
     ////////////
@@ -738,6 +844,20 @@ private class HH_Container_TEST {
         c.MailingState = addr.MailingState__c;
         c.MailingPostalCode = addr.MailingPostalCode__c;
         c.MailingCountry = addr.MailingCountry__c;
+    }
+
+    /*********************************************************************************************************
+    * @description Populates Account's Billing Address from the source Address
+    * @param addr Address
+    * @param a Account
+    * @return void
+    **********************************************************************************************************/
+    private static void copyAddressToAccount(Address__c addr, Account a) {
+        a.BillingStreet = addr.MailingStreet__c;
+        a.BillingCity = addr.MailingCity__c;
+        a.BillingState = addr.MailingState__c;
+        a.BillingPostalCode = addr.MailingPostalCode__c;
+        a.BillingCountry = addr.MailingCountry__c;
     }
 
     /*********************************************************************************************************

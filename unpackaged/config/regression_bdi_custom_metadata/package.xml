@@ -137,5 +137,5 @@
         <members>npsp__Data_Import_Object_Mapping_Set.Migrated_Custom_Object_Mapping_Set</members>
         <name>CustomMetadata</name>
     </types>
-    <version>48.0</version>
+    <version>53.0</version>
 </Package>

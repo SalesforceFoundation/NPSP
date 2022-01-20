@@ -44,6 +44,12 @@ const PAYMENT_METHODS = Object.freeze({
     ACH: 'ACH',
     CREDIT_CARD: 'CARD'
 });
+
+const CLICKED_UP = 'clicked-up';
+const CLICKED_DOWN = 'clicked-down';
+const DOWN = 'down';
+const UP = 'up';
+
 export {
     DISABLE_TOKENIZE_WIDGET_EVENT_NAME,
     LABEL_NEW_LINE,
@@ -59,5 +65,9 @@ export {
     PAYMENT_METHOD_CREDIT_CARD,
     PAYMENT_METHOD_ACH,
     TOKENIZE_ACH_EVENT_ACTION,
-    TOKENIZE_CREDIT_CARD_EVENT_ACTION
+    TOKENIZE_CREDIT_CARD_EVENT_ACTION,
+    CLICKED_UP,
+    CLICKED_DOWN,
+    DOWN,
+    UP
 };

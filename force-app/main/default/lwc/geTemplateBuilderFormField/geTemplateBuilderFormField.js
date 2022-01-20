@@ -29,6 +29,17 @@ export default class geTemplateBuilderFormField extends LightningElement {
     hasPermission = hasViewSetup;
     shouldRender = true;
 
+    @api
+    focusOnDownButton() {
+        const downButton = this.template.querySelector('[data-id="down"]');
+        downButton.focus();
+    }
+
+    @api
+    focusOnUpButton() {
+        const upButton = this.template.querySelector('[data-id="up"]');
+        upButton.focus();
+    }
 
     /*******************************************************************************
     * @description Retrieves the target object's describe data. Used to get the

@@ -296,7 +296,7 @@
         <apex:outputPanel rendered="{!step == 2}">
             <apex:variable var="hasResults" value="{!searchResults.size > 0}"/>
             <apex:variable var="cardClass" value="{!IF(hasResults, '', 'slds-card_empty')}"/>
-            <apex:form >
+            <apex:form>
                 <div class="slds-card slds-m-horizontal_large {!cardClass}">
                     <div class="slds-card__header slds-grid slds-grid_align-spread">
                         <h2 class="slds-text-heading_small slds-truncate slds-align-middle">
@@ -309,7 +309,8 @@
                     </div>
                     <div class="slds-card__body">
                         <apex:outputPanel rendered="{!NOT(hasResults)}">
-                            <h3 class="slds-text-heading_small slds-p-top_large slds-p-bottom_large">
+                            <h3 id="noContactsFoundHeading"
+                                class="slds-text-heading_small slds-p-top_large slds-p-bottom_large">
                                 <apex:outputText value="{!$Label.npe01__contact_merge_error_confirm_message_nothing_found}"/>
                             </h3>
                         </apex:outputPanel>
@@ -332,7 +333,7 @@
                                     </thead>
                                     <tbody>
                                         <apex:repeat value="{!searchResults}" var="item">
-                                            <tr>
+                                            <tr class="searchResultRow">
                                                 <td class="slds-row-select">
                                                     <label class="slds-checkbox">
                                                         <apex:inputCheckbox value="{!item.selected}"/>
@@ -584,7 +585,23 @@
                     },
                     false
                 );
+
             </script>
         </apex:outputPanel>
     </div>
+    <script>
+        function setFocusOnLoad() {
+            const searchResultRows = document.getElementsByClassName('searchResultRow');
+            if (searchResultRows && searchResultRows.length > 0) {
+                searchResultRows[0].setAttribute('tabindex', '-1');
+                searchResultRows[0].focus();
+            } else {
+                const noContactsHeading = document.getElementById('noContactsFoundHeading')
+                if (noContactsHeading) {
+                    noContactsHeading.setAttribute('tabindex', '-1');
+                    noContactsHeading.focus();
+                }
+            }
+        }
+    </script>
 </apex:page>
