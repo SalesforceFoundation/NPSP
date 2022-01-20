@@ -38,11 +38,11 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                 if (data) {
                     this.namespace = data;
                 }
-                this.linkLabel = ( this.item.link.label + ' ' + this.labels.opensInNewLink);
-                if( !(this.item.primaryBtn) === undefined){
+                this.linkLabel = (this.item.link.label + ' ' + this.labels.opensInNewLink);
+                if (this.hasPrimaryBtn) {
                     this.primaryBtnLabel = (this.item.primaryBtn.label + ' ' + this.labels.opensInNewLink);
                 }
-                if( !(this.item.secondaryBtn) === undefined){
+                if (this.hasSecondaryBtn) {
                     this.secondaryBtnLabel = (this.item.secondaryBtn.label + ' ' + this.labels.opensInNewLink);
                 }
             });
@@ -97,7 +97,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     */
     get footerClass() {
         const styleClass = ['content-footer'];
-        if(!this.item.link) {
+        if (!this.item.link) {
             styleClass.push('without-link');
         }
         return styleClass.join(' ');
@@ -119,7 +119,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @param string button type
     */
     buttonAction(button) {
-        switch(button.type) {
+        switch (button.type) {
             case 'sfdc:new-tab': {
                 this.sfdcLinkAction(button.value);
                 break;
@@ -135,7 +135,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @param string button value
     */
     sfdcLinkAction(value) {
-        const values = value.split(':');     
+        const values = value.split(':');
         this[NavigationMixin.GenerateUrl]({
             type: `standard__${values[0]}`,
             attributes: this.getSfdcLinkAttr(values)
@@ -150,7 +150,7 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
     * @returns object
     */
     getSfdcLinkAttr(values) {
-        switch(values[0]) {
+        switch (values[0]) {
             case 'navItemPage':
                 return {
                     apiName: this.subNamespace(values[1])
@@ -184,28 +184,28 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
         let target = event.target;
         target.disabled = true;
 
-        updateCheckItem({'itemId': this.item.id, 'isChecked': checked})
-        .then ( _ => {
-            let eventName = checked ? 'checked' : 'unchecked';
-            this.dispatchEvent(new CustomEvent(eventName));
-        })
-        .catch(error => {
-            if (error && error.body) {
-                const evt = new ShowToastEvent({
-                    title: '',
-                    message: error.body.message,
-                    variant: 'error'
-                });
-                this.dispatchEvent(evt);
-                
-            }
-        }) 
-        .then( _ => {
-            target.disabled = false;
-        })
-        .then( _ => {
-            target.focus();
-        });
-        
+        updateCheckItem({ 'itemId': this.item.id, 'isChecked': checked })
+            .then(_ => {
+                let eventName = checked ? 'checked' : 'unchecked';
+                this.dispatchEvent(new CustomEvent(eventName));
+            })
+            .catch(error => {
+                if (error && error.body) {
+                    const evt = new ShowToastEvent({
+                        title: '',
+                        message: error.body.message,
+                        variant: 'error'
+                    });
+                    this.dispatchEvent(evt);
+
+                }
+            })
+            .then(_ => {
+                target.disabled = false;
+            })
+            .then(_ => {
+                target.focus();
+            });
+
     }
 }

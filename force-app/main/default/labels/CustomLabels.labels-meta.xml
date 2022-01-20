@@ -9654,7 +9654,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Aria Label for the links which open in a new window</shortDescription>
-        <value> (opens in a new window)</value>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
