@@ -1,14 +1,18 @@
 <template>
     <article key={formSection.id}
              class={sectionClass}
+             tabindex="0"
+             onkeyup={handleKeyUpSelectActiveSection}
              onclick={handleSelectActiveSection}
              data-section-id={formSection.id}
-             data-qa-locator={qaLocatorSection}>
+             data-qa-locator={qaLocatorSection}
+             aria-describedby={formSection.id}>
 
 
         <header class="slds-media slds-media_center slds-has-flexi-truncate slds-border_bottom slds-p-vertical_small slds-p-left_small slds-p-right_x-large">
             <div class="slds-media__body">
-                <h2 class="slds-card__header-title">
+                <h2 class="slds-card__header-title"
+                    id={formSection.id}>
                     {formSection.label}
                 </h2>
             </div>
@@ -26,6 +30,7 @@
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
                                        disabled={isFirst}
+                                       data-id="up"
                                        data-qa-locator={qaLocatorSectionUp}>
                 </lightning-button-icon>
                 <lightning-button-icon icon-name="utility:chevrondown"
@@ -34,6 +39,7 @@
                                        data-section-id={formSection.id}
                                        class="slds-m-left_xxx-small"
                                        disabled={isLast}
+                                       data-id="down"
                                        data-qa-locator={qaLocatorSectionDown}>
                 </lightning-button-icon>
             </div>
@@ -81,6 +87,7 @@
                 </div>
                 <template iterator:it={formSection.elements}>
                     <c-ge-template-builder-form-field key={it.value.id}
+                                                      data-id={it.value.id}
                                                       field={it.value}
                                                       is-first={it.first}
                                                       is-last={it.last}

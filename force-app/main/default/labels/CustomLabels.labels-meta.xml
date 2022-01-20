@@ -933,7 +933,7 @@
         <categories>Error, Delete</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <shortDescription>ConfirmDeleteLeaveAccountEmpty</shortDescription>
         <value>{0} is the only Contact in the Account. Deleting this Contact would leave an empty Account.</value>
     </labels>
     <labels>
@@ -1362,6 +1362,38 @@
         <value>Add Dependent Task</value>
     </labels>
     <labels>
+        <fullName>donationHistoryGivingSummaryTitle</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Component title</shortDescription>
+        <value>Giving Summary</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelLifetime</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for lifetime donations</shortDescription>
+        <value>Lifetime</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelPreviousYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for previous years donations</shortDescription>
+        <value>Previous Year</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryLabelThisYear</fullName>
+        <categories>Donors</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>label for this years donations</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
         <fullName>EPAddTask</fullName>
         <categories>Engagement Plans</categories>
         <language>en_US</language>
@@ -1432,6 +1464,14 @@
         <protected>true</protected>
         <shortDescription>ErrorEmailMessage</shortDescription>
         <value>Salesforce encountered these NPSP errors. To learn more about common errors, see &quot;Troubleshoot the Nonprofit Success Pack&quot; on the Power of Us Hub. If you&apos;re unsure how to resolve the errors, post a message in the Nonprofit Success Pack group: https://powerofus.force.com/HUB_NPSP_Group</value>
+    </labels>
+    <labels>
+        <fullName>FieldSetRelatedFieldError</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when including Related Fields in a managed Field Set</shortDescription>
+        <value>Related field {0} not supported in field set {1}. You can only include fields directly on object {2}.</value>
     </labels>
     <labels>
         <fullName>HiddenForSecurity</fullName>
@@ -2991,6 +3031,22 @@
         <protected>false</protected>
         <shortDescription>Relationship Viewer - View Contact Record</shortDescription>
         <value>View Contact Record</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerGraphical</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading graphical view</shortDescription>
+        <value>Graphical View</value>
+    </labels>
+    <labels>
+        <fullName>REL_ViewerTabular</fullName>
+        <categories>Relationships, relationship-viewer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header / A11y Text for loading tabular view</shortDescription>
+        <value>Tabular View</value>
     </labels>
     <labels>
         <fullName>RP_CustomerJourneyLinkLabel</fullName>
@@ -5606,6 +5662,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Number Settings</value>
     </labels>
     <labels>
+        <fullName>commonAccessErrorMessage</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Page-level error for database-level security check</shortDescription>
+        <value>You don&apos;t have the required permissions to perform this action. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>commonActivate</fullName>
         <categories>Auto Number</categories>
         <language>en_US</language>
@@ -6254,6 +6318,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Stage Complete</value>
     </labels>
     <labels>
+        <fullName>conMergeStageCurrent</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageCurrent</shortDescription>
+        <value>Current Stage</value>
+    </labels>
+    <labels>
+        <fullName>conMergeStageNotStarted</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>conMergeStageNotStarted</shortDescription>
+        <value>Stage Not Started</value>
+    </labels>
+    <labels>
         <fullName>conMergeWinnerAsstText</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
@@ -6474,6 +6554,56 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Soft Credit Widget: Add Soft Credit</shortDescription>
         <value>Add Soft Credit</value>
+    </labels>
+    <labels>
+        <fullName>geA11ySection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Used as a part of a screen reader message when a form section is unnamed.</shortDescription>
+        <value>section</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} added to the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderAddUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is added to unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} added to {1} {2}.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveNamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from named section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Label for a form section e.g. Donation Information, Donor Information -->
+        <value>{0} removed from the {1} section.</value>
+    </labels>
+    <labels>
+        <fullName>geA11yTemplateBuilderRemoveUnnamedSection</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Screen reader message when a form field/bundle is removed from unnamed section.</shortDescription>
+        <!-- {0} is a string. Label for a form field or field bundle e.g. Donation Donor, Account Name -->
+        <!-- {1} is a string. Custom label geA11ySection -->
+        <!-- {2} is a non-zero number. Index of the form section in an array e.g. 1, 5, 7 -->
+        <value>{0} removed from {1} {2}.</value>
     </labels>
     <labels>
         <fullName>geAssistiveActiveSection</fullName>
@@ -9487,6 +9617,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Explore Trailhead</value>
     </labels>
     <labels>
+        <fullName>gseuTrailheadLogoText</fullName>
+        <categories>End User Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text displayed in the trailhead component for logo</shortDescription>
+        <value>Trailhead Logo</value>
+    </labels>
+    <labels>
         <fullName>gseuTrailheadText</fullName>
         <categories>End User Get Started Page</categories>
         <language>en_US</language>
@@ -9509,6 +9647,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Learn more label for the application status component</shortDescription>
         <value>Learn More</value>
+    </labels>
+    <labels>
+        <fullName>gsLearnMoreAriaLabel</fullName>
+        <categories>Get Started Page</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Aria Label for the Learn more label for the application status component</shortDescription>
+        <value>Learn More (opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
@@ -10839,6 +10985,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <protected>true</protected>
         <shortDescription>Notify user component has been deprecated.</shortDescription>
         <value>This component has been deprecated.</value>
+    </labels>
+    <labels>
+        <fullName>lblEmpty</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to display Empty.</shortDescription>
+        <value>empty</value>
     </labels>
     <labels>
         <fullName>lblExtendedStatus</fullName>
@@ -15171,5 +15325,21 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Community Group link label in Get Started Resources section for End Users</shortDescription>
         <value>Trailhead Community</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDatatableAriaLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define aria-label on donation history datatable</shortDescription>
+        <value>Donation History</value>
+    </labels>
+    <labels>
+        <fullName>donationHistoryDonorLabel</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to define donor column for donation history datatable</shortDescription>
+        <value>Donor</value>
     </labels>
 </CustomLabels>

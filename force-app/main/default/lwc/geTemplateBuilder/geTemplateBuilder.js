@@ -27,9 +27,18 @@ import {
     removeByProperty,
     removeFromArray,
     isEmpty,
+    isNotEmpty,
     hasNestedProperty,
-    apiNameFor
+    apiNameFor,
+    format
 } from 'c/utilCommon';
+
+import geA11ySection from '@salesforce/label/c.geA11ySection';
+import geA11yTemplateBuilderAddNamedSection from '@salesforce/label/c.geA11yTemplateBuilderAddNamedSection';
+import geA11yTemplateBuilderAddUnnamedSection from '@salesforce/label/c.geA11yTemplateBuilderAddUnnamedSection';
+import geA11yTemplateBuilderRemoveNamedSection from '@salesforce/label/c.geA11yTemplateBuilderRemoveNamedSection';
+import geA11yTemplateBuilderRemoveUnnamedSection from '@salesforce/label/c.geA11yTemplateBuilderRemoveUnnamedSection';
+
 import DATA_IMPORT_BATCH_OBJECT from '@salesforce/schema/DataImportBatch__c';
 import DATA_IMPORT_BATCH_TABLE_COLUMNS_FIELD from '@salesforce/schema/DataImportBatch__c.Batch_Table_Columns__c';
 import DONATION_RECORD_TYPE_NAME from '@salesforce/schema/DataImport__c.Donation_Record_Type_Name__c';
@@ -985,6 +994,24 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         }
 
         this.formSections = formSections;
+
+        this.announceFieldAddedToSection(formSection, field);
+    }
+
+    announceFieldAddedToSection(formSection, field) {
+        const formSectionIndex = findIndexByProperty(this.formSections, ID, formSection.id);
+
+        const screenReaderMessage =
+            isNotEmpty(formSection.label) ?
+                format(geA11yTemplateBuilderAddNamedSection, [field.label, formSection.label])
+                : format(geA11yTemplateBuilderAddUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
+
+        this.screenReaderAnnounce(screenReaderMessage);
+    }
+
+    screenReaderAnnounce(message) {
+        const utilScreenReaderAnnouncer = this.template.querySelector('c-util-screen-reader-announcer');
+        utilScreenReaderAnnouncer?.announce(message);
     }
 
     addFieldToAvailableBatchTableColumnOptions(field) {
@@ -1029,6 +1056,10 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
 
         let formSections = mutable(this.formSections);
         let section = formSections.find(fs => fs.id === sectionId);
+        const field = section.elements.find(element => {
+            const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
+            return name === fieldMappingDeveloperName;
+        });
         const index = section.elements.findIndex((element) => {
             const name = element.componentName ? element.componentName : element.dataImportFieldMappingDevNames[0];
             return name === fieldMappingDeveloperName;
@@ -1038,6 +1069,18 @@ export default class geTemplateBuilder extends NavigationMixin(LightningElement)
         this.formSections = formSections;
 
         this.removeOptionFromBatchTableColumn(fieldMappingDeveloperName);
+
+        this.announceFieldRemovedFromSection(section, field);
+    }
+
+    announceFieldRemovedFromSection(formSection, field) {
+        const formSectionIndex = findIndexByProperty(this.formSections, ID, formSection.id);
+        const screenReaderMessage =
+            isNotEmpty(formSection.label) ?
+                format(geA11yTemplateBuilderRemoveNamedSection, [field.label, formSection.label])
+                : format(geA11yTemplateBuilderRemoveUnnamedSection, [field.label, geA11ySection, formSectionIndex + 1]);
+
+        this.screenReaderAnnounce(screenReaderMessage);
     }
 
     /*******************************************************************************

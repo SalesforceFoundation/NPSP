@@ -4,7 +4,7 @@
     <defaultValue>false</defaultValue>
     <description>Indicates whether Allocations can be set at the Payment level. If selected, you can manually create Allocation records for each Payment, or let NPSP automatically create Payment Allocation records based on the related Opportunity Allocation settings.</description>
     <externalId>false</externalId>
-    <inlineHelpText>Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting.</inlineHelpText>
+    <inlineHelpText>Indicates whether Allocations can be set at the Payment level. Only for use with Accounting Subledger. Contact your Salesforce Account Executive for more information.</inlineHelpText>
     <label>Payment Allocations Enabled</label>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>

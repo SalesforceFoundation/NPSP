@@ -37,6 +37,9 @@
 */
 public class BDI_Donations {
 
+    public static final String[] campaignImportedFields = new String[]{'npsp__DonationCampaignImported__c',
+                                                                        'DonationCampaignImported__c'};
+
     /*******************************************************************************************************
     * @description constructor for the BDI Donations helper
     * @param bdi The Batch Data Import Service the helper should use
@@ -325,10 +328,12 @@ public class BDI_Donations {
     */
     private List<DataImport__c> validateDonationsToProcess(String matchBehavior) {
         List<DataImport__c> dataImportDonations = new List<DataImport__c>();
+
         for (DataImport__c dataImport : bdi.listDI) {
-            Boolean anyDonationFieldsPopulated =
+
+            Boolean anyNonCampaignDonationFieldsPopulated =
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
-                            dataImportFieldToOpportunityField);
+                            dataImportFieldToOpportunityField,campaignImportedFields);
             Boolean anyPaymentFieldsPopulated =
                     BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToPaymentField);
 
@@ -337,15 +342,16 @@ public class BDI_Donations {
                continue;
             }
 
-            //If there are no Donation Fields or Payment Fields populated and no donation amount populated then
-            //do not continue with donation processing.
-            if (dataImport.Donation_Amount__c == null && !anyDonationFieldsPopulated && !anyPaymentFieldsPopulated) {
+            // If there are no Donation Fields or Payment Fields populated and no donation amount populated then
+            // do not continue with donation processing. The 'Donation Campaign Imported / Source' field doesn't count since 
+            // that could be populated if a user was just creating a Recurring Donation.
+            if (dataImport.Donation_Amount__c == null && !anyNonCampaignDonationFieldsPopulated && !anyPaymentFieldsPopulated) {
                 continue;
             }
 
             // Skip DIs that have no fields populated for donation and no DonationImported Id, which means they are
             // not new Donations and not in the DI to serve as a parent for a new payment.
-            if (dataImport.DonationImported__c == null && !anyDonationFieldsPopulated) {
+            if (dataImport.DonationImported__c == null && !anyNonCampaignDonationFieldsPopulated) {
                 continue;
             }
 

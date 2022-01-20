@@ -197,10 +197,21 @@ public class UTIL_Describe {
     public static string getObjectLabel(String objectName) {
         objectName = objectName.toLowerCase();
         // make sure we have this object's schema mapped
-        if (!objectDescribes.containsKey(objectName))
+        if (!objectDescribes.containsKey(objectName)) {
             fillMapsForObject(objectName);
+        }
 
         return objectDescribes.get(objectName).getLabel();
+    }
+
+    public static String getObjectLabelPlural(String objectName) {
+        objectName = objectName.toLowerCase();
+        // make sure we have this object's schema mapped
+        if (!objectDescribes.containsKey(objectName)) {
+            fillMapsForObject(objectName);
+        }
+
+        return objectDescribes.get(objectName).getLabelPlural();
     }
 
     /*******************************************************************************************************
@@ -534,12 +545,23 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description utility to return a list of strings from a field set.
+    * @description utility to return a list of field names from a field set.
     * @param obj the namespaced name of the object
     * @param fieldSet the namespaced name of the object's field set
     * @return a list of strings of field names in the field set
     */
     public static List<String> listStrFromFieldSet(String obj, String fieldSetName) {
+        return listStrFromFieldSet(obj, fieldSetName, false);
+    }
+
+    /*******************************************************************************************************
+    * @description utility to return a list of field names from a field set.
+    * @param obj the namespaced name of the object
+    * @param fieldSet the namespaced name of the object's field set
+    * @param onlyRequired if true, only return required fields
+    * @return a list of strings of field names in the field set
+    */
+    public static List<String> listStrFromFieldSet(String obj, String fieldSetName, Boolean onlyRequired) {
         List<String> fieldNames = new List<String>();
         if (gd==null) gd = Schema.getGlobalDescribe();
         Schema.SObjectType targetType = gd.get(obj);
@@ -550,12 +572,13 @@ public class UTIL_Describe {
         } else {
             for(Schema.FieldSetMember fieldSetMember : fieldSetDescribe.getFields()) {
                 if (fieldSetMember.getFieldPath().contains('.')) {
-                    String errorMessage = 'Related field \'' + fieldSetMember.getFieldPath() +
-                            '\' not supported ' + 'in field set \'' + fieldSetName +
-                            '\'.  You can only include fields directly on object \'' + obj + '\'.';
+                    String errorMessage = String.format(Label.FieldSetRelatedFieldError, 
+                        new List<String>{'\''+fieldSetMember.getFieldPath()+'\'', '\''+fieldSetName+'\'', '\''+obj+'\''});
                     throw (new SchemaDescribeException(errorMessage));
                 }
-                fieldNames.add(fieldSetMember.getFieldPath());
+                if(!onlyRequired || fieldSetMember.getDBRequired() || fieldSetMember.getRequired()){
+                    fieldNames.add(fieldSetMember.getFieldPath());
+                }
             }
             return fieldNames;
         }
@@ -774,6 +797,10 @@ public class UTIL_Describe {
         }
 
         return objectName;
+    }
+
+    public Boolean isFieldSortable(Schema.SObjectField field) {
+        return field.getDescribe().isSortable();
     }
 
     /** @description our exception object for Field Level & Object Security errors. */

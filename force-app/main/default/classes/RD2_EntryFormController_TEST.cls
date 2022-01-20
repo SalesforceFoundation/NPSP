@@ -91,6 +91,10 @@ private with sharing class RD2_EntryFormController_TEST {
             'Installment_Period__c.IsCreatable should return true');
         System.assert(orgSettingsByKey.get('customFieldSets') instanceof List<RD2_EntryFormController.CustomField>,
             'A list of Custom Fields should be returned');
+        System.assert(orgSettingsByKey.get('periodToYearlyFrequencyMap') instanceof Map<String, Integer>,
+            'A map of String to Integer should be returned');
+        System.assert(orgSettingsByKey.get('defaultRecurringType') instanceof String,
+            'A String value should be returned');
     }
 
     /***

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recurring_Donation_Elevate_Event_Version__c</fullName>
+    <description>The version of the Elevate event that was used to create this Data Import record.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The version of the Elevate event that was used to create this Data Import record.</inlineHelpText>
+    <label>Recurring Donation Elevate Event Version</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,11 @@
+:host {
+    --sds-c-card-color-background: #F3F3F3;
+    --sds-c-card-header-spacing-block-end: 12px;
+    --sds-c-card-header-spacing-inline-start: 12px;
+    --sds-c-card-header-spacing-inline-end: 12px;
+    --sds-c-card-heading-font-weight: 700;
+}
+
+.relation-card {
+    display: block;
+}

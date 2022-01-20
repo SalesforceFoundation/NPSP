@@ -1,187 +1,233 @@
 <apex:page extensions="REL_RelationshipsViewer_CTRL" standardController="Contact" sidebar="false">
+    <apex:includeLightning />
+    <apex:slds />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/colors.js')}" />
-    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/primitives.js')}" />
+    <apex:includeScript
+        value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/primitives.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/src/graphics/graphics.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/jquery/jquery-3.5.0.min.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor.js')}" />
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/arbor-v0.92/lib/arbor-tween.js')}" />
 
+    <style>
+        .slds-scope .slds-table tr.slds-hint-parent td, .slds-scope .slds-table tr.slds-hint-parent th {
+            padding: 0.25rem;
+        }
+    </style>
     <body>
-        <canvas id="viewport" width="1000" height="600"></canvas>
-        <script>
-            var j$ = jQuery.noConflict();
-            /*
-            these colors are used to show the different levels of relationships
-            the base contact starts at purple, and each step removed from the original contact displays at a different color
-            purple: "#7A3185"
-            dark blue:"#006EA5"
-            green:"#009F79"
-            yellow:"#f0bc4c"
-            orange:"#f07c39"
-            */
-            var colors = ["#7A3185", "#006EA5", "#009F79", "#f0bc4c", "#f07c39"];
+    <div class="slds-scope">
+        <div class="slds-tabs_default">
+            <apex:outputPanel layout="block" rendered="{!$Site.Name == ''}">
+            <ul class="slds-tabs_default__nav" role="tablist">
+                <li id="tab-graphical" class="slds-tabs_default__item slds-is-active" title="{!$Label.REL_ViewerGraphical}" role="presentation">
+                    <a class="slds-tabs_default__link" href="#" role="tab" tabindex="0" aria-selected="true"
+                       aria-controls="tab-default-1" id="tab-default-1__item">
+          <span class="slds-tabs__left-icon">
+            <span class="slds-icon_container slds-icon-standard-contact" title="{!$Label.REL_ViewerGraphical}">
+              <svg class="slds-icon slds-icon_small" aria-hidden="true" viewBox="0 0 100 100">
+                <path d="M73.9 27c-3.9 0-7.1 3.2-7.1 7.1 0 .6.1 1.1.2 1.6l-6.7 4.4c-2.1-2.4-5.1-4-8.6-4-2.6 0-5 .9-6.9 2.4l-11-7.6c.7-2.9-.8-6.1-3.6-7.4-3.3-1.5-7.2-.1-8.7 3.1s-.1 7.2 3.1 8.7c1.7.8 3.6.8 5.3.1l11.3 7.9c-.5 1.2-.8 2.6-.8 4 0 .8.1 1.5.2 2.3l-6.9 2.5c-.9-1-2.1-1.8-3.6-2.2-3.9-1.1-8 1.2-9.1 5.2-1.1 3.9 1.2 8 5.2 9.1 3.9 1.1 8-1.2 9.1-5.2.1-.4.2-.8.2-1.2l7.9-2.8c2.1 2.2 5 3.6 8.2 3.6h.9l1.1 5.6c-2.1 1.7-3.3 4.4-3 7.2.4 4.6 4.5 7.9 9.1 7.5 4.6-.4 7.9-4.5 7.5-9.1-.4-4.1-3.7-7.2-7.7-7.5l-1.2-5.9c2.8-2 4.7-5.4 4.7-9.1 0-.6-.1-1.2-.1-1.7l7.9-5.2c1 .5 2.1.8 3.2.8 3.9 0 7.1-3.2 7.1-7.1-.1-3.9-3.3-7.1-7.2-7.1zM51.7 54.6c-4 0-7.2-3.2-7.2-7.2s3.2-7.2 7.2-7.2 7.2 3.2 7.2 7.2c0 3.9-3.2 7.2-7.2 7.2z"/>
+              </svg>
+            </span>
+          </span>{!$Label.REL_ViewerGraphical}</a>
+                </li>
+                <li id="tab-tabular" class="slds-tabs_default__item" title="{!$Label.REL_ViewerTabular}" role="presentation">
+                    <a class="slds-tabs_default__link" href="#" role="tab" tabindex="-1" aria-selected="false"
+                       aria-controls="tab-default-2" id="tab-default-2__item">
+          <span class="slds-tabs__left-icon">
+            <span class="slds-icon_container slds-icon-standard-contact" title="{!$Label.REL_ViewerTabular}">
+              <svg class="slds-icon slds-icon_small" aria-hidden="true" viewBox="0 0 100 100">
+                <path d="M31.9 38.8h-10c-1 0-1.9.9-1.9 1.9v31.9c0 2.8 2.2 5 5 5h6.9c1 0 1.9-.9 1.9-1.9v-35c0-1.1-.9-1.9-1.9-1.9zm46.2 0H40.6c-1 0-1.9.9-1.9 1.9v35c0 1 .9 1.9 1.9 1.9H75c2.8 0 5-2.2 5-5v-32c0-1-.9-1.8-1.9-1.8zM75 22.5H25c-2.8 0-5 2.2-5 5v4.4c0 1 .9 1.9 1.9 1.9h56.2c1 0 1.9-.9 1.9-1.9v-4.4c0-2.7-2.2-5-5-5z"/>
+              </svg>
+            </span>
+          </span>{!$Label.REL_ViewerTabular}</a>
+                </li>
+            </ul>
+                </apex:outputPanel>
+            <div id="tab-default-1" class="slds-show" role="tabpanel"
+                 aria-labelledby="tab-default-1__item">
+                <canvas id="viewport" width="1000" height="600"></canvas>
+            </div>
+            <div id="tab-default-2" class="slds-hide" role="tabpanel"
+                 aria-labelledby="tab-default-2__item">
+                <div id="tabular-lwc"></div>
+            </div>
+        </div>
+    </div>
 
-            // this is the object that stores the contact info that displays in the info box
-            var currentContact = new Object();
-            currentContact.name = '';
-            currentContact.accountName = '';
-            currentContact.title = '';
-            currentContact.id = '';
+    <script>
+        var j$ = jQuery.noConflict();
+        /*
+        these colors are used to show the different levels of relationships
+        the base contact starts at purple, and each step removed from the original contact displays at a different color
+        purple: "#7A3185"
+        dark blue:"#006EA5"
+        green:"#009F79"
+        yellow:"#f0bc4c"
+        orange:"#f07c39"
+        */
+        var colors = ["#7A3185", "#006EA5", "#009F79", "#f0bc4c", "#f07c39"];
 
-            // tracks whether you're currently in a mouseover of a node
-            // since the mouselisteners are at the canvas level, not on each individual node, you're "mousing over" a node if the distance to the nearest node is less than 50
-            var mouseOutComplete = false;
-            var particleSystem;
-            //contains information about the relationship object metadata for use in linking
-            var RelationshipInfo = new Object();
-            RelationshipInfo.prefix = '';
-            RelationshipInfo.NameField = '';
-            RelationshipInfo.NameIdField = '';
+        // this is the object that stores the contact info that displays in the info box
+        var currentContact = new Object();
+        currentContact.name = '';
+        currentContact.accountName = '';
+        currentContact.title = '';
+        currentContact.id = '';
 
-            (function(j$) {
+        // tracks whether you're currently in a mouseover of a node
+        // since the mouselisteners are at the canvas level, not on each individual node, you're "mousing over" a node if the distance to the nearest node is less than 50
+        var mouseOutComplete = false;
+        var particleSystem;
+        //contains information about the relationship object metadata for use in linking
+        var RelationshipInfo = new Object();
+        RelationshipInfo.prefix = '';
+        RelationshipInfo.NameField = '';
+        RelationshipInfo.NameIdField = '';
 
-                var Renderer = function(canvas) {
-                    var canvas = j$(canvas).get(0)
-                    var ctx = canvas.getContext("2d");
+        (function(j$) {
 
-                    var that = {
-                        init:function(system) {
-                            particleSystem = system;
-                            // resize canvas to window
-                            ctx.canvas.width = window.innerWidth - 20;
-                            particleSystem.screenSize(canvas.width, canvas.height);
-                            particleSystem.screenPadding(80);
-                            that.initMouseHandling();
-                        },
-          
-                        redraw:function() {
-                            ctx.canvas.width = window.innerWidth - 20;
-                            ctx.fillStyle = "white"
-                            ctx.fillRect(0,0, canvas.width, canvas.height)
-                
-                            particleSystem.eachEdge(function(edge, pt1, pt2) {
-                                ctx.strokeStyle = "rgba(0,0,0, .333)";
-                                ctx.lineWidth = 1;
-                                ctx.beginPath();
-                                ctx.moveTo(pt1.x, pt1.y);
-                                ctx.lineTo(pt2.x, pt2.y);
-                                ctx.stroke();
+            var Renderer = function(canvas) {
+                var canvas = j$(canvas).get(0)
+                var ctx = canvas.getContext("2d");
 
-                                if (edge.data.label) {
-                                    // set font style
-                                    ctx.font = 'italic 10px sans-serif';
+                var that = {
+                    init: function(system) {
+                        particleSystem = system;
+                        // resize canvas to window
+                        ctx.canvas.width = window.innerWidth - 20;
+                        particleSystem.screenSize(canvas.width, canvas.height);
+                        particleSystem.screenPadding(80);
+                        that.initMouseHandling();
+                    },
 
-                                    // add white box behind text to block line
-                                    ctx.fillStyle = "white";
-                                    var boxWidth = ctx.measureText(edge.data.label).width;
-                                    ctx.fillRect((pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2 - 15, boxWidth, 20);
+                    redraw: function() {
+                        ctx.canvas.width = window.innerWidth - 20;
+                        ctx.fillStyle = "white"
+                        ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-                                    // add label
-                                    ctx.fillStyle = "black";
-                                    ctx.fillText(edge.data.label, (pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2);
-                                }
-                            })
-        
-                            particleSystem.eachNode(function(node, pt) {
-                                var label = node.data.label||"";
-                                var link = node.data.link||"";
-                                var w = ctx.measureText(""+label).width + 20;
-                                if (!(""+label).match(/^[ \t]*$/)) {
-                                    pt.x = Math.floor(pt.x)
-                                    pt.y = Math.floor(pt.y)
-                                } else {
-                                    label = null;
-                                }
+                        particleSystem.eachEdge(function(edge, pt1, pt2) {
+                            ctx.strokeStyle = "rgba(0,0,0, .333)";
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(pt1.x, pt1.y);
+                            ctx.lineTo(pt2.x, pt2.y);
+                            ctx.stroke();
 
-                                // draw a circle centered at pt
-                                if (node.data.color) {
-                                    ctx.fillStyle = node.data.color
-                                } else {
-                                    ctx.fillStyle = "rgba(0,0,0,.2)"
-                                }
+                            if (edge.data.label) {
+                                // set font style
+                                ctx.font = 'italic 10px sans-serif';
 
-                                if (node.data.color == 'none') {
-                                    ctx.fillStyle = "white"
-                                }
+                                // add white box behind text to block line
+                                ctx.fillStyle = "white";
+                                var boxWidth = ctx.measureText(edge.data.label).width;
+                                ctx.fillRect((pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2 - 15, boxWidth, 20);
 
-                                ctx.beginPath();
-                                ctx.arc(pt.x, pt.y, w / 2, 0, 2 * Math.PI, false);
-                                ctx.fill();
+                                // add label
+                                ctx.fillStyle = "black";
+                                ctx.fillText(edge.data.label, (pt1.x + pt2.x - boxWidth) / 2, (pt1.y + pt2.y) / 2);
+                            }
+                        })
 
-                                // save this to position info box later
-                                node.data.radius = w / 2;
-
-                                // center the label inside the circle 
-                                if (label) {
-                                    ctx.font = "Bold 12px Helvetica";
-                                    ctx.textAlign = "center";
-                                    ctx.fillStyle = "white";
-                                    if (node.data.color=='none') {
-                                        ctx.fillStyle = '#333333';
-                                    }
-                                    ctx.fillText(label || "", pt.x, pt.y + 4);
-                                }
-                            })
-                            ctx.strokeStyle = "#cccccc"
-                            ctx.lineWidth = 1
-                            ctx.beginPath()
-                        },
-        
-                        initMouseHandling:function() {
-                            // no-nonsense drag and drop (thanks springy.js)
-                            var dragged = null;
-
-                            var mouseoverHandler = {
-                                mouseover: function (e) {
-                                    var pos = j$(canvas).offset();
-                                    _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top)
-                                    nearest = particleSystem.nearest(_mouseP);
-                                    if (nearest.distance < nearest.node.data.radius + 10) {
-                                        if (nearest.node.data.id != currentContact.id || mouseOutComplete) {
-                                            currentContact.id = nearest.node.data.id;
-                                            currentContact.name = nearest.node.data.label;
-                                            if (nearest.node.data.accountName) {
-                                                currentContact.accountName = nearest.node.data.accountName;
-                                            } else{
-                                                currentContact.accountName = '';
-                                            }
-                                            if (nearest.node.data.title) {
-                                                currentContact.title = nearest.node.data.title;
-                                            } else {
-                                                currentContact.title = '';
-                                            }
-                                            var infoBox = getContactInfoBox();
-                                            mouseOutComplete = false;
-                                            drawToolTip(e.pageX-pos.left, e.pageY-pos.top,infoBox);
-                                        }                  
-                                    } else if (!mouseOutComplete && nearest.distance > 100) {
-                                        // hide text box
-                                        hideToolTip();
-                                    }
-                                }
+                        particleSystem.eachNode(function(node, pt) {
+                            var label = node.data.label || "";
+                            var link = node.data.link || "";
+                            var w = ctx.measureText("" + label).width + 20;
+                            if (!("" + label).match(/^[ \t]*$/)) {
+                                pt.x = Math.floor(pt.x)
+                                pt.y = Math.floor(pt.y)
+                            } else {
+                                label = null;
                             }
 
-                            // set up a handler object that will initially listen for mousedowns then
-                            // for moves and mouseups while dragging
-                            var handler = {
-                                clicked:function(e) {
-                                    var pos = j$(canvas).offset();
-                                    _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top);
-                                    nearest = dragged = particleSystem.nearest(_mouseP);      
-                                    
-                                    var currNode = particleSystem.getNode(nearest.node.data.id);                                    
-                                                                          
-                                    //get a list of the existing node relIds and return it to filter our relationship selection
-                                    var relIds = new Array();
-                                    particleSystem.eachEdge(function(edge, pt1, pt2) {
-                                        relIds.push(edge.data.relId);
-                                    });
-                                    
-                                    Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}',
-                                        currNode.data.id, false, relIds,function(result, event) {
-                                                                                  
+                            // draw a circle centered at pt
+                            if (node.data.color) {
+                                ctx.fillStyle = node.data.color
+                            } else {
+                                ctx.fillStyle = "rgba(0,0,0,.2)"
+                            }
+
+                            if (node.data.color == 'none') {
+                                ctx.fillStyle = "white"
+                            }
+
+                            ctx.beginPath();
+                            ctx.arc(pt.x, pt.y, w / 2, 0, 2 * Math.PI, false);
+                            ctx.fill();
+
+                            // save this to position info box later
+                            node.data.radius = w / 2;
+
+                            // center the label inside the circle 
+                            if (label) {
+                                ctx.font = "Bold 12px Helvetica";
+                                ctx.textAlign = "center";
+                                ctx.fillStyle = "white";
+                                if (node.data.color == 'none') {
+                                    ctx.fillStyle = '#333333';
+                                }
+                                ctx.fillText(label || "", pt.x, pt.y + 4);
+                            }
+                        })
+                        ctx.strokeStyle = "#cccccc"
+                        ctx.lineWidth = 1
+                        ctx.beginPath()
+                    },
+
+                    initMouseHandling: function() {
+                        // no-nonsense drag and drop (thanks springy.js)
+                        var dragged = null;
+
+                        var mouseoverHandler = {
+                            mouseover: function(e) {
+                                var pos = j$(canvas).offset();
+                                _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top)
+                                nearest = particleSystem.nearest(_mouseP);
+                                if (nearest.distance < nearest.node.data.radius + 10) {
+                                    if (nearest.node.data.id != currentContact.id || mouseOutComplete) {
+                                        currentContact.id = nearest.node.data.id;
+                                        currentContact.name = nearest.node.data.label;
+                                        if (nearest.node.data.accountName) {
+                                            currentContact.accountName = nearest.node.data.accountName;
+                                        } else {
+                                            currentContact.accountName = '';
+                                        }
+                                        if (nearest.node.data.title) {
+                                            currentContact.title = nearest.node.data.title;
+                                        } else {
+                                            currentContact.title = '';
+                                        }
+                                        var infoBox = getContactInfoBox();
+                                        mouseOutComplete = false;
+                                        drawToolTip(e.pageX - pos.left, e.pageY - pos.top, infoBox);
+                                    }
+                                } else if (!mouseOutComplete && nearest.distance > 100) {
+                                    // hide text box
+                                    hideToolTip();
+                                }
+                            }
+                        }
+
+                        // set up a handler object that will initially listen for mousedowns then
+                        // for moves and mouseups while dragging
+                        var handler = {
+                            clicked: function(e) {
+                                var pos = j$(canvas).offset();
+                                _mouseP = arbor.Point(e.pageX - pos.left, e.pageY - pos.top);
+                                nearest = dragged = particleSystem.nearest(_mouseP);
+
+                                var currNode = particleSystem.getNode(nearest.node.data.id);
+
+                                //get a list of the existing node relIds and return it to filter our relationship selection
+                                var relIds = new Array();
+                                particleSystem.eachEdge(function(edge, pt1, pt2) {
+                                    relIds.push(edge.data.relId);
+                                });
+
+                                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}',
+                                    currNode.data.id, false, relIds, function(result, event) {
+
                                         if (event.status) {
-                                            output = '';  
+                                            output = '';
                                             var relatedNode = null;
                                             var childColorIndex = currNode.data.colorIndex;
                                             if (childColorIndex < colors.length - 1) {
@@ -196,73 +242,90 @@
                                                     thisLabel = result[i].type + ' ({!JSINHTMLENCODE($Label.REL_Former)})';
                                                 } else {
                                                     thisLabel = result[i].type;
-                                                }                                               
-                                
+                                                }
+
                                                 if (!relatedNode) {
-                                                    relatedNode = particleSystem.addNode(result[i].id, {label:result[i].firstName + ' ' + result[i].lastName, color:colors[childColorIndex]})
+                                                    relatedNode = particleSystem.addNode(result[i].id, {
+                                                        label: result[i].firstName + ' ' + result[i].lastName,
+                                                        color: colors[childColorIndex],
+                                                        colorIndex: childColorIndex,
+                                                        link: result[i].link,
+                                                        id: result[i].id,
+                                                        title: result[i].title,
+                                                        accountName: result[i].accountName
+                                                    })
                                                 }
                                                 // only add edge ifthe relationship is not already drawn
                                                 if (particleSystem.getEdges(currNode, relatedNode).length == 0 && particleSystem.getEdges(relatedNode, currNode).length == 0) {
-                                                    particleSystem.addEdge(currNode, relatedNode, {label:thisLabel, status:result[i].status, colorIndex:childColorIndex, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName, relId:result[i].relId});
-                                                } else { 
+                                                    particleSystem.addEdge(currNode, relatedNode, {
+                                                        label: thisLabel,
+                                                        status: result[i].status,
+                                                        colorIndex: childColorIndex,
+                                                        link: result[i].link,
+                                                        id: result[i].id,
+                                                        title: result[i].title,
+                                                        accountName: result[i].accountName,
+                                                        relId: result[i].relId
+                                                    });
+                                                } else {
                                                     //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
-                                                    var thisEdge;                                                                                                     
+                                                    var thisEdge;
                                                     if (particleSystem.getEdges(currNode, relatedNode).length != 0) {
                                                         thisEdge = particleSystem.getEdges(currNode, relatedNode);
                                                     } else {
-                                                        thisEdge = particleSystem.getEdges(relatedNode, currNode);                                                    
+                                                        thisEdge = particleSystem.getEdges(relatedNode, currNode);
                                                     }
-                                                    var thisEdgeLabel = '';                                                 
+                                                    var thisEdgeLabel = '';
                                                     thisEdgeLabel = thisEdge[0].data.label;
                                                     //if this edge doesn't yet have the appended label
                                                     if (thisEdgeLabel.indexOf(thisLabel) == -1) {
                                                         thisEdge[0].data.label = thisEdgeLabel + ', ' + thisLabel;
                                                     }
-                                                }                               
+                                                }
                                             }
-                                        }   
-                                    },{escape:true});
-        
-                                    if (dragged && dragged.node !== null) {
-                                        // while we're dragging, don't let physics move the node
-                                        dragged.node.fixed = true
-                                    }
-                                    j$(canvas).bind('mousemove', handler.dragged)
-                                    j$(window).bind('mouseup', handler.dropped)
-                                    return false
-                                },
-                  
-                                dragged:function(e) {
-                                    var pos = j$(canvas).offset();
-                                    var s = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
-        
-                                    if (dragged && dragged.node !== null) {
-                                        var p = particleSystem.fromScreen(s)
-                                        dragged.node.p = p
-                                    }
-                                    return false;
-                                },
-        
-                                dropped:function(e) {
-                                    if (dragged===null || dragged.node===undefined) return;
-                                    if (dragged.node !== null) dragged.node.fixed = false;
+                                        }
+                                    }, { escape: true });
 
-                                    dragged.node.tempMass = 1000;
-                                    dragged = null;
-                                    j$(canvas).unbind('mousemove', handler.dragged);
-                                    j$(window).unbind('mouseup', handler.dropped);
-                                    _mouseP = null;
-                                    return false;
-                                }                 
-                            }               
+                                if (dragged && dragged.node !== null) {
+                                    // while we're dragging, don't let physics move the node
+                                    dragged.node.fixed = true
+                                }
+                                j$(canvas).bind('mousemove', handler.dragged)
+                                j$(window).bind('mouseup', handler.dropped)
+                                return false
+                            },
+
+                            dragged: function(e) {
+                                var pos = j$(canvas).offset();
+                                var s = arbor.Point(e.pageX - pos.left, e.pageY - pos.top)
+
+                                if (dragged && dragged.node !== null) {
+                                    var p = particleSystem.fromScreen(s)
+                                    dragged.node.p = p
+                                }
+                                return false;
+                            },
+
+                            dropped: function(e) {
+                                if (dragged === null || dragged.node === undefined) return;
+                                if (dragged.node !== null) dragged.node.fixed = false;
+
+                                dragged.node.tempMass = 1000;
+                                dragged = null;
+                                j$(canvas).unbind('mousemove', handler.dragged);
+                                j$(window).unbind('mouseup', handler.dropped);
+                                _mouseP = null;
+                                return false;
+                            }
+                        }
                         // start listening
                         j$(canvas).mousedown(handler.clicked);
                         j$(canvas).mousemove(mouseoverHandler.mouseover);
-                    },      
-               }
-               return that;
-            }    
- 
+                    },
+                }
+                return that;
+            }
+
             j$(document).ready(function() {
                 var showPermissionError = '{!showPermissionError}';
                 if (showPermissionError == "false") {
@@ -272,7 +335,7 @@
                             RelationshipInfo = getRelationshipInfo();
                             sys = arbor.ParticleSystem(1000, 200, 0.2) // create the system with sensible repulsion/stiffness/friction
                             //particleSystem = sys;
-                            sys.parameters({gravity:true}) // use center-gravity to make the graph settle nicely (ymmv)
+                            sys.parameters({ gravity: true }) // use center-gravity to make the graph settle nicely (ymmv)
                             sys.renderer = Renderer("#viewport") // our newly created renderer will have its .init() method called shortly by sys...
 
                             var conFirstName;
@@ -287,16 +350,24 @@
                             if (result.length < 2) {
                                 var notice = '<p><strong>{!JSINHTMLENCODE($Label.REL_No_Relationships)}</strong></p>';
                                 notice += '<p><a href="/' + result[0].id + '" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Return_to_Contact)} ] </a><br/>';
-                                
+
                                 drawToolTip(20, 20, notice);
                             } else {
-                                basenode = sys.addNode(result[0].id, {label:conFirstName + ' ' + result[0].lastName, color:colors[0], colorIndex:0, link:result[0].link, id:result[0].id, title:result[0].title, accountName:result[0].accountName})
+                                basenode = sys.addNode(result[0].id, {
+                                    label: conFirstName + ' ' + result[0].lastName,
+                                    color: colors[0],
+                                    colorIndex: 0,
+                                    link: result[0].link,
+                                    id: result[0].id,
+                                    title: result[0].title,
+                                    accountName: result[0].accountName
+                                })
                                 for (var i = 1; i < result.length; i++) {
                                     var thisLabel = '';
                                     if (result[i].status == '{!JSINHTMLENCODE($Label.REL_Former)}') {
                                         thisLabel = result[i].type + ' ({!JSINHTMLENCODE($Label.REL_Former)})';
                                     } else {
-                                    	thisLabel = result[i].type;
+                                        thisLabel = result[i].type;
                                     }
                                     var thisConFirstName = '';
                                     // if (result[i].firstName === "undefined" || result[i].firstName == null) {
@@ -306,7 +377,15 @@
                                         thisConFirstName = result[i].firstName;
                                     }
 
-                                    relatednode = sys.addNode(result[i].id, {label:thisConFirstName + ' ' + result[i].lastName, color:colors[1], colorIndex:1, link:result[i].link, id:result[i].id, title:result[i].title, accountName:result[i].accountName})
+                                    relatednode = sys.addNode(result[i].id, {
+                                        label: thisConFirstName + ' ' + result[i].lastName,
+                                        color: colors[1],
+                                        colorIndex: 1,
+                                        link: result[i].link,
+                                        id: result[i].id,
+                                        title: result[i].title,
+                                        accountName: result[i].accountName
+                                    })
 
                                     //if edge is already drawn, and the type is not listed, append the additional type to the label for this edge
                                     if (sys.getEdges(basenode, relatednode).length != 0) {
@@ -316,116 +395,199 @@
                                         thisEdgeLabel = thisEdge[0].data.label;
                                         thisEdge[0].data.label = thisEdgeLabel + ', ' + thisLabel;
                                     } else {
-                                        sys.addEdge(basenode, relatednode, {label:thisLabel, status:result[i].status, relId:result[i].relId})
+                                        sys.addEdge(basenode, relatednode, {
+                                            label: thisLabel,
+                                            status: result[i].status,
+                                            relId: result[i].relId
+                                        })
                                     }
                                 }
                             }
                         }
-                    },{escape:true});
+                    }, { escape: true });
                 } else {
                     document.getElementById("viewport").style.display = "none";
                 }
 
+                if ({!$Site.Name == ''}) {
+
+                    $Lightning.use("{!namespace}:REL_RelationshipsApp", function() {
+                        $Lightning.createComponent("{!namespace}:REL_RelationshipsContainer",
+                            {
+                                recordId: '{!JSENCODE(CASESAFEID(id))}',
+                                isLightningOut: true
+                            },
+                            "tabular-lwc");
+                    });
+
+                    function showTabularView() {
+                        j$('#tab-default-2').removeClass("slds-hide").addClass("slds-show");
+                        j$('#tab-default-1').removeClass("slds-show").addClass("slds-hide");
+                        j$("#tab-tabular").addClass("slds-is-active");
+                        j$("#tab-graphical").removeClass("slds-is-active");
+                        j$('#tab-default-2__item')
+                            .attr("tabindex", "0")
+                            .attr("aria-selected", "true")
+                            .focus();
+                        j$('#tab-default-1__item')
+                            .attr("tabindex", "-1")
+                            .attr("aria-selected", "false")
+                    }
+
+                    function showGraphicalView() {
+                        j$('#tab-default-1').removeClass("slds-hide").addClass("slds-show");
+                        j$('#tab-default-2').removeClass("slds-show").addClass("slds-hide");
+                        j$("#tab-graphical").addClass("slds-is-active");
+                        j$("#tab-tabular").removeClass("slds-is-active");
+                        j$('#tab-default-1__item')
+                            .attr("tabindex", "0")
+                            .attr("aria-selected", "true")
+                            .focus();
+                        j$('#tab-default-2__item')
+                            .attr("tabindex", "-1")
+                            .attr("aria-selected", "false")
+                    }
+
+                    const graphicalTab = j$('#tab-default-1__item');
+                    const tabularTab = j$("#tab-default-2__item");
+
+                    graphicalTab.click(function() {
+                        showGraphicalView();
+                    });
+
+                    tabularTab.click(function() {
+                        showTabularView();
+                    });
+
+                    graphicalTab.keydown(function(event) {
+                        if (event.key === 'ArrowRight') {
+                            showTabularView();
+                        }
+                    });
+
+                    tabularTab.keydown(function(event) {
+                        if (event.key === 'ArrowLeft') {
+                            showGraphicalView();
+                        }
+                    });
+                }
             })
         })(this.jQuery)
 
-        function drawToolTip(x,y,text) {
-            j$("#tooltip").css({top: y + 'px', left:  x +'px'});
-            j$("#tooltip").animate({opacity: 1.0}, 500);
-            j$("#tooltip").html(text);
+        function drawToolTip(x, y, text) {
+            j$('#tooltip').show();
+            j$("#tooltip").css({ top: y + 'px', left: x + 'px' });
+            j$("#tooltip").animate({ opacity: 1.0 }, 500);
+            j$("#tooltip").html(text);
         }
-    
+
         function hideToolTip() {
-            j$("#tooltip").animate({opacity: 0.0}, 50, function() {
+            j$("#tooltip").animate({ opacity: 0.0 }, 50, function() {
                 // cheating by adding nonlinked versions of the text, so no one accidentally clicks on an invisible link
-                var infoText ='<p><strong>';
+                var infoText = '<p><strong>';
                 infoText += currentContact.name + '<br />';
                 if (currentContact.title) infoText += currentContact.title + '<br />';
                 if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
                 infoText += '<br />[ {!JSINHTMLENCODE($Label.REL_View_Contact_Record)} ]<br />';
                 infoText += '[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)}  ]<br />';
                 infoText += '[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]<br />';
-                infoText +='</strong></p>';  
-                j$("#tooltip").html(infoText);             
+                infoText += '</strong></p>';
+                j$("#tooltip").html(infoText);
+                j$("#tooltip").hide();
             });
-            mouseOutComplete = true;        
+            mouseOutComplete = true;
         }
-    
+
         function getRelationshipInfo() {
             //retrieve metadata about the Relationship object in this org
             if (RelationshipInfo.prefix == '') {
-                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationshipInfo}', function(result,event) {
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationshipInfo}', function(result, event) {
                     if (event.status)
-                        RelationshipInfo = result;                      
-                });       
-            }        
+                        RelationshipInfo = result;
+                });
+            }
             return RelationshipInfo;
         }
-    
+
         function getContactInfoBox() {
-            var infoText ='<p><strong>';
+            var infoText = '<p><strong>';
             infoText += currentContact.name + '<br />';
             if (currentContact.title) infoText += currentContact.title + '<br />';
             if (currentContact.accountName) infoText += currentContact.accountName + '<br />';
             infoText += '<br /><a href=/' + currentContact.id + ' target="_blank" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_View_Contact_Record)} ]</a><br />';
-        
+
             //retrieve metadata about the Relationship object in this org
             var ri = getRelationshipInfo();
-                   
+
             var RelPrefix = ri.prefix;
-            
+
             var RelNameId = '';
             if (ri.NameField != null)
-            RelNameId = ri.NameField + '=';
+                RelNameId = ri.NameField + '=';
             var RelNameIdId = '';
             if (ri.NameIdField != null)
-               RelNameIdId = ri.NameIdField + '=';
-            
+                RelNameIdId = ri.NameIdField + '=';
+
             var uriString = '/' + RelPrefix + '/e?';
             if (RelNameId != '' && RelNameIdId != '')
-                uriString += RelNameId + currentContact.name + '&' + RelNameIdId + currentContact.id + '&';  
-        
+                uriString += RelNameId + currentContact.name + '&' + RelNameIdId + currentContact.id + '&';
+
             uriString += 'retURL=' + currentContact.id;
             var encodedNewRel = encodeURI(uriString);
             infoText += '<a href=' + encodedNewRel + ' target="_blank" style="color: white; font-weight: bold;" >[ {!JSINHTMLENCODE($Label.REL_Create_New_Relationship)} ]</a><br />';
-            infoText += '<a href=/apex/REL_RelationshipsViewer?id=' + currentContact.id + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
-            infoText +='</strong></p>';     
-            return infoText;    
+            infoText += '<a href=' + getRelationshipViewerURLForContact(currentContact.id) + ' target="_parent" style="color: white; font-weight: bold;">[ {!JSINHTMLENCODE($Label.REL_RECenter)} ]</a><br />';
+            infoText += '</strong></p>';
+            return infoText;
         }
 
-            //From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
-            function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-                if (typeof stroke == "undefined") {
-                    stroke = true;
-                }
-                if (typeof radius === "undefined") {
-                    radius = 5;
-                }
-                ctx.beginPath();
-                ctx.moveTo(x + radius, y);
-                ctx.lineTo(x + width - radius, y);
-                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-                ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-                ctx.lineTo(x + radius, y + height);
-                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-                ctx.lineTo(x, y + radius);
-                ctx.quadraticCurveTo(x, y, x + radius, y);
-                ctx.closePath();
-                if (stroke) {
-                    ctx.stroke();
-                }
-                if (fill) {
-                    ctx.fill();
-                }
+        //From Juan Mendes here: http://js-bits.blogspot.com/2010/07/canvas-rounded-corner-rectangles.html
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            if (typeof stroke == "undefined") {
+                stroke = true;
             }
-        </script>
+            if (typeof radius === "undefined") {
+                radius = 5;
+            }
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (stroke) {
+                ctx.stroke();
+            }
+            if (fill) {
+                ctx.fill();
+            }
+        }
 
-        <apex:pageMessages />
+        function getRelationshipViewerURLForContact(contactId) {
+            const baseUrl = '{!$Site.BaseUrl}';
+            const pageUrl = '{!URLFOR($Page.REL_RelationshipsViewer)}';
+            let urlObject;
+            if (baseUrl !== '') {
+                // URLFOR in Sites only returns a relative URL, so we must supply a base URL.
+                urlObject = new URL(pageUrl, baseUrl);
+            } else {
+                urlObject = new URL(pageUrl);
+            }
+            urlObject.searchParams.append('id', contactId);
+            return urlObject.href;
+        }
+    </script>
 
-        <div style="/* box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80); -moz-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);-webkit-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);*/-moz-border-radius: 4px; border-radius: 4px; opacity: 0.0; padding:12px; position:absolute; top: 0px; left: 0px; color: white; background-color: #991111; font-face: Helvtica; font-size: 12px;"
-            id="tooltip">
-            <h1> </h1>
-        </div>
+    <apex:pageMessages />
+
+    <div
+        style="/* box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80); -moz-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);-webkit-box-shadow: 4px 3px 8px rgba(0, 0, 0, 0.80);*/-moz-border-radius: 4px; border-radius: 4px; opacity: 0.0; padding:12px; position:absolute; top: 0px; left: 0px; color: white; background-color: #991111; font-face: Helvtica; font-size: 12px;"
+        id="tooltip">
+        <h1></h1>
+    </div>
     </body>
 </apex:page>
