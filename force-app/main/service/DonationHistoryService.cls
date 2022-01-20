@@ -33,7 +33,6 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-
     private Id contactId;
     private Integer offset;
     
@@ -90,7 +89,7 @@ public with sharing class DonationHistoryService {
             throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
         }
     }
-    
+
     /** 
     * @author Salesforce.org
     * @date 2021

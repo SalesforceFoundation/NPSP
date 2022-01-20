@@ -35,7 +35,8 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-    /**
+
+    /** 
     * @author Salesforce.org
     * @date 2021
     * @description Method to generate test data.
@@ -57,14 +58,13 @@ public class DonationHistoryController_TEST {
             CloseDate=myDateTime
         );
         Opportunity opportunitySoftCredit = new Opportunity(
-            Name='SoftCredit1',
-            AccountId=accSrc.Id,
-            Primary_Contact__c=listConSrc[1].Id,
-            Amount=200,
-            StageName='Closed Won',
+            Name='SoftCredit1', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[1].Id, 
+            Amount=200, 
+            StageName='Closed Won', 
             CloseDate=myDateTime
         );
-       
         List<Opportunity> recordsOpp = new List<Opportunity>();
         recordsOpp.add(opportunityHardCredit);
         recordsOpp.add(opportunitySoftCredit);
@@ -94,7 +94,6 @@ public class DonationHistoryController_TEST {
 
         System.assertEquals(1, donationHistory.donations.size(), 'Should return only 1 record');
         System.assertEquals(1, donationHistory.totalNumberOfRecords, 'Should return only 1 on total number of records');
-
     }
 
     /**
