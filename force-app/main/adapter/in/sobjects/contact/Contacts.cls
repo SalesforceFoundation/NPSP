@@ -199,17 +199,6 @@ public inherited sharing class Contacts extends fflib_SObjects2 {
         return newOwnerContactById;
     }
 
-    public Map<Id, Contact> getNewOwnerContactById() {
-        Map<Id, Contact> newOwnerContactById = new Map<Id, Contact>();
-        for (Contact contactRecord : (List<Contact>) getRecords()) {
-            Contact oldContact = oldMap.get(contactRecord.Id);
-            if (contactRecord.OwnerId != oldContact.OwnerId) {
-                newOwnerContactById.put(contactRecord.Id, contactRecord);
-            }
-        }
-        return newOwnerContactById;
-    }
-
     /*******************************************************************************************************
     * @description returns whether changes in the contact require an update to the 1:1 account
     * @param contactRecord the new version of the Contact
