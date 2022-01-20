@@ -83,7 +83,7 @@ private class CON_ContactMerge_TEST2 {
         system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
         
     }
-    
+
     @isTest
     static void merge2OneToOneInSameAccountOne2One(){
         //skip the test if Advancement is installed
@@ -94,28 +94,26 @@ private class CON_ContactMerge_TEST2 {
     @isTest
     static void merge2OneToOneInSameAccountHHAccount(){
         merge2OneToOneInSameAccount(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
     static void merge2OneToOneInSameAccount(string strProcessor) {
-        
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-        
-        Id conAccountId = [select accountId from Contact where id=:con.id].accountId;
-        
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        con2.AccountId = conAccountId;
-        
-        insert con2;
-        
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-        
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+
+        List<Contact> testContacts;
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_TYPE) {
+            testContacts = getHouseholdContacts();
+        } else if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
+            testContacts = getOneToOneContacts();
+        }
+
+        Contact con = testContacts[0];
+        Contact con2 = testContacts[1];
+
         CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, testContacts);
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         
@@ -134,7 +132,7 @@ private class CON_ContactMerge_TEST2 {
         } else {
             //contacts have the same account which should not be deleted
             system.assertEquals(con.AccountId, con2.AccountId);
-            system.assertEquals(1,[select count() from Account where id=:con.AccountId]);       
+            system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
         }
         //First contact's account id should not have changed
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
@@ -925,7 +923,7 @@ private class CON_ContactMerge_TEST2 {
                 new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         UTIL_UnitTestData_TEST.createAccountContactTestData(
-                CAO_Constants.HH_ACCOUNT_TYPE, numberToCreate, 1, 0);
+                CAO_Constants.HH_ACCOUNT_TYPE, numberToCreate, 2, 0);
     }
 
     private static List<Contact> getHouseholdContacts() {
@@ -934,6 +932,23 @@ private class CON_ContactMerge_TEST2 {
                 FROM Contact
                 WHERE Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
                 LIMIT 3
+        ];
+    }
+
+    private static List<Account> getContactsForAccount(Id accountId) {
+        return [
+                SELECT Id, (SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId, MailingStreet, MailingCity
+                            FROM Contacts)
+                FROM Account
+                WHERE Id = :accountId
+        ];
+    }
+
+    private static List<Contact> getOneToOneContacts() {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId, MailingStreet, MailingCity
+                FROM Contact
+                WHERE Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
         ];
     }
 

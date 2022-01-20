@@ -706,7 +706,6 @@ public class CON_ContactMerge_TEST {
 
     private static CON_ContactMerge_CTRL setupControllerMock(List<Contact> testContacts) {
         CON_ContactMerge_CTRL controller = getController();
-        getPrivateContacts();
         setupMockDataForMerge(controller, testContacts);
         return controller;
     }
