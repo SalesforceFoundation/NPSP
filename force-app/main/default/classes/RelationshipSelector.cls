@@ -35,18 +35,19 @@
 public with sharing class RelationshipSelector {
 
     public List<npe4__Relationship__c> getContactRelations(Id contactId) {
-        return [
-                SELECT Id,
-                        npe4__Relationship_Explanation__c,
-                        npe4__RelatedContact__c,
-                        toLabel(npe4__Type__c),
-                        npe4__RelatedContact__r.Account.Name,
-                        npe4__RelatedContact__r.Name,
-                        npe4__RelatedContact__r.Title
-                FROM npe4__Relationship__c
-                WHERE npe4__Contact__c = :contactId
-                WITH SECURITY_ENFORCED
-                ORDER BY npe4__RelatedContact__r.Name
-        ];
+        UTIL_Query query = new UTIL_Query()
+                .withSelectFields(new Set<String>{
+                        'npe4__Relationship_Explanation__c',
+                        'npe4__RelatedContact__c',
+                        'toLabel(npe4__Type__c)',
+                        'npe4__RelatedContact__r.Account.Name',
+                        'npe4__RelatedContact__r.Name',
+                        'npe4__RelatedContact__r.Title'
+                })
+                .withFrom(npe4__Relationship__c.SObjectType)
+                .withWhere('npe4__Contact__c = :contactId')
+                .withOrderBy(Contact.Name, 'npe4__RelatedContact__r.Name')
+                .withSecurityEnforced();
+        return Database.query(query.build());
     }
 }

@@ -799,6 +799,10 @@ public class UTIL_Describe {
         return objectName;
     }
 
+    public Boolean isFieldSortable(Schema.SObjectField field) {
+        return field.getDescribe().isSortable();
+    }
+
     /** @description our exception object for Field Level & Object Security errors. */
     private class permsException extends Exception {}
 

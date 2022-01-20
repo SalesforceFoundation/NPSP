@@ -116,6 +116,19 @@ public without sharing class CMT_FilterRule_SEL {
     }
 
     /**
+     * @description Queries a single Rollup Definition using the specified DeveloperName
+     * @return Record or null
+     */
+    public static Filter_Rule__mdt getFilterRuleByDeveloperName(String developerName) {
+        for (Filter_Rule__mdt fr : cachedFilterRules) {
+            if (developerName == fr.DeveloperName) {
+                return fr;
+            }
+        }
+        return null; 
+    }
+
+    /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing FilterRule. This list can be used when building a query of the needed fields to retrieve
      *  for an object.
