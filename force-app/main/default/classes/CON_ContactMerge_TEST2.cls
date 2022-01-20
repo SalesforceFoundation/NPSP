@@ -45,6 +45,8 @@ private class CON_ContactMerge_TEST2 {
 
     @IsTest
     static void merge3OneToOne() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         system.assertEquals(3, [select count() from Address__c]);
 

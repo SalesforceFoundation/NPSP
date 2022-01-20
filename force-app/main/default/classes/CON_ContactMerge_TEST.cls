@@ -414,6 +414,8 @@ public class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     @IsTest
     static void merge2Organizations() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -463,6 +465,9 @@ public class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     @IsTest
     static void merge2PrivateContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         List<Contact> privateContacts = getPrivateContacts();
         CON_ContactMerge_CTRL controller = setupControllerMock(privateContacts);
 
@@ -490,6 +495,8 @@ public class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted or renamed
     @IsTest
     static void merge2IndividualBucketContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         // Arrange: GIVEN two Individual Bucket Contacts exist and are to be merged on the
         // Contact Merge Visualforce page
         List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(2);
