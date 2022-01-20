@@ -40,8 +40,8 @@ public class CON_ContactMerge_TEST {
     private static void createTestData() {
         createGenericTestContacts(3);
         createUniqueContact();
-
         createOneToOneAccountAndContacts(2);
+        createPrivateContacts();
 
         UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
     }
@@ -385,18 +385,17 @@ public class CON_ContactMerge_TEST {
 
         CON_ContactMerge_CTRL controller = getController();
         setupMockDataForMerge(controller, new List<Contact>{winningContact, losingContact});
-
-        selectMasterRecord(controller, winningContact.id);
+        selectMasterRecord(controller, winningContact.Id);
 
         Test.startTest();
         //merge them
             controller.mergeContacts();
         Test.stopTest();
 
-        List<Contact> updatedWinningContact = [Select id, accountId, FirstName, LastName, MailingStreet from Contact
-                                               where Id = :winningContact.id];
-        List<Contact> updatedLosingContact = [Select id, accountId, FirstName, LastName, MailingStreet from Contact
-                                              where Id = :losingContact.id];
+        List<Contact> updatedWinningContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+                                               where Id = :winningContact.Id];
+        List<Contact> updatedLosingContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+                                              where Id = :losingContact.Id];
 
         List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
         List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
@@ -410,67 +409,34 @@ public class CON_ContactMerge_TEST {
                 'account should not have changed.');
     }
 
-    static testMethod void merge2PrivateContactsOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2PrivateContactsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
     //merge two private contacts
     //the organization shouldn't be deleted
     @IsTest
     static void merge2PrivateContacts() {
 
-//        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> privateContacts = getPrivateContacts();
+        setupMockDataForMerge(controller, privateContacts);
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        con.npe01__Private__c = true;
+        Contact winningContact = privateContacts[0];
+        Contact losingContact = privateContacts[1];
 
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        con2.npe01__Private__c = true;
+        selectMasterRecord(controller, winningContact.Id);
 
-        insert new Contact[]{con, con2};
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
 
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        List<Contact> updatedWinningContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :winningContact.Id];
+        List<Contact> updatedLosingContact = [Select id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :losingContact.Id];
 
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //First contact's account id should not have changed
-        system.assertEquals(null,[select AccountId from Contact where id=:con.id].AccountId);
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
     }
 
     static testMethod void merge2IndividualsOne2One(){
@@ -845,6 +811,14 @@ public class CON_ContactMerge_TEST {
     }
 
     /*** Helper methods ***/
+    private static void createPrivateContacts() {
+        List<Contact> contactsToMakePrivate = UTIL_UnitTestData_TEST.getContacts(2);
+        for (Contact contact : contactsToMakePrivate) {
+            contact.npe01__Private__c = true;
+        }
+        insert contactsToMakePrivate;
+    }
+
     private static void createOneToOneAccountAndContacts(Integer numberToCreate) {
         List<Contact> oneToOneContacts = UTIL_UnitTestData_TEST.createAccountContactTestData(
                 CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, numberToCreate, 1, 0);
@@ -919,6 +893,14 @@ public class CON_ContactMerge_TEST {
             SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
             FROM Contact
             LIMIT :numberOfContacts
+        ];
+    }
+
+    private static List<Contact> getPrivateContacts() {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE npe01__Private__c = TRUE
         ];
     }
 
