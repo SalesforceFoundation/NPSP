@@ -2793,16 +2793,16 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when Automation Lapsed Status is not mapped correctly</shortDescription>
-        <value>The Status Automation Lapsed Status should map to Lapsed State</value>
+        <shortDescription>Error when Automation Closed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Closed Status should map to Closed State</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidLapsedStatus</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error when Automation Closed Status is not mapped correctly</shortDescription>
-        <value>The Status Automation Closed Status should map to Closed State</value>
+        <shortDescription>Error when Automation Lapsed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Lapsed Status should map to Lapsed State</value>
     </labels>
     <labels>
         <fullName>RD2_StatusAutomationInvalidNumberOfDays</fullName>
