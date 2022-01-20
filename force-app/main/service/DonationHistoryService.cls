@@ -75,8 +75,7 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
             Partial_Soft_Credit__c.Amount__c,
             Partial_Soft_Credit__c.Contact_Role_ID__c
-        })
-            && permissions.canRead(	npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
+        }) && permissions.canRead(npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
             npe01__OppPayment__c.npe01__Payment_Method__c,
             npe01__OppPayment__c.npe01__Opportunity__c
         });
