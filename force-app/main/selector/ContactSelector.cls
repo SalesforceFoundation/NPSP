@@ -83,7 +83,7 @@ public inherited sharing class ContactSelector {
         if (queryForContactNamingFields == null) {
             //we use dynamic soql so we can include all contact fields, since custom naming may refer to any field.
             String[] selectFields = new String[]{
-                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c'
+                    'Id', 'HHId__c', 'npo02__Naming_Exclusions__c', 'Deceased__c'
             };
             selectFields.addAll(
                     new HouseholdNamingService()
@@ -184,7 +184,7 @@ public inherited sharing class ContactSelector {
         List<String> selectFields = new List<String>{
                 'Id', 'npe01__Private__c', 'AccountId', 'Account.npe01__SYSTEMIsIndividual__c',
                 'Account.npe01__SYSTEM_AccountType__c', 'Account.npe01__One2OneContact__c',
-                'npe01__Organization_Type__c', 'Account.Name',
+                'npe01__Organization_Type__c', 'Account.Name', 'Deceased__c',
                 'FirstName', 'LastName', 'OwnerId', 'Salutation', 'npo02__Naming_Exclusions__c',
                 'npo02__Household_Naming_Order__c',
                 'MailingStreet', 'MailingCity', 'MailingState', 'MailingPostalCode',
