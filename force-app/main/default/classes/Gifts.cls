@@ -206,7 +206,7 @@ public with sharing class Gifts {
     private void giftsToProcessingStatus() {
         for (DataImport__c dataImport : dataImportsById.values()) {
             Gift currentGift = toGift(dataImport);
-            if (currentGift.isDryRunValidated()) {
+            if (!currentGift.isImported()) {
                 dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(dataImport);
             }

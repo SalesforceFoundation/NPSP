@@ -35,25 +35,25 @@
 
 public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer{
 
-   @TestVisible
-   private GiftBatchService giftBatchService {
-      get {
-         if (giftBatchService == null) {
-            giftBatchService = new GiftBatchService();
-         }
-         return giftBatchService;
-      }
-      set;
-   }
-   private GiftBatchId giftBatchId;
+    @TestVisible
+    private GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    private GiftBatchId giftBatchId;
 
-   public GiftEntryProcessorQueueFinalizer (GiftBatchId giftBatchId) {
-      this.giftBatchId = giftBatchId;
-   }
+    public GiftEntryProcessorQueueFinalizer (GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
+    }
 
-   public void execute(FinalizerContext finalizerContext) {
-      if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
-         giftBatchService.validateBatch(this.giftBatchId);
-      }
-   }
+    public void execute(FinalizerContext finalizerContext) {
+        if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
+            giftBatchService.validateBatch(this.giftBatchId);
+        }
+    }
 }
