@@ -35,7 +35,6 @@
 */
 @IsTest
 public class DonationHistoryController_TEST {
-
     /** 
     * @author Salesforce.org
     * @date 2021

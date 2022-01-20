@@ -38,7 +38,6 @@ public inherited sharing class DonationHistorySelector {
     * @date 2021
     * @description method to return OpportunityContactRole data.
     */
-
     public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
         return [
             SELECT Id, 
