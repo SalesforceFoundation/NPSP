@@ -58,7 +58,7 @@ public class CON_ContactMerge_TEST {
     @IsTest
     private static void shouldDisplayErrorWhenTooFewContactsSelected() {
         // given
-        List<Contact> testContacts = getTestContacts(1);
+        List<Contact> testContacts = getContacts(1);
         CON_ContactMerge_CTRL controller = getControllerForSearch();
 
         // when
@@ -200,7 +200,7 @@ public class CON_ContactMerge_TEST {
     @isTest
     private static void loadMergePageFailsWithNoDeleteRecordAccess() {
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts(2);
+        List<Contact> testContacts = getContacts(2);
         setupMockDataForMerge(controller, testContacts);
 
         //given
@@ -284,7 +284,7 @@ public class CON_ContactMerge_TEST {
 
         // given
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts(2);
+        List<Contact> testContacts = getContacts(2);
         setupMockDataForMerge(controller, testContacts);
 
         //when
@@ -317,7 +317,7 @@ public class CON_ContactMerge_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts(1);
+        List<Contact> testContacts = getContacts(1);
         testContacts.add(getUniqueContact());
         setupMockDataForMerge(controller, testContacts);
 
@@ -335,8 +335,8 @@ public class CON_ContactMerge_TEST {
             controller.mergeContacts();
         Test.stopTest();
 
-        List<Contact> updatedWinningContact = getTestContacts(new List<Contact>{winningContact});
-        List<Contact> updatedLosingContact = getTestContacts(new List<Contact>{losingContact});
+        List<Contact> updatedWinningContact = getContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getContacts(new List<Contact>{losingContact});
 
         List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
         List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
@@ -413,16 +413,13 @@ public class CON_ContactMerge_TEST {
     //the organization shouldn't be deleted
     @IsTest
     static void merge2PrivateContacts() {
-
-        CON_ContactMerge_CTRL controller = getController();
         List<Contact> privateContacts = getPrivateContacts();
-        setupMockDataForMerge(controller, privateContacts);
+        CON_ContactMerge_CTRL controller = setupControllerMock(privateContacts);
 
         Contact winningContact = privateContacts[0];
         Contact losingContact = privateContacts[1];
 
         selectMasterRecord(controller, winningContact.Id);
-
 
         Test.startTest();
             controller.mergeContacts();
@@ -439,95 +436,46 @@ public class CON_ContactMerge_TEST {
                 'account should not have changed.');
     }
 
-    static testMethod void merge2IndividualsOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2IndividualBucketContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2IndividualsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2IndividualBucketContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
     //merge two contacts in the Individual Account
     //the organization shouldn't be deleted or renamed
-    static void merge2IndividualBucketContacts(string strProcessor) {
+    @IsTest
+    static void merge2IndividualBucketContacts() {
         // Arrange: GIVEN two Individual Bucket Contacts exist and are to be merged on the
         // Contact Merge Visualforce page
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        Contact[] contacts = new Contact[]{
-                con, con2
-        };
-        insertAsIndividualBucketContacts(contacts);
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(2);
+        insertAsIndividualBucketContacts(testContacts);
 
-        Map<Id, Contact> queriedBucketContacts = getContacts(new Set<Id>{con.Id, con2.Id});
-        con = queriedBucketContacts.get(con.Id);
-        con2 = queriedBucketContacts.get(con2.Id);
+        List<Contact> queriedBucketContacts = getContacts(testContacts);
+        Contact winningContact = queriedBucketContacts[0];
+        Contact losingContact = queriedBucketContacts[1];
 
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller = setupControllerMock(queriedBucketContacts);
 
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
+        selectMasterRecord(controller, winningContact.Id);
 
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        // Act: WHEN one Individual Bucket Contact is merged into another Bucket Contact
         Test.startTest();
-        controller.mergeContacts();
+            controller.mergeContacts();
         Test.stopTest();
 
-        // Assert: THEN
-        //second contact should be deleted
-        System.assertEquals(0, [SELECT COUNT() FROM Contact WHERE Id = :con2.Id]);
-        System.assertEquals(1, [SELECT COUNT() FROM Contact WHERE Id = :con.Id]);
-        //second contact's account should not be deleted
-        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con2.AccountId]);
-        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con.AccountId]);
+        List<Contact> updatedWinningContact = [Select Id, accountId, Account.Name, FirstName, LastName, MailingStreet
+            from Contact where Id = :winningContact.Id];
 
-        Map<Id, Contact> queriedContacts = getContacts(new Set<Id>{
-                con.Id
-        });
-        Contact mergeWinner = queriedContacts.get(con.Id);
+        List<Contact> updatedLosingContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :losingContact.Id];
 
-        System.assertEquals(con.AccountId, mergeWinner.AccountId,
-                'The winning Contact\'s account id should not have changed');
-        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, mergeWinner.Account.Name,
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(!losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
+
+        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, updatedWinningContact[0].Account.Name,
                 'The winning Contact\'s Account\'s Name should not have changed');
-    }
-
-    private static Map<Id, Contact> getContacts(Set<Id> contactIds) {
-        return new Map<Id, Contact>([
-                Select accountId, FirstName, LastName, MailingStreet, Account.Name
-                from Contact
-                where Id = :contactIds
-        ]);
-    }
-
-    private static void insertAsIndividualBucketContacts(Contact[] contacts) {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (
-                        npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
-
-        insert contacts;
     }
 
     static testMethod void merge1Org1OneToOneOne2One(){
@@ -687,7 +635,7 @@ public class CON_ContactMerge_TEST {
     static void mergeShouldReturnCorrectPageReference() {
         // given
         CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getTestContacts(2);
+        List<Contact> testContacts = getContacts(2);
         setupMockDataForMerge(controller, testContacts);
 
         // when
@@ -819,6 +767,45 @@ public class CON_ContactMerge_TEST {
         insert contactsToMakePrivate;
     }
 
+    private static CON_ContactMerge_CTRL setupControllerMock(List<Contact> testContacts) {
+        CON_ContactMerge_CTRL controller = getController();
+        getPrivateContacts();
+        setupMockDataForMerge(controller, testContacts);
+        return controller;
+    }
+
+    private static Map<Id, Contact> getContactsByRecordId(Set<Id> contactIds) {
+        return new Map<Id, Contact>([
+                Select accountId, FirstName, LastName, MailingStreet, Account.Name
+                from Contact
+                where Id = :contactIds
+        ]);
+    }
+
+    private static List<Contact> getContacts(Integer numberOfContacts) {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                LIMIT :numberOfContacts
+        ];
+    }
+
+    private static List<Contact> getContacts(List<Contact> contacts) {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE Id IN :contacts
+        ];
+    }
+
+    private static void insertAsIndividualBucketContacts(Contact[] contacts) {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (
+                        npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+
+        insert contacts;
+    }
+
     private static void createOneToOneAccountAndContacts(Integer numberToCreate) {
         List<Contact> oneToOneContacts = UTIL_UnitTestData_TEST.createAccountContactTestData(
                 CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, numberToCreate, 1, 0);
@@ -888,27 +875,11 @@ public class CON_ContactMerge_TEST {
         insert differingContact;
     }
 
-    private static List<Contact> getTestContacts(Integer numberOfContacts) {
-        return [
-            SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
-            FROM Contact
-            LIMIT :numberOfContacts
-        ];
-    }
-
     private static List<Contact> getPrivateContacts() {
         return [
                 SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
                 FROM Contact
                 WHERE npe01__Private__c = TRUE
-        ];
-    }
-
-    private static List<Contact> getTestContacts(List<Contact> contacts) {
-        return [
-                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
-                FROM Contact
-                WHERE Id IN :contacts
         ];
     }
 
