@@ -37,26 +37,65 @@
 @isTest
 private class CON_ContactMerge_TEST2 {
 
-    @TestSetup
-    private static void createTestData() {
-        createOneToOneAccountAndContacts(3);
-        createHouseholdAccountsAndContacts(3);
-    }
-
-    @IsTest
-    static void merge3OneToOne() {
+    @isTest
+    static void merge3OneToOneOne2One(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        system.assertEquals(3, [select count() from Address__c]);
+        merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    }
+    @isTest
+    static void merge3OneToOneHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        list<Contact> listCon = getHouseholdContacts();
-        Contact con = listCon[0];
-        Contact con2 = listCon[1];
-        Contact con3 = listCon[2];
+        merge3OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+    }
+    static void merge3OneToOne(string strProcessor) {
+
+        TDTM_DefaultConfig.startTestDataInit();
+
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+
+        // note that we include addresses so the household pass will deal with merging household accounts with address objects.
+        system.assertEquals(false, contactSettingsForTests.Household_Account_Addresses_Disabled__c);
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.MailingStreet = '123 45th St';
+        con.MailingCity = 'Seattle';
+
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.MailingStreet = '678 90th St';
+        con2.MailingCity = 'Bellevue';
+
+        Contact con3 = UTIL_UnitTestData_TEST.getContact();
+        con3.LastName = '3Contact_forTests_Merge';
+        con3.MailingStreet = '999 88th St';
+        con3.MailingCity = 'Redmond';
+
+        //insert new Contact[]{con, con2, con3};
+        // insert our contacts seperately, to ensure they get different Lastmodified times.
+        insert con;
+        insert con2;
+        insert con3;
+
+        TDTM_DefaultConfig.stopTestDataInit();
+
+        // make sure addresses created
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            system.assertEquals(3, [select count() from Address__c]);
+        }
+
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by Id];
+        con = listCon[0];
+        con2 = listCon[1];
+        con3 = listCon[2];
 
         CON_ContactMerge_CTRL controller = getController();
-        setupMockDataForMerge(controller, listCon);
+        setupMockDataForMerge(controller, new List<Contact>{con, con2, con3});
+
         CON_ContactMerge_TEST.selectMasterRecord(controller, con3.id);
 
         //merge them
@@ -70,17 +109,28 @@ private class CON_ContactMerge_TEST2 {
         system.assertEquals(0,[select count() from Contact where id=:con2.id]);
         system.assertEquals(0,[select count() from Contact where id=:con.id]);
         //first and second contact's account should be deleted
-        system.assertEquals(1, [select count() from Account where id=:con3.AccountId]);
+        system.assertEquals(1, [select count() from Account]);
         system.assertEquals(0,[select count() from Account where id=:con2.AccountId]);
         system.assertEquals(0,[select count() from Account where id=:con.AccountId]);
         //Third contact's account id should not have changed
         system.assertEquals(1,[select count() from Account where id=:con3.AccountId]);
         system.assertEquals(con3.AccountId,[select AccountId from Contact where id=:con3.id].AccountId);
 
-        // since the solo household account were merged, all addresses should still exist
-        system.assertEquals(3, [select count() from Address__c]);
-        // only one should be default
-        system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        if (strProcessor == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
+            // since the solo household account were merged, all addresses should still exist
+            system.assertEquals(3, [select count() from Address__c]);
+            // only one should be default
+            system.assertEquals(1, [select count() from Address__c where Default_Address__c = true]);
+        }
+
+        // make sure winning contact's address is correct
+        // had to take this out, because our code to keep the correct default address
+        // relies on it being sorted first when sorting by LastModifiedDate.
+        // unfortunately, soql only sorts by a granularity of seconds, not milliseconds,
+        // so it was random which address would appear older.
+        //con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact];
+        //system.assertEquals(con3.MailingStreet, con.MailingStreet);
+        //system.assertEquals(con3.MailingCity, con.MailingCity);
         
     }
 
@@ -99,22 +149,24 @@ private class CON_ContactMerge_TEST2 {
     //the second contact's org should be deleted
     static void merge2OneToOneInSameAccount(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
-        List<Contact> testContacts;
-        if (strProcessor == CAO_Constants.HH_ACCOUNT_TYPE) {
-            testContacts = getHouseholdContacts();
-        } else if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            testContacts = getOneToOneContacts();
-        }
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
 
-        Contact con = testContacts[0];
-        Contact con2 = testContacts[1];
+        Id conAccountId = [select accountId from Contact where id=:con.id].accountId;
 
-        CON_ContactMerge_CTRL controller = getController();
-        setupMockDataForMerge(controller, testContacts);
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        con2.AccountId = conAccountId;
         
+        insert con2;
+
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'test');
+
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         
         //merge them
@@ -137,7 +189,7 @@ private class CON_ContactMerge_TEST2 {
         //First contact's account id should not have changed
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
-    
+
     @isTest
     static void ghIssue6One2One(){
         ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -145,67 +197,67 @@ private class CON_ContactMerge_TEST2 {
     @isTest
     static void ghIssue6HHAccount(){
         ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }    
+    }
     static void ghIssue6(string strProcessor){
-        
+
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-                
+
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.LastName = 'O\'Sullivan';
-        
+
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = 'O\'Sullivan';
-        
+
         insert new Contact[]{con, con2};
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         system.assertEquals(con.LastName, 'O\'Sullivan');
 
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'O\'Sullivan');
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con2.id);
-        
+
         controller.mergeContacts();
-        
+
     }
   
     @isTest
     public static  void householdDifferentFromMaster() {
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        
+
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR));
         
         Contact con = UTIL_UnitTestData_TEST.getContact();
-        
+
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
-        
+
         insert new Contact[] {con, con2};
         
         Id hh1Id = [select npo02__Household__c from Contact where Id = :con.Id].npo02__Household__c;
         Id hh2Id = [select npo02__Household__c from Contact where Id = :con2.Id].npo02__Household__c;
         System.assertNotEquals(null, hh1Id);
         System.assertNotEquals(null, hh2Id);
-         
+
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        
+
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         controller.showContactSearchPage();
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        Id[] fixedSearchResults=new Id[2];
+        fixedSearchResults[0]=con.Id;
+        fixedSearchResults[1]=con2.Id;
+
+        Test.setFixedSearchResults(fixedSearchResults);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
         controller.searchResults[0].selected = true;
         controller.searchResults[1].selected = true;
-        
+
         controller.nextStep();
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
@@ -217,10 +269,10 @@ private class CON_ContactMerge_TEST2 {
                 break;
             }
         }
-        
+
         //merge them
         controller.mergeContacts();
-        
+
         //Merged contact should reference the second contact's household
         System.assertEquals(hh2Id, [select npo02__Household__c from Contact where id=:con.id].npo02__Household__c);
     }  
@@ -583,7 +635,7 @@ private class CON_ContactMerge_TEST2 {
         Contact conWinner = listConAll[iConWinner];
         Contact conLoser = listConAll[iConLoser];        
 
-        CON_ContactMerge_CTRL controller = getController();
+        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { conWinner, conLoser }, 'test');
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, conWinner.id);
         
@@ -804,7 +856,7 @@ private class CON_ContactMerge_TEST2 {
 
             System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
             
-            CON_ContactMerge_CTRL controller = getController();
+            CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
             CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
 
             //Select the primary affiliation of the one that is not the one we selected as master
@@ -923,7 +975,7 @@ private class CON_ContactMerge_TEST2 {
                 new npe01__Contacts_And_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));
 
         UTIL_UnitTestData_TEST.createAccountContactTestData(
-                CAO_Constants.HH_ACCOUNT_TYPE, numberToCreate, 2, 0);
+                CAO_Constants.HH_ACCOUNT_TYPE, numberToCreate, 1, 0);
     }
 
     private static List<Contact> getHouseholdContacts() {
