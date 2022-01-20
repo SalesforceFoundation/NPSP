@@ -66,6 +66,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
 
     maximumDaysForLapsed;
     minimumDaysForClosed;
+    minimumDaysForClosedErrorMessage = '';
 
     inputClosedStatus;
     inputLapsedStatus;
@@ -117,6 +118,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     }
 
     handleCancel() {
+        this.resetSettingsInput();
         this.isEdit = false;
     }
 
@@ -166,13 +168,32 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
     }
 
     assignInputDaysThreshold() {
-        this.maximumDaysForLapsed = (this.inputDaysForClosed === null)
+        this.maximumDaysForLapsed = (isNull(this.inputDaysForClosed))
             ? null
-            : parseInt(this.inputDaysForClosed) - 1;
+            : this.getMinimumDays(parseInt(this.inputDaysForClosed) - 1);
         
-        this.minimumDaysForClosed = (this.inputDaysForLapsed === null)
+        this.minimumDaysForClosed = (isNull(this.inputDaysForLapsed))
             ? 0
-            : parseInt(this.inputDaysForLapsed) + 1;
+            : this.getMinimumDays(parseInt(this.inputDaysForLapsed) + 1);
+
+        this.adjustDaysForClosedErrorMessage();
+    }
+
+    adjustDaysForClosedErrorMessage() {
+        this.minimumDaysForClosedErrorMessage = 
+            (!isNull(this.inputDaysForLapsed) && this.minimumDaysForClosed >= 0 && this.inputDaysForClosed >= 0) 
+                ? this.labels.daysForClosedTooSmall
+                : '';
+    }
+    resetSettingsInput() {
+        this.inputClosedStatus = this.closedStatus;
+        this.inputLapsedStatus = this.lapsedStatus;
+        this.inputDaysForClosed = this.automationSettings.numberOfDaysForClosed;
+        this.inputDaysForLapsed = this.automationSettings.numberOfDaysForLapsed;
+    }
+
+    getMinimumDays(days) {
+        return (days < 0)? 0 : days;
     }
 
     handleLapsedStatusChanged(event) {
