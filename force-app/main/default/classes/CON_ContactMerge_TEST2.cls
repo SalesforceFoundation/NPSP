@@ -88,7 +88,8 @@ private class CON_ContactMerge_TEST2 {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by Id];
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from
+                Contact order by Id];
         con = listCon[0];
         con2 = listCon[1];
         con3 = listCon[2];
@@ -163,8 +164,10 @@ private class CON_ContactMerge_TEST2 {
         
         insert con2;
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from Contact where Id =
+                :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from Contact where Id =
+                :con2.id];
 
         CON_ContactMerge_CTRL controller = getController();
         setupMockDataForMerge(controller, new List<Contact>{con, con2});
