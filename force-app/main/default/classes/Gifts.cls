@@ -131,6 +131,8 @@ public with sharing class Gifts {
     public void prepareForProcessing() {
         giftsToUpdate.clear();
 
+        giftsToProcessingStatus();
+
         Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
         if (paymentIntegrationUnavailable) {
             String failReason = String.format(
@@ -138,8 +140,6 @@ public with sharing class Gifts {
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
         }
-
-        giftsToProcessingStatus();
     }
 
     public void updateRecords() {
@@ -167,13 +167,12 @@ public with sharing class Gifts {
     }
 
     public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
-        for (DataImport__c gift : dataImportsById.values()) {
+        for (DataImport__c gift : giftsToUpdate) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.hasAuthorizedPayment()) {
                 gift.Status__c = BDI_DataImport_API.bdiFailed;
                 gift.FailureInformation__c = failReason;
-                giftsToUpdate.add(gift);
             }
         }
     }
