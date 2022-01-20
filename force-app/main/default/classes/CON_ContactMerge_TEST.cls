@@ -133,6 +133,23 @@ public class CON_ContactMerge_TEST {
     }
 
     @IsTest
+    static void mergeShouldReturnCorrectPageReference() {
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(2);
+        setupMockDataForMerge(controller, testContacts);
+
+        // when
+        Test.startTest();
+        PageReference mergedContact = controller.mergeContacts();
+        Test.stopTest();
+
+        //then
+        PageReference expectedMergedContactPage  = new PageReference('/' + testContacts[0].Id);
+        System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
+    }
+
+    @IsTest
     private static void mergeFailsWhenContactIsMissing() {
         //given
         // Contact ids are mock ids which will simulate missing contacts on the database
@@ -150,6 +167,39 @@ public class CON_ContactMerge_TEST {
         ApexPages.Message pageMessage = ApexPages.getMessages()[0];
         System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
         System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
+    }
+
+    /*******************************************************************************************************
+     * @description Integration test to test full load merge candidates flow.
+     */
+    @IsTest
+    private static void selectedMergeCandidatesShouldDisplayCorrectValues() {
+        Contact differingContact = [SELECT HomePhone FROM Contact WHERE LastName = 'Differing' LIMIT 1];
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+        controller.search();
+        selectSearchResults(controller.searchResults);
+
+        Test.startTest();
+        controller.nextStep();
+        Test.stopTest();
+
+        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
+
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.fieldName.equals(CON_ContactMerge_CTRL.MASTER_KEY)) {
+                System.assert(row.showRadio);
+                System.assert(row.selectedValue != null);
+            }
+
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.FirstName))) {
+                System.assert(!row.showRadio, 'The field should not be shown when both records have the same value.');
+            }
+
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.HomePhone))) {
+                System.assert(row.showRadio);
+                System.assertEquals(differingContact.Id, row.selectedValue);
+            }
+        }
     }
 
     @IsTest
@@ -478,12 +528,14 @@ public class CON_ContactMerge_TEST {
                 'The winning Contact\'s Account\'s Name should not have changed');
     }
 
-    static testMethod void testShowDuplicateRecordSets() {
+    @IsTest
+    private static void testShowDuplicateRecordSets() {
         //Create 15 DRS records
-        getDuplicateSetOfRecords(15);
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        getDuplicateSetOfRecords(2);
+        CON_ContactMerge_CTRL controller = getController();
+        controller.pageSize = 1;
         controller.showDuplicateRecordSets();
+
         Test.startTest();
         System.assertEquals(controller.hasDSRObjectReadPermission(), true);
         
@@ -494,27 +546,27 @@ public class CON_ContactMerge_TEST {
         System.assertEquals(pageNumberValue, 1);
         System.assertEquals(hasPreviousValue, false);
         System.assertEquals(hasNextvalue, true);
-        
+
         // Test pagination methods
         controller.lastPage();
         controller.firstPage();
         controller.previouspage();
         controller.nextpage();
 
+        Test.stopTest();
+
         //Asserts to check the results are correct.
         System.assertEquals(controller.showDRS, true);
         System.assertEquals(controller.totalPages, 2);
         System.assertEquals(controller.hasContactObjectDeletePermission(), true, 'Do not have delete permission on DRS');
         System.assertNotEquals(controller.listDuplicateRecordSets.size(), 0, 'List is empty');
-        
-        Test.stopTest();
-
     }
 
-    static testMethod void testSelectDRSrecord() {
+    @IsTest
+    private static void testSelectDRRecord() {
 
         Test.startTest();
-        getDuplicateSetOfRecords(15);
+        getDuplicateSetOfRecords(3);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
@@ -527,10 +579,10 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
-    static testMethod void shouldDisplayDuplicateRecordSetWithLeadAndTwoContacts() {
-
+    @IsTest
+    private static void shouldDisplayDuplicateRecordSetWithLeadAndTwoContacts() {
         Test.startTest();
-        getDuplicateSetOfRecords(15, 2, true);
+        getDuplicateSetOfRecords(3, 2, true);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
@@ -546,95 +598,46 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
-    static testMethod void shouldNotDisplayDuplicateRecordSetWithLeadAndOneContact() {
-
+    @IsTest
+    static void shouldNotDisplayDuplicateRecordSetWithLeadAndOneContact() {
         Test.startTest();
-        getDuplicateSetOfRecords(15, 1, true);
+        getDuplicateSetOfRecords(3, 1, true);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
             = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
         controller.getUnactionableDuplicateRecordSets();
-        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 15,
-            'All 15 Duplicate Record Sets should not be visible');
+        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 3,
+            'All 3 Duplicate Record Sets should not be visible');
         Test.stopTest();
     }
 
-    @IsTest
-    static void mergeShouldReturnCorrectPageReference() {
-        // given
-        CON_ContactMerge_CTRL controller = getController();
-        List<Contact> testContacts = getContacts(2);
-        setupMockDataForMerge(controller, testContacts);
-
-        // when
-        Test.startTest();
-            PageReference mergedContact = controller.mergeContacts();
-        Test.stopTest();
-
-        //then
-        PageReference expectedMergedContactPage  = new PageReference('/' + testContacts[0].Id);
-        System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
-    }
-
-    /*******************************************************************************************************
-     * @description Integration test to test full load merge candidates flow.
-     */
-    @IsTest
-    private static void selectedMergeCandidatesShouldDisplayCorrectValues() {
-        Contact differingContact = [SELECT HomePhone FROM Contact WHERE LastName = 'Differing' LIMIT 1];
-        CON_ContactMerge_CTRL controller = getControllerForSearch();
-        controller.search();
-        selectSearchResults(controller.searchResults);
-
-        Test.startTest();
-            controller.nextStep();
-        Test.stopTest();
-
-        List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
-
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-            if (row.fieldName.equals(CON_ContactMerge_CTRL.MASTER_KEY)) {
-                System.assert(row.showRadio);
-                System.assert(row.selectedValue != null);
-            }
-
-            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.FirstName))) {
-                System.assert(!row.showRadio, 'The field should not be shown when both records have the same value.');
-            }
-
-            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.HomePhone))) {
-                System.assert(row.showRadio);
-                System.assertEquals(differingContact.Id, row.selectedValue);
-            }
-        }
-    }
-
+    /*** Helper methods ***/
     public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
         getDuplicateSetOfRecords(duplicateRecordSize, 2, false);
     }
-    
+
     //Create the duplicate data for contact
     public static void getDuplicateSetOfRecords(Integer duplicateRecordSize,
-                                                Integer contactsPerSet,
-                                                Boolean createLeads) {
+            Integer contactsPerSet,
+            Boolean createLeads) {
         DuplicateRule dR = [
-                            SELECT 
-                                Id
-                            FROM 
-                                DuplicateRule
-                            Where
-                                SobjectType = 'Contact'
-                            LIMIT 1
-                            ];
+                SELECT
+                        Id
+                FROM
+                        DuplicateRule
+                Where
+                        SobjectType = 'Contact'
+                LIMIT 1
+        ];
         //Create Original Contacts
         List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
         insert contacts;
-        
+
         //Create Duplicate Record Set
         List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , duplicateRecordSize);
         insert dupRSList;
-        
+
         //Create Duplicate Contact Records
         List<Contact> duplicatecontacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
 
@@ -645,12 +648,12 @@ public class CON_ContactMerge_TEST {
             duplicateleads = UTIL_UnitTestData_TEST.createMultipleTestLeads(duplicateRecordSize);
             insert duplicateleads;
         }
-        
+
         //Create Duplicate Record Items
         List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
 
-        Database.DMLOptions insertDML = new Database.DMLOptions(); 
-        insertDML.DuplicateRuleHeader.AllowSave = true; 
+        Database.DMLOptions insertDML = new Database.DMLOptions();
+        insertDML.DuplicateRuleHeader.AllowSave = true;
         List<Database.SaveResult> srList  = Database.insert(duplicatecontacts, insertDML);
         Integer index = 0 ;
         for (Database.SaveResult sr : srList) {
@@ -667,13 +670,13 @@ public class CON_ContactMerge_TEST {
         }
         insert duplicateRecordItems;
     }
-   
+
     //Create Duplicate Record Sets
     public static List<DuplicateRecordSet> getDuplicateRecordSets(Id duplicateRuleId, Integer count) {
         List<DuplicateRecordSet> drsList = new List<DuplicateRecordSet>();
         for (Integer i = 0; i < count; i++) {
             drsList.add(
-                new DuplicateRecordSet(DuplicateRuleId = duplicateRuleId)
+                    new DuplicateRecordSet(DuplicateRuleId = duplicateRuleId)
             );
         }
         return drsList;
@@ -682,12 +685,10 @@ public class CON_ContactMerge_TEST {
     //Create Duplicate Record Items
     public static DuplicateRecordItem getDuplicateRecordItem(Id drsId, Id recordId) {
         return new DuplicateRecordItem(
-            DuplicateRecordSetId = drsId,
-            RecordId = recordId
+                DuplicateRecordSetId = drsId,
+                RecordId = recordId
         );
     }
-
-    /*** Helper methods ***/
     private static void createPrivateContacts() {
         List<Contact> contactsToMakePrivate = UTIL_UnitTestData_TEST.getContacts(2);
         for (Contact contact : contactsToMakePrivate) {

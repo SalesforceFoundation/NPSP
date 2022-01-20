@@ -154,6 +154,7 @@ public with sharing class CON_ContactMerge_CTRL {
      /**********************************************************************************************
     * @description Duplicate Record Set diplay page size.
     */
+    @TestVisible
     private Integer pageSize = 10;
     
     /***********************************************************************************************
