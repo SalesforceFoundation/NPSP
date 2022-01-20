@@ -149,7 +149,8 @@ private class CON_ContactMerge_TEST2 {
     //the second contact's org should be deleted
     static void merge2OneToOneInSameAccount(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -162,10 +163,11 @@ private class CON_ContactMerge_TEST2 {
         
         insert con2;
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con.id];
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact where Id = :con2.id];
 
-        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'test');
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, new List<Contact>{con, con2});
 
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         
@@ -190,17 +192,7 @@ private class CON_ContactMerge_TEST2 {
         system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.id].AccountId);
     }
 
-    @isTest
-    static void ghIssue6One2One(){
-        ghIssue6(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    @isTest
-    static void ghIssue6HHAccount(){
-        ghIssue6(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
     static void ghIssue6(string strProcessor){
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         con.LastName = 'O\'Sullivan';
@@ -213,7 +205,8 @@ private class CON_ContactMerge_TEST2 {
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         system.assertEquals(con.LastName, 'O\'Sullivan');
 
-        CON_ContactMerge_CTRL controller = setupPageController(new List<Contact> { con, con2 }, 'O\'Sullivan');
+        CON_ContactMerge_CTRL controller = getController();
+        setSelectedRecordsForMerge(controller, new List<Contact> {con, con2});
         
         CON_ContactMerge_TEST.selectMasterRecord(controller, con2.id);
 
@@ -840,7 +833,7 @@ private class CON_ContactMerge_TEST2 {
             insert objectsToInsert;
             
             List<Contact> contactsToMerge = [
-                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
+                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c, MailingCity
                 FROM Contact 
                 ORDER BY Id
             ];
@@ -856,12 +849,11 @@ private class CON_ContactMerge_TEST2 {
 
             System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
             
-            CON_ContactMerge_CTRL controller = setupPageController(contactsToMerge, 'test');
-            CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
+            CON_ContactMerge_CTRL controller = getController();
+            setupMockDataForMerge(controller, new List<Contact>{con, con2});
 
             //Select the primary affiliation of the one that is not the one we selected as master
-            List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;  
-            for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            for (CON_ContactMerge_CTRL.FieldRow row : controller.fieldRows) {
                 if (row.fieldName == UTIL_Namespace.StrTokenNSPrefix('Primary_Affiliation__c')) {
                     row.selectedValue = String.valueOf(con2.id);
                     break;
@@ -901,7 +893,8 @@ private class CON_ContactMerge_TEST2 {
                 String.valueOf(Contact.FirstName),
                 String.valueOf(Contact.LastName),
                 String.valueOf(Contact.MailingStreet),
-                String.valueOf(Contact.MailingCity)
+                String.valueOf(Contact.MailingCity),
+                String.valueOf(Contact.Primary_Affiliation__c)
         }, contactsToMerge);
     }
 
