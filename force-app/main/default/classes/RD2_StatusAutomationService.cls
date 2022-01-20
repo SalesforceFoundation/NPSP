@@ -100,11 +100,19 @@ public with sharing class RD2_StatusAutomationService {
             if (statusMapper.getState(lapsedStatus) != RD2_Constants.STATUS_LAPSED) {
                 return System.label.RD2_StatusAutomationInvalidLapsedStatus;
             }
+
+            if (daysForLapsed < 0) {
+                return System.label.RD2_StatusAutomationNegativeNumberOfDays;
+            }
         }
 
         if (daysForClosed != null) {
             if (statusMapper.getState(closedStatus) != RD2_Constants.STATUS_Closed) {
                 return System.label.RD2_StatusAutomationInvalidClosedStatus;
+            }
+
+            if (daysForClosed < 0) {
+                return System.label.RD2_StatusAutomationNegativeNumberOfDays;
             }
         }
 

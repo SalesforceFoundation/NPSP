@@ -171,7 +171,7 @@ export default class Rd2StatusAutomationSettings extends LightningElement {
             : parseInt(this.inputDaysForClosed) - 1;
         
         this.minimumDaysForClosed = (this.inputDaysForLapsed === null)
-            ? null
+            ? 0
             : parseInt(this.inputDaysForLapsed) + 1;
     }
 

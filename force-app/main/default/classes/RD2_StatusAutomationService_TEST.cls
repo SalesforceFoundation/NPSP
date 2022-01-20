@@ -88,6 +88,38 @@ private class RD2_StatusAutomationService_TEST {
     }
 
     @IsTest
+    private static void verifyDaysForLapsedCannotBeNegative() {
+        RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
+        );
+        RD2_StatusAutomationService service = new RD2_StatusAutomationService();
+
+        Test.startTest();
+        String errorMessage = service.validateSetting(-5, null, RD2_Constants.STATUS_LAPSED, null);
+        Test.stopTest();
+
+        System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
+        'Number of Days for Lapsed cannot be negative.');
+    }
+
+    @IsTest
+    private static void verifyDaysForClosedCannotBeNegative() {
+        RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
+            RD2_StatusMapper.Class,
+            new RD2_StatusMapper_TEST.Stub().withDefaultMapping()
+        );
+        RD2_StatusAutomationService service = new RD2_StatusAutomationService();
+
+        Test.startTest();
+        String errorMessage = service.validateSetting(null, -3, null, RD2_Constants.STATUS_CLOSED);
+        Test.stopTest();
+
+        System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
+        'Number of Days for Lapsed cannot be negative.');
+    }
+
+    @IsTest
     private static void verifyClosedStatusShouldMappedToClosedState() {
         RD2_StatusAutomationService.statusMapper = (RD2_StatusMapper) Test.createStub(
             RD2_StatusMapper.Class,
