@@ -33,31 +33,33 @@
 * @description Donation History Selector class.
 */
 public inherited sharing class DonationHistorySelector {
-  /** 
-  * @author Salesforce.org
-  * @date 2021
-  * @description method to return Opportunity and Payment data.
-  */
-  public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
-      return [
-          SELECT Id, 
-              Name, 
-              CloseDate, 
-              Amount, 
-              Primary_Contact__r.Email, 
-              Primary_Contact__r.Name,
-                  (SELECT 
-                          npe01__Payment_Method__c 
-                          FROM npe01__OppPayment__r 
-                          ORDER BY npe01__Payment_Date__c
-                          LIMIT 1) 
-          FROM Opportunity
-          WHERE IsWon = true 
-          AND Primary_Contact__r.Id =:contactId 
-          WITH SECURITY_ENFORCED
-          ORDER BY CloseDate 
-          DESC LIMIT 50
-      ];
-  }
-  
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Opportunity and Payment data.
+    */
+    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
+        return [
+            SELECT Id, 
+                Name, 
+                CloseDate, 
+                Amount, 
+                Primary_Contact__r.Email, 
+                Primary_Contact__r.Name,
+                    (SELECT 
+                            npe01__Payment_Method__c,
+                            npe01__Paid__c
+                            FROM npe01__OppPayment__r 
+                            WHERE npe01__Paid__c = true
+                            ORDER BY npe01__Payment_Date__c
+                            LIMIT 1) 
+            FROM Opportunity
+            WHERE IsWon = true 
+            AND Primary_Contact__r.Id =:contactId 
+            WITH SECURITY_ENFORCED
+            ORDER BY CloseDate 
+            DESC LIMIT 50
+        ];
+    }
+    
 }
