@@ -160,7 +160,8 @@ public with sharing class GiftBatchService {
         }
 
         public void updateGiftBatchWith(Id apexJobId, GiftBatchId giftBatchId) {
-            DataImportBatch__c batch = new DataImportBatch__c(Id = giftBatchId.value(), Latest_Apex_Job_Id__c = apexJobId);
+            DataImportBatch__c batch =
+                new DataImportBatch__c(Id = giftBatchId.value(), Latest_Apex_Job_Id__c = apexJobId);
             unitOfWork.registerDirty(new List<SObject> { batch });
             unitOfWork.save();
         }

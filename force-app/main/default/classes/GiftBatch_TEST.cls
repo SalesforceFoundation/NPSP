@@ -206,6 +206,7 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.ABORTED.name())
             .build();
 
+        System.assert(giftBatch.canBeEnqueued());
         System.assert(giftBatch.hasGiftsToResolve());
 
         giftBatch.resolveGiftsRemainingInProcessing();
@@ -229,6 +230,7 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.FAILED.name())
             .build();
 
+        System.assert(giftBatch.canBeEnqueued());
         System.assert(giftBatch.hasGiftsToResolve());
 
         giftBatch.resolveGiftsRemainingInProcessing();
@@ -252,6 +254,7 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.COMPLETED.name())
             .build();
 
+        System.assert(giftBatch.canBeEnqueued());
         System.assert(giftBatch.hasGiftsToResolve());
 
         giftBatch.resolveGiftsRemainingInProcessing();
@@ -275,6 +278,7 @@ private class GiftBatch_TEST {
             .withStatus(UTIL_BatchJobService.ApexJobStatus.PROCESSING.name())
             .build();
 
+        System.assert(!giftBatch.canBeEnqueued());
         System.assert(!giftBatch.hasGiftsToResolve());
     }
 
