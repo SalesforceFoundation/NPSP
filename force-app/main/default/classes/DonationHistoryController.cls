@@ -99,7 +99,10 @@ public with sharing class DonationHistoryController {
         boolean isPaymentEnabled = service.checkIfPaymentsAreEnabled();
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for (Opportunity opp : opportunities) {
-            donationHistories.add(new DonationHistoryView(opp, (isPaymentEnabled ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c : EMPTY_PAYMENT_METHOD)));
+			String paymentMethod = isPaymentEnabled
+                ? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
+                : EMPTY_PAYMENT_METHOD;
+            donationHistories.add(new DonationHistoryView(opp, paymentMethod));
         }
         return donationHistories;
     }
