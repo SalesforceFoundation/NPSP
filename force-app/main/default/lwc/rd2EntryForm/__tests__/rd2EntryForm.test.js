@@ -4,6 +4,7 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getRecord } from 'lightning/uiRecordApi';
 import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
@@ -31,6 +32,14 @@ const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json')
 const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
 const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
+const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
+const rd2WithCardCommitmentInitialView = require("./data/rd2WithCardCommitmentInitialView.json");
+const rd2WithACHCommitmentInitialView = require("./data/rd2WithACHCommitmentInitialView.json");
+const rd2WithoutCommitmentInitialView = require("./data/rd2WithoutCommitmentInitialView.json");
+
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
+    () => ({ default: jest.fn() }),
+    { virtual: true });
 
 const mockScrollIntoView = jest.fn();
 const mockRecordEditFormSubmit = jest.fn();
@@ -85,6 +94,7 @@ jest.mock('@salesforce/apex/RD2_EntryFormController.handleCommitment',
 describe('c-rd2-entry-form', () => {
 
     beforeEach(() => {
+        getInitialView.mockResolvedValue(initialViewResponse);
         getRecurringSettings.mockResolvedValue(recurringSettingsResponse);
         hasRequiredFieldPermissions.mockResolvedValue(true);
         window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
@@ -103,7 +113,7 @@ describe('c-rd2-entry-form', () => {
 
             await flushPromises();
 
-            expect(mockScrollIntoView).toHaveBeenCalledTimes(1);
+            expect(mockScrollIntoView).toHaveBeenCalled();
 
             const saveButton = controller.saveButton();
             expect(saveButton.disabled).toBe(true);
@@ -179,6 +189,7 @@ describe('c-rd2-entry-form', () => {
     describe('tokenization', () => {
 
         beforeEach(() => {
+            getInitialView.mockResolvedValue(initialViewResponse);
             setupIframeReply();
         });
 
@@ -262,7 +273,6 @@ describe('c-rd2-entry-form', () => {
             controller.paymentMethod().changeValue('ACH');
             await flushPromises();
 
-
             controller.accountLookup().changeValue('001fakeAccountId');
             await flushPromises();
 
@@ -308,7 +318,7 @@ describe('c-rd2-entry-form', () => {
         })
 
         it('rd2 record with card payment, when editing, displays card information', async () => {
-
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
@@ -332,7 +342,7 @@ describe('c-rd2-entry-form', () => {
 
 
         it('rd2 record with ACH payment, when editing, displays ACH last 4', async () => {
-
+            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
             await flushPromises();
@@ -408,6 +418,7 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('rd2 record, when editing, uses existing contact information in tokenization', async () => {
+            getInitialView.mockResolvedValue(rd2WithoutCommitmentInitialView);
 
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -462,6 +473,7 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('clears credit card fields when payment method changed to ACH', async () => {
+            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
             setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -522,6 +534,8 @@ describe('c-rd2-entry-form', () => {
 
 
         it('clears ACH fields when payment method changed to Card', async () => {
+            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
+
             setupCommitmentResponse(handleCommitmentResponseBody);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
             const controller = new RD2FormController(element);
@@ -832,7 +846,6 @@ class RD2FormController {
         this.status().setValue('Active');
         this.amount().setValue(0.50);
         this.setDefaultInputFieldValues(recurringType);
-        this.contactLookup().setValue('001fakeContactId');
     }
 
     donorSection() {
@@ -966,6 +979,8 @@ class RD2FormController {
 }
 
 class RD2FormField {
+
+    element;
 
     constructor(element) {
         this.element = element;
