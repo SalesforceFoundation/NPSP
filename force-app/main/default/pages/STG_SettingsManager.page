@@ -229,6 +229,15 @@
                                         class="slds-grow slds-m-left_large">
                                         {!$Label.stgNavRDFieldMap}</a>
                                 </li>
+                                <li role="treeitem" aria-level="2" id="idPanelRD2StatusAutomationNav"
+                                    class="{!IF(isRD2Enabled, 'slds-tree__item', 'hide')}"
+                                    style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+
+                                    <a href="#" onclick="ShowPanel('idPanelRD2StatusAutomation');return false;"
+                                        class="slds-grow slds-m-left_large"
+                                        style="{!IF(isRD2Enabled, 'display: block', 'display: none')}">
+                                        {!$Label.stgNavRD2StatusAutomation}</a>
+                                </li>
                             </ul>
 
                             <!-- Bulk Data Processes -->
@@ -390,6 +399,10 @@
 
                 <div class="panel noborder" id="idPanelRDFieldMap" style="display:none" >
                     <apex:include pageName="STG_PanelRDCustomFieldMapping" id="idPanelRDFieldMap" />
+                </div>
+
+                <div class="panel noborder" id="idPanelRD2StatusAutomation" style="display:none">
+                    <apex:include pageName="STG_PanelRD2StatusAutomationSettings" id="idPanelRD2StatusAutomation"/>
                 </div>
 
                 <!-- Bulk Data Processes -->
