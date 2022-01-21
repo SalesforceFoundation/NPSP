@@ -31,7 +31,7 @@ import { Rd2Service } from 'c/rd2Service';
 export default class rd2EditPaymentInformationModal extends LightningElement {
     @api rdRecord;
     @api defaultRecordTypeId;
-    @api accountHolderType;
+    @api rd2State;
 
     rd2Service = new Rd2Service();
 

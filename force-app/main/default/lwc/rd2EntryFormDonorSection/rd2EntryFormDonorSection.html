@@ -12,7 +12,7 @@
                         <lightning-combobox
                                 name="DonorTypeSelect"
                                 label={customLabels.donorTypeLabel}
-                                value={donorType}
+                                value={rd2State.donorType}
                                 placeholder=""
                                 field-level-help={customLabels.donorTypeHelpText}
                                 class="rd2-entry-custom-field-padding"
@@ -28,7 +28,7 @@
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.contact} >
                             <lightning-input-field 
                                 field-name={fields.contact.apiName} 
-                                value={contactId}
+                                value={rd2State.contactId}
                                 data-id="contactLookup"
                                 required
                                 onchange={handleContactChange}>
@@ -40,7 +40,7 @@
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.account}>
                             <lightning-input-field
                                     field-name={fields.account.apiName}
-                                    value={accountId}
+                                    value={rd2State.accountId}
                                     data-id="accountLookup"
                                     required
                                     onchange={handleAccountChange}
@@ -52,6 +52,8 @@
                     <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.dateEstablished}>
                         <lightning-input-field
                                 field-name={fields.dateEstablished.apiName}
+                                onchange={handleDateEstablishedChange}
+                                value={rd2State.dateEstablished}
                                 required
                                 data-id="dateEstablished"
                         >
@@ -62,7 +64,7 @@
                         <lightning-layout-item padding="horizontal-small" size="12" small-device-size="6" if:true={fields.contact}>
                             <lightning-input-field 
                                 field-name={fields.contact.apiName} 
-                                value={contactId} 
+                                value={rd2State.contactId}
                                 onchange={handleContactChange}>
                             </lightning-input-field>
                         </lightning-layout-item>
