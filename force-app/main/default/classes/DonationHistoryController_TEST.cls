@@ -90,7 +90,6 @@ public class DonationHistoryController_TEST {
             DonationHistoryController.DonationHistoryAppView donationHistory =
             DonationHistoryController.getDonationHistory(testContact.Id, 0);
         Test.stopTest();
-
         System.assertEquals(1, donationHistory.donations.size(), 'Should return only 1 record');
         System.assertEquals(1, donationHistory.totalNumberOfRecords, 'Should return only 1 on total number of records');
     }

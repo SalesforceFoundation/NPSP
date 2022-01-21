@@ -78,7 +78,6 @@ public with sharing class DonationHistoryController {
             DonationHistoryAppView donationHistories = new DonationHistoryAppView();
             donationHistories.donations = buildHistoryFromOCRs(service.getDonationHistory());
             donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
-
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
