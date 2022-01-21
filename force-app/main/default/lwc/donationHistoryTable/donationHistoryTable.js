@@ -1,6 +1,6 @@
 import { api, LightningElement, track } from "lwc";
 import donationHistoryDatatableAriaLabel from "@salesforce/label/c.donationHistoryDatatableAriaLabel";
-import RD2_ScheduleVisualizerColumnDate from "@salesforce/label/c.RD2_ScheduleVisualizerColumnDate";
+import commonDate from "@salesforce/label/c.commonDate";
 import getDonationHistory from "@salesforce/apex/DonationHistoryController.getDonationHistory";
 import commonAmount from "@salesforce/label/c.commonAmount";
 import donationHistoryDonorLabel from "@salesforce/label/c.donationHistoryDonorLabel";
@@ -39,7 +39,7 @@ export default class DonationHistoryTable extends LightningElement {
 
                 this.columns = [
                     {
-                        label: RD2_ScheduleVisualizerColumnDate,
+                        label: commonDate,
                         fieldName: "closeDate",
                         type: "date-local",
                         typeAttributes: {
