@@ -128,7 +128,7 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                 List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
             }
 
-            SfdoInstrumentationService.getInstanace().log(
+            SfdoInstrumentationService.getInstance().log(
                 SfdoInstrumentationEnum.Feature.EngagementPlans, 
                 SfdoInstrumentationEnum.Component.TriggerAction, 
                 SfdoInstrumentationEnum.Action.Create, 

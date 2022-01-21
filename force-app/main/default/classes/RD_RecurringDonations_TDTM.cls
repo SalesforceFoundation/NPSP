@@ -118,7 +118,7 @@ public class RD_RecurringDonations_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
-            SfdoInstrumentationService.log(
+            SfdoInstrumentationService.getInstance().log(
                 SfdoInstrumentationEnum.Feature.LegacyRecurringDonations, 
                 SfdoInstrumentationEnum.Component.TriggerAction, 
                 SfdoInstrumentationEnum.Action.Create, 
