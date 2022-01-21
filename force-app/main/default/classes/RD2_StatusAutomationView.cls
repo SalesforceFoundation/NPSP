@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,20 +26,19 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for NPSP Settings Lightning Components.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-    <aura:dependency resource="c:RD2_EnablementDelegate" />
-    <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
-    <aura:dependency resource="c:rd2StatusMappingSettings" />
-    <aura:dependency resource="c:rd2StatusAutomationSettings" />
-    <aura:dependency resource="c:utilIllustration" />
-    <aura:dependency resource="c:bdeRetirementAlert" />
-    <aura:dependency resource="c:bdiBatchNumberSettings" />
-    <aura:dependency resource="c:gePaymentGatewayManagement" />
-</aura:application>
+*/
+/**
+* @author Salesforce.org
+* @date 2022
+* @group Recurring Donations
+* @description Stores and retrieves Recurring Donation Status Automation Settings
+*/
+public with sharing class RD2_StatusAutomationView {
+    @AuraEnabled public Integer numberOfDaysForClosed;
+    @AuraEnabled public Integer numberOfDaysForLapsed;
+    @AuraEnabled public String closedStatus;
+    @AuraEnabled public String lapsedStatus;
+    @AuraEnabled public List<PicklistOptionView> lapsedStatusOption;
+    @AuraEnabled public List<PicklistOptionView> closedStatusOption;
+    @AuraEnabled public Boolean rd2Enabled;
+}
