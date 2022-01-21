@@ -59,14 +59,13 @@
                             </h3>
                             <div aria-hidden="false" class="slds-section__content">
                                 <c-rd2-entry-form-donor-section
-                                        record-id={recordId}
-                                        parent-id={parentId}
-                                        parent-s-object-type={rdSettings.parentSObjectType}
+                                        rd2-state={rd2State}
                                         data-id="donorComponent"
                                         onerrorevent={handleChildComponentError}
                                         oncontactchange={handleContactChange}
                                         onaccountchange={handleAccountChange}
                                         ondonortypechange={handleDonorTypeChange}
+                                        ondateestablishedchange={handleDateEstablishedChange}
                                         if:true={isSettingReady}
                                 >
                                 </c-rd2-entry-form-donor-section>
@@ -160,18 +159,19 @@
                                     <lightning-layout-item size="12" class="slds-p-bottom_small"
                                         if:true={isElevateWidgetEnabled}>
                                         <c-rd2-elevate-credit-card-form data-id='elevateWidget'
-                                            data-qa-locator='widget Elevate'    
+                                            rd2-state={rd2State}
+                                            data-qa-locator='widget Elevate'
                                             is-edit-mode={isCommitmentEdit}
                                             rd2-record-id={recordId}
                                             card-exp-date={cardExpDate}
                                             card-last-four-label={cardLastFourLabel}
                                             ach-last-four-label={achLastFourLabel}
-                                            card-last-four={cardLastFour}
-                                            ach-last-four={achLastFour}
+                                            card-last-four={rd2State.cardLastFour}
+                                            ach-last-four={rd2State.achLastFour}
                                             next-donation-date={nextDonationDate}
-                                            payer-organization-name={organizationAccountName}
-                                            payer-first-name={contactFirstName}
-                                            payer-last-name={contactLastName}
+                                            payer-organization-name={rd2State.accountName}
+                                            payer-first-name={rd2State.contactFirstName}
+                                            payer-last-name={rd2State.contactLastName}
                                             ach-account-type={accountHolderType}
                                             existing-payment-method={existingPaymentMethod}
                                             payment-method={paymentMethod}>
