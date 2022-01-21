@@ -37,7 +37,7 @@ public with sharing class DonationHistoryService {
     static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
     private List<Opportunity> credits;
     private Id contactId;
-
+    
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
         this.credits = new List<Opportunity>();
