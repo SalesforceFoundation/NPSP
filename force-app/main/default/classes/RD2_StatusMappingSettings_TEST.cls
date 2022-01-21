@@ -45,7 +45,7 @@ private with sharing class RD2_StatusMappingSettings_TEST {
      */
     @IsTest
     private static void shouldReturnStateOptions() {
-        List<RD2_StatusMappingSettings_CTRL.Option> options = RD2_StatusMappingSettings_CTRL.getStateOptions();
+        List<PicklistOptionView> options = RD2_StatusMappingSettings_CTRL.getStateOptions();
 
         System.assertEquals(3, options.size(), 'Expected number of the state options should be returned: ' + options);
 
@@ -311,8 +311,8 @@ private with sharing class RD2_StatusMappingSettings_TEST {
      * @param option The actual option
      * @return void
      */
-    private static void assertStateOption(String value, RD2_StatusMappingSettings_CTRL.Option option) {
-        RD2_StatusMappingSettings_CTRL.Option expectedOption = new RD2_StatusMappingSettings_CTRL.Option()
+    private static void assertStateOption(String value, PicklistOptionView option) {
+        PicklistOptionView expectedOption = new PicklistOptionView()
             .withValue(value)
             .withLabel(
                 UTIL_Describe.getTranslatedPicklistLabel(
