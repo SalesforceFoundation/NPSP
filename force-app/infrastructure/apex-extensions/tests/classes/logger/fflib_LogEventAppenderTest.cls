@@ -67,40 +67,4 @@ private class fflib_LogEventAppenderTest
 		// THEN - It should be ignored
 		System.assertEquals(0, Limits.getDmlStatements(), 'Oops, the log entry should have been ignored');
 	}
-
-	@IsTest
-	static void itShouldAppendInfoMessageWhenTheApexLevelIsSetToInfo()
-	{
-		// GIVEN - And appender with a Apex level set to Info
-		fflib_LogEventAppender eventAppender = new fflib_LogEventAppender();
-		eventAppender.setLoggingLevel(System.LoggingLevel.INFO);
-
-		// WHEN - We append an Info Entry
-		System.Test.startTest();
-		eventAppender.append(new fflib_LogEntry(System.LoggingLevel.INFO, TEST_ERROR_MESSAGE));
-		System.Test.stopTest();
-
-		// THEN - It should be ignored
-		System.assertEquals(1, [SELECT COUNT() FROM fflib_LogEntry__c]);
-	}
-
-	@IsTest
-	static void itShouldAppendInfoMessageWhenTheOrgSettingsLevelIsSetToInfo()
-	{
-		// GIVEN - And appender with a Org level set to Info
-		fflib_LogEventAppender eventAppender = new fflib_LogEventAppender();
-
-		fflib_LogLevelFilter__c orgSettings = fflib_LogLevelFilter__c.getOrgDefaults();
-		System.debug(orgSettings);
-		orgSettings.LogLevel__c = 'INFO';
-		insert orgSettings;
-
-		// WHEN - We append an Info Entry
-		System.Test.startTest();
-		eventAppender.append(new fflib_LogEntry(System.LoggingLevel.INFO, TEST_ERROR_MESSAGE));
-		System.Test.stopTest();
-
-		// THEN - It should be ignored
-		System.assertEquals(1, [SELECT COUNT() FROM fflib_LogEntry__c]);
-	}
 }
