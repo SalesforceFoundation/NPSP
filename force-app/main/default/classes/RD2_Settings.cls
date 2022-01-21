@@ -116,14 +116,40 @@ public with sharing class RD2_Settings {
     }
 
     /***
+    * @description Retrieve RD2_Entry_Form_Custom_Fields Fieldset and eliminate any packaged and already displayed fields
+    * @return List<Schema.FieldSetMember>
+    */
+    public List<Schema.FieldSetMember> getCustomFieldSetMembers() {
+        Set<String> excludedCustomFields = getExcludedCustomFields();
+
+        List<Schema.FieldSetMember> fields = new List<Schema.FieldSetMember>();
+        List<Schema.FieldSetMember> fieldSetFields = Schema.SObjectType.npe03__Recurring_Donation__c.fieldSets.RD2_Entry_Form_Custom_Fields.getFields();
+
+        for (Schema.FieldSetMember field : fieldSetFields) {
+            if (excludedCustomFields.contains(field.getFieldPath())
+                    || field.getFieldPath().startsWith('npsp__')
+                    || field.getFieldPath().startsWith('npe03__')
+                    || !UTIL_Describe.getFieldDescribe('npe03__Recurring_Donation__c', field.getFieldPath()).isAccessible()
+                    ) {
+                continue;
+            }
+
+            fields.add(field);
+        }
+
+        return fields;
+    }
+
+
+    /***
     * @description Installment Opp Auto Creation Option,
     * If random string is input, the setting will be default to Always Create Next installment
     */
     public String installmentCreateOption {
         get {
             if (installmentCreateOption == null) {
-                installmentCreateOption = String.isNotBlank(settings.installmentOppAutoCreateOption__c)
-                    ? settings.installmentOppAutoCreateOption__c
+                installmentCreateOption = String.isNotBlank(settings.InstallmentOppAutoCreateOption__c)
+                    ? settings.InstallmentOppAutoCreateOption__c
                     : RD2_Constants.InstallmentCreateOptions.Always_Create_Next_Installment.name();
             }
 
@@ -292,4 +318,24 @@ public with sharing class RD2_Settings {
         private set;
     }
 
+    /**
+    * @description Set of fields that will be excluded from the RD2_EntryForm Custom Field Section
+    */
+    @TestVisible
+    private static Set<String> getExcludedCustomFields() {
+        return new Set<String> {
+                'CreatedById',
+                'CreatedDate',
+                'CurrencyIsoCode',
+                'Id',
+                'IsDeleted',
+                'LastModifiedById',
+                'LastModifiedDate',
+                'LastReferencedDate',
+                'LastViewedDate',
+                'Name',
+                'OwnerId',
+                'SystemModStamp'
+        };
+    }
 }
