@@ -23,7 +23,11 @@ import {
     TOKENIZE_ACH_EVENT_ACTION
 } from 'c/geConstants';
 
-import { Rd2Service } from 'c/rd2Service';
+import {
+    Rd2Service,
+    CONTACT_DONOR_TYPE,
+    ACCOUNT_DONOR_TYPE
+} from "c/rd2Service";
 
 /***
 * @description Event name fired when the Elevate credit card widget is displayed or hidden
@@ -63,6 +67,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     _updatePaymentMode = false;
     enableWidgetOnPaymentMethodChange = true;
 
+    @api rd2State;
     @api rd2RecordId;
     @api existingPaymentMethod;
     @api isEditMode;
@@ -254,7 +259,7 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     requestCardToken(iframe) {
-        const params = {nameOnCard: this.getCardholderName()};
+        const params = { nameOnCard: this.getCardholderName() };
         return tokenHandler.requestToken({
             iframe: iframe,
             tokenizeParameters: params,
@@ -274,23 +279,23 @@ export default class rd2ElevateCreditCardForm extends LightningElement {
     }
 
     getAchParams() {
-        if(this.achAccountType === ACCOUNT_HOLDER_TYPES.INDIVIDUAL) {
+        if(this.rd2State.donorType === CONTACT_DONOR_TYPE) {
             return {
                 accountHolder: {
                     firstName: this.payerFirstName,
                     lastName: this.payerLastName,
-                    type: this.achAccountType,
+                    type: ACCOUNT_HOLDER_TYPES.INDIVIDUAL,
                     bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
                 achCode: DEFAULT_ACH_CODE,
                 nameOnAccount: `${this.payerFirstName} ${this.payerLastName}`
             };
-        } else if(this.achAccountType === ACCOUNT_HOLDER_TYPES.BUSINESS) {
+        } else if(this.rd2State.donorType === ACCOUNT_DONOR_TYPE) {
             return {
                 accountHolder: {
                     businessName: this.payerLastName,
                     accountName: this.payerOrganizationName,
-                    type: this.achAccountType,
+                    type: ACCOUNT_HOLDER_TYPES.BUSINESS,
                     bankType: ACCOUNT_HOLDER_BANK_TYPES.CHECKING
                 },
                 achCode: DEFAULT_ACH_CODE,

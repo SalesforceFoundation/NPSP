@@ -6,6 +6,7 @@ import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import handleUpdatePaymentCommitment from '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment';
 import { mockGetIframeReply } from 'c/psElevateTokenHandler';
 import { ACCOUNT_HOLDER_TYPES } from "c/geConstants";
+import { ACCOUNT_DONOR_TYPE, CONTACT_DONOR_TYPE } from "c/rd2Service";
 
 jest.mock(
     '@salesforce/apex/RD2_EntryFormController.handleUpdatePaymentCommitment',
@@ -177,6 +178,9 @@ describe('c-rd2-edit-payment-information-modal', () => {
         beforeEach(() => {
             component.rdRecord = recurringDonation;
             component.accountHolderType = ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
+            component.rd2State = {
+                donorType: CONTACT_DONOR_TYPE
+            };
             setupUpdateCommitmentResponse(mockPaymentResultBody);
             setupIframeReply();
             updateRecord.mockResolvedValue(recurringDonation);
@@ -231,7 +235,7 @@ describe('c-rd2-edit-payment-information-modal', () => {
 
         it('sets donor information on rd2 credit card form after load', async () => {
             const widget = getElevateWidget(component);
-            expect(widget.achAccountType).toBe(ACCOUNT_HOLDER_TYPES.INDIVIDUAL);
+            expect(widget.rd2State.donorType).toBe(CONTACT_DONOR_TYPE);
         });
 
         it('saves successfully after swapping to ACH', async () => {
