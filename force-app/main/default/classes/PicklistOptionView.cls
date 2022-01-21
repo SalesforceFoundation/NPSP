@@ -1,5 +1,5 @@
-<!--
-    Copyright (c) 2019, Salesforce.org
+/*
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -26,20 +26,34 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-	@author Salesforce.org
-	@date 2019
-	@group Recurring Donations
-	@description Harness app for NPSP Settings Lightning Components.
--->
-<aura:application access="GLOBAL" extends="ltng:outApp">
-    <aura:dependency resource="c:RD2_EnablementDelegate" />
-    <aura:dependency resource="c:RD2_EnablementDelegateSimple" />
-    <aura:dependency resource="c:rd2StatusMappingSettings" />
-    <aura:dependency resource="c:rd2StatusAutomationSettings" />
-    <aura:dependency resource="c:utilIllustration" />
-    <aura:dependency resource="c:bdeRetirementAlert" />
-    <aura:dependency resource="c:bdiBatchNumberSettings" />
-    <aura:dependency resource="c:gePaymentGatewayManagement" />
-</aura:application>
+*/
+/**
+* @author Salesforce.org
+* @date 2022
+* @group LWC View, Picklist
+* @description Lightning Web Component combo-box and Picklist wrapper class
+*/
+public class PicklistOptionView {
+    @AuraEnabled public String value;
+    @AuraEnabled public String label;
+
+    /**
+     * @description Sets the option value
+     * @param value The option value
+     * @return Option This option instance
+     */
+    public PicklistOptionView withValue(String value) {
+        this.value = value;
+        return this;
+    }
+
+    /**
+     * @description Sets the option label
+     * @param label The option label
+     * @return Option This option instance
+     */
+    public PicklistOptionView withLabel(String label) {
+        this.label = label;
+        return this;
+    }
+}
