@@ -187,6 +187,23 @@ public with sharing class RD2_StatusMapper {
     }
 
     /**
+     * @description Returns all Recurring Donation Status that are mapped to Lapsed State
+     * @return Set<String> Set of status
+     */
+    public Set<String> getLapsedStatusValues() {
+        List<Mapping> allmappings = mappingByStatus.values();
+        Set<String> lapsedStates = new Set<String>();
+
+        for (Mapping mapping : allmappings) {
+            if (mapping.state == RD2_Constants.STATUS_LAPSED) {
+                lapsedStates.add(mapping.status);
+            }
+        }
+
+        return lapsedStates;
+    }
+
+    /**
      * @description Contains mapping configuration detail
      */
     public inherited sharing class Mapping {
