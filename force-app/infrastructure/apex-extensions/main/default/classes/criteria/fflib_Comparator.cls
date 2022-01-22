@@ -65,6 +65,10 @@ public with sharing class fflib_Comparator
 			return compare((Date) object1, (Date) object2);
 		else if (object1 instanceof Datetime && object2 instanceof Datetime)
 			return compare((Datetime) object1, (Datetime) object2);
+		else if (object1 instanceof Datetime && object2 instanceof Date)
+			return compare((Datetime) object1, (Date) object2);
+		else if (object1 instanceof Date && object2 instanceof Datetime)
+			return compare((Date) object1, (Datetime) object2);
 		else if (object1 instanceof Integer && object2 instanceof Integer)
 			return compare((Integer) object1, (Integer) object2);
 		else if (object1 instanceof Long && object2 instanceof Long)
@@ -95,6 +99,20 @@ public with sharing class fflib_Comparator
 	}
 
 	public static Integer compare(Datetime d1, Datetime d2)
+	{
+		if (d1 < d2) return -1;
+		else if (d1 == d2) return 0;
+		else return 1;
+	}
+
+	public static Integer compare(Datetime d1, Date d2)
+	{
+		if (d1 < d2) return -1;
+		else if (d1 == d2) return 0;
+		else return 1;
+	}
+
+	public static Integer compare(Date d1, Datetime d2)
 	{
 		if (d1 < d2) return -1;
 		else if (d1 == d2) return 0;

@@ -250,6 +250,22 @@ public virtual class fflib_SObjects2
 	}
 
 	/**
+	 * @param sObjectField The Schema.SObjectField to get the SUM of
+	 *
+	 * @return The total SUM of the given field
+	 */
+	@TestVisible
+	protected virtual Decimal getDecimalFieldSum(Schema.SObjectField sObjectField)
+	{
+		Decimal result = 0;
+		for (SObject record : getRecords())
+		{
+			result += record.get(sObjectField) == null ? 0 : (Decimal) record.get(sObjectField);
+		}
+		return result;
+	}
+
+	/**
 	 * @param sObjectField The Schema.SObjectField to get their Id values
 	 *
 	 * @return The Decimal values of the given sObjectField, null values are omitted
@@ -367,6 +383,45 @@ public virtual class fflib_SObjects2
 				result.put(keyFieldValue, new Set<Object>());
 			}
 			result.get(keyFieldValue).add(record.get(valueField));
+		}
+		return result;
+	}
+
+	/**
+	 * @return Returns only the first SObject contained in the domain.
+	 */
+	public SObject getFirstSObject()
+	{
+		if (isEmpty()) return null;
+
+		return getRecords().get(0);
+	}
+
+	/**
+	 * Get a map with the values of a String field as key and Id field
+	 * Key fields containing null values are omitted
+	 *
+	 * @param valueField The Id field to use as the Value of the Map
+	 * @param keyField The String field to use as the Key of the map
+	 *
+	 * @return Returns a map with the values of two fields
+	 *
+	 * @example
+	 * Contacts contacts = Contacts.newInstance(records);
+	 * Map<String, Id> accountIdByContactId = contacts.getIdFieldByStringField(Contact.Id, Contact.Name);
+	 */
+	@TestVisible
+	protected virtual Map<String, Id> getIdFieldByStringField(Schema.SObjectField valueField, Schema.SObjectField keyField)
+	{
+		Map<String, Id> result = new Map<String, Id>();
+		for (SObject record : getRecords())
+		{
+			if (record.get(keyField) == null) continue;
+
+			result.put(
+					(String) record.get(keyField),
+					(Id) record.get(valueField)
+			);
 		}
 		return result;
 	}
@@ -658,7 +713,7 @@ public virtual class fflib_SObjects2
 	protected virtual Map<Id, String> getStringFieldByIdField(Schema.SObjectField valueField, Schema.SObjectField keyField)
 	{
 		Map<Id, String> result = new Map<Id, String>();
-		Map<Object, Object> fieldByField = getFieldByField(keyField, valueField);
+		Map<Object, Object> fieldByField = getFieldByField(valueField, keyField);
 		for (Object obj : fieldByField.keySet())
 		{
 			result.put((Id) obj, (String) fieldByField.get(obj));
@@ -734,5 +789,52 @@ public virtual class fflib_SObjects2
 	{
 		new fflib_SObjects2(getRecords(criteria), getSObjectType())
 				.setFieldValue(sObjectField, value);
+	}
+
+	/**
+	 * Sets a value to the given field only when key field Id value is provided in the given map
+	 *
+	 * @param sObjectIdFieldToCheck The SObject Id Field to match the key against in the provided map
+	 * @param sObjectFieldToUpdate The SObjectField to store the mapped value when the key matches the value in the sObjectFieldToUpdate field
+	 * @param values Map of values to store by the sObjectIdFieldToCheck fields value
+	 */
+	@TestVisible
+	protected virtual void setFieldValue(
+			Schema.SObjectField sObjectIdFieldToCheck,
+			Schema.SObjectField sObjectFieldToUpdate,
+			Map<Id, Object> values)
+	{
+		for (SObject record : getRecords())
+		{
+			Id keyValue = (Id) record.get(sObjectIdFieldToCheck);
+			if (values?.containsKey(keyValue))
+			{
+				record.put(sObjectFieldToUpdate, values.get(keyValue));
+			}
+		}
+	}
+
+	/**
+	 * Sets a value to the given field only when key field String value is provided in the given map
+	 *
+	 * @param sObjectStringFieldToCheck The SObject String Field to match the key against in the provided map
+	 * @param sObjectFieldToUpdate The SObjectField to store the mapped value when the key matches the value in the sObjectFieldToUpdate field
+	 * @param values Map of values to store by the sObjectIdFieldToCheck fields value
+	 */
+	@TestVisible
+	protected virtual void setFieldValue(
+			Schema.SObjectField sObjectStringFieldToCheck,
+			Schema.SObjectField sObjectFieldToUpdate,
+			Map<String, Object> values)
+	{
+		for (SObject record : getRecords())
+		{
+			String keyValue = (String) record.get(sObjectStringFieldToCheck);
+			if (values?.containsKey(keyValue))
+			{
+				record.put(sObjectFieldToUpdate, values.get(keyValue));
+			}
+		}
+
 	}
 }

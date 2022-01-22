@@ -85,8 +85,17 @@ private with sharing class fflib_ComparatorTest
 
 	private static testmethod void testDatetime()
 	{
-		Object d1 = datetime.newInstance(2008, 12, 1, 12, 30, 1);
-		Object d2 = datetime.newInstance(2008, 12, 1, 12, 30, 2);
+		Object d1 = Datetime.newInstance(2010, 01, 1, 12, 30, 0);
+		Object d2 = Datetime.newInstance(2020, 01, 1, 12, 30, 0);
+		assertCompareDatetime(d1, d2, -1);
+		assertCompareDatetime(d1, d1, 0);
+		assertCompareDatetime(d2, d1, 1);
+	}
+
+	private static testmethod void testDatetimeToDate()
+	{
+		Object d1 = Date.newInstance(2010, 01, 1);
+		Object d2 = Datetime.newInstance(2020, 01, 1, 12, 30, 0);
 		assertCompareDatetime(d1, d2, -1);
 		assertCompareDatetime(d1, d1, 0);
 		assertCompareDatetime(d2, d1, 1);

@@ -5,8 +5,8 @@
     <fieldManageability>SubscriberControlled</fieldManageability>
     <label>Binding Object</label>
     <referenceTo>EntityDefinition</referenceTo>
-    <relationshipLabel>Bindings</relationshipLabel>
-    <relationshipName>Bindings</relationshipName>
+    <relationshipLabel>BindingObjects</relationshipLabel>
+    <relationshipName>BindingObjects</relationshipName>
     <required>false</required>
     <type>MetadataRelationship</type>
     <unique>false</unique>
