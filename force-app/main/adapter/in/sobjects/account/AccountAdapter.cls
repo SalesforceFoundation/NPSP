@@ -185,9 +185,12 @@ public inherited sharing class AccountAdapter extends fflib_SObjects2 {
                 }
             } else {
                 NPSP_HouseholdAccount npspHouseholdAccount = new NPSP_HouseholdAccount(
-                        accountsById.get(npspNewAddress.householdId())
+                        accountsById.get(npspNewAddress.householdId()),
+                        accounts.oldMap.get(npspNewAddress.householdId())
                 );
-                npspNewAddress.setUndeliverable(npspHouseholdAccount.undeliverableAddressStatus());
+                if (npspHouseholdAccount.isUndeliverableStatusChanged()) {
+                    npspNewAddress.setUndeliverable(npspHouseholdAccount.undeliverableAddressStatus());
+                }
                 dmlWrapper.objectsToInsert.add(npspNewAddress.getRecord());
             }
         }

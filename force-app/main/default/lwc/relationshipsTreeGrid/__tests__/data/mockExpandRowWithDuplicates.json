@@ -1,0 +1,18 @@
+[
+  {
+    "title": null,
+    "relationshipId": "a0F54000005tAzkEAE",
+    "relationshipExplanation": "Honorable David Johnson  is  Samuel Harrison's Employee",
+    "contactName": "David Johnson",
+    "contactId": "0035400000l7lpuAAA",
+    "accountName": "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household"
+  },
+  {
+    "accountName": "Taylor, Alvarez, Stone, Smith, Russell, Medina, Kelly, Johnson and Harrison Household",
+    "contactId": "0035400000l7lprAAA",
+    "contactName": "Raymond Alvarez",
+    "relationshipExplanation": "Dr Raymond Alvarez  is Dr Stephanie Bailey's Partner",
+    "relationshipId": "a0F54000005tAzhEAE",
+    "title": "Research Associate"
+  }
+]

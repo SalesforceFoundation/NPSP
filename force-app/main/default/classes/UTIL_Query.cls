@@ -34,6 +34,17 @@
 * @description SOQL Builder
 */
 public with sharing class UTIL_Query {
+    @TestVisible
+    private UTIL_Describe describe {
+        get {
+            if(describe == null) {
+                describe = new UTIL_Describe();
+            }
+            return describe;
+        }
+        set;
+    }
+
     /** @description Exception raised by the Query builder */
     public class UTIL_QueryException extends Exception {}
 
@@ -107,6 +118,20 @@ public with sharing class UTIL_Query {
     */
     public UTIL_Query withOrderBy(String orderBy) {
         this.orderBy = orderBy;
+        return this;
+    }
+
+    /**
+     * @description Registers an ORDER BY field only if that field is unencrypted and sortable.
+     * @param field A reference to the field being sorted on
+     * @param orderByClause The order by clause to add to the query
+     *
+     * @return UTIL_Query The instance of the Query builder
+     */
+    public UTIL_Query withOrderBy(Schema.SObjectField field, String orderByClause) {
+        if(describe.isFieldSortable(field)) {
+            this.orderBy = orderByClause;
+        }
         return this;
     }
 

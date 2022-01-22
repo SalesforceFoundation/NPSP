@@ -247,7 +247,9 @@ public class BDI_RecurringDonations {
             // RD then it is just being provided as an existing parent of a new Opportunity, and doesn't need to be
             // included in the update.
             if (dataImport.RecurringDonationImported__c != null &&
-                    !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,dataImportFieldToRDField)) {
+                    !BDI_DataImportService.anyFieldsPopulatedForObjectMapping(dataImport,
+                                                                                dataImportFieldToRDField,
+                                                                                BDI_Donations.campaignImportedFields)) {
                 return null;
 
             }

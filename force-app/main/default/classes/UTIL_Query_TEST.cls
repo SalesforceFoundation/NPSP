@@ -436,4 +436,55 @@ private class UTIL_Query_TEST {
 
         System.assertEquals(expectedSoql, soql, 'SOQL should include offset');
     }
+
+    @IsTest
+    static void shouldExcludeEncryptedFields() {
+        UTIL_DescribeMock describeMock = new UTIL_DescribeMock()
+                .sortable(Contact.FirstName)
+                .unsortable(Contact.LastName);
+        UTIL_Query query = new UTIL_Query();
+        query.describe = (UTIL_Describe)Test.createStub(UTIL_Describe.class, describeMock);
+        query.describe.isFieldSortable(Contact.LastName);
+
+        query.withFrom(Contact.SObjectType)
+                .withSelectFields(new List<String>{'Id', 'FirstName', 'LastName'})
+                .withOrderBy(Contact.LastName, 'LastName');
+        String queryStr = query.build();
+        System.assert(!queryStr.contains('ORDER BY LastName'));
+
+        query.withOrderBy(Contact.FirstName, 'FirstName');
+        queryStr = query.build();
+        System.assert(queryStr.contains('ORDER BY FirstName'));
+    }
+
+
+    private class UTIL_DescribeMock implements StubProvider {
+        Map<Schema.SObjectField, Boolean> fieldSortableMap;
+
+        public UTIL_DescribeMock() {
+            fieldSortableMap = new Map<Schema.SObjectField, Boolean>();
+        }
+
+        public UTIL_DescribeMock sortable(Schema.SObjectField field) {
+            this.fieldSortableMap.put(field, true);
+            return this;
+        }
+
+        public UTIL_DescribeMock unsortable(Schema.SObjectField field) {
+            this.fieldSortableMap.put(field, false);
+            return this;
+        }
+
+        public Object handleMethodCall(Object stubbedObject, String stubbedMethodName,
+                Type returnType, List<Type> listOfParamTypes, List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on stubbedMethodName {
+                when 'isFieldSortable' {
+                    return fieldSortableMap.get((Schema.SObjectField)listOfArgs[0]);
+                }
+            }
+            return null;
+        }
+    }
 }

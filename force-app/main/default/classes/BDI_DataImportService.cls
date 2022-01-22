@@ -2110,9 +2110,37 @@ global with sharing class BDI_DataImportService {
     */
     public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di,
                                                             Map<String,String> diFieldToTargetFieldMap) {
+        return anyFieldsPopulatedForObjectMapping(di, diFieldToTargetFieldMap, new String[]{});
+    }
+
+    /*******************************************************************************************************
+    * @description loops through fields provided in Map and determines if any of them have a value.  If at least
+    * one field does, then it returns true.  This variant of the method also allows a list of fields to ignore to be 
+    * passed in since some fields may be mapped to two different object mappings, and others may always have a value.
+    * @param di the data import record to check
+    * @param diFieldToTargetFieldMap the mapping of DI field to target field that will be evaluated.
+    * @param fieldsToIgnore List of fields that should be ignored when checking for values, usually because these fields
+    * are shared with another object mapping, or are always populated.
+    * @return Boolean whether any fields were populated
+    */
+    public static Boolean anyFieldsPopulatedForObjectMapping(DataImport__c di,
+                                                            Map<String,String> diFieldToTargetFieldMap,
+                                                            String[] fieldsToIgnore) {
         Boolean isPopulated = false;
+
+        if (fieldsToIgnore == null) {
+            fieldsToIgnore = new String[]{};
+        } else {
+            // Force all fields to lower case so they can match correctly
+            for (Integer i = 0; i < fieldsToIgnore.size(); i++) {
+                fieldsToIgnore[i] = fieldsToIgnore[i].toLowerCase();
+            }
+        }
+
         for (String diField : diFieldToTargetFieldMap.keySet()){
-            if (di.get(diField) != null) {
+            // Set the is populated flag to true if the field should not be ignored, and it does have a value in the DI
+            Boolean shouldAddPopulatedField = !fieldsToIgnore.contains(diField.toLowerCase()) && di.get(diField) != null;
+            if (shouldAddPopulatedField) {
                 isPopulated = true;
                 break;
             }
