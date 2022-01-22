@@ -911,6 +911,10 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.NextDonationDateMatchRangeDays__c = settings.NextDonationDateMatchRangeDays__c;
         recurringDonationsSettings.StatusMappingDeploymentId__c = settings.StatusMappingDeploymentId__c;
         recurringDonationsSettings.EnableChangeLog__c = settings.EnableChangeLog__c;
+        recurringDonationsSettings.StatusAutomationDaysForLapsed__c = settings.StatusAutomationDaysForLapsed__c;
+        recurringDonationsSettings.StatusAutomationDaysForClosed__c = settings.StatusAutomationDaysForClosed__c;
+        recurringDonationsSettings.StatusAutomationLapsedValue__c = settings.StatusAutomationLapsedValue__c;
+        recurringDonationsSettings.StatusAutomationClosedValue__c = settings.StatusAutomationClosedValue__c;
 
         orgRecurringDonationsSettings = recurringDonationsSettings;
 

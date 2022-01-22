@@ -42,9 +42,7 @@ public virtual class fflib_AppBindingModule
 
 	public virtual void addBinding(fflib_IAppBinding binding)
 	{
-		if (null == this.bindings) this.bindings = new List<fflib_IAppBinding>();
-
-		this.bindings.add(binding);
+		addBindings(new List<fflib_IAppBinding>{ binding });
 	}
 
 	public virtual void addBindings(List<fflib_IAppBinding> bindings)

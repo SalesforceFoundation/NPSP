@@ -166,9 +166,17 @@ public virtual with sharing class fflib_Criteria
 	 */
 	public virtual fflib_Criteria formulaCriteria(String formula)
 	{
-		this.type = 'FORMULA';
+		this.type = fflib_Criteria.FORMULA;
 		this.formulaEvaluator = new FormulaEvaluator(formula.toUpperCase());
 		return this;
+	}
+
+	public virtual String getEvaluatedFormula()
+	{
+		if (this.type != fflib_Criteria.FORMULA)
+			throw new CriteriaException('Expected a Formula');
+
+		return ((FormulaEvaluator) this.formulaEvaluator).getEvaluatedFormula();
 	}
 
 
@@ -180,7 +188,8 @@ public virtual with sharing class fflib_Criteria
 
 	public class FormulaEvaluator implements IFormulaEvaluator
 	{
-		private String formula;
+		final private String formula;
+		private Map<Integer, Boolean> evaluatedResultByNumber;
 		private String type
 		{
 			get;
@@ -243,6 +252,7 @@ public virtual with sharing class fflib_Criteria
 
 		public Boolean evaluate(Object record, Map<Integer, Boolean> evaluatedResultByNumber)
 		{
+			this.evaluatedResultByNumber = evaluatedResultByNumber;
 			Boolean result = !(this.type == 'OR');
 			for (IFormulaEvaluator evaluator : formulaParts)
 			{
@@ -255,6 +265,19 @@ public virtual with sharing class fflib_Criteria
 				{
 					return false;
 				}
+			}
+			return result;
+		}
+
+		public String getEvaluatedFormula()
+		{
+			String result = String.valueOf(this.formula);
+			for (Integer i : this.evaluatedResultByNumber.keySet())
+			{
+				result = result.replace(
+						String.valueOf(i+1),
+						String.valueOf(evaluatedResultByNumber.get(i)).toUpperCase()
+				);
 			}
 			return result;
 		}
@@ -533,38 +556,73 @@ public virtual with sharing class fflib_Criteria
 	{
 		return inSet(field, new fflib_Objects(new List<Object>(values)));
 	}
-	// Method overrides
+	public virtual fflib_Criteria inSet(String fieldName, Set<Object> values)
+	{
+		return inSet(fieldName, new fflib_Objects(new List<Object>(values)));
+	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Date> values)
 	{
 		return inSet(field, new fflib_Dates(values));
+	}
+	public fflib_Criteria inSet(String fieldName, Set<Date> values)
+	{
+		return inSet(fieldName, new fflib_Dates(values));
 	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Datetime> values)
 	{
 		return inSet(field, new fflib_DateTimes(values));
 	}
+	public fflib_Criteria inSet(String fieldName, Set<Datetime> values)
+	{
+		return inSet(fieldName, new fflib_DateTimes(values));
+	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Decimal> values)
 	{
 		return inSet(field, new fflib_Decimals(values));
+	}
+	public fflib_Criteria inSet(String fieldName, Set<Decimal> values)
+	{
+		return inSet(fieldName, new fflib_Decimals(values));
 	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Double> values)
 	{
 		return inSet(field, new fflib_Doubles(values));
 	}
+	public fflib_Criteria inSet(String fieldName, Set<Double> values)
+	{
+		return inSet(fieldName, new fflib_Doubles(values));
+	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Id> values)
 	{
 		return inSet(field, new fflib_Ids(values));
+	}
+	public fflib_Criteria inSet(String fieldName, Set<Id> values)
+	{
+		return inSet(fieldName, new fflib_Ids(values));
 	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Integer> values)
 	{
 		return inSet(field, new fflib_Integers(values));
 	}
+	public fflib_Criteria inSet(String fieldName, Set<Integer> values)
+	{
+		return inSet(fieldName, new fflib_Integers(values));
+	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<Long> values)
 	{
 		return inSet(field, new fflib_Longs(values));
 	}
+	public fflib_Criteria inSet(String fieldName, Set<Long> values)
+	{
+		return inSet(fieldName, new fflib_Longs(values));
+	}
 	public fflib_Criteria inSet(Schema.SObjectField field, Set<String> values)
 	{
 		return inSet(field, new fflib_Strings(values));
+	}
+	public fflib_Criteria inSet(String fieldName, Set<String> values)
+	{
+		return inSet(fieldName, new fflib_Strings(values));
 	}
 	/**
 	 * checks if the given sets contains the fields values
@@ -584,6 +642,11 @@ public virtual with sharing class fflib_Criteria
 	public fflib_Criteria inSet(Schema.SObjectField field, fflib_Objects values)
 	{
 		evaluators.add(new FieldSetEvaluator(field, fflib_Operator.INx, values));
+		return this;
+	}
+	public fflib_Criteria inSet(String fieldName, fflib_Objects values)
+	{
+		evaluators.add(new RelatedFieldSetEvaluator(fieldName, fflib_Operator.INx, values));
 		return this;
 	}
 
@@ -606,37 +669,73 @@ public virtual with sharing class fflib_Criteria
 	{
 		return notInSet(field, new fflib_Dates(values));
 	}
+	public fflib_Criteria notInSet(String fieldName, Set<Date> values)
+	{
+		return notInSet(fieldName, new fflib_Dates(values));
+	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Datetime> values)
 	{
 		return notInSet(field, new fflib_DateTimes(values));
+	}
+	public fflib_Criteria notInSet(String fieldName, Set<Datetime> values)
+	{
+		return notInSet(fieldName, new fflib_DateTimes(values));
 	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Decimal> values)
 	{
 		return notInSet(field, new fflib_Decimals(values));
 	}
+	public fflib_Criteria notInSet(String fieldName, Set<Decimal> values)
+	{
+		return notInSet(fieldName, new fflib_Decimals(values));
+	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Double> values)
 	{
 		return notInSet(field, new fflib_Doubles(values));
+	}
+	public fflib_Criteria notInSet(String fieldName, Set<Double> values)
+	{
+		return notInSet(fieldName, new fflib_Doubles(values));
 	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Id> values)
 	{
 		return notInSet(field, new fflib_Ids(values));
 	}
+	public fflib_Criteria notInSet(String fieldName, Set<Id> values)
+	{
+		return notInSet(fieldName, new fflib_Ids(values));
+	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Integer> values)
 	{
 		return notInSet(field, new fflib_Integers(values));
+	}
+	public fflib_Criteria notInSet(String fieldName, Set<Integer> values)
+	{
+		return notInSet(fieldName, new fflib_Integers(values));
 	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Long> values)
 	{
 		return notInSet(field, new fflib_Longs(values));
 	}
+	public fflib_Criteria notInSet(String fieldName, Set<Long> values)
+	{
+		return notInSet(fieldName, new fflib_Longs(values));
+	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<String> values)
 	{
 		return notInSet(field, new fflib_Strings(values));
 	}
+	public fflib_Criteria notInSet(String fieldName, Set<String> values)
+	{
+		return notInSet(fieldName, new fflib_Strings(values));
+	}
 	public fflib_Criteria notInSet(Schema.SObjectField field, Set<Object> values)
 	{
 		return notInSet(field, new fflib_Objects(new List<Object>(values)));
+	}
+	public fflib_Criteria notInSet(String fieldName, Set<Object> values)
+	{
+		return notInSet(fieldName, new fflib_Objects(new List<Object>(values)));
 	}
 
 	/**
@@ -657,6 +756,11 @@ public virtual with sharing class fflib_Criteria
 	public fflib_Criteria notInSet(Schema.SObjectField field, fflib_Objects values)
 	{
 		evaluators.add(new FieldSetEvaluator(field, fflib_Operator.NOT_IN, values));
+		return this;
+	}
+	public fflib_Criteria notInSet(String fieldName, fflib_Objects values)
+	{
+		evaluators.add(new RelatedFieldSetEvaluator(fieldName, fflib_Operator.NOT_IN, values));
 		return this;
 	}
 
@@ -714,15 +818,15 @@ public virtual with sharing class fflib_Criteria
 		else if (operator == fflib_Operator.GREATER_THAN_OR_EQUAL_TO)
 			return '>=';
 		else if (operator == fflib_Operator.LIKEx)
-			return ' like ';
+			return 'LIKE';
 		else if (operator == fflib_Operator.INx)
-			return ' IN ';
+			return 'IN';
 		else if (operator == fflib_Operator.NOT_IN)
-			return ' NOT IN ';
+			return 'NOT IN';
 		else if (operator == fflib_Operator.INCLUDES)
-			return ' INCLUDES ';
+			return 'INCLUDES';
 		else if (operator == fflib_Operator.EXCLUDES)
-			return ' EXCLUDES ';
+			return 'EXCLUDES';
 		else
 				return null;
 	}
@@ -829,7 +933,7 @@ public virtual with sharing class fflib_Criteria
 		public String toSOQL()
 		{
 			return String.format(
-					'{0} {2} {3}',
+					'{0} {1} {2}',
 					new List<String>
 					{
 							this.sObjectField.getDescribe().getName(),
@@ -962,7 +1066,7 @@ public virtual with sharing class fflib_Criteria
 		public String toSOQL()
 		{
 			return String.format(
-					'{0} {2} {3}',
+					'{0} {1} {2}',
 					new List<String>
 					{
 							this.fieldName,

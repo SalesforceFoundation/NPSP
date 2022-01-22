@@ -89,29 +89,147 @@ private class fflib_SObjects2Test
 	{
 		fflib_Criteria criteria = new fflib_Criteria().equalTo(Account.Name, 'A');
 
-		DomainAccounts domain = generateDomain();
+		DomainAccounts domain = new DomainAccounts(
+				new List<Account>
+				{
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), Name = 'A', ShippingCountry = 'USA', AnnualRevenue = 5, BillingLatitude = 121.0),
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), Name = 'B', ShippingCountry = 'Ireland', AnnualRevenue = 3),
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), Name = 'C', ShippingCountry = 'UK', AnnualRevenue = 2),
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), Name = 'D', ShippingCountry = '', AnnualRevenue = 1),
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), Name = 'E'),
+						new Account(Id = fflib_IDGenerator.generate(Account.SObjectType), BillingLatitude = 121.0 )
+				}
+		);
 		domain.getDateTimeFieldValues(Account.LastActivityDate);
-		domain.getDateTimeFieldValues(Account.CreatedDate);
-		domain.getFieldByField(Account.Name, Account.AccountNumber);
-		domain.getFieldsByField(Account.Id, Account.AccountNumber);
+		domain.getDateTimeFieldValues(Account.CreatedDate, criteria);
+		domain.getFieldByField(Account.Name, Account.AnnualRevenue);
+		domain.getFieldsByField(Account.Id, Account.AnnualRevenue);
 		domain.getFieldByField(Account.Id, Account.Id);
-		domain.getIdFieldByIdField(Account.Id, Account.Id);
 		domain.getIdFieldsByIdField(Account.Id, Account.Id);
 		domain.getIdFieldValues(Account.Id);
 		domain.getIdFieldValues(Account.Id, criteria);
-		domain.getIntegerFieldValues(Account.NumberOfEmployees);
-		domain.getIntegerFieldValues(Account.NumberOfEmployees, criteria);
+		domain.getDecimalFieldValues(Account.BillingLatitude, criteria);
 		domain.getDoubleFieldValues(Account.BillingLatitude);
 		domain.getDoubleFieldValues(Account.BillingLatitude, criteria);
 		domain.getSObjectByIdField(Account.Id);
 		domain.getSObjectsByIdField(Account.Id);
 		domain.getSObjectByStringField(Account.Name);
 		domain.getSObjectsByStringField(Account.Name);
-		domain.getStringFieldByIdField(Account.Id, Account.Name);
 		domain.getStringFieldByStringField(Account.Name, Account.AccountNumber);
 		domain.getStringFieldValues(Account.Name, criteria);
 
 		// todo - add assertions
+	}
+
+	@IsTest
+	static void itShouldReturnStringById()
+	{
+		final String accountName = 'My Account';
+		final Id accountId = fflib_IDGenerator.generate(Schema.Account.SObjectType);
+		final Account record = new Account(Id = accountId, Name = accountName);
+		fflib_SObjects2 domain = new fflib_SObjects2(new List<Account>{ record });
+		System.Test.startTest();
+		Map<String, Id> nameById = domain.getIdFieldByStringField(Schema.Account.Id, Schema.Account.Name);
+		System.Test.stopTest();
+		System.assert(nameById.containsKey(accountName));
+		System.assertEquals(accountId, nameById.get(accountName));
+	}
+
+	@IsTest
+	static void itShouldReturnStringFieldByIdField()
+	{
+		final String accountName = 'My Account';
+		final Id accountId = fflib_IDGenerator.generate(Account.SObjectType);
+		DomainAccounts domain = new DomainAccounts(
+				new List<Account>
+				{
+						new Account(Id = accountId, Name = accountName),
+						new Account(Name = accountName + ' 2')              // This one should be ignored
+				});
+
+		System.Test.startTest();
+		Map<Id, String> result = domain.getStringFieldByIdField(Account.Name, Account.Id);
+		System.Test.stopTest();
+
+		System.assertEquals(1, result.size(), 'Incorrect returned amount of results');
+		System.assert(result.keySet().contains(accountId), 'The accountId is missing from the results');
+		System.assertEquals(accountName, result.get(accountId), 'Incorrect returned account name');
+	}
+
+	@IsTest
+	static void itShouldReturnIntegerFieldValues()
+	{
+		final Integer numberOfEmployees = 10;
+		final String accountName = 'Test Account';
+		DomainAccounts domain = new DomainAccounts(
+				new List<Account>
+				{
+						new Account(NumberOfEmployees = numberOfEmployees),
+						new Account(Name = accountName, NumberOfEmployees = numberOfEmployees * 2),
+						new Account()              // This one should be ignored
+				});
+
+		System.Test.startTest();
+		Set<Integer> result = domain.getIntegerFieldValues(Account.NumberOfEmployees).getIntegerSet();
+		Set<Integer> result2 =
+				domain.getIntegerFieldValues(
+						Account.NumberOfEmployees,
+						new fflib_Criteria().equalTo(Schema.Account.Name, accountName)
+				)
+						.getIntegerSet();
+		System.Test.stopTest();
+
+		System.assertEquals(2, result.size(), 'Incorrect amount of results');
+		System.assert(result.contains(numberOfEmployees), 'The expected numberOfEmployees was not returned');
+		System.assert(result.contains(numberOfEmployees * 2), 'The expected numberOfEmployees was not returned');
+
+		System.assertEquals(1, result2.size(), 'Incorrect amount of results');
+		System.assert(result2.contains(numberOfEmployees * 2), 'The expected numberOfEmployees was not returned');
+	}
+
+	@IsTest
+	static void itShouldReturnLongFieldValues()
+	{
+		final Integer numberOfEmployees = 10;
+		final String accountName = 'Test Account';
+		DomainAccounts domain = new DomainAccounts(
+				new List<Account>
+				{
+						new Account(NumberOfEmployees = numberOfEmployees),
+						new Account(Name = accountName, NumberOfEmployees = numberOfEmployees * 2),
+						new Account()              // This one should be ignored
+				});
+
+		System.Test.startTest();
+		Set<Long> result = domain.getLongFieldValues(Account.NumberOfEmployees).getLongSet();
+		Set<Long> result2 =
+				domain.getLongFieldValues(
+						Account.NumberOfEmployees,
+						new fflib_Criteria().equalTo(Schema.Account.Name, accountName)
+				)
+						.getLongSet();
+		System.Test.stopTest();
+
+		System.assertEquals(2, result.size(), 'Incorrect amount of results');
+		System.assert(result.contains(numberOfEmployees), 'The expected numberOfEmployees was not returned');
+		System.assert(result.contains(numberOfEmployees * 2), 'The expected numberOfEmployees was not returned');
+
+		System.assertEquals(1, result2.size(), 'Incorrect amount of results');
+		System.assert(result2.contains(numberOfEmployees * 2), 'The expected numberOfEmployees was not returned');
+	}
+
+	@IsTest
+	static void itShouldReturnRecordIdById()
+	{
+		final Id contactId = fflib_IDGenerator.generate(Schema.Contact.SObjectType);
+		final Id accountId = fflib_IDGenerator.generate(Schema.Account.SObjectType);
+		final Contact record = new Contact(Id = contactId, AccountId = accountId);
+		fflib_SObjects2 domain = new fflib_SObjects2(new List<Contact>{ record });
+		System.Test.startTest();
+		Map<Id, Id> accountIdByContactId = domain.getIdFieldByIdField(Schema.Contact.AccountId, Schema.Contact.Id);
+		System.Test.stopTest();
+		System.assert(accountIdByContactId.containsKey(contactId));
+		System.assertEquals(accountId, accountIdByContactId.get(contactId));
 	}
 
 	@IsTest
@@ -319,15 +437,71 @@ private class fflib_SObjects2Test
 		System.assert(domain.selectByRating('Hot').size() == 1);
 	}
 
+	@IsTest
+	static void itShouldGetTheSumOfAnnualRevenue()
+	{
+		DomainAccounts domain = generateDomain();
+		System.assert(domain.getDecimalFieldSum(Account.AnnualRevenue) == 11);
+		System.assert(domain.getDecimalFieldValues(Account.AnnualRevenue).contains((Decimal) 5));
+	}
+
+	@IsTest
+	static void itShouldSetFieldByIdField()
+	{
+		Id accountId = fflib_IDGenerator.generate(Account.SObjectType);
+		Account record = new Account(Id = accountId, Name = '');
+		fflib_SObjects2 domain = new fflib_SObjects2(new List<Account>{ record });
+
+		domain.setFieldValue(
+				Schema.Account.Id,
+				Schema.Account.Name,
+				new Map<Id, String>
+				{
+						accountId => 'Hello'
+				}
+		);
+
+		System.assert(domain.getFirstSObject().get('Name') == 'Hello');
+	}
+
+	@IsTest
+	static void itShouldSetFieldByStringField()
+	{
+		Account record = new Account(Name = 'Hello', Rating = 'Cold');
+		fflib_SObjects2 domain = new fflib_SObjects2(new List<Account>{ record });
+
+		domain.setFieldValue(
+				Schema.Account.Name,
+				Schema.Account.Rating,
+				new Map<String, String>
+				{
+						'Hello' => 'Warm'
+				}
+		);
+
+		System.assert(domain.getFirstSObject().get('Rating') == 'Warm');
+	}
+
+	@IsTest
+	static void itShouldSetField()
+	{
+		Account record = new Account(Name = 'Hello', Rating = 'Cold');
+		fflib_SObjects2 domain = new fflib_SObjects2(new List<Account>{ record });
+
+		domain.setFieldValue(Account.Name, 'Hello World', new fflib_Criteria().equalTo(Account.Rating, 'Cold'));
+
+		System.assert(domain.getFirstSObject().get('Name') == 'Hello World');
+	}
+
 	private static DomainAccounts generateDomain()
 	{
 		DomainAccounts domain = new DomainAccounts(
 				new List<Account>
 				{
-						new Account(Name = 'A', ShippingCountry = 'USA'),
-						new Account(Name = 'B', ShippingCountry = 'Ireland'),
-						new Account(Name = 'C', ShippingCountry = 'UK'),
-						new Account(Name = 'D', ShippingCountry = ''),
+						new Account(Name = 'A', ShippingCountry = 'USA', AnnualRevenue = 5),
+						new Account(Name = 'B', ShippingCountry = 'Ireland', AnnualRevenue = 3),
+						new Account(Name = 'C', ShippingCountry = 'UK', AnnualRevenue = 2),
+						new Account(Name = 'D', ShippingCountry = '', AnnualRevenue = 1),
 						new Account(Name = 'E'),
 						new Account()
 				}

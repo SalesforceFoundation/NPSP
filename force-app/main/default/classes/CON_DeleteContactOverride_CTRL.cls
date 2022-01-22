@@ -45,8 +45,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /** @description LEx navigation value to go to Contact Home. */
     private static final String LEX_HOME = 'home';
 
+    /** @description Retain Id for passed in contact. */
+    private Id contactId;
+
     /** @description The contact record the user is attempting to delete. */
-    private Contact queryContact;
+    private Contact contactRecord;
     /** @description The id of the contact's account. */
     private String accountId;
     /** @description The return URL. */
@@ -59,7 +62,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public String sforceNav {get; private set;}
 
     /** @description Boolean that is set to true if user theme is LEx or SF1 */
-    @TestVisible 
+    @TestVisible
     private Boolean lexOrSF1User {
         get {
             return lexOrSF1User = lexOrSF1User == null
@@ -69,12 +72,38 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
-    /** @description Flag to tell the page which operation we're doing. */
-    public Boolean shouldDeleteContactAlone {get;set;}
+    /** @description Selector class. */
+    @TestVisible
+    private CON_DeleteContactOverrideSelector contactOverrideSelector {
+        get {
+            if (contactOverrideSelector == null) {
+                contactOverrideSelector = new CON_DeleteContactOverrideSelector();
+            }
+            return contactOverrideSelector;
+        }
+        set;
+    }
+
+    /** @description Permissions class. */
+    @TestVisible
+    private CON_DeleteContactOverridePermissions permissions {
+        get {
+            if (permissions == null) {
+                permissions = new CON_DeleteContactOverridePermissions(contactOverrideSelector);
+            }
+            return permissions;
+        }
+        set;
+    }
+
+    /** @description Flag to tell the page this is the only contact in a Household Account. */
+    public Boolean isOnlyContactInHousehold {get;set;}
     /** @description Flag to tell the page account deletion is permitted. */
-    public Boolean canDeleteAccount {get;set;}
+    public Boolean hasAccountDeleteAccess {get;set;}
     /** @description Flag indicating if only this Contact should be deleted while leaving empty Account. */
-    private Boolean isDeleteContactLeaveAccount = false;
+    private Boolean isDeleteContactLeaveAccount;
+    /** @description Flag indicating if only this Contact is in a Household Account. */
+    private Boolean isHouseholdAccount;
 
     /** @description Boolean for disabling the account deletion button if there are errors preventing deletion. */
     public Boolean hasPageMessages {
@@ -84,56 +113,89 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         set;
     }
 
+    /**  @description Component-friendly NPSP namespace */
+    public String namespace {
+        get {
+            if (namespace == null) {
+                namespace = UTIL_Namespace.getComponentNamespace();
+            }
+            return namespace;
+        }
+        set;
+    }
+
+    /**
+     * @description True if the current user has minimum access for Contact deletion with this page.
+     */
+    public Boolean hasMinimumAccess {get;set;}
+
     /*******************************************************************************************************
-    * @description Standard controller constructor. Queries for contact, verifies whether the contact or its
-    * account should be deleted.
+    * @description Standard controller constructor.
     */
     public CON_DeleteContactOverride_CTRL(ApexPages.StandardController stdController) {
+        contactId = stdController.getId();
         setNavigationParams(ApexPages.currentPage().getParameters());
+    }
 
-        queryContact = [
-            SELECT Id, Name, FirstName, LastName,
-                AccountId, Account.Name, Account.npe01__SYSTEMIsIndividual__c
-            FROM Contact
-            WHERE Id = :stdController.getId()
-        ];
-
-        shouldDeleteContactAlone = true;
-        canDeleteAccount = false;
-
-        if (queryContact.AccountId != null && queryContact.Account.npe01__SYSTEMIsIndividual__c) {
-            accountId = queryContact.AccountId;
-            List<AggregateResult> contactsInHousehold = [
-                SELECT COUNT(id) ct
-                FROM Contact
-                WHERE AccountId = :accountId
-                GROUP BY AccountId
-                HAVING COUNT(id) = 1
-            ];
-
-            //This contact is alone in a system account, delete the system account and allow the cascading
-            //delete to remove the contact
-            if (contactsInHousehold.size() == 1 && contactsInHousehold[0].get('ct') == 1) {
-                shouldDeleteContactAlone = false;
-
-                String helpDeleteAccountInstead;
-                if (UTIL_Permissions.canRead('Account', 'Name', false)) {
-                    canDeleteAccount = true;
-                    helpDeleteAccountInstead = String.format(
-                        Label.ConfirmDeleteAccount,
-                        new List<String>{ queryContact.Name.escapeHtml4(), queryContact.Account.Name.escapeHtml4() }
-                    );
-                } else {
-                
-                    helpDeleteAccountInstead = String.format(
-                        Label.ConfirmDeleteLeaveAccountEmpty,
-                        new List<String>{queryContact.Name.escapeHtml4()}
-                    );
-                }
-
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
-            }
+    /*******************************************************************************************************
+    * @description Required processing to check access and establish context. Queries for contact, verifies
+    * whether the contact or its account should be deleted.
+    */
+    public void preProcessDelete() {
+        hasMinimumAccess = permissions.canDelete(contactId);
+        if (!hasMinimumAccess) {
+            return;
         }
+
+        contactRecord = contactOverrideSelector.queryContact(contactId);
+        hasAccountDeleteAccess = permissions.canDelete(contactRecord.AccountId);
+
+        isHouseholdAccount = false;
+        isOnlyContactInHousehold = false;
+        handleHouseholdAccount();
+    }
+
+    /*******************************************************************************************************
+    * @description Identifies household accounts.
+    */
+    private void handleHouseholdAccount() {
+        if (contactRecord.AccountId == null || !contactRecord.Account.npe01__SYSTEMIsIndividual__c) {
+            return;
+        }
+
+        isHouseholdAccount = true;
+        accountId = contactRecord.AccountId;
+        handleSingleMemberHousehold(contactRecord);
+    }
+
+    /*******************************************************************************************************
+    * @description Identifies and handles single contact household accounts.
+    */
+    private void handleSingleMemberHousehold(Contact contactRecord) {
+        isOnlyContactInHousehold = contactOverrideSelector.isAccountWithSingleContact(contactRecord.AccountId);
+        if (!isOnlyContactInHousehold) {
+            return;
+        }
+
+        String helpDeleteAccountInstead;
+        if (hasAccountDeleteAccess) {
+            helpDeleteAccountInstead = String.format(
+                Label.ConfirmDeleteAccount,
+                new List<String>{
+                    contactRecord.Name.escapeHtml4(), contactRecord.Account.Name.escapeHtml4()
+                }
+            );
+
+        } else {
+            helpDeleteAccountInstead = String.format(
+                Label.ConfirmDeleteLeaveAccountEmpty,
+                new List<String>{
+                    contactRecord.Name.escapeHtml4()
+                }
+            );
+        }
+
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, helpDeleteAccountInstead));
     }
 
     /*******************************************************************************************************
@@ -161,6 +223,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */
     public PageReference processDelete() {
+        preProcessDelete();
+        if (!hasMinimumAccess || (isHouseholdAccount && isOnlyContactInHousehold)) {
+            return null;
+        }
+
         try {
             return deleteContact();
         } catch (Exception ex){
@@ -202,12 +269,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
-            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(queryContact);
+            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(contactRecord, contactOverrideSelector);
             cascadeDelete.validate();
             cascadeDelete.deleteOpportunities();
             cascadeDelete.deleteRecurringDonations();
 
-            delete queryContact;
+            delete contactRecord;
 
 
             if (lexOrSF1User) {
@@ -225,7 +292,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * @return Boolean
     */
     private Boolean isDeleteContactOnly() {
-        return shouldDeleteContactAlone || isDeleteContactLeaveAccount;
+        return (!isOnlyContactInHousehold) || isDeleteContactLeaveAccount;
     }
 
     /*******************************************************************************************************
@@ -237,10 +304,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteAccount() {
-        Account account =  [SELECT Id, Name FROM Account WHERE Id = :accountId];
+        Account account =  contactOverrideSelector.getAccountRecord(accountId);
         
         try {
-            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account);
+            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account, contactOverrideSelector);
             cascadeDelete.validate();
 
             delete account;
@@ -312,24 +379,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * Retrieves the Cases, Opportunities and Recurring Donations of the deleted Contacts. 
         * @param Contact The Contact to delete.
         ********************************************************************************************************/
-        public ContactCascadeDelete(Contact contactToDelete) {
+        public ContactCascadeDelete(Contact contactToDelete, CON_DeleteContactOverrideSelector contactOverrideSelector) {
             this.contactToDelete = contactToDelete;
 
-            relatedCases = [
-                SELECT CaseNumber, ContactId
-                FROM Case
-                WHERE ContactId = :contactToDelete.Id
-            ];
-            relatedOpportunities = [
-                SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
-                FROM Opportunity
-                WHERE Primary_Contact__c = :contactToDelete.Id
-            ];
-            relatedRecurringDonations = [
-                SELECT Name, npe03__Contact__c
-                FROM npe03__Recurring_Donation__c
-                WHERE npe03__Contact__c = :contactToDelete.Id
-            ];
+            relatedCases = contactOverrideSelector.getCasesRelatedToContact(contactToDelete.Id);
+            relatedOpportunities = contactOverrideSelector.getOpportunitiesRelatedToContact(contactToDelete.Id);
+            relatedRecurringDonations = contactOverrideSelector.getRelatedRecurringDonations(contactToDelete.Id);
         }
 
         /*******************************************************************************************************
@@ -389,19 +444,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * @description AccountCascadeDelete Constructor.
         * @param Account The Account to delete.
         ********************************************************************************************************/
-        public AccountCascadeDelete(Account accountToDelete) {
+        public AccountCascadeDelete(Account accountToDelete, CON_DeleteContactOverrideSelector contactOverrideSelector) {
             this.accountToDelete = accountToDelete;
 
-            relatedCases = [
-                SELECT CaseNumber, AccountId
-                FROM Case
-                WHERE AccountId = :accountToDelete.Id
-            ];
-            relatedOpportunities = [
-                SELECT Name, AccountId, IsWon, IsClosed
-                FROM Opportunity
-                WHERE AccountId = :accountToDelete.Id
-            ];
+            relatedCases = contactOverrideSelector.getCasesRelatedToAccount(accountToDelete.Id);
+            relatedOpportunities = contactOverrideSelector.getOpportunitiesRelatedToAccount(accountToDelete.Id);
         }
 
         /*******************************************************************************************************

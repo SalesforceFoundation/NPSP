@@ -50,28 +50,4 @@ public with sharing class fflib_LogEntry
 		this.message = message;
 		this.userId = System.UserInfo.getUserId();
 	}
-
-	public fflib_LogEntry(fflib_LogEvent__e logEvent)
-	{
-		this.className = logEvent.ClassName__c;
-		this.executionContext = logEvent.ExecutionContext__c;
-		this.lineNumber = logEvent.LineNumber__c;
-		this.logLevel = System.LoggingLevel.valueOf(logEvent.LogLevel__c);
-		this.message = logEvent.Message__c;
-		this.methodName = logEvent.MethodName__c;
-		this.userId = logEvent.CreatedById;
-		this.createdDatetime = logEvent.CreatedDate;
-	}
-
-	public fflib_LogEvent__e toPlatformEvent()
-	{
-		return new fflib_LogEvent__e(
-				ClassName__c = this.className,
-				ExecutionContext__c = this.executionContext,
-				LineNumber__c = this.lineNumber,
-				LogLevel__c = this.logLevel.name(),
-				Message__c = this.message,
-				MethodName__c = this.methodName
-		);
-	}
 }
