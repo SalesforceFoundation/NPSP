@@ -111,13 +111,14 @@ public inherited sharing class RD2_QueryService {
      * @param rdIds Recurring Donation Ids
      * @param startDate offset by the Next Donation Date match days before the year start date
      *      so past Opportunities matching future projected installments are returned.
+     *      See getOpportunitySubQuery() for usage.
      * @return List<RecurringDonation> Recurring Donations with related installment Opportunities and active Schedules
      */
     public List<npe03__Recurring_Donation__c> getRecurringDonationsWithRelatedRecords(Set<Id> rdIds, Date startDate) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
-        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
+        queryFields.addAll(customFieldMapper.getRdFieldNames());
         queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
         queryFields.add(getOpportunitySubQuery());
         queryFields.add(getScheduleSubQuery());
@@ -136,17 +137,23 @@ public inherited sharing class RD2_QueryService {
     }
 
     /**
-     * @description Populate the collection of Recurring Donation records, querying ALL fields
-     * without querying Schedule and Opportunity related lists.
-     * @param rdIds Recurring Donation Ids
-     * @return List<RecurringDonation> Recurring Donations
+     * @description Retrieve a recurring donation with fields needed for UI applications
+     * @param recurringDonationId Recurring Donation Id
+     * @return npe03__Recurring_Donation__c The Recurring Donation
      */
-    public List<npe03__Recurring_Donation__c> getRecurringDonationsBase(Set<Id> rdIds) {
+    public npe03__Recurring_Donation__c getRecurringDonationForUI(Id recurringDonationId) {
         Set<String> queryFields = new Set<String>();
 
         queryFields.addAll(rdFields);
-        queryFields.addAll((new RD2_CustomFieldMapper()).getRdFieldNames());
-        queryFields.addAll((new RD2_NamingService()).nameFormatter.fields);
+        queryFields.addAll(new Set<String>{
+                'npe03__Organization__r.RecordTypeId',
+                'npe03__Contact__r.Account.RecordTypeId',
+                String.valueOf(npe03__Recurring_Donation__c.ACH_Last_4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardLast4__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c),
+                String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c)
+        });
+        queryFields.addAll(customFieldMapper.getRdFieldNames());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add(CURRENCY_ISO_CODE_FIELD);
@@ -155,10 +162,12 @@ public inherited sharing class RD2_QueryService {
         String soql = new UTIL_Query()
             .withFrom(npe03__Recurring_Donation__c.SObjectType)
             .withSelectFields(queryFields)
-            .withWhere('Id IN :rdIds')
+            .withWhere('Id = :recurringDonationId')
+            .withLimit(1)
             .build();
 
-        return Database.query(soql);
+        List<npe03__Recurring_Donation__c> results = Database.query(soql);
+        return results[0];
     }
 
 
