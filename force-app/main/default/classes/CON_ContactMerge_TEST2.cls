@@ -838,7 +838,7 @@ private class CON_ContactMerge_TEST2 {
             insert objectsToInsert;
             
             List<Contact> contactsToMerge = [
-                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c, MailingCity
+                SELECT Id, AccountId, FirstName, LastName, MailingStreet, Description , Primary_Affiliation__c
                 FROM Contact 
                 ORDER BY Id
             ];
