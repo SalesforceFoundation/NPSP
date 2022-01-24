@@ -131,6 +131,12 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             captureAuthorizedGifts();
         }
         BDI_DataImport_API.processDataImportBatches(new List<Id>{ id() });
+        /** Instrument that multiple gifts were processed through the GiftEntry UI */
+        sfdoInstrumentationService.getInstance().log(
+            sfdoInstrumentationEnum.Feature.GiftEntry,
+            sfdoInstrumentationEnum.Component.Page,
+            sfdoInstrumentationEnum.Action.Save,
+            gifts.size());
     }
 
     public void updateRecords() {

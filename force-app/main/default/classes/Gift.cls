@@ -125,6 +125,15 @@ public with sharing class Gift {
             dataImportSettings,
             new List<DataImport__c> { this.dataImport },
             false);
+
+            if (this.dataImport.FailureInformation__c == null) {
+            /** Instrument that a single gift was processed through the GiftEntry UI */
+            sfdoInstrumentationService.getInstance().log(
+                sfdoInstrumentationEnum.Feature.GiftEntry,
+                sfdoInstrumentationEnum.Component.Page,
+                sfdoInstrumentationEnum.Action.Save,
+                1);
+        }
     }
 
     public void assignSoftCredits(SoftCredits incomingSoftCredits) {
