@@ -388,8 +388,10 @@ private class CON_ContactMerge_TEST2 {
     @isTest
     static void personAccountErrorDetection() {
         // detect PersonAccounts
-        boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
-        if (!isPAEnabled)
+        OrgConfig orgConfig = new OrgConfig();
+        Boolean isPersonAccountsEnabled = orgConfig.isPersonAccountsEnabled();
+
+        if (!isPersonAccountsEnabled)
             return;
         
         npe01__Contacts_And_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(

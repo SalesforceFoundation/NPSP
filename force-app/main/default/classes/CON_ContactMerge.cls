@@ -47,6 +47,17 @@ public class CON_ContactMerge {
         }
         set;
     }
+
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
     
     /*******************************************************************************************************
     * @description Min number of contacts that can be merged.
@@ -93,7 +104,7 @@ public class CON_ContactMerge {
         Contact winner = contactMergeSelector.getContactsWithAccountFields(new List<Contact>{winningContact})[0];
 
         // detect PersonAccounts
-        Boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
+        Boolean isPersonAccountsEnabled = orgConfig.isPersonAccountsEnabled();
         //get winner contact Account
         if (winner.AccountId!=null){
 	        winnerAccount = contactMergeSelector.getAccountsFor(new Set<Id>{winner.AccountId});
@@ -106,14 +117,14 @@ public class CON_ContactMerge {
                 winnerAccountIsOneToOne = true;
             }
             
-            if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
+            if (isPersonAccountsEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
         }
 
         losers = contactMergeSelector.getContactsWithAccountFields(new List<Contact>(losers));
 
         for (Contact thisloserContact : losers) {
-            if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
+            if (isPersonAccountsEnabled && (boolean)thisloserContact.get('isPersonAccount'))
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
