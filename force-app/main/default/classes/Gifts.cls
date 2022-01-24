@@ -204,8 +204,7 @@ public with sharing class Gifts {
     @TestVisible
     private void giftsToProcessingStatus() {
         for (DataImport__c dataImport : dataImportsById.values()) {
-            Gift currentGift = toGift(dataImport);
-            if (!currentGift.isImported()) {
+            if (dataImport.Status__c != BDI_DataImport_API.bdiImported) {
                 dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
                 giftsToUpdate.add(dataImport);
             }
