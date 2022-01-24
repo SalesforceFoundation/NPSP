@@ -61,7 +61,6 @@ public inherited sharing class OrgConfig {
         return validCountriesByCode;
     }
 
-    //todo: add test coverage
     public Boolean isPersonAccountsEnabled() {
         return UTIL_Describe.isValidField(String.valueOf(Account.SObjectType), 'isPersonAccount');
     }
