@@ -2,10 +2,16 @@ import { LightningElement } from 'lwc';
 import CumulusStaticResources from '@salesforce/resourceUrl/CumulusStaticResources';
 import gsVideoHeaderTitle from '@salesforce/label/c.gsVideoHeaderTitle';
 import gsVideoLength from '@salesforce/label/c.gsVideoHeaderLength';
+import opensInNewLink from '@salesforce/label/c.opensInNewLink'
 
 const gsAssets = CumulusStaticResources + '/gsAssets';
 
 export default class gsVideoHeader extends LightningElement {
+
+    labels = {
+        opensInNewLink,
+    }
+
     backgroundUrl = gsAssets + '/Get_started_header.svg';
     /**
     * Returns an Image URL to display in UI
@@ -24,6 +30,10 @@ export default class gsVideoHeader extends LightningElement {
 
     get title() {
         return gsVideoHeaderTitle;
+    }
+
+    get ariaLabel() {
+        return gsVideoHeaderTitle + " " + this.labels.opensInNewLink ;
     }
 
     get length() {
