@@ -88,14 +88,14 @@ private class CON_ContactMerge_TEST2 {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from
                 Contact order by Id];
         con = listCon[0];
         con2 = listCon[1];
         con3 = listCon[2];
 
         CON_ContactMerge_CTRL controller = getController();
-        setupMockDataForMerge(controller, new List<Contact>{con, con2, con3});
+        setupMockDataForMerge(controller, new List<Contact>{con, con2, con3}, getContactFieldNames());
 
         CON_ContactMerge_TEST.selectMasterRecord(controller, con3.id);
 
@@ -164,13 +164,13 @@ private class CON_ContactMerge_TEST2 {
         
         insert con2;
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from Contact where Id =
+        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id =
                 :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity, Primary_Affiliation__c from Contact where Id =
+        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id =
                 :con2.id];
 
         CON_ContactMerge_CTRL controller = getController();
-        setupMockDataForMerge(controller, new List<Contact>{con, con2});
+        setupMockDataForMerge(controller, new List<Contact>{con, con2}, getContactFieldNames());
 
         CON_ContactMerge_TEST.selectMasterRecord(controller, con.id);
         
@@ -855,7 +855,10 @@ private class CON_ContactMerge_TEST2 {
             System.assertEquals(1, affiliations.size(), 'Affiliations are created for the contact');
             
             CON_ContactMerge_CTRL controller = getController();
-            setupMockDataForMerge(controller, new List<Contact>{con, con2});
+            List<SObjectField> contactFieldNames = getContactFieldNames();
+            contactFieldNames.add(Contact.Primary_Affiliation__c);
+
+            setupMockDataForMerge(controller, new List<Contact>{con, con2}, contactFieldNames);
 
             //Select the primary affiliation of the one that is not the one we selected as master
             for (CON_ContactMerge_CTRL.FieldRow row : controller.fieldRows) {
@@ -887,20 +890,24 @@ private class CON_ContactMerge_TEST2 {
         return controller;
     }
 
-    private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
-        setMockFieldRows(controller, contactsToMerge);
+    private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge,
+            List<SObjectField> fieldNames) {
+
+        setMockFieldRows(controller, contactsToMerge, fieldNames);
         setSelectedRecordsForMerge(controller, contactsToMerge);
     }
 
-    private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
-        controller.fieldRows = getMockFieldRows(new List<String>{
-                CON_ContactMerge_CTRL.MASTER_KEY,
-                String.valueOf(Contact.FirstName),
-                String.valueOf(Contact.LastName),
-                String.valueOf(Contact.MailingStreet),
-                String.valueOf(Contact.MailingCity),
-                String.valueOf(Contact.Primary_Affiliation__c)
-        }, contactsToMerge);
+    private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge,
+            List<SObjectField> contactFields) {
+
+        List<String> mockFieldNames = new List<String>();
+        mockFieldNames.add(CON_ContactMerge_CTRL.MASTER_KEY);
+
+        for (SObjectField contactField : contactFields) {
+            mockFieldNames.add(String.valueOf(contactField));
+        }
+
+        controller.fieldRows = getMockFieldRows(mockFieldNames, contactsToMerge);
     }
 
     private static List<CON_ContactMerge_CTRL.FieldRow> getMockFieldRows(List<String> fieldNames,
@@ -958,6 +965,15 @@ private class CON_ContactMerge_TEST2 {
 
     private static Map<String, Contact> getMockSelectedRecordsForMerge(List<Contact> mockContactsWithIds) {
         return new Map<String, Contact>(mockContactsWithIds);
+    }
+
+    private static List<SObjectField> getContactFieldNames() {
+        return new List<SObjectField>{
+            Contact.AccountId,
+            Contact.FirstName,
+            Contact.LastName,
+            Contact.MailingStreet
+        };
     }
 
     private static void createOneToOneAccountAndContacts(Integer numberToCreate) {
