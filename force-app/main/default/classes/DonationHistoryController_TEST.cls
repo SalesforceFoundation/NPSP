@@ -152,9 +152,7 @@ public class DonationHistoryController_TEST {
     
     @IsTest
     private static void shouldReturnOneElementFor2019(){
-        if (!UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c) {
-            return;
-        }
+        
         Contact testContact =findContactByFirstname('TestFirstName11');        
        
         Test.startTest();
