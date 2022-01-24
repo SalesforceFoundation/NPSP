@@ -84,7 +84,7 @@ private class OrganizationAccountTests_TEST {
 
         // Act: WHEN the Household Contact is merged into the Org Account via Contact merge
         Test.startTest();
-        CON_ContactMerge contactMerge = new CON_ContactMerge();
+        ContactMergeService contactMerge = new ContactMergeService();
         contactMerge.mergeContacts(orgContact1, new List<Contact>{
                 householdContact
         });
@@ -119,7 +119,7 @@ private class OrganizationAccountTests_TEST {
 
         // Act: WHEN one Org Contact is merged into the other Org Account via Contact merge
         Test.startTest();
-        CON_ContactMerge contactMerge = new CON_ContactMerge();
+        ContactMergeService contactMerge = new ContactMergeService();
         contactMerge.mergeContacts(orgContact1, new List<Contact>{
                 orgContact3
         });

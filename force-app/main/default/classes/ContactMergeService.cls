@@ -35,7 +35,7 @@
 * @group ContactMerge
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
-public class CON_ContactMerge {
+public class ContactMergeService {
 
     @TestVisible
     private ContactMergeSelector contactMergeSelector {
