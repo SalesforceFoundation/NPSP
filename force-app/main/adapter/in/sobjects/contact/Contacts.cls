@@ -144,6 +144,19 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return householdIdsToRename;
     }
 
+    public List<Id> getHouseholdIdsForContactsWithDeceasedUpdates(List<Id> accountsToRename) {
+        Set<Id> uniqueAccountsToHandle = new Set<Id>(accountsToRename);
+
+        for (Contact contactRecord : (List<Contact>) getRecords()) {
+            Contact oldContact = oldVersionOf(contactRecord);
+            if (needsHHDeceasedFlagUpdate(contactRecord, oldContact)) {
+                uniqueAccountsToHandle.add(contactRecord.AccountId);
+            }
+        }
+
+        return new List<Id>(uniqueAccountsToHandle);
+    }
+
     public void resetDeprecatedFields() {
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             // always clear this deprecated field to avoid confusing users.
@@ -247,6 +260,10 @@ public inherited sharing class Contacts extends fflib_SObjects {
             }
         }
         return setAccountId;
+    }
+
+    private Boolean needsHHDeceasedFlagUpdate(Contact contactRecord, Contact oldContact) {
+        return contactRecord.Deceased__c != oldContact.Deceased__c;
     }
 
     /*******************************************************************************************************
