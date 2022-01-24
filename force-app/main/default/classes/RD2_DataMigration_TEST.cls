@@ -1847,7 +1847,6 @@ private class RD2_DataMigration_TEST {
 
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(2)
                 .withTotalRecordsProcessed(1)
                 .withTotalRecordsFailed(1);
 
@@ -2399,7 +2398,6 @@ private class RD2_DataMigration_TEST {
     private static void assertBatchSummarySuccess(Id jobId, Integer totalProcessed) {
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(totalProcessed)
                 .withTotalRecordsProcessed(totalProcessed)
                 .withTotalRecordsFailed(0);
 
@@ -2415,7 +2413,6 @@ private class RD2_DataMigration_TEST {
     private static void assertBatchSummaryFailed(Id jobId, Integer totalFailed) {
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(totalFailed)
                 .withTotalRecordsProcessed(0)
                 .withTotalRecordsFailed(totalFailed);
 
@@ -2437,7 +2434,6 @@ private class RD2_DataMigration_TEST {
 
         UTIL_BatchJobService.JobSummary summary = summaryByType.values()[0];
         System.assertEquals(expectedSummary.batchId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(expectedSummary.total, summary.total, 'Total Records should match: ' + summary);
         System.assertEquals(expectedSummary.processed, summary.processed, 'Total Records Processed should match: ' + summary);
         System.assertEquals(expectedSummary.failed, summary.failed, 'Total Records Failed should match: ' + summary);
     }

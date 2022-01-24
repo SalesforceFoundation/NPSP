@@ -71,6 +71,8 @@ export default class BatchProgress extends LightningElement {
 
                 this.hasSummary = !isNull(this.batchJob.summary);
 
+                this.setTotalRecords();
+
                 this.notifyOnStatusChange();
 
                 if (this.batchJob.isInProgress === true
@@ -94,6 +96,13 @@ export default class BatchProgress extends LightningElement {
             self.handleLoadBatchJob();
 
         }, this.pollingTimeout, self);
+    }
+
+    /***
+    * @description Sets the Total Records value based on Processed and Failed
+    */
+    setTotalRecords() {
+        this.batchJob.summary.total = this.batchJob.summary.processed + this.batchJob.summary.failed;
     }
 
     /***
