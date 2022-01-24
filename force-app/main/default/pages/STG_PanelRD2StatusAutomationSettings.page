@@ -1,0 +1,36 @@
+<apex:page controller="RD2_StatusAutomationSettings_CTRL" id="RD2_StatusAutomationSettings" standardStylesheets="false">
+
+    <apex:slds/>
+    <apex:includeLightning/>
+
+    <style>
+        /* Remove box shadow when user clicks on the datatable cell in both view and edit modes */	
+        th.slds-has-focus {	
+            box-shadow: none !important;	
+        }	
+        td.slds-has-focus {	
+            box-shadow: none !important;	
+        }
+    </style>
+
+    <div class="slds-scope">
+        <div class="slds-m-around_large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRD2StatusAutomation}" />
+        </div>
+
+        <div id="statusAutomationDiv">
+        </div>
+    </div>
+
+    <script>
+        $Lightning.use('{!namespace}' + ":RD2_EnablementApp", function () {
+            $Lightning.createComponent(
+                '{!namespace}' + ':rd2StatusAutomationSettings',
+                {},
+                "statusAutomationDiv",
+                function () { }
+            );
+        });
+    </script>
+
+</apex:page>
