@@ -174,7 +174,7 @@
             "message": "Nonprofit Success Pack requires Chatter. Please enable Chatter in your org and try again.",
             "description": "shown if validation fails"
         },
-        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See the Power of Us Hub for assistance.": {
+        "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation. See NPSP documentation for assistance.": {
             "message": "Advanced Currency Management must be disabled to install Nonprofit Success Pack, but can be enabled after installation.",
             "description": "shown if validation fails"
         },
