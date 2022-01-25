@@ -36,6 +36,15 @@
 */
 @isTest
 public class CON_ContactMerge_TEST {
+    @TestSetup
+    private static void createTestData() {
+        createGenericTestContacts(3);
+        createUniqueContact();
+        createOneToOneAccountAndContacts(2);
+        createPrivateContacts();
+
+        UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
+    }
 
     public static void selectMasterRecord(CON_ContactMerge_CTRL cont, Id masterId) {
         for (CON_ContactMerge_CTRL.FieldRow row : cont.fieldRows) {
@@ -45,305 +54,255 @@ public class CON_ContactMerge_TEST {
         }
     }
 
-    static testMethod void exerciseUIOne2One(){
-        exerciseUI(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    @IsTest
+    private static void shouldDisplayErrorWhenTooFewContactsSelected() {
+        // given
+        List<Contact> testContacts = getContacts(1);
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+
+        // when
+        controller.loadMergeCandidates(getSetOfIds(testContacts));
+
+        // then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'Selecting only one contact should display one ' +
+                'page-level error message.');
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.Error, pageMessage.getSeverity(), 'The error thrown should be an error' +
+                ' severity.');
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Few_Contacts, pageMessage.getDetail(), 'The correct ' +
+                'error message should be displayed.');
     }
-    static testMethod void exerciseUIHHAccount(){
-        exerciseUI(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+
+    @IsTest
+    private static void searchReturnsResultsWhenMatchFound() {
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+        controller.showContactSearch = true;
+        controller.searchText = CAO_Constants.CONTACT_FIRSTNAME_FOR_TESTS;
+        controller.mergeSelector = stubFor(new ContactMergeSelectorMock(3));
+
+        Test.startTest();
+            controller.search();
+        Test.stopTest();
+
+        System.assert(!controller.searchResults.isEmpty(), 'Search results should not be empty.');
+        System.assertEquals(3, controller.searchResults.size(), 'The correct number of search results should be ' +
+                'returned.');
     }
-    //exercise the many UI variables
-    static void exerciseUI(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 3 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        con3.LastName = '3Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2, con3};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
+    @IsTest
+    private static void searchReturnsNoResultsWhenNoMatchesFound() {
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+        controller.showContactSearch = true;
         controller.searchText = 'test';
 
         Test.startTest();
         controller.search();
-
-        //Since we didn't index the results yet, search results should be empty and should not be displayed
-        system.assert(controller.searchResults.isEmpty());
-
-        Id[] fixedSearchResults=new Id[3];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-        fixedSearchResults[2]=con3.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        //search results should be displayed
-        system.assert(!controller.searchResults.isEmpty());
-
-        //there should be 3 Contacts returned
-        system.assertEquals(3,controller.searchResults.size());
-
-        controller.searchResults[0].selected = true;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
-        System.assertEquals(2, controller.step); // We are on step 2 "select contacts"
-
-        controller.search();
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true; // Select second contact
-        String record1Id = controller.searchResults[1].contactRecord.id;
-
-        controller.nextStep();
-
         Test.stopTest();
 
-        System.assertEquals(3, controller.step); // We are now on step 3, "choose winning contact"
+        System.assert(controller.searchResults.isEmpty(), 'Search results returned from controller should be empty.');
+    }
+
+    @IsTest
+    private static void shouldSelectEntireDefaultRecordWhenChoosingSelectAll() {
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContactsWithIds = getMockContactsWithIds(3);
+        controller.selectedRecords = getMockSelectedRecordsForMerge(mockContactsWithIds);
+        controller.fieldRows = getMockFieldRows(new List<String>{
+                String.valueOf(Contact.FirstName),
+                String.valueOf(Contact.LastName),
+                String.valueOf(Contact.npe01__Preferred_Email__c)
+        }, mockContactsWithIds);
+
+        Id defaultRecordId = controller.selectedRecords.get(mockContactsWithIds[0].Id).Id;
+        ApexPages.currentPage().getParameters().put('recordId', defaultRecordId);
+
+        //when
+        Test.startTest();
+            controller.selectDefaultRecord();
+        Test.stopTest();
+
+        //then
+        for (CON_ContactMerge_CTRL.FieldRow row : controller.fieldRows) {
+            if (row.showRadio) {
+                System.assertEquals(defaultRecordId, row.selectedValue, 'The selected record should be the default ' +
+                    'record.');
+            }
+        }
+    }
+
+    @IsTest
+    static void mergeShouldReturnCorrectPageReference() {
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(2);
+        setupMockDataForMerge(controller, testContacts);
+
+        // when
+        Test.startTest();
+        PageReference mergedContact = controller.mergeContacts();
+        Test.stopTest();
+
+        //then
+        PageReference expectedMergedContactPage  = new PageReference('/' + testContacts[0].Id);
+        System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
+    }
+
+    @IsTest
+    private static void mergeFailsWhenContactIsMissing() {
+        //given
+        // Contact ids are mock ids which will simulate missing contacts on the database
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, getMockContactsWithIds(2));
+
+        //when
+        Test.startTest();
+        controller.mergeContacts();
+        Test.stopTest();
+
+        //then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'Contact merge should from the controller should fail ' +
+                'if a contact chosen for merge has been deleted.'); // Selecting a deleted record must throw an error
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Lock_failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
+    }
+
+    /*******************************************************************************************************
+     * @description Integration test to test full load merge candidates flow.
+     */
+    @IsTest
+    private static void selectedMergeCandidatesShouldDisplayCorrectValues() {
+        Contact differingContact = [SELECT HomePhone FROM Contact WHERE LastName = 'Differing' LIMIT 1];
+        CON_ContactMerge_CTRL controller = getControllerForSearch();
+        controller.search();
+        selectSearchResults(controller.searchResults);
+
+        Test.startTest();
+        controller.nextStep();
+        Test.stopTest();
 
         List<CON_ContactMerge_CTRL.FieldRow> fieldRows = controller.fieldRows;
 
         for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-            if (row.fieldName.equals('Master')) {
+            if (row.fieldName.equals(CON_ContactMerge_CTRL.MASTER_KEY)) {
                 System.assert(row.showRadio);
-                System.assert(row.selectedValue != null); // Since all contacts were created simulateneously, hard to know which one will be selected by default
+                System.assert(row.selectedValue != null);
             }
 
-            if (row.fieldName.equalsIgnoreCase('MailingStreet')) {
-                System.assert(!row.showRadio); // Since both records have the same value, we dont need to show the radio
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.FirstName))) {
+                System.assert(!row.showRadio, 'The field should not be shown when both records have the same value.');
             }
 
-            if (row.fieldName.equalsIgnoreCase('homephone')) {
+            if (row.fieldName.equalsIgnoreCase(String.valueOf(Contact.HomePhone))) {
                 System.assert(row.showRadio);
-                System.assertEquals(con2.id, row.selectedValue); // Since contact 1 has a null homephone while contact 2 has a non-null homephone, the contact 2 should be selected here.
-            }
-        }
-
-        // Test select all for a record
-        ApexPages.currentPage().getParameters().put('recordId', record1Id);
-        controller.selectDefaultRecord();
-
-        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
-            if (row.showRadio) {
-                System.assertEquals(record1Id, row.selectedValue); // Since we selected all radios for contact 2, contact 2 id should be the selected value
+                System.assertEquals(differingContact.Id, row.selectedValue);
             }
         }
     }
 
-    static testMethod void failNextStepWithDeletedRecordSelectedOne2One(){
-        failNextStepWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void failNextStepWithDeletedRecordSelectedHHAccount(){
-        failNextStepWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    // Try selecting a deleted record for merge
-    static void failNextStepWithDeletedRecordSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 2 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
+    @IsTest
+    private static void loadingMergePageFailsWhenTooFewContactsSelected() {
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(1);
+        setupMockDataForMerge(controller, mockContacts);
 
         Test.startTest();
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        //there should be 2 Contacts returned
-        system.assertEquals(2,controller.searchResults.size());
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        // delete 1 contact
-        delete con;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Query_Failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
-        System.assertEquals(2, controller.step); // We are on step 2 "select contacts"
-
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
         Test.stopTest();
-    }
-
-    static testMethod void failMergeWithDeletedRecordSelectedOne2One(){
-        failMergeWithDeletedRecordSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void failMergeWithDeletedRecordSelectedHHAccount(){
-        failMergeWithDeletedRecordSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-        // Try selecting a deleted record for merge
-    static void failMergeWithDeletedRecordSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 2 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        Test.startTest();
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-
-        //call the search method, which will return the bogus SOSL results
-
-        controller.search();
-
-        //there should be 2 Contacts returned
-        system.assertEquals(2,controller.searchResults.size());
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        // delete 1 contact
-        delete con;
-
-        controller.mergeContacts();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting a deleted record must throw an error
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Lock_failed + ' ' + label.npe01.Contact_Merge_Error_please_retry, m.getDetail());
-
-        Test.stopTest();
-
-    }
-
-    static testMethod void tooFewContactsSelectedOne2One(){
-        tooFewContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void tooFewContactsSelectedHHAccount(){
-        tooFewContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    static void tooFewContactsSelected(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        //set up 1 contact for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        insert con;
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[1];
-        fixedSearchResults[0]=con.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        controller.searchResults[0].selected = true;
-
-        controller.nextStep();
 
         System.assertEquals(1, ApexPages.getMessages().size()); // Selecting only one record for merge should throw an error.
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Few_Contacts, m.getDetail());
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Few_Contacts, pageMessage.getDetail());
     }
 
+    @IsTest
+    private static void loadMergePageFailsWhenTooManyContactsAreSelected() {
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(4);
+        setupMockDataForMerge(controller, mockContacts);
 
-    static testMethod void tooManyContactsSelectedOne2One(){
-        tooManyContactsSelected(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+        Test.startTest();
+        controller.loadMergeCandidates(getSetOfIds(mockContacts));
+        Test.stopTest();
+
+        ApexPages.Message[] pageMessages = ApexPages.getMessages();
+        System.assertNotEquals(0, pageMessages.size(), 'Error should be thrown if more than 3 contacts are selected ' +
+                'for merge.');
+
+        Boolean messageFound = false;
+        for (ApexPages.Message message : pageMessages) {
+            if ( message.getSeverity() == ApexPages.Severity.ERROR
+                    && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
+                messageFound = true;
+            }
+        }
+        System.assert(messageFound);
     }
-    static testMethod void tooManyContactsSelectedHHAccount(){
-        tooManyContactsSelected(CAO_Constants.HH_ACCOUNT_PROCESSOR);
+
+    /**
+     * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
+       gets a pageErrorMessage doing the contact merge.
+     */
+    @isTest
+    private static void loadMergePageFailsWithNoDeleteRecordAccess() {
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(2);
+        setupMockDataForMerge(controller, testContacts);
+
+        //given
+        User readOnlyUser = getReadOnlyUser();
+        assignDeletePermissionSet(readOnlyUser.Id);
+
+        Test.startTest();
+        System.runAs(readOnlyUser) {
+            //when
+            controller.loadMergeCandidates(getSetOfIds(testContacts));
+            //then
+            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
+        }
+        Test.stopTest();
     }
-    static void tooManyContactsSelected(string strProcessor) {
 
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+    @IsTest
+    private static void loadingMergePageFailsWhenContactIsMissing() {
+        //given
+        // Contact ids are mock ids which will simulate missing contacts on the database
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(2);
 
-        //set up 4 contacts for the merge interface to work with
-        Contact con = UTIL_UnitTestData_TEST.getContact();
+        // when
+        Test.startTest();
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
+        Test.stopTest();
 
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
+        //then
+        System.assertEquals(1, ApexPages.getMessages().size(), 'An error should be thrown when all merge candidates ' +
+                'were not successfully queried.');
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Query_Failed + ' ' + Label.npe01.Contact_Merge_Error_please_retry, pageMessage.getDetail());
 
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        con3.LastName = '3Contact_forTests_Merge';
+    }
 
-        Contact con4 = UTIL_UnitTestData_TEST.getContact();
-        con4.LastName = '4Contact_forTests_Merge';
+    @IsTest
+    private static void loadingMergePageFailsWhenTooManyContactsSelected() {
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> mockContacts = getMockContactsWithIds(4);
+        setupMockDataForMerge(controller, mockContacts);
 
-        insert new Contact[]{con, con2, con3, con4};
+        Test.startTest();
+            controller.loadMergeCandidates(getSetOfIds(mockContacts));
+        Test.stopTest();
 
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-
-        Id[] fixedSearchResults=new Id[4];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-        fixedSearchResults[2]=con3.Id;
-        fixedSearchResults[3]=con4.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //call the search method, which will return the bogus SOSL results
-        controller.search();
-
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        controller.searchResults[2].selected = true;
-        controller.searchResults[3].selected = true;
-
-        controller.nextStep();
-
-        System.assertEquals(1, ApexPages.getMessages().size()); // Selecting too many records for merge should throw an error.
-        ApexPages.Message m = ApexPages.getMessages()[0];
-        System.assertEquals(ApexPages.Severity.Error, m.getSeverity());
-        System.assertEquals(label.npe01.Contact_Merge_Error_Too_Many_Contacts, m.getDetail());
+        System.assertEquals(1, ApexPages.getMessages().size(), 'An error should be thrown when more than 3 contacts ' +
+                'are selected for merge.'); // Selecting too many records for merge should throw
+        // an error.
+        ApexPages.Message pageMessage = ApexPages.getMessages()[0];
+        System.assertEquals(ApexPages.Severity.ERROR, pageMessage.getSeverity());
+        System.assertEquals(Label.npe01.Contact_Merge_Error_Too_Many_Contacts, pageMessage.getDetail());
     }
 
     /**
@@ -352,267 +311,110 @@ public class CON_ContactMerge_TEST {
      */
     @isTest
     private static void shouldDisplayErrorWithNoDeletePermission() {
-        // Create contacts for going through the contact merge page
-        Contact con = UTIL_UnitTestData_TEST.getContact();
+        //given
+        User readOnlyUser = getReadOnlyUser();
 
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-
-        // Verify that controller detects the User doesn't have delete permissions on the Contact object
         Test.startTest();
-        System.runAs(readOnlyUser) {
-            Test.setCurrentPage(Page.CON_ContactMerge);
-            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteObjPermission);
-        }
+            System.runAs(readOnlyUser) {
+                //when
+                CON_ContactMerge_CTRL controller = getController();
+                //then
+                UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteObjPermission);
+            }
         Test.stopTest();
     }
 
-    /**
-     * @description Validate that a User with delete permissions to the Contact object, but no record level acesss
-       gets a pageErrorMessage doing the contact merge.
-     */
-    @isTest
-    private static void shouldDisplayErrorWithNoDeleteRecAccess() {
-        //Create contacts for going through the contact merge page
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
-        User readOnlyUser = UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
-
-        User adminUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        // Run as admin user to set the permission set with object level delete permission for the readonlyuser
-        System.runas(adminUser) {
-            assignDeletePermissionSet(readOnlyUser.Id);
-        }
-
-        Test.startTest();
-        // Verify that when logged in as readonlyuser, it returns error when merging contacts because of record level permissions
-        System.runAs(readOnlyUser) {
-            Test.setCurrentPage(Page.CON_ContactMerge);
-            Con_ContactMerge_CTRL ctlr = new Con_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
-
-            ctlr.showContactSearchPage();
-            ctlr.searchText = 'test';
-            //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-            List<Id> fixedSearchResults = new List<Id>{ con.Id, con2.Id };
-
-            Test.setFixedSearchResults(fixedSearchResults);
-            //search for contacts
-            ctlr.search();
-            //select the two contacts and grab them
-            ctlr.searchResults[0].selected = true;
-            ctlr.searchResults[1].selected = true;
-            ctlr.nextStep();
-
-            UTIL_UnitTestData_TEST.assertPageHasError(System.Label.conMergeErrorNoDeleteRecAccess);
-        }
-
-        Test.stopTest();
-    }
-
-    /*******************************************************************************************************
-    * @description Creates and assigns the permission set with delete permission on contact object
-    */
-    private static void assignDeletePermissionSet(Id userId) {
-        // Create a permission set with CustomizeApplication set ensuring other flags
-        // on which CustomizeApplication settings depends are set as well
-        PermissionSet permission = new PermissionSet(
-            Name = 'PermissionTest',
-            Label = 'PermissionTest'
-        );
-
-        insert permission;
-
-        insert new ObjectPermissions (
-            SObjectType = 'Contact',
-            ParentId = permission.id,
-            PermissionsRead = true,
-            PermissionsViewAllRecords = true,
-            PermissionsCreate = true,
-            PermissionsDelete = true,
-            PermissionsEdit = true
-        );
-
-        insert new PermissionSetAssignment(
-            AssigneeId = userId,
-            PermissionSetId = permission.Id
-        );
-
-    }
-
-    static testMethod void merge2OneToOneOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2OneToOneHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
     //merge two contacts that are both in the one-to-one account model
     //the second contact's org should be deleted
-    static void merge2OneToOne(string strProcessor) {
-
-        Test.startTest();  
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = 
-            UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c(npe01__Account_Processor__c = strProcessor));
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[] {con, con2};
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = 
-            new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-            
-        Test.stopTest();          
-            
-        con = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con.id];
-        con2 = [SELECT Id, AccountId, FirstName, LastName, MailingStreet FROM Contact WHERE Id = :con2.id];
-      
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con2.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //first contact should be deleted
-        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con.id]);
-        //first contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
-        system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-        //Second contact's account id should not have changed
-        system.assertEquals(con2.accountId,[select AccountId from Contact where id=:con2.id].AccountId);
-    }
-
-    static testMethod void merge2OneToOneOppsOne2One(){
+    @IsTest
+    private static void mergingTwoContactsDeletesCorrectDuplicateAndAccount() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2OneToOneOppsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
+        // given
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(2);
+        setupMockDataForMerge(controller, testContacts);
 
-        merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //merge two contacts that are both in the one-to-one account model
-    //the second contact's org shouldn't be deleted because it has open opportunities
-    static void merge2OneToOneOpps(string strProcessor) {
-
-        TDTM_DefaultConfig.startTestDataInit();
-
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        String newContactMailingStreet = '123 Elm St';
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        Opportunity o = new Opportunity(AccountId=con.accountId,Amount=500,Name='test',StageName='Closed Won',CloseDate=System.today());
-        insert o;
-
-        //select the second as winner
-        controller.nextStep();
-
-        selectMasterRecord(controller, con2.id);
-
-        //merge them
-        TDTM_DefaultConfig.stopTestDataInit();
+        //when
         Test.startTest();
-        controller.mergeContacts();
+            controller.mergeContacts();
         Test.stopTest();
 
-        //first contact should be deleted
-        system.assertEquals(1,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(0,[select count() from Contact where id=:con.id]);
-        //first contact's account should be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        if (strProcessor == CAO_Constants.ONE_TO_ONE_PROCESSOR) {
-            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
-        } else {
-            system.assertEquals(0,[select count() from Account where id=:con.accountId]);
-            system.assertEquals(1,[select count() from Opportunity where accountId=:con2.AccountId]);
-            system.assertEquals(0,[select count() from Opportunity where accountId=:con.AccountId]);
-        }
+        List<Contact> winningContact = getWinningContact(testContacts);
+        List<Contact> losingContact = getLosingContact(testContacts);
 
-        //Second contact's account id should not have changed
-        system.assertEquals(con2.AccountId,[select AccountId from Contact where id=:con2.id].AccountId);
+        //then
+        System.assert(!winningContact.isEmpty(), 'The winning contact should not be deleted.');
+        System.assert(losingContact.isEmpty(), 'The losing contact should be deleted.');
+        System.assertEquals(testContacts[0].AccountId, testContacts[0].AccountId, 'The winning contacts account ' +
+                'should not have changed.');
+
+        List<Account> winningTestAccount = getTestAccountFor(testContacts[0].AccountId);
+        List<Account> losingTestAccount = getTestAccountFor(testContacts[1].AccountId);
+
+        System.assert(!winningTestAccount.isEmpty(), 'The winning contacts account should not be deleted.');
+        System.assert(losingTestAccount.isEmpty(), 'The losing contacts account should be deleted.');
+
     }
 
-    static testMethod void merge2OrganizationsOne2One(){
-        merge2Organizations(CAO_Constants.ONE_TO_ONE_PROCESSOR);
+    //merge two contacts that are both in the one-to-one account model
+    //the second contact's org shouldn't be deleted because it has open opportunities
+    @IsTest
+    private static void mergingTwoContactsDoesNotDeleteDuplicateAccountWithOpportunities() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        CON_ContactMerge_CTRL controller = getController();
+        List<Contact> testContacts = getContacts(1);
+        testContacts.add(getUniqueContact());
+        setupMockDataForMerge(controller, testContacts);
+
+        Contact losingContact = testContacts[0];
+        Contact winningContact = testContacts[1];
+
+        Opportunity testOpportunity = new Opportunity(AccountId =losingContact.AccountId,
+                Amount=500, Name='test',StageName='Closed Won',CloseDate=System.today());
+        insert testOpportunity;
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        //merge them
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = getContacts(new List<Contact>{winningContact});
+        List<Contact> updatedLosingContact = getContacts(new List<Contact>{losingContact});
+
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+
+        List<Opportunity> updatedWinningOpportunity = [SELECT Id FROM Opportunity WHERE AccountId =
+                :updatedWinningContact[0].AccountId];
+        List<Opportunity> updatedLosingOpportunity = [SELECT Id FROM Opportunity WHERE AccountId = :losingContact
+                .AccountId];
+
+        System.assert(!updatedWinningOpportunity.isEmpty(), 'The winning account should not be deleted since it' +
+                ' has opportunities associated.');
+        System.assert(updatedLosingOpportunity.isEmpty(), 'The losing account opportunities should be deleted.');
+
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
     }
-    static testMethod void merge2OrganizationsHHAccount(){
-        merge2Organizations(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
+
     //merge a one-to-one contact with one in a normal organzation
     //the organization shouldn't be deleted
-    static void merge2Organizations(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
+    @IsTest
+    static void merge2Organizations() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         Account acc = new Account(
             Name = 'Test Account 1'
@@ -623,386 +425,123 @@ public class CON_ContactMerge_TEST {
         );
         insert new Account[]{acc, acc2};
 
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        con.AccountId = acc.Id;
+        Contact winningContact = UTIL_UnitTestData_TEST.getContact();
+        winningContact.AccountId = acc.Id;
 
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        con2.AccountId = acc2.Id;
+        Contact losingContact = UTIL_UnitTestData_TEST.getContact();
+        losingContact.LastName = '2Contact_forTests_Merge';
+        losingContact.AccountId = acc2.Id;
 
-        insert new Contact[]{con, con2};
+        insert new Contact[]{winningContact, losingContact};
 
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, new List<Contact>{winningContact, losingContact});
+        selectMasterRecord(controller, winningContact.Id);
 
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account should not be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.accountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
-        //First contact's account id should not have changed
-        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
-    }
-
-    static testMethod void merge2PrivateContactsOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2PrivateContactsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //merge two private contacts
-    //the organization shouldn't be deleted
-    static void merge2PrivateContacts(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        con.npe01__Private__c = true;
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        con2.npe01__Private__c = true;
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //First contact's account id should not have changed
-        system.assertEquals(null,[select AccountId from Contact where id=:con.id].AccountId);
-    }
-
-    static testMethod void merge2IndividualsOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2IndividualBucketContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge2IndividualsHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge2IndividualBucketContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //merge two contacts in the Individual Account
-    //the organization shouldn't be deleted or renamed
-    static void merge2IndividualBucketContacts(string strProcessor) {
-        // Arrange: GIVEN two Individual Bucket Contacts exist and are to be merged on the
-        // Contact Merge Visualforce page
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-        Contact[] contacts = new Contact[]{
-                con, con2
-        };
-        insertAsIndividualBucketContacts(contacts);
-
-        Map<Id, Contact> queriedBucketContacts = getContacts(new Set<Id>{con.Id, con2.Id});
-        con = queriedBucketContacts.get(con.Id);
-        con2 = queriedBucketContacts.get(con2.Id);
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        // Act: WHEN one Individual Bucket Contact is merged into another Bucket Contact
         Test.startTest();
-        controller.mergeContacts();
+        //merge them
+            controller.mergeContacts();
         Test.stopTest();
 
-        // Assert: THEN
-        //second contact should be deleted
-        System.assertEquals(0, [SELECT COUNT() FROM Contact WHERE Id = :con2.Id]);
-        System.assertEquals(1, [SELECT COUNT() FROM Contact WHERE Id = :con.Id]);
-        //second contact's account should not be deleted
-        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con2.AccountId]);
-        System.assertEquals(1, [SELECT COUNT() FROM Account WHERE Id = :con.AccountId]);
+        List<Contact> updatedWinningContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+                                               where Id = :winningContact.Id];
+        List<Contact> updatedLosingContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+                                              where Id = :losingContact.Id];
 
-        Map<Id, Contact> queriedContacts = getContacts(new Set<Id>{
-                con.Id
-        });
-        Contact mergeWinner = queriedContacts.get(con.Id);
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
 
-        System.assertEquals(con.AccountId, mergeWinner.AccountId,
-                'The winning Contact\'s account id should not have changed');
-        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, mergeWinner.Account.Name,
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(!losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
+    }
+
+    //merge two private contacts
+    //the organization shouldn't be deleted
+    @IsTest
+    static void merge2PrivateContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        List<Contact> privateContacts = getPrivateContacts();
+        CON_ContactMerge_CTRL controller = setupControllerMock(privateContacts);
+
+        Contact winningContact = privateContacts[0];
+        Contact losingContact = privateContacts[1];
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :winningContact.Id];
+        List<Contact> updatedLosingContact = [Select id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :losingContact.Id];
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
+    }
+
+    //merge two contacts in the Individual Account
+    //the organization shouldn't be deleted or renamed
+    @IsTest
+    static void merge2IndividualBucketContacts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        // Arrange: GIVEN two Individual Bucket Contacts exist and are to be merged on the
+        // Contact Merge Visualforce page
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.getContacts(2);
+        insertAsIndividualBucketContacts(testContacts);
+
+        List<Contact> queriedBucketContacts = getContacts(testContacts);
+        Contact winningContact = queriedBucketContacts[0];
+        Contact losingContact = queriedBucketContacts[1];
+
+        CON_ContactMerge_CTRL controller = setupControllerMock(queriedBucketContacts);
+
+        selectMasterRecord(controller, winningContact.Id);
+
+        Test.startTest();
+            controller.mergeContacts();
+        Test.stopTest();
+
+        List<Contact> updatedWinningContact = [Select Id, accountId, Account.Name, FirstName, LastName, MailingStreet
+            from Contact where Id = :winningContact.Id];
+
+        List<Contact> updatedLosingContact = [Select Id, accountId, FirstName, LastName, MailingStreet from Contact
+            where Id = :losingContact.Id];
+
+        List<Account> winningAccount = getTestAccountFor(updatedWinningContact[0].AccountId);
+        List<Account> losingAccount = getTestAccountFor(losingContact.AccountId);
+
+        System.assert(!updatedWinningContact.isEmpty(), 'Winning contact should not be deleted.');
+        System.assert(updatedLosingContact.isEmpty(), 'Losing contact should be deleted.');
+
+        System.assert(!winningAccount.isEmpty(), 'The winning contact account should not be deleted');
+        System.assert(!losingAccount.isEmpty(), 'The losing contact account should be deleted.');
+        System.assertEquals(winningContact.AccountId, updatedWinningContact[0].AccountId, 'The winning contacts ' +
+                'account should not have changed.');
+
+        System.assertEquals(CAO_Constants.BUCKET_ACCOUNT_NAME, updatedWinningContact[0].Account.Name,
                 'The winning Contact\'s Account\'s Name should not have changed');
     }
 
-    private static Map<Id, Contact> getContacts(Set<Id> contactIds) {
-        return new Map<Id, Contact>([
-                Select accountId, FirstName, LastName, MailingStreet, Account.Name
-                from Contact
-                where Id = :contactIds
-        ]);
-    }
-
-    private static void insertAsIndividualBucketContacts(Contact[] contacts) {
-        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
-                new npe01__Contacts_and_Orgs_Settings__c (
-                        npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
-
-        insert contacts;
-    }
-
-    /*
-    //merge one contacts in the Individual Account, one in one-to-one model
-    //the individual organization shouldn't be deleted
-    static testMethod void merge1Individual1OneToOne() {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account should not be deleted
-        system.assertEquals(1,[select count() from Account where id=:con2.AccountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.AccountId]);
-        //First contact's account id should not have changed
-        system.assertEquals(con.AccountId,[select AccountId from Contact where id=:con.Id].AccountId);
-    }
-
-    //merge one contacts in the Individual Account, one in one-to-one model
-    //the individual organization shouldn't be deleted
-    static testMethod void merge1OneToOne1Individual() {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-        //second contact's account should be deleted
-        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
-        system.assertEquals(1,[select count() from Account where id=:con.accountId]);
-        //First contact's account id should not have changed
-        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
-    }
-    */
-
-
-    static testMethod void merge1Org1OneToOneOne2One(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge1Org1OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
-    }
-    static testMethod void merge1Org1OneToOneHHAccount(){
-        //skip the test if Advancement is installed
-        if(ADV_PackageInfo_SVC.useAdv()) return;
-
-        merge1Org1OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
-    }
-    //merge one contacts in the Individual Account, one in one-to-one model
-    //the individual organization shouldn't be deleted
-    static void merge1Org1OneToOne(string strProcessor) {
-
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = strProcessor));
-
-        Account acc = new Account(
-            Name = 'Test Account 1'
-        );
-        insert acc;
-
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        con.AccountId = acc.Id;
-
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        con2.LastName = '2Contact_forTests_Merge';
-
-        insert new Contact[]{con, con2};
-
-        con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
-        con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
-
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-
-        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
-
-        controller.showContactSearchPage();
-        controller.searchText = 'test';
-        //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2];
-        fixedSearchResults[0]=con.Id;
-        fixedSearchResults[1]=con2.Id;
-
-        Test.setFixedSearchResults(fixedSearchResults);
-        //search for contacts
-        controller.search();
-        //select the two contacts and grab them
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-
-        controller.nextStep();
-
-        selectMasterRecord(controller, con.id);
-
-        //merge them
-        controller.mergeContacts();
-
-        //second contact should be deleted
-        system.assertEquals(0,[select count() from Contact where id=:con2.id]);
-        system.assertEquals(1,[select count() from Contact where id=:con.id]);
-
-        //second contact's account should be deleted
-        system.assertEquals(0,[select count() from Account where id=:con2.accountId]);
-
-        system.assertEquals(1,[select count() from Account where id=:con.accountId]);
-        //First contact's account id should not have changed
-        system.assertEquals(con.accountId,[select AccountId from Contact where id=:con.id].AccountId);
-    }
-
-    static testMethod void testShowDuplicateRecordSets() {
+    @IsTest
+    private static void testShowDuplicateRecordSets() {
         //Create 15 DRS records
-        getDuplicateSetOfRecords(15);
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
+        getDuplicateSetOfRecords(2);
+        CON_ContactMerge_CTRL controller = getController();
+        controller.pageSize = 1;
         controller.showDuplicateRecordSets();
+
         Test.startTest();
         System.assertEquals(controller.hasDSRObjectReadPermission(), true);
         
@@ -1013,27 +552,27 @@ public class CON_ContactMerge_TEST {
         System.assertEquals(pageNumberValue, 1);
         System.assertEquals(hasPreviousValue, false);
         System.assertEquals(hasNextvalue, true);
-        
+
         // Test pagination methods
         controller.lastPage();
         controller.firstPage();
         controller.previouspage();
         controller.nextpage();
 
+        Test.stopTest();
+
         //Asserts to check the results are correct.
         System.assertEquals(controller.showDRS, true);
         System.assertEquals(controller.totalPages, 2);
         System.assertEquals(controller.hasContactObjectDeletePermission(), true, 'Do not have delete permission on DRS');
         System.assertNotEquals(controller.listDuplicateRecordSets.size(), 0, 'List is empty');
-        
-        Test.stopTest();
-
     }
 
-    static testMethod void testSelectDRSrecord() {
+    @IsTest
+    private static void testSelectDRRecord() {
 
         Test.startTest();
-        getDuplicateSetOfRecords(15);
+        getDuplicateSetOfRecords(3);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
@@ -1046,10 +585,10 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
-    static testMethod void shouldDisplayDuplicateRecordSetWithLeadAndTwoContacts() {
-
+    @IsTest
+    private static void shouldDisplayDuplicateRecordSetWithLeadAndTwoContacts() {
         Test.startTest();
-        getDuplicateSetOfRecords(15, 2, true);
+        getDuplicateSetOfRecords(3, 2, true);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
@@ -1065,166 +604,46 @@ public class CON_ContactMerge_TEST {
         Test.stopTest();
     }
 
-    static testMethod void shouldNotDisplayDuplicateRecordSetWithLeadAndOneContact() {
-
+    @IsTest
+    static void shouldNotDisplayDuplicateRecordSetWithLeadAndOneContact() {
         Test.startTest();
-        getDuplicateSetOfRecords(15, 1, true);
+        getDuplicateSetOfRecords(3, 1, true);
 
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
         CON_ContactMerge_CTRL controller
             = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
         controller.getUnactionableDuplicateRecordSets();
-        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 15,
-            'All 15 Duplicate Record Sets should not be visible');
+        System.assertEquals(controller.unactionableDuplicateRecordSets.size(), 3,
+            'All 3 Duplicate Record Sets should not be visible');
         Test.stopTest();
     }
 
-    static testMethod void testMergeContact() {
-
-        getDuplicateSetOfRecords(15);        
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        Test.startTest();
-        controller.showDuplicateRecordSets();
-        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
-        // now select  2 contacts from the contactwrapper to proceed for merge
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        Id contactId = controller.searchResults[0].contactRecord.Id; 
-        controller.nextStep();
-        System.assertEquals(controller.selectedRecordsCount, 2);
-        
-        Apexpages.currentPage().getParameters().put('recordId', contactId);
-        controller.selectDefaultRecord();
-        PageReference mergedContact = controller.mergeContacts();
-        PageReference expectedMergedContactPage  = new PageReference('/'+contactId);
-        System.assertEquals(expectedMergedContactPage.getUrl(), mergedContact.getUrl());
-
-        Test.stopTest();
-    }
-    
-    //When one contact is selected on the page
-    static testMethod void testOneContactSelectedToMerge() {
-        
-        getDuplicateSetOfRecords(15);        
-        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        Test.startTest();
-        controller.showDuplicateRecordSets();
-        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
-        // now select  2 contacts from the contactwrapper to proceed for merge
-        controller.searchResults[0].selected = true;
-        Id contactId = controller.searchResults[0].contactRecord.Id; 
-        controller.nextStep();
-        
-        apexPages.Message[] pageMessages = ApexPages.getMessages();
-        System.assertNotEquals(0, pageMessages.size());
-        Boolean messageFound = false;
-        for (ApexPages.Message message : pageMessages) {
-            if ( message.getSeverity() == ApexPages.Severity.Error
-              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Few_Contacts) {
-                messageFound = true;
-            }
-        }
-        System.assert(messageFound);
-        //Exception is thrown hence the selectedRecordsCount is not populated.
-        System.assertEquals(controller.selectedRecordsCount, 0 );
-
-        Test.stopTest();
-    }
-
-    //Test if more than 3 contacts are selected for merge
-    static testMethod void testFourContactSelectedToMerge() {
-        
-        DuplicateRule dR = [
-                            SELECT 
-                                Id
-                            FROM 
-                                DuplicateRule
-                            Where
-                                SobjectType = 'Contact'
-                            LIMIT 1
-                            ];
-        Test.startTest();
-        
-        //Create Original Contacts
-        Contact con = UTIL_UnitTestData_TEST.getContact();
-        Contact con2 = UTIL_UnitTestData_TEST.getContact();
-        Contact con3 = UTIL_UnitTestData_TEST.getContact();
-        Contact con4 = UTIL_UnitTestData_TEST.getContact();
-        
-        insert new Contact[]{con, con2, con3, con4};
-        
-        //Create Duplicate Record Set
-        List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , 1);
-        insert dupRSList;
-        
-        //Create Duplicate Record Items
-        List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con2.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con3.Id));
-        duplicateRecordItems.add(getDuplicateRecordItem(dupRSList[0].Id , con4.Id));
-        insert duplicateRecordItems;
-
-        CON_ContactMerge_CTRL controller 
-            = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new List<Contact>()));
-        controller.showDuplicateRecordSets();
-        controller.DRSrecordId = controller.listDuplicateRecordSets[0].Id;
-        controller.search(); 
-        // now select 4 contacts from the contactwrapper to proceed for merge
-        controller.searchResults[0].selected = true;
-        controller.searchResults[1].selected = true;
-        controller.searchResults[2].selected = true;
-        controller.searchResults[3].selected = true;
-        Id contactId = controller.searchResults[0].contactRecord.Id; 
-
-        controller.nextStep();
-        apexPages.Message[] pageMessages = ApexPages.getMessages();
-        System.assertNotEquals(0, pageMessages.size());
-        Boolean messageFound = false;
-        for (ApexPages.Message message : pageMessages) {
-            if ( message.getSeverity() == ApexPages.Severity.Error
-              && message.getDetail() == Label.npe01.Contact_Merge_Error_Too_Many_Contacts) {
-                messageFound = true;
-            }
-        }
-        System.assert(messageFound);
-        //Exception is thrown hence the selectedRecordsCount is not populated.
-        System.assertEquals(controller.selectedRecordsCount, 0 );
-
-        Test.stopTest();
-    }
-
+    /*** Helper methods ***/
     public static void getDuplicateSetOfRecords(Integer duplicateRecordSize) {
         getDuplicateSetOfRecords(duplicateRecordSize, 2, false);
     }
-    
+
     //Create the duplicate data for contact
     public static void getDuplicateSetOfRecords(Integer duplicateRecordSize,
-                                                Integer contactsPerSet,
-                                                Boolean createLeads) {
+            Integer contactsPerSet,
+            Boolean createLeads) {
         DuplicateRule dR = [
-                            SELECT 
-                                Id
-                            FROM 
-                                DuplicateRule
-                            Where
-                                SobjectType = 'Contact'
-                            LIMIT 1
-                            ];
+                SELECT
+                        Id
+                FROM
+                        DuplicateRule
+                Where
+                        SobjectType = 'Contact'
+                LIMIT 1
+        ];
         //Create Original Contacts
         List<Contact> contacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
         insert contacts;
-        
+
         //Create Duplicate Record Set
         List<DuplicateRecordSet> dupRSList = getDuplicateRecordSets(dR.Id , duplicateRecordSize);
         insert dupRSList;
-        
+
         //Create Duplicate Contact Records
         List<Contact> duplicatecontacts = UTIL_UnitTestData_TEST.createMultipleTestContacts(duplicateRecordSize);
 
@@ -1235,12 +654,12 @@ public class CON_ContactMerge_TEST {
             duplicateleads = UTIL_UnitTestData_TEST.createMultipleTestLeads(duplicateRecordSize);
             insert duplicateleads;
         }
-        
+
         //Create Duplicate Record Items
         List<DuplicateRecordItem> duplicateRecordItems = new List<DuplicateRecordItem>();
 
-        Database.DMLOptions insertDML = new Database.DMLOptions(); 
-        insertDML.DuplicateRuleHeader.AllowSave = true; 
+        Database.DMLOptions insertDML = new Database.DMLOptions();
+        insertDML.DuplicateRuleHeader.AllowSave = true;
         List<Database.SaveResult> srList  = Database.insert(duplicatecontacts, insertDML);
         Integer index = 0 ;
         for (Database.SaveResult sr : srList) {
@@ -1257,13 +676,13 @@ public class CON_ContactMerge_TEST {
         }
         insert duplicateRecordItems;
     }
-   
+
     //Create Duplicate Record Sets
     public static List<DuplicateRecordSet> getDuplicateRecordSets(Id duplicateRuleId, Integer count) {
         List<DuplicateRecordSet> drsList = new List<DuplicateRecordSet>();
         for (Integer i = 0; i < count; i++) {
             drsList.add(
-                new DuplicateRecordSet(DuplicateRuleId = duplicateRuleId)
+                    new DuplicateRecordSet(DuplicateRuleId = duplicateRuleId)
             );
         }
         return drsList;
@@ -1272,8 +691,311 @@ public class CON_ContactMerge_TEST {
     //Create Duplicate Record Items
     public static DuplicateRecordItem getDuplicateRecordItem(Id drsId, Id recordId) {
         return new DuplicateRecordItem(
-            DuplicateRecordSetId = drsId,
-            RecordId = recordId
+                DuplicateRecordSetId = drsId,
+                RecordId = recordId
         );
+    }
+    private static void createPrivateContacts() {
+        List<Contact> contactsToMakePrivate = UTIL_UnitTestData_TEST.getContacts(2);
+        for (Contact contact : contactsToMakePrivate) {
+            contact.npe01__Private__c = true;
+        }
+        insert contactsToMakePrivate;
+    }
+
+    private static CON_ContactMerge_CTRL setupControllerMock(List<Contact> testContacts) {
+        CON_ContactMerge_CTRL controller = getController();
+        setupMockDataForMerge(controller, testContacts);
+        return controller;
+    }
+
+    private static Map<Id, Contact> getContactsByRecordId(Set<Id> contactIds) {
+        return new Map<Id, Contact>([
+                Select accountId, FirstName, LastName, MailingStreet, Account.Name
+                from Contact
+                where Id = :contactIds
+        ]);
+    }
+
+    private static List<Contact> getContacts(Integer numberOfContacts) {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                LIMIT :numberOfContacts
+        ];
+    }
+
+    private static List<Contact> getContacts(List<Contact> contacts) {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE Id IN :contacts
+        ];
+    }
+
+    private static void insertAsIndividualBucketContacts(Contact[] contacts) {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c (
+                        npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR));
+
+        insert contacts;
+    }
+
+    private static void createOneToOneAccountAndContacts(Integer numberToCreate) {
+        List<Contact> oneToOneContacts = UTIL_UnitTestData_TEST.createAccountContactTestData(
+                CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, numberToCreate, 1, 0);
+    }
+
+    private static List<Contact> getLosingContact(List<Contact> testContacts) {
+        List<Contact> losingContact = [SELECT AccountId FROM Contact WHERE Id = :testContacts[1].Id];
+        return losingContact;
+    }
+
+    private static List<Contact> getWinningContact(List<Contact> testContacts) {
+        List<Contact> winningContact = [SELECT AccountId FROM Contact WHERE Id = :testContacts[0].Id];
+        return winningContact;
+    }
+
+    private static List<Account> getTestAccountFor(Id accountId) {
+        return [SELECT Id FROM Account WHERE Id = :accountId];
+    }
+
+    private static Set<Id> getSetOfIds(List<SObject> records) {
+        return (new Map<Id,SObject>(records)).keySet();
+    }
+
+    private static User getReadOnlyUser() {
+        return [SELECT Id FROM User WHERE Profile.Name = :UTIL_UnitTestData_TEST.PROFILE_READONLY_USER LIMIT 1];
+    }
+
+    private static void selectSearchResults(List<CON_ContactMerge_CTRL.ContactWrapper> searchResults) {
+        for (CON_ContactMerge_CTRL.ContactWrapper contactWrapper : searchResults) {
+            contactWrapper.selected = true;
+        }
+    }
+
+    private static List<Contact> getMockContactsWithIds(Integer numberOfResults) {
+        List<Contact> mockContacts = new List<Contact>();
+        for (Integer i = 0; i < numberOfResults; i++) {
+            Contact testContact = UTIL_UnitTestData_TEST.getContact();
+            UTIL_UnitTestData_TEST.setMockId(testContact);
+
+            mockContacts.add(testContact);
+        }
+        return mockContacts;
+    }
+
+    private static List<Contact> createGenericTestContacts(Integer numberOfContacts) {
+        List<Contact> testContacts = new List<Contact>();
+        for (Integer i = 0; i < numberOfContacts; i++) {
+            Contact testContact = UTIL_UnitTestData_TEST.getContact();
+
+            testContacts.add(testContact);
+        }
+        insert testContacts;
+        return testContacts;
+    }
+
+    private static void createUniqueContact() {
+        List<Account> testAccounts = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE);
+        UTIL_UnitTestData_TEST.oppsForAccountList(new List<Account> {testAccounts[0]}, null,
+            UTIL_UnitTestData_TEST.getClosedWonStage(), null, Double.valueOf(10.00),
+            null, null);
+
+        Contact differingContact = UTIL_UnitTestData_TEST.getContact();
+        differingContact.LastName = 'Differing';
+        differingContact.HomePhone = '7771232345';
+        differingContact.MailingStreet = '123 Test St';
+        differingContact.AccountId = testAccounts[0].Id;
+        insert differingContact;
+    }
+
+    private static List<Contact> getPrivateContacts() {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE npe01__Private__c = TRUE
+        ];
+    }
+
+    private static List<Contact> getOneToOneContacts() {
+        return [
+                SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE Account.npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+        ];
+    }
+
+    private static Contact getUniqueContact() {
+        return [SELECT FirstName, LastName, npe01__Preferred_Email__c, AccountId
+                FROM Contact
+                WHERE LastName = 'Differing'
+                LIMIT 1
+        ];
+    }
+
+    private static Map<String, Contact> getMockSelectedRecordsForMerge(List<Contact> mockContactsWithIds) {
+        return new Map<String, Contact>(mockContactsWithIds);
+    }
+
+    private static List<CON_ContactMerge_CTRL.FieldRow> getMockFieldRows(List<String> fieldNames,
+            List<Contact> contacts) {
+        List<CON_ContactMerge_CTRL.FieldRow> mockFieldRows = new List<CON_ContactMerge_CTRL.FieldRow>();
+        for (Integer i=0; i < fieldNames.size(); i++) {
+            CON_ContactMerge_CTRL.FieldRow mockFieldRow = new CON_ContactMerge_CTRL.FieldRow();
+
+            if (isMasterRecordField(fieldNames[i])) {
+                mockFieldRow.fieldName = CON_ContactMerge_CTRL.MASTER_KEY;
+                mockFieldRow.fieldLabel = 'Master Record';
+                mockFieldRow.showRadio = true;
+                mockFieldRow.selectedValue = contacts[0].Id;
+            } else {
+                mockFieldRow.fieldLabel = 'Test Field';
+                mockFieldRow.fieldName = fieldNames[i];
+                mockFieldRow.showRadio = true;
+                mockFieldRow.selectedValue = contacts[0].Id;
+            }
+
+            List<CON_ContactMerge_CTRL.Cell> mockCells = getMockCells(fieldNames[i], contacts);
+            mockFieldRow.values = mockCells;
+            mockFieldRows.add(mockFieldRow);
+        }
+        return mockFieldRows;
+    }
+
+    private static List<CON_ContactMerge_CTRL.Cell> getMockCells(String fieldName, List<Contact> contacts) {
+        List<CON_ContactMerge_CTRL.Cell> mockCells = new List<CON_ContactMerge_CTRL.Cell>();
+        for (Contact contact : contacts) {
+            CON_ContactMerge_CTRL.Cell mockCell = new CON_ContactMerge_CTRL.Cell(
+                contact.Id,
+                getCellValue(fieldName, contact)
+            );
+            mockCells.add(mockCell);
+        }
+        return mockCells;
+    }
+
+    private static String getCellValue(String fieldName, Contact contact) {
+        if (isMasterRecordField(fieldName)) {
+            return String.valueOf(contact.Id);
+        } else {
+           return String.valueOf(contact.get(fieldName));
+        }
+    }
+
+    private static Boolean isMasterRecordField(String fieldName) {
+        return fieldName == CON_ContactMerge_CTRL.MASTER_KEY;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates and assigns the permission set with delete permission on contact object
+    */
+    private static void assignDeletePermissionSet(Id userId) {
+        // Create a permission set with CustomizeApplication set ensuring other flags
+        // on which CustomizeApplication settings depends are set as well
+        PermissionSet permission = new PermissionSet(
+                Name = 'PermissionTest',
+                Label = 'PermissionTest'
+        );
+
+        insert permission;
+
+        insert new ObjectPermissions (
+                SObjectType = 'Contact',
+                ParentId = permission.id,
+                PermissionsRead = true,
+                PermissionsViewAllRecords = true,
+                PermissionsCreate = true,
+                PermissionsDelete = true,
+                PermissionsEdit = true
+        );
+
+        insert new PermissionSetAssignment(
+                AssigneeId = userId,
+                PermissionSetId = permission.Id
+        );
+
+    }
+
+    private static CON_ContactMerge_CTRL getControllerForSearch() {
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
+        controller.showContactSearch = true;
+        controller.searchText = 'test';
+        return controller;
+    }
+
+    private static CON_ContactMerge_CTRL getController() {
+        Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));
+        CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.StandardSetController(new List<Contact>()));
+        return controller;
+    }
+
+    private static void setupMockDataForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        setMockFieldRows(controller, contactsToMerge);
+        setSelectedRecordsForMerge(controller, contactsToMerge);
+    }
+
+    private static void setMockFieldRows(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        controller.fieldRows = getMockFieldRows(new List<String>{
+                CON_ContactMerge_CTRL.MASTER_KEY,
+                String.valueOf(Contact.FirstName),
+                String.valueOf(Contact.LastName),
+                String.valueOf(Contact.npe01__Preferred_Email__c)
+        }, contactsToMerge);
+    }
+
+    private static void setSelectedRecordsForMerge(CON_ContactMerge_CTRL controller, List<Contact> contactsToMerge) {
+        controller.selectedRecords = getMockSelectedRecordsForMerge(contactsToMerge);
+    }
+
+    private static CON_ContactMerge_CTRL.FieldRow getMasterRecordRow(List<CON_ContactMerge_CTRL.FieldRow> fieldRows) {
+        CON_ContactMerge_CTRL.FieldRow masterRecordRow;
+        for (CON_ContactMerge_CTRL.FieldRow row : fieldRows) {
+            if (row.showRadio && isMasterRecordField(row.fieldName)) {
+                masterRecordRow = row;
+            }
+        }
+        return masterRecordRow;
+    }
+
+    private static Id setWinningContact(CON_ContactMerge_CTRL.FieldRow masterRecordRow, Id winningContactIdToSet) {
+        masterRecordRow.selectedValue = winningContactIdToSet;
+
+        return winningContactIdToSet;
+    }
+
+    private static ContactMergeSelector stubFor(StubProvider mock) {
+        return  (ContactMergeSelector) Test.createStub(
+                ContactMergeSelector.class,
+                mock
+        );
+    }
+
+    private class ContactMergeSelectorMock implements StubProvider {
+        Integer numberOfResults;
+
+        public ContactMergeSelectorMock(Integer numberOfResults) {
+            this.numberOfResults = numberOfResults;
+        }
+
+        public Object handleMethodCall(Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'selectContactsByName' {
+                    List<Contact> contacts = UTIL_UnitTestData_TEST.getContacts(numberOfResults);
+                    UTIL_UnitTestData_TEST.setMockIds(contacts);
+
+                    return contacts;
+                }
+            }
+
+            return null;
+        }
     }
 }
