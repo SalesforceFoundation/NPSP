@@ -39,13 +39,13 @@ export default class GsChecklistItem extends NavigationMixin(LightningElement) {
                     this.namespace = data;
                 }
                 if (this.hasLink){
-                    this.linkLabel = (this.item.link.label + ' ' + this.labels.opensInNewLink);
+                    this.linkLabel =  `${this.item.link.label} ${this.labels.opensInNewLink}`;
                 }
                 if (this.hasPrimaryBtn) {
-                    this.primaryBtnLabel = (this.item.primaryBtn.label + ' ' + this.labels.opensInNewLink);
+                    this.primaryBtnLabel = `${this.item.primaryBtn.label} ${this.labels.opensInNewLink}`;
                 }
                 if (this.hasSecondaryBtn) {
-                    this.secondaryBtnLabel = (this.item.secondaryBtn.label + ' ' + this.labels.opensInNewLink);
+                    this.secondaryBtnLabel = `${this.item.secondaryBtn.label} ${this.labels.opensInNewLink}`;
                 }
             });
     }

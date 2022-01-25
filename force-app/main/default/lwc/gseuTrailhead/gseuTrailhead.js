@@ -20,7 +20,7 @@ export default class EuTrailhead extends LightningElement {
         opensInNewLink
     }
 
-    exploreTrailheadAriaLabel = this.labels.gseuExploreTrailheadButton + ' ' + this.labels.opensInNewLink;
+    exploreTrailheadAriaLabel = `${this.labels.gseuExploreTrailheadButton} ${this.labels.opensInNewLink}`;
 
     /**
      * Handles the click in the button. 

@@ -33,7 +33,7 @@ export default class gsVideoHeader extends LightningElement {
     }
 
     get ariaLabel() {
-        return gsVideoHeaderTitle + " " + this.labels.opensInNewLink ;
+        return `${gsVideoHeaderTitle} ${this.labels.opensInNewLink}` ;
     }
 
     get length() {

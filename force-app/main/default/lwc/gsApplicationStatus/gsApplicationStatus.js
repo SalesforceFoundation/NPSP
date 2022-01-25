@@ -57,9 +57,9 @@ export default class GsApplicationStatus extends LightningElement {
             this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 
             this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
-            this.learnMoreAriaLabel = this.labels.gsLearnMore + ' ' + this.labels.opensInNewLink;
-            this.applyForFreeLicensesAriaLabel = this.labels.gsApplyForFreeLicenses + ' ' + this.labels.opensInNewLink;
-            this.checkStatusAriaLabel = this.labels.gsCheckStatus + ' ' + this.labels.opensInNewLink;
+            this.learnMoreAriaLabel = `${this.labels.gsLearnMore} ${this.labels.opensInNewLink}`;
+            this.applyForFreeLicensesAriaLabel = `${this.labels.gsApplyForFreeLicenses} ${this.labels.opensInNewLink}`;
+            this.checkStatusAriaLabel = `${this.labels.gsCheckStatus} ${this.labels.opensInNewLink}`;
         })
         .catch(error => {
             this.errorMessage = error;
