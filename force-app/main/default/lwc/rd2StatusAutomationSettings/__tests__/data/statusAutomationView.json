@@ -1,0 +1,22 @@
+{
+    "rd2Enabled" : true,
+    "numberOfDaysForClosed" : 30,
+    "numberOfDaysForLpased" : 15,
+    "closedStatus" : "Closed",
+    "lapsedStatus" : "Lapsed",
+    "lapsedStatusOption" : [ {
+            "label" : "Lapsed",
+            "value" : "Lapsed"
+        }, {
+            "label" : "Idle",
+            "value" : "Idle" 
+        }
+    ],
+    "closedStatusOption" : [ {
+        "label" : "Closed",
+        "value" : "Closed"
+    }, {
+        "label" : "Cancel",
+        "value" : "Cancel" 
+    }]
+}

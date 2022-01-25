@@ -2749,6 +2749,118 @@
         <value>Upcoming Installments</value>
     </labels>
     <labels>
+        <fullName>RD2_StatusAutomationConfigurationSection</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation configuration section header</shortDescription>
+        <value>Number of Days for Lapsed or Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationClosedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Closed Status Value if donations aren&apos;t being received as expected. This value must be higher than the Number of Days for Lapsed. NPSP does not create installment Opportunities for Closed Recurring Donations.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Closed</shortDescription>
+        <value>Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Number of Days for Lapsed</shortDescription>
+        <value>Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationIntro</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation introduction</shortDescription>
+        <value>These settings automate changing the Recurring Donation Status when donors miss installment payments.&lt;br/&gt;&lt;br/&gt;Using these settings, NPSP updates the Recurring Donation&apos;s Status when the current date exceeds the Last Donation Date plus the future expected installment date and the Number of Days for Lapsed or Number of Days for Closed.&lt;br/&gt;&lt;br/&gt;For example, given a monthly Recurring Donation started on January 1st, and Number of Days for Lapsed is set to 10 days, the Recurring Donation becomes Lapsed on February 10th if no installment payment is received.&lt;br/&gt;&lt;br/&gt;Elevate Recurring Donations are not included in this automation.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Closed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Closed Status should map to Closed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Automation Lapsed Status is not mapped correctly</shortDescription>
+        <value>The Status Automation Lapsed Status should map to Lapsed State</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is smaller than Number of Days For Closed</shortDescription>
+        <value>Number of Days for Closed must be higher than the Number of Days for Lapsed.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForClosed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Closed is too small</shortDescription>
+        <value>Must be larger than Number of Days for Lapsed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationInvalidNumberOfDaysForLapsed</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed is too large</shortDescription>
+        <value>Must be smaller than Number of Days for Closed</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationNegativeNumberOfDays</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when Number of Days for Lapsed or Number of Days for Closed is negative.</shortDescription>
+        <value>Number of Days for Lapsed and Number of Days for Closed cannot be negative.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationLapsedDefinition</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed definition</shortDescription>
+        <value>After the specified number of days, NPSP updates the Recurring Donation Status to the Lapsed Status Value if donations aren&apos;t being received as expected. NPSP continues to create installment Opportunities for Lapsed Recurring Donations as defined by the schedule.</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetClosedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Closed Status Label</shortDescription>
+        <value>Closed Status Value</value>
+    </labels>
+    <labels>
+        <fullName>RD2_StatusAutomationSetLapsedStatus</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Status Automation Lapsed Status Label</shortDescription>
+        <value>Lapsed Status Value</value>
+    </labels>
+    <labels>
         <fullName>RD2_StatusMappingColumnState</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5948,6 +6060,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Page-level error message about missing required fields</shortDescription>
         <value>These required fields must be completed: {0}</value>
+    </labels>
+    <labels>
+        <fullName>commonNoneSpecified</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>None specified</shortDescription>
+        <value>None specified</value>
     </labels>
     <labels>
         <fullName>commonNewGift</fullName>
@@ -9649,12 +9769,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Learn More</value>
     </labels>
     <labels>
-        <fullName>gsLearnMoreAriaLabel</fullName>
-        <categories>Get Started Page</categories>
+        <fullName>opensInNewLink</fullName>
+        <categories>Accessibility</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Aria Label for the Learn more label for the application status component</shortDescription>
-        <value>Learn More (opens in a new window)</value>
+        <shortDescription>Aria Label for the links which open in a new window</shortDescription>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
@@ -14877,6 +14997,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>Menu name for the status to state mapping settings</shortDescription>
         <value>Status to State Mapping</value>
+    </labels>
+    <labels>
+        <fullName>stgNavRD2StatusAutomation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu name for the Status Automation settings</shortDescription>
+        <value>Status Automation</value>
     </labels>
     <labels>
         <fullName>stgNavRDBatch</fullName>
