@@ -46,7 +46,6 @@ public class CON_ContactMerge_TEST {
         UTIL_UnitTestData_TEST.createUser(UTIL_UnitTestData_TEST.PROFILE_READONLY_USER);
     }
 
-    //todo: this is public and used outside of this test class.
     public static void selectMasterRecord(CON_ContactMerge_CTRL cont, Id masterId) {
         for (CON_ContactMerge_CTRL.FieldRow row : cont.fieldRows) {
             if (row.showRadio) {

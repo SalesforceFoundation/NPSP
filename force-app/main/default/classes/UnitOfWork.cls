@@ -41,14 +41,12 @@ public inherited sharing class UnitOfWork {
 
     public Database.SaveResult[] save() {
         List<Database.SaveResult> saveResults = new List<Database.SaveResult>();
-
         if (!objectsToInsert.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.insertRecords(objectsToInsert, false));
         }
         if (!objectsToUpdate.isEmpty()) {
             saveResults.addAll(UTIL_DMLService.updateRecords(objectsToUpdate, false));
         }
-
         return saveResults;
     }
 
@@ -86,4 +84,5 @@ public inherited sharing class UnitOfWork {
             }
         }
     }
+
 }
