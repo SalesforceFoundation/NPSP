@@ -158,6 +158,13 @@ public class UTIL_UnitTestData_TEST {
     // =====================================================================================================
     // Data Factory Methods - Contact, Lead, Account, Opportunity, Engagement Plan
     // =====================================================================================================
+    public static List<Contact> getContacts(Integer numberOfContacts) {
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i=0; i < numberOfContacts; i++) {
+            contacts.add(getContact());
+        }
+        return contacts;
+    }
 
     /**
      * @description Return a single Contact SObject for tests with a unique last name
@@ -175,6 +182,7 @@ public class UTIL_UnitTestData_TEST {
             OtherCity = 'Seattle'
         );
     }
+
 
     /**
      * @description Return a list of Contact SObjects for tests with a unique first and last name
@@ -1047,8 +1055,12 @@ public class UTIL_UnitTestData_TEST {
     */
     public static void setMockIds(List<SObject> records) {
         for (SObject record : records) {
-            record.Id = mockId(record.getSObjectType());
+            setMockId(record);
         }
+    }
+
+    public static void setMockId(SObject record) {
+        record.Id = mockId(record.getSObjectType());
     }
 
     /**
