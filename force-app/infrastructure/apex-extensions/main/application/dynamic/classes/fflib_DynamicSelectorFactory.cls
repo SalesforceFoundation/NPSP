@@ -69,7 +69,7 @@ public virtual class fflib_DynamicSelectorFactory
 	public List<SObject> selectById(Set<Id> recordIds)
 	{
 		if (null == recordIds || recordIds.size() == 0)
-			throw new fflib_Application.DeveloperException('Invalid record Id\'s set');
+			throw new Application.DeveloperException('Invalid record Id\'s set');
 
 		return selectById(recordIds, new List<Id>(recordIds)[0].getSObjectType());
 	}
@@ -77,7 +77,7 @@ public virtual class fflib_DynamicSelectorFactory
 	public List<SObject> selectById(Set<Id> recordIds, SObjectType sObjectType)
 	{
 		if (null == recordIds || recordIds.size() == 0)
-			throw new fflib_Application.DeveloperException('Invalid record Id\'s set');
+			throw new Application.DeveloperException('Invalid record Id\'s set');
 
 		return newInstance(sObjectType)
 				.selectSObjectsById(recordIds);

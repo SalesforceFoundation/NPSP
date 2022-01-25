@@ -34,5 +34,8 @@
 * and factories for Domains, Selectors, and Services.
 */
 public inherited sharing class Application {
-
+    /**
+     * Exception representing a developer coding error, not intended for end user eyes
+     **/
+    public class DeveloperException extends Exception { }
 }
