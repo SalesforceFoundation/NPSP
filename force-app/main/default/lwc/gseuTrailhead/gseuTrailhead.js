@@ -2,6 +2,7 @@ import { LightningElement } from 'lwc';
 import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
 import gseuTrailheadText from '@salesforce/label/c.gseuTrailheadText'
 import gseuTrailheadLogoText from '@salesforce/label/c.gseuTrailheadLogoText'
+import opensInNewLink from '@salesforce/label/c.opensInNewLink'
 import gseuExploreTrailheadButton from '@salesforce/label/c.gseuExploreTrailheadButton'
 export default class EuTrailhead extends LightningElement {
     /**
@@ -15,8 +16,11 @@ export default class EuTrailhead extends LightningElement {
     labels = {
         gseuTrailheadText,
         gseuTrailheadLogoText,
-        gseuExploreTrailheadButton
+        gseuExploreTrailheadButton,
+        opensInNewLink
     }
+
+    exploreTrailheadAriaLabel = `${this.labels.gseuExploreTrailheadButton} ${this.labels.opensInNewLink}`;
 
     /**
      * Handles the click in the button. 
