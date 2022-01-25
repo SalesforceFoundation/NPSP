@@ -76,11 +76,11 @@ public with sharing class DonationHistoryController {
         DonationHistoryService service = new DonationHistoryService(contactId);
         try {
             List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            donationHistories.addAll(buildHistoryFromOpportunities(service.getDonationHistory(), contactId));
-            
+            Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
+            donationHistories.addAll(buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled));
             DonationHistoryAppView appView = new DonationHistoryAppView();
             appView.donations = donationHistories;
-            appView.isPaymentsEnabled = service.checkIfPaymentsAreEnabled();
+            appView.isPaymentsEnabled = paymentsEnabled;
             appView.paymentMethodLabel = service.getPaymentMethodLabel();
             return appView;
         } catch(AuraHandledException ex) {
@@ -94,13 +94,11 @@ public with sharing class DonationHistoryController {
     * @description method creates list of DonationHistoryView to return to LWC
     * @return List<DonationHistoryView>
     */
-    private static List<DonationHistoryView> buildHistoryFromOpportunities( List<Opportunity> opportunities, Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
-        boolean isPaymentEnabled = service.checkIfPaymentsAreEnabled();
+    private static List<DonationHistoryView> buildHistoryFromOpportunities(List<Opportunity> opportunities, Id contactId, Boolean includePaymentMethod) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
         for (Opportunity opp : opportunities) {
             if(opp.npe01__OppPayment__r != null && opp.npe01__OppPayment__r.size() > 0){
-                String paymentMethod = isPaymentEnabled
+                String paymentMethod = includePaymentMethod
                 	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
                 	: EMPTY_PAYMENT_METHOD;
             	donationHistories.add(new DonationHistoryView(opp, paymentMethod));

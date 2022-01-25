@@ -81,7 +81,7 @@ public with sharing class DonationHistoryService {
         });
     }
 
-    public boolean checkIfPaymentsAreEnabled() {
+    public Boolean checkIfPaymentsAreEnabled() {
         return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
     }
 
