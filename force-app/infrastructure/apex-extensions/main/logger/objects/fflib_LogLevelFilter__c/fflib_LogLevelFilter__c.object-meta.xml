@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <customSettingsType>Hierarchy</customSettingsType>
-    <description>Filter to add customised logging for particular users</description>
-    <enableFeeds>false</enableFeeds>
-    <label>Log Level Filter</label>
-    <visibility>Public</visibility>
-</CustomObject>
