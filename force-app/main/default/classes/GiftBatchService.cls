@@ -113,8 +113,8 @@ public with sharing class GiftBatchService {
         GiftBatch giftBatch = new GiftBatch(giftBatchId);
         giftBatch.asyncApexJob(giftBatchServicePrivilegedHelper.getAsyncApexJob(giftBatchId));
 
-        if (giftBatch.hasGiftsToResolve()) {
-            giftBatch.resolveGiftsRemainingInProcessing();
+        if (giftBatch.hasStandardGiftsToResolve()) {
+            giftBatch.resolveStandardGiftsRemainingInProcessing();
             giftBatch.updateRecords();
         }
 

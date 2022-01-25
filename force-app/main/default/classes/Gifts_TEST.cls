@@ -306,6 +306,31 @@ private class Gifts_TEST {
         System.assertEquals(testGift.fields().get(statusField), BDI_DataImport_API.bdiProcessing);
     }
 
+    @IsTest
+    static void shouldSetOnlyStandardGiftsToProcessing() {
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        DataImport__c testDataImport = new DataImport__c(
+            Status__c = BDI_DataImport_API.bdiProcessing,
+            Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name()
+        );
+        DataImport__c testDataImport1 = new DataImport__c(
+            Status__c = BDI_DataImport_API.bdiProcessing
+        );
+
+        dataImports.add(testDataImport);
+        dataImports.add(testDataImport1);
+        insert dataImports;
+
+        Gifts gifts = new Gifts(dataImports);
+
+        Test.startTest();
+        List<Gift> processingGifts = gifts.standardGiftsInProcessing();
+        Test.stopTest();
+
+        System.assertEquals(1 ,processingGifts.size());
+    }
+
+
     private static List<DataImport__c> buildGifts(
         Integer numberOfGifts,
         String paymentStatus,

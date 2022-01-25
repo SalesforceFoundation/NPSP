@@ -150,7 +150,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         }
     }
 
-    public void failGiftsWith(String failReason) {
+    private void failGiftsWith(String failReason) {
         gifts.failWith(failReason);
     }
 
@@ -158,11 +158,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         return this.asyncApexJob == null || hasFinishedProcessing();
     }
 
-    public Boolean hasGiftsToResolve() {
-        return hasFinishedProcessing() && hasGiftsRemainingInProcessing();
+    public Boolean hasStandardGiftsToResolve() {
+        return hasFinishedProcessing() && hasStandardGiftsRemainingInProcessing();
     }
 
-    public void resolveGiftsRemainingInProcessing() {
+    public void resolveStandardGiftsRemainingInProcessing() {
         failGiftsWith(System.Label.geBatchProcessingIncomplete);
     }
 
@@ -251,7 +251,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
     }
 
-    private Boolean hasGiftsRemainingInProcessing() {
+    private Boolean hasStandardGiftsRemainingInProcessing() {
         return this.gifts.inProcessing();
     }
 

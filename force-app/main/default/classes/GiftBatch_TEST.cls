@@ -207,9 +207,9 @@ private class GiftBatch_TEST {
             .build();
 
         System.assert(giftBatch.canBeEnqueued());
-        System.assert(giftBatch.hasGiftsToResolve());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
 
-        giftBatch.resolveGiftsRemainingInProcessing();
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -231,9 +231,9 @@ private class GiftBatch_TEST {
             .build();
 
         System.assert(giftBatch.canBeEnqueued());
-        System.assert(giftBatch.hasGiftsToResolve());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
 
-        giftBatch.resolveGiftsRemainingInProcessing();
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -255,9 +255,9 @@ private class GiftBatch_TEST {
             .build();
 
         System.assert(giftBatch.canBeEnqueued());
-        System.assert(giftBatch.hasGiftsToResolve());
+        System.assert(giftBatch.hasStandardGiftsToResolve());
 
-        giftBatch.resolveGiftsRemainingInProcessing();
+        giftBatch.resolveStandardGiftsRemainingInProcessing();
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
@@ -279,7 +279,7 @@ private class GiftBatch_TEST {
             .build();
 
         System.assert(!giftBatch.canBeEnqueued());
-        System.assert(!giftBatch.hasGiftsToResolve());
+        System.assert(!giftBatch.hasStandardGiftsToResolve());
     }
 
 

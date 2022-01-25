@@ -169,6 +169,10 @@ public with sharing class Gift {
         return this.dataImport.Payment_Status__c == ElevateTransactionStatus.AUTHORIZED.name();
     }
 
+    public Boolean isPaymentProcessing() {
+        return this.dataImport.Payment_Status__c == ElevateTransactionStatus.PAYMENTPROCESSING.name();
+    }
+
     public Boolean isDryRunValidated() {
         return this.dataImport.Status__c == BDI_DataImport_API.bdiDryRunValidated;
     }

@@ -178,7 +178,7 @@ public with sharing class Gifts {
     }
 
     public void failWith(String failReason) {
-        for (Gift gift : giftsInProcessing()) {
+        for (Gift gift : standardGiftsInProcessing()) {
             gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
             gift.asDataImport().FailureInformation__c = failReason;
             giftsToUpdate.add(gift.asDataImport());
@@ -186,15 +186,15 @@ public with sharing class Gifts {
     }
 
     public Boolean inProcessing() {
-        return giftsInProcessing().size() > 0;
+        return standardGiftsInProcessing().size() > 0;
     }
 
-    private List<Gift> giftsInProcessing() {
+    @TestVisible
+    private List<Gift> standardGiftsInProcessing() {
         List<Gift> processingGifts = new List<Gift>();
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
-
-            if (currentGift.isProcessing()) {
+            if (currentGift.isProcessing() && !currentGift.isPaymentProcessing()) {
                 processingGifts.add(currentGift);
             }
         }
