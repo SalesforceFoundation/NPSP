@@ -43,6 +43,21 @@ global with sharing class Callable_API implements System.Callable {
     public class MalformedMethodInvocationException extends Exception {}
 
     /*******************************************************************************************************
+    * @description Data Import controller
+    ********************************************************************************************************/
+    @TestVisible
+    private STG_PanelDataImportAdvancedMapping_CTRL panelMappingController {
+        get {
+            if (panelMappingController == null) {
+                panelMappingController = new STG_PanelDataImportAdvancedMapping_CTRL();
+            }
+            return panelMappingController;
+        }
+        set;
+    }
+
+
+    /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
     * action handler based on the action text
     * @param action string of the target action
@@ -159,7 +174,17 @@ global with sharing class Callable_API implements System.Callable {
                 // It returns the Job ID of the Scheduled Job.
                 return CallableApiApexDelegationService.handleApexScheduleJob(params);
 
-            } when else {
+            } when 'settings.enableadvancedmapping' {
+                panelMappingController.enableDataImportFieldMapping();
+
+                return null;
+
+            } when 'settings.enableGiftEntry' {
+                panelMappingController.enableGiftEntry();
+
+                return null;
+            }
+            when else {
                 throw new MalformedMethodInvocationException(
                     String.format(System.Label.CallableApiMethodNotImplemented, new List<String> { action })
                 );

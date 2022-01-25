@@ -43,6 +43,7 @@ private with sharing class Callable_API_TEST {
     private static final String RD2_ENABLE_ACTION = 'Settings.EnableEnhancedRecurringDonations';
     private static final String JOB_SCHEDULE_ACTION = 'Apex.ScheduleJob';
     private static final String RD2_PAUSE_ACTION = 'rd2.pause';
+    private static final String ADVANCED_MAPPING_ACTION = 'settings.enableadvancedmapping';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -117,6 +118,21 @@ private with sharing class Callable_API_TEST {
         Test.stopTest();
     }
 
+    @IsTest
+    private static void shouldCallEnableAdvancedMappingOnAction() {
+
+        Test.startTest();
+            Callable_API callableApi = new Callable_API();
+            STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new STG_PanelDataImportAdvancedMapping_CTRLMock();
+            callableApi.panelMappingController = stubFor(controllerMock);
+
+            callableApi.call(ADVANCED_MAPPING_ACTION, null);
+        Test.stopTest();
+
+        System.assert(controllerMock.enableDataImportMappingCalled, 'The enabled advanced mapping controller method ' +
+                'should be called.');
+    }
+
     /**
      * @description Verifies if Enhanced Recurring Donations are enabled
      */
@@ -188,5 +204,31 @@ private with sharing class Callable_API_TEST {
         String expectedErrorMessage = String.format(System.Label.RD2_InvalidRecurringDonationId,
             new List<String> { UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID });
         System.assertEquals(expectedErrorMessage, returnPause.error, 'An error with unexpected Id should be return');
+    }
+
+    private static STG_PanelDataImportAdvancedMapping_CTRL stubFor(STG_PanelDataImportAdvancedMapping_CTRLMock
+            advancedMappingControllerMock) {
+        return (STG_PanelDataImportAdvancedMapping_CTRL) Test.createStub(
+                STG_PanelDataImportAdvancedMapping_CTRL.class, advancedMappingControllerMock);
+    }
+
+    private class STG_PanelDataImportAdvancedMapping_CTRLMock implements StubProvider {
+        Boolean enableDataImportMappingCalled = false;
+
+        public Object handleMethodCall(
+                Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'enableDataImportFieldMapping' {
+                    enableDataImportMappingCalled = true;
+                }
+            }
+            return null;
+        }
     }
 }
