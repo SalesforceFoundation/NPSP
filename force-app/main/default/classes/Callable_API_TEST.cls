@@ -130,8 +130,27 @@ private with sharing class Callable_API_TEST {
             callableApi.call(ADVANCED_MAPPING_ACTION, null);
         Test.stopTest();
 
-        System.assert(controllerMock.enableDataImportMappingCalled, 'The enabled advanced mapping controller method ' +
+        System.assert(controllerMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
                 'should be called.');
+    }
+
+    @IsTest
+    private static void shouldNotCallEnableAdvancedMappingIfMappingIsEnabled() {
+        Data_Import_Settings__c dataImportSettings = new Data_Import_Settings__c();
+        dataImportSettings.Field_Mapping_Method__c = BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
+        UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
+
+        Callable_API callableApi = new Callable_API();
+        STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new
+                STG_PanelDataImportAdvancedMapping_CTRLMock();
+        callableApi.panelMappingController = stubFor(controllerMock);
+
+        Test.startTest();
+            callableApi.call(ADVANCED_MAPPING_ACTION, null);
+        Test.stopTest();
+
+        System.assert(!controllerMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
+                'should not be called.');
     }
 
     @IsTest

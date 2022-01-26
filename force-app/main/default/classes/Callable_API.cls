@@ -56,6 +56,16 @@ global with sharing class Callable_API implements System.Callable {
         set;
     }
 
+    @TestVisible
+    private UTIL_CustomSettingsFacade customSettingsFacade {
+        get {
+            if (customSettingsFacade == null) {
+                customSettingsFacade = new UTIL_CustomSettingsFacade();
+            }
+            return customSettingsFacade;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description call function implementation of the callable Interface will dispatch to the appropriate
@@ -175,6 +185,11 @@ global with sharing class Callable_API implements System.Callable {
                 return CallableApiApexDelegationService.handleApexScheduleJob(params);
 
             } when 'settings.enableadvancedmapping' {
+                Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+                if (isAdvancedMappingEnabled(dataImportSettings)) {
+                    return null;
+                }
+
                 panelMappingController.enableDataImportFieldMapping();
 
                 return null;
@@ -193,6 +208,10 @@ global with sharing class Callable_API implements System.Callable {
 
         // if the action does not return a value then return success
         return true;
+    }
+
+    private Boolean isAdvancedMappingEnabled(Data_Import_Settings__c dataImportSettings) {
+        return dataImportSettings.Field_Mapping_Method__c == BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
     }
 
 }
