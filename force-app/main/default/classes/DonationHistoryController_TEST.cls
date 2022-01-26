@@ -164,9 +164,9 @@ public class DonationHistoryController_TEST {
     }
 
     private static Contact findContactByFirstName(String firstName) {
-        for (Contact c : [SELECT ID, Firstname
+        for (Contact c : [SELECT ID, FirstName
                           FROM Contact]) {
-            if (c.Firstname == firstname) {
+            if (c.Firstname == firstName) {
                 return c;
             }
         }

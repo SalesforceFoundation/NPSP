@@ -126,7 +126,7 @@ public with sharing class DonationHistoryService {
     private List<String> convertAggregateResultListToStringList(List<AggregateResult> results) {
         List<String> aggregateResultsAsStrings = new List<String>();
         for(AggregateResult result : results) {
-            aggregateResultsAsStrings.add(String.valueOf(result.get('expr0')));
+            aggregateResultsAsStrings.add(String.valueOf(result.get('closeYear')));
         }
         return aggregateResultsAsStrings;
     }

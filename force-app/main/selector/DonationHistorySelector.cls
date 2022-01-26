@@ -85,7 +85,7 @@ public inherited sharing class DonationHistorySelector {
      * @returns List<AggregateResult> Selecting the Calenday_Year of the Opportunity.CloseDate
      */
     public List<AggregateResult> getYearsWithDonationForContact(Id contactId) {
-        return [SELECT   Calendar_Year(CloseDate)
+        return [SELECT   Calendar_Year(CloseDate) closeYear
                 FROM     Opportunity 
                 WHERE    IsWon = true 
                 AND      ContactId =:contactId 
