@@ -145,14 +145,14 @@ describe('c-rd2-entry-form-schedule-section', () => {
             await flushPromises();
             const customPeriod = controller.customPeriod();
             changeValue(customPeriod, 'Monthly');
-            expect(mockHandleCustomPeriodChange.mock.calls[0][0].detail).toMatchObject({periodType: 'Monthly'});
+            expect(mockHandleCustomPeriodChange.mock.calls[0][0].detail).toBe('Monthly');
         });
 
         it('when advanced period picklist changed, informs parent component', async () => {
             await flushPromises();
             const advancedPeriod = controller.advancedInstallmentPeriod();
             changeValue(advancedPeriod, 'Daily');
-            expect(mockHandleAdvancedPeriodChange.mock.calls[0][0].detail).toMatchObject({period: 'Daily'});
+            expect(mockHandleAdvancedPeriodChange.mock.calls[0][0].detail).toBe( 'Daily');
         });
 
         it('installment period picklist is set to weekly', async () => {

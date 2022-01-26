@@ -5,6 +5,9 @@ import {
     SET_ACCOUNT_DETAILS,
     SET_DONOR_TYPE,
     SET_DATE_ESTABLISHED,
+    SET_PERIOD_TYPE,
+    SET_RECURRING_TYPE,
+    SET_RECURRING_PERIOD,
     INITIAL_VIEW_LOAD
 } from "./actions";
 
@@ -26,7 +29,8 @@ const DEFAULT_INITIAL_STATE = {
 
     //schedule
     donationValue: null,
-    recurringPeriod: null, // Monthly / Yearly
+    recurringPeriod: null, // Monthly / Yearly / 1st and 15th
+    periodType: null, // Monthly or Advanced
     recurringFrequency: null, // Every *2* Months
     startDate: null,
     dayOfMonth: null,
@@ -95,6 +99,20 @@ const setDonorType = (state, donorType) => {
     };
 };
 
+const setRecurringPeriod = (state, recurringPeriod) => {
+    return {
+        ...state,
+        recurringPeriod
+    };
+}
+
+const setRecurringType = (state, recurringType) => {
+    return {
+        ...state,
+        recurringType
+    };
+}
+
 const setDateEstablished = (state, dateEstablished) => {
     return {
         ...state,
@@ -125,6 +143,12 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
             return setDateEstablished(state, action.payload);
+        case SET_RECURRING_PERIOD:
+            return setRecurringPeriod(state, action.payload);
+        case SET_RECURRING_TYPE:
+            return setRecurringType(state, action.payload);
+        case SET_PERIOD_TYPE:
+            return setPeriodType(state, action.payload);
         case INITIAL_VIEW_LOAD:
             return loadInitialView(state, action.payload);
         default:

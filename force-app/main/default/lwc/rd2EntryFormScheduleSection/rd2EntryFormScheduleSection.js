@@ -310,7 +310,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         // Notify the main entry form about the Recurring Type value change
         this.dispatchEvent(new CustomEvent(
             'typechange', 
-            { detail: { 'recurringType': this.recurringType }}
+            { detail: { 'recurringType': event.target.value }}
         ));
     }
 
@@ -324,7 +324,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
         this.dispatchEvent(new CustomEvent(
             'periodtypechange',
-            { detail: { periodType: recurringPeriod }}
+            { detail: recurringPeriod }
         ));
     }
 
@@ -338,7 +338,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         this.updateScheduleFieldVisibility(this.customPeriod, period);
         this.dispatchEvent(new CustomEvent(
             'periodchange',
-            { detail: { period }}
+            { detail: period }
         ));
     }
 
@@ -347,15 +347,15 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * @param event
      */
      handleRecurringFrequencyChange(event) {
-        this.dispatchEvent(new CustomEvent('frequencychange'));
+        this.dispatchEvent(new CustomEvent('frequencychange', { detail: event.target.value }));
     }
 
     /**
      * @description When the installments change, we need to check if the Annual Value changed
      * @param event
      */
-     onHandlePlannedInstallmentsChange(event) {
-        this.dispatchEvent(new CustomEvent('installmentschange'));
+     handlePlannedInstallmentsChange(event) {
+        this.dispatchEvent(new CustomEvent('installmentschange', { detail : event.target.value }));
     }
 
     /**

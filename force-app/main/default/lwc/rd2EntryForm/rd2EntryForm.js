@@ -441,21 +441,36 @@ export default class rd2EntryForm extends LightningElement {
      * - Recurring Type change might hide or display the credit card widget.
      * @param event
      */
-    handleRecurringTypeChange() {
+    handleRecurringTypeChange(event) {
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_RECURRING_TYPE,
+                payload: event.detail
+            });
     }
 
     handleRecurringPeriodChange(event) {
         this.recurringPeriod = event.detail.period;
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_RECURRING_PERIOD,
+                payload: event.detail
+            });
     }
 
     handleRecurringPeriodTypeChange(event) {
-        this.periodType = event.detail.periodType;
+        this.periodType = event.detail;
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_PERIOD_TYPE,
+                payload: event.detail
+            });
     }
 
 
@@ -463,7 +478,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Currency change might hide or display the credit card widget
      * @param event
      */
-    handleCurrencyChange() {
+    handleCurrencyChange(event) {
         this.handleElevateWidgetDisplay();
         this.handleDonationValueChange();
     }

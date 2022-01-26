@@ -4,4 +4,7 @@ export const SET_CONTACT_DETAILS = 'set_contact_details';
 export const SET_ACCOUNT_DETAILS = 'set_account_details';
 export const SET_DONOR_TYPE = 'set_donor_type';
 export const SET_DATE_ESTABLISHED = 'set_date_established';
+export const SET_PERIOD_TYPE = 'set_period_type';
+export const SET_RECURRING_TYPE = 'set_recurring_type';
+export const SET_RECURRING_PERIOD = 'set_recurring_period';
 export const INITIAL_VIEW_LOAD = 'initial_view_load';
