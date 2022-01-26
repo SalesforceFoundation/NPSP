@@ -34,8 +34,36 @@
 * and factories for Domains, Selectors, and Services.
 */
 public inherited sharing class Application {
-    /**
-     * Exception representing a developer coding error, not intended for end user eyes
-     **/
-    public class DeveloperException extends Exception { }
+
+    private static fflib_IAppBindingResolver bindingResolver = new fflib_AppBindingResolver();
+
+    public static final fflib_IUnitOfWorkFactory UnitOfWork =
+            new fflib_ClassicUnitOfWorkFactory(
+                    new List<SObjectType>
+                    {
+                            Schema.Account.SObjectType,
+                            Schema.Contact.SObjectType
+                    }
+            );
+
+    public static final fflib_IServiceFactory Service =
+            new fflib_DynamicServiceFactory(bindingResolver)
+                    .setSharingMode(fflib_SharingMode.WithSharing);
+
+    public static final fflib_ISelectorFactory Selector =
+            new fflib_DynamicSelectorFactory(bindingResolver);
+
+    public static final fflib_ISelectorFactory WithoutSharingSelector =
+            new fflib_DynamicSelectorFactory(
+                    bindingResolver.bySharingMode(fflib_SharingMode.WithoutSharing)
+            );
+
+    public static final fflib_ISelectorFactory InheritedSharingSelector =
+            new fflib_DynamicSelectorFactory(
+                    bindingResolver.bySharingMode(fflib_SharingMode.InheritedSharing)
+            );
+
+    public static final fflib_IDomainFactory Domain =
+            new fflib_DynamicDomainFactory(bindingResolver, Selector);
+
 }
