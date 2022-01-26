@@ -179,7 +179,7 @@ global with sharing class Callable_API implements System.Callable {
 
                 return null;
 
-            } when 'settings.enableGiftEntry' {
+            } when 'settings.enablegiftentry' {
                 panelMappingController.enableGiftEntry();
 
                 return null;

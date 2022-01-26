@@ -44,6 +44,7 @@ private with sharing class Callable_API_TEST {
     private static final String JOB_SCHEDULE_ACTION = 'Apex.ScheduleJob';
     private static final String RD2_PAUSE_ACTION = 'rd2.pause';
     private static final String ADVANCED_MAPPING_ACTION = 'settings.enableadvancedmapping';
+    private static final String GIFT_ENTRY_ACTION = 'settings.enablegiftentry';
 
     /**
     * @description verify the TDTM Callable action returns an Object
@@ -133,6 +134,20 @@ private with sharing class Callable_API_TEST {
                 'should be called.');
     }
 
+    @IsTest
+    private static void shouldCallEnableGiftEntryOnAction() {
+        Test.startTest();
+            Callable_API callableApi = new Callable_API();
+            STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new STG_PanelDataImportAdvancedMapping_CTRLMock();
+            callableApi.panelMappingController = stubFor(controllerMock);
+
+            callableApi.call(GIFT_ENTRY_ACTION, null);
+        Test.stopTest();
+
+        System.assert(controllerMock.enableGiftEntryCalled, 'The enabled gift entry controller method ' +
+            'should be called.');
+    }
+
     /**
      * @description Verifies if Enhanced Recurring Donations are enabled
      */
@@ -214,6 +229,7 @@ private with sharing class Callable_API_TEST {
 
     private class STG_PanelDataImportAdvancedMapping_CTRLMock implements StubProvider {
         Boolean enableDataImportMappingCalled = false;
+        Boolean enableGiftEntryCalled = false;
 
         public Object handleMethodCall(
                 Object stubbedObject,
@@ -226,6 +242,9 @@ private with sharing class Callable_API_TEST {
             switch on (stubbedMethodName) {
                 when 'enableDataImportFieldMapping' {
                     enableDataImportMappingCalled = true;
+                }
+                when 'enableGiftEntry' {
+                    enableGiftEntryCalled = true;
                 }
             }
             return null;
