@@ -28,6 +28,11 @@ const LAST_DAY_OF_MONTH = 'Last_Day';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
 
+    @api recordId;
+    @api rd2State;
+
+    @track fields = {};
+
     customLabels = Object.freeze({
         picklistLabelAdvanced,
         fieldLabelEvery,
@@ -43,35 +48,30 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     isRecordReady = false;
     hasError = false;
 
-    @api recordId;
-    @track isLoading = true;
-    @track isAdvancedMode = false;
+    isLoading = true;
+    isAdvancedMode = false;
 
-    @track showDayOfMonth = true;
-    @track showNumPlannedInstallments = false;
-    @track customPeriod = PERIOD.MONTHLY; // default
-    @track customPeriodAdvancedMode;
+    showDayOfMonth = true;
+    showNumPlannedInstallments = false;
+    customPeriod = PERIOD.MONTHLY; // default
+    customPeriodAdvancedMode;
 
-    @track fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
+    fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
 
-    @track fields = {};
-
-    @track inputFieldInstallmentFrequency = 1;
+    inputFieldInstallmentFrequency = 1;
 
     rdObjectInfo;
     defaultDayOfMonthValue;
     defaultInstallmentPeriodValue;
     recurringType;
 
-    @track disablePeriodPicklistField;
-    @track disableInstallmentFrequencyField;
-    @track hidePeriodPicklistField;
-    @track hideInstallmentFrequencyField;
+    disablePeriodPicklistField;
+    disableInstallmentFrequencyField;
+    hidePeriodPicklistField;
+    hideInstallmentFrequencyField;
 
-    @track advancedPeriodPicklistValues;
-
-    @track recurringTypeColumnSize = 6;
-    @track scheduleRowColumnSize = 6;
+    recurringTypeColumnSize = 6;
+    scheduleRowColumnSize = 6;
 
     /***
     * @description Init function
