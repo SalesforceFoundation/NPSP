@@ -63,15 +63,13 @@ export default class BatchProgress extends LightningElement {
         loadBatchJob({ className: this.className })
             .then((data) => {
                 this.prevBatchJob = this.batchJob;
-                this.batchJob = JSON.parse(data);
+                this.batchJob = this.setTotalRecords(JSON.parse(data));
 
                 if (isNull(this.batchJob)) {
                     return;
                 }
 
                 this.hasSummary = !isNull(this.batchJob.summary);
-
-                this.setTotalRecords();
 
                 this.notifyOnStatusChange();
 
@@ -99,10 +97,13 @@ export default class BatchProgress extends LightningElement {
     }
 
     /***
-    * @description Sets the Total Records value based on Processed and Failed
+    * @description Sets the total value as the sum of processed and failed
     */
-    setTotalRecords() {
-        this.batchJob.summary.total = this.batchJob.summary.processed + this.batchJob.summary.failed;
+    setTotalRecords(data) {
+        if(!isNull(data)) {
+            data.summary.total = data.summary.processed + data.summary.failed;
+        }
+        return data;
     }
 
     /***
