@@ -201,7 +201,7 @@ private class GiftBatch_TEST {
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.ABORTED.name())
             .build();
@@ -225,7 +225,7 @@ private class GiftBatch_TEST {
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.FAILED.name())
             .build();
@@ -249,7 +249,7 @@ private class GiftBatch_TEST {
         giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.COMPLETED.name())
             .build();
@@ -273,7 +273,7 @@ private class GiftBatch_TEST {
         giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new List<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.PROCESSING.name())
             .build();
