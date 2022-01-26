@@ -47,7 +47,7 @@ private class GiftBatch_TEST {
 
         System.assert(elevateBatchServiceMock.enqueuePaymentCaptureJobForCalled);
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
-        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
         }
     }
@@ -66,7 +66,7 @@ private class GiftBatch_TEST {
         giftBatch.failGiftsWithReason(buildFailReasonByElevateBatchId(numberOfGifts));
 
         System.assert(authorizedGifts.giftsToUpdate.size() == numberOfGifts);
-        for (DataImport__c gift : authorizedGifts.giftsToUpdate) {
+        for (DataImport__c gift : authorizedGifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }
@@ -201,7 +201,7 @@ private class GiftBatch_TEST {
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.ABORTED.name())
             .build();
@@ -213,7 +213,7 @@ private class GiftBatch_TEST {
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
-        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
             System.assertNotEquals(null, gift.FailureInformation__c);
         }
@@ -225,7 +225,7 @@ private class GiftBatch_TEST {
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts = new Gifts();
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.FAILED.name())
             .build();
@@ -237,7 +237,7 @@ private class GiftBatch_TEST {
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
-        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
             System.assertNotEquals(null, gift.FailureInformation__c);
         }
@@ -249,7 +249,7 @@ private class GiftBatch_TEST {
         giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.COMPLETED.name())
             .build();
@@ -261,7 +261,7 @@ private class GiftBatch_TEST {
 
         System.assertEquals(1, giftBatch.gifts.giftsToUpdate.size());
 
-        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate) {
+        for(DataImport__c gift : giftBatch.gifts.giftsToUpdate.values()) {
             System.assert(gift.Status__c == BDI_DataImport_API.bdiFailed);
             System.assertNotEquals(null, gift.FailureInformation__c);
         }
@@ -273,7 +273,7 @@ private class GiftBatch_TEST {
         giftBatch.gifts = new Gifts();
         giftBatch.giftBatchId = DUMMY_GIFT_BATCH_ID;
         giftBatch.gifts.dataImportsById = buildDataImportsByIds(DUMMY_GIFT_BATCH_ID.value());
-        giftBatch.gifts.giftsToUpdate = new Set<DataImport__c>();
+        giftBatch.gifts.giftsToUpdate = new Map<Id, DataImport__c>();
         giftBatch.asyncApexJob =  new TestAsyncApexJob()
             .withStatus(UTIL_BatchJobService.ApexJobStatus.PROCESSING.name())
             .build();

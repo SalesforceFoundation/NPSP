@@ -133,7 +133,7 @@ private class Gifts_TEST {
             Label.gePaymentServicesUnavailableFailureMessage,
             new List<String> { Label.commonPaymentServices });
 
-        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+        for (DataImport__c dataImport : gifts.giftsToUpdate.values()) {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 numberOfFailedGifts ++;
                 System.assertEquals(expectedFailureInformation, dataImport.FailureInformation__c);
@@ -165,7 +165,7 @@ private class Gifts_TEST {
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
-        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+        for (DataImport__c dataImport : gifts.giftsToUpdate.values()) {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 numberOfFailedGifts ++;
             }
@@ -211,7 +211,7 @@ private class Gifts_TEST {
         gifts.authorizedToPaymentProcessingStatus();
 
         System.assertEquals(10, gifts.giftsToUpdate.size());
-        for (DataImport__c gift : gifts.giftsToUpdate) {
+        for (DataImport__c gift : gifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
         }
     }
@@ -228,7 +228,7 @@ private class Gifts_TEST {
         gifts.failGiftsByElevateBatchIdWithReason(buildFailReasonByElevateBatchId(numberOfFailedGifts, elevateBatchId));
 
         System.assertEquals(numberOfFailedGifts, gifts.giftsToUpdate.size());
-        for (DataImport__c gift : gifts.giftsToUpdate) {
+        for (DataImport__c gift : gifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }

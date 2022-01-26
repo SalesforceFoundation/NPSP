@@ -37,7 +37,7 @@ public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
     @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
-    @TestVisible private Set<DataImport__c> giftsToUpdate = new Set<DataImport__c>();
+    @TestVisible private Map<Id, DataImport__c> giftsToUpdate = new Map<Id, DataImport__c>();
     @TestVisible private GiftSelector giftSelector;
     @TestVisible private DonationSelector donationSelector;
     @TestVisible private Donations donations;
@@ -143,9 +143,7 @@ public with sharing class Gifts {
     }
 
     public void updateRecords() {
-        List<DataImport__c> gifts = new List<DataImport__c>();
-        gifts.addAll(giftsToUpdate);
-        update gifts;
+        update giftsToUpdate.values();
         giftsToUpdate.clear();
     }
 
@@ -156,7 +154,7 @@ public with sharing class Gifts {
     public void authorizedToPaymentProcessingStatus() {
         for (DataImport__c gift : authorizedGifts()) {
             gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 
@@ -169,7 +167,7 @@ public with sharing class Gifts {
     }
 
     public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
-        for (DataImport__c gift : giftsToUpdate) {
+        for (DataImport__c gift : giftsToUpdate.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.hasAuthorizedPayment()) {
@@ -183,7 +181,7 @@ public with sharing class Gifts {
         for (Gift gift : standardGiftsInProcessing()) {
             gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
             gift.asDataImport().FailureInformation__c = failReason;
-            giftsToUpdate.add(gift.asDataImport());
+            giftsToUpdate.put(gift.id(), gift.asDataImport());
         }
     }
 
@@ -208,7 +206,7 @@ public with sharing class Gifts {
         for (DataImport__c dataImport : dataImportsById.values()) {
             if (dataImport.Status__c != BDI_DataImport_API.bdiImported) {
                 dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(dataImport);
+                giftsToUpdate.put(dataImport.Id, dataImport);
             }
         }
     }
@@ -217,7 +215,7 @@ public with sharing class Gifts {
         for (DataImport__c gift : giftsInElevateBatch) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
             gift.FailureInformation__c = failReason;
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 
