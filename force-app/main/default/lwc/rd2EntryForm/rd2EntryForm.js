@@ -473,6 +473,22 @@ export default class rd2EntryForm extends LightningElement {
             });
     }
 
+    handleDayOfMonthChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_DAY_OF_MONTH,
+                payload: event.detail
+            });
+    }
+
+    handleStartDateChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_START_DATE,
+                payload: event.detail
+            });
+    }
+
 
     /***
      * @description Currency change might hide or display the credit card widget

@@ -91,6 +91,7 @@
                             <lightning-input-field
                                     field-name={fields.dayOfMonth.apiName}
                                     value={defaultDayOfMonth}
+                                    onchange={handleDayOfMonthChange}
                                     data-id="dayOfMonth"
                                     required>
                             </lightning-input-field>
@@ -101,6 +102,7 @@
                                            if:true={fields.startDate}>
                         <lightning-input-field
                                 field-name={fields.startDate.apiName}
+                                onchange={handleStartDateChange}
                                 data-id="startDate"
                                 required>
                         </lightning-input-field>

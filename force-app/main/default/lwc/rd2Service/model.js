@@ -3,13 +3,18 @@ import {
     SET_ACCOUNT_ID,
     SET_CONTACT_DETAILS,
     SET_ACCOUNT_DETAILS,
+    SET_DAY_OF_MONTH,
     SET_DONOR_TYPE,
     SET_DATE_ESTABLISHED,
     SET_PERIOD_TYPE,
+    SET_START_DATE,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
+    SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD
 } from "./actions";
+
+import { PERIOD } from 'c/rd2Service';
 
 const DEFAULT_INITIAL_STATE = {
     // RD2 Record
@@ -29,7 +34,7 @@ const DEFAULT_INITIAL_STATE = {
 
     //schedule
     donationValue: null,
-    recurringPeriod: null, // Monthly / Yearly / 1st and 15th
+    recurringPeriod: null, // Monthly / Yearly / 1st and 15th. When periodType is Monthly, recurringPeriod is Monthly.
     periodType: null, // Monthly or Advanced
     recurringFrequency: null, // Every *2* Months
     startDate: null,
@@ -57,14 +62,14 @@ const DEFAULT_INITIAL_STATE = {
     periodToYearlyFrequencyMap: null,
     closedStatusValues: [],
     defaultInstallmentPeriod: null // new!
-}
+};
 
 const setAccountId = (state, accountId) => {
     return {
         ...state,
         accountId
     };
-}
+};
 
 const setContactId = (state, contactId) => {
     return {
@@ -99,19 +104,49 @@ const setDonorType = (state, donorType) => {
     };
 };
 
+const setStartDate = (state, startDate) => {
+    return {
+        ...state,
+        startDate
+    };
+};
+
+const setPeriodType = (state, periodType) => {
+    return {
+        ...state,
+        periodType
+    };
+};
+
+const setPlannedInstallments = (state, plannedInstallments) => {
+    return {
+        ...state,
+        plannedInstallments
+    };
+};
+
 const setRecurringPeriod = (state, recurringPeriod) => {
     return {
         ...state,
         recurringPeriod
     };
-}
+};
 
 const setRecurringType = (state, recurringType) => {
+    const isMonthly = recurringType === PERIOD.MONTHLY;
     return {
         ...state,
-        recurringType
+        recurringType,
+        recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod
     };
-}
+};
+
+const setDayOfMonth = (state, dayOfMonth) => {
+    return {
+        ...state,
+        dayOfMonth
+    };
+};
 
 const setDateEstablished = (state, dateEstablished) => {
     return {
@@ -127,7 +162,7 @@ const loadInitialView = (state, payload) => {
         ...record,
         ...rest
     };
-}
+};
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
     switch (action.type) {
@@ -139,16 +174,22 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setContactDetails(state, action.payload);
         case SET_ACCOUNT_DETAILS:
             return setAccountDetails(state, action.payload);
+        case SET_DAY_OF_MONTH:
+            return setDayOfMonth(state, action.payload);
         case SET_DONOR_TYPE:
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
             return setDateEstablished(state, action.payload);
+        case SET_PLANNED_INSTALLMENTS:
+            return setPlannedInstallments(state, action.payload);
         case SET_RECURRING_PERIOD:
             return setRecurringPeriod(state, action.payload);
         case SET_RECURRING_TYPE:
             return setRecurringType(state, action.payload);
         case SET_PERIOD_TYPE:
             return setPeriodType(state, action.payload);
+        case SET_START_DATE:
+            return setStartDate(state, action.payload);
         case INITIAL_VIEW_LOAD:
             return loadInitialView(state, action.payload);
         default:
