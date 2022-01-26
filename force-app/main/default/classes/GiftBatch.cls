@@ -144,10 +144,11 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private void prepareGiftsForProcessing() {
         gifts.prepareForProcessing();
-        updateRecords();
+
         if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
             captureAuthorizedGifts();
         }
+        updateRecords();
     }
 
     private void failGiftsWith(String failReason) {

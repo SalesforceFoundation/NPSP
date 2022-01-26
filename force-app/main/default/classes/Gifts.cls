@@ -37,7 +37,7 @@ public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
     @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
-    @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private Set<DataImport__c> giftsToUpdate = new Set<DataImport__c>();
     @TestVisible private GiftSelector giftSelector;
     @TestVisible private DonationSelector donationSelector;
     @TestVisible private Donations donations;
@@ -143,7 +143,9 @@ public with sharing class Gifts {
     }
 
     public void updateRecords() {
-        update giftsToUpdate;
+        List<DataImport__c> gifts = new List<DataImport__c>();
+        gifts.addAll(giftsToUpdate);
+        update gifts;
         giftsToUpdate.clear();
     }
 
