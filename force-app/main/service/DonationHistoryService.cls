@@ -73,14 +73,25 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
             Partial_Soft_Credit__c.Amount__c,
             Partial_Soft_Credit__c.Contact_Role_ID__c
+        }) && permissions.canRead(npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
+            npe01__OppPayment__c.npe01__Payment_Method__c,
+            npe01__OppPayment__c.npe01__Opportunity__c
         });
     }
 
+    public Boolean checkIfPaymentsAreEnabled() {
+        return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
+    }
+
+    public String getPaymentMethodLabel() {
+        return Schema.DataImport__c.Payment_Method__c.getDescribe().getLabel();
+    }
+    
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
-    * @param contactId contact id which is going to be requested.
+    * @return List<Opportunity> returns Opportunities and Payment Method for them.
     */
     public List<Opportunity> getDonationHistory() {
         if (hasAccessToDonationHistory()) {

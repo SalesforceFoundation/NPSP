@@ -6262,6 +6262,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Update</value>
     </labels>
     <labels>
+        <fullName>commonDate</fullName>
+        <categories>Donation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Date</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
         <fullName>commonViewAll</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
