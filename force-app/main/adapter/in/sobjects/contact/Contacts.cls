@@ -144,8 +144,8 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return householdIdsToRename;
     }
 
-    public List<Id> getHouseholdIdsForContactsWithDeceasedUpdates(List<Id> accountsToRename) {
-        Set<Id> uniqueAccountsToHandle = new Set<Id>(accountsToRename);
+    public List<Id> getHouseholdIdsToRenameAndAggregate() {
+        Set<Id> uniqueAccountsToHandle = new Set<Id>(getHouseholdIdsToRename());
 
         for (Contact contactRecord : (List<Contact>) getRecords()) {
             Contact oldContact = oldVersionOf(contactRecord);
