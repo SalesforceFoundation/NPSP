@@ -17,4 +17,19 @@ export default class GeModalRecurringDonation extends LightningElement {
         baseClass.push('slds-theme_'+ this.variant);
         return baseClass.join(' ');
     }
+
+    get scheduleComponent() {
+        return this.template.querySelectorAll("[data-id=\"scheduleComponent\"]")[0];
+    }
+
+    handleCreateRecurrence() {
+        console.log('geModalRecurringDonation: handleCreateRecurrence');
+        const scheduleData = this.scheduleComponent.returnValues();
+        this.createRecurrenceCallback(scheduleData);
+    }
+
+    handleCancel() {
+        console.log('geModalRecurringDonation: handleCancel');
+        this.cancelCallback();
+    }
 }
