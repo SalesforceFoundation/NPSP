@@ -324,7 +324,11 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
-        Date expectedDonationDate = scheduleService.getNextDonationDateAfter(baseDate, this, rd.RecurringDonationSchedules__r).addDays(1);
+        Date expectedDonationDate = scheduleService.getNextDonationDateAfter(
+            baseDate.addDays(1),
+            this,
+            rd.RecurringDonationSchedules__r
+        );
 
         if(isActive() && rdSettings.isStatusAutomationForLapsedEnabled()) {
             Date lapsedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForLapsed);
