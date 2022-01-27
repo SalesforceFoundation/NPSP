@@ -405,7 +405,7 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description The source of the gift entry batch process - UI or someplace else
     */
-    public static Boolean isFromGiftEntryUI = isExecutionSourceUserInterface();
+    public static Boolean isFromGiftEntryUI = UTIL_BatchJobService.isExecutionSourceFromUserInterface();
 
     /*******************************************************************************************************
     * @description holds the performance logger object for tracking performance metrics during processing.
@@ -461,18 +461,6 @@ global with sharing class BDI_DataImportService {
             return isCustomIdInAccountDatatypeString;
         }
         set;
-    }
-
-    /*******************************************************************************************************
-    * @description Sets isFromGiftEntryUI value using the system Quiddity to determine where the execution originates from
-    * @return void
-    */    
-    private static Boolean isExecutionSourceUserInterface() {
-        Request reqInfo = Request.getCurrent();
-        String currentRequestId = reqInfo.getRequestId();
-        Quiddity currentType = reqInfo.getQuiddity();
-        
-        return (currentType == System.Quiddity.AURA);
     }
 
     /*******************************************************************************************************
