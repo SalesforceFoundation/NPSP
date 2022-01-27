@@ -364,39 +364,20 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      * this Picklist on this UI.
      */
     get advancedPeriodOptions() {
-        let advancedPeriodPicklistValues = [];
-        this.installmentPeriodPicklistValues
-            .forEach(pl => {
-                switch (pl.value) {
-                    case PERIOD.DAILY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralDays, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.WEEKLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralWeeks, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.MONTHLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralMonths, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.YEARLY:
-                        advancedPeriodPicklistValues.push(
-                            {label: this.customLabels.periodPluralYears, value: pl.value}
-                        );
-                        break;
-                    case PERIOD.FIRST_AND_FIFTEENTH:
-                        advancedPeriodPicklistValues.push(
-                            {label: pl.label, value: pl.value}
-                        );
-                        break;
-                }
-
-            });
-        return advancedPeriodPicklistValues;
+        return this.installmentPeriodPicklistValues.map(({ label, value }) => {
+            switch (value) {
+                case PERIOD.DAILY:
+                    return { label: this.customLabels.periodPluralDays, value };
+                case PERIOD.WEEKLY:
+                    return { label: this.customLabels.periodPluralWeeks, value };
+                case PERIOD.MONTHLY:
+                    return { label: this.customLabels.periodPluralMonths, value };
+                case PERIOD.YEARLY:
+                    return { label: this.customLabels.periodPluralYears, value };
+                default:
+                    return { label, value };
+            }
+        });
     }
 
     /**
