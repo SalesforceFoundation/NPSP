@@ -61,6 +61,16 @@ public class DonationHistoryController_TEST {
             StageName='Closed Won', 
             CloseDate=myDateTime
         );
+
+        Opportunity opportunityAnotherHardCreditOfContact0 = new Opportunity(
+            Name='HardCredit2', 
+            AccountId=accSrc.Id, 
+            Primary_Contact__c=listConSrc[0].Id, 
+            Amount=400, 
+            StageName='Closed Won', 
+            CloseDate=dateTimeInPast
+        );
+
         Opportunity opportunityForContact1 = new Opportunity(
             Name='SoftCredit1', 
             AccountId=accSrc.Id, 
@@ -79,7 +89,7 @@ public class DonationHistoryController_TEST {
             CloseDate=dateTimeInPast
         );
         
-        List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
+        List<Opportunity> recordsOpp = new List<Opportunity> {opportunityHardCreditOfContact0, opportunityAnotherHardCreditOfContact0, opportunityForContact1, anotherOpportunityForContact1};
         insert recordsOpp;
     }
 
@@ -93,11 +103,11 @@ public class DonationHistoryController_TEST {
         Contact testContact = findContactByFirstname('TestFirstName10');
         
         Test.startTest();
-        List<DonationHistoryController.DonationHistoryView> donationHistory = 
+        DonationHistoryController.DonationHistoryAppView donationHistory = 
             DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
         Test.stopTest();
 
-        System.assertEquals(1, donationHistory.size(), 'Should return only 1 record');
+        System.assertEquals(2, donationHistory.donations.size(), 'Should return only 2 record');
     }
 
     /** 
@@ -110,10 +120,10 @@ public class DonationHistoryController_TEST {
         Contact testContact = findContactByFirstname('TestFirstName12');
         
         Test.startTest();
-        List<DonationHistoryController.DonationHistoryView> donationHistory = 
+        DonationHistoryController.DonationHistoryAppView donationHistory = 
         DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime');
         Test.stopTest();
-        System.assertEquals(0, donationHistory.size(), 'Should not return records');
+        System.assertEquals(0, donationHistory.donations.size(), 'Should not return records');
     }
 
     /** 
@@ -129,7 +139,7 @@ public class DonationHistoryController_TEST {
         try{
             Test.startTest();
             System.runAs(u){
-                List<DonationHistoryController.DonationHistoryView> donationHistory = 
+                DonationHistoryController.DonationHistoryAppView donationHistory = 
                 DonationHistoryController.getDonationHistory(testContact.Id, 'lifetime'); 
             }
 	        Test.stopTest();
@@ -153,14 +163,14 @@ public class DonationHistoryController_TEST {
     @IsTest
     private static void shouldReturnOneElementFor2019(){
         
-        Contact testContact =findContactByFirstname('TestFirstName11');        
+        Contact testContact =findContactByFirstname('TestFirstName10');        
        
         Test.startTest();
-        List<DonationHistoryController.DonationHistoryView> donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, '2019');
+        DonationHistoryController.DonationHistoryAppView donationHistory = DonationHistoryController.getDonationHistory(testContact.Id, '2019');
         Test.stopTest();
 
         System.assertNotEquals(null, donationHistory, 'Donation History should not be empty');
-        System.assertEquals(1, donationHistory.size(), 'donationHistory should contain only one element');
+        System.assertEquals(1, donationHistory.donations.size(), 'donationHistory should contain only one element');
     }
 
     private static Contact findContactByFirstName(String firstName) {

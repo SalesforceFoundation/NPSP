@@ -1,4 +1,4 @@
-import { api, LightningElement, wire } from 'lwc';
+import { api, LightningElement, wire, track } from 'lwc';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 import DATA_IMPORT from '@salesforce/schema/DataImport__c';
 import PAYMENT_FIELD from '@salesforce/schema/DataImport__c.Payment_Method__c';
@@ -7,6 +7,7 @@ import RD2_ScheduleVisualizerColumnDate from '@salesforce/label/c.RD2_ScheduleVi
 import getDonationHistory from '@salesforce/apex/DonationHistoryController.getDonationHistory';
 import commonAmount from '@salesforce/label/c.commonAmount';
 import donationHistoryDonorLabel from '@salesforce/label/c.donationHistoryDonorLabel';
+import commonDate from "@salesforce/label/c.commonDate";
 const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;
@@ -25,8 +26,11 @@ export default class DonationHistoryTable extends LightningElement {
 
     label = {
         donationHistoryDatatableAriaLabel,
-    }
+    };
 
+    arePaymentsEnabled = false;
+
+    @track
     columns = [];
 
     @wire(getObjectInfo, { objectApiName: DATA_IMPORT })
@@ -66,19 +70,48 @@ export default class DonationHistoryTable extends LightningElement {
         getDonationHistory({contactId: this.contactId, filter : this.filter})
         .then(data => {
             if (data) {
-                this.allData = data;
-                this.data = data.slice(0, RECORDS_TO_LOAD);
-                this.totalNumberOfRows = data.length;
+                this.allData = data.donations;
+                this.data = data.donations.slice(0, RECORDS_TO_LOAD);
+                this.totalNumberOfRows = data.donations.length;
+                this.paymentMethodLabel = data.paymentMethodLabel;
+                this.arePaymentsEnabled = data.isPaymentsEnabled;
+
+                this.columns = [
+                    {
+                        label: commonDate,
+                        fieldName: "closeDate",
+                        type: "date-local",
+                        typeAttributes: {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                        },
+                        cellAttributes: { alignment: "right" },
+                    },
+                    {
+                        label: donationHistoryDonorLabel,
+                        fieldName: "name",
+                        type: "text",
+                    },
+                    { label: commonAmount, fieldName: "amount", type: "currency" },
+                ];
+                if (this.arePaymentsEnabled) {
+                    this.columns.push({
+                        label: this.paymentMethodLabel,
+                        fieldName: "paymentMethod",
+                        type: "text",
+                    });
+                }
             }
         });
     }
 
     /**
-     * 
-     * @param {*} event 
+     *
+     * @param {*} event
      * handle the scroll event to get more content and concat to the existing table data
      */
-    loadMoreDonationData(event){
+    loadMoreDonationData(event) {
         event.target.isLoading = true;
         if (this.data.length >= this.totalNumberOfRows) {
             event.target.enableInfiniteLoading = false;
