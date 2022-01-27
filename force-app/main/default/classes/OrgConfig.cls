@@ -61,6 +61,10 @@ public inherited sharing class OrgConfig {
         return validCountriesByCode;
     }
 
+    public Boolean isPersonAccountsEnabled() {
+        return UTIL_Describe.isValidField(String.valueOf(Account.SObjectType), 'isPersonAccount');
+    }
+
     /*******************************************************************************************************
     * @description specifies whether state and country picklists are enabled in this org.
     * @return true if enabled
