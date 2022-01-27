@@ -3,7 +3,6 @@ import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
 import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from 'c/rd2Service';
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 
 import picklistLabelAdvanced from '@salesforce/label/c.RD2_EntryFormPeriodAdvanced';
 import customPeriodHelpText from '@salesforce/label/c.RD2_EntryFormPeriodHelpText';
@@ -86,30 +85,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     init() {
         if (isNull(this.recordId)) {
             this.isNew = true;
-            this.updateScheduleFieldVisibility(PERIOD.MONTHLY, PERIOD.MONTHLY);
-            this.updatePlannedInstallmentsVisibility();
-        } else {
-            /**
-             * @description Retrieve the RD Schedule related fields from apex to configure the custom picklist values
-             * and field visibility rules accordingly.
-             */
-            getRecurringData({recordId: this.recordId})
-                .then(response => {
-                    // this.customPeriod = response.Period;
-                    // this.recurringType = response.RecurringType;
-                    // this.inputFieldInstallmentFrequency = response.Frequency;
-                    if (response.Period !== PERIOD.MONTHLY
-                        || (response.Period === PERIOD.MONTHLY && this.inputFieldInstallmentFrequency > 1)
-                    ) {
-                        this.customPeriod = RECURRING_PERIOD_ADVANCED;
-                    }
-                    this.updateScheduleFieldVisibility(this.customPeriod, response.Period);
-                    this.updatePlannedInstallmentsVisibility();
-                })
-                .catch((error) => {
-                    this.hasError = true;
-                    this.dispatchEvent(new CustomEvent('errorevent', { detail: { value: error }}));
-                });
         }
 
         /**

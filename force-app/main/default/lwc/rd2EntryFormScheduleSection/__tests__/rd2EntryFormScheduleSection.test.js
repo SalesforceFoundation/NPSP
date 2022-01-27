@@ -281,23 +281,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
             controller = new Rd2EntryFormScheduleSectionTestController(component);
         });
 
-        it('alerts parent component when getRecurringData fails', async () => {
-            getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
-            const errorMessage = {
-                "status": 500,
-                "body": {
-                    "message": "List has now rows for assignment to SObject"
-                }
-            };
-            getRecurringData.mockRejectedValue(errorMessage);
-            document.body.appendChild(component);
-            await setupWires();
-            await flushPromises();
-
-            expect(mockHandleError.mock.calls[0][0].detail).toMatchObject({value: errorMessage});
-        });
-
-
         it('alerts parent component when wiredGetRecurringObjectInfo fails', async () => {
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             getRecurringData.mockResolvedValue(mockGetRecurringDataFixed);
