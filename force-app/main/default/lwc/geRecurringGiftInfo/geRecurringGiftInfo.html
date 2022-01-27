@@ -1,0 +1,19 @@
+<template>
+    <article class='slds-box slds-m-bottom_small'>
+        <lightning-layout>
+            <lightning-layout-item size='8'>
+                {scheduleAsString}
+            </lightning-layout-item>
+            <lightning-layout-item size='4'>
+                <lightning-button class='slds-m-horizontal_xx-small'
+                                  label='Edit'
+                                  onclick={handleCancel}>
+                </lightning-button>
+                <lightning-button class='slds-m-horizontal_xx-small'
+                                  label='Remove Recurrence'
+                                  onclick={handleCreateRecurrence}>
+                </lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </article>
+</template>
