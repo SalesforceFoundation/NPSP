@@ -466,13 +466,17 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(rdRecord, rdSchedules);
+        return getNextDonationDateAfter(currentDate, rdRecord, rdSchedules);
+    }
+
+    public Date getNextDonationDateAfter(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(referenceDate, rdRecord, rdSchedules);
 
         return record != null && record.getInstallment() != null
             ? record.getInstallment().nextDonationDate
             : null;
-    }
 
+    }
     /***
     * @description Calculates the date of the next donation and returns the Opportunity matcher record
     * that contains the next donation installment and might contain the matching open Opportunity.
@@ -480,7 +484,7 @@ public without sharing class RD2_ScheduleService {
     * @param rdSchedules Schedules on the Recurring Donation record
     * @return RD2_OpportunityMatcher.Record
     */
-    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+    public RD2_OpportunityMatcher.Record getNextDonationDateRecord(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
 
         if (rdSchedules == null || rdSchedules.isEmpty()
             || rdRecord.isClosed()
@@ -491,12 +495,12 @@ public without sharing class RD2_ScheduleService {
 
         evaluateScheduleEndDate(rdRecord, rdSchedules);
 
-        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(currentDate)
+        RD2_OpportunityMatcher matcher = new RD2_OpportunityMatcher(referenceDate)
             .includeCurrent(rdRecord.getOpportunities());
 
         Integer numberOfInstallments = matcher.getNumberOfOpportunities() + 1;
         matcher.match(getVisualizedInstallments(
-            currentDate, numberOfInstallments, rdSchedules
+            referenceDate, numberOfInstallments, rdSchedules
         ));
 
         return getNextDonationDateRecord(matcher);
