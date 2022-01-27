@@ -466,16 +466,19 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDate(RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        return getNextDonationDateAfter(currentDate, rdRecord, rdSchedules);
-    }
-
-    public Date getNextDonationDateAfter(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(referenceDate, rdRecord, rdSchedules);
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(currentDate, rdRecord, rdSchedules);
 
         return record != null && record.getInstallment() != null
             ? record.getInstallment().nextDonationDate
             : null;
+    }
 
+    public Date getNextDonationDateAfter(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(currentDate, rdRecord, rdSchedules);
+
+        return record != null
+            ? record.getInstallment().nextDonationDate
+            : null;
     }
     /***
     * @description Calculates the date of the next donation and returns the Opportunity matcher record
