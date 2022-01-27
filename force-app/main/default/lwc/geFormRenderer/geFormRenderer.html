@@ -156,6 +156,11 @@
                         </lightning-layout>
                     </template>
                     <template if:false={isSingleGiftEntry}>
+                        <lightning-button if:true={isRecurringGiftsEnabled}
+                                          label='Make Recurring'
+                                          data-id='recurringButton'
+                                          onclick={handleMakeGiftRecurring}>
+                        </lightning-button>
                         <c-util-expandable-section class='slds-card slds-card_extension slds-m-bottom_large'
                                                    id={expandableContainerId}
                                                    is-collapsed={isFormCollapsed}

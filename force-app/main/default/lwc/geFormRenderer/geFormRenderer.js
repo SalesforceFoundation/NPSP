@@ -281,6 +281,10 @@ export default class GeFormRenderer extends LightningElement{
             this.CUSTOM_LABELS.geButtonCancelAndClear;
     }
 
+    get isRecurringGiftsEnabled() {
+        return Settings.isRecurringGiftsEnabled();
+    }
+
     @wire(getRecord, {recordId: '$donorRecordId', optionalFields: '$fieldNames'})
     wiredGetRecordMethod({error, data}) {
         if (data) {
@@ -344,6 +348,14 @@ export default class GeFormRenderer extends LightningElement{
                 }
             }
         });
+    }
+
+    handleMakeGiftRecurring() {
+        console.log('handleMakeGiftRecurring');
+    }
+
+    createRecurrenceCallback(scheduleData) {
+        console.log('geFormRenderer: createRecurrenceCallback');
     }
 
     handleWidgetStateChange(changeEvent) {
