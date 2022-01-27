@@ -6,7 +6,7 @@ describe('c-ge-modal-recurring-donation', () => {
         clearDOM();
     });
 
-    const setup = (cancelCallback=jest.fn(), createRecurrenceCallback=jest.fn()) => {
+    const setup = (cancelCallback, createRecurrenceCallback) => {
         const modalElement = createElement('c-ge-modal-recurring-donation', {
             is: GeModalRecurringDonation
         });
@@ -45,11 +45,36 @@ describe('c-ge-modal-recurring-donation', () => {
 
     describe('callback behavior', () => {
         it('calls provided callback for cancel button', async () => {
+            const mockCancelButtonCallback = jest.fn();
+            const modalElement = setup(mockCancelButtonCallback);
+            await flushPromises();
 
+            const buttons = modalElement.shadowRoot.querySelectorAll('lightning-button');
+            const cancelButton = buttons[0];
+            cancelButton.click();
+
+            expect(mockCancelButtonCallback).toHaveBeenCalled();
         });
 
         it('calls provided callback for create recurrence button', async () => {
+            const mockCreateRecurrenceCallback = jest.fn();
+            const modalElement = setup(jest.fn(), mockCreateRecurrenceCallback);
 
+            const scheduler = modalElement.shadowRoot.querySelector('[data-id="scheduleComponent"]');
+            scheduler.isValid = jest.fn(() => true);
+            scheduler.returnValues = jest.fn(() => ({
+                dummyField: 'dummyValue'
+            }));
+            await flushPromises();
+
+            const buttons = modalElement.shadowRoot.querySelectorAll('lightning-button');
+            const createRecurrenceButton = buttons[1];
+            createRecurrenceButton.click();
+
+            expect(mockCreateRecurrenceCallback).toHaveBeenCalled();
+            expect(mockCreateRecurrenceCallback).toHaveBeenCalledWith({
+                dummyField: 'dummyValue'
+            });
         });
     });
 });
