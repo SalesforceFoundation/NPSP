@@ -27,11 +27,16 @@ class Gift {
             if (giftView.processedSoftCredits) {
                 this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
             }
+            this._schedule = giftView.schedule;
         }
     }
 
     id() {
         return this._fields.Id;
+    }
+
+    hasSchedule() {
+        return this?._schedule;
     }
 
     addSchedule(scheduleData) {
@@ -133,7 +138,8 @@ class Gift {
         return {
             fields: { ...this._fields },
             softCredits: JSON.stringify([ ...this._softCredits.unprocessedSoftCredits() ]),
-            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ])
+            processedSoftCredits: JSON.stringify([ ...this._softCredits.processedSoftCredits() ]),
+            schedule: { ...this._schedule }
         }
     }
 
