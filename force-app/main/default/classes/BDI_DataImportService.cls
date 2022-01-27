@@ -343,7 +343,27 @@ global with sharing class BDI_DataImportService {
             dataImportBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
             dataImportBatch.Records_Failed__c = cRecordsFailed;
             UTIL_DMLService.updateRecord(dataImportBatch);
+
+            if (isFromGiftEntryUI) {
+                instrumentGiftEntryResults(cRecordsSucceeded);
+            }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Instrument that multiple gift were successfully processed through the GiftEntry Batch UI
+    * but only if this originated from the UI context
+    * @param DataImportBatch__c record
+    * @return void
+    */
+    public static void instrumentGiftEntryResults(Integer records) {
+        try {
+            sfdoInstrumentationService.getInstance().log(
+                sfdoInstrumentationEnum.Feature.GiftEntry,
+                sfdoInstrumentationEnum.Component.Page,
+                sfdoInstrumentationEnum.Action.Save,
+                records);
+        } catch (Exception ex) {}
     }
 
     /*******************************************************************************************************
@@ -371,6 +391,11 @@ global with sharing class BDI_DataImportService {
     * @description whether the processing should be done in Dry Run mode (vs. normal mode).
     */
     global Boolean isDryRun { get; private set; }
+
+    /*******************************************************************************************************
+    * @description The source of the gift entry batch process - UI or someplace else
+    */
+    public static Boolean isFromGiftEntryUI = isExecutionSourceUserInterface();
 
     /*******************************************************************************************************
     * @description holds the performance logger object for tracking performance metrics during processing.
@@ -426,6 +451,18 @@ global with sharing class BDI_DataImportService {
             return isCustomIdInAccountDatatypeString;
         }
         set;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets isFromGiftEntryUI value using the system Quiddity to determine where the execution originates from
+    * @return void
+    */    
+    private static Boolean isExecutionSourceUserInterface() {
+        Request reqInfo = Request.getCurrent();
+        String currentRequestId = reqInfo.getRequestId();
+        Quiddity currentType = reqInfo.getQuiddity();
+        
+        return (currentType == System.Quiddity.AURA);
     }
 
     /*******************************************************************************************************

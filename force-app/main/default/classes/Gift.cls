@@ -126,13 +126,8 @@ public with sharing class Gift {
             new List<DataImport__c> { this.dataImport },
             false);
 
-            if (this.dataImport.FailureInformation__c == null) {
-            /** Instrument that a single gift was processed through the GiftEntry UI */
-            sfdoInstrumentationService.getInstance().log(
-                sfdoInstrumentationEnum.Feature.GiftEntry,
-                sfdoInstrumentationEnum.Component.Page,
-                sfdoInstrumentationEnum.Action.Save,
-                1);
+        if (this.dataImport.FailureInformation__c == null) {
+            BDI_DataImportService.instrumentGiftEntryResults(1);
         }
     }
 
