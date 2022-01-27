@@ -13,6 +13,7 @@ import { GIFT_STATUSES, PAYMENT_STATUSES } from 'c/geConstants';
 
 class Gift {
     _softCredits = new SoftCredits();
+    _schedule = {};
     _fields = {};
 
     constructor(giftView) {
@@ -31,6 +32,10 @@ class Gift {
 
     id() {
         return this._fields.Id;
+    }
+
+    addSchedule(scheduleData) {
+        this._schedule = scheduleData;
     }
 
     isFailed() {
@@ -109,7 +114,8 @@ class Gift {
     forSave() {
         return {
             fields: this.asDataImport(),
-            softCredits: [ ...this._softCredits.forSave() ]
+            softCredits: [ ...this._softCredits.forSave() ],
+            schedule: this._schedule
         }
     }
 

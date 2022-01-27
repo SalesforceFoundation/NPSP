@@ -351,7 +351,6 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleMakeGiftRecurring() {
-        console.log('handleMakeGiftRecurring');
         const componentProperties = {
             cancelCallback: () => {
                 fireEvent(this.pageRef, 'geModalCloseEvent', {})
@@ -372,7 +371,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     createRecurrence(scheduleData) {
-        console.log('geFormRenderer: createRecurrence');
+        this.dispatchEvent(new CustomEvent('schedulechange', { detail: scheduleData }));
     }
 
     handleWidgetStateChange(changeEvent) {

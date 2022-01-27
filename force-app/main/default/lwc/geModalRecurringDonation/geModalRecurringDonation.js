@@ -23,13 +23,11 @@ export default class GeModalRecurringDonation extends LightningElement {
     }
 
     handleCreateRecurrence() {
-        console.log('geModalRecurringDonation: handleCreateRecurrence');
         const scheduleData = this.scheduleComponent.returnValues();
         this.createRecurrenceCallback(scheduleData);
     }
 
     handleCancel() {
-        console.log('geModalRecurringDonation: handleCancel');
         this.cancelCallback();
     }
 }

@@ -33,7 +33,6 @@ describe('c-ge-modal-recurring-donation', () => {
             const buttons = modalElement.shadowRoot.querySelectorAll('lightning-button');
             const cancelButton = buttons[0];
             const createRecurrenceButton = buttons[1];
-            console.log(buttons);
 
             expect(buttons.length).toBe(2);
             expect(cancelButton).toBeDefined();
