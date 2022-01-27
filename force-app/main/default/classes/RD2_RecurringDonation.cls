@@ -319,7 +319,7 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     private void statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
-        if (isPaused() || isClosed() || !new RD2_StatusAutomationService().isSettingValid()) {
+        if (isPaused() || isClosed() || !hasSchedule() || !new RD2_StatusAutomationService().isSettingValid() || isElevateRecord()) {
             return;
         }
 
