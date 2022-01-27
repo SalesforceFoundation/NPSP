@@ -2,16 +2,24 @@
     <article class='slds-box slds-m-bottom_small'>
         <lightning-layout>
             <lightning-layout-item size='8'>
-                {scheduleAsString}
+                <span data-id='scheduleInfo'>
+                    {scheduleAsString}
+                </span>
             </lightning-layout-item>
             <lightning-layout-item size='4'>
-                <lightning-button class='slds-m-horizontal_xx-small'
-                                  label='Edit'
-                                  onclick={handleCancel}>
+                <lightning-button
+                    class='slds-m-horizontal_xx-small'
+                    label='Edit'
+                    onclick={handleEdit}
+                    data-id='edit'
+                    >
                 </lightning-button>
-                <lightning-button class='slds-m-horizontal_xx-small'
-                                  label='Remove Recurrence'
-                                  onclick={handleCreateRecurrence}>
+                <lightning-button
+                    class='slds-m-horizontal_xx-small'
+                    label='Remove Recurrence'
+                    onclick={handleRemoveRecurrence}
+                    data-id='removeRecurrence'
+                    >
                 </lightning-button>
             </lightning-layout-item>
         </lightning-layout>
