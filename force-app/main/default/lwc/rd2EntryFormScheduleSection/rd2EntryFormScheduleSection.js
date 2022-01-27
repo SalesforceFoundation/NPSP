@@ -2,7 +2,6 @@ import { LightningElement, api, track, wire } from 'lwc';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { isNull } from 'c/utilCommon';
 import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_OPEN, RECURRING_TYPE_FIXED } from 'c/rd2Service';
-import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 
 import picklistLabelAdvanced from '@salesforce/label/c.RD2_EntryFormPeriodAdvanced';
 import customPeriodHelpText from '@salesforce/label/c.RD2_EntryFormPeriodHelpText';
@@ -27,7 +26,6 @@ const LAST_DAY_OF_MONTH = 'Last_Day';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
 
-    @api recordId;
     @api rd2State;
 
     @track fields = {};
@@ -43,7 +41,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         periodPluralYears
     });
 
-    isNew = false;
     isRecordReady = false;
     hasError = false;
 
@@ -72,43 +69,24 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     recurringTypeColumnSize = 6;
     scheduleRowColumnSize = 6;
 
-    /***
-    * @description Init function
-    */
-    connectedCallback() {
-        this.init();
+    get isNew() {
+        return isNull(this.rd2State.recordId);
     }
 
-     /***
-    * @description Get settings required to enable or disable fields and populate their values
-    */
-    init() {
-        if (isNull(this.recordId)) {
-            this.isNew = true;
-        }
+    get _hidePeriodPicklistField() {
+        return this.shouldHideField(this.rd2State.InstallmentPeriodPermissions);
+    }
 
-        /**
-         * @description Retrieve special RD settings and permissions from Apex that cannot be retrieved effecively here.
-         */
-        getRecurringSettings({ parentId: null })
-            .then(response => {
-                this.disablePeriodPicklistField = this.shouldDisableField(response.InstallmentPeriodPermissions);
-                this.hidePeriodPicklistField = this.shouldHideField(response.InstallmentPeriodPermissions);
+    get _disablePeriodPicklistField() {
+        return this.shouldDisableField(this.rd2State.InstallmentPeriodPermissions);
+    }
 
-                this.disableInstallmentFrequencyField = this.shouldDisableField(response.InstallmentFrequencyPermissions);
-                this.hideInstallmentFrequencyField = this.shouldHideField(response.InstallmentFrequencyPermissions);
+    get _hideInstallmentFrequencyField() {
+        return this.shouldHideField(this.rd2State.InstallmentFrequencyPermissions);
+    }
 
-                // if (isEmpty(this.recurringType)) {
-                //     this.recurringType = response.defaultRecurringType;
-                // }
-                this.updatePlannedInstallmentsVisibility();
-            })
-            .catch((error) => {
-                // handleError(error);
-            })
-            .finally(() => {
-                this.isLoading = !this.isEverythingLoaded();
-            });
+    get _disableInstallmentFrequencyField() {
+        return this.shouldDisableField(this.rd2State.InstallmentFrequencyPermissions);
     }
 
     /**

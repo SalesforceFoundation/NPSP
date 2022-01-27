@@ -230,7 +230,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
     describe('editing an existing record', () => {
         beforeEach(async () => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
-            component.recordId = FAKE_RD2_ID;
             controller = new Rd2EntryFormScheduleSectionTestController(component);
         });
 
@@ -276,7 +275,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
     describe('error conditions', () => {
         beforeEach(() => {
             component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
-            component.recordId = FAKE_RD2_ID;
             component.addEventListener('errorevent', mockHandleError);
             controller = new Rd2EntryFormScheduleSectionTestController(component);
         });

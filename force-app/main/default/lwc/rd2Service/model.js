@@ -61,7 +61,11 @@ const DEFAULT_INITIAL_STATE = {
     isChangeLogEnabled: null,
     periodToYearlyFrequencyMap: null,
     closedStatusValues: [],
-    defaultInstallmentPeriod: null // new!
+    defaultInstallmentPeriod: null, // new!
+
+    //Permissions
+    InstallmentPeriodPermissions: {},
+    InstallmentFrequencyPermissions: {}
 };
 
 const isAdvancedPeriod = (state) => {
