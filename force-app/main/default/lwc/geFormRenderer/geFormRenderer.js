@@ -352,10 +352,27 @@ export default class GeFormRenderer extends LightningElement{
 
     handleMakeGiftRecurring() {
         console.log('handleMakeGiftRecurring');
+        const componentProperties = {
+            cancelCallback: () => {
+                fireEvent(this.pageRef, 'geModalCloseEvent', {})
+            },
+            createRecurrenceCallback: (scheduleData) => {
+                this.createRecurrence(scheduleData);
+            }
+        };
+        const detail = {
+            modalProperties: {
+                header: 'Placeholder Title',
+                componentName: 'geModalRecurringDonation',
+                showCloseButton: true,
+            },
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
     }
 
-    createRecurrenceCallback(scheduleData) {
-        console.log('geFormRenderer: createRecurrenceCallback');
+    createRecurrence(scheduleData) {
+        console.log('geFormRenderer: createRecurrence');
     }
 
     handleWidgetStateChange(changeEvent) {

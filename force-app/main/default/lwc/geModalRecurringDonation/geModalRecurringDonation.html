@@ -1,0 +1,18 @@
+<template>
+    <lightning-card>
+        <c-rd2-entry-form-schedule-section data-id='scheduleComponent'>
+        </c-rd2-entry-form-schedule-section>
+        <div slot='footer'>
+            <div>
+                <lightning-button class='slds-m-horizontal_xx-small'
+                                  label='Cancel'
+                                  onclick={handleCancel}>
+                </lightning-button>
+                <lightning-button class='slds-m-horizontal_xx-small'
+                                  label='Create Recurrence'
+                                  onclick={handleCreateRecurrence}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
