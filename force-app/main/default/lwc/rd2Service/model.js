@@ -14,7 +14,7 @@ import {
     INITIAL_VIEW_LOAD
 } from "./actions";
 
-import { PERIOD } from 'c/rd2Service';
+import { PERIOD, RECURRING_PERIOD_ADVANCED } from 'c/rd2Service';
 
 const DEFAULT_INITIAL_STATE = {
     // RD2 Record
@@ -62,6 +62,11 @@ const DEFAULT_INITIAL_STATE = {
     periodToYearlyFrequencyMap: null,
     closedStatusValues: [],
     defaultInstallmentPeriod: null // new!
+};
+
+const isAdvancedPeriod = (state) => {
+    return state.recurringPeriod !== PERIOD.MONTHLY
+        || state.recurringFrequency > 1;
 };
 
 const setAccountId = (state, accountId) => {
@@ -112,9 +117,11 @@ const setStartDate = (state, startDate) => {
 };
 
 const setPeriodType = (state, periodType) => {
+    const isMonthly = periodType === PERIOD.MONTHLY;
     return {
         ...state,
-        periodType
+        periodType,
+        recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod
     };
 };
 
@@ -133,11 +140,9 @@ const setRecurringPeriod = (state, recurringPeriod) => {
 };
 
 const setRecurringType = (state, recurringType) => {
-    const isMonthly = recurringType === PERIOD.MONTHLY;
     return {
         ...state,
-        recurringType,
-        recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod
+        recurringType
     };
 };
 
@@ -157,14 +162,20 @@ const setDateEstablished = (state, dateEstablished) => {
 
 const loadInitialView = (state, payload) => {
     const { record, ...rest } = payload;
+    const flattenedInitialState = { ...record, ...rest };
+    if (isAdvancedPeriod(flattenedInitialState)) {
+        flattenedInitialState.periodType = RECURRING_PERIOD_ADVANCED;
+    } else {
+        flattenedInitialState.periodType = PERIOD.MONTHLY;
+    }
     return {
         ...state,
-        ...record,
-        ...rest
+        ...flattenedInitialState
     };
 };
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
+    console.log(JSON.parse(JSON.stringify({state, action})));
     switch (action.type) {
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);

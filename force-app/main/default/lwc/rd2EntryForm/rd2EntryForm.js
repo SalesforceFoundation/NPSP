@@ -489,6 +489,15 @@ export default class rd2EntryForm extends LightningElement {
             });
     }
 
+    handleFrequencyChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_RECURRING_FREQUENCY,
+                payload: event.detail
+            });
+        this.handleDonationValueChange();
+    }
+
 
     /***
      * @description Currency change might hide or display the credit card widget

@@ -95,9 +95,9 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
              */
             getRecurringData({recordId: this.recordId})
                 .then(response => {
-                    this.customPeriod = response.Period;
+                    // this.customPeriod = response.Period;
                     // this.recurringType = response.RecurringType;
-                    this.inputFieldInstallmentFrequency = response.Frequency;
+                    // this.inputFieldInstallmentFrequency = response.Frequency;
                     if (response.Period !== PERIOD.MONTHLY
                         || (response.Period === PERIOD.MONTHLY && this.inputFieldInstallmentFrequency > 1)
                     ) {
@@ -404,6 +404,24 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         }
     }
 
+    get _showDayOfMonth() {
+        return this.rd2State.recurringPeriod === PERIOD.MONTHLY;
+    }
+
+    get _scheduleRowColumnSize() {
+        if (this.rd2State.periodType === PERIOD.MONTHLY) {
+            return 6;
+        } else if (this.rd2State.recurringPeriod === PERIOD.MONTHLY) {
+            return 3;
+        } else {
+            return 4;
+        }
+    }
+
+    get _isAdvancedMode() {
+        return this.rd2State.periodType === RECURRING_PERIOD_ADVANCED;
+    }
+
     /**
      * @description Update the visibility of the Planned Installments field based on the Recurring Type
      */
@@ -415,6 +433,14 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
             this.showNumPlannedInstallments = false;
             this.recurringTypeColumnSize = 6;
         }
+    }
+
+    get _recurringTypeColumnSize() {
+        return this.rd2State.recurringType === RECURRING_TYPE_FIXED ? 4 : 6;
+    }
+
+    get _showNumPlannedInstallments() {
+        return this.rd2State.recurringType === RECURRING_TYPE_FIXED;
     }
 
     /**

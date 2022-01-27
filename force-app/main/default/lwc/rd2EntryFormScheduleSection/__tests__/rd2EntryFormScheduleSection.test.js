@@ -1,5 +1,7 @@
 import { createElement } from 'lwc';
-import rd2EntryFormScheduleSection from 'c/rd2EntryFormScheduleSection';
+import Rd2EntryFormScheduleSection from 'c/rd2EntryFormScheduleSection';
+import { Rd2Service } from "c/rd2Service";
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
 import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
@@ -8,21 +10,28 @@ import { mockReset } from 'lightning/inputField';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
+import { SET_DONOR_TYPE, SET_RECURRING_TYPE } from "../../rd2Service/actions";
 
 const mockGetRecurringSettings = require('./data/getRecurringSettings.json');
 const mockGetRecurringDataFixed = require('./data/getRecurringDataFixed.json');
 const mockDayOfMonthPicklistValues = require('./data/wiredDayOfMonthPicklistValues.json');
 const mockInstallmentPeriodPicklistValues = require('./data/wiredInstallmentPeriodPicklistValues.json');
 const mockRecurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
+const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
 
 const TEST_DATE = new Date(2021, 10, 4);
 const FAKE_RD2_ID = '00A_fake_rd2_id';
+const FAKE_CONTACT_ID = '003_fake_contact_id';
 
 const mockHandleFrequencyChange = jest.fn();
 const mockHandleInstallmentsChange = jest.fn();
 const mockHandleCustomPeriodChange = jest.fn();
 const mockHandleAdvancedPeriodChange = jest.fn();
 const mockHandleError = jest.fn();
+
+jest.mock("@salesforce/apex/RD2_EntryFormController.getInitialView",
+    () => ({ default: jest.fn() }),
+    { virtual: true });
 
 jest.mock('@salesforce/apex/RD2_EntryFormController.getRecurringSettings', () => {
     return { default: jest.fn() };
@@ -38,8 +47,11 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     describe('new rd with default recurring type open', () => {
         beforeEach(async () => {
-            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
-
+            const rd2Service = new Rd2Service();
+            getInitialView.mockResolvedValue(initialViewResponse);
+            component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
+            const rd2State = await rd2Service.loadInitialView(rd2Service.init(), null, FAKE_CONTACT_ID);
+            component.rd2State = rd2State;
             controller = new Rd2EntryFormScheduleSectionTestController(component);
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             document.body.appendChild(component);
@@ -56,8 +68,11 @@ describe('c-rd2-entry-form-schedule-section', () => {
         });
 
         it('when recurring type changed to fixed, number of planned installments is visible', async () => {
-            const recurringType = controller.recurringType();
-            changeValue(recurringType, 'Fixed');
+            const rd2Service = new Rd2Service();
+            const recurringTypeField = controller.recurringType();
+            const newRecurringType = 'Fixed';
+            changeValue(recurringTypeField, newRecurringType);
+            component.rd2State = rd2Service.dispatch(component.rd2State, { type: SET_RECURRING_TYPE, payload: newRecurringType });
             await flushPromises();
 
             expect(controller.numberOfPlannedInstallments()).toBeTruthy();
@@ -65,6 +80,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
         it('default installment period is set on load', async () => {
            await flushPromises();
+           expect(component.rd2State.periodType).toBe('Monthly');
            expect(controller.customPeriod().value).toBe('Monthly');
         });
 
@@ -99,7 +115,19 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     describe('new rd with default recurring type fixed', () => {
         beforeEach(async () => {
-            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
+            const rd2Service = new Rd2Service();
+            const initialViewFixed = {
+                ...initialViewResponse,
+                record: {
+                    ...initialViewResponse.record,
+                    recurringType: 'Fixed'
+                }
+            };
+            getInitialView.mockResolvedValue(initialViewFixed);
+            component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
+            const rd2State = await rd2Service.loadInitialView(rd2Service.init(), null, FAKE_CONTACT_ID);
+            component.rd2State = rd2State;
+
             component.addEventListener('installmentschange', mockHandleInstallmentsChange);
             controller = new Rd2EntryFormScheduleSectionTestController(component);
             getRecurringSettings.mockResolvedValue({ ...mockGetRecurringSettings, defaultRecurringType: 'Fixed' });
@@ -126,7 +154,18 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     describe('new rd with default recurring period weekly', () => {
         beforeEach(async () => {
-            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
+            const rd2Service = new Rd2Service();
+            const initialViewWeekly = {
+                ...initialViewResponse,
+                record: {
+                    ...initialViewResponse.record,
+                    recurringPeriod: 'Weekly'
+                }
+            };
+            getInitialView.mockResolvedValue(initialViewWeekly);
+            component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
+            const rd2State = await rd2Service.loadInitialView(rd2Service.init(), null, FAKE_CONTACT_ID);
+            component.rd2State = rd2State;
             component.addEventListener('frequencychange', mockHandleFrequencyChange);
             component.addEventListener('periodtypechange', mockHandleCustomPeriodChange);
             component.addEventListener('periodchange', mockHandleAdvancedPeriodChange);
@@ -190,8 +229,8 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     describe('editing an existing record', () => {
         beforeEach(async () => {
-            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
-            component.recordId = FAKE_RD2_ID;;
+            component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
+            component.recordId = FAKE_RD2_ID;
             controller = new Rd2EntryFormScheduleSectionTestController(component);
         });
 
@@ -220,7 +259,7 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
     describe('error conditions', () => {
         beforeEach(() => {
-            component = createElement('c-rd2-entry-form-schedule-section', { is: rd2EntryFormScheduleSection });
+            component = createElement('c-rd2-entry-form-schedule-section', { is: Rd2EntryFormScheduleSection });
             component.recordId = FAKE_RD2_ID;
             component.addEventListener('errorevent', mockHandleError);
             controller = new Rd2EntryFormScheduleSectionTestController(component);

@@ -8,7 +8,7 @@
 
                 <lightning-layout horizontal-align="spread" multiple-rows="true">
 
-                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={_recurringTypeColumnSize}
                                            flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
                                                onchange={handleRecurringTypeChange}
@@ -17,8 +17,8 @@
                         </lightning-input-field>
                     </lightning-layout-item>
 
-                    <template if:true={showNumPlannedInstallments}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={recurringTypeColumnSize}
+                    <template if:true={_showNumPlannedInstallments}>
+                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_recurringTypeColumnSize}
                                                if:true={fields.plannedInstallments}>
                             <lightning-input-field data-id="plannedInstallments"
                                                    field-name={fields.plannedInstallments.apiName}
@@ -28,13 +28,13 @@
                         </lightning-layout-item>
                     </template>
 
-                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={recurringTypeColumnSize}
+                    <lightning-layout-item padding="horizontal-small" size="6" large-device-size={_recurringTypeColumnSize}
                                            if:false={hidePeriodPicklistField}>
                         <lightning-combobox
                                 name="CustomPeriodSelect"
                                 label={customLabels.fieldLabelPeriod}
                                 class="advanced-mode-fields rd2-entry-custom-field-padding"
-                                value={customPeriod}
+                                value={rd2State.periodType}
                                 options={customPeriodOptions}
                                 onchange={handleRecurringPeriodChange}
                                 field-level-help={customLabels.customPeriodHelpText}
@@ -45,13 +45,13 @@
                         </lightning-combobox>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_scheduleRowColumnSize}
                                            if:false={hideInstallmentFrequencyField}>
-                        <template if:true={isAdvancedMode}>
+                        <template if:true={_isAdvancedMode}>
                             <lightning-input label={customLabels.fieldLabelEvery}
                                              name="installmentFrequency"
                                              class="advanced-mode-fields rd2-entry-custom-field-padding"
-                                             value={inputFieldInstallmentFrequency}
+                                             value={rd2State.recurringFrequency}
                                              type="number"
                                              onchange={handleRecurringFrequencyChange}
                                              field-level-help={fields.installmentFrequency.inlineHelpText}
@@ -66,9 +66,9 @@
                         </template>
                     </lightning-layout-item>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_scheduleRowColumnSize}
                                            if:false={hidePeriodPicklistField}>
-                        <template if:true={isAdvancedMode}>
+                        <template if:true={_isAdvancedMode}>
                             <lightning-combobox
                                 name="advancedPeriodSelect"
                                 class="advanced-mode-fields rd2-entry-custom-field-padding"
@@ -84,9 +84,9 @@
                         </template>
                     </lightning-layout-item>
 
-                    <template if:true={showDayOfMonth}>
+                    <template if:true={_showDayOfMonth}>
                         <lightning-layout-item padding="horizontal-small" size="12"
-                                               large-device-size={scheduleRowColumnSize}
+                                               large-device-size={_scheduleRowColumnSize}
                                                if:true={fields.dayOfMonth}>
                             <lightning-input-field
                                     field-name={fields.dayOfMonth.apiName}
@@ -98,7 +98,7 @@
                         </lightning-layout-item>
                     </template>
 
-                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={scheduleRowColumnSize}
+                    <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_scheduleRowColumnSize}
                                            if:true={fields.startDate}>
                         <lightning-input-field
                                 field-name={fields.startDate.apiName}
