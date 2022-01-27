@@ -403,11 +403,6 @@ global with sharing class BDI_DataImportService {
     global Boolean isDryRun { get; private set; }
 
     /*******************************************************************************************************
-    * @description The source of the gift entry batch process - UI or someplace else
-    */
-    public static Boolean isFromGiftEntryUI = UTIL_BatchJobService.isExecutionSourceFromUserInterface();
-
-    /*******************************************************************************************************
     * @description holds the performance logger object for tracking performance metrics during processing.
     */
     public static BDI_PerfLogger perfLogger { get; private set; }
@@ -2155,6 +2150,21 @@ global with sharing class BDI_DataImportService {
 
         return isPopulated;
     }
+
+    /*******************************************************************************************************
+    * @description The source of the gift entry batch process - UI or someplace else
+    */
+    @TestVisible
+    public static Boolean isFromGiftEntryUI {
+        get {
+            if (isFromGiftEntryUI == null) {
+                isFromGiftEntryUI = UTIL_BatchJobService.isExecutionSourceFromUserInterface();
+            }
+            return isFromGiftEntryUI;
+        } private set;
+    } 
+
+
 
     /*******************************************************************************************************
     * @description our exception object for Field Level Security errors.
