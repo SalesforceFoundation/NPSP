@@ -45,20 +45,11 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     hasError = false;
 
     isLoading = true;
-    isAdvancedMode = false;
 
-    showDayOfMonth = true;
-    showNumPlannedInstallments = false;
     customPeriod = PERIOD.MONTHLY; // defaults to monthly, can also be RECURRING_PERIOD_ADVANCED
-    customPeriodAdvancedMode;
-
-    fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
 
     rdObjectInfo;
     defaultDayOfMonthValue;
-
-    recurringTypeColumnSize = 6;
-    scheduleRowColumnSize = 6;
 
     get isNew() {
         return isNull(this.rd2State.recordId);
@@ -88,10 +79,7 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         if (response.data) {
             this.rdObjectInfo = response.data;
             this.setFields(this.rdObjectInfo.fields);
-            this.buildFieldDescribes(
-                this.rdObjectInfo.fields,
-                this.rdObjectInfo.apiName
-            );
+            this.buildFieldDescribes();
             this.isLoading = !this.isEverythingLoaded();
 
         } else if (response.error) {
@@ -113,11 +101,12 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     * @description Method converts field describe info into objects that the
     * getRecord method can accept into its 'fields' parameter.
     */
-    buildFieldDescribes(fields, objectApiName) {
+    buildFieldDescribes() {
+        const { fields, apiName } = this.rdObjectInfo;
         return Object.keys(fields).map((fieldApiName) => {
             return {
                 fieldApiName: fieldApiName,
-                objectApiName: objectApiName
+                objectApiName: apiName
             }
         });
     }
@@ -248,8 +237,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     handleRecurringTypeChange(event) {
         const recurringType = event.target.value;
-        this.updatePlannedInstallmentsVisibility(recurringType);
-
         // Notify the main entry form about the Recurring Type value change
         this.dispatchEvent(new CustomEvent(
             'typechange', 
@@ -315,19 +302,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
     get _isAdvancedMode() {
         return this.rd2State.periodType === RECURRING_PERIOD_ADVANCED;
-    }
-
-    /**
-     * @description Update the visibility of the Planned Installments field based on the Recurring Type
-     */
-    updatePlannedInstallmentsVisibility(recurringType) {
-        if (recurringType === RECURRING_TYPE_FIXED) {
-            this.showNumPlannedInstallments = true;
-            this.recurringTypeColumnSize = 4;
-        } else {
-            this.showNumPlannedInstallments = false;
-            this.recurringTypeColumnSize = 6;
-        }
     }
 
     get _recurringTypeColumnSize() {
