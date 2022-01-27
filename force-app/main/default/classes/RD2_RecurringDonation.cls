@@ -61,6 +61,16 @@ public inherited sharing class RD2_RecurringDonation {
         set;
     }
 
+    private RD2_Settings rdSettings{
+        get {
+            if (rdSettings == null) {
+                rdSettings = new RD2_Settings();
+            }
+            return rdSettings;
+        }
+        set;
+    }
+
     /**
     * @description Recurring Donation record current and future Opportunities
     */
@@ -232,6 +242,8 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         reviseStatusForPaused(currentDate, scheduleService);
+        
+        statusAutomationReviseStatus(scheduleService);
 
         return this;
     }
@@ -297,11 +309,36 @@ public inherited sharing class RD2_RecurringDonation {
             }
         } else {
 
-            if (rd.Status__c == RD2_Constants.STATUS_PAUSED) {
+            if (isPaused()) {
                 rd.Status__c = RD2_Constants.STATUS_ACTIVE;
                 rd.ClosedReason__c = null;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
                 changedFields.add(npe03__Recurring_Donation__c.ClosedReason__c);
+            }
+        }
+    }
+
+    private void statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
+        if (isPaused() || isClosed() || !new RD2_StatusAutomationService().isSettingValid()) {
+            return;
+        }
+
+        Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
+        Date expectedDonationDate = scheduleService.getNextDonationDateAfter(baseDate, this, rd.RecurringDonationSchedules__r);
+
+        if(isActive() && rdSettings.isStatusAutomationForLapsedEnabled()) {
+            Date lapsedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForLapsed);
+            if (lapsedThresholdDate <= RD2_ScheduleService.currentDate) {
+                rd.Status__c = rdSettings.statusAutomationClosedValue;
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
+            }
+        }
+
+        if (rdSettings.isStatusAutomationForClosedEnabled()) {
+            Date closedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForClosed);
+            if (closedThresholdDate <= RD2_ScheduleService.currentDate) {
+                rd.Status__c = rdSettings.statusAutomationLapsedValue;
+                changedFields.add(npe03__Recurring_Donation__c.Status__c);
             }
         }
     }
@@ -375,6 +412,14 @@ public inherited sharing class RD2_RecurringDonation {
     */
     public Boolean isActive() {
         return state == RD2_Constants.STATUS_ACTIVE;
+    }
+
+    /**
+    * @description Indicates if the Recurring Donation is paused
+    * @return Boolean
+    */
+    public Boolean isPaused() {
+        return rd.Status__c == RD2_Constants.STATUS_PAUSED;
     }
 
     /**

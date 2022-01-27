@@ -89,6 +89,27 @@ public with sharing class RD2_StatusAutomationService {
         }
     }
 
+    public Boolean isSettingValid() {
+        Boolean isSettingValid = true;
+        if (rd2Settings.isStatusAutomationForClosedEnabled() && rd2Settings.isStatusAutomationForLapsedEnabled()) {
+            isSettingValid = isSettingValid
+                && rd2Settings.statusAutomationNumberOfDaysForLapsed < rd2Settings.statusAutomationNumberOfDaysForClosed;
+        }
+
+        if (rd2Settings.isStatusAutomationForClosedEnabled()) {
+            isSettingValid = isSettingValid
+                && statusMapper.getState(rd2Settings.statusAutomationClosedValue) == RD2_Constants.STATUS_Closed 
+                && rd2Settings.statusAutomationNumberOfDaysForClosed > 0;
+        }
+
+        if (rd2Settings.isStatusAutomationForLapsedEnabled()) {
+            isSettingValid = isSettingValid
+                && statusMapper.getState(rd2Settings.statusAutomationLapsedValue) != RD2_Constants.STATUS_LAPSED
+                && rd2Settings.statusAutomationNumberOfDaysForLapsed > 0;
+        }
+        return isSettingValid;
+    }
+
     public String validateSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
         if (daysForLapsed != null && daysForClosed != null) {
             if (daysForLapsed >= daysForClosed) {
