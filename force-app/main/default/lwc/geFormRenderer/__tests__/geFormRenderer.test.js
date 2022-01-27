@@ -28,21 +28,68 @@ describe('c-ge-form-renderer', () => {
 
     describe('render behavior', () => {
         it('renders make recurring button, when in batch mode and feature is enabled', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            element.batchId = 'dummyBatchId';
 
+            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
+            element.Settings = Settings;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(1);
         });
 
         it('does not render make recurring button, when in batch mode and feature is disabled', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            element.batchId = 'dummyBatchId';
 
+            Settings.isRecurringGiftsEnabled = jest.fn(() => false);
+            element.Settings = Settings;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(0);
         });
 
         it('does not render make recurring button, when in single mode', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
 
+            document.body.appendChild(element);
+            await flushPromises();
+
+            const button = element.shadowRoot.querySelectorAll('[data-id="recurringButton"]');
+            expect(button).toHaveLength(0);
         });
     });
 
     describe('events', () => {
         it('dispatches an event to display recurring donation schedule modal', async () => {
+            retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
+            getAllocationsSettings.mockResolvedValue(allocationsSettingsNoDefaultGAU);
+            const element = createElement('c-ge-form-renderer', {is: GeFormRenderer });
+            element.batchId = 'dummyBatchId';
 
+            Settings.isRecurringGiftsEnabled = jest.fn(() => true);
+            element.Settings = Settings;
+            document.body.appendChild(element);
+            await flushPromises();
+
+            const dispatchEventSpy = jest.spyOn(element, 'dispatchEvent');
+            const button = element.shadowRoot.querySelector('[data-id="recurringButton"]');
+            button.click();
+            await flushPromises();
+
+            expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
+            const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
+            expect(componentName).toBe('ge-recurring-modal');
         });
     });
 
