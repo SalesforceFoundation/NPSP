@@ -26,6 +26,26 @@ describe('c-ge-form-renderer', () => {
         jest.clearAllMocks();
     });
 
+    describe('render behavior', () => {
+        it('renders make recurring button, when in batch mode and feature is enabled', async () => {
+
+        });
+
+        it('does not render make recurring button, when in batch mode and feature is disabled', async () => {
+
+        });
+
+        it('does not render make recurring button, when in single mode', async () => {
+
+        });
+    });
+
+    describe('events', () => {
+        it('dispatches an event to display recurring donation schedule modal', async () => {
+
+        });
+    });
+
     it('loads a template with four sections', async () => {
 
         retrieveDefaultSGERenderWrapper.mockResolvedValue(mockWrapperWithNoNames);
