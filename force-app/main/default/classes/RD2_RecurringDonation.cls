@@ -331,6 +331,7 @@ public inherited sharing class RD2_RecurringDonation {
             if (lapsedThresholdDate <= RD2_ScheduleService.currentDate) {
                 rd.Status__c = rdSettings.statusAutomationClosedValue;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                return;
             }
         }
 
@@ -339,6 +340,7 @@ public inherited sharing class RD2_RecurringDonation {
             if (closedThresholdDate <= RD2_ScheduleService.currentDate) {
                 rd.Status__c = rdSettings.statusAutomationLapsedValue;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
+                return;
             }
         }
     }

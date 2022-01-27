@@ -104,7 +104,7 @@ public with sharing class RD2_StatusAutomationService {
 
         if (rd2Settings.isStatusAutomationForLapsedEnabled()) {
             isSettingValid = isSettingValid
-                && statusMapper.getState(rd2Settings.statusAutomationLapsedValue) != RD2_Constants.STATUS_LAPSED
+                && statusMapper.getState(rd2Settings.statusAutomationLapsedValue) == RD2_Constants.STATUS_LAPSED
                 && rd2Settings.statusAutomationNumberOfDaysForLapsed > 0;
         }
         return isSettingValid;
