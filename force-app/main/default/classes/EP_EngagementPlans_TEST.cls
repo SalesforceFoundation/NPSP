@@ -381,6 +381,49 @@ private with sharing class EP_EngagementPlans_TEST {
         System.assertEquals(new List<String>{UTIL_Namespace.StrTokenNSPrefix('Household_Account__r'),'OwnerId'},EP_EngagementPlans_UTIL.getOwnerIdPath(Address__c.SObjectType));
     }
 
+    /***
+    * @description Verifies that the instrumentation service is called when a new EP is inserted
+    */
+    @isTest
+    private static void shouldInstrumentInsertedEngagementPlan() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        Contact con = new Contact(LastName = 'foo');
+        insert con;
+
+        Engagement_Plan_Template__c template = new Engagement_Plan_Template__c(
+            Name = 'TemplateSkipWeekends',
+            Skip_Weekends__c = true,
+            Reschedule_To__c = EP_EngagementPlans_UTIL.SKIP_DAY_MONDAY,
+            Default_Assignee__c = EP_EngagementPlans_UTIL.BLANK_ASSIGNMENT_USER_CREATING
+        );
+        insert template;
+
+        Engagement_Plan_Task__c epTask = new Engagement_Plan_Task__c(
+            Name = 'Call',
+            Engagement_Plan_Template__c = template.id,
+            Comments__c = 'This comment should be copied correctly to the Task.',
+            Reminder__c = true,
+            Reminder_Time__c = '660',
+            Type__c = 'Call',
+            Priority__c = 'Medium'
+        );
+        insert epTask;
+
+        Engagement_Plan__c plan = new Engagement_Plan__c(
+            Contact__c = con.id,
+            Engagement_Plan_Template__c = template.id
+        );
+
+        Test.startTest();
+        insert plan;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new EngagementPlan was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.EngagementPlans, mockService.feature, 
+            'The instrumentation service should have indicated EnagementPlans');
+    }
+
     /*********************************************************************************************************
     * @description Returns the user id of an active user other than the current one if one exists, 
     * otherwise returns the current user id.

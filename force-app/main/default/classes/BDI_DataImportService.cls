@@ -343,27 +343,37 @@ global with sharing class BDI_DataImportService {
             dataImportBatch.Records_Successfully_Processed__c = cRecordsSucceeded;
             dataImportBatch.Records_Failed__c = cRecordsFailed;
             UTIL_DMLService.updateRecord(dataImportBatch);
-
-            if (isFromGiftEntryUI) {
-                instrumentGiftEntryResults(cRecordsSucceeded);
-            }
         }
     }
 
     /*******************************************************************************************************
-    * @description Instrument that multiple gift were successfully processed through the GiftEntry Batch UI
-    * but only if this originated from the UI context
-    * @param DataImportBatch__c record
+    * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+    * @param Id Apex Batch Job to find related DataImport__c records for
     * @return void
     */
-    public static void instrumentGiftEntryResults(Integer records) {
+    public static void instrumentGiftEntryUIResults(Id apexJobId) {
         try {
-            sfdoInstrumentationService.getInstance().log(
-                sfdoInstrumentationEnum.Feature.GiftEntry,
-                sfdoInstrumentationEnum.Component.Page,
-                sfdoInstrumentationEnum.Action.Save,
-                records);
+            String createStatus = System.Label.bdiCreated;
+            Integer insertedGifts = [SELECT Count() 
+                FROM DataImport__c 
+                WHERE ApexJobId__c = :apexJobId
+                AND DonationImportStatus__c = :createstatus];
+                instrumentGiftEntryUIResults(insertedGifts);
+
         } catch (Exception ex) {}
+    }
+
+    /*******************************************************************************************************
+    * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+    * @param insertedGifts
+    * @return void
+    */
+    public static void instrumentGiftEntryUIResults(Integer insertedGifts) {
+        sfdoInstrumentationService.getInstance().log(
+            sfdoInstrumentationEnum.Feature.GiftEntry,
+            sfdoInstrumentationEnum.Component.Page,
+            sfdoInstrumentationEnum.Action.Save,
+            insertedGifts);
     }
 
     /*******************************************************************************************************

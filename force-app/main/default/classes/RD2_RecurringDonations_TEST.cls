@@ -1115,6 +1115,27 @@ private with sharing class RD2_RecurringDonations_TEST {
         System.assertEquals(nextDonationDate, rd.npe03__Next_Payment_Date__c, 'Next Donation Date should be unchanged');
     }
 
+    /***
+    * @description Verifies that the instrumentation service is called when a new RD is inserted
+    */
+    @isTest
+    private static void shouldInstrumentInsertedRecurringDonation() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        RD2_ScheduleService.currentDate = DATE_ESTABLISHED;
+        final Date nextDonationDate = Date.newInstance(2019, 10, 1);
+
+        npe03__Recurring_Donation__c rd = getRecurringDonationMonthlyBuilder().build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new RD was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.EnhancedRecurringDonations, mockService.feature, 
+            'The instrumentation service should have indicated Enhanced Recurring Donations');
+    }
 
     // Helpers
     ///////////////////
