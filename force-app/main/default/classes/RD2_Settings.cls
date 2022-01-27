@@ -34,7 +34,15 @@
 *
 */
 public with sharing class RD2_Settings {
-    
+    private static RD2_Settings rdSettings;
+
+    public static RD2_Settings getInstance() {
+        if (rdSettings == null) {
+            rdSettings = new RD2_Settings();
+        }
+        return rdSettings;
+    }
+
     /***
     * @description Recurring Donation custom settings
     */

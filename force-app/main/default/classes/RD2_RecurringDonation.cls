@@ -64,7 +64,7 @@ public inherited sharing class RD2_RecurringDonation {
     private RD2_Settings rdSettings{
         get {
             if (rdSettings == null) {
-                rdSettings = new RD2_Settings();
+                rdSettings = RD2_Settings.getInstance();
             }
             return rdSettings;
         }
