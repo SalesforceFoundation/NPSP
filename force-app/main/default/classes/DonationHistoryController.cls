@@ -60,7 +60,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(Opportunity ocr, String paymentMethod) 
+        public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
             this.name = ocr.Name;
             this.closeDate = ocr.CloseDate;
