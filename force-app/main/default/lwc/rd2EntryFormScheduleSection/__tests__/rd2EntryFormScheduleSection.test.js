@@ -10,7 +10,7 @@ import { mockReset } from 'lightning/inputField';
 import FIELD_DAY_OF_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.Day_of_Month__c';
 import FIELD_INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
 import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donation__c';
-import { SET_DONOR_TYPE, SET_RECURRING_TYPE } from "../../rd2Service/actions";
+import { SET_RECURRING_TYPE } from "../../rd2Service/actions";
 
 const mockGetRecurringSettings = require('./data/getRecurringSettings.json');
 const mockGetRecurringDataFixed = require('./data/getRecurringDataFixed.json');
@@ -235,8 +235,20 @@ describe('c-rd2-entry-form-schedule-section', () => {
         });
 
         it('when record is Fixed recurring type, number of planned installments field is visible', async () => {
+            const rd2Service = new Rd2Service();
+            const initialViewFixed = {
+                ...initialViewResponse,
+                record: {
+                    ...initialViewResponse.record,
+                    recurringType: 'Fixed'
+                }
+            };
+            getInitialView.mockResolvedValue(initialViewFixed);
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             getRecurringData.mockResolvedValue(mockGetRecurringDataFixed);
+            const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
+            component.rd2State = rd2State;
+
             document.body.appendChild(component);
             await setupWires();
             await flushPromises();
@@ -244,11 +256,15 @@ describe('c-rd2-entry-form-schedule-section', () => {
         });
 
         it('when record is Open recurring type, number of planned installments field is not visible', async () => {
+            const rd2Service = new Rd2Service();
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
             getRecurringData.mockResolvedValue({
                 ...mockGetRecurringDataFixed,
                 RecurringType: 'Open'
             });
+            getInitialView.mockResolvedValue(initialViewResponse);
+            const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
+            component.rd2State = rd2State;
             document.body.appendChild(component);
             await setupWires();
             await flushPromises();
