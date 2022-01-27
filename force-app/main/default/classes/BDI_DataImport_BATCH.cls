@@ -142,7 +142,7 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
         if (!dataImportService.isDryRun) {
             BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
             if (this.isFromGiftEntryUI == true) {
-                BDI_DataImportService.instrumentGiftEntryUIResults(bc.getJobId());
+                BDI_DataImportService.instrumentGiftEntry(bc.getJobId());
             }
         }
     }

@@ -511,17 +511,4 @@ public without sharing class UTIL_BatchJobService {
         }
     }
 
-
-    /*******************************************************************************************************
-    * @description Sets isFromGiftEntryUI value using the system Quiddity to determine where the execution originates from
-    * @return void
-    */    
-    public static Boolean isExecutionSourceFromUserInterface() {
-        Request reqInfo = Request.getCurrent();
-        String currentRequestId = reqInfo.getRequestId();
-        Quiddity currentType = reqInfo.getQuiddity();
-        
-        return (currentType == System.Quiddity.AURA || currentType == System.Quiddity.VF || currentType == System.Quiddity.QUICK_ACTION);
-    }
-
 }

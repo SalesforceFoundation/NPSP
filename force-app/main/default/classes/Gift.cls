@@ -127,7 +127,7 @@ public with sharing class Gift {
             false);
 
         if (this.dataImport.FailureInformation__c == null) {
-            BDI_DataImportService.instrumentGiftEntryUIResults(1);
+            BDI_DataImportService.instrumentGiftEntry(1);
         }
     }
 

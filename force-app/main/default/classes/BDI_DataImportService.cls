@@ -351,14 +351,14 @@ global with sharing class BDI_DataImportService {
     * @param Id Apex Batch Job to find related DataImport__c records for
     * @return void
     */
-    public static void instrumentGiftEntryUIResults(Id apexJobId) {
+    public static void instrumentGiftEntry(Id apexJobId) {
         try {
             String createStatus = System.Label.bdiCreated;
             Integer insertedGifts = [SELECT Count() 
                 FROM DataImport__c 
                 WHERE ApexJobId__c = :apexJobId
                 AND DonationImportStatus__c = :createstatus];
-                instrumentGiftEntryUIResults(insertedGifts);
+                instrumentGiftEntry(insertedGifts);
 
         } catch (Exception ex) {}
     }
@@ -368,7 +368,7 @@ global with sharing class BDI_DataImportService {
     * @param insertedGifts
     * @return void
     */
-    public static void instrumentGiftEntryUIResults(Integer insertedGifts) {
+    public static void instrumentGiftEntry(Integer insertedGifts) {
         sfdoInstrumentationService.getInstance().log(
             sfdoInstrumentationEnum.Feature.GiftEntry,
             sfdoInstrumentationEnum.Component.Page,
@@ -2154,14 +2154,13 @@ global with sharing class BDI_DataImportService {
     /*******************************************************************************************************
     * @description The source of the gift entry batch process - UI or someplace else
     */
-    @TestVisible
     public static Boolean isFromGiftEntryUI {
         get {
             if (isFromGiftEntryUI == null) {
-                isFromGiftEntryUI = UTIL_BatchJobService.isExecutionSourceFromUserInterface();
+                isFromGiftEntryUI = USER_UserService.isExecutionSourceFromUserInterface();
             }
             return isFromGiftEntryUI;
-        } private set;
+        } set;
     } 
 
 
