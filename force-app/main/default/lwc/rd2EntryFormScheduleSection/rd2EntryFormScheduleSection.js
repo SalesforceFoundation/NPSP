@@ -54,17 +54,8 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
 
     fieldInstallmentPeriod = this.customLabels.periodPluralMonths;
 
-    inputFieldInstallmentFrequency = 1;
-
     rdObjectInfo;
     defaultDayOfMonthValue;
-    defaultInstallmentPeriodValue;
-    recurringType;
-
-    disablePeriodPicklistField;
-    disableInstallmentFrequencyField;
-    hidePeriodPicklistField;
-    hideInstallmentFrequencyField;
 
     recurringTypeColumnSize = 6;
     scheduleRowColumnSize = 6;
@@ -172,19 +163,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     }
 
     /**
-     * @description If the default Installment Period is not monthly (the hard-coded default in this UI), then update
-     * the custom picklist field default values accordingly as well as the visibility rules for the fields.
-     */
-    setDefaultInstallmentPeriod() {
-        if (!this.isNew || !this.defaultInstallmentPeriodValue) {
-            return;
-        }
-        if (this.defaultInstallmentPeriodValue !== PERIOD.MONTHLY) {
-            this.updateScheduleFieldVisibility(RECURRING_PERIOD_ADVANCED, this.defaultInstallmentPeriodValue);
-        }
-    }
-
-    /**
      * @description Returns a boolean to disable entry into a field based on the FLS
      * @returns True to disable entry into the field
      */
@@ -224,10 +202,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     wiredInstallmentPeriodPicklistValues({ error, data }) {
         if (data) {
             this.installmentPeriodPicklistValues = data.values;
-            if (data.defaultValue && data.defaultValue.value) {
-                this.defaultInstallmentPeriodValue = data.defaultValue.value;
-                this.setDefaultInstallmentPeriod();
-            }
         } else if (error) {
             // Installment Period field likely not visible
             this.installmentPeriodPicklistValues = {};
@@ -290,7 +264,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     handleRecurringPeriodChange(event) {
         const recurringPeriod = event.target.value;
-        this.updateScheduleFieldVisibility(recurringPeriod, this.customPeriodAdvancedMode);
         this.dispatchEvent(new CustomEvent(
             'periodtypechange',
             { detail: recurringPeriod }
@@ -304,7 +277,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
     handleAdvancedPeriodChange(event) {
         const period = event.target.value;
-        this.updateScheduleFieldVisibility(this.customPeriod, period);
         this.dispatchEvent(new CustomEvent(
             'periodchange',
             { detail: period }
@@ -325,36 +297,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
      */
      handlePlannedInstallmentsChange(event) {
         this.dispatchEvent(new CustomEvent('installmentschange', { detail : event.target.value }));
-    }
-
-    /**
-     * @description Set the various properties to control field visibility, how many fields appear in each row
-     * and other rules based on the selected InstallmentPeriod value.
-     * @param customPeriod Monthly or Advanced
-     * @param advancedPeriod Monthly, Weekly, Daily, Yearly or 1st and 15th
-     */
-    updateScheduleFieldVisibility(customPeriod, advancedPeriod) {
-        this.customPeriod = customPeriod;
-        this.customPeriodAdvancedMode = advancedPeriod;
-
-        if (customPeriod === PERIOD.MONTHLY) {
-            this.isAdvancedMode = false;
-            this.showDayOfMonth = true;
-            this.scheduleRowColumnSize = 6;
-
-        } else if (customPeriod === RECURRING_PERIOD_ADVANCED) {
-            this.isAdvancedMode = true;
-            this.showDayOfMonth = (this.customPeriodAdvancedMode === PERIOD.MONTHLY);
-            this.scheduleRowColumnSize = (this.showDayOfMonth ? 3 : 4);
-
-            if (advancedPeriod === PERIOD.MONTHLY) {
-                this.showDayOfMonth = true;
-                this.scheduleRowColumnSize = 3;
-            } else {
-                this.showDayOfMonth = false;
-                this.scheduleRowColumnSize = 4;
-            }
-        }
     }
 
     get _showDayOfMonth() {
@@ -531,12 +473,12 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
                         data[this.fields.installmentFrequency.apiName] = input.value;
                         break;
                     case 'CustomPeriodSelect':
-                        if (!this.isAdvancedMode) {
+                        if (!this._isAdvancedMode) {
                             data[this.fields.period.apiName] = input.value;
                         }
                         break;
                     case 'advancedPeriodSelect':
-                        if (this.isAdvancedMode) {
+                        if (this._isAdvancedMode) {
                             data[this.fields.period.apiName] = input.value;
                         }
                         break;
