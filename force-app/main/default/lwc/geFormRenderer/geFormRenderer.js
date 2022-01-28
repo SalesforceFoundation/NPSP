@@ -195,6 +195,11 @@ export default class GeFormRenderer extends LightningElement{
     _isFormCollapsed = false;
     _shouldInformParent = true;
 
+    get hasSchedule() {
+        const schedule = this._giftInView?.schedule;
+        return schedule ? Object.keys(schedule).length > 0 : false;
+    }
+
     set selectedDonationOrPaymentRecord(record) {
         if (record.new === true) {
             this.setCreateNewOpportunityInFormState();
@@ -372,6 +377,31 @@ export default class GeFormRenderer extends LightningElement{
 
     createRecurrence(scheduleData) {
         this.dispatchEvent(new CustomEvent('schedulechange', { detail: scheduleData }));
+    }
+
+    handleEditSchedule() {
+        const componentProperties = {
+            cancelCallback: () => {
+                fireEvent(this.pageRef, 'geModalCloseEvent', {})
+            },
+            createRecurrenceCallback: (scheduleData) => {
+                this.createRecurrence(scheduleData);
+            },
+            schedule: this.giftInView.schedule
+        };
+        const detail = {
+            modalProperties: {
+                header: 'Placeholder Title',
+                componentName: 'geModalRecurringDonation',
+                showCloseButton: true,
+            },
+            componentProperties
+        };
+        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
+    }
+
+    handleRemoveSchedule() {
+        this.dispatchEvent(new CustomEvent('schedulechange', { detail: {} }));
     }
 
     handleWidgetStateChange(changeEvent) {
