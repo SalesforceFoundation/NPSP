@@ -22,19 +22,14 @@ import FIELD_NAME from "@salesforce/schema/npe03__Recurring_Donation__c.Name";
 import FIELD_CAMPAIGN from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Recurring_Donation_Campaign__c";
 import FIELD_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Amount__c";
 import FIELD_PAYMENT_METHOD from "@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c";
-import FIELD_RECURRING_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c";
 import FIELD_STATUS from "@salesforce/schema/npe03__Recurring_Donation__c.Status__c";
 import FIELD_STATUS_REASON from "@salesforce/schema/npe03__Recurring_Donation__c.ClosedReason__c";
 import FIELD_COMMITMENT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c";
 import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
 import FIELD_CARD_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c";
-import FIELD_CARD_EXPIRY_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c";
-import FIELD_CARD_EXPIRY_YEAR from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c";
 import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c";
 import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
 import FIELD_NEXT_DONATION_DATE from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c";
-import FIELD_CONTACT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c";
-import FIELD_ORGANIZATION_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c";
 import FIELD_CHANGE_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c";
 import FIELD_PAID_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Paid_Amount__c";
 import FIELD_PAID_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c";
@@ -152,10 +147,7 @@ export default class rd2EntryForm extends LightningElement {
     paymentMethodToken;
     _paymentMethod;
 
-    contactId;
-    organizationAccountId;
     accountHolderType;
-    recurringPeriod;
     periodType;
     recurringDonationStatus;
     closedStatusValues;
@@ -325,14 +317,11 @@ export default class rd2EntryForm extends LightningElement {
             this.isEdit = true;
             this._paymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
             this.existingPaymentMethod = getFieldValue(this.record, FIELD_PAYMENT_METHOD);
-            this.contactId = getFieldValue(this.record, FIELD_CONTACT_ID);
-            this.organizationAccountId = getFieldValue(this.record, FIELD_ORGANIZATION_ID);
             this.commitmentId = getFieldValue(this.record, FIELD_COMMITMENT_ID);
             this.isCommitmentEdit = !isNull(this.commitmentId);
             this._nextDonationDate = getFieldValue(this.record, FIELD_NEXT_DONATION_DATE);
             this.cardLastFour = getFieldValue(this.record, FIELD_CARD_LAST4);
             this.achLastFour = getFieldValue(this.record, FIELD_ACH_LAST4);
-            this.recurringPeriod = getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD);
             this.recurringDonationStatus = getFieldValue(this.record, FIELD_STATUS);
 
             this.evaluateElevateEditWidget();
@@ -350,14 +339,17 @@ export default class rd2EntryForm extends LightningElement {
      * Otherwise, contact data should not be retrieved from database.
      */
     handleContactChange(event) {
-        if (this.isElevateCustomer && !this.isEdit) {
-            this.contactId = event.detail && event.detail.value ? event.detail.value : event.detail;
-            this.contact.MailingCountry = null;
-        }
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            type: ACTIONS.SET_CONTACT_ID,
+            payload: event.detail
+        });
     }
 
     handleAccountChange(event) {
-        this.organizationAccountId = event.detail;
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            type: ACTIONS.SET_ACCOUNT_ID,
+            payload: event.detail
+        });
     }
 
     handleDonorTypeChange(event) {
@@ -381,7 +373,7 @@ export default class rd2EntryForm extends LightningElement {
      * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, {
-        recordId: "$contactId", fields: [
+        recordId: "$rd2State.contactId", fields: [
             MAILING_COUNTRY_FIELD,
             CONTACT_LAST_NAME,
             CONTACT_FIRST_NAME
@@ -404,7 +396,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     @wire(getRecord, {
-        recordId: "$organizationAccountId", fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
+        recordId: "$rd2State.accountId", fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
     })
     wiredGetDonorAccount({ error, data }) {
         if (data) {
@@ -452,14 +444,13 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleRecurringPeriodChange(event) {
-        this.recurringPeriod = event.detail.period;
-        this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
         this.rd2State = this.rd2Service.dispatch(this.rd2State,
             {
                 type: ACTIONS.SET_RECURRING_PERIOD,
                 payload: event.detail
             });
+        this.handleElevateWidgetDisplay();
+        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
@@ -647,8 +638,8 @@ export default class rd2EntryForm extends LightningElement {
         if (this.scheduleComponent) {
             const recurringType = this.getRecurringType();
             const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.periodType === PERIOD.MONTHLY
-                || this.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
+            const isValidInstallmentPeriod = this.rd2State.periodType === PERIOD.MONTHLY
+                || this.rd2State.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
 
             return isValidRecurringType && isValidInstallmentPeriod;
         }
@@ -713,9 +704,7 @@ export default class rd2EntryForm extends LightningElement {
      * is supported by the Elevate credit card widget
      */
     isCountrySupported() {
-        const country = (this.contactId && this.contact && this.contact.MailingCountry)
-            ? this.contact.MailingCountry
-            : null;
+        const country = this.rd2State.mailingCountry;
 
         return isNull(country)
             || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
@@ -841,15 +830,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     getRecurringType() {
-        let recurringType;
-        // Use value from record until schedule component is present
-        if (this.record) {
-            recurringType = getFieldValue(this.record, FIELD_RECURRING_TYPE);
-        }
-        if (this.scheduleComponent && this.scheduleComponent.getRecurringType()) {
-            recurringType = this.scheduleComponent.getRecurringType();
-        }
-        return recurringType;
+        return this.rd2State.recurringType;
     }
 
     /***
