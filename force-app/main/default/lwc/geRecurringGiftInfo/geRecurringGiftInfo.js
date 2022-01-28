@@ -8,12 +8,12 @@ export default class GeRecurringGiftInfo extends LightningElement {
     }
 
     handleEdit() {
-        const customEvent = new CustomEvent('editrecurrence', {});
+        const customEvent = new CustomEvent('editschedule', {});
         this.dispatchEvent(customEvent);
     }
 
-    handleRemoveRecurrence() {
-        const customEvent = new CustomEvent('removerecurrence', {});
+    handleRemoveSchedule() {
+        const customEvent = new CustomEvent('removeschedule', {});
         this.dispatchEvent(customEvent);
     }
 }
