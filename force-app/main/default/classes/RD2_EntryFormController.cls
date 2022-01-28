@@ -539,11 +539,13 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String donorType;
         @AuraEnabled public Date dateEstablished;
         @AuraEnabled public Decimal donationValue;
+        @AuraEnabled public Decimal paidAmount;
         @AuraEnabled public String recurringPeriod;
         @AuraEnabled public Integer recurringFrequency;
         @AuraEnabled public Date startDate;
         @AuraEnabled public String dayOfMonth;
         @AuraEnabled public Integer plannedInstallments;
+        @AuraEnabled public Integer paidInstallments;
         @AuraEnabled public String recurringType;
         @AuraEnabled public String paymentToken;
         @AuraEnabled public String commitmentId;
@@ -569,11 +571,13 @@ public with sharing class RD2_EntryFormController {
             this.donorType = getDonorType(record);
             this.dateEstablished = record.npe03__Date_Established__c;
             this.donationValue = record.npe03__Amount__c;
+            this.paidAmount = record.npe03__Paid_Amount__c;
             this.recurringPeriod = record.npe03__Installment_Period__c;
             this.recurringFrequency = record.InstallmentFrequency__c?.intValue();
             this.startDate = record.StartDate__c;
             this.dayOfMonth = record.Day_of_Month__c;
             this.plannedInstallments = record.npe03__Installments__c?.intValue();
+            this.paidInstallments = record.npe03__Total_Paid_Installments__c.intValue();
             this.recurringType = record.RecurringType__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;
