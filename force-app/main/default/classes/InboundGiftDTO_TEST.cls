@@ -29,6 +29,33 @@
 */
 @isTest
 private class InboundGiftDTO_TEST {
+
+    @isTest
+    static void shouldReturnGiftWithASchedule() {
+        InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();
+        dummyGiftDTO.fields = new DataImport__c();
+        dummyGiftDTO.fields.Id = DUMMY_DATA_IMPORT_ID;
+        dummyGiftDTO.schedule = new npe03__Recurring_Donation__c();
+        dummyGiftDTO.schedule.RecurringType__c = 'Monthly';
+
+        Gift dummyGift = dummyGiftDTO.asGift();
+
+        System.assertEquals(true, dummyGift.hasSchedule(),
+            'Gift should have a schedule');
+    }
+
+    @isTest
+    static void shouldReturnGiftWithoutSchedule() {
+        InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();
+        dummyGiftDTO.fields = new DataImport__c();
+        dummyGiftDTO.fields.Id = DUMMY_DATA_IMPORT_ID;
+
+        Gift dummyGift = dummyGiftDTO.asGift();
+
+        System.assertEquals(false, dummyGift.hasSchedule(),
+            'Gift should not have a schedule');
+    }
+
     @isTest
     static void shouldReturnGift() {
         InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();

@@ -36,6 +36,7 @@ public with sharing class InboundGiftDTO {
 
     @AuraEnabled public DataImport__c fields { get; set; }
     @AuraEnabled public List<OpportunityContactRole> softCredits { get; set; }
+    @AuraEnabled public npe03__Recurring_Donation__c schedule { get; set; }
 
     public InboundGiftDTO() {}
 
@@ -44,6 +45,10 @@ public with sharing class InboundGiftDTO {
 
         if (softCredits != null) {
             gift.assignSoftCredits(new SoftCredits(softCredits));
+        }
+
+        if (schedule != null) {
+            gift.addSchedule(schedule);
         }
 
         return gift;
