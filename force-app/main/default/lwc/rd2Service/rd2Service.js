@@ -36,11 +36,17 @@ const RECURRING_TYPE_OPEN = 'Open';
 const RECURRING_TYPE_FIXED = 'Fixed';
 const ACCOUNT_DONOR_TYPE = 'Account';
 const CONTACT_DONOR_TYPE = 'Contact';
+const CHANGE_TYPE_UPGRADE = "Upgrade";
+const CHANGE_TYPE_DOWNGRADE = "Downgrade";
 
 class Rd2Service {
 
     dispatch(state, action) {
         return nextState(state, action);
+    }
+
+    init() {
+        return this.dispatch();
     }
 
     async loadInitialView(state, recordId, parentId) {
@@ -54,10 +60,6 @@ class Rd2Service {
             console.log("Error: ", ex);
             return state;
         }
-    }
-
-    init() {
-        return this.dispatch();
     }
 
     /***
@@ -238,5 +240,7 @@ export { Rd2Service,
     RECURRING_TYPE_FIXED,
     RECURRING_TYPE_OPEN,
     ACCOUNT_DONOR_TYPE,
-    CONTACT_DONOR_TYPE
+    CONTACT_DONOR_TYPE,
+    CHANGE_TYPE_DOWNGRADE,
+    CHANGE_TYPE_UPGRADE
 };

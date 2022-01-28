@@ -16,7 +16,16 @@ import {
     INITIAL_VIEW_LOAD
 } from "./actions";
 
-import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN } from "c/rd2Service";
+import {
+    PERIOD,
+    RECURRING_PERIOD_ADVANCED,
+    RECURRING_TYPE_FIXED,
+    RECURRING_TYPE_OPEN,
+    CHANGE_TYPE_UPGRADE,
+    CHANGE_TYPE_DOWNGRADE,
+} from "c/rd2Service";
+
+let initialViewState;
 
 const DEFAULT_INITIAL_STATE = {
     // RD2 Record
@@ -44,6 +53,9 @@ const DEFAULT_INITIAL_STATE = {
     plannedInstallments: null, // Only used for "Fixed" RDs.
     recurringType: null, // Fixed or Open
 
+    //change type
+    changeType: "",
+
     //Custom Fields
     customFields: {},
     customFieldValues: {},
@@ -70,6 +82,14 @@ const DEFAULT_INITIAL_STATE = {
     InstallmentFrequencyPermissions: {}
 };
 
+const isRecurringTypeChanged = (state) => {
+    return state.recurringType !== initialViewState.recurringType;
+}
+
+const isNewRecord = (state) => {
+    return !!state.recordId;
+}
+
 const getAnnualValue = (state) => {
     const amount = state.donationValue;
     const frequency = state.recurringFrequency;
@@ -92,6 +112,21 @@ const getDonationValue = (state) => {
         return getAnnualValue(state);
     } else if (state.recurringType === RECURRING_TYPE_FIXED) {
         return getFixedValue(state);
+    }
+}
+
+const getChangeType = (state) => {
+    if (isRecurringTypeChanged(state) || isNewRecord(state)) {
+        return "";
+    }
+
+    const oldValue = getDonationValue(initialViewState);
+    const newValue = getDonationValue(state);
+
+    if (oldValue > newValue) {
+        return CHANGE_TYPE_DOWNGRADE;
+    } else if (newValue > oldValue) {
+        return CHANGE_TYPE_UPGRADE;
     }
 }
 
@@ -132,9 +167,10 @@ const setAccountDetails = (state, {accountName, lastName}) => {
 };
 
 const setDonationAmount = (state, donationValue) => {
+    const newState = { ...state, donationValue };
     return {
-        ...state,
-        donationValue
+        ...newState,
+        changeType: getChangeType(newState)
     };
 };
 
@@ -156,38 +192,59 @@ const setStartDate = (state, startDate) => {
 
 const setPeriodType = (state, periodType) => {
     const isMonthly = periodType === PERIOD.MONTHLY;
-    return {
+    const newState = {
         ...state,
         periodType,
         recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod
     };
+    return {
+        ...newState,
+        changeType: getChangeType(newState)
+    };
 };
 
 const setPlannedInstallments = (state, plannedInstallments) => {
-    return {
+    const newState = {
         ...state,
         plannedInstallments
+    };
+    return {
+        ...newState,
+        changeType: getChangeType(state)
     };
 };
 
 const setRecurringPeriod = (state, recurringPeriod) => {
-    return {
+    const newState = {
         ...state,
         recurringPeriod
+    };
+
+    return {
+        ...newState,
+        changeType: getChangeType(state)
     };
 };
 
 const setRecurringFrequency = (state, recurringFrequency) => {
-    return {
+    const newState = {
         ...state,
         recurringFrequency
+    };
+    return {
+        ...newState,
+        changeType: getChangeType(state)
     };
 };
 
 const setRecurringType = (state, recurringType) => {
-    return {
+    const newState = {
         ...state,
         recurringType
+    };
+    return {
+        ...newState,
+        changeType: getChangeType(state)
     };
 };
 
@@ -213,10 +270,13 @@ const loadInitialView = (state, payload) => {
     } else {
         flattenedInitialState.periodType = PERIOD.MONTHLY;
     }
-    return {
+
+    initialViewState = {
         ...state,
         ...flattenedInitialState
     };
+
+    return initialViewState;
 };
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
