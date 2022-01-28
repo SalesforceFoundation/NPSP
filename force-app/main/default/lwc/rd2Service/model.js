@@ -84,11 +84,11 @@ const DEFAULT_INITIAL_STATE = {
 
 const isRecurringTypeChanged = (state) => {
     return state.recurringType !== initialViewState.recurringType;
-}
+};
 
 const isNewRecord = (state) => {
-    return !!state.recordId;
-}
+    return !state.recordId;
+};
 
 const getAnnualValue = (state) => {
     const amount = state.donationValue;
