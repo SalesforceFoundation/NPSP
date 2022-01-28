@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from "lwc";
 import CURRENCY from "@salesforce/i18n/currency";
 import { registerListener } from "c/pubsubNoPageRef";
-import { Rd2Service, PERIOD, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN, ACTIONS } from "c/rd2Service";
+import { Rd2Service, PERIOD, RECURRING_TYPE_OPEN, ACTIONS } from "c/rd2Service";
 import {
     isNull,
     showToast,
@@ -31,9 +31,6 @@ import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Don
 import FIELD_INSTALLMENT_PERIOD from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c";
 import FIELD_NEXT_DONATION_DATE from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c";
 import FIELD_CHANGE_TYPE from "@salesforce/schema/npe03__Recurring_Donation__c.ChangeType__c";
-import FIELD_PAID_AMOUNT from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Paid_Amount__c";
-import FIELD_PAID_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c";
-import FIELD_INSTALLMENTS from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c";
 
 import currencyFieldLabel from "@salesforce/label/c.lblCurrency";
 import cancelButtonLabel from "@salesforce/label/c.stgBtnCancel";
@@ -70,9 +67,6 @@ import CONTACT_FIRST_NAME from "@salesforce/schema/Contact.FirstName";
 import CONTACT_LAST_NAME from "@salesforce/schema/Contact.LastName";
 import ACCOUNT_NAME from "@salesforce/schema/Account.Name";
 import ACCOUNT_PRIMARY_CONTACT_LAST_NAME from "@salesforce/schema/Account.npe01__One2OneContact__r.LastName";
-
-const CHANGE_TYPE_UPGRADE = "Upgrade";
-const CHANGE_TYPE_DOWNGRADE = "Downgrade";
 
 const ELEVATE_SUPPORTED_COUNTRIES = ["US", "USA", "United States", "United States of America"];
 const ELEVATE_SUPPORTED_CURRENCIES = ["USD"];
@@ -230,7 +224,6 @@ export default class rd2EntryForm extends LightningElement {
             .finally(() => {
                 this.isLoading = false;
                 this.evaluateElevateEditWidget();
-                this.handleDonationValueChange();
             });
 
         /*
@@ -326,7 +319,6 @@ export default class rd2EntryForm extends LightningElement {
 
             this.evaluateElevateEditWidget();
             this.evaluateElevateWidget();
-            this.handleDonationValueChange();
 
         } else if (response.error) {
             this.handleError(response.error);
@@ -440,7 +432,6 @@ export default class rd2EntryForm extends LightningElement {
                 payload: event.detail
             });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodChange(event) {
@@ -450,13 +441,11 @@ export default class rd2EntryForm extends LightningElement {
                 payload: event.detail
             });
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodTypeChange(event) {
         this.periodType = event.detail;
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
         this.rd2State = this.rd2Service.dispatch(this.rd2State,
             {
                 type: ACTIONS.SET_PERIOD_TYPE,
@@ -486,7 +475,6 @@ export default class rd2EntryForm extends LightningElement {
                 type: ACTIONS.SET_RECURRING_FREQUENCY,
                 payload: event.detail
             });
-        this.handleDonationValueChange();
     }
 
 
@@ -496,7 +484,6 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleCurrencyChange(event) {
         this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
     }
 
     /***
@@ -513,88 +500,10 @@ export default class rd2EntryForm extends LightningElement {
             type: ACTIONS.SET_DONATION_AMOUNT,
             payload: event.target.value
         });
-        this.handleDonationValueChange();
     }
 
-    /***
-     * @description Checks if Change Log is Enabled, then checks the Annual Value
-     */
-    handleDonationValueChange() {
-        if (this.isChangeLogEnabled) {
-            if (!this.donationValue) {
-                this.donationValue = this.returnDonationValue(true);
-            }
-            this.showChangeTypeField = this.isEdit;
-            this.checkForDonationValueChange();
-        }
-    }
-
-    /***
-     * @description Get the Annual Value based on the current Amount and Schedule
-     */
-    getAnnualValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const formFrequency = allFields[FIELD_INSTALLMENT_FREQUENCY.fieldApiName];
-        const frequency = (duringInit || !formFrequency)
-            ? getFieldValue(this.record, FIELD_INSTALLMENT_FREQUENCY) : formFrequency;
-        const period = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENT_PERIOD)
-            : allFields[FIELD_INSTALLMENT_PERIOD.fieldApiName];
-        const yearlyFrequency = this.periodToYearlyFrequencyMap[period];
-        return amount * (yearlyFrequency / frequency);
-    }
-
-    /***
-     * @description Get the Expected Value based on the current Amount, Paid Amount and Installment Number
-     */
-    getExpectedTotalValue(duringInit) {
-        const allFields = this.getAllFields();
-        const amount = duringInit ? getFieldValue(this.record, FIELD_AMOUNT)
-            : allFields[FIELD_AMOUNT.fieldApiName];
-        const paidAmount = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_AMOUNT));
-        const paidInstallments = this.returnZeroIfNull(getFieldValue(this.record, FIELD_PAID_INSTALLMENTS));
-        const numberOfInstallments = duringInit ? getFieldValue(this.record, FIELD_INSTALLMENTS)
-            : allFields[FIELD_INSTALLMENTS.fieldApiName];
-        const remainingInstallments = numberOfInstallments - paidInstallments;
-        const expectedValue = paidAmount + remainingInstallments * amount;
-        return expectedValue;
-    }
-
-    /***
-     * @description Returns 0 if the provided value is null
-     */
-    returnZeroIfNull(numberField) {
-        return numberField != null ? numberField : 0;
-    }
-
-    /***
-     * @description Returns the Annual Value for Open Donations and Expected Value for Fixed
-     */
-    returnDonationValue(duringInit) {
-        if (this.getRecurringType() === RECURRING_TYPE_OPEN) {
-            return this.getAnnualValue(duringInit);
-        } else if (this.getRecurringType() === RECURRING_TYPE_FIXED) {
-            return this.getExpectedTotalValue(duringInit);
-        }
-    }
-
-    /***
-     * @description Checks if the Annual or Expected Total Value changed, which will update the Change Type
-     */
-    checkForDonationValueChange() {
-        let newChangeType = "";
-        let newdonationValue = this.returnDonationValue();
-
-        if (this.rd2State.recurringType !== this.getRecurringType()) {
-            newChangeType = "";
-        } else if (newdonationValue > this.donationValue) {
-            newChangeType = CHANGE_TYPE_UPGRADE;
-        } else if (newdonationValue < this.donationValue) {
-            newChangeType = CHANGE_TYPE_DOWNGRADE;
-        }
-
-        this.changeType = newChangeType;
+    get _showChangeTypeField() {
+        return !!this.rd2State.recordId && this.rd2State.isChangeLogEnabled;
     }
 
     /***
@@ -622,7 +531,6 @@ export default class rd2EntryForm extends LightningElement {
     /***
      * @description Checks if the Elevate widget should be displayed.
      * The Elevate widget is applicable to new RDs only for now.
-     * @param paymentMethod Payment method
      */
     evaluateElevateWidget() {
         const isScheduleSupported = this.isScheduleSupported();
@@ -983,7 +891,6 @@ export default class rd2EntryForm extends LightningElement {
         }
         if (!isNull(this.scheduleComponent)) {
             this.scheduleComponent.resetValues();
-            this.scheduleComponent.forceRefresh();
         }
         if (!isNull(this.customFieldsComponent)) {
             this.customFieldsComponent.resetValues();

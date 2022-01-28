@@ -598,6 +598,11 @@ describe('c-rd2-entry-form', () => {
         let controller;
 
         beforeEach(async () => {
+
+            getInitialView.mockResolvedValue({
+                ...rd2WithoutCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
             getRecurringData.mockResolvedValue(recurringDataContactResponse);
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
@@ -621,6 +626,7 @@ describe('c-rd2-entry-form', () => {
 
         it('open donation, when form loads, change type picklist is empty', async () => {
             const changeTypePicklist = controller.changeTypePicklist();
+            expect(changeTypePicklist).toBeTruthy();
             expect(changeTypePicklist.value).toBe('');
         });
 
@@ -632,7 +638,9 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('open donation, when frequency changed from monthly to weekly, sets change type to upgrade', async () => {
-            controller.recurringPeriod().changeValue('Weekly');
+            controller.recurringPeriod().changeValue('Advanced');
+            await flushPromises();
+            controller.installmentPeriod().changeValue('Weekly');
             await flushPromises();
             const changeTypePicklist = controller.changeTypePicklist();
             expect(changeTypePicklist.value).toBe('Upgrade');
@@ -833,7 +841,7 @@ class RD2FormController {
     async setDefaultInputFieldValues(recurringType = 'Open') {
         this.recurringType().changeValue(recurringType);
         await flushPromises();
-        if(recurringType === 'Fixed') {
+        if (recurringType === 'Fixed') {
             this.plannedInstallments().setValue(12);
         }
         this.recurringPeriod().changeValue('Monthly');

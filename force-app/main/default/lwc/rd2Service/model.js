@@ -210,7 +210,7 @@ const setPlannedInstallments = (state, plannedInstallments) => {
     };
     return {
         ...newState,
-        changeType: getChangeType(state)
+        changeType: getChangeType(newState)
     };
 };
 
@@ -222,7 +222,7 @@ const setRecurringPeriod = (state, recurringPeriod) => {
 
     return {
         ...newState,
-        changeType: getChangeType(state)
+        changeType: getChangeType(newState)
     };
 };
 
@@ -233,7 +233,7 @@ const setRecurringFrequency = (state, recurringFrequency) => {
     };
     return {
         ...newState,
-        changeType: getChangeType(state)
+        changeType: getChangeType(newState)
     };
 };
 
@@ -244,7 +244,7 @@ const setRecurringType = (state, recurringType) => {
     };
     return {
         ...newState,
-        changeType: getChangeType(state)
+        changeType: getChangeType(newState)
     };
 };
 

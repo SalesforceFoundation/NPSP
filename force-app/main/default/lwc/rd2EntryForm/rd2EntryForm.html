@@ -205,12 +205,12 @@
                                         </lightning-input-field>
                                     </lightning-layout-item>
 
-                                    <template if:true={showChangeTypeField}>
+                                    <template if:true={_showChangeTypeField}>
                                         <lightning-layout-item padding="horizontal-small" size="6" if:true={fields.changeType}>
                                             <lightning-input-field
                                                 data-id="changeType"
                                                 field-name={fields.changeType.apiName}
-                                                value={changeType}
+                                                value={rd2State.changeType}
                                             >
                                             </lightning-input-field>
                                         </lightning-layout-item>
