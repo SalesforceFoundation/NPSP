@@ -1,6 +1,7 @@
 import { LightningElement, api } from 'lwc';
 
 export default class GeModalRecurringDonation extends LightningElement {
+    @api schedule;
     @api cancelCallback;
     @api createRecurrenceCallback;
 

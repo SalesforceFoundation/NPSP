@@ -27,6 +27,17 @@ import FIELD_START_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.St
 const LAST_DAY_OF_MONTH = 'Last_Day';
 
 export default class rd2EntryFormScheduleSection extends LightningElement {
+    // Placeholder for rd2State while implementation is performed by FunRaisers
+    _rd2State;
+    @api
+    get rd2State() {
+        return this._rd2State;
+    }
+    set rd2State(value) {
+        if (!value) return;
+        console.log(`received rd2State from edit action: ${JSON.stringify(value)}`);
+        this._rd2State = value;
+    }
 
     customLabels = Object.freeze({
         picklistLabelAdvanced,
