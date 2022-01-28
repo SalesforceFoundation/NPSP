@@ -390,22 +390,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         return isValid;
     }
 
-    /***
-     * @description Returns value of the Recurring Type field
-     */
-    @api
-    getRecurringType() {
-        return this.rd2State.recurringType;
-    }
-
-
-    @api
-    getInstallmentPeriod() {
-        const installmentPeriod = this.template.querySelector(`lightning-combobox[data-id='installmentPeriod']`);
-
-        return installmentPeriod ? installmentPeriod.value : null;
-    }
-
     /**
      * @description Returns fields displayed on the Recurring Donation Schedule section
      * @return Object containing field API names and their values
@@ -445,14 +429,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         }
 
         return data;
-    }
-
-    /**
-    * @description run init function 
-    */
-    @api
-    forceRefresh() {
-       this.init();
     }
 
     /**
