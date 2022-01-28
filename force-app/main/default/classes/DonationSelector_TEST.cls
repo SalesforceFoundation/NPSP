@@ -143,7 +143,7 @@ private class DonationSelector_TEST {
         for (Integer i = 0; i < opportunityCount; i++) {
             Opportunity dummyOpportunity = new Opportunity(
                 Name = 'Test Opportunity ' + i,
-                StageName = 'Prospecting',
+                StageName = UTIL_UnitTestData_TEST.getOpenStage(),
                 CloseDate = Date.today(),
                 Amount = 100
             );
