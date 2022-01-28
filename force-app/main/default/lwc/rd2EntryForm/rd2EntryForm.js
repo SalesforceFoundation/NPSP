@@ -207,6 +207,9 @@ export default class rd2EntryForm extends LightningElement {
      * @description Get settings required to enable or disable fields and populate their values
      */
     async connectedCallback() {
+        const initialView = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
+        this.rd2State = initialView;
+
         getRecurringSettings({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;
@@ -242,9 +245,6 @@ export default class rd2EntryForm extends LightningElement {
                     });
                 }
             });
-
-        const initialView = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
-        this.rd2State = initialView;
 
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
