@@ -225,6 +225,111 @@ private class Gift_Test {
         System.assertEquals(BDI_DataImport_API.bdiImported, gift.status());
     }
 
+    @isTest
+    static void shouldHaveSchedule() {
+        // Arrange
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            RecurringType__c = 'Open',
+            npe03__Date_Established__c = Date.today(),
+            Day_of_Month__c = '1',
+            StartDate__c = Date.today(),
+            npe03__Installment_Period__c = 'Monthly'
+        );
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift dummyGift = new Gift(dataImport);
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        dummyGift.unitOfWork = stubFor(unitOfWorkMock);
+
+        // Act
+        dummyGift.addSchedule(rd);
+        dummyGift.saveRecord();
+        DataImport__c recordToInsert = (DataImport__c) unitOfWorkMock.objectsToInsert[0];
+
+        // Assert
+        System.assertEquals(true, dummyGift.hasSchedule(),
+            'Gift should have a schedule');
+        System.assertEquals('Open', recordToInsert.Recurring_Donation_Recurring_Type__c,
+            'Unit of work should have recurring donation type set to Open');
+        System.assertEquals('1', recordToInsert.Recurring_Donation_Day_of_Month__c,
+            'Unit of work should have recurring donation day of month set to 1');
+        System.assertEquals('Monthly', recordToInsert.Recurring_Donation_Installment_Period__c,
+            'Unit of work should have recurring donation installment period set to Monthly');
+        System.assertEquals(10, recordToInsert.Recurring_Donation_Amount__c,
+            'Unit of work should have recurring donation amount set to 10');
+        System.assertEquals(Date.today(), recordToInsert.Recurring_Donation_Date_Established__c,
+            'Unit of work should have recurring donation date established set to today');
+        System.assertEquals(Date.today(), recordToInsert.Recurring_Donation_Effective_Date__c,
+            'Unit of work should have recurring donation effective date set to today');
+    }
+
+    @isTest
+    static void shouldNotHaveSchedule() {
+        // Arrange
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift dummyGift = new Gift(dataImport);
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        dummyGift.unitOfWork = stubFor(unitOfWorkMock);
+
+        // Act
+        dummyGift.saveRecord();
+        DataImport__c recordToInsert = (DataImport__c) unitOfWorkMock.objectsToInsert[0];
+
+        // Assert
+        System.assertEquals(false, dummyGift.hasSchedule(),
+            'Gift should not have a schedule');
+        System.assert(recordToInsert.Recurring_Donation_Recurring_Type__c == null,
+            'Unit of work should not have recurring donation type set');
+        System.assert(recordToInsert.Recurring_Donation_Day_of_Month__c == null,
+            'Unit of work should not have recurring donation day of month set');
+        System.assert(recordToInsert.Recurring_Donation_Installment_Period__c == null,
+            'Unit of work should not have recurring donation installment period set');
+        System.assert(recordToInsert.Recurring_Donation_Amount__c == null,
+            'Unit of work should not have recurring donation amount set');
+        System.assert(recordToInsert.Recurring_Donation_Date_Established__c == null,
+            'Unit of work should not have recurring donation date established set');
+        System.assert(recordToInsert.Recurring_Donation_Effective_Date__c == null,
+            'Unit of work should not have recurring donation effective date set');
+    }
+
+    @isTest
+    static void shouldNotHaveScheduleWhenProvidedScheduleIsIncomplete() {
+        // Arrange
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            npe03__Date_Established__c = Date.today(),
+            Day_of_Month__c = '1',
+            StartDate__c = Date.today(),
+            npe03__Installment_Period__c = 'Monthly'
+        );
+        Id dummyDataImportId = UTIL_UnitTestData_TEST.mockId(DataImport__c.SObjectType);
+        DataImport__c dataImport = new DataImport__c(
+            Id = dummyDataImportId,
+            Donation_Amount__c = 10,
+            Donation_Date__c = Date.today()
+        );
+        Gift dummyGift = new Gift(dataImport);
+        UnitOfWorkMock unitOfWorkMock = new UnitOfWorkMock();
+        dummyGift.unitOfWork = stubFor(unitOfWorkMock);
+
+        // Act
+        dummyGift.addSchedule(rd);
+        dummyGift.saveRecord();
+        DataImport__c recordToInsert = (DataImport__c) unitOfWorkMock.objectsToInsert[0];
+
+        // Assert
+        System.assertEquals(false, dummyGift.hasSchedule(),
+            'Gift should not have a schedule');
+    }
+
     private class GiftSelectorMock implements StubProvider {
 
         private Decimal newDonationAmount;
@@ -262,6 +367,7 @@ private class Gift_Test {
     }
 
     private class UnitOfWorkMock implements StubProvider {
+        public List<SObject> objectsToInsert;
         public Boolean registerDirtyCalled = false;
         public Boolean saveCalled = false;
 
@@ -275,6 +381,7 @@ private class Gift_Test {
             switch on (stubbedMethodName) {
                 when 'registerDirty' {
                     registerDirtyCalled = true;
+                    objectsToInsert = (List<SObject>) listOfArgs[0];
                 }
                 when 'save' {
                     saveCalled = true;
