@@ -128,6 +128,8 @@ const getChangeType = (state) => {
     } else if (newValue > oldValue) {
         return CHANGE_TYPE_UPGRADE;
     }
+
+    return "";
 }
 
 const isAdvancedPeriod = (state) => {
