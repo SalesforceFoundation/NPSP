@@ -4,17 +4,19 @@ import {
     SET_CONTACT_DETAILS,
     SET_ACCOUNT_DETAILS,
     SET_DAY_OF_MONTH,
+    SET_DONATION_AMOUNT,
     SET_DONOR_TYPE,
     SET_DATE_ESTABLISHED,
     SET_PERIOD_TYPE,
     SET_START_DATE,
     SET_RECURRING_TYPE,
     SET_RECURRING_PERIOD,
+    SET_RECURRING_FREQUENCY,
     SET_PLANNED_INSTALLMENTS,
     INITIAL_VIEW_LOAD
 } from "./actions";
 
-import { PERIOD, RECURRING_PERIOD_ADVANCED } from 'c/rd2Service';
+import { PERIOD, RECURRING_PERIOD_ADVANCED, RECURRING_TYPE_FIXED, RECURRING_TYPE_OPEN } from "c/rd2Service";
 
 const DEFAULT_INITIAL_STATE = {
     // RD2 Record
@@ -38,7 +40,7 @@ const DEFAULT_INITIAL_STATE = {
     periodType: null, // Monthly or Advanced
     recurringFrequency: null, // Every *2* Months
     startDate: null,
-    dayOfMonth: null,
+    dayOfMonth: null, // 1, 2, 3 ... "LAST_DAY"
     plannedInstallments: null, // Only used for "Fixed" RDs.
     recurringType: null, // Fixed or Open
 
@@ -67,6 +69,31 @@ const DEFAULT_INITIAL_STATE = {
     InstallmentPeriodPermissions: {},
     InstallmentFrequencyPermissions: {}
 };
+
+const getAnnualValue = (state) => {
+    const amount = state.donationValue;
+    const frequency = state.recurringFrequency;
+    const period = state.recurringPeriod;
+    const yearlyFrequency = state.periodToYearlyFrequencyMap[period];
+    return amount * (yearlyFrequency / frequency);
+};
+
+const getFixedValue = (state) => {
+    const amount = state.donationValue;
+    const paidAmount = 0; // TODO: populate in model
+    const paidInstallments = 0; // TODO: populate in model
+    const numberOfInstallments = state.plannedInstallments;
+    const remainingInstallments = numberOfInstallments - paidInstallments;
+    return paidAmount + (remainingInstallments * amount);
+};
+
+const getDonationValue = (state) => {
+    if (state.recurringType === RECURRING_TYPE_OPEN) {
+        return getAnnualValue(state);
+    } else if (state.recurringType === RECURRING_TYPE_FIXED) {
+        return getFixedValue(state);
+    }
+}
 
 const isAdvancedPeriod = (state) => {
     return state.recurringPeriod !== PERIOD.MONTHLY
@@ -101,6 +128,13 @@ const setAccountDetails = (state, {accountName, lastName}) => {
         ...state,
         accountName,
         contactLastName: lastName,
+    };
+};
+
+const setDonationAmount = (state, donationValue) => {
+    return {
+        ...state,
+        donationValue
     };
 };
 
@@ -140,6 +174,13 @@ const setRecurringPeriod = (state, recurringPeriod) => {
     return {
         ...state,
         recurringPeriod
+    };
+};
+
+const setRecurringFrequency = (state, recurringFrequency) => {
+    return {
+        ...state,
+        recurringFrequency
     };
 };
 
@@ -191,6 +232,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setAccountDetails(state, action.payload);
         case SET_DAY_OF_MONTH:
             return setDayOfMonth(state, action.payload);
+        case SET_DONATION_AMOUNT:
+            return setDonationAmount(state, action.payload);
         case SET_DONOR_TYPE:
             return setDonorType(state, action.payload);
         case SET_DATE_ESTABLISHED:
@@ -199,6 +242,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setPlannedInstallments(state, action.payload);
         case SET_RECURRING_PERIOD:
             return setRecurringPeriod(state, action.payload);
+        case SET_RECURRING_FREQUENCY:
+            return setRecurringFrequency(state, action.payload);
         case SET_RECURRING_TYPE:
             return setRecurringType(state, action.payload);
         case SET_PERIOD_TYPE:

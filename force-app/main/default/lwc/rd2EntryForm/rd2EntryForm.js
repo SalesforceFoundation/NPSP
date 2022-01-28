@@ -434,13 +434,13 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleRecurringTypeChange(event) {
-        this.handleElevateWidgetDisplay();
-        this.handleDonationValueChange();
         this.rd2State = this.rd2Service.dispatch(this.rd2State,
             {
                 type: ACTIONS.SET_RECURRING_TYPE,
                 payload: event.detail
             });
+        this.handleElevateWidgetDisplay();
+        this.handleDonationValueChange();
     }
 
     handleRecurringPeriodChange(event) {
@@ -508,6 +508,14 @@ export default class rd2EntryForm extends LightningElement {
         }
     }
 
+    handleAmountChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            type: ACTIONS.SET_DONATION_AMOUNT,
+            payload: event.target.value
+        });
+        this.handleDonationValueChange();
+    }
+
     /***
      * @description Checks if Change Log is Enabled, then checks the Annual Value
      */
@@ -515,9 +523,6 @@ export default class rd2EntryForm extends LightningElement {
         if (this.isChangeLogEnabled) {
             if (!this.donationValue) {
                 this.donationValue = this.returnDonationValue(true);
-            }
-            if (!this.recurringType) {
-                this.recurringType = this.getRecurringType();
             }
             this.showChangeTypeField = this.isEdit;
             this.checkForDonationValueChange();
@@ -581,7 +586,7 @@ export default class rd2EntryForm extends LightningElement {
         let newChangeType = "";
         let newdonationValue = this.returnDonationValue();
 
-        if (this.recurringType !== this.getRecurringType()) {
+        if (this.rd2State.recurringType !== this.getRecurringType()) {
             newChangeType = "";
         } else if (newdonationValue > this.donationValue) {
             newChangeType = CHANGE_TYPE_UPGRADE;
