@@ -44,7 +44,7 @@ private class Gift_Test {
         Opportunity dummyOpportunity = new Opportunity(
             Id = dummyOpportunityId,
             Amount = 100.00,
-            StageName = 'Open'
+            StageName = UTIL_UnitTestData_TEST.getOpenStage()
         );
         Donation dummyDonation = new Donation(dummyOpportunity);
         Gift gift = new Gift(dummyDataImport, dummyDonation);
