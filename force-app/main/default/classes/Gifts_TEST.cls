@@ -384,7 +384,7 @@ private class Gifts_TEST {
 
                     return new List<Opportunity> { new Opportunity(
                         Amount = 100.00,
-                        StageName = 'Open',
+                        StageName = UTIL_UnitTestData_TEST.getOpenStage(),
                         Name = 'Dummy Opportunity From Mocked Selector',
                         CloseDate = Date.today()
                     )};
