@@ -287,7 +287,7 @@ public inherited sharing class LegacyHouseholds extends fflib_SObjects {
                 contactService.moveOppsForContactsSwitchingAccounts(contactsInstance);
         householdService.updateHouseholds(householdIdsToUpdate, dmlWrapper);
 
-        Households.updateNameAndMemberCount(contactsInstance.getHouseholdIdsToRenameAndAggregate());
+        Households.updateNameAndMemberCount(contactsInstance.getHouseholdIdsToRenameAndCountMembers());
 
         updateOwners(contactsInstance.getNewOwnerContactById(), dmlWrapper);
     }

@@ -144,7 +144,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
         return householdIdsToRename;
     }
 
-    public List<Id> getHouseholdIdsToRenameAndAggregate() {
+    public List<Id> getHouseholdIdsToRenameAndCountMembers() {
         Set<Id> uniqueAccountsToHandle = new Set<Id>(getHouseholdIdsToRename());
 
         for (Contact contactRecord : (List<Contact>) getRecords()) {
