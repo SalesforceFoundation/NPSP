@@ -473,7 +473,10 @@ describe('c-rd2-entry-form', () => {
         });
 
         it('clears credit card fields when payment method changed to ACH', async () => {
-            getInitialView.mockResolvedValue(rd2WithCardCommitmentInitialView);
+            getInitialView.mockResolvedValue({
+                ...rd2WithCardCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
             setupCommitmentResponse(handleCommitmentResponseBodyACH);
             const element = createRd2EditForm(FAKE_CARD_RD2_ID);
             const controller = new RD2FormController(element);
@@ -534,7 +537,10 @@ describe('c-rd2-entry-form', () => {
 
 
         it('clears ACH fields when payment method changed to Card', async () => {
-            getInitialView.mockResolvedValue(rd2WithACHCommitmentInitialView);
+            getInitialView.mockResolvedValue({
+                ...rd2WithACHCommitmentInitialView,
+                isChangeLogEnabled: true
+            });
 
             setupCommitmentResponse(handleCommitmentResponseBody);
             const element = createRd2EditForm(FAKE_ACH_RD2_ID);
