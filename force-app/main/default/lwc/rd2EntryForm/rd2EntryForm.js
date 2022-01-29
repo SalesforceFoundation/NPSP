@@ -107,34 +107,28 @@ export default class rd2EntryForm extends LightningElement {
     @api parentId;
     @api recordId;
 
-    @track isEdit = false;
-    @track isCommitmentEdit = false;
+    isEdit = false;
+    isCommitmentEdit = false;
     @track record;
     recordName;
-    @track isMultiCurrencyEnabled = false;
+    isMultiCurrencyEnabled = false;
     @track fields = {};
     @track rdSettings = {};
     @track customFields = {};
     fieldInfos;
 
-    @track header = newHeaderLabel;
+    header = newHeaderLabel;
 
-    @track isAutoNamingEnabled;
-    @track isLoading = true;
-    @track loadingText = this.customLabels.loadingMessage;
-    @track hasCustomFields = false;
+    isAutoNamingEnabled;
+    isLoading = true;
+    loadingText = this.customLabels.loadingMessage;
+    hasCustomFields = false;
     isRecordReady = false;
-    @track isSettingReady = false;
-    @track isSaveButtonDisabled = true;
-    @track changeType;
-    @track showChangeTypeField = false;
-    isChangeLogEnabled = false;
-    periodToYearlyFrequencyMap;
-    donationValue;
-    recurringType;
+    isSettingReady = false;
+    isSaveButtonDisabled = true;
 
-    @track isElevateWidgetEnabled = false;
-    @track isElevateEditWidgetEnabled = false;
+    isElevateWidgetEnabled = false;
+    isElevateEditWidgetEnabled = false;
     hasUserDisabledElevateWidget = false;
     isElevateCustomer = false;
     commitmentId = null;
@@ -142,13 +136,8 @@ export default class rd2EntryForm extends LightningElement {
     _paymentMethod;
 
     accountHolderType;
-    periodType;
     recurringDonationStatus;
     closedStatusValues;
-
-    contact = {
-        MailingCountry: null
-    };
 
     rd2Service = new Rd2Service();
     @track rd2State = this.rd2Service.init();
@@ -214,8 +203,6 @@ export default class rd2EntryForm extends LightningElement {
                 this.customFields = response.customFieldSets;
                 this.hasCustomFields = Object.keys(this.customFields).length !== 0;
                 this.isElevateCustomer = response.isElevateCustomer;
-                this.isChangeLogEnabled = response.isChangeLogEnabled;
-                this.periodToYearlyFrequencyMap = response.periodToYearlyFrequencyMap;
                 this.closedStatusValues = response.closedStatusValues;
             })
             .catch((error) => {
@@ -444,7 +431,6 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleRecurringPeriodTypeChange(event) {
-        this.periodType = event.detail;
         this.handleElevateWidgetDisplay();
         this.rd2State = this.rd2Service.dispatch(this.rd2State,
             {
