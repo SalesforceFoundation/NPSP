@@ -52,6 +52,8 @@ const DEFAULT_INITIAL_STATE = {
     dayOfMonth: null, // 1, 2, 3 ... "LAST_DAY"
     plannedInstallments: null, // Only used for "Fixed" RDs.
     recurringType: null, // Fixed or Open
+    paidAmount: null, // Fixed Only, used to calculate change type
+    paidInstallments: null, // Fixed Only, used to calculate change type
 
     //change type
     changeType: "",
@@ -100,8 +102,8 @@ const getAnnualValue = (state) => {
 
 const getFixedValue = (state) => {
     const amount = state.donationValue;
-    const paidAmount = 0; // TODO: populate in model
-    const paidInstallments = 0; // TODO: populate in model
+    const paidAmount = state.paidAmount;
+    const paidInstallments = state.paidInstallments;
     const numberOfInstallments = state.plannedInstallments;
     const remainingInstallments = numberOfInstallments - paidInstallments;
     return paidAmount + (remainingInstallments * amount);

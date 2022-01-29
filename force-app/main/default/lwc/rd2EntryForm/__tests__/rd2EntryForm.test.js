@@ -673,6 +673,15 @@ describe('c-rd2-entry-form', () => {
         let controller;
 
         beforeEach(async () => {
+            getInitialView.mockResolvedValue({
+                ...rd2WithoutCommitmentInitialView,
+                record: {
+                    ...rd2WithoutCommitmentInitialView.record,
+                    recurringType: "Fixed",
+                    plannedInstallments: 12
+                },
+                isChangeLogEnabled: true
+            });
             getRecurringData.mockResolvedValue({
                 "DonorType": "Contact",
                 "Period": "Monthly",

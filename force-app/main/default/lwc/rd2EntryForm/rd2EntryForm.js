@@ -477,6 +477,14 @@ export default class rd2EntryForm extends LightningElement {
             });
     }
 
+    handleInstallmentsChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State,
+            {
+                type: ACTIONS.SET_PLANNED_INSTALLMENTS,
+                payload: event.detail
+            });
+    }
+
 
     /***
      * @description Currency change might hide or display the credit card widget
