@@ -95,20 +95,17 @@ const isNewRecord = (state) => {
 };
 
 const getAnnualValue = (state) => {
-    const amount = state.donationValue;
-    const frequency = state.recurringFrequency;
-    const period = state.recurringPeriod;
-    const yearlyFrequency = state.periodToYearlyFrequencyMap[period];
-    return amount * (yearlyFrequency / frequency);
+    const { donationValue, recurringFrequency, recurringPeriod, periodToYearlyFrequencyMap } = state;
+    const yearlyFrequency = periodToYearlyFrequencyMap[recurringPeriod];
+
+    return donationValue * (yearlyFrequency / recurringFrequency);
 };
 
 const getFixedValue = (state) => {
-    const amount = state.donationValue;
-    const paidAmount = state.paidAmount;
-    const paidInstallments = state.paidInstallments;
-    const numberOfInstallments = state.plannedInstallments;
-    const remainingInstallments = numberOfInstallments - paidInstallments;
-    return paidAmount + (remainingInstallments * amount);
+    const { donationValue, paidAmount, paidInstallments, plannedInstallments } = state;
+    const remainingInstallments = plannedInstallments - paidInstallments;
+
+    return paidAmount + (remainingInstallments * donationValue);
 };
 
 const getDonationValue = (state) => {
