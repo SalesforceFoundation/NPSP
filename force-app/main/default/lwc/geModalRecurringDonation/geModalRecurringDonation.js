@@ -1,7 +1,9 @@
 import { LightningElement, api } from 'lwc';
+import { isEmpty } from 'c/utilCommon';
 
 import commonCancel from '@salesforce/label/c.commonCancel';
 import geAddSchedule from '@salesforce/label/c.geAddSchedule';
+import geUpdateSchedule from '@salesforce/label/c.geUpdateSchedule';
 
 export default class GeModalRecurringDonation extends LightningElement {
     @api schedule;
@@ -12,8 +14,7 @@ export default class GeModalRecurringDonation extends LightningElement {
 
     connectedCallback() {
         this.labels = {
-            commonCancel,
-            geAddSchedule,
+            commonCancel
         }
     }
 
@@ -29,6 +30,14 @@ export default class GeModalRecurringDonation extends LightningElement {
 
         baseClass.push('slds-theme_'+ this.variant);
         return baseClass.join(' ');
+    }
+
+    get isUpdatingSchedule() {
+        return !isEmpty(this.schedule);
+    }
+
+    get applyScheduleButton() {
+        return this.isUpdatingSchedule ? geUpdateSchedule : geAddSchedule;
     }
 
     get scheduleComponent() {

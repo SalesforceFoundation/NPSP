@@ -26,7 +26,7 @@ describe('c-ge-modal-recurring-donation', () => {
             expect(scheduleComponent).toBeDefined();
         });
 
-        it('renders cancel and create recurrence buttons', async () => {
+        it('renders cancel and add schedule buttons', async () => {
             const modalElement = setup();
             await flushPromises();
 
@@ -39,6 +39,23 @@ describe('c-ge-modal-recurring-donation', () => {
             expect(cancelButton.label).toBe('c.commonCancel');
             expect(createRecurrenceButton).toBeDefined();
             expect(createRecurrenceButton.label).toBe('c.geAddSchedule');
+        });
+
+        it('renders update schedule button', async () => {
+            const modalElement = setup();
+            modalElement.schedule = {
+                RecurringType__c: 'Open',
+                StartDate__c: '2020-01-01',
+                npe03__Installment_Period__c: 'Monthly',
+            }
+            await flushPromises();
+
+            const buttons = modalElement.shadowRoot.querySelectorAll('lightning-button');
+            const updateScheduleButton = buttons[1];
+
+            expect(buttons.length).toBe(2);
+            expect(updateScheduleButton).toBeDefined();
+            expect(updateScheduleButton.label).toBe('c.geUpdateSchedule');
         });
     });
 
