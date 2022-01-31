@@ -195,6 +195,10 @@ export default class rd2EntryForm extends LightningElement {
     async connectedCallback() {
         this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
 
+        // avoid binding wires into state object
+        this._contactId = this.rd2State.contactId;
+        this._accountId = this.rd2State.accountId;
+
         getRecurringSettings({ parentId: this.parentId })
             .then(response => {
                 this.isAutoNamingEnabled = response.isAutoNamingEnabled;

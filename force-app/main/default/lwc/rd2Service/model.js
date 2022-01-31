@@ -152,12 +152,12 @@ const setContactId = (state, contactId) => {
     };
 };
 
-const setContactDetails = (state, {firstName, lastName, mailingCountry}) => {
+const setContactDetails = (state, { firstName, lastName, mailingCountry }) => {
     return {
         ...state,
         contactFirstName: firstName,
         contactLastName: lastName,
-        contactMailingCountry: mailingCountry
+        contactMailingCountry: mailingCountry,
     };
 };
 
@@ -290,7 +290,6 @@ const loadInitialView = (state, payload) => {
 };
 
 export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
-    console.log(JSON.parse(JSON.stringify({state, action})));
     switch (action.type) {
         case SET_CONTACT_ID:
             return setContactId(state, action.payload);
