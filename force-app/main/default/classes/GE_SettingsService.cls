@@ -50,6 +50,6 @@ public with sharing class GE_SettingsService {
     }
 
     public Boolean isRecurringGiftsEnabled() {
-        return UTIL_CustomSettings_API.getGiftEntrySettings().Enable_Recurring_Gifts__c;
+        return UTIL_CustomSettings_API.getGiftEntrySettings().Enable_Recurring_Donations_in_Gift_Entry__c;
     }
 }
