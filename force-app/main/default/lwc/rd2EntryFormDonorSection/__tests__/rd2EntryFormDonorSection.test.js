@@ -3,14 +3,11 @@ import Rd2EntryFormDonorSection from "c/rd2EntryFormDonorSection";
 import { Rd2Service } from "c/rd2Service";
 import { getObjectInfo } from "lightning/uiObjectInfoApi";
 
-import getRecurringData from "@salesforce/apex/RD2_EntryFormController.getRecurringData";
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import RECURRING_DONATION_OBJECT from "@salesforce/schema/npe03__Recurring_Donation__c";
 import { SET_DONOR_TYPE } from "../../rd2Service/actions";
 
 
-const recurringDataAccountResponse = require("../../../../../../tests/__mocks__/apex/data/recurringDataAccountResponse.json");
-const recurringDataContactResponse = require("../../../../../../tests/__mocks__/apex/data/recurringDataContactResponse.json");
 const recurringDonationObjectInfo = require("../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json");
 const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
 const rd2WithCardCommitmentInitialView = require("../../rd2EntryForm/__tests__/data/rd2WithCardCommitmentInitialView.json");
@@ -83,7 +80,6 @@ describe("existing recurring contact donation", () => {
     let element;
 
     beforeEach(async () => {
-        getRecurringData.mockResolvedValue(recurringDataContactResponse);
         element = await createDonorSection({ recordId: FAKE_RD_ID });
         getObjectInfo.emit(recurringDonationObjectInfo, ({ objectApiName }) => {
             return objectApiName === RECURRING_DONATION_OBJECT.objectApiName;
@@ -121,7 +117,6 @@ describe("existing recurring account donation", () => {
             }
         };
 
-        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
 
         element = await createDonorSection({ recordId: FAKE_RD_ID }, initialViewWithAccountDonor);
 
@@ -179,7 +174,6 @@ describe("new donation from account", () => {
             accountId: FAKE_ACCOUNT_ID
         };
 
-        getRecurringData.mockResolvedValue(recurringDataAccountResponse);
 
         element = await createDonorSection({ parentId: FAKE_ACCOUNT_ID, parentSObjectType: "Account" }, initialViewFromAccount);
 
@@ -240,7 +234,6 @@ describe("new donation from contact", () => {
     let element;
 
     beforeEach(async () => {
-        getRecurringData.mockResolvedValue({ ...recurringDataAccountResponse, DonorType: "Contact" });
 
         element = await createDonorSection({ parentId: FAKE_CONTACT_ID, parentSObjectType: "Contact" });
 

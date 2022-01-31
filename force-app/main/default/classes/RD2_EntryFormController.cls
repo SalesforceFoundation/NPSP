@@ -160,36 +160,6 @@ public with sharing class RD2_EntryFormController {
         };
     }
 
-    /**
-    * @description Retrieve the donor type for an existing RD record
-    * @param recordId RecurringDonation.RecordId
-    * @return Map<String, Object> of specific type of RD data
-    */
-    @AuraEnabled
-    public static Map<String, Object> getRecurringData(String recordId) {
-        if (recordId == null) {
-            return null;
-        }
-
-        npe03__Recurring_Donation__c rd;
-        Map<String, Object> response = new Map<String, Object>();
-        try {
-            rd = selector.getRecurringDonationForUI(recordId);
-        } catch (Exception ex) {
-            throw new AuraHandledException(ex.getMessage());
-        }
-
-        String donorType = getDonorType(rd);
-        response.put('DonorType', donorType);
-
-        response.put('Period', rd.npe03__Installment_Period__c);
-        response.put('Frequency', rd.InstallmentFrequency__c);
-        response.put('RecurringType', rd.RecurringType__c);
-        response.put('NumInstallments', rd.npe03__Installments__c);
-
-        return response;
-    }
-
     private static String getDonorType(npe03__Recurring_Donation__c rd) {
         String donorType = isContactDonor(rd) ? 'Contact' : 'Account';
         return donorType;

@@ -3,7 +3,6 @@ import Rd2EntryFormScheduleSection from 'c/rd2EntryFormScheduleSection';
 import { Rd2Service } from "c/rd2Service";
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import { getObjectInfo, getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { mockReset } from 'lightning/inputField';
 
@@ -13,7 +12,6 @@ import RECURRING_DONATION_OBJECT from '@salesforce/schema/npe03__Recurring_Donat
 import { SET_RECURRING_TYPE } from "../../rd2Service/actions";
 
 const mockGetRecurringSettings = require('./data/getRecurringSettings.json');
-const mockGetRecurringDataFixed = require('./data/getRecurringDataFixed.json');
 const mockDayOfMonthPicklistValues = require('./data/wiredDayOfMonthPicklistValues.json');
 const mockInstallmentPeriodPicklistValues = require('./data/wiredInstallmentPeriodPicklistValues.json');
 const mockRecurringDonationObjectInfo = require('../../../../../../tests/__mocks__/apex/data/recurringDonationObjectInfo.json');
@@ -244,7 +242,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
             };
             getInitialView.mockResolvedValue(initialViewFixed);
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
-            getRecurringData.mockResolvedValue(mockGetRecurringDataFixed);
             const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
             component.rd2State = rd2State;
 
@@ -257,10 +254,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
         it('when record is Open recurring type, number of planned installments field is not visible', async () => {
             const rd2Service = new Rd2Service();
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
-            getRecurringData.mockResolvedValue({
-                ...mockGetRecurringDataFixed,
-                RecurringType: 'Open'
-            });
             getInitialView.mockResolvedValue(initialViewResponse);
             const rd2State = await rd2Service.loadInitialView(rd2Service.init(), FAKE_RD2_ID, FAKE_CONTACT_ID);
             component.rd2State = rd2State;
@@ -281,7 +274,6 @@ describe('c-rd2-entry-form-schedule-section', () => {
 
         it('alerts parent component when wiredGetRecurringObjectInfo fails', async () => {
             getRecurringSettings.mockResolvedValue(mockGetRecurringSettings);
-            getRecurringData.mockResolvedValue(mockGetRecurringDataFixed);
             document.body.appendChild(component);
             const errorMessage = {
                 "status": 403,

@@ -6,7 +6,6 @@ import { mockGetIframeReply } from "c/psElevateTokenHandler";
 
 import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 import getRecurringSettings from '@salesforce/apex/RD2_EntryFormController.getRecurringSettings';
-import getRecurringData from '@salesforce/apex/RD2_EntryFormController.getRecurringData';
 import hasRequiredFieldPermissions from '@salesforce/apex/RD2_EntryFormController.hasRequiredFieldPermissions';
 import handleCommitment from '@salesforce/apex/RD2_EntryFormController.handleCommitment';
 
@@ -313,7 +312,6 @@ describe('c-rd2-entry-form', () => {
     describe('edit mode', () => {
 
         beforeEach(() => {
-            getRecurringData.mockResolvedValue(recurringDataContactResponse);
             setupIframeReply();
         })
 
@@ -609,7 +607,6 @@ describe('c-rd2-entry-form', () => {
                 ...rd2WithoutCommitmentInitialView,
                 isChangeLogEnabled: true
             });
-            getRecurringData.mockResolvedValue(recurringDataContactResponse);
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
             await flushPromises();
@@ -687,12 +684,6 @@ describe('c-rd2-entry-form', () => {
                     plannedInstallments: 12
                 },
                 isChangeLogEnabled: true
-            });
-            getRecurringData.mockResolvedValue({
-                "DonorType": "Contact",
-                "Period": "Monthly",
-                "Frequency": 1,
-                "RecurringType": "Fixed"
             });
             element = createRd2EditForm(FAKE_CARD_RD2_ID);
             controller = new RD2FormController(element);
