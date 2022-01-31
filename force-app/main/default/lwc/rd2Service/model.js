@@ -2,6 +2,7 @@ import {
     SET_CONTACT_ID,
     SET_ACCOUNT_ID,
     SET_CONTACT_DETAILS,
+    SET_CURRENCY,
     SET_ACCOUNT_DETAILS,
     SET_DAY_OF_MONTH,
     SET_DONATION_AMOUNT,
@@ -45,6 +46,7 @@ const DEFAULT_INITIAL_STATE = {
 
     //schedule
     donationValue: null,
+    currency: null,
     recurringPeriod: null, // Monthly / Yearly / 1st and 15th. When periodType is Monthly, recurringPeriod is Monthly.
     periodType: null, // Monthly or Advanced
     recurringFrequency: null, // Every *2* Months
@@ -159,6 +161,13 @@ const setContactDetails = (state, {firstName, lastName, mailingCountry}) => {
         contactFirstName: firstName,
         contactLastName: lastName,
         contactMailingCountry: mailingCountry
+    };
+};
+
+const setCurrency = (state, currencyIsoCode) => {
+    return {
+        ...state,
+        currencyIsoCode
     };
 };
 
@@ -292,6 +301,8 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
             return setAccountId(state, action.payload);
         case SET_CONTACT_DETAILS:
             return setContactDetails(state, action.payload);
+        case SET_CURRENCY:
+            return setCurrency(state, action.payload);
         case SET_ACCOUNT_DETAILS:
             return setAccountDetails(state, action.payload);
         case SET_DAY_OF_MONTH:

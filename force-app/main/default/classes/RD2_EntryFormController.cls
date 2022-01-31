@@ -109,6 +109,9 @@ public with sharing class RD2_EntryFormController {
         if (recordId != null) {
             npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
             view.withRecord(rd);
+            if (view.isMultiCurrencyEnabled) {
+                view.record.currencyIsoCode = (String)rd.get('CurrencyIsoCode');
+            }
         } else if (parentId != null) {
             view.withParentId(parentId);
         }
@@ -539,6 +542,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public String donorType;
         @AuraEnabled public Date dateEstablished;
         @AuraEnabled public Decimal donationValue;
+        @AuraEnabled public String currencyIsoCode;
         @AuraEnabled public Decimal paidAmount;
         @AuraEnabled public String recurringPeriod;
         @AuraEnabled public Integer recurringFrequency;
@@ -577,7 +581,7 @@ public with sharing class RD2_EntryFormController {
             this.startDate = record.StartDate__c;
             this.dayOfMonth = record.Day_of_Month__c;
             this.plannedInstallments = record.npe03__Installments__c?.intValue();
-            this.paidInstallments = record.npe03__Total_Paid_Installments__c.intValue();
+            this.paidInstallments = record.npe03__Total_Paid_Installments__c?.intValue();
             this.recurringType = record.RecurringType__c;
             this.commitmentId = record.CommitmentId__c;
             this.achLastFour = record.ACH_Last_4__c;

@@ -12,4 +12,5 @@ export const SET_RECURRING_TYPE = 'set_recurring_type';
 export const SET_RECURRING_PERIOD = 'set_recurring_period';
 export const SET_RECURRING_FREQUENCY = 'set_recurring_frequency';
 export const SET_START_DATE = 'set_start_date';
+export const SET_CURRENCY = 'set_currency';
 export const INITIAL_VIEW_LOAD = 'initial_view_load';

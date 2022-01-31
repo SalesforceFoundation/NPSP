@@ -477,6 +477,10 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleCurrencyChange(event) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            type: ACTIONS.SET_CURRENCY,
+            payload: event.target.value
+        });
         this.handleElevateWidgetDisplay();
     }
 
@@ -542,16 +546,10 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     isScheduleSupported() {
-        if (this.scheduleComponent) {
-            const recurringType = this.getRecurringType();
-            const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
-            const isValidInstallmentPeriod = this.rd2State.periodType === PERIOD.MONTHLY
-                || this.rd2State.recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
-
-            return isValidRecurringType && isValidInstallmentPeriod;
-        }
-
-        return false;
+        const { recurringPeriod, recurringType } = this.rd2State;
+        const isValidRecurringType = recurringType === RECURRING_TYPE_OPEN;
+        const isValidInstallmentPeriod = recurringPeriod !== PERIOD.FIRST_AND_FIFTEENTH;
+        return isValidInstallmentPeriod && isValidRecurringType;
     }
 
     isElevatePaymentMethod() {
@@ -611,10 +609,10 @@ export default class rd2EntryForm extends LightningElement {
      * is supported by the Elevate credit card widget
      */
     isCountrySupported() {
-        const country = this.rd2State.mailingCountry;
+        const { mailingCountry } = this.rd2State;
 
-        return isNull(country)
-            || ELEVATE_SUPPORTED_COUNTRIES.includes(country);
+        return isNull(mailingCountry)
+            || ELEVATE_SUPPORTED_COUNTRIES.includes(mailingCountry);
     }
 
     isValidStatusForElevate() {

@@ -125,10 +125,13 @@
                                             <div class="slds-p-horizontal_xx-small slds-m-bottom_x-small">
                                                 <label for="currencyField"
                                                     class="slds-form-element__label slds-no-flex">{fields.currency.label}</label>
-                                                <lightning-input-field id="currencyField" data-id="currencyField"
-                                                    field-name={fields.currency.apiName} variant="label-hidden"
-                                                    required onchange={handleCurrencyChange}>
-                                                </lightning-input-field>
+                                                <lightning-input-field id="currencyField"
+                                                                       data-id="currencyField"
+                                                                       field-name={fields.currency.apiName}
+                                                                       variant="label-hidden"
+                                                                       onchange={handleCurrencyChange}
+                                                                       required
+                                                ></lightning-input-field>
                                             </div>
                                         </lightning-layout-item>
                                     </template>
