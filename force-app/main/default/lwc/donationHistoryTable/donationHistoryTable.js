@@ -42,7 +42,8 @@ export default class DonationHistoryTable extends LightningElement {
     }
 
     getDonations(contactId){
-        getDonationHistory({ contactId, offset: 0 }).then((data) => {
+        getDonationHistory({ contactId: this.contactId, offset: 0 }).then((data) => {
+
             if (data) {
                 this.totalNumberOfRecords = data.totalNumberOfRecords;
                 this.data = data.donations;

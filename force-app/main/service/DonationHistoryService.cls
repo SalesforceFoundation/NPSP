@@ -33,9 +33,6 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-    
-    static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<Opportunity> credits;
     private Id contactId;
     private Integer offset;
     
@@ -112,5 +109,4 @@ public with sharing class DonationHistoryService {
     public Integer getTotalNumberOfRecords() {
         return selector.getTotalNumberOfRecords(this.contactId);
     }
-
 }
