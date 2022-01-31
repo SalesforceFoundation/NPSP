@@ -105,6 +105,8 @@ public with sharing class DonationHistoryController {
                 	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
                 	: EMPTY_PAYMENT_METHOD;
             	donationHistories.add(new DonationHistoryView(opp, paymentMethod));
+            } else {
+                donationHistories.add(new DonationHistoryView(opp, EMPTY_PAYMENT_METHOD));
             }
         }
         return donationHistories;
