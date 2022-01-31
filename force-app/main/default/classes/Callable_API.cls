@@ -42,27 +42,14 @@ global with sharing class Callable_API implements System.Callable {
     ********************************************************************************************************/
     public class MalformedMethodInvocationException extends Exception {}
 
-    /*******************************************************************************************************
-    * @description Data Import controller
-    ********************************************************************************************************/
-    @TestVisible
-    private STG_PanelDataImportAdvancedMapping_CTRL panelMappingController {
-        get {
-            if (panelMappingController == null) {
-                panelMappingController = new STG_PanelDataImportAdvancedMapping_CTRL();
-            }
-            return panelMappingController;
-        }
-        set;
-    }
 
     @TestVisible
-    private UTIL_CustomSettingsFacade customSettingsFacade {
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
         get {
-            if (customSettingsFacade == null) {
-                customSettingsFacade = new UTIL_CustomSettingsFacade();
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
             }
-            return customSettingsFacade;
+            return advancedMappingEnablementService;
         }
         set;
     }
@@ -185,17 +172,15 @@ global with sharing class Callable_API implements System.Callable {
                 return CallableApiApexDelegationService.handleApexScheduleJob(params);
 
             } when 'settings.enableadvancedmapping' {
-                Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-                if (isAdvancedMappingEnabled(dataImportSettings)) {
+                if (advancedMappingEnablementService.isEnabled()) {
                     return null;
                 }
 
-                panelMappingController.enableDataImportFieldMapping();
+                advancedMappingEnablementService.enable();
 
                 return null;
 
             } when 'settings.enablegiftentry' {
-                panelMappingController.enableGiftEntry();
 
                 return null;
             }

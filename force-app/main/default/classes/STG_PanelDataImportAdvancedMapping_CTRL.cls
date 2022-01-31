@@ -141,6 +141,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         set;
     }
 
+    @TestVisible
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
+        get {
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
+            }
+            return advancedMappingEnablementService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
     */
@@ -199,13 +210,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 isPolling = true;
 
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
-                migrationMappingUtility.migrateHelpTextToCustomMetadata();
+                Id metadataDeploymentId = advancedMappingEnablementService.enable();
 
-                Id deploymentId = CMT_MetadataAPI.deployMetadata(
-                    migrationMappingUtility.queuedMetadataTypesForDeploy,
-                    new BDI_MigrationMappingUtility.DeploymentCallback());
-
-                saveDeploymentId(deploymentId);
+                saveDeploymentId(metadataDeploymentId);
 
             } catch (Exception e) {
                 Database.rollback(sp);
