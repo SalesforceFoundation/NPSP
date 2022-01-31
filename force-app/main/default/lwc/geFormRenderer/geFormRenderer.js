@@ -376,7 +376,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     createRecurrence(scheduleData) {
-        this.dispatchEvent(new CustomEvent('schedulechange', { detail: scheduleData }));
+        this.dispatchEvent(new CustomEvent('addschedule', { detail: scheduleData }));
     }
 
     handleEditSchedule() {
@@ -401,7 +401,7 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleRemoveSchedule() {
-        this.dispatchEvent(new CustomEvent('schedulechange', { detail: {} }));
+        this.dispatchEvent(new CustomEvent('removeschedule', { detail: {} }));
     }
 
     handleWidgetStateChange(changeEvent) {

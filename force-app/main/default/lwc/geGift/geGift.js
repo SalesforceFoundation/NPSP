@@ -9,6 +9,7 @@ import PAYMENT_STATUS from '@salesforce/schema/DataImport__c.Payment_Status__c';
 import PAYMENT_ELEVATE_ID from '@salesforce/schema/DataImport__c.Payment_Elevate_ID__c';
 
 import SoftCredits from './geSoftCredits';
+import GiftScheduleService from './geScheduleService';
 import { GIFT_STATUSES, PAYMENT_STATUSES } from 'c/geConstants';
 
 class Gift {
@@ -27,7 +28,9 @@ class Gift {
             if (giftView.processedSoftCredits) {
                 this._softCredits.addProcessedSoftCredits(giftView.processedSoftCredits)
             }
-            this._schedule = giftView.schedule;
+
+            const giftScheduleService = new GiftScheduleService();
+            this._schedule = giftScheduleService.retrieveScheduleFromFields(this._fields);
         }
     }
 
@@ -41,6 +44,14 @@ class Gift {
 
     addSchedule(scheduleData) {
         this._schedule = scheduleData;
+        const giftScheduleService = new GiftScheduleService();
+        this._fields = giftScheduleService.addScheduleTo(this._fields, scheduleData);
+    }
+
+    removeSchedule() {
+        const giftScheduleService = new GiftScheduleService();
+        this._fields = giftScheduleService.removeScheduleFromFields(this._fields);
+        this._schedule = {};
     }
 
     isFailed() {
