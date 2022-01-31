@@ -45,8 +45,12 @@ export default class GeModalRecurringDonation extends LightningElement {
     }
 
     handleAddSchedule() {
-        const scheduleData = this.scheduleComponent.returnValues();
-        this.createRecurrenceCallback(scheduleData);
+        const isValid = this.scheduleComponent.isValid();
+
+        if (isValid) {
+            const scheduleData = this.scheduleComponent.returnValues();
+            this.createRecurrenceCallback(scheduleData);
+        }
     }
 
     handleCancel() {
