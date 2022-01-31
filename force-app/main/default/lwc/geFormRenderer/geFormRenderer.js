@@ -35,6 +35,7 @@ import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
 import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
+import geRecurringScheduleInformation from '@salesforce/label/c.geRecurringScheduleInformation';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     buildErrorMessage,
@@ -145,6 +146,12 @@ const FORM_STATE_IMMUTABLE_FIELDS_API_NAMES = [
 
 const ACH_CONSENT_MESSAGE = 'true';
 const EXPANDABLE_SECTION_CONTAINER = 'expandableSectionContainer';
+
+const GIFT_SCHEDULE_OVERLAY_LIBRARY_PROPERTIES = {
+    header: geRecurringScheduleInformation,
+    componentName: 'geModalRecurringDonation',
+    showCloseButton: true,
+}
 
 export default class GeFormRenderer extends LightningElement{
     // these three fields are used to query the donor record
@@ -361,6 +368,18 @@ export default class GeFormRenderer extends LightningElement{
     }
 
     handleMakeGiftRecurring() {
+        this.openRecurringGiftModal(false);
+    }
+
+    handleEditSchedule() {
+        this.openRecurringGiftModal(true);
+    }
+
+    createRecurrence(scheduleData) {
+        this.dispatchEvent(new CustomEvent('addschedule', { detail: scheduleData }));
+    }
+
+    openRecurringGiftModal(isEdit) {
         const componentProperties = {
             cancelCallback: () => {
                 fireEvent(this.pageRef, 'geModalCloseEvent', {})
@@ -369,37 +388,13 @@ export default class GeFormRenderer extends LightningElement{
                 this.createRecurrence(scheduleData);
             }
         };
-        const detail = {
-            modalProperties: {
-                header: 'Placeholder Title',
-                componentName: 'geModalRecurringDonation',
-                showCloseButton: true,
-            },
-            componentProperties
-        };
-        this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
-    }
 
-    createRecurrence(scheduleData) {
-        this.dispatchEvent(new CustomEvent('addschedule', { detail: scheduleData }));
-    }
+        if (isEdit) {
+            componentProperties.schedule = this.giftInView.schedule;
+        }
 
-    handleEditSchedule() {
-        const componentProperties = {
-            cancelCallback: () => {
-                fireEvent(this.pageRef, 'geModalCloseEvent', {})
-            },
-            createRecurrenceCallback: (scheduleData) => {
-                this.createRecurrence(scheduleData);
-            },
-            schedule: this.giftInView.schedule
-        };
         const detail = {
-            modalProperties: {
-                header: 'Placeholder Title',
-                componentName: 'geModalRecurringDonation',
-                showCloseButton: true,
-            },
+            modalProperties: GIFT_SCHEDULE_OVERLAY_LIBRARY_PROPERTIES,
             componentProperties
         };
         this.dispatchEvent(new CustomEvent('togglemodal', { detail }));
