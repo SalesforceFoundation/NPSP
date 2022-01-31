@@ -1,13 +1,16 @@
 <template>
     <article class='slds-box slds-box__extension slds-m-bottom_small'>
-        <lightning-layout vertical-align="center">
-            <lightning-layout-item size='8'>
+        <lightning-layout
+            vertical-align="center"
+            multiple-rows
+            >
+            <lightning-layout-item size='12' medium-device-size='6' large-device-size='7'>
                 <p data-id='scheduleInfo'>
                     {scheduleAsString}
                 </p>
             </lightning-layout-item>
-            <lightning-layout-item size='4'>
-                <lightning-layout horizontal-align="end">
+            <lightning-layout-item size='12' medium-device-size='6' large-device-size='5'>
+                <lightning-layout horizontal-align='end'>
                     <lightning-layout-item>
                         <lightning-button
                             class='slds-m-horizontal_xx-small'
@@ -18,7 +21,7 @@
                         </lightning-button>
                         <lightning-button
                             class='slds-m-horizontal_xx-small'
-                            icon-name="utility:delete"
+                            icon-name='utility:delete'
                             label={labels.geRemoveSchedule}
                             onclick={handleRemoveSchedule}
                             data-id='removeSchedule'
