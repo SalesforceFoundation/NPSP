@@ -358,7 +358,7 @@ global with sharing class BDI_DataImportService {
                 FROM DataImport__c 
                 WHERE ApexJobId__c = :apexJobId
                 AND DonationImportStatus__c = :createstatus];
-                instrumentGiftEntry(insertedGifts);
+            instrumentGiftEntry(insertedGifts);
 
         } catch (Exception ex) {}
     }
