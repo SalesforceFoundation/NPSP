@@ -7450,6 +7450,54 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This form contains fields that can&apos;t be found. Please check with your administrator.</value>
     </labels>
     <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Gift Schedule modal</shortDescription>
+        <value>Recurring Schedule Information</value>
+    </labels>
+    <labels>
+        <fullName>geAddSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for adding a schedule to a gift</shortDescription>
+        <value>Add Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geUpdateSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for updating a gift&apos;s schedule</shortDescription>
+        <value>Update Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geMakeRecurring</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to toggle recurring behavior for a gift</shortDescription>
+        <value>Make Recurring</value>
+    </labels>
+    <labels>
+        <fullName>geRemoveSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
+        <fullName>geEditSchedule</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
+        <value>Remove Recurring Schedule</value>
+    </labels>
+    <labels>
         <fullName>gsAdminSetupTitle</fullName>
         <categories>Get Started Page</categories>
         <language>en_US</language>
