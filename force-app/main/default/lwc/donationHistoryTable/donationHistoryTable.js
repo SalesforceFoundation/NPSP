@@ -10,8 +10,8 @@ export default class DonationHistoryTable extends LightningElement {
 
     paymentMethodLabel;
 
-    totalNumberOfRows;
-
+    totalNumberOfRecords;
+    
     tableElement;
 
     allData = [];
@@ -29,11 +29,10 @@ export default class DonationHistoryTable extends LightningElement {
 
     // eslint-disable-next-line @lwc/lwc/no-async-await
     async connectedCallback() {
-        getDonationHistory({ contactId: this.contactId }).then((data) => {
+        getDonationHistory({ contactId: this.contactId, offset: 0 }).then((data) => {
             if (data) {
-                this.allData = data.donations;
-                this.data = data.donations.slice(0, RECORDS_TO_LOAD);
-                this.totalNumberOfRows = data.donations.length;
+                this.totalNumberOfRecords = data.totalNumberOfRecords;
+                this.data = data.donations;
                 this.paymentMethodLabel = data.paymentMethodLabel;
                 this.arePaymentsEnabled = data.isPaymentsEnabled;
 
@@ -74,17 +73,19 @@ export default class DonationHistoryTable extends LightningElement {
      */
     loadMoreDonationData(event) {
         event.target.isLoading = true;
-        if (this.data.length >= this.totalNumberOfRows) {
-            event.target.enableInfiniteLoading = false;
-            event.target.isLoading = false;
-            return;
-        }
-        const current = this.data.length;
-        const offset = current + RECORDS_TO_LOAD;
-        const currentData = this.data;
-        //Appends new data to the end of the table
-        const newData = currentData.concat(this.allData.slice(current, offset));
-        this.data = newData;
-        event.target.isLoading = false;
+        this.tableElement = event.target;
+        getDonationHistory({contactId: this.contactId, offset: this.data.length})
+        .then(data => {
+                if (this.data.length >= this.totalNumberOfRecords) {
+                    this.tableElement.isLoading = false;
+                    this.tableElement.enableInfiniteLoading = false;
+                    return;
+                }
+                const currentData = this.data;
+                const newData = currentData.concat(data.donations);
+                this.data = newData;
+                //this fails for reference
+                this.tableElement.isLoading = false;
+        });
     }
 }

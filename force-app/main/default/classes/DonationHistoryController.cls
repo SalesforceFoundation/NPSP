@@ -34,6 +34,17 @@
 * @description Class for list donation history by credit type.
 */
 public with sharing class DonationHistoryController {
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Donation History App view inner class.
+    */
+    public class DonationHistoryAppView {
+        @AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public Boolean isPaymentsEnabled;
+        @AuraEnabled public String paymentMethodLabel;
+        @AuraEnabled public Integer totalNumberOfRecords;
+    }
 
     private static final String EMPTY_PAYMENT_METHOD = '-';
     
@@ -49,7 +60,6 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-
         public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
             this.name = ocr.Name;
@@ -59,12 +69,6 @@ public with sharing class DonationHistoryController {
             this.paymentMethod = paymentMethod;
         }
     }
-
-    public class DonationHistoryAppView {
-        @AuraEnabled public Boolean isPaymentsEnabled;
-        @AuraEnabled public List<DonationHistoryView> donations;
-        @AuraEnabled public String paymentMethodLabel;
-    }
     
     /** 
     * @author Salesforce.org
@@ -72,22 +76,21 @@ public with sharing class DonationHistoryController {
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static DonationHistoryAppView getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset) {
+        DonationHistoryService service = new DonationHistoryService(contactId, offset);
         try {
-            List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
             Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
-            donationHistories.addAll(buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled));
-            DonationHistoryAppView appView = new DonationHistoryAppView();
-            appView.donations = donationHistories;
-            appView.isPaymentsEnabled = paymentsEnabled;
-            appView.paymentMethodLabel = service.getPaymentMethodLabel();
-            return appView;
+            DonationHistoryAppView donationHistories = new DonationHistoryAppView();
+            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled);
+            donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
+            donationHistories.isPaymentsEnabled = paymentsEnabled;
+            donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
+            return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
-    
+
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -102,6 +105,8 @@ public with sharing class DonationHistoryController {
                 	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
                 	: EMPTY_PAYMENT_METHOD;
             	donationHistories.add(new DonationHistoryView(opp, paymentMethod));
+            } else {
+                donationHistories.add(new DonationHistoryView(opp, EMPTY_PAYMENT_METHOD));
             }
         }
         return donationHistories;
