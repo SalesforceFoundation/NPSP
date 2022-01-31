@@ -121,16 +121,15 @@ private with sharing class Callable_API_TEST {
 
     @IsTest
     private static void shouldCallEnableAdvancedMappingOnAction() {
+        Callable_API callableApi = new Callable_API();
+        AdvancedMappingEnablementServiceMock mappingServiceMock = new AdvancedMappingEnablementServiceMock();
+        callableApi.advancedMappingEnablementService = stubFor(mappingServiceMock);
 
         Test.startTest();
-            Callable_API callableApi = new Callable_API();
-            AdvancedMappingEnablementServiceMock mappingServiceMock = new AdvancedMappingEnablementServiceMock();
-            callableApi.advancedMappingEnablementService = stubFor(mappingServiceMock);
-
             callableApi.call(ADVANCED_MAPPING_ACTION, null);
         Test.stopTest();
 
-        System.assert(mappingServiceMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
+        System.assert(mappingServiceMock.enableAdvancedMappingCalled, 'The enable advanced mapping service method ' +
                 'should be called.');
     }
 
@@ -149,8 +148,22 @@ private with sharing class Callable_API_TEST {
             callableApi.call(ADVANCED_MAPPING_ACTION, null);
         Test.stopTest();
 
-        System.assert(!mappingServiceMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
+        System.assert(!mappingServiceMock.enableAdvancedMappingCalled, 'The enable advanced mapping service method ' +
                 'should not be called.');
+    }
+
+    @IsTest
+    private static void shouldCallEnableGiftEntryOnAction() {
+        Callable_API callableApi = new Callable_API();
+        GiftEntryEnablementServiceMock giftEntryEnablementServiceMock = new GiftEntryEnablementServiceMock();
+        callableApi.giftEntryEnablementService = stubFor(giftEntryEnablementServiceMock);
+
+        Test.startTest();
+            callableApi.call(GIFT_ENTRY_ACTION, null);
+        Test.stopTest();
+
+        System.assert(giftEntryEnablementServiceMock.enableGiftEntryCalled, 'The enable gift entry service method ' +
+            'should be called.');
     }
 
     /**
@@ -226,14 +239,24 @@ private with sharing class Callable_API_TEST {
         System.assertEquals(expectedErrorMessage, returnPause.error, 'An error with unexpected Id should be return');
     }
 
+    private static GiftEntryEnablementService stubFor(GiftEntryEnablementServiceMock giftEntryEnablementServiceMock) {
+        return (GiftEntryEnablementService) Test.createStub(
+                GiftEntryEnablementService.class, giftEntryEnablementServiceMock);
+    }
+
     private static AdvancedMappingEnablementService stubFor(AdvancedMappingEnablementServiceMock
             advancedMappingControllerMock) {
         return (AdvancedMappingEnablementService) Test.createStub(
                 AdvancedMappingEnablementService.class, advancedMappingControllerMock);
     }
 
-    private class AdvancedMappingEnablementServiceMock implements StubProvider {
-        Boolean enableDataImportMappingCalled = false;
+    private class GiftEntryEnablementServiceMock implements StubProvider {
+        Boolean enableGiftEntryCalled = false;
+        Boolean isEnabled = false;
+
+        private void setEnabled() {
+            isEnabled = true;
+        }
 
         public Object handleMethodCall(
                 Object stubbedObject,
@@ -244,8 +267,37 @@ private with sharing class Callable_API_TEST {
                 List<Object> listOfArgs) {
 
             switch on (stubbedMethodName) {
-                when 'enableDataImportFieldMapping' {
-                    enableDataImportMappingCalled = true;
+                when 'enable' {
+                    enableGiftEntryCalled = true;
+                }
+                when 'isEnabled' {
+                    return UTIL_CustomSettingsFacade.getGiftEntrySettings().Enable_Gift_Entry__c;
+                }
+            }
+            return null;
+        }
+    }
+
+    private class AdvancedMappingEnablementServiceMock implements StubProvider {
+        Boolean enableAdvancedMappingCalled = false;
+
+        public Object handleMethodCall(
+                Object stubbedObject,
+                String stubbedMethodName,
+                Type returnType,
+                List<Type> listOfParamTypes,
+                List<String> listOfParamNames,
+                List<Object> listOfArgs) {
+
+            switch on (stubbedMethodName) {
+                when 'enable' {
+                    enableAdvancedMappingCalled = true;
+                }
+                when 'isEnabled' {
+                    Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+
+                    return dataImportSettings.Field_Mapping_Method__c ==
+                            BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
                 }
             }
             return null;

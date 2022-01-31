@@ -374,12 +374,10 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return null
     */
     public PageReference enableGiftEntry() {
-        Gift_Entry_Settings__c giftEntrySettings =
-                GE_GiftEntryController.getGiftEntrySettings();
-        if (!giftEntrySettings.Enable_Gift_Entry__c) {
-                giftEntrySettings.Enable_Gift_Entry__c = true;
+        GiftEntryEnablementService giftEntryEnablementService = new GiftEntryEnablementService();
+        if (!giftEntryEnablementService.isEnabled()) {
             try {
-                upsert giftEntrySettings;
+                giftEntryEnablementService.enable();
                 addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
             } catch(DmlException e) {
                 addPageMessage(ApexPages.Severity.ERROR,
