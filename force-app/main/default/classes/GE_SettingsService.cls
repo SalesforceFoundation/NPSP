@@ -37,7 +37,7 @@ public with sharing class GE_SettingsService {
 
     private static GE_SettingsService geSettingsServiceInstance;
 
-    public static GE_SettingsService getInstance(){
+    public static GE_SettingsService getInstance() {
         if (geSettingsServiceInstance == null) {
             geSettingsServiceInstance = new GE_SettingsService();
         }
@@ -45,7 +45,7 @@ public with sharing class GE_SettingsService {
     }
 
     @TestVisible
-    private static void setInstance(GE_SettingsService instance){
+    private static void setInstance(GE_SettingsService instance) {
         geSettingsServiceInstance = instance;
     }
 

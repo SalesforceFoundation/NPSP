@@ -1,12 +1,13 @@
 import isElevateCustomer from "@salesforce/apex/GE_GiftEntryController.isElevateCustomer";
-// TODO: Implement and import a call to retrieve the value of _isRecurringGiftsEnabled
+import isRecurringGiftsEnabled from "@salesforce/apex/GE_GiftEntryController.isRecurringGiftsEnabled";
 
 class GeSettings {
     _isElevateCustomer = undefined;
-    _isRecurringGiftsEnabled = true;
+    _isRecurringGiftsEnabled = undefined;
 
     async init() {
         this._isElevateCustomer = await isElevateCustomer();
+        this._isRecurringGiftsEnabled = await isRecurringGiftsEnabled();
     }
 
     isElevateCustomer() {
@@ -14,7 +15,6 @@ class GeSettings {
     };
 
     isRecurringGiftsEnabled() {
-        // TODO: replace placeholder with actual value
         return this._isRecurringGiftsEnabled;
     }
 }

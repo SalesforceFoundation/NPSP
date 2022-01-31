@@ -185,6 +185,15 @@ public with sharing class GE_GiftEntryController {
         }
     }
 
+    @AuraEnabled(cacheable=true)
+    public static Boolean isRecurringGiftsEnabled() {
+        try {
+            return new GE_SettingsService().isRecurringGiftsEnabled();
+        } catch (AuraHandledException ex) {
+            throw new AuraHandledException(ex.getMessage());
+        }
+    }
+
     /*******************************************************************************************************
     * @description Creates and posts an elevate purchase request
     *
