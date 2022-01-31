@@ -193,8 +193,7 @@ export default class rd2EntryForm extends LightningElement {
      * @description Get settings required to enable or disable fields and populate their values
      */
     async connectedCallback() {
-        const initialView = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
-        this.rd2State = initialView;
+        this.rd2State = await this.rd2Service.loadInitialView(this.state, this.recordId, this.parentId);
 
         getRecurringSettings({ parentId: this.parentId })
             .then(response => {
@@ -505,7 +504,7 @@ export default class rd2EntryForm extends LightningElement {
         });
     }
 
-    get _showChangeTypeField() {
+    get showChangeTypeField() {
         return !!this.rd2State.recordId && this.rd2State.isChangeLogEnabled;
     }
 

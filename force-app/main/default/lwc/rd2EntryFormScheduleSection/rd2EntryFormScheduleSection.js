@@ -55,19 +55,19 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         return isNull(this.rd2State.recordId);
     }
 
-    get _hidePeriodPicklistField() {
+    get hidePeriodPicklistField() {
         return this.shouldHideField(this.rd2State.InstallmentPeriodPermissions);
     }
 
-    get _disablePeriodPicklistField() {
+    get disablePeriodPicklistField() {
         return this.shouldDisableField(this.rd2State.InstallmentPeriodPermissions);
     }
 
-    get _hideInstallmentFrequencyField() {
+    get hideInstallmentFrequencyField() {
         return this.shouldHideField(this.rd2State.InstallmentFrequencyPermissions);
     }
 
-    get _disableInstallmentFrequencyField() {
+    get disableInstallmentFrequencyField() {
         return this.shouldDisableField(this.rd2State.InstallmentFrequencyPermissions);
     }
 

@@ -29,7 +29,7 @@
                     </template>
 
                     <lightning-layout-item padding="horizontal-small" size="6" large-device-size={_recurringTypeColumnSize}
-                                           if:false={_hidePeriodPicklistField}>
+                                           if:false={hidePeriodPicklistField}>
                         <lightning-combobox
                                 name="CustomPeriodSelect"
                                 label={customLabels.fieldLabelPeriod}
@@ -38,7 +38,7 @@
                                 options={customPeriodOptions}
                                 onchange={handleRecurringPeriodChange}
                                 field-level-help={customLabels.customPeriodHelpText}
-                                disabled={_disablePeriodPicklistField}
+                                disabled={disablePeriodPicklistField}
                                 data-id="recurringPeriod"
                                 required
                         >
@@ -46,7 +46,7 @@
                     </lightning-layout-item>
 
                     <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_scheduleRowColumnSize}
-                                           if:false={_hideInstallmentFrequencyField}>
+                                           if:false={hideInstallmentFrequencyField}>
                         <template if:true={_isAdvancedMode}>
                             <lightning-input label={customLabels.fieldLabelEvery}
                                              name="installmentFrequency"
@@ -58,7 +58,7 @@
                                              step="1"
                                              min="1"
                                              max="20"
-                                             disabled={_disableInstallmentFrequencyField}
+                                             disabled={disableInstallmentFrequencyField}
                                              data-id="installmentFrequency"
                                              required
                             >
@@ -67,7 +67,7 @@
                     </lightning-layout-item>
 
                     <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_scheduleRowColumnSize}
-                                           if:false={_hidePeriodPicklistField}>
+                                           if:false={hidePeriodPicklistField}>
                         <template if:true={_isAdvancedMode}>
                             <lightning-combobox
                                 name="advancedPeriodSelect"
@@ -78,7 +78,7 @@
                                 options={advancedPeriodOptions}
                                 onchange={handleAdvancedPeriodChange}
                                 data-id="installmentPeriod"
-                                disabled={_disablePeriodPicklistField}
+                                disabled={disablePeriodPicklistField}
                                 required>
                             </lightning-combobox>
                         </template>
