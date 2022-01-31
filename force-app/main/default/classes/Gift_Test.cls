@@ -262,7 +262,6 @@ private class Gift_Test {
     }
 
     private class UnitOfWorkMock implements StubProvider {
-        public List<SObject> objectsToInsert;
         public Boolean registerDirtyCalled = false;
         public Boolean saveCalled = false;
 
@@ -276,7 +275,6 @@ private class Gift_Test {
             switch on (stubbedMethodName) {
                 when 'registerDirty' {
                     registerDirtyCalled = true;
-                    objectsToInsert = (List<SObject>) listOfArgs[0];
                 }
                 when 'save' {
                     saveCalled = true;

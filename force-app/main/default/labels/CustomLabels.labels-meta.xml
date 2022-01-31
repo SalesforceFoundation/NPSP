@@ -7494,8 +7494,8 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <categories>Gift Entry</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Button for removing a gift&apos;s schedule</shortDescription>
-        <value>Remove Recurring Schedule</value>
+        <shortDescription>Button for editing a gift&apos;s schedule</shortDescription>
+        <value>Edit Recurring Schedule</value>
     </labels>
     <labels>
         <fullName>gsAdminSetupTitle</fullName>

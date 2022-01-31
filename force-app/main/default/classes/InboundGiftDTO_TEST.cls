@@ -29,7 +29,6 @@
 */
 @isTest
 private class InboundGiftDTO_TEST {
-
     @isTest
     static void shouldReturnGift() {
         InboundGiftDTO dummyGiftDTO = new InboundGiftDTO();
