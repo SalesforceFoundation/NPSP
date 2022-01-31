@@ -124,13 +124,13 @@ private with sharing class Callable_API_TEST {
 
         Test.startTest();
             Callable_API callableApi = new Callable_API();
-            STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new STG_PanelDataImportAdvancedMapping_CTRLMock();
-            callableApi.panelMappingController = stubFor(controllerMock);
+            AdvancedMappingEnablementServiceMock mappingServiceMock = new AdvancedMappingEnablementServiceMock();
+            callableApi.advancedMappingEnablementService = stubFor(mappingServiceMock);
 
             callableApi.call(ADVANCED_MAPPING_ACTION, null);
         Test.stopTest();
 
-        System.assert(controllerMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
+        System.assert(mappingServiceMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
                 'should be called.');
     }
 
@@ -141,30 +141,16 @@ private with sharing class Callable_API_TEST {
         UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
 
         Callable_API callableApi = new Callable_API();
-        STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new
-                STG_PanelDataImportAdvancedMapping_CTRLMock();
-        callableApi.panelMappingController = stubFor(controllerMock);
+        AdvancedMappingEnablementServiceMock mappingServiceMock = new
+                AdvancedMappingEnablementServiceMock();
+        callableApi.advancedMappingEnablementService = stubFor(mappingServiceMock);
 
         Test.startTest();
             callableApi.call(ADVANCED_MAPPING_ACTION, null);
         Test.stopTest();
 
-        System.assert(!controllerMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
+        System.assert(!mappingServiceMock.enableDataImportMappingCalled, 'The enable advanced mapping controller method ' +
                 'should not be called.');
-    }
-
-    @IsTest
-    private static void shouldCallEnableGiftEntryOnAction() {
-        Test.startTest();
-            Callable_API callableApi = new Callable_API();
-            STG_PanelDataImportAdvancedMapping_CTRLMock controllerMock = new STG_PanelDataImportAdvancedMapping_CTRLMock();
-            callableApi.panelMappingController = stubFor(controllerMock);
-
-            callableApi.call(GIFT_ENTRY_ACTION, null);
-        Test.stopTest();
-
-        System.assert(controllerMock.enableGiftEntryCalled, 'The enabled gift entry controller method ' +
-            'should be called.');
     }
 
     /**
@@ -240,15 +226,14 @@ private with sharing class Callable_API_TEST {
         System.assertEquals(expectedErrorMessage, returnPause.error, 'An error with unexpected Id should be return');
     }
 
-    private static STG_PanelDataImportAdvancedMapping_CTRL stubFor(STG_PanelDataImportAdvancedMapping_CTRLMock
+    private static AdvancedMappingEnablementService stubFor(AdvancedMappingEnablementServiceMock
             advancedMappingControllerMock) {
-        return (STG_PanelDataImportAdvancedMapping_CTRL) Test.createStub(
-                STG_PanelDataImportAdvancedMapping_CTRL.class, advancedMappingControllerMock);
+        return (AdvancedMappingEnablementService) Test.createStub(
+                AdvancedMappingEnablementService.class, advancedMappingControllerMock);
     }
 
-    private class STG_PanelDataImportAdvancedMapping_CTRLMock implements StubProvider {
+    private class AdvancedMappingEnablementServiceMock implements StubProvider {
         Boolean enableDataImportMappingCalled = false;
-        Boolean enableGiftEntryCalled = false;
 
         public Object handleMethodCall(
                 Object stubbedObject,
@@ -261,9 +246,6 @@ private with sharing class Callable_API_TEST {
             switch on (stubbedMethodName) {
                 when 'enableDataImportFieldMapping' {
                     enableDataImportMappingCalled = true;
-                }
-                when 'enableGiftEntry' {
-                    enableGiftEntryCalled = true;
                 }
             }
             return null;
