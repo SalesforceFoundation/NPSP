@@ -3,7 +3,7 @@ import Resources from '@salesforce/resourceUrl/CumulusStaticResources'
 import getApplicationStatus from '@salesforce/apex/GS_ApplicationStatusController.getApplicationStatus'
 import gsNoApplicationSubmitted from '@salesforce/label/c.gsNoApplicationSubmitted'
 import gsLearnMore from '@salesforce/label/c.gsLearnMore'
-import gsLearnMoreAriaLabel from '@salesforce/label/c.gsLearnMoreAriaLabel'
+import opensInNewLink from '@salesforce/label/c.opensInNewLink'
 import gsDaysRemainingInFreeTrial from '@salesforce/label/c.gsDaysRemainingInFreeTrial'
 import gsApplyForFreeLicenses from '@salesforce/label/c.gsApplyForFreeLicenses'
 import gsApplicationStatus from '@salesforce/label/c.gsApplicationStatus'
@@ -37,8 +37,12 @@ export default class GsApplicationStatus extends LightningElement {
         gsApplicationStatusModalHeader,
         gsClose,
         gsFollowUpApplicationStatus,
-        gsLearnMoreAriaLabel
+        opensInNewLink
     }
+
+    learnMoreAriaLabel;
+    applyForFreeLicensesAriaLabel;
+    checkStatusAriaLabel;
 
     /**
      * Initialized the component with the data retrieved from Salesforce
@@ -53,6 +57,9 @@ export default class GsApplicationStatus extends LightningElement {
             this.img = this.isApplicationSubmitted ?  this.checkForStatusImg : this.applyForFreeLicensesImg; 
             this.isActiveInstance = result.trialExpirationDate == null;
             this.hideSpinner();
+            this.learnMoreAriaLabel = `${this.labels.gsLearnMore} ${this.labels.opensInNewLink}`;
+            this.applyForFreeLicensesAriaLabel = `${this.labels.gsApplyForFreeLicenses} ${this.labels.opensInNewLink}`;
+            this.checkStatusAriaLabel = `${this.labels.gsCheckStatus} ${this.labels.opensInNewLink}`;
         })
         .catch(error => {
             this.errorMessage = error;

@@ -5,6 +5,7 @@ import getDonationHistory from "@salesforce/apex/DonationHistoryController.getDo
 import commonAmount from "@salesforce/label/c.commonAmount";
 import donationHistoryDonorLabel from "@salesforce/label/c.donationHistoryDonorLabel";
 import getContactIdByUserId from "@salesforce/apex/DonationHistoryController.getContactIdByUserId";
+
 const RECORDS_TO_LOAD = 50;
 export default class DonationHistoryTable extends LightningElement {
     @api contactId;

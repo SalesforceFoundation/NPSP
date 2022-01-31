@@ -60,6 +60,7 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
+
         public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
             this.name = ocr.Name;
@@ -69,6 +70,13 @@ public with sharing class DonationHistoryController {
             this.paymentMethod = paymentMethod;
         }
     }
+
+    public class DonationHistoryAppView {
+        @AuraEnabled public Boolean isPaymentsEnabled;
+        @AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public String paymentMethodLabel;
+    }
+
     
     /** 
     * @author Salesforce.org

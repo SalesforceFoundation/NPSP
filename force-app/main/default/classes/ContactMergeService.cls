@@ -35,7 +35,29 @@
 * @group ContactMerge
 * @group-content ../../ApexDocContent/ContactMerge.htm
 */
-public class CON_ContactMerge {
+public class ContactMergeService {
+
+    @TestVisible
+    private ContactMergeSelector contactMergeSelector {
+        get {
+            if (contactMergeSelector == null) {
+                contactMergeSelector = new ContactMergeSelector();
+            }
+            return contactMergeSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private OrgConfig orgConfig {
+        get {
+            if (orgConfig == null) {
+                orgConfig = new OrgConfig();
+            }
+            return orgConfig;
+        }
+        set;
+    }
     
     /*******************************************************************************************************
     * @description Min number of contacts that can be merged.
@@ -68,7 +90,7 @@ public class CON_ContactMerge {
     * @param losers The loser records.
     * @return Boolean Whether the merge was successful.
     */
-    public static Boolean mergeContacts(Contact winningContact, List<Contact> losers) {
+    public Boolean mergeContacts(Contact winningContact, List<Contact> losers) {
         boolean successfulMerge = false;
 
         List<Account> winnerAccount = new List<Account>();
@@ -79,41 +101,30 @@ public class CON_ContactMerge {
     
         Id winningAccountId = null;
         Boolean winnerAccountIsOneToOne = false;
-        Contact winner = [SELECT AccountId,Account.npe01__SYSTEM_AccountType__c FROM Contact WHERE Id =:winningContact.Id];
+        Contact winner = contactMergeSelector.getContactsWithAccountFields(new List<Contact>{winningContact})[0];
 
         // detect PersonAccounts
-        boolean isPAEnabled = UTIL_Describe.isValidField('Account', 'isPersonAccount');
-        
+        Boolean isPersonAccountsEnabled = orgConfig.isPersonAccountsEnabled();
         //get winner contact Account
         if (winner.AccountId!=null){
-            ID winnerAccId = winner.AccountId;
-	        string strSoql = 'Select Id,npe01__SYSTEM_AccountType__c,Name';
-	        if (isPAEnabled)
-	            strSoql += ', PersonContactId ';  // note: we originally used isPersonAccount, but having the field in the sobject caused merge to fail.
-	        strSoql += ' from Account where Id=:winnerAccId';
-	        winnerAccount = database.query(strSoql);
+	        winnerAccount = contactMergeSelector.getAccountsFor(new Set<Id>{winner.AccountId});
         }
             
         if (winnerAccount.size()>0) {
-            
             winningAccountId = winnerAccount[0].Id;
             
             if(winnerAccount[0].npe01__SYSTEM_AccountType__c==CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE){
                 winnerAccountIsOneToOne = true;
             }
             
-            if (isPAEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
+            if (isPersonAccountsEnabled && (ID)winnerAccount[0].get('PersonContactId') != null)
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
         }
-           
-        string strSoql = 'Select Account.Id,Account.npe01__SYSTEM_AccountType__c ';
-        if (isPAEnabled)
-            strSoql += ', isPersonAccount ';
-        strSoql += ' from Contact where Id IN :losers ORDER BY Id ASC';
-        losers = database.query(strSoql);
-        
+
+        losers = contactMergeSelector.getContactsWithAccountFields(new List<Contact>(losers));
+
         for (Contact thisloserContact : losers) {
-            if (isPAEnabled && (boolean)thisloserContact.get('isPersonAccount'))
+            if (isPersonAccountsEnabled && (boolean)thisloserContact.get('isPersonAccount'))
                 throw new ConMergeException(label.conMergeErrNoPersonAccounts);
                 
             //don't try to merge null Accounts or Accounts that are the same as the winner's Account
@@ -126,19 +137,7 @@ public class CON_ContactMerge {
         
         //get loser contact Accounts that should be merged out.  This includes
         // One2One accounts and Solo Household Accounts
-        loserAccountsToBeMerged = [
-            SELECT Id, npe01__SYSTEMIsIndividual__c, npe01__SYSTEM_AccountType__c, Name
-            FROM Account a
-            WHERE
-                Id IN :loserAccountIds
-                AND (
-                    npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
-                    OR (
-                        npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
-                        AND Number_of_Household_Members__c = 1
-                    )
-                )
-        ];
+        loserAccountsToBeMerged = contactMergeSelector.getHouseholdAndOrgAccountsFor(loserAccountIds);
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
         //we merge the Accounts first, if there are any one-to-one Accounts or Solo Household Accounts in the mix
         if (loserAccountsToBeMerged.size() > 0) {
@@ -169,7 +168,7 @@ public class CON_ContactMerge {
         }
             
         //set the account to null and mark private so that trigger won't reset the Account
-        if (winningAccountId!=null && winnerAccountIsOneToOne){         
+        if (winningAccountId!=null && winnerAccountIsOneToOne){
             UTIL_DMLService.updateRecord(winnerMakePrivate);
         }
         
@@ -178,14 +177,14 @@ public class CON_ContactMerge {
         }
 
         merge winnerMakePrivate losers;
-        
+
         //set the contact Account Id back to the winning Account Id
         if (winnerAccountIsOneToOne){
             winnerMakePrivate.AccountId = winningAccountId;
             winnerMakePrivate.npe01__Private__c = false;
             UTIL_DMLService.updateRecord(winnerMakePrivate);
-        }       
-        
+        }
+
         UTIL_Debug.debug('loserAccountsToBeDeleted: ' + loserAccountsToBeDeleted);
         if (loserAccountsToBeDeleted.size() > 0) {
             delete loserAccountsToBeDeleted;
