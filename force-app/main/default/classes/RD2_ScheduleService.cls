@@ -481,7 +481,7 @@ public without sharing class RD2_ScheduleService {
     * @return Date
     */
     public Date getNextDonationDateAfter(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(currentDate, rdRecord, rdSchedules);
+        RD2_OpportunityMatcher.Record record = getNextDonationDateRecord(referenceDate, rdRecord, rdSchedules);
 
         return record != null
             ? record.getInstallment().nextDonationDate

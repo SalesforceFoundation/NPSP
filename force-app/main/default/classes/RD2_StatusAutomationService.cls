@@ -173,8 +173,6 @@ public with sharing class RD2_StatusAutomationService {
         return closedThresholdDate < RD2_ScheduleService.currentDate;
     }
 
-
-
     private void validateUpdatePermission() {
         Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
             String.valueOf(npe03__Recurring_Donations_Settings__c.SObjectType)

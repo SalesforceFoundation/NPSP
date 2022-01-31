@@ -322,13 +322,11 @@ public inherited sharing class RD2_RecurringDonation {
         if(statusAutomationServce.shouldMarkRDAsLapsed(this, scheduleService)) {           
             rd.Status__c = rdSettings.statusAutomationClosedValue;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
-
         }
 
         if (statusAutomationServce.shouldMarkRDAsClosed(this, scheduleService)) {        
             rd.Status__c = rdSettings.statusAutomationLapsedValue;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
-
         }
 
         return this;
