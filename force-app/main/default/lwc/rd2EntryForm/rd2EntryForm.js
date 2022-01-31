@@ -107,6 +107,9 @@ export default class rd2EntryForm extends LightningElement {
     @api parentId;
     @api recordId;
 
+    _contactId;
+    _accountId;
+
     isEdit = false;
     isCommitmentEdit = false;
     @track record;
@@ -318,6 +321,7 @@ export default class rd2EntryForm extends LightningElement {
      * Otherwise, contact data should not be retrieved from database.
      */
     handleContactChange(event) {
+        this._contactId = event.detail;
         this.rd2State = this.rd2Service.dispatch(this.rd2State, {
             type: ACTIONS.SET_CONTACT_ID,
             payload: event.detail
@@ -325,6 +329,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleAccountChange(event) {
+        this._accountId = event.detail;
         this.rd2State = this.rd2Service.dispatch(this.rd2State, {
             type: ACTIONS.SET_ACCOUNT_ID,
             payload: event.detail
@@ -352,7 +357,7 @@ export default class rd2EntryForm extends LightningElement {
      * Data is not refreshed when the contact Id is null.
      */
     @wire(getRecord, {
-        recordId: "$rd2State.contactId", fields: [
+        recordId: "$_contactId", fields: [
             MAILING_COUNTRY_FIELD,
             CONTACT_LAST_NAME,
             CONTACT_FIRST_NAME
@@ -375,7 +380,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     @wire(getRecord, {
-        recordId: "$rd2State.accountId", fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
+        recordId: "$_accountId", fields: [ACCOUNT_NAME, ACCOUNT_PRIMARY_CONTACT_LAST_NAME]
     })
     wiredGetDonorAccount({ error, data }) {
         if (data) {
