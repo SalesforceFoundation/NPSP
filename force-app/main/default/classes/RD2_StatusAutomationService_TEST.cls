@@ -224,7 +224,35 @@ private class RD2_StatusAutomationService_TEST {
     }
 
     @Istest
-    private static void verifyStatusAutomationShouldMarkRDToClosedAfterThresholdDay() {
+    private static void verifyStatusAutomationShouldNotMarkRDToClosedOnThresholdDay() {
+        RD2_EnablementService_TEST.setRecurringDonations2Enabled();
+        setupStatusAutomationSettings(15, 20);
+        RD2_ScheduleService scheduleService = new RD2_ScheduleService();
+        RD2_StatusAutomationService automationService = new RD2_StatusAutomationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructEnhancedBuilder()
+            .withInstallmentPeriodWeekly()
+            .withStatusActive()
+            .withInstallmentFrequency(1)
+            .withStartDate(Date.newInstance(2019, 6, 10))
+            .withCalculateNextDonationDate()
+            .withLastPaymentDate(Date.newinstance(2019, 7, 16))
+            .build();
+
+        rd = TEST_RecurringDonationBuilder.mockRecurringDonationFullQueryResult(rd, new List<Opportunity>(), scheduleService.buildNewSchedules(rd));
+        RD2_ScheduleService.currentDate = Date.newinstance(2019, 8, 11);
+
+        RD2_RecurringDonation rdRecord = new RD2_RecurringDonation(rd);
+        Test.startTest();
+        Boolean shouldMarkAsClosed = automationService.shouldMarkRDAsClosed(rdRecord, scheduleService);
+        Test.stopTest();
+
+        System.assertEquals(false, shouldMarkAsClosed,
+            'Should not mark RD as Closed when threshold days has not passed (8/11/2019 - 20 days) since the expected donation on 7/22/2019 is missing');
+    }
+
+    @Istest
+    private static void verifyStatusAutomationShouldNotRDToClosedOnThresholdDay() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         setupStatusAutomationSettings(15, 20);
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
@@ -250,7 +278,6 @@ private class RD2_StatusAutomationService_TEST {
         System.assertEquals(true, shouldMarkAsClosed,
             'Should mark RD as Closed when threshold days has passed (20 days) since the expected donation on 2020/6/10 is missing');
     }
-
 
     private static void setupStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed) {
         RD2_Settings_TEST.setUpConfiguration(
