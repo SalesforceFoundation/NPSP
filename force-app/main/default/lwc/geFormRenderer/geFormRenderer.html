@@ -157,11 +157,18 @@
                     </template>
                     <template if:false={isSingleGiftEntry}>
                         <template if:false={hasSchedule}>
-                            <lightning-button if:true={isRecurringGiftsEnabled}
-                                              label='Make Recurring'
-                                              data-id='recurringButton'
-                                              onclick={handleMakeGiftRecurring}>
-                            </lightning-button>
+                            <lightning-layout horizontal-align="end">
+                                <lightning-layout-item>
+                                    <lightning-button
+                                        if:true={isRecurringGiftsEnabled}
+                                        icon-name="utility:refresh"
+                                        label={CUSTOM_LABELS.geMakeRecurring}
+                                        data-id='recurringButton'
+                                        onclick={handleMakeGiftRecurring}
+                                        >
+                                    </lightning-button>
+                                </lightning-layout-item>
+                            </lightning-layout>
                         </template>
                         <template if:true={hasSchedule}>
                             <lightning-layout>

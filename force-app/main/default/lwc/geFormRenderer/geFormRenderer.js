@@ -34,6 +34,7 @@ import GeFormService from 'c/geFormService';
 import Settings from 'c/geSettings';
 import GeLabelService from 'c/geLabelService';
 import messageLoading from '@salesforce/label/c.labelMessageLoading';
+import geMakeRecurring from '@salesforce/label/c.geMakeRecurring';
 import { getNumberAsLocalizedCurrency } from 'c/utilNumberFormatter';
 import {
     buildErrorMessage,
@@ -184,7 +185,11 @@ export default class GeFormRenderer extends LightningElement{
     currentElevateBatch = new ElevateBatch();
 
     erroredFields = [];
-    CUSTOM_LABELS = {...GeLabelService.CUSTOM_LABELS, messageLoading};
+    CUSTOM_LABELS = {
+        ...GeLabelService.CUSTOM_LABELS,
+        messageLoading,
+        geMakeRecurring
+    };
 
     @track widgetConfig = {
         hasPaymentMethodFieldInForm: undefined,
