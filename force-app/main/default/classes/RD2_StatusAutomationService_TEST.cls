@@ -196,7 +196,7 @@ private class RD2_StatusAutomationService_TEST {
     }
 
     @Istest
-    private static void verifyStatusAutomationShouldNotMarkRDToLapsedAfterThresholdDay() {
+    private static void verifyStatusAutomationShouldMarkRDToLapsedAfterThresholdDay() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         setupStatusAutomationSettings(15, 20);
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
@@ -224,7 +224,7 @@ private class RD2_StatusAutomationService_TEST {
     }
 
     @Istest
-    private static void verifyStatusAutomationShouldNotMarkRDToClosedAfterThresholdDay() {
+    private static void verifyStatusAutomationShouldMarkRDToClosedAfterThresholdDay() {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
         setupStatusAutomationSettings(15, 20);
         RD2_ScheduleService scheduleService = new RD2_ScheduleService();
