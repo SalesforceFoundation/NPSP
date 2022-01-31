@@ -37,7 +37,6 @@ public with sharing class Gift {
 
     @TestVisible private Data_Import_Settings__c dataImportSettings;
     @TestVisible private DataImport__c dataImport;
-    private GiftSchedule schedule;
     private Donation donation;
     private List<String> availableFields;
     private SoftCredits softCredits {
@@ -107,13 +106,11 @@ public with sharing class Gift {
 
     public void saveRecord() {
         convertAdditionalObjectMembers();
-
         if (this.dataImport.Id != null) {
             unitOfWork.registerDirty(new List<sObject> { this.dataImport });
         } else {
             unitOfWork.registerNew(new List<sObject> { this.dataImport });
         }
-
         unitOfWork.save();
     }
 
@@ -247,4 +244,5 @@ public with sharing class Gift {
         }
         set;
     }
+
 }
