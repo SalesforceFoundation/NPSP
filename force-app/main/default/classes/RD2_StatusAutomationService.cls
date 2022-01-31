@@ -140,6 +140,41 @@ public with sharing class RD2_StatusAutomationService {
         return null;
     }
 
+    public Boolean shouldMarkRDAsLapsed(RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
+        if (!new RD2_StatusAutomationService().isSettingValid()
+            || !rd2Settings.isStatusAutomationForLapsedEnabled()
+            || !rdRecord.isActive()
+            || !rdRecord.hasSchedule()
+            || rdRecord.isElevateRecord()
+        ) {
+            return false;
+        }
+
+        Date expectedDonationDate = rdRecord.getExpectedDonationDate(scheduleService);
+        Date lapsedThresholdDate = expectedDonationDate.addDays(rd2Settings.statusAutomationNumberOfDaysForLapsed);
+
+        return lapsedThresholdDate < RD2_ScheduleService.currentDate;
+    }
+
+    public Boolean shouldMarkRDAsClosed(RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
+        if (!new RD2_StatusAutomationService().isSettingValid()
+            || !rd2Settings.isStatusAutomationForClosedEnabled()
+            || rdRecord.isClosed()
+            || rdRecord.isPaused()
+            || !rdRecord.hasSchedule()
+            || rdRecord.isElevateRecord()
+        ) {
+            return false;
+        }
+
+        Date expectedDonationDate = rdRecord.getExpectedDonationDate(scheduleService);
+        Date closedThresholdDate = expectedDonationDate.addDays(rd2Settings.statusAutomationNumberOfDaysForClosed);
+
+        return closedThresholdDate < RD2_ScheduleService.currentDate;
+    }
+
+
+
     private void validateUpdatePermission() {
         Boolean hasUpdatePermission = UTIL_Describe.getObjectDescribe(
             String.valueOf(npe03__Recurring_Donations_Settings__c.SObjectType)

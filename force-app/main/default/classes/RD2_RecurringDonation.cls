@@ -317,33 +317,18 @@ public inherited sharing class RD2_RecurringDonation {
     }
 
     public RD2_RecurringDonation statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
-        if (isPaused() || isClosed() || !hasSchedule() || !new RD2_StatusAutomationService().isSettingValid() || isElevateRecord()) {
-            return this;
+        RD2_StatusAutomationService statusAutomationServce = new RD2_StatusAutomationService();
+
+        if(statusAutomationServce.shouldMarkRDAsLapsed(this, scheduleService)) {           
+            rd.Status__c = rdSettings.statusAutomationClosedValue;
+            changedFields.add(npe03__Recurring_Donation__c.Status__c);
+
         }
 
-        Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
-        Date expectedDonationDate = scheduleService.getNextDonationDateAfter(
-            baseDate.addDays(1),
-            this,
-            rd.RecurringDonationSchedules__r
-        );
+        if (statusAutomationServce.shouldMarkRDAsClosed(this, scheduleService)) {        
+            rd.Status__c = rdSettings.statusAutomationLapsedValue;
+            changedFields.add(npe03__Recurring_Donation__c.Status__c);
 
-        if(isActive() && rdSettings.isStatusAutomationForLapsedEnabled()) {
-            Date lapsedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForLapsed);
-            if (lapsedThresholdDate < RD2_ScheduleService.currentDate) {
-                rd.Status__c = rdSettings.statusAutomationClosedValue;
-                changedFields.add(npe03__Recurring_Donation__c.Status__c);
-                return this;
-            }
-        }
-
-        if (rdSettings.isStatusAutomationForClosedEnabled()) {
-            Date closedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForClosed);
-            if (closedThresholdDate < RD2_ScheduleService.currentDate) {
-                rd.Status__c = rdSettings.statusAutomationLapsedValue;
-                changedFields.add(npe03__Recurring_Donation__c.Status__c);
-                return this;
-            }
         }
 
         return this;
@@ -543,6 +528,15 @@ public inherited sharing class RD2_RecurringDonation {
 
     public String getInstallmentPeriod() {
         return rd.npe03__Installment_Period__c;
+    }
+
+    public Date getExpectedDonationDate(RD2_ScheduleService scheduleService) {
+        Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
+        return scheduleService.getNextDonationDateAfter(
+            baseDate.addDays(1),
+            this,
+            rd.RecurringDonationSchedules__r
+        );
     }
 
     /**
