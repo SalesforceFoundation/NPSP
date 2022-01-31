@@ -61,7 +61,7 @@ public with sharing class RD2_OpportunityService {
     private RD2_Settings rdSettings {
         get {
             if (rdSettings == null) {
-                rdSettings = RD2_Settings.getInstance();
+                rdSettings = new RD2_Settings();
             }
             return rdSettings;
         }
