@@ -36,22 +36,59 @@ public inherited sharing class DonationHistorySelector {
     /** 
     * @author Salesforce.org
     * @date 2021
-    * @description method to return OpportunityContactRole data.
+    * @description method to return Opportunity and Payment data.
     */
-    public List<Opportunity> getWonOpportunitiesByContactId(Id contactId) {
+  public List<Opportunity> getWonOpportunitiesByContactId( Id contactId, Integer offset ) {
         return [
             SELECT Id, 
                 Name, 
                 CloseDate, 
                 Amount, 
                 Primary_Contact__r.Email, 
-                Primary_Contact__r.Name
+                Primary_Contact__r.Name,
+                (
+                    SELECT npe01__Payment_Method__c,
+                        npe01__Paid__c
+                    FROM npe01__OppPayment__r 
+                    WHERE npe01__Paid__c = true
+                    ORDER BY npe01__Payment_Date__c
+                    LIMIT 1
+                )
             FROM Opportunity
             WHERE IsWon = true 
             AND Primary_Contact__r.Id =:contactId 
             WITH SECURITY_ENFORCED
             ORDER BY CloseDate 
             DESC LIMIT 50
+            OFFSET :offset
         ];
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return total number of record
+    */
+    public Integer getTotalNumberOfRecords( Id contactId ) {
+        Integer totalRecords = [SELECT COUNT()
+                                FROM Opportunity
+                                WHERE IsWon = true
+                                AND Primary_Contact__r.Id =:contactId
+                                WITH SECURITY_ENFORCED];
+        return totalRecords;
+    }
+
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return contact related to current user.
+    */
+    public Id getContactIdByUserId( Id userId ) {
+        List<User> contactId = [SELECT ContactId
+                                FROM User
+                                WHERE Id =: userId
+                                WITH SECURITY_ENFORCED
+                                LIMIT 1];
+        return contactId.get(0).ContactId;
     }
 }

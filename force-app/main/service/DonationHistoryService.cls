@@ -34,9 +34,11 @@
 */
 public with sharing class DonationHistoryService {
     private Id contactId;
+    private Integer offset;
     
-    public DonationHistoryService(Id contactId) {
+    public DonationHistoryService(Id contactId, Integer offset) {
         this.contactId = contactId;
+        this.offset    = offset;
     }
 
     @TestVisible
@@ -68,23 +70,43 @@ public with sharing class DonationHistoryService {
         }) && permissions.canRead(Contact.SObjectType, new Set<SObjectField>{
             Contact.Email,
             Contact.Name
-        }) && permissions.canRead(Partial_Soft_Credit__c.SObjectType, new Set<SObjectField>{
-            Partial_Soft_Credit__c.Amount__c,
-            Partial_Soft_Credit__c.Contact_Role_ID__c
+        }) && permissions.canRead(User.SObjectType, new Set<SObjectField>{
+            User.ContactId
+        }) && permissions.canRead(npe01__OppPayment__c.SObjectType, new Set<SObjectField>{
+            npe01__OppPayment__c.npe01__Payment_Method__c,
+            npe01__OppPayment__c.npe01__Opportunity__c
         });
+    }
+
+    public Boolean checkIfPaymentsAreEnabled() {
+        return npe01__Contacts_And_Orgs_Settings__c.getOrgDefaults().npe01__Payments_Enabled__c;
+    }
+
+    public String getPaymentMethodLabel() {
+        return Schema.DataImport__c.Payment_Method__c.getDescribe().getLabel();
+    }
+    
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Donation History list.
+    * @return List<Opportunity> returns Opportunities and Payment Method for them.
+    */
+    public List<Opportunity> getDonationHistory() {
+        if (hasAccessToDonationHistory()) {
+            return selector.getWonOpportunitiesByContactId(this.contactId, this.offset);
+        } else {
+            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
+        }
     }
 
     /** 
     * @author Salesforce.org
     * @date 2021
-    * @description method to return Donation History list.
+    * @description method to return Donation History Number of Records for infinite scroll.
     * @param contactId contact id which is going to be requested.
     */
-    public List<Opportunity> getDonationHistory() {
-        if (hasAccessToDonationHistory()) {
-            return selector.getWonOpportunitiesByContactId(this.contactId);
-        } else {
-            throw new UTIL_Permissions.InsufficientPermissionException(Label.commonInsufficientPermissions);
-        }
+    public Integer getTotalNumberOfRecords() {
+        return selector.getTotalNumberOfRecords(this.contactId);
     }
 }

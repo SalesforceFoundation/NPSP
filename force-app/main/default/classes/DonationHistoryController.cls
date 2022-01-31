@@ -34,7 +34,20 @@
 * @description Class for list donation history by credit type.
 */
 public with sharing class DonationHistoryController {
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description Donation History App view inner class.
+    */
+    public class DonationHistoryAppView {
+        @AuraEnabled public List<DonationHistoryView> donations;
+        @AuraEnabled public Boolean isPaymentsEnabled;
+        @AuraEnabled public String paymentMethodLabel;
+        @AuraEnabled public Integer totalNumberOfRecords;
+    }
 
+    private static final String EMPTY_PAYMENT_METHOD = '-';
+    
     /** 
     * @author Salesforce.org
     * @date 2021
@@ -47,38 +60,61 @@ public with sharing class DonationHistoryController {
         @AuraEnabled public String creditType;
         @AuraEnabled public Decimal amount;
         @AuraEnabled public String paymentMethod;
-        public DonationHistoryView(Opportunity ocr){
+        public DonationHistoryView(Opportunity ocr, String paymentMethod) {
             this.id = ocr.Id;
             this.name = ocr.Name;
             this.closeDate = ocr.CloseDate;
             this.amount = ocr.Amount;
             this.creditType = System.Label.CRLP_HardCredit;
-            this.paymentMethod = 'Cash';
+            this.paymentMethod = paymentMethod;
         }
     }
-
+    
     /** 
     * @author Salesforce.org
     * @date 2021
     * @description method to return Donation History list.
     */
     @AuraEnabled(cacheable=true)
-    public static List<DonationHistoryView> getDonationHistory(Id contactId) {
-        DonationHistoryService service = new DonationHistoryService(contactId);
+    public static DonationHistoryAppView getDonationHistory(Id contactId, Integer offset) {
+        DonationHistoryService service = new DonationHistoryService(contactId, offset);
         try {
-            List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-            donationHistories.addAll(buildHistoryFromOCRs(service.getDonationHistory()));
+            Boolean paymentsEnabled = service.checkIfPaymentsAreEnabled();
+            DonationHistoryAppView donationHistories = new DonationHistoryAppView();
+            donationHistories.donations = buildHistoryFromOpportunities(service.getDonationHistory(), contactId, paymentsEnabled);
+            donationHistories.totalNumberOfRecords = service.getTotalNumberOfRecords();
+            donationHistories.isPaymentsEnabled = paymentsEnabled;
+            donationHistories.paymentMethodLabel = service.getPaymentMethodLabel();
             return donationHistories;
         } catch(AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
     }
 
-    private static List<DonationHistoryView> buildHistoryFromOCRs(List<Opportunity> contactRoles) {
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method creates list of DonationHistoryView to return to LWC
+    * @return List<DonationHistoryView>
+    */
+    private static List<DonationHistoryView> buildHistoryFromOpportunities(List<Opportunity> opportunities, Id contactId, Boolean includePaymentMethod) {
         List<DonationHistoryView> donationHistories = new List<DonationHistoryView>();
-        for(Opportunity role : contactRoles) {
-            donationHistories.add(new DonationHistoryView(role));
+        for (Opportunity opp : opportunities) {
+            if(opp.npe01__OppPayment__r != null && opp.npe01__OppPayment__r.size() > 0){
+                String paymentMethod = includePaymentMethod
+                	? opp.npe01__OppPayment__r.get(0).npe01__Payment_Method__c
+                	: EMPTY_PAYMENT_METHOD;
+            	donationHistories.add(new DonationHistoryView(opp, paymentMethod));
+            } else {
+                donationHistories.add(new DonationHistoryView(opp, EMPTY_PAYMENT_METHOD));
+            }
         }
         return donationHistories;
+    }
+
+    @AuraEnabled(cacheable=true)
+    public static Id getContactIdByUserId(){
+        DonationHistorySelector selector = new DonationHistorySelector();
+        return selector.getContactIdByUserId(UserInfo.getUserId());
     }
 }
