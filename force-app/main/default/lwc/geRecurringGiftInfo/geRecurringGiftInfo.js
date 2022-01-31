@@ -4,7 +4,7 @@ export default class GeRecurringGiftInfo extends LightningElement {
     @api schedule;
 
     get scheduleAsString() {
-        return JSON.stringify(this.schedule);
+        return `Recurring info: ${this.schedule.RecurringType__c}, ${this.schedule.StartDate__c}, ${this.schedule.npe03__Installment_Period__c}`;
     }
 
     handleEdit() {

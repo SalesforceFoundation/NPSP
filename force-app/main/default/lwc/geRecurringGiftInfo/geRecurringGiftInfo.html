@@ -1,26 +1,32 @@
 <template>
-    <article class='slds-box slds-m-bottom_small'>
-        <lightning-layout>
+    <article class='slds-box slds-box__extension slds-m-bottom_small'>
+        <lightning-layout vertical-align="center">
             <lightning-layout-item size='8'>
-                <span data-id='scheduleInfo'>
+                <p data-id='scheduleInfo'>
                     {scheduleAsString}
-                </span>
+                </p>
             </lightning-layout-item>
             <lightning-layout-item size='4'>
-                <lightning-button
-                    class='slds-m-horizontal_xx-small'
-                    label='Edit'
-                    onclick={handleEdit}
-                    data-id='edit'
-                    >
-                </lightning-button>
-                <lightning-button
-                    class='slds-m-horizontal_xx-small'
-                    label='Remove Recurrence'
-                    onclick={handleRemoveSchedule}
-                    data-id='removeSchedule'
-                    >
-                </lightning-button>
+                <lightning-layout horizontal-align="end">
+                    <lightning-layout-item>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            label='Edit'
+                            onclick={handleEdit}
+                            data-id='edit'
+                            >
+                        </lightning-button>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            icon-name="utility:delete"
+                            label='Remove Recurrence'
+                            onclick={handleRemoveSchedule}
+                            data-id='removeSchedule'
+                            variant='destructive-text'
+                            >
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
             </lightning-layout-item>
         </lightning-layout>
     </article>
