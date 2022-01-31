@@ -108,10 +108,6 @@ public with sharing class Gift {
     public void saveRecord() {
         convertAdditionalObjectMembers();
 
-        if (hasSchedule()) {
-            schedule.mapTo(dataImport);
-        }
-
         if (this.dataImport.Id != null) {
             unitOfWork.registerDirty(new List<sObject> { this.dataImport });
         } else {
@@ -250,52 +246,5 @@ public with sharing class Gift {
             return unitOfWork;
         }
         set;
-    }
-
-    public Boolean hasSchedule() {
-        return this.schedule != null;
-    }
-
-    public void addSchedule(npe03__Recurring_Donation__c recurringDonation) {
-        if (recurringDonation.RecurringType__c == null) {
-            this.schedule = null;
-        } else {
-            this.schedule = new GiftSchedule(recurringDonation);
-        }
-    }
-
-    public class GiftSchedule {
-        // Populated from passed in recurring donation
-        private String recurringType;
-        private String dayOfMonth;
-        private Decimal installmentFrequency;
-        private String installmentPeriod;
-        private Decimal plannedInstallments;
-        private Date effectiveDate;
-
-        // Populated from the data import
-        private Date dateEstablished;
-        private Decimal recurringAmount;
-
-        public GiftSchedule(npe03__Recurring_Donation__c recurringDonation) {
-            this.recurringType = recurringDonation.RecurringType__c;
-            this.dayOfMonth = recurringDonation.Day_of_Month__c;
-            this.installmentFrequency = recurringDonation.InstallmentFrequency__c;
-            this.installmentPeriod = recurringDonation.npe03__Installment_Period__c;
-            this.plannedInstallments = recurringDonation.npe03__Installments__c;
-            this.effectiveDate = recurringDonation.StartDate__c;
-        }
-
-        public void mapTo(DataImport__c dataImport) {
-            dataImport.Recurring_Donation_Recurring_Type__c = this.recurringType;
-            dataImport.Recurring_Donation_Day_of_Month__c = this.dayOfMonth;
-            dataImport.Recurring_Donation_Installment_Frequency__c = this.installmentFrequency;
-            dataImport.Recurring_Donation_Installment_Period__c = this.installmentPeriod;
-            dataImport.Recurring_Donation_Planned_Installments__c = this.plannedInstallments;
-            dataImport.Recurring_Donation_Effective_Date__c = this.effectiveDate;
-
-            dataImport.Recurring_Donation_Amount__c = dataImport.Donation_Amount__c;
-            dataImport.Recurring_Donation_Date_Established__c = dataImport.Donation_Date__c;
-        }
     }
 }
