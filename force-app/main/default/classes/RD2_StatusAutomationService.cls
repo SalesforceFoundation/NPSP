@@ -49,7 +49,7 @@ public with sharing class RD2_StatusAutomationService {
     private static RD2_Settings rd2Settings {
         get {
             if (rd2Settings == null) {
-                rd2Settings = new RD2_Settings();
+                rd2Settings = RD2_Settings.getInstance();
             }
             return rd2Settings;
         }
@@ -90,24 +90,12 @@ public with sharing class RD2_StatusAutomationService {
     }
 
     public Boolean isSettingValid() {
-        Boolean isSettingValid = true;
-        if (rd2Settings.isStatusAutomationForClosedEnabled() && rd2Settings.isStatusAutomationForLapsedEnabled()) {
-            isSettingValid = isSettingValid
-                && rd2Settings.statusAutomationNumberOfDaysForLapsed < rd2Settings.statusAutomationNumberOfDaysForClosed;
-        }
-
-        if (rd2Settings.isStatusAutomationForClosedEnabled()) {
-            isSettingValid = isSettingValid
-                && statusMapper.getState(rd2Settings.statusAutomationClosedValue) == RD2_Constants.STATUS_Closed 
-                && rd2Settings.statusAutomationNumberOfDaysForClosed > 0;
-        }
-
-        if (rd2Settings.isStatusAutomationForLapsedEnabled()) {
-            isSettingValid = isSettingValid
-                && statusMapper.getState(rd2Settings.statusAutomationLapsedValue) == RD2_Constants.STATUS_LAPSED
-                && rd2Settings.statusAutomationNumberOfDaysForLapsed > 0;
-        }
-        return isSettingValid;
+        return String.isBlank(validateSetting(
+            rd2Settings.statusAutomationNumberOfDaysForLapsed,
+            rd2Settings.statusAutomationNumberOfDaysForClosed,
+            rd2Settings.statusAutomationLapsedValue,
+            rd2Settings.statusAutomationClosedValue)
+        );
     }
 
     public String validateSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
