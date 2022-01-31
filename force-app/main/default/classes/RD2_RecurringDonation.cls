@@ -242,8 +242,6 @@ public inherited sharing class RD2_RecurringDonation {
         }
 
         reviseStatusForPaused(currentDate, scheduleService);
-        
-        statusAutomationReviseStatus(scheduleService);
 
         return this;
     }
@@ -318,9 +316,9 @@ public inherited sharing class RD2_RecurringDonation {
         }
     }
 
-    private void statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
+    public RD2_RecurringDonation statusAutomationReviseStatus(RD2_ScheduleService scheduleService) {
         if (isPaused() || isClosed() || !hasSchedule() || !new RD2_StatusAutomationService().isSettingValid() || isElevateRecord()) {
-            return;
+            return this;
         }
 
         Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
@@ -332,21 +330,23 @@ public inherited sharing class RD2_RecurringDonation {
 
         if(isActive() && rdSettings.isStatusAutomationForLapsedEnabled()) {
             Date lapsedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForLapsed);
-            if (lapsedThresholdDate <= RD2_ScheduleService.currentDate) {
+            if (lapsedThresholdDate < RD2_ScheduleService.currentDate) {
                 rd.Status__c = rdSettings.statusAutomationClosedValue;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
-                return;
+                return this;
             }
         }
 
         if (rdSettings.isStatusAutomationForClosedEnabled()) {
             Date closedThresholdDate = expectedDonationDate.addDays(rdSettings.statusAutomationNumberOfDaysForClosed);
-            if (closedThresholdDate <= RD2_ScheduleService.currentDate) {
+            if (closedThresholdDate < RD2_ScheduleService.currentDate) {
                 rd.Status__c = rdSettings.statusAutomationLapsedValue;
                 changedFields.add(npe03__Recurring_Donation__c.Status__c);
-                return;
+                return this;
             }
         }
+
+        return this;
     }
 
     /**
