@@ -17,13 +17,17 @@ describe('c-ge-modal-recurring-donation', () => {
 
     describe('render behavior', () => {
         it('renders schedule data', async () => {
-            const infoCard = setup({ RecurringType__c: 'Open' });
+            const infoCard = setup({
+                RecurringType__c: 'Open',
+                StartDate__c: '2020-01-01',
+                npe03__Installment_Period__c: 'Monthly'
+            });
             await flushPromises();
 
             const schedule = infoCard.shadowRoot.querySelector('[data-id="scheduleInfo"]');
 
             expect(schedule).toBeDefined();
-            expect(schedule.textContent).toBe('{\"RecurringType__c\":\"Open\"}');
+            expect(schedule.textContent).toBe('Recurring info: Open, 2020-01-01, Monthly');
         });
 
         it('renders edit and remove recurrence buttons', async () => {
@@ -32,11 +36,11 @@ describe('c-ge-modal-recurring-donation', () => {
 
             const buttons = infoCard.shadowRoot.querySelectorAll('lightning-button');
             const editButton = infoCard.shadowRoot.querySelector('[data-id="edit"]');
-            const removeRecurrenceButton = infoCard.shadowRoot.querySelector('[data-id="removeRecurrence"]');
+            const removeRecurrenceButton = infoCard.shadowRoot.querySelector('[data-id="removeSchedule"]');
 
             expect(buttons.length).toBe(2);
-            expect(editButton.label).toBe('Edit');
-            expect(removeRecurrenceButton.label).toBe('Remove Recurrence');
+            expect(editButton.label).toBe('c.commonEdit');
+            expect(removeRecurrenceButton.label).toBe('c.geRemoveSchedule');
         });
     });
 

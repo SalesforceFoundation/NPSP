@@ -11,7 +11,7 @@
                     <lightning-layout-item>
                         <lightning-button
                             class='slds-m-horizontal_xx-small'
-                            label='Edit'
+                            label={labels.commonEdit}
                             onclick={handleEdit}
                             data-id='edit'
                             >
@@ -19,7 +19,7 @@
                         <lightning-button
                             class='slds-m-horizontal_xx-small'
                             icon-name="utility:delete"
-                            label='Remove Recurrence'
+                            label={labels.geRemoveSchedule}
                             onclick={handleRemoveSchedule}
                             data-id='removeSchedule'
                             variant='destructive-text'
