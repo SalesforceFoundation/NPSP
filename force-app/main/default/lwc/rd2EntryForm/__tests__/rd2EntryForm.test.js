@@ -28,7 +28,6 @@ const accountGetRecord = require('./data/accountGetRecord.json');
 const rd2WithCardCommitment = require('./data/rd2WithCardCommitment.json');
 const rd2WithACHCommitment = require('./data/rd2WithACHCommitment.json');
 const rd2WithoutCommitmentCard = require('./data/rd2WithoutCommitmentCard.json');
-const recurringDataContactResponse = require('./data/recurringDataContactResponse.json');
 const handleCommitmentResponseBody = require('./data/handleCommitmentResponseBody.json');
 const handleCommitmentResponseBodyACH = require('./data/handleCommitmentResponseBodyACH.json');
 const initialViewResponse = require("../../../../../../tests/__mocks__/apex/data/getInitialView.json");
