@@ -1,9 +1,21 @@
 import { LightningElement, api } from 'lwc';
 
+import commonCancel from '@salesforce/label/c.commonCancel';
+import geAddSchedule from '@salesforce/label/c.geAddSchedule';
+
 export default class GeModalRecurringDonation extends LightningElement {
     @api schedule;
     @api cancelCallback;
     @api createRecurrenceCallback;
+
+    labels = {};
+
+    connectedCallback() {
+        this.labels = {
+            commonCancel,
+            geAddSchedule,
+        }
+    }
 
     get titleSectionComputedClass() {
         let allowedVariants = ['warning', 'shade', 'inverse', 'alt-inverse', 
@@ -23,7 +35,7 @@ export default class GeModalRecurringDonation extends LightningElement {
         return this.template.querySelectorAll("[data-id=\"scheduleComponent\"]")[0];
     }
 
-    handleCreateRecurrence() {
+    handleAddSchedule() {
         const scheduleData = this.scheduleComponent.returnValues();
         this.createRecurrenceCallback(scheduleData);
     }

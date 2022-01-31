@@ -36,9 +36,9 @@ describe('c-ge-modal-recurring-donation', () => {
 
             expect(buttons.length).toBe(2);
             expect(cancelButton).toBeDefined();
-            expect(cancelButton.label).toBe('Cancel');
+            expect(cancelButton.label).toBe('c.commonCancel');
             expect(createRecurrenceButton).toBeDefined();
-            expect(createRecurrenceButton.label).toBe('Create Recurrence');
+            expect(createRecurrenceButton.label).toBe('c.geAddSchedule');
         });
     });
 

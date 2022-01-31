@@ -6,19 +6,24 @@
             >
         </c-rd2-entry-form-schedule-section>
         <div slot='footer'>
-            <div>
-                <lightning-button
-                    class='slds-m-horizontal_xx-small'
-                    label='Cancel'
-                    onclick={handleCancel}
-                    >
-                </lightning-button>
-                <lightning-button
-                    class='slds-m-horizontal_xx-small'
-                    label='Create Recurrence'
-                    onclick={handleCreateRecurrence}
-                    >
-                </lightning-button>
+            <div class='slds-theme_shade slds-p-around_small'>
+                <lightning-layout horizontal-align="end">
+                    <lightning-layout-item>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            label={labels.commonCancel}
+                            onclick={handleCancel}
+                            >
+                        </lightning-button>
+                        <lightning-button
+                            class='slds-m-horizontal_xx-small'
+                            label={labels.geAddSchedule}
+                            onclick={handleAddSchedule}
+                            variant="brand"
+                            >
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
             </div>
         </div>
     </lightning-card>
