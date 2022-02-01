@@ -147,6 +147,7 @@ public with sharing class GE_GiftEntryController {
 
     @AuraEnabled
     public static Map<String, Integer> getGiftBatchTotalsBy(String batchId) {
+        giftBatchService.validateBatch(new GiftBatchId((Id) batchId));
         return giftBatchService.getGiftBatchTotalsMapFor((Id) batchId);
     }
 
@@ -317,7 +318,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled
     public static void processGiftsFor(Id batchId) {
        try {
-           giftBatchService.processGiftsFor(batchId);
+           giftBatchService.processGiftsFor(new GiftBatchId(batchId));
        } catch (Exception ex) {
           throw new AuraHandledException(ex.getMessage());
        }
