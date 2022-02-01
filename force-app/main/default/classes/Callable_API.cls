@@ -186,7 +186,7 @@ global with sharing class Callable_API implements System.Callable {
                 if (advancedMappingEnablementService.isEnabled()) {
                     return null;
                 }
-+
+
                 advancedMappingEnablementService.enable();
 
                 return null;

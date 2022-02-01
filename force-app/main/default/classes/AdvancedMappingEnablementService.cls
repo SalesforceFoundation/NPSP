@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2019, Salesforce.org
+    Copyright (c) 2022, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
     * @author: Salesforce.org
-    * @date: 2021
+    * @date: 2022
     * @description: Service to enable the advanced mapping feature
  */
 public with sharing class AdvancedMappingEnablementService {
