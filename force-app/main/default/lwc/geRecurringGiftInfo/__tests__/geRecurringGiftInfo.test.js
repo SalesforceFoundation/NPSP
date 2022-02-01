@@ -6,6 +6,7 @@ import INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.
 import EFFECTIVE_DATE from '@salesforce/schema/npe03__Recurring_Donation__c.StartDate__c';
 import INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installments__c';
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
+import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 
 jest.mock("@salesforce/label/c.geOpenEndedGiftSchedule", () => {
     return { default: 'Recurring Schedule Information: {0} {1} donation starting on {2}.' };
@@ -18,7 +19,8 @@ jest.mock("@salesforce/label/c.geFixedGiftSchedule", () => {
 }, { virtual: true });
 
 const dataImportFields = {
-    donationAmount: DONATION_AMOUNT.fieldApiName
+    donationAmount: DONATION_AMOUNT.fieldApiName,
+    donationDate: DONATION_DATE.fieldApiName
 }
 const scheduleFields = {
     recurringType: RECURRING_TYPE.fieldApiName,
@@ -32,7 +34,7 @@ describe('c-ge-modal-recurring-donation', () => {
         clearDOM();
     });
 
-    const setup = (schedule) => {
+    const setup = (donationAmount, donationDate, schedule) => {
         const infoCard = createElement('c-ge-modal-recurring-donation', {
             is: GeRecurringGiftInfo
         });
@@ -46,7 +48,10 @@ describe('c-ge-modal-recurring-donation', () => {
             infoCard.schedule = schedule;
         }
         infoCard.giftInView = {
-            fields: { [dataImportFields.donationAmount]: 100 },
+            fields: {
+                [dataImportFields.donationAmount]: donationAmount,
+                [dataImportFields.donationDate]: donationDate
+            },
             schedule: schedule
         }
         document.body.appendChild(infoCard);
@@ -55,11 +60,15 @@ describe('c-ge-modal-recurring-donation', () => {
 
     describe('render behavior', () => {
         it('renders expected text for open ended schedules', async () => {
-            const infoCard = setup({
-                [scheduleFields.recurringType]: 'Open',
-                [scheduleFields.effectiveDate]: '2022-01-31',
-                [scheduleFields.installmentPeriod]: 'Monthly'
-            });
+            const infoCard = setup(
+                100,
+                '2022-01-31',
+                {
+                    [scheduleFields.recurringType]: 'Open',
+                    [scheduleFields.effectiveDate]: '2022-01-31',
+                    [scheduleFields.installmentPeriod]: 'Monthly'
+                }
+            );
             await flushPromises();
 
             const schedule = infoCard.shadowRoot.querySelector('[data-id="scheduleInfo"]');
@@ -70,12 +79,16 @@ describe('c-ge-modal-recurring-donation', () => {
         });
 
         it('renders expected text for fixed schedules', async () => {
-            const infoCard = setup({
-                [scheduleFields.recurringType]: 'Fixed',
-                [scheduleFields.effectiveDate]: '2022-01-31',
-                [scheduleFields.installmentPeriod]: 'Monthly',
-                [scheduleFields.installments]: '12'
-            });
+            const infoCard = setup(
+                100,
+                '2022-01-31',
+                {
+                    [scheduleFields.recurringType]: 'Fixed',
+                    [scheduleFields.effectiveDate]: '2022-01-31',
+                    [scheduleFields.installmentPeriod]: 'Monthly',
+                    [scheduleFields.installments]: '12'
+                }
+            );
             await flushPromises();
 
             const schedule = infoCard.shadowRoot.querySelector('[data-id="scheduleInfo"]');
@@ -87,17 +100,40 @@ describe('c-ge-modal-recurring-donation', () => {
         });
 
         it('renders empty string for incomplete gift view', async () => {
-            const infoCard = setup({
-                [scheduleFields.recurringType]: 'INVALID',
-                [scheduleFields.effectiveDate]: 'INVALID',
-                [scheduleFields.installmentPeriod]: 'INVALID'
-            });
+            const infoCard = setup(
+                100,
+                '2022-01-31',
+                {
+                    [scheduleFields.recurringType]: 'INVALID',
+                    [scheduleFields.effectiveDate]: 'INVALID',
+                    [scheduleFields.installmentPeriod]: 'INVALID'
+                }
+            );
             await flushPromises();
 
             const schedule = infoCard.shadowRoot.querySelector('[data-id="scheduleInfo"]');
 
             expect(schedule).toBeDefined();
             expect(schedule.textContent).toBe('');
+        });
+
+        it('renders 0 for NaN donation amount', async () => {
+            const infoCard = setup(
+                undefined,
+                '2022-01-31',
+                {
+                    [scheduleFields.recurringType]: 'Open',
+                    [scheduleFields.effectiveDate]: '2022-01-31',
+                    [scheduleFields.installmentPeriod]: 'Monthly',
+                }
+            );
+            await flushPromises();
+
+            const schedule = infoCard.shadowRoot.querySelector('[data-id="scheduleInfo"]');
+
+            expect(schedule).toBeDefined();
+            expect(schedule.textContent)
+                .toBe('Recurring Schedule Information: $0.00 monthly donation starting on 1/31/2022.');
         });
 
         it('renders edit and remove recurrence buttons', async () => {

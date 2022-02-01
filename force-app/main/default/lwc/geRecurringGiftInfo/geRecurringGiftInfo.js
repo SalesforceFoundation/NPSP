@@ -74,7 +74,7 @@ export default class GeRecurringGiftInfo extends LightningElement {
     }
 
     localizedDonationAmount() {
-        const donationAmount = this.giftInView?.fields[DONATION_AMOUNT.fieldApiName];
+        const donationAmount = this.giftInView?.fields[DONATION_AMOUNT.fieldApiName] || 0;
         const localizedDonationAmount = new Intl.NumberFormat(LOCALE,
             {
                 style: 'currency',
