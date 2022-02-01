@@ -33,20 +33,19 @@
 * @description Donation History Service class in NPSP.
 */
 public with sharing class DonationHistoryService {
-    
-    static final String NPSP_CREDIT_ROLES = 'NPSP_OppsSoftCreditRoles';
-    private List<Opportunity> credits;
     private Id contactId;
     private String filter;
+    private Integer offset;
 
-    public DonationHistoryService(Id contactId, String filter) {
+    public DonationHistoryService(Id contactId, Integer offset, String filter) {
         this.contactId = contactId;
         this.filter = filter;
+        this.offset = offset;
     }
 
     public DonationHistoryService(Id contactId) {
         this.contactId = contactId;
-        this.credits = new List<Opportunity>();
+        this.offset    = offset;
     }
 
     @TestVisible
@@ -105,9 +104,9 @@ public with sharing class DonationHistoryService {
         if (hasAccessToDonationHistory()) {
             List<Opportunity> credits = null;
             if (shouldApplyFilterByYear(filter)) {
-                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, Integer.valueOf(filter));
+                credits = selector.getWonOpportunitiesByContactIdAndYear(contactId, offset, Integer.valueOf(filter));
             } else { 
-                credits = selector.getWonOpportunitiesByContactId(contactId);
+                credits = selector.getWonOpportunitiesByContactId(contactId, offset);
             }
             return credits;
         } else {
@@ -146,4 +145,13 @@ public with sharing class DonationHistoryService {
         return aggregateResultsAsStrings;
     }
 
+    /** 
+    * @author Salesforce.org
+    * @date 2021
+    * @description method to return Donation History Number of Records for infinite scroll.
+    * @param contactId contact id which is going to be requested.
+    */
+    public Integer getTotalNumberOfRecords() {
+        return selector.getTotalNumberOfRecords(this.contactId);
+    }
 }
