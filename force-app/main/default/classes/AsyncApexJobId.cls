@@ -29,19 +29,33 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description Value object class for the AsyncApexJob Id.
 */
-public with sharing class GiftService {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
-    }
+public inherited sharing class AsyncApexJobId {
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
-    }
+   private Id asyncApexJobId;
+
+   public AsyncApexJobId(Id asyncApexJobId) {
+      if (!isAsyncApexJobId(asyncApexJobId)) {
+         throw new AsyncApexJobIdException('Invalid AsyncApexJob Id');
+      }
+      this.asyncApexJobId = asyncApexJobId;
+   }
+
+   private Boolean isAsyncApexJobId(Id asyncApexJobId) {
+      SObjectType providedIdSObjectType = asyncApexJobId.getSobjectType();
+      if (providedIdSObjectType == AsyncApexJob.getSObjectType()) {
+         return true;
+      }
+      return false;
+   }
+
+   public Id value() {
+      return this.asyncApexJobId;
+   }
+
+   public class AsyncApexJobIdException extends Exception {}
+
 }
