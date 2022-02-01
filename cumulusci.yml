@@ -938,6 +938,71 @@ flows:
             2:
                 task: update_admin_profile
 
+    enable_gift_entry_managed:
+        description: Enable the Gift Entry feature in a scratch org (managed package only)
+        group: NPSP
+        steps:
+            1:
+                flow: enable_advanced_mapping_managed
+            2:
+                task: execute_anon
+                options:
+                    managed: true
+                    unmanaged: false
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enablegiftentry', null);
+
+    enable_gift_entry:
+        description: Enable the Gift Entry feature in a scratch org (unmanaged code only).
+        group: NPSP
+        steps:
+            1:
+                flow: enable_advanced_mapping
+            2:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enablegiftentry', null);
+
+    enable_advanced_mapping_managed:
+        description: Enable the BDI Advanced Mapping feature (managed package only)
+        group: NPSP
+        steps:
+            1:
+                flow: enable_advanced_mapping
+                options:
+                    execute_anon:
+                        managed: true
+                        unmanaged: false
+                    custom_settings_value_wait:
+                        managed: true
+                        unmanaged: false
+
+    enable_advanced_mapping:
+        description: Enable the BDI Advanced Mapping feature (unmanaged code only).
+        group: NPSP
+        steps:
+            1:
+                task: execute_anon
+                options:
+                    apex: >
+                        String namespace = ('%%%NAMESPACE%%%').replace('__','');
+                        Type t = Type.forName(namespace, 'Callable_Api');
+                        Callable apiClass = (Callable)t.newInstance();
+                        apiClass.call('settings.enableadvancedmapping', null);
+            2:
+                task: custom_settings_value_wait
+                options:
+                    object: "%%%NAMESPACE%%%Data_Import_Settings__c"
+                    field: "%%%NAMESPACE%%%Field_Mapping_Method__c"
+                    value: "Data Import Field Mapping"
+
     enable_rd2:
         description: 'Fully configures and enables a Scratch org with Enhanced Recurring Donations (unmanaged code only)'
         group: NPSP
