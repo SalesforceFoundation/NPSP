@@ -80,7 +80,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(5, 3, null, null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(5, 3, null, null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidNumberOfDays, errorMessage,
@@ -96,7 +96,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(-5, null, RD2_Constants.STATUS_LAPSED, null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(-5, null, RD2_Constants.STATUS_LAPSED, null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
@@ -112,7 +112,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, -3, null, RD2_Constants.STATUS_CLOSED);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, -3, null, RD2_Constants.STATUS_CLOSED));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationNegativeNumberOfDays, errorMessage,
@@ -128,7 +128,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, 3, null, 'random');
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, 3, null, 'random'));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidClosedStatus, errorMessage,
@@ -144,7 +144,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(2, null, 'random', null);
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(2, null, 'random', null));
         Test.stopTest();
 
         System.assertEquals(System.label.RD2_StatusAutomationInvalidLapsedStatus, errorMessage,
@@ -160,7 +160,7 @@ private class RD2_StatusAutomationService_TEST {
         RD2_StatusAutomationService service = new RD2_StatusAutomationService();
 
         Test.startTest();
-        String errorMessage = service.validateSetting(null, null, 'random', 'random');
+        String errorMessage = service.validateSetting(service.buildStatusAutomationSettings(null, null, 'random', 'random'));
         Test.stopTest();
 
         System.assertEquals(null, errorMessage,
@@ -289,4 +289,5 @@ private class RD2_StatusAutomationService_TEST {
             }
         );
     }
+
 }
