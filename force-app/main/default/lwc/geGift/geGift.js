@@ -39,7 +39,7 @@ class Gift {
     }
 
     hasSchedule() {
-        return this?._schedule;
+        return Object.keys(this._schedule).length > 0;
     }
 
     addSchedule(scheduleData) {

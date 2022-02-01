@@ -89,7 +89,7 @@ describe('c-ge-form-renderer', () => {
 
             expect(dispatchEventSpy).toHaveBeenCalledTimes(1);
             const componentName = dispatchEventSpy.mock.calls[0][0].detail.modalProperties.componentName;
-            expect(componentName).toBe('ge-recurring-modal');
+            expect(componentName).toBe('geModalRecurringDonation');
         });
     });
 
