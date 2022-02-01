@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,31 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description Processor Queue Finalizer to act on finalized queueables.
 */
-public with sharing class GiftService {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
+public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer{
+
+    @TestVisible
+    private GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    private GiftBatchId giftBatchId;
+
+    public GiftEntryProcessorQueueFinalizer (GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
     }
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
+    public void execute(FinalizerContext finalizerContext) {
+        if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
+            giftBatchService.validateBatch(this.giftBatchId);
+        }
     }
 }
