@@ -30,21 +30,30 @@
 /**
 * @author Salesforce.org
 * @date 2022
-* @description Processor for all gifts entered through the Gift Entry App.
+* @description Processor Queue Finalizer to act on finalized queueables.
 */
-public inherited sharing class GiftEntryProcessor {
 
-   @TestVisible private GiftBatch giftBatch;
+public inherited sharing class GiftEntryProcessorQueueFinalizer implements Finalizer{
 
-   public GiftEntryProcessor (GiftBatch giftBatch) {
-      this.giftBatch = giftBatch;
-   }
+    @TestVisible
+    private GiftBatchService giftBatchService {
+        get {
+            if (giftBatchService == null) {
+                giftBatchService = new GiftBatchService();
+            }
+            return giftBatchService;
+        }
+        set;
+    }
+    private GiftBatchId giftBatchId;
 
-   public void process(){
-      if (giftBatch.canBeEnqueued()) {
-         giftBatch.prepareGiftsForProcessing();
-         GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(new GiftBatchId(giftBatch.id()));
-         System.enqueueJob(processorQueue);
-      }
-   }
+    public GiftEntryProcessorQueueFinalizer (GiftBatchId giftBatchId) {
+        this.giftBatchId = giftBatchId;
+    }
+
+    public void execute(FinalizerContext finalizerContext) {
+        if (finalizerContext.getResult() != ParentJobResult.SUCCESS) {
+            giftBatchService.validateBatch(this.giftBatchId);
+        }
+    }
 }

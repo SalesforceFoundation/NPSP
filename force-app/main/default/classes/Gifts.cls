@@ -37,7 +37,7 @@ public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
     @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
-    @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private Map<Id, DataImport__c> giftsToUpdate = new Map<Id, DataImport__c>();
     @TestVisible private GiftSelector giftSelector;
     @TestVisible private DonationSelector donationSelector;
     @TestVisible private Donations donations;
@@ -131,6 +131,8 @@ public with sharing class Gifts {
     public void prepareForProcessing() {
         giftsToUpdate.clear();
 
+        giftsToProcessingStatus();
+
         Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
         if (paymentIntegrationUnavailable) {
             String failReason = String.format(
@@ -138,12 +140,10 @@ public with sharing class Gifts {
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
         }
-
-        giftsToProcessingStatus();
     }
 
     public void updateRecords() {
-        update giftsToUpdate;
+        update giftsToUpdate.values();
         giftsToUpdate.clear();
     }
 
@@ -154,7 +154,7 @@ public with sharing class Gifts {
     public void authorizedToPaymentProcessingStatus() {
         for (DataImport__c gift : authorizedGifts()) {
             gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 
@@ -167,35 +167,34 @@ public with sharing class Gifts {
     }
 
     public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
-        for (DataImport__c gift : dataImportsById.values()) {
+        for (DataImport__c gift : giftsToUpdate.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.hasAuthorizedPayment()) {
                 gift.Status__c = BDI_DataImport_API.bdiFailed;
                 gift.FailureInformation__c = failReason;
-                giftsToUpdate.add(gift);
             }
         }
     }
 
     public void failWith(String failReason) {
-        for (Gift gift : giftsInProcessing()) {
+        for (Gift gift : standardGiftsInProcessing()) {
             gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
             gift.asDataImport().FailureInformation__c = failReason;
-            giftsToUpdate.add(gift.asDataImport());
+            giftsToUpdate.put(gift.id(), gift.asDataImport());
         }
     }
 
     public Boolean inProcessing() {
-        return giftsInProcessing().size() > 0;
+        return standardGiftsInProcessing().size() > 0;
     }
 
-    private List<Gift> giftsInProcessing() {
+    @TestVisible
+    private List<Gift> standardGiftsInProcessing() {
         List<Gift> processingGifts = new List<Gift>();
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
-
-            if (currentGift.isProcessing()) {
+            if (currentGift.isProcessing() && !currentGift.isPaymentProcessing()) {
                 processingGifts.add(currentGift);
             }
         }
@@ -205,10 +204,9 @@ public with sharing class Gifts {
     @TestVisible
     private void giftsToProcessingStatus() {
         for (DataImport__c dataImport : dataImportsById.values()) {
-            Gift currentGift = toGift(dataImport);
-            if (currentGift.isDryRunValidated()) {
+            if (dataImport.Status__c != BDI_DataImport_API.bdiImported) {
                 dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(dataImport);
+                giftsToUpdate.put(dataImport.Id, dataImport);
             }
         }
     }
@@ -217,7 +215,7 @@ public with sharing class Gifts {
         for (DataImport__c gift : giftsInElevateBatch) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
             gift.FailureInformation__c = failReason;
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 

@@ -35,25 +35,26 @@
 
 public with sharing class GiftEntryProcessorQueue implements Queueable, Database.AllowsCallouts{
 
-   private GiftBatchId giftBatchId;
-   private String jobId;
-   @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
+    private GiftBatchId giftBatchId;
+    private String jobId;
+    @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
 
-   public GiftEntryProcessorQueue (GiftBatchId giftBatchId){
-      this.giftBatchId = giftBatchId;
-   }
+    public GiftEntryProcessorQueue (GiftBatchId giftBatchId){
+        this.giftBatchId = giftBatchId;
+    }
 
-   public void execute(QueueableContext queueableContext) {
-      if (Test.isRunningTest()){
-         jobId = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.getSObjectType());
-      } else {
-         BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
-         jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
-      }
-      updateGiftBatchWith(new AsyncApexJobId(jobId));
-   }
+    public void execute(QueueableContext queueableContext) {
+        if (Test.isRunningTest()){
+            jobId = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.getSObjectType());
+        } else {
+            System.attachFinalizer(new GiftEntryProcessorQueueFinalizer(this.giftBatchId));
+            BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
+            jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
+        }
+        updateGiftBatchWith(new AsyncApexJobId(jobId));
+    }
 
-   private void updateGiftBatchWith(AsyncApexJobId asyncApexJobId) {
-      giftBatchService.updateGiftBatchWith(giftBatchId, asyncApexJobId);
-   }
+    private void updateGiftBatchWith(AsyncApexJobId asyncApexJobId) {
+        giftBatchService.updateGiftBatchWith(giftBatchId, asyncApexJobId);
+    }
 }
