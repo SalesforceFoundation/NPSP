@@ -109,15 +109,11 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     /*******************************************************************************************************
     * @description is the running user an admin
     */
-    @TestVisible
     public Boolean isAdmin {
         get {
-            if (isAdmin == null) {
-                isAdmin = STG_Panel.runningUserIsAdmin();
-            }
-            return isAdmin;
+            return STG_Panel.runningUserIsAdmin();
         }
-        private set;
+        set;
     }
 
     /*******************************************************************************************************
