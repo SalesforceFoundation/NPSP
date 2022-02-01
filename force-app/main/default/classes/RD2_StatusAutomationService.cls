@@ -74,53 +74,58 @@ public with sharing class RD2_StatusAutomationService {
         return view;
     }
 
-    public void saveSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
+    public npe03__Recurring_Donations_Settings__c buildStatusAutomationSettings(
+        Integer daysForLapsed,
+        Integer daysForClosed,
+        String lapsedStatus,
+        String closedStatus) {
+
+        npe03__Recurring_Donations_Settings__c automationSettings = 
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+    
+        automationSettings.StatusAutomationDaysForLapsed__c = daysForLapsed;
+        automationSettings.StatusAutomationDaysForClosed__c = daysForClosed;
+        automationSettings.StatusAutomationLapsedValue__c = lapsedStatus;
+        automationSettings.StatusAutomationClosedValue__c = closedStatus;
+
+        return automationSettings;
+    }
+    public void saveSetting(npe03__Recurring_Donations_Settings__c automationSettings) {
         validateUpdatePermission();
-        npe03__Recurring_Donations_Settings__c settings = 
-            UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        
-        settings.StatusAutomationDaysForLapsed__c = daysForLapsed;
-        settings.StatusAutomationDaysForClosed__c = daysForClosed;
-        settings.StatusAutomationLapsedValue__c = lapsedStatus;
-        settings.StatusAutomationClosedValue__c = closedStatus;
 
         if (!Test.isRunningTest()) {
-            update settings;
+            update automationSettings;
         }
     }
 
     public Boolean isSettingValid() {
-        return String.isBlank(validateSetting(
-            rd2Settings.statusAutomationNumberOfDaysForLapsed,
-            rd2Settings.statusAutomationNumberOfDaysForClosed,
-            rd2Settings.statusAutomationLapsedValue,
-            rd2Settings.statusAutomationClosedValue)
-        );
+        return String.isBlank(validateSetting(UTIL_CustomSettingsFacade.getRecurringDonationsSettings()));
     }
 
-    public String validateSetting(Integer daysForLapsed, Integer daysForClosed, String lapsedStatus, String closedStatus) {
-        if (daysForLapsed != null && daysForClosed != null) {
-            if (daysForLapsed >= daysForClosed) {
+    public String validateSetting(npe03__Recurring_Donations_Settings__c settings) {
+        if (settings.StatusAutomationDaysForLapsed__c != null
+            && settings.StatusAutomationDaysForClosed__c != null) {
+            if (settings.StatusAutomationDaysForLapsed__c >= settings.StatusAutomationDaysForClosed__c) {
                 return System.label.RD2_StatusAutomationInvalidNumberOfDays;
             }
         }
 
-        if (daysForLapsed != null) {
-            if (statusMapper.getState(lapsedStatus) != RD2_Constants.STATUS_LAPSED) {
+        if (settings.StatusAutomationDaysForLapsed__c != null) {
+            if (statusMapper.getState(settings.StatusAutomationLapsedValue__c) != RD2_Constants.STATUS_LAPSED) {
                 return System.label.RD2_StatusAutomationInvalidLapsedStatus;
             }
 
-            if (daysForLapsed < 0) {
+            if (settings.StatusAutomationDaysForLapsed__c < 0) {
                 return System.label.RD2_StatusAutomationNegativeNumberOfDays;
             }
         }
 
-        if (daysForClosed != null) {
-            if (statusMapper.getState(closedStatus) != RD2_Constants.STATUS_Closed) {
+        if (settings.StatusAutomationDaysForClosed__c != null) {
+            if (statusMapper.getState(settings.StatusAutomationClosedValue__c) != RD2_Constants.STATUS_Closed) {
                 return System.label.RD2_StatusAutomationInvalidClosedStatus;
             }
 
-            if (daysForClosed < 0) {
+            if (settings.StatusAutomationDaysForClosed__c < 0) {
                 return System.label.RD2_StatusAutomationNegativeNumberOfDays;
             }
         }
