@@ -36,23 +36,43 @@ public with sharing class Donations {
 
     private List<Donation> donations = new List<Donation>();
     private String donorType;
+    private String relationshipField;
 
+    // Constructor is used in Gift Entry for the review donations modal and retrieves
+    // all open donations for a given organization or contact donor
     public Donations(Id donorId, DonationSelector selector) {
-        this.donorType = donorId.getSObjectType().getDescribe().getName();
-
-        String relationshipField;
-        if (donorType == SObjectType.Account.Name) {
-            relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
-        } else if (donorType == SObjectType.Contact.Name) {
-            relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
-        }
+        donorType = donorId.getSObjectType().getDescribe().getName();
+        determineRelationshipFieldFrom(donorType);
 
         for (Opportunity opportunity : selector.getOpenDonations(relationshipField, donorId)) {
             donations.add(new Donation(opportunity));
         }
     }
 
+    public Donations(List<Id> opportunityIds, DonationSelector selector) {
+        for (Opportunity opportunity : selector.getDonations(opportunityIds)) {
+            donations.add(new Donation(opportunity));
+        }
+    }
+
     public List<Donation> all() {
         return this.donations;
+    }
+
+    public Donation getDonationFor(DataImport__c dataImport) {
+        for (Donation donation : donations) {
+            if (donation.opportunity()?.Id == dataImport.DonationImported__c) {
+                return donation;
+            }
+        }
+        return null;
+    }
+
+    private void determineRelationshipFieldFrom(String donorType) {
+        if (donorType == SObjectType.Account.Name) {
+            relationshipField = SObjectType.Opportunity.fields.AccountId.Name;
+        } else if (donorType == SObjectType.Contact.Name) {
+            relationshipField = SObjectType.Opportunity.fields.Primary_Contact__c.Name;
+        }
     }
 }
