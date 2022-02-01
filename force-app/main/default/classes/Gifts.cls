@@ -39,6 +39,8 @@ public with sharing class Gifts {
     @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
     @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
     @TestVisible private GiftSelector giftSelector;
+    @TestVisible private DonationSelector donationSelector;
+    @TestVisible private Donations donations;
 
     public Gifts() {}
 
@@ -53,25 +55,41 @@ public with sharing class Gifts {
         set;
     }
 
-    public Gifts(List<DataImport__c> dataImports) {
-        populateDataImportsById(dataImports);
-        setElevateBatchIds(dataImportsById.values());
+    @TestVisible
+    private Gifts(List<DataImport__c> dataImports) {
+        this.giftSelector = new GiftSelector();
+        this.donationSelector = new DonationSelector();
+        init(dataImports);
     }
 
     public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector) {
-        this.giftSelector = giftSelector;
-        init(this.giftSelector.getGiftsFor(giftBatchId));
+        this(giftBatchId, giftSelector, new DonationSelector());
     }
 
-    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+    public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector, DonationSelector donationSelector) {
         this.giftSelector = giftSelector;
-        init(this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId)));
+        this.donationSelector = donationSelector;
+        init(this.giftSelector.getGiftsFor(giftBatchId));
     }
 
     private void init(List<DataImport__c> dataImports) {
         populateDataImportsById(dataImports);
+        populateDonationsFrom(dataImports);
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             setElevateBatchIds(dataImports);
+        }
+    }
+
+    private void populateDonationsFrom(List<DataImport__c> dataImports) {
+        List<Id> donationIds = new List<Id>();
+        for (DataImport__c dataImport : dataImports) {
+            if (dataImport.DonationImported__c != null) {
+                donationIds.add(dataImport.DonationImported__c);
+            }
+        }
+
+        if (donationIds.size() > 0) {
+            donations = new Donations(donationIds, donationSelector);
         }
     }
 
@@ -90,7 +108,8 @@ public with sharing class Gifts {
     public List<Gift> all() {
         List<Gift> gifts = new List<Gift>();
         for (DataImport__c dataImport : dataImportsById.values()) {
-            gifts.add(new Gift(dataImport));
+            Gift currentGift = toGift(dataImport);
+            gifts.add(currentGift);
         }
         return gifts;
     }
@@ -161,12 +180,11 @@ public with sharing class Gifts {
 
     @TestVisible
     private void giftsToProcessingStatus() {
-        for (DataImport__c gift : dataImportsById.values()) {
-            Gift currentGift = new Gift(gift);
-
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            Gift currentGift = toGift(dataImport);
             if (currentGift.isDryRunValidated()) {
-                gift.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(gift);
+                dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.add(dataImport);
             }
         }
     }
@@ -209,6 +227,14 @@ public with sharing class Gifts {
     private void populateDataImportsById(List<DataImport__c> dataImports) {
         for (DataImport__c dataImport : dataImports) {
             this.dataImportsById.put(dataImport.Id, dataImport);
+        }
+    }
+
+    private Gift toGift(DataImport__c dataImport) {
+        if (dataImport.DonationImported__c != null && donations != null) {
+            return new Gift(dataImport, donations.getDonationFor(dataImport));
+        } else {
+            return new Gift(dataImport);
         }
     }
 }
