@@ -375,9 +375,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
             try {
                 giftEntryEnablementService.enable();
                 addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
-            } catch(DmlException e) {
+            } catch(Exception e) {
                 addPageMessage(ApexPages.Severity.ERROR,
-                        e.getDmlMessage(0));
+                        e.getMessage());
             }
         }
         return null;

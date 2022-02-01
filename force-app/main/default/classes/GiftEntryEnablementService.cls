@@ -33,15 +33,32 @@
 * @description Enablement Service for the Gift Entry feature
 */
 public with sharing class GiftEntryEnablementService {
+    @TestVisible
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
+        get {
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
+            }
+            return advancedMappingEnablementService;
+        }
+        set;
+    }
 
     public Boolean isEnabled() {
         return UTIL_CustomSettingsFacade.getGiftEntrySettings().Enable_Gift_Entry__c;
     }
 
     public void enable() {
+        if (!advancedMappingEnablementService.isEnabled()) {
+            throw new GiftEntryEnablementException('Advanced mapping is not enabled. First enable advanced mapping ' +
+                    'before gift entry can be enabled.');
+        }
+
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
         giftEntrySettings.Enable_Gift_Entry__c = true;
 
         upsert giftEntrySettings;
     }
+
+    private class GiftEntryEnablementException extends Exception {}
 }
