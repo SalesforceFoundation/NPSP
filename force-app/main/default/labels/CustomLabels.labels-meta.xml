@@ -9817,12 +9817,12 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>Learn More</value>
     </labels>
     <labels>
-        <fullName>gsLearnMoreAriaLabel</fullName>
-        <categories>Get Started Page</categories>
+        <fullName>opensInNewLink</fullName>
+        <categories>Accessibility</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Aria Label for the Learn more label for the application status component</shortDescription>
-        <value>Learn More (opens in a new window)</value>
+        <shortDescription>Aria Label for the links which open in a new window</shortDescription>
+        <value>(opens in a new window)</value>
     </labels>
     <labels>
         <fullName>gsNoApplicationSubmitted</fullName>
