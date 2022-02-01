@@ -67,6 +67,11 @@ public with sharing class Gift {
     }
 
     public Gift(DataImport__c dataImport) {
+        this(dataImport, null);
+    }
+
+    public Gift(DataImport__c dataImport, Donation donation) {
+        this.donation = donation;
         this.dataImport = dataImport;
         this.populateAvailableFields();
         this.populateSoftCredits();
@@ -94,6 +99,10 @@ public with sharing class Gift {
 
     public SoftCredits softCredits() {
         return this.softCredits;
+    }
+
+    public Donation donation() {
+        return this.donation;
     }
 
     public Map<String, Object> fields() {
@@ -180,8 +189,7 @@ public with sharing class Gift {
 
     private void populateSoftCreditsFromDonation() {
         if (hasDonation()) {
-            donation = new Donation(this.dataImport.DonationImported__c);
-            this.softCredits.addAll(donation.softCredits().all());
+            this.softCredits.addAll(this.donation.softCredits().all());
         }
     }
 
@@ -195,7 +203,7 @@ public with sharing class Gift {
     }
 
     private Boolean hasDonation() {
-        return this.dataImport.DonationImported__c != null;
+        return this.dataImport.DonationImported__c != null && this.donation != null;
     }
 
     private Boolean hasPaymentFieldsChanged() {
