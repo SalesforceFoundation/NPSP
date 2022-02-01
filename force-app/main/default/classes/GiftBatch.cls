@@ -37,9 +37,8 @@ public inherited sharing class GiftBatch implements IGiftBatch {
 
     @TestVisible private GiftBatchId giftBatchId;
     @TestVisible private DataImportBatch__c batch;
-    @TestVisible private Money total;
-    @TestVisible private Integer totalCount;
     @TestVisible private GiftBatchTotals totals;
+    public AsyncApexJob asyncApexJob;
 
     @TestVisible
     private Gifts gifts = new Gifts();
@@ -47,12 +46,24 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     @TestVisible
     private GiftTemplate giftTemplate;
 
+    @TestVisible
     private GiftBatchSelector giftBatchSelector {
         get {
             if (giftBatchSelector == null) {
                 giftBatchSelector = new GiftBatchSelector();
             }
             return giftBatchSelector;
+        }
+        set;
+    }
+
+    @TestVisible
+    private AsyncApexJobSelector asyncApexJobSelector {
+        get {
+            if (asyncApexJobSelector == null) {
+                asyncApexJobSelector = new AsyncApexJobSelector();
+            }
+            return asyncApexJobSelector;
         }
         set;
     }
@@ -95,7 +106,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
     }
 
-    public Giftbatch(GiftBatchId giftBatchId, List<Id> giftIds) {
+    public GiftBatch(GiftBatchId giftBatchId, List<Id> giftIds) {
         this.giftBatchId = giftBatchId;
         this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
@@ -103,7 +114,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
         this.totals = new GiftBatchTotals(giftBatchId, giftBatchSelector);
     }
 
-    public Giftbatch(GiftBatchId giftBatchId, Integer giftsLimit, Integer giftsOffset) {
+    public GiftBatch(GiftBatchId giftBatchId, Integer giftsLimit, Integer giftsOffset) {
         this.giftBatchId = giftBatchId;
         this.batch = giftBatchSelector.selectGiftBatchBy(giftBatchId);
         this.giftTemplate = new GiftTemplate(batch.Form_Template__r.Template_JSON__c);
@@ -125,12 +136,35 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public void processGifts() {
-        gifts.prepareGiftsForProcessing();
-        updateRecords();
+        prepareGiftsForProcessing();
+        GiftEntryProcessorQueue processorQueue = new GiftEntryProcessorQueue(this.giftBatchId);
+        System.enqueueJob(processorQueue);
+    }
+
+    @TestVisible
+    private void prepareGiftsForProcessing() {
+        gifts.prepareForProcessing();
+
         if (paymentIntegrationServiceConfig.isIntegrationEnabled()) {
             captureAuthorizedGifts();
         }
-        BDI_DataImport_API.processDataImportBatches(new List<Id>{ id() });
+        updateRecords();
+    }
+
+    private void failGiftsWith(String failReason) {
+        gifts.failWith(failReason);
+    }
+
+    public Boolean canBeEnqueued() {
+        return this.asyncApexJob == null || hasFinishedProcessing();
+    }
+
+    public Boolean hasStandardGiftsToResolve() {
+        return hasFinishedProcessing() && hasStandardGiftsRemainingInProcessing();
+    }
+
+    public void resolveStandardGiftsRemainingInProcessing() {
+        failGiftsWith(System.Label.geBatchProcessingIncomplete);
     }
 
     public void updateRecords() {
@@ -156,7 +190,7 @@ public inherited sharing class GiftBatch implements IGiftBatch {
     }
 
     public String name() {
-        return this.batch.name;
+        return this.batch.Name;
     }
 
     public Gifts gifts() {
@@ -210,5 +244,19 @@ public inherited sharing class GiftBatch implements IGiftBatch {
             return unitOfWork;
         }
         set;
+    }
+
+    private Boolean hasFinishedProcessing() {
+        return this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.ABORTED.name()
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.FAILED.name()
+            || this.asyncApexJob.Status == UTIL_BatchJobService.ApexJobStatus.COMPLETED.name();
+    }
+
+    private Boolean hasStandardGiftsRemainingInProcessing() {
+        return this.gifts.inProcessing();
+    }
+
+    public void asyncApexJob(AsyncApexJob asyncApexJob) {
+        this.asyncApexJob = asyncApexJob;
     }
 }

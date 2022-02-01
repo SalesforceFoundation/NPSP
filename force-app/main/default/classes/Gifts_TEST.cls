@@ -125,8 +125,7 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(false);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareGiftsForProcessing();
-        System.assertEquals(5, gifts.giftsToUpdate.size());
+        gifts.prepareForProcessing();
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
@@ -134,7 +133,7 @@ private class Gifts_TEST {
             Label.gePaymentServicesUnavailableFailureMessage,
             new List<String> { Label.commonPaymentServices });
 
-        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+        for (DataImport__c dataImport : gifts.giftsToUpdate.values()) {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 numberOfFailedGifts ++;
                 System.assertEquals(expectedFailureInformation, dataImport.FailureInformation__c);
@@ -161,12 +160,12 @@ private class Gifts_TEST {
             new PS_IntegrationServiceConfigMock(true);
         gifts.paymentIntegrationServiceConfig = stubFor(integrationServiceConfigMock);
 
-        gifts.prepareGiftsForProcessing();
+        gifts.prepareForProcessing();
         System.assertEquals(5, gifts.giftsToUpdate.size());
 
         Integer numberOfFailedGifts = 0;
         Integer numberOfProcessingGifts = 0;
-        for (DataImport__c dataImport : gifts.giftsToUpdate) {
+        for (DataImport__c dataImport : gifts.giftsToUpdate.values()) {
             if (dataImport.Status__c == BDI_DataImport_API.bdiFailed) {
                 numberOfFailedGifts ++;
             }
@@ -212,7 +211,7 @@ private class Gifts_TEST {
         gifts.authorizedToPaymentProcessingStatus();
 
         System.assertEquals(10, gifts.giftsToUpdate.size());
-        for (DataImport__c gift : gifts.giftsToUpdate) {
+        for (DataImport__c gift : gifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.PAYMENTPROCESSING.name(), gift.Payment_Status__c);
         }
     }
@@ -229,7 +228,7 @@ private class Gifts_TEST {
         gifts.failGiftsByElevateBatchIdWithReason(buildFailReasonByElevateBatchId(numberOfFailedGifts, elevateBatchId));
 
         System.assertEquals(numberOfFailedGifts, gifts.giftsToUpdate.size());
-        for (DataImport__c gift : gifts.giftsToUpdate) {
+        for (DataImport__c gift : gifts.giftsToUpdate.values()) {
             System.assertEquals(ElevateTransactionStatus.RETRYABLEERROR.name(), gift.Payment_Status__c);
             System.assertEquals('DUMMY FAIL REASON', gift.FailureInformation__c);
         }
@@ -306,6 +305,31 @@ private class Gifts_TEST {
         String statusField = String.valueOf(DataImport__c.Status__c);
         System.assertEquals(testGift.fields().get(statusField), BDI_DataImport_API.bdiProcessing);
     }
+
+    @IsTest
+    static void shouldSetOnlyStandardGiftsToProcessing() {
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        DataImport__c testDataImport = new DataImport__c(
+            Status__c = BDI_DataImport_API.bdiProcessing,
+            Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name()
+        );
+        DataImport__c testDataImport1 = new DataImport__c(
+            Status__c = BDI_DataImport_API.bdiProcessing
+        );
+
+        dataImports.add(testDataImport);
+        dataImports.add(testDataImport1);
+        insert dataImports;
+
+        Gifts gifts = new Gifts(dataImports);
+
+        Test.startTest();
+        List<Gift> processingGifts = gifts.standardGiftsInProcessing();
+        Test.stopTest();
+
+        System.assertEquals(1 ,processingGifts.size());
+    }
+
 
     private static List<DataImport__c> buildGifts(
         Integer numberOfGifts,
