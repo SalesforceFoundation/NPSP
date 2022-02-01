@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2021 Salesforce.org
+    Copyright (c) 2022 Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,19 +29,32 @@
 */
 /**
 * @author Salesforce.org
-* @date 2021
-* @description Service class for Gifts in NPSP.
+* @date 2022
+* @description Processor Queue for all gifts entered and processed through the Gift Entry App.
 */
-public with sharing class GiftService {
 
-    public GiftView viewModelFrom(GiftId giftId) {
-        Gift gift = new Gift(giftId);
-        GiftDTO giftDTO = new GiftDTO(gift);
-        return new GiftView(giftDTO);
+public with sharing class GiftEntryProcessorQueue implements Queueable, Database.AllowsCallouts{
+
+    private GiftBatchId giftBatchId;
+    private String jobId;
+    @TestVisible private GiftBatchService giftBatchService = new GiftBatchService();
+
+    public GiftEntryProcessorQueue (GiftBatchId giftBatchId){
+        this.giftBatchId = giftBatchId;
     }
 
-    public void saveSingle(Gift gift) {
-        gift.saveRecord();
-        gift.processThroughBDI();
+    public void execute(QueueableContext queueableContext) {
+        if (Test.isRunningTest()){
+            jobId = UTIL_UnitTestData_TEST.mockId(AsyncApexJob.getSObjectType());
+        } else {
+            System.attachFinalizer(new GiftEntryProcessorQueueFinalizer(this.giftBatchId));
+            BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(giftBatchId.value(), false);
+            jobId = Database.executeBatch(batch, Integer.valueOf(batch.diSettings.Batch_Size__c));
+        }
+        updateGiftBatchWith(new AsyncApexJobId(jobId));
+    }
+
+    private void updateGiftBatchWith(AsyncApexJobId asyncApexJobId) {
+        giftBatchService.updateGiftBatchWith(giftBatchId, asyncApexJobId);
     }
 }
