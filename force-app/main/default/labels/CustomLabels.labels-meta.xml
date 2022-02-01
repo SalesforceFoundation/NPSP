@@ -6907,6 +6907,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Total Batch Amount</value>
     </labels>
     <labels>
+        <fullName>geBatchProcessingIncomplete</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Batch processing incomplete message</shortDescription>
+        <value>Import process stopped before it could complete. Contact your system administrator for assistance.</value>
+    </labels>
+    <labels>
         <fullName>geBatchProcessingSuccess</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
