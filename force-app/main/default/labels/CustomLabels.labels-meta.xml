@@ -7503,7 +7503,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Describes open ended recurring gift schedule</shortDescription>
-        <value>Recurring Schedule Information: {0} {1} donation starting on {2}.</value>
+        <value>{0} {1} donation starting on {2}.</value>
     </labels>
     <labels>
         <fullName>geFixedGiftSchedule</fullName>
@@ -7511,7 +7511,15 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Describes fixed recurring gift schedule</shortDescription>
-        <value>Recurring Schedule Information: {0} {1} donation starting on {2} and ending after {3} installments.</value>
+        <value>{0} {1} donation starting on {2} and ending after {3} installments.</value>
+    </labels>
+    <labels>
+        <fullName>geRecurringScheduleInformation</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for the recurring gift schedule card</shortDescription>
+        <value>Recurring Schedule Information</value>
     </labels>
     <labels>
         <fullName>gsAdminSetupTitle</fullName>
