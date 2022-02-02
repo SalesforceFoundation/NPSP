@@ -2,6 +2,18 @@ import { isBlank } from 'c/util';
 import { format } from 'c/utilCommon';
 import { nextState } from "./model";
 import * as ACTIONS from './actions';
+import {
+    DONOR_TYPE_ACCOUNT,
+    DONOR_TYPE_CONTACT,
+    RECURRING_PERIOD_ADVANCED,
+    PERIOD,
+    RECURRING_TYPE_OPEN,
+    RECURRING_TYPE_FIXED,
+    ACCOUNT_DONOR_TYPE,
+    CONTACT_DONOR_TYPE,
+    CHANGE_TYPE_UPGRADE,
+    CHANGE_TYPE_DOWNGRADE
+} from './constants.js';
 
 import getInitialView from '@salesforce/apex/RD2_EntryFormController.getInitialView';
 
@@ -20,24 +32,6 @@ import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessag
 import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
 
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
-const DONOR_TYPE_ACCOUNT = 'Account';
-const DONOR_TYPE_CONTACT = 'Contact';
-
-const RECURRING_PERIOD_ADVANCED = 'Advanced';
-const PERIOD = {
-    MONTHLY: 'Monthly',
-    YEARLY: 'Yearly',
-    WEEKLY: 'Weekly',
-    DAILY: 'Daily',
-    FIRST_AND_FIFTEENTH: '1st and 15th'
-};
-
-const RECURRING_TYPE_OPEN = 'Open';
-const RECURRING_TYPE_FIXED = 'Fixed';
-const ACCOUNT_DONOR_TYPE = 'Account';
-const CONTACT_DONOR_TYPE = 'Contact';
-const CHANGE_TYPE_UPGRADE = "Upgrade";
-const CHANGE_TYPE_DOWNGRADE = "Downgrade";
 
 class Rd2Service {
 
@@ -232,7 +226,8 @@ class RecurringDonation {
 
 
 
-export { Rd2Service,
+export {
+    Rd2Service,
     ACTIONS,
     ELEVATE_PAYMENT_METHODS,
     PERIOD,

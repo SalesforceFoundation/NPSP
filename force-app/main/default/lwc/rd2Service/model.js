@@ -24,7 +24,7 @@ import {
     RECURRING_TYPE_OPEN,
     CHANGE_TYPE_UPGRADE,
     CHANGE_TYPE_DOWNGRADE,
-} from "c/rd2Service";
+} from "./constants";
 
 let initialViewState;
 
