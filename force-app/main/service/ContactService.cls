@@ -69,54 +69,6 @@ public with sharing class ContactService {
     }
 
     /*******************************************************************************************************
-    * @description compares two contacts' addresses
-    * @param con1 a Contact
-    * @param con2 a Contact
-    * @return boolean. true if the Mailing Address fields have changed
-    ********************************************************************************************************/
-    public Boolean isContactAddressChanged(Contact con1, Contact con2) {
-        // if both null, no change
-        if (con1 == null && con2 == null) {
-            return false;
-        }
-
-        // if one null, make sure other has at least one address field set
-        if (con1 == null || con2 == null) {
-            if (con1 == null) {
-                con1 = con2;
-            }
-            return (!isContactAddressEmpty(con1) ||
-                    con1.npe01__Primary_Address_Type__c != null);
-        }
-
-        // both provided, so look for at least one change between address fields
-        Boolean isChanged =
-                !addressServiceInstance.equalsCaseSensitive(con1.MailingStreet, con2.MailingStreet) ||
-                        !addressServiceInstance.equalsCaseSensitive(con1.MailingCity, con2
-                                .MailingCity) ||
-                        !addressServiceInstance.equalsCaseSensitive(con1.MailingState, con2
-                                .MailingState) ||
-                        !addressServiceInstance.equalsCaseSensitive(con1.MailingPostalCode, con2
-                                .MailingPostalCode) ||
-                        !addressServiceInstance.equalsCaseSensitive(con1.MailingCountry, con2
-                                .MailingCountry) ||
-                        !addressServiceInstance.equalsCaseSensitive(con1
-                                .npe01__Primary_Address_Type__c,
-                                con2
-                                .npe01__Primary_Address_Type__c);
-
-        if (!isChanged && orgConfig.isStateCountryPicklistsEnabled()) {
-            isChanged =
-                    !addressServiceInstance.equalsCaseSensitive(String.valueOf(con1.get
-                            ('MailingStateCode')),
-                            String.valueOf(con2.get('MailingStateCode'))) ||
-                            !addressServiceInstance.equalsCaseSensitive(String.valueOf(con1.get
-                                    ('MailingCountryCode')), String.valueOf(con2.get('MailingCountryCode')));
-        }
-        return isChanged;
-    }
-
-    /*******************************************************************************************************
     * @description returns whether the contact's mailing address is empty
     * @param con1 a Contact
     * @return boolean. true if the Mailing Address fields are all empty
