@@ -59,5 +59,5 @@ public with sharing class GiftEntryEnablementService {
         upsert giftEntrySettings;
     }
 
-    private class GiftEntryEnablementException extends Exception {}
+    public class GiftEntryEnablementException extends Exception {}
 }
