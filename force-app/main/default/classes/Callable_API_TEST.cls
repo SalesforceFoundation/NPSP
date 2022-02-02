@@ -292,32 +292,4 @@ private with sharing class Callable_API_TEST {
             return null;
         }
     }
-
-    private class AdvancedMappingEnablementServiceMock implements StubProvider {
-        Boolean enableAdvancedMappingCalled = false;
-        Boolean isEnabled = false;
-
-        public void setEnabled() {
-            isEnabled = true;
-        }
-
-        public Object handleMethodCall(
-                Object stubbedObject,
-                String stubbedMethodName,
-                Type returnType,
-                List<Type> listOfParamTypes,
-                List<String> listOfParamNames,
-                List<Object> listOfArgs) {
-
-            switch on (stubbedMethodName) {
-                when 'enable' {
-                    enableAdvancedMappingCalled = true;
-                }
-                when 'isEnabled' {
-                    return isEnabled;
-                }
-            }
-            return null;
-        }
-    }
 }
