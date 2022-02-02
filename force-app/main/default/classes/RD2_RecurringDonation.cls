@@ -529,11 +529,11 @@ public inherited sharing class RD2_RecurringDonation {
 
     public Date getExpectedDonationDate(RD2_ScheduleService scheduleService) {
         Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
-        return scheduleService.getNextDonationDateAfter(
+        return scheduleService.getVisualizedInstallments(
             baseDate.addDays(1),
-            this,
+            1,
             rd.RecurringDonationSchedules__r
-        );
+        )?.get(0)?.nextDonationDate;
     }
 
     /**

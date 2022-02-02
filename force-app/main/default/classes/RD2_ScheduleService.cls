@@ -474,16 +474,6 @@ public without sharing class RD2_ScheduleService {
     }
 
     /***
-    * @description Calculates the date of the next donation for an existing Recurring Donation after the reference date
-    * @param referenceDate The date the calculation will be based on
-    * @param rdRecord Recurring Donation record
-    * @param rdSchedules Schedules on the Recurring Donation record
-    * @return Date
-    */
-    public Date getNextDonationDateAfter(Date referenceDate, RD2_RecurringDonation rdRecord, List<RecurringDonationSchedule__c> rdSchedules) {
-        return getVisualizedInstallments(referenceDate, 1, rdSchedules)?.get(0)?.nextDonationDate;
-    }
-    /***
     * @description Calculates the date of the next donation and returns the Opportunity matcher record
     * that contains the next donation installment and might contain the matching open Opportunity.
     * @param referenceDate The date the calculation will be based on
