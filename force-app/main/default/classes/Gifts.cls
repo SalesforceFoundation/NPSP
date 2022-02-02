@@ -37,8 +37,10 @@ public with sharing class Gifts {
 
     private Set<String> elevateBatchIds;
     @TestVisible private Map<Id, DataImport__c> dataImportsById = new Map<Id, DataImport__c>();
-    @TestVisible private List<DataImport__c> giftsToUpdate = new List<DataImport__c>();
+    @TestVisible private Map<Id, DataImport__c> giftsToUpdate = new Map<Id, DataImport__c>();
     @TestVisible private GiftSelector giftSelector;
+    @TestVisible private DonationSelector donationSelector;
+    @TestVisible private Donations donations;
 
     public Gifts() {}
 
@@ -53,25 +55,41 @@ public with sharing class Gifts {
         set;
     }
 
-    public Gifts(List<DataImport__c> dataImports) {
-        populateDataImportsById(dataImports);
-        setElevateBatchIds(dataImportsById.values());
+    @TestVisible
+    private Gifts(List<DataImport__c> dataImports) {
+        this.giftSelector = new GiftSelector();
+        this.donationSelector = new DonationSelector();
+        init(dataImports);
     }
 
     public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector) {
-        this.giftSelector = giftSelector;
-        init(this.giftSelector.getGiftsFor(giftBatchId));
+        this(giftBatchId, giftSelector, new DonationSelector());
     }
 
-    public Gifts(Id giftBatchId, GiftSelector giftSelector) {
+    public Gifts(GiftBatchId giftBatchId, GiftSelector giftSelector, DonationSelector donationSelector) {
         this.giftSelector = giftSelector;
-        init(this.giftSelector.getGiftsFor(new GiftBatchId(giftBatchId)));
+        this.donationSelector = donationSelector;
+        init(this.giftSelector.getGiftsFor(giftBatchId));
     }
 
     private void init(List<DataImport__c> dataImports) {
         populateDataImportsById(dataImports);
+        populateDonationsFrom(dataImports);
         if (GE_PaymentServices.getInstance().isElevateCustomer()) {
             setElevateBatchIds(dataImports);
+        }
+    }
+
+    private void populateDonationsFrom(List<DataImport__c> dataImports) {
+        List<Id> donationIds = new List<Id>();
+        for (DataImport__c dataImport : dataImports) {
+            if (dataImport.DonationImported__c != null) {
+                donationIds.add(dataImport.DonationImported__c);
+            }
+        }
+
+        if (donationIds.size() > 0) {
+            donations = new Donations(donationIds, donationSelector);
         }
     }
 
@@ -90,7 +108,8 @@ public with sharing class Gifts {
     public List<Gift> all() {
         List<Gift> gifts = new List<Gift>();
         for (DataImport__c dataImport : dataImportsById.values()) {
-            gifts.add(new Gift(dataImport));
+            Gift currentGift = toGift(dataImport);
+            gifts.add(currentGift);
         }
         return gifts;
     }
@@ -109,8 +128,10 @@ public with sharing class Gifts {
         return giftsToReturn;
     }
 
-    public void prepareGiftsForProcessing() {
+    public void prepareForProcessing() {
         giftsToUpdate.clear();
+
+        giftsToProcessingStatus();
 
         Boolean paymentIntegrationUnavailable = !paymentIntegrationServiceConfig.isIntegrationEnabled();
         if (paymentIntegrationUnavailable) {
@@ -119,12 +140,10 @@ public with sharing class Gifts {
                 new List<String> { Label.commonPaymentServices });
             failGiftsWithAuthorizedPaymentsWith(failReason);
         }
-
-        giftsToProcessingStatus();
     }
 
     public void updateRecords() {
-        update giftsToUpdate;
+        update giftsToUpdate.values();
         giftsToUpdate.clear();
     }
 
@@ -135,7 +154,7 @@ public with sharing class Gifts {
     public void authorizedToPaymentProcessingStatus() {
         for (DataImport__c gift : authorizedGifts()) {
             gift.Payment_Status__c = ElevateTransactionStatus.PAYMENTPROCESSING.name();
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 
@@ -148,25 +167,46 @@ public with sharing class Gifts {
     }
 
     public void failGiftsWithAuthorizedPaymentsWith(String failReason) {
-        for (DataImport__c gift : dataImportsById.values()) {
+        for (DataImport__c gift : giftsToUpdate.values()) {
             Gift currentGift = new Gift(gift);
 
             if (currentGift.hasAuthorizedPayment()) {
                 gift.Status__c = BDI_DataImport_API.bdiFailed;
                 gift.FailureInformation__c = failReason;
-                giftsToUpdate.add(gift);
             }
         }
     }
 
+    public void failWith(String failReason) {
+        for (Gift gift : standardGiftsInProcessing()) {
+            gift.asDataImport().Status__c = BDI_DataImport_API.bdiFailed;
+            gift.asDataImport().FailureInformation__c = failReason;
+            giftsToUpdate.put(gift.id(), gift.asDataImport());
+        }
+    }
+
+    public Boolean inProcessing() {
+        return standardGiftsInProcessing().size() > 0;
+    }
+
     @TestVisible
-    private void giftsToProcessingStatus() {
+    private List<Gift> standardGiftsInProcessing() {
+        List<Gift> processingGifts = new List<Gift>();
         for (DataImport__c gift : dataImportsById.values()) {
             Gift currentGift = new Gift(gift);
+            if (currentGift.isProcessing() && !currentGift.isPaymentProcessing()) {
+                processingGifts.add(currentGift);
+            }
+        }
+        return processingGifts;
+    }
 
-            if (currentGift.isDryRunValidated()) {
-                gift.Status__c = BDI_DataImport_API.bdiProcessing;
-                giftsToUpdate.add(gift);
+    @TestVisible
+    private void giftsToProcessingStatus() {
+        for (DataImport__c dataImport : dataImportsById.values()) {
+            if (dataImport.Status__c != BDI_DataImport_API.bdiImported) {
+                dataImport.Status__c = BDI_DataImport_API.bdiProcessing;
+                giftsToUpdate.put(dataImport.Id, dataImport);
             }
         }
     }
@@ -175,7 +215,7 @@ public with sharing class Gifts {
         for (DataImport__c gift : giftsInElevateBatch) {
             gift.Payment_Status__c = ElevateTransactionStatus.RETRYABLEERROR.name();
             gift.FailureInformation__c = failReason;
-            giftsToUpdate.add(gift);
+            giftsToUpdate.put(gift.Id, gift);
         }
     }
 
@@ -209,6 +249,14 @@ public with sharing class Gifts {
     private void populateDataImportsById(List<DataImport__c> dataImports) {
         for (DataImport__c dataImport : dataImports) {
             this.dataImportsById.put(dataImport.Id, dataImport);
+        }
+    }
+
+    private Gift toGift(DataImport__c dataImport) {
+        if (dataImport.DonationImported__c != null && donations != null) {
+            return new Gift(dataImport, donations.getDonationFor(dataImport));
+        } else {
+            return new Gift(dataImport);
         }
     }
 }
