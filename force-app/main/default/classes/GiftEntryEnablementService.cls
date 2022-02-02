@@ -50,8 +50,7 @@ public with sharing class GiftEntryEnablementService {
 
     public void enable() {
         if (!advancedMappingEnablementService.isEnabled()) {
-            throw new GiftEntryEnablementException('Advanced mapping is not enabled. First enable advanced mapping ' +
-                    'before gift entry can be enabled.');
+            throw new GiftEntryEnablementException(System.Label.geServiceLevelErrorAdvancedMapping);
         }
 
         Gift_Entry_Settings__c giftEntrySettings = UTIL_CustomSettingsFacade.getGiftEntrySettings();
