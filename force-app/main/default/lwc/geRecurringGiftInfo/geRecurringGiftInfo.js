@@ -12,6 +12,7 @@ import commonEdit from '@salesforce/label/c.commonEdit';
 import geRemoveSchedule from '@salesforce/label/c.geRemoveSchedule';
 import geOpenEndedGiftSchedule from '@salesforce/label/c.geOpenEndedGiftSchedule';
 import geFixedGiftSchedule from '@salesforce/label/c.geFixedGiftSchedule';
+import geRecurringScheduleInformation from '@salesforce/label/c.geRecurringScheduleInformation';
 
 import { format } from 'c/utilCommon';
 
@@ -23,7 +24,8 @@ export default class GeRecurringGiftInfo extends LightningElement {
 
     labels = {
         commonEdit,
-        geRemoveSchedule
+        geRemoveSchedule,
+        geRecurringScheduleInformation,
     };
 
     get scheduleText() {
@@ -89,7 +91,8 @@ export default class GeRecurringGiftInfo extends LightningElement {
         const scheduleFields = this.giftInView?.schedule;
         const effectiveDate = scheduleFields[EFFECTIVE_DATE.fieldApiName];
         const i18nOptions = {
-            timeZone: 'UTC'
+            timeZone: 'UTC',
+            dateStyle: 'long',
         };
         const localizedEffectiveDate = new Intl.DateTimeFormat(LOCALE, i18nOptions)
             .format(new Date(effectiveDate));

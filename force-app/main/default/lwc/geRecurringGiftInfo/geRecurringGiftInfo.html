@@ -5,12 +5,21 @@
             multiple-rows
             >
             <lightning-layout-item size='12' medium-device-size='6' large-device-size='7'>
+                <h2
+                    class='slds-text-title_bold'
+                    data-id='scheduleHeader'
+                >
+                    {labels.geRecurringScheduleInformation}
+                </h2>
                 <p data-id='scheduleInfo'>
                     {scheduleText}
                 </p>
             </lightning-layout-item>
             <lightning-layout-item size='12' medium-device-size='6' large-device-size='5'>
-                <lightning-layout horizontal-align='end'>
+                <lightning-layout
+                    horizontal-align='end'
+                    vertical-align='center'
+                >
                     <lightning-layout-item>
                         <lightning-button
                             class='slds-m-horizontal_xx-small'

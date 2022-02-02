@@ -8,6 +8,7 @@ import INSTALLMENTS from '@salesforce/schema/npe03__Recurring_Donation__c.npe03_
 import DONATION_AMOUNT from '@salesforce/schema/DataImport__c.Donation_Amount__c';
 import DONATION_DATE from '@salesforce/schema/DataImport__c.Donation_Date__c';
 
+// Mock custom labels with parameters to assert values are replaced with expected values
 jest.mock("@salesforce/label/c.geOpenEndedGiftSchedule", () => {
     return { default: 'Recurring Schedule Information: {0} {1} donation starting on {2}.' };
 }, { virtual: true });
@@ -59,6 +60,16 @@ describe('c-ge-modal-recurring-donation', () => {
     }
 
     describe('render behavior', () => {
+        it('renders header text', async () => {
+            const infoCard = setup();
+            await flushPromises();
+
+            const header = infoCard.shadowRoot.querySelector('[data-id="scheduleHeader"]');
+
+            expect(header).toBeDefined();
+            expect(header.textContent).toBe('c.geRecurringScheduleInformation');
+        });
+
         it('renders expected text for open ended schedules', async () => {
             const infoCard = setup(
                 100,
@@ -75,7 +86,7 @@ describe('c-ge-modal-recurring-donation', () => {
 
             expect(schedule).toBeDefined();
             expect(schedule.textContent)
-                .toBe('Recurring Schedule Information: $100.00 monthly donation starting on 1/31/2022.');
+                .toBe('Recurring Schedule Information: $100.00 monthly donation starting on January 31, 2022.');
         });
 
         it('renders expected text for fixed schedules', async () => {
@@ -95,7 +106,7 @@ describe('c-ge-modal-recurring-donation', () => {
 
             expect(schedule).toBeDefined();
             expect(schedule.textContent)
-                .toBe('Recurring Schedule Information: $100.00 monthly donation starting on 1/31/2022 '
+                .toBe('Recurring Schedule Information: $100.00 monthly donation starting on January 31, 2022 '
                 + 'and ending after 12 installments.');
         });
 
@@ -133,7 +144,7 @@ describe('c-ge-modal-recurring-donation', () => {
 
             expect(schedule).toBeDefined();
             expect(schedule.textContent)
-                .toBe('Recurring Schedule Information: $0.00 monthly donation starting on 1/31/2022.');
+                .toBe('Recurring Schedule Information: $0.00 monthly donation starting on January 31, 2022.');
         });
 
         it('renders edit and remove recurrence buttons', async () => {
