@@ -135,13 +135,11 @@ private with sharing class Callable_API_TEST {
 
     @IsTest
     private static void shouldNotCallEnableAdvancedMappingIfMappingIsEnabled() {
-        Data_Import_Settings__c dataImportSettings = new Data_Import_Settings__c();
-        dataImportSettings.Field_Mapping_Method__c = BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
-        UTIL_CustomSettingsFacade.setDataImportSettings(dataImportSettings);
-
         Callable_API callableApi = new Callable_API();
         AdvancedMappingEnablementServiceMock mappingServiceMock = new
                 AdvancedMappingEnablementServiceMock();
+        mappingServiceMock.setEnabled();
+
         callableApi.advancedMappingEnablementService = stubFor(mappingServiceMock);
 
         Test.startTest();
@@ -156,6 +154,7 @@ private with sharing class Callable_API_TEST {
     private static void shouldCallEnableGiftEntryOnAction() {
         Callable_API callableApi = new Callable_API();
         GiftEntryEnablementServiceMock giftEntryEnablementServiceMock = new GiftEntryEnablementServiceMock();
+
         callableApi.giftEntryEnablementService = stubFor(giftEntryEnablementServiceMock);
 
         Test.startTest();
@@ -164,6 +163,22 @@ private with sharing class Callable_API_TEST {
 
         System.assert(giftEntryEnablementServiceMock.enableGiftEntryCalled, 'The enable gift entry service method ' +
             'should be called.');
+    }
+
+    @IsTest
+    private static void shouldNotCallEnableGiftEntryIfAlreadyEnabled() {
+        GiftEntryEnablementServiceMock giftEntryEnablementServiceMock = new GiftEntryEnablementServiceMock();
+        giftEntryEnablementServiceMock.setEnabled();
+
+        Callable_API callableApi = new Callable_API();
+        callableApi.giftEntryEnablementService = stubFor(giftEntryEnablementServiceMock);
+
+        Test.startTest();
+            callableApi.call(ADVANCED_MAPPING_ACTION, null);
+        Test.stopTest();
+
+        System.assert(!giftEntryEnablementServiceMock.enableGiftEntryCalled, 'The enable gift entry service ' +
+                'method should not be called.');
     }
 
     /**
@@ -254,7 +269,7 @@ private with sharing class Callable_API_TEST {
         Boolean enableGiftEntryCalled = false;
         Boolean isEnabled = false;
 
-        private void setEnabled() {
+        public void setEnabled() {
             isEnabled = true;
         }
 
@@ -271,7 +286,7 @@ private with sharing class Callable_API_TEST {
                     enableGiftEntryCalled = true;
                 }
                 when 'isEnabled' {
-                    return UTIL_CustomSettingsFacade.getGiftEntrySettings().Enable_Gift_Entry__c;
+                    return isEnabled;
                 }
             }
             return null;
@@ -280,6 +295,11 @@ private with sharing class Callable_API_TEST {
 
     private class AdvancedMappingEnablementServiceMock implements StubProvider {
         Boolean enableAdvancedMappingCalled = false;
+        Boolean isEnabled = false;
+
+        public void setEnabled() {
+            isEnabled = true;
+        }
 
         public Object handleMethodCall(
                 Object stubbedObject,
@@ -294,10 +314,7 @@ private with sharing class Callable_API_TEST {
                     enableAdvancedMappingCalled = true;
                 }
                 when 'isEnabled' {
-                    Data_Import_Settings__c dataImportSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
-
-                    return dataImportSettings.Field_Mapping_Method__c ==
-                            BDI_MigrationMappingUtility.DATA_IMPORT_FIELD_MAPPING;
+                    return isEnabled;
                 }
             }
             return null;
