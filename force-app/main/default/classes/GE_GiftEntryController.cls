@@ -80,6 +80,16 @@ public with sharing class GE_GiftEntryController {
         set;
     }
 
+    private static GE_SettingsService geSettingsService {
+        get {
+            if (geSettingsService == null) {
+                geSettingsService = new GE_SettingsService();
+            }
+            return geSettingsService;
+        }
+        set;
+    }
+
     @AuraEnabled
     public static void addGiftTo(Id dataImportBatchId, InboundGiftDTO inboundGift) {
         try {
@@ -189,7 +199,7 @@ public with sharing class GE_GiftEntryController {
     @AuraEnabled(cacheable=true)
     public static Boolean isRecurringGiftsEnabled() {
         try {
-            return new GE_SettingsService().isRecurringGiftsEnabled();
+            return geSettingsService.isRecurringGiftsEnabled();
         } catch (AuraHandledException ex) {
             throw new AuraHandledException(ex.getMessage());
         }
