@@ -133,37 +133,39 @@ public with sharing class RD2_StatusAutomationService {
         return null;
     }
 
-    public Boolean shouldMarkRDAsLapsed(RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
-        if (!new RD2_StatusAutomationService().isSettingValid()
-            || !rd2Settings.isStatusAutomationForLapsedEnabled()
-            || !rdRecord.isActive()
-            || !rdRecord.hasSchedule()
-            || rdRecord.isElevateRecord()
-        ) {
-            return false;
-        }
-
-        Date expectedDonationDate = rdRecord.getExpectedDonationDate(scheduleService);
-        Date lapsedThresholdDate = expectedDonationDate.addDays(rd2Settings.statusAutomationNumberOfDaysForLapsed);
-
-        return lapsedThresholdDate < RD2_ScheduleService.currentDate;
+    private enum StatusAutomationMode {
+        EVALUATE_LAPSED,
+        EVALUATE_CLOSED
     }
 
     public Boolean shouldMarkRDAsClosed(RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
+        return processStatusAutomation(StatusAutomationMode.EVALUATE_CLOSED,rdRecord, scheduleService);
+     }
+
+    public Boolean shouldMarkRDAsLapsed(RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
+        return processStatusAutomation(StatusAutomationMode.EVALUATE_LAPSED, rdRecord, scheduleService);
+    }
+
+    private Boolean processStatusAutomation(StatusAutomationMode processMode, RD2_RecurringDonation rdRecord, RD2_ScheduleService scheduleService) {
         if (!new RD2_StatusAutomationService().isSettingValid()
-            || !rd2Settings.isStatusAutomationForClosedEnabled()
-            || rdRecord.isClosed()
+            || rdRecord.isClosed() 
             || rdRecord.isPaused()
             || !rdRecord.hasSchedule()
             || rdRecord.isElevateRecord()
+            || (processMode == StatusAutomationMode.EVALUATE_CLOSED && !rd2Settings.isStatusAutomationForClosedEnabled())
+            || (processMode == StatusAutomationMode.EVALUATE_LAPSED && !rd2Settings.isStatusAutomationForLapsedEnabled())
         ) {
             return false;
         }
+    
+        Integer thresholdDays = (processMode == StatusAutomationMode.EVALUATE_CLOSED)
+            ? rd2Settings.statusAutomationNumberOfDaysForClosed
+            : rd2Settings.statusAutomationNumberOfDaysForLapsed;
 
         Date expectedDonationDate = rdRecord.getExpectedDonationDate(scheduleService);
-        Date closedThresholdDate = expectedDonationDate.addDays(rd2Settings.statusAutomationNumberOfDaysForClosed);
+        Date thresholdDate = expectedDonationDate.addDays(thresholdDays);
 
-        return closedThresholdDate < RD2_ScheduleService.currentDate;
+        return thresholdDate < RD2_ScheduleService.currentDate;
     }
 
     private void validateUpdatePermission() {
