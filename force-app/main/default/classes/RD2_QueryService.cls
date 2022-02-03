@@ -64,6 +64,16 @@ public inherited sharing class RD2_QueryService {
         set;
     }
 
+    private RD2_Settings settings {
+        get {
+            if (settings == null) {
+                settings = new RD2_Settings();
+            }
+            return settings;
+        }
+        set;
+    }
+
     /**
     * @description Contains all mandatory Recurring Donation fields required for the Opportunity Evaluation Service
     */
@@ -153,7 +163,8 @@ public inherited sharing class RD2_QueryService {
                 String.valueOf(npe03__Recurring_Donation__c.CardExpirationMonth__c),
                 String.valueOf(npe03__Recurring_Donation__c.CardExpirationYear__c)
         });
-        queryFields.addAll(customFieldMapper.getRdFieldNames());
+
+        queryFields.addAll(getCustomFieldNames());
 
         if (UserInfo.isMultiCurrencyOrganization()) {
             queryFields.add(CURRENCY_ISO_CODE_FIELD);
@@ -218,5 +229,13 @@ public inherited sharing class RD2_QueryService {
             .build();
 
         return '(' + oppSubquery + ')';
+    }
+
+    private List<String> getCustomFieldNames() {
+        List<String> fieldNames = new List<String>();
+        for(FieldSetMember field : settings.getCustomFieldSetMembers()) {
+            fieldNames.add(field.fieldPath);
+        }
+        return fieldNames;
     }
 }

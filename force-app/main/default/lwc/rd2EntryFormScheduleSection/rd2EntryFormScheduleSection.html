@@ -90,7 +90,7 @@
                                                if:true={fields.dayOfMonth}>
                             <lightning-input-field
                                     field-name={fields.dayOfMonth.apiName}
-                                    value={defaultDayOfMonth}
+                                    value={rd2State.dayOfMonth}
                                     onchange={handleDayOfMonthChange}
                                     data-id="dayOfMonth"
                                     required>
@@ -103,6 +103,7 @@
                         <lightning-input-field
                                 field-name={fields.startDate.apiName}
                                 onchange={handleStartDateChange}
+                                value={rd2State.startDate}
                                 data-id="startDate"
                                 required>
                         </lightning-input-field>

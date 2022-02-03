@@ -105,6 +105,10 @@ public with sharing class RD2_EntryFormController {
                 'npe03__Recurring_Donation__c',
                 String.valueOf(npe03__Recurring_Donation__c.npe03__Installment_Period__c)
         );
+        view.defaultDayOfMonth = UTIL_Describe.getDefaultSelectOption(
+                'npe03__Recurring_Donation__c',
+                String.valueOf(npe03__Recurring_Donation__c.Day_of_Month__c)
+        );
 
         if (recordId != null) {
             npe03__Recurring_Donation__c rd = selector.getRecurringDonationForUI(recordId);
@@ -575,6 +579,7 @@ public with sharing class RD2_EntryFormController {
         @AuraEnabled public Boolean isChangeLogEnabled;
         @AuraEnabled public Map<String, Integer> periodToYearlyFrequencyMap;
         @AuraEnabled public List<String> closedStatusValues;
+        @AuraEnabled public String defaultDayOfMonth;
         @AuraEnabled public String defaultRecurringType;
         @AuraEnabled public String defaultInstallmentPeriod;
         @AuraEnabled public List<Map<String, String>> installmentPeriodOptions;
@@ -606,8 +611,15 @@ public with sharing class RD2_EntryFormController {
                 this.record.recurringPeriod = this.defaultInstallmentPeriod;
             }
 
-            if(this.defaultRecurringType != null && this.record.recurringType == null) {
+            if (this.defaultRecurringType != null && this.record.recurringType == null) {
                 this.record.recurringType = this.defaultRecurringType;
+            }
+
+            if (this.defaultDayOfMonth != null && this.record.dayOfMonth == null) {
+                this.record.dayOfMonth = this.defaultDayOfMonth;
+            } else if (this.record.dayOfMonth == null) {
+                String currentDay = String.valueOf(Date.today().day());
+                this.record.dayOfMonth = currentDay == '31' ? RD2_Constants.DAY_OF_MONTH_LAST_DAY : currentDay;
             }
         }
     }
