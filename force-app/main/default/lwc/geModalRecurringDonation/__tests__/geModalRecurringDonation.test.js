@@ -1,5 +1,5 @@
 import { createElement } from 'lwc';
-import GeModalRecurringDonation from 'c/GeModalRecurringDonation';
+import GeModalRecurringDonation from 'c/geModalRecurringDonation';
 
 describe('c-ge-modal-recurring-donation', () => {
     afterEach(() => {
