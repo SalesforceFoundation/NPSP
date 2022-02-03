@@ -1,5 +1,5 @@
 import { createElement } from 'lwc';
-import GeRecurringGiftInfo from 'c/GeRecurringGiftInfo';
+import GeRecurringGiftInfo from 'c/geRecurringGiftInfo';
 
 import RECURRING_TYPE from '@salesforce/schema/npe03__Recurring_Donation__c.RecurringType__c';
 import INSTALLMENT_PERIOD from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Installment_Period__c';
