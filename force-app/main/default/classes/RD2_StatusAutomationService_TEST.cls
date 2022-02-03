@@ -34,7 +34,7 @@
 * @description Test class for RD2_StatusAutomationService
 */
 @IsTest
-private class RD2_StatusAutomationService_TEST {
+public class RD2_StatusAutomationService_TEST {
     private static final Integer DAYS_FOR_LAPSED = 15;
     private static final Integer DAYS_FOR_CLOSED = 20;
 
@@ -279,7 +279,7 @@ private class RD2_StatusAutomationService_TEST {
             'Should mark RD as Closed when threshold days has passed (20 days) since the expected donation on 2020/6/10 is missing');
     }
 
-    private static void setupStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed) {
+    public static void setupStatusAutomationSettings(Integer daysForLapsed, Integer daysForClosed) {
         RD2_Settings_TEST.setUpConfiguration(
             new Map<String, Object>{
                 'StatusAutomationDaysForLapsed__c' => daysForLapsed,
