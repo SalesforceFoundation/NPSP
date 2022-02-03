@@ -49,7 +49,7 @@ const DEFAULT_INITIAL_STATE = {
     currency: null,
     recurringPeriod: null, // Monthly / Yearly / 1st and 15th. When periodType is Monthly, recurringPeriod is Monthly.
     periodType: null, // Monthly or Advanced
-    recurringFrequency: null, // Every *2* Months
+    recurringFrequency: 1, // Every *X* Months
     startDate: null,
     dayOfMonth: null, // 1, 2, 3 ... "LAST_DAY"
     plannedInstallments: null, // Only used for "Fixed" RDs.
