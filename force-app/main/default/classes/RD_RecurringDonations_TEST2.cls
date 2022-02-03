@@ -1411,6 +1411,32 @@ private with sharing class RD_RecurringDonations_TEST2 {
         System.assertEquals(null, rd.npe03__Next_Payment_Date__c, 'Next Payment Date should be null');
     }
 
+    /***
+    * @description Verifies that the instrumentation service is called when a new RD is inserted
+    */
+    @isTest
+    private static void shouldInstrumentInsertedRecurringDonation() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        npe03__Recurring_Donation__c rd = TEST_RecurringDonationBuilder.constructLegacyBuilder()
+            .withContact(getContact().Id)
+            .withAmount(100)
+            .withOpenEndedStatusOpen()
+            .withDateEstablished(Date.newInstance(2000, 9, 19))
+            .withNextPaymentDate(Date.newInstance(2000, 9, 21))
+            .withInstallmentPeriodMonthly()
+            .withDayOfMonth('1')
+            .build();
+
+        Test.startTest();
+        insert rd;
+        Test.stopTest();
+
+        System.assertEquals(1, mockService.value, 'The instrumentation service should have indicated a single new RD was inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.LegacyRecurringDonations, mockService.feature, 
+            'The instrumentation service should have indicated Enhanced Recurring Donations');
+    }
+
     // Helpers
     ////////////
 

@@ -34,7 +34,7 @@
 */
 public inherited sharing class SfdoInstrumentationService {
 
-    private SfdoInstrumentationService() { }
+    public SfdoInstrumentationService() { }
 
     @TestVisible
     private static SfdoInstrumentationService instance;

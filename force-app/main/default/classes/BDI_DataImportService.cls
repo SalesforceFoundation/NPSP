@@ -347,6 +347,38 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+    * @param Id Apex Batch Job to find related DataImport__c records for
+    * @return void
+    */
+    public static void instrumentGiftEntry(Id apexJobId) {
+        try {
+            String createStatus = System.Label.bdiCreated;
+            Integer insertedGifts = [SELECT Count() 
+                FROM DataImport__c 
+                WHERE ApexJobId__c = :apexJobId
+                AND DonationImportStatus__c = :createstatus];
+            if (insertedGifts > 0) {
+                instrumentGiftEntry(insertedGifts);
+            }
+
+        } catch (Exception ex) {}
+    }
+
+    /*******************************************************************************************************
+    * @description Instrument that multiple gift were successfully processed through the DataImport Batch process
+    * @param insertedGifts
+    * @return void
+    */
+    public static void instrumentGiftEntry(Integer insertedGifts) {
+        sfdoInstrumentationService.getInstance().log(
+            sfdoInstrumentationEnum.Feature.GiftEntry,
+            sfdoInstrumentationEnum.Component.Page,
+            sfdoInstrumentationEnum.Action.Save,
+            insertedGifts);
+    }
+
+    /*******************************************************************************************************
     * @description maps to keep track of the objects we will create.
     * all are indexed by the object's matching key or the dataImport.Id
     */
@@ -2120,6 +2152,20 @@ global with sharing class BDI_DataImportService {
 
         return isPopulated;
     }
+
+    /*******************************************************************************************************
+    * @description The source of the gift entry batch process - UI or someplace else
+    */
+    public static Boolean isFromGiftEntryUI {
+        get {
+            if (isFromGiftEntryUI == null) {
+                isFromGiftEntryUI = USER_UserService.isExecutionSourceFromUserInterface();
+            }
+            return isFromGiftEntryUI;
+        } set;
+    } 
+
+
 
     /*******************************************************************************************************
     * @description our exception object for Field Level Security errors.

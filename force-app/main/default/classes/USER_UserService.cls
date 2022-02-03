@@ -279,4 +279,16 @@ public with sharing class USER_UserService {
     public static String getLightningBaseURL(String targetId) {
         return '/one/one.app#/sObject/' + targetId + '/view';
     }
+
+    /*******************************************************************************************************
+    * @description Determines if the origin of a process is from any form of User Interface (Aura/Visualforce/QuickAction)
+    * @return True if from a UI
+    **********************************************************************************************************/
+    public static Boolean isExecutionSourceFromUserInterface() {
+        Request reqInfo = Request.getCurrent();
+        String currentRequestId = reqInfo.getRequestId();
+        Quiddity currentType = reqInfo.getQuiddity();
+        
+        return (currentType == System.Quiddity.AURA || currentType == System.Quiddity.VF || currentType == System.Quiddity.QUICK_ACTION);
+    }
 }

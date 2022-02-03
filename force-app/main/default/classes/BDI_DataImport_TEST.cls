@@ -1928,6 +1928,55 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
+    * @description When the Data Import Service has been mocked to simulate coming in through the UI, verify
+    * that the instrumentation service logs the two records.
+    *        two contacts created
+    **********************************************************************************************************/            
+    @IsTest
+    private static void shouldInstrumentNewDonationsWhenThroughUserInterface() {
+        BDI_DataImportService.isFromGiftEntryUI = true;     // simulate the service coming through the UI
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(newDI('c1', 'C1', 100));
+        dataImports.add(newDI('c2', 'C2', 100));
+        dataImports.add(newDI('c2', 'C2')); // this third entry is not a gift, but just a Contact
+        insert dataImports;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        System.assertEquals(2, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+        System.assertEquals(sfdoInstrumentationEnum.Feature.GiftEntry, mockService.feature, 
+            'The instrumentation service should have indicated GiftEntry');  
+    }
+
+    /*********************************************************************************************************
+    * @description When the Data Import Service has been mocked to simulate coming in through the UI, verify
+    * that the instrumentation service logs the two records.
+    *        two contacts created
+    **********************************************************************************************************/            
+    @IsTest
+    private static void shouldNotInstrumentNewDonationsWhenNotThroughUserInterface() {
+        SfdoInstrumentationMock_TEST.MockService mockService = SfdoInstrumentationMock_TEST.injectMockedInstrumentationService();
+
+        List<DataImport__c> dataImports = new List<DataImport__c>();
+        dataImports.add(newDI('c1', 'C1', 100));
+        insert dataImports;
+          
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+    
+        System.assertEquals(null, mockService.value, 'The instrumentation service should have indicated two new Gifts were inserted');
+    }
+
+    /*********************************************************************************************************
     * @description operation:
     *    Retrieves data import records in the order they were created during the test. 
     * @return List<DataImport__c> All data import records in creation order

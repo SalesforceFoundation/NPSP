@@ -60,6 +60,11 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     public Id batchId;
 
     /*******************************************************************************************************
+    * @description Save the current UI origination state during instantiation to have for the finish method
+    */
+    public Boolean isFromGiftEntryUI; 
+
+    /*******************************************************************************************************
     * @description constructor, which sets up our initial soql
     */
     public BDI_DataImport_BATCH() {
@@ -93,6 +98,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @param dataImportService instance of data import service that will process the batches
     */
     public BDI_DataImport_BATCH(ID batchId, BDI_DataImportService dataImportService) {
+        // remember the value
+        this.isFromGiftEntryUI = BDI_DataImportService.isFromGiftEntryUI;
+
         // remember our batchId
         this.batchId = batchId;
         // set the bdi service
@@ -133,6 +141,9 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     public void finish(Database.BatchableContext bc) {
         if (!dataImportService.isDryRun) {
             BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
+            if (this.isFromGiftEntryUI == true) {
+                BDI_DataImportService.instrumentGiftEntry(bc.getJobId());
+            }
         }
     }
 }

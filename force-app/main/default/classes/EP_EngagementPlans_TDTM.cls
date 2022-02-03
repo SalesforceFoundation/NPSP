@@ -127,6 +127,12 @@ public with sharing class EP_EngagementPlans_TDTM extends TDTM_Runnable {
                 options.EmailHeader.triggerUserEmail = false;
                 List<Database.SaveResult> results = Database.insert(taskInsertNoEmail, options);
             }
+
+            SfdoInstrumentationService.getInstance().log(
+                SfdoInstrumentationEnum.Feature.EngagementPlans, 
+                SfdoInstrumentationEnum.Component.TriggerAction, 
+                SfdoInstrumentationEnum.Action.Create, 
+                engagementPlans.size());    
         }
 
         return null;
