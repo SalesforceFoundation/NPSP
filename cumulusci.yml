@@ -939,7 +939,7 @@ flows:
                 task: update_admin_profile
 
     enable_gift_entry:
-        description: Enable the Gift Entry feature (unmanaged code only).
+        description: Enable the Gift Entry feature.
         group: NPSP
         steps:
             1:
@@ -954,7 +954,7 @@ flows:
                         apiClass.call('settings.enablegiftentry', null);
 
     enable_advanced_mapping:
-        description: Enable the BDI Advanced Mapping feature (unmanaged code only).
+        description: Enable the BDI Advanced Mapping feature.
         group: NPSP
         steps:
             1:
