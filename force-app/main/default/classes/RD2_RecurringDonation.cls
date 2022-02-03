@@ -320,11 +320,11 @@ public inherited sharing class RD2_RecurringDonation {
         RD2_StatusAutomationService statusAutomationServce = new RD2_StatusAutomationService();
 
         if (statusAutomationServce.shouldMarkRDAsClosed(this, scheduleService)) {        
-            rd.Status__c = rdSettings.statusAutomationLapsedValue;
+            rd.Status__c = rdSettings.statusAutomationClosedValue;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
         
-        } else if(statusAutomationServce.shouldMarkRDAsLapsed(this, scheduleService)) {           
-            rd.Status__c = rdSettings.statusAutomationClosedValue;
+        } else if(statusAutomationServce.shouldMarkRDAsLapsed(this, scheduleService)) {
+            rd.Status__c = rdSettings.statusAutomationLapsedValue;
             changedFields.add(npe03__Recurring_Donation__c.Status__c);
         }
 
@@ -529,11 +529,11 @@ public inherited sharing class RD2_RecurringDonation {
 
     public Date getExpectedDonationDate(RD2_ScheduleService scheduleService) {
         Date baseDate = (rd.npe03__Last_Payment_Date__c == null) ? rd.StartDate__c : rd.npe03__Last_Payment_Date__c;
-        return scheduleService.getNextDonationDateAfter(
+        return scheduleService.getVisualizedInstallments(
             baseDate.addDays(1),
-            this,
+            1,
             rd.RecurringDonationSchedules__r
-        );
+        )?.get(0)?.nextDonationDate;
     }
 
     /**
