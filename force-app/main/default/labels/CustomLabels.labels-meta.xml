@@ -8808,7 +8808,7 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Service-level error message when advanced mapping is not enabled.</shortDescription>
-        <value>Advanced mapping is not enabled. First enable advanced mapping before gift entry can be enabled.</value>
+        <value>You must enable Advanced Mapping before you can enable Gift Entry.</value>
     </labels>
     <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
