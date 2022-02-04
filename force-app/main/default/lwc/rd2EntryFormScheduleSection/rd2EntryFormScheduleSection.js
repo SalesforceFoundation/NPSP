@@ -49,7 +49,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     customPeriod = PERIOD.MONTHLY; // defaults to monthly, can also be RECURRING_PERIOD_ADVANCED
 
     rdObjectInfo;
-    defaultDayOfMonthValue;
 
     get isNew() {
         return isNull(this.rd2State.recordId);
@@ -141,16 +140,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
         } catch (error) { }
     }
 
-    /***
-     * @description Set today's day as default Day of Month value for a new Recurring Donation record, unless
-     * the picklist itself has a default value.
-     */
-    get defaultDayOfMonth() {
-        return (this.isNew && this.dayOfMonthPicklistValues)
-            ? (this.defaultDayOfMonthValue ? this.defaultDayOfMonthValue : this.getCurrentDayOfMonth())
-            : undefined;
-    }
-
     /**
      * @description Returns a boolean to disable entry into a field based on the FLS
      * @returns True to disable entry into the field
@@ -174,9 +163,6 @@ export default class rd2EntryFormScheduleSection extends LightningElement {
     wiredDayOfMonthPicklistValues({ error, data }) {
         if (data) {
             this.dayOfMonthPicklistValues = data.values;
-            if (data.defaultValue && data.defaultValue.value) {
-                this.defaultDayOfMonthValue = data.defaultValue.value;
-            }
         } else if (error) {
             // Day of Month field likely not visible
             this.dayOfMonthPicklistValues = {};
