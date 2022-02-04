@@ -150,7 +150,6 @@ export default class rd2EntryFormDonorSection extends LightningElement {
             this.accountRequired = false;
             this.contactRequired = true;
         }
-        this.dispatchChangeEvent('contactchange', null);
     }
 
     /**
