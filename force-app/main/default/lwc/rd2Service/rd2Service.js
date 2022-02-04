@@ -3,8 +3,6 @@ import { format } from 'c/utilCommon';
 import { nextState } from "./model";
 import * as ACTIONS from './actions';
 import {
-    DONOR_TYPE_ACCOUNT,
-    DONOR_TYPE_CONTACT,
     RECURRING_PERIOD_ADVANCED,
     PERIOD,
     RECURRING_TYPE_OPEN,
@@ -116,9 +114,9 @@ class Rd2Service {
     }
 
     accountHolderTypeFor(donorType) {
-        if(donorType === DONOR_TYPE_CONTACT) {
+        if (donorType === CONTACT_DONOR_TYPE) {
             return ACCOUNT_HOLDER_TYPES.INDIVIDUAL;
-        } else if(donorType === DONOR_TYPE_ACCOUNT) {
+        } else if (donorType === ACCOUNT_DONOR_TYPE) {
             return ACCOUNT_HOLDER_TYPES.BUSINESS;
         }
     }

@@ -143,7 +143,7 @@ export default class rd2EntryFormDonorSection extends LightningElement {
      * based on the value of the DonorType picklist.
      */
     updateDonorFields(donorType) {
-        if (donorType === 'Account') {
+        if (donorType === ACCOUNT_DONOR_TYPE) {
             this.accountRequired = true;
             this.contactRequired = false;
         } else {
