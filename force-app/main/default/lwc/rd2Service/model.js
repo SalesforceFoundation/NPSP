@@ -187,9 +187,7 @@ const setDonationAmount = (state, donationValue) => {
 const setDonorType = (state, donorType) => {
     return {
         ...state,
-        donorType,
-        accountId: null,
-        contactId: null
+        donorType
     };
 };
 
