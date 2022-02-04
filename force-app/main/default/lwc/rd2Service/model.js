@@ -23,7 +23,7 @@ import {
     RECURRING_TYPE_FIXED,
     RECURRING_TYPE_OPEN,
     CHANGE_TYPE_UPGRADE,
-    CHANGE_TYPE_DOWNGRADE,
+    CHANGE_TYPE_DOWNGRADE, CONTACT_DONOR_TYPE
 } from "./constants";
 
 let initialViewState;
@@ -40,7 +40,7 @@ const DEFAULT_INITIAL_STATE = {
     contactLastName: null,
     accountId: null,
     accountName: null,
-    donorType: 'Contact',
+    donorType: CONTACT_DONOR_TYPE,
     dateEstablished: null,
     mailingCountry: null,
 
