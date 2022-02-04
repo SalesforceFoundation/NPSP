@@ -1506,6 +1506,33 @@ private class ACCT_IndividualAccounts_TEST {
             System.assertEquals(c.Account.OwnerId, currUserId, 'The Account owner should be the same as the Contact Owner');
         }
     }
+    /**
+     * @description Validate that Account is updated when Contact.Deceased__c is set.
+     */
+    @IsTest
+    private static void shouldUpdateAllMembersDeceased() {
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        Contact queryCon = [SELECT Id, AccountId FROM Contact WHERE Id = :con.id];
+        Account queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(false, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be false when Contact Deceased flag is false');
+
+        Test.startTest();
+        con.Deceased__c = true;
+        update con;
+        Test.stopTest();
+
+        queryAccount = [SELECT Id, All_Members_Deceased__c FROM Account WHERE Id = :queryCon.AccountId];
+
+        System.assertEquals(true, queryAccount.All_Members_Deceased__c,
+            'All Members Deceased should be true when Contact Deceased flag is updated to true');
+    }
+
+
+
 
     // Helpers
     ////////////
