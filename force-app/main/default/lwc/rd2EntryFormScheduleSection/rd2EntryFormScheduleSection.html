@@ -18,9 +18,12 @@
                     </lightning-layout-item>
 
                     <template if:true={_showNumPlannedInstallments}>
-                        <lightning-layout-item padding="horizontal-small" size="12" large-device-size={_recurringTypeColumnSize}
+                        <lightning-layout-item padding="horizontal-small"
+                                               size="12"
+                                               large-device-size={_recurringTypeColumnSize}
                                                if:true={fields.plannedInstallments}>
                             <lightning-input-field data-id="plannedInstallments"
+                                                   value={rd2State.plannedInstallments}
                                                    field-name={fields.plannedInstallments.apiName}
                                                    onchange={handlePlannedInstallmentsChange}
                                                    required>
