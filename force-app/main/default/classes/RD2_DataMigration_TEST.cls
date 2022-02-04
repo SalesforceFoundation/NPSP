@@ -2061,8 +2061,8 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
- * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
- */
+     * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
+     */
     @IsTest
     private static void shouldConvertFixedLengthRDWithoutFixedPicklistOption() {
         final Integer installments = 12;
@@ -2089,6 +2089,34 @@ private class RD2_DataMigration_TEST {
         }
     }
 
+    /**
+    * @description Verifies that Migration State can be set even when the number of records is high
+    */
+    @isTest
+    private static void shouldNotCauseErrorIfMigrationRecordCountIsVeryLarge() {
+        Integer totalRecordsFailed = 1000;
+        Integer totalRecordsProcessed = 100000000;
+
+        UTIL_BatchJobService.JobSummary summary = 
+            new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+                .withTotalRecordsProcessed(totalRecordsProcessed)
+                .withTotalRecordsFailed(totalRecordsFailed)
+                .withCompletedDate(Datetime.now());
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = 
+            new Map<String, UTIL_BatchJobService.JobSummary> {
+                'dryRun' => summary,
+                'run' => summary
+            };
+
+        npe03__Recurring_Donations_Settings__c rdSettings = 
+            new npe03__Recurring_Donations_Settings__c (
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            );
+
+        System.assert(rdSettings.RecurringDonations2MigrationState__c.length() <= 255,
+            'RD Migration State String should be less than or equal to 255');
+    }
 
 
     // HELPER METHODS
