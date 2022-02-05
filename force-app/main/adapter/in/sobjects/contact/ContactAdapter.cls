@@ -33,7 +33,7 @@
 * @description The ContactAdapter's role is to provide clients with a single Type
 * that will handle DML on Contacts and call the appropriate method on Domains.
 */
-public inherited sharing class ContactAdapter extends fflib_SObjects {
+public inherited sharing class ContactAdapter extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
@@ -259,16 +259,7 @@ public inherited sharing class ContactAdapter extends fflib_SObjects {
     }
 
     public Set<Id> accountIds() {
-        Set<Id> setAccountId = new Set<Id>();
-        for (Integer i = 0; i < getRecords().size(); i++) {
-            Contact newRecord = (Contact) getRecords()[i];
-
-            // need to query account fields we need to look at
-            if (newRecord.AccountId != null) {
-                setAccountId.add(newRecord.AccountId);
-            }
-        }
-        return setAccountId;
+        return getIdFieldValues(Contact.AccountId).getIds();
     }
 
     private Map<Id, Account> accountsById;

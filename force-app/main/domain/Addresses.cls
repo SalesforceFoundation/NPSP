@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Addresses in NPSP.
 */
-public inherited sharing class Addresses extends fflib_SObjects {
+public inherited sharing class Addresses extends fflib_SObjects2 {
 
     private Map<Id, Address__c> oldMap;
 
@@ -893,9 +893,9 @@ public inherited sharing class Addresses extends fflib_SObjects {
     }
 
     private Addresses defaultAddresses() {
-        fflib_SObjects defaultAddresses = selectByFieldValue(
+        List<Address__c> defaultAddresses = getRecordsByFieldValue(
                 Address__c.Default_Address__c, TRUE);
-        return new Addresses(defaultAddresses.getRecords());
+        return new Addresses(defaultAddresses);
     }
 
     private void updateLatestDatesForDefaultChanges() {
