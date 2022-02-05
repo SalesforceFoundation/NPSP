@@ -23,73 +23,20 @@
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-public virtual class fflib_Objects implements fflib_Domain
+public interface fflib_ISObjects extends fflib_IObjects
 {
-    protected List<Object> Objects { get; private set;}
+	/**
+	 * @return Return the SObject records contained in the domain
+	 */
+	List<SObject> getRecords();
 
-    /**
-     * Class constructor
-     */
-    public fflib_Objects(List<Object> objects)
-    {
-        this.Objects = objects.clone();
-    }
+	/**
+	 * @return Return the SObject records ids contained in the domain
+	 */
+	Set<Id> getRecordIds();
 
-    public virtual Object getType()
-    {
-        return Object.class;
-    }
-
-    public List<Object> getObjects()
-    {
-        return this.Objects;
-    }
-
-    public Boolean contains(Object value)
-    {
-        return getObjects().contains(value);
-    }
-
-    public Boolean containsAll(List<Object> values)
-    {
-        return containsAll(new Set<Object>(values));
-    }
-
-    public Boolean containsAll(Set<Object> values)
-    {
-        for (Object value : values)
-        {
-            if (!getObjects().contains(value)) return false;
-        }
-        return true;
-    }
-
-    public Boolean containsNot(Object value)
-    {
-        return !contains(value);
-    }
-
-    public Boolean containsNot(List<Object> values)
-    {
-        return containsNot(new Set<Object>(values));
-    }
-
-    public Boolean containsNot(Set<Object> values)
-    {
-        for (Object value : values)
-        {
-            if (getObjects().contains(value)) return false;
-        }
-        return true;
-    }
-
-    public Boolean isEmpty()
-    {
-        return (getObjects() == null || getObjects().isEmpty());
-    }
-
-    public Boolean isNotEmpty()
-    {
-        return !isEmpty();
-    }
+	/**
+	 * @return Return the SObjectType of the SObjects contained in the domain
+	 */
+	SObjectType getSObjectType();
 }

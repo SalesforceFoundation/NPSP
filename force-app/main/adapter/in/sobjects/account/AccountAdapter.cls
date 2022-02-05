@@ -36,7 +36,7 @@
 * HouseholdAddresses, Organizations, OrganizationAddresses, etc.) the Adapter requests
 * domain instances for each of them.
 */
-public inherited sharing class AccountAdapter extends fflib_SObjects {
+public inherited sharing class AccountAdapter extends fflib_SObjects2 {
 
     public Map<Id, Account> oldMap = new Map<Id, Account>();
 
@@ -352,10 +352,9 @@ public inherited sharing class AccountAdapter extends fflib_SObjects {
     }
 
     public List<Account> householdAccounts() {
-        return (List<Account>) selectByFieldValue(
+        return getRecordsByFieldValue(
                 Account.npe01__SYSTEM_AccountType__c,
-                CAO_Constants.HH_ACCOUNT_TYPE)
-                .getRecords();
+                CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
     private Account oldVersionOf(Account acc) {
