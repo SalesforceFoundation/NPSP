@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Contacts in NPSP.
 */
-public inherited sharing class Contacts extends fflib_SObjects {
+public inherited sharing class Contacts extends fflib_SObjects2 {
 
     public Map<Id, Contact> oldMap;
 
@@ -350,7 +350,7 @@ public inherited sharing class Contacts extends fflib_SObjects {
     }
 
     public Set<Id> ids() {
-       return getIdFieldValues(Contact.Id);
+       return getIdFieldValues(Contact.Id).getIds();
     }
 
 }
