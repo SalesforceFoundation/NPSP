@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Require_Interface_Type_For_Services</fullName>
+    <active>true</active>
+    <description>An Interface Type is required for Service class Bindings</description>
+    <errorConditionFormula>AND(ISPICKVAL(Type__c,&quot;Service&quot;), ISBLANK( InterfaceType__c ) )</errorConditionFormula>
+    <errorDisplayField>ImplementationType__c</errorDisplayField>
+    <errorMessage>An Interface Type is required for Service class Bindings</errorMessage>
+</ValidationRule>
