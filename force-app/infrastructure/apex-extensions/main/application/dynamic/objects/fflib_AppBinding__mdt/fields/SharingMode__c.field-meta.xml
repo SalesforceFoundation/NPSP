@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SharingMode__c</fullName>
+    <defaultValue>&quot;With Sharing&quot;</defaultValue>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Sharing mode</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>With Sharing</fullName>
+                <default>true</default>
+                <label>With Sharing</label>
+            </value>
+            <value>
+                <fullName>Without Sharing</fullName>
+                <default>false</default>
+                <label>Without Sharing</label>
+            </value>
+            <value>
+                <fullName>Inherited Sharing</fullName>
+                <default>false</default>
+                <label>Inherited Sharing</label>
+            </value>
+            <value>
+                <fullName>None</fullName>
+                <default>false</default>
+                <label>None</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
