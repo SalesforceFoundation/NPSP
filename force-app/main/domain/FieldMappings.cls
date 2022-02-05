@@ -32,7 +32,7 @@
 * @date 2021
 * @description Domain class for Field Mappings in NPSP.
 */
-public with sharing class FieldMappings extends fflib_SObjects {
+public with sharing class FieldMappings extends fflib_SObjects2 {
 
     @TestVisible
     private static FieldMappingSelector mappingSelector {
