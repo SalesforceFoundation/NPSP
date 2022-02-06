@@ -1,8 +1,15 @@
 {
   "devDependencies": {
+    "@lwc/eslint-plugin-lwc": "^1.1.1",
     "@sa11y/jest": "^3.1.0",
+    "@salesforce/eslint-config-lwc": "^3.2.1",
+    "@salesforce/eslint-plugin-lightning": "^1.0.0",
     "@salesforce/sfdx-lwc-jest": "^1.0.1",
-    "jest": "^27.4.3"
+    "eslint": "^8.7.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.0.0",
+    "jest": "^27.4.3",
+    "prettier": "2.5.1"
   },
   "resolutions": {
     "js-yaml": "^3.13.1",
@@ -13,7 +20,8 @@
     "test:unit": "lwc-jest --skipApiVersionCheck",
     "test:unit:watch": "lwc-jest --watch --skipApiVersionCheck",
     "test:unit:debug": "lwc-jest --debug --skipApiVersionCheck",
-    "test:unit:a11y": "SA11Y_AUTO=1 SA11Y_CLEANUP=1 lwc-jest --skipApiVersionCheck"
+    "test:unit:a11y": "SA11Y_AUTO=1 SA11Y_CLEANUP=1 lwc-jest --skipApiVersionCheck",
+    "lint:lwc": "eslint force-app/main/default/lwc"
   },
   "dependencies": {
     "js-yaml": "^4.0.0"
