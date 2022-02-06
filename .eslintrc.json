@@ -1,0 +1,20 @@
+{
+ "extends": [
+  "@salesforce/eslint-config-lwc/recommended"
+ ],
+ "globals": {
+  "clearDOM": "readonly",
+  "flushPromises": "readonly"
+ },
+ "rules": {
+  "no-use-before-define": [
+   "error",
+   {
+    "functions": false,
+    "classes": true,
+    "variables": true
+   }
+  ],
+  "@lwc/no-async-await": "off"
+ }
+}
