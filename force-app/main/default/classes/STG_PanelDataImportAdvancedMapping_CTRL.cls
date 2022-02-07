@@ -137,6 +137,17 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
         set;
     }
 
+    @TestVisible
+    private AdvancedMappingEnablementService advancedMappingEnablementService {
+        get {
+            if (advancedMappingEnablementService == null) {
+                advancedMappingEnablementService = new AdvancedMappingEnablementService();
+            }
+            return advancedMappingEnablementService;
+        }
+        set;
+    }
+
     /*******************************************************************************************************
     * @description Instance of BDI_MigrationMappingUtility
     */
@@ -195,13 +206,9 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
                 isPolling = true;
 
                 // Start the migration, collect help text mappings, and compare against existing cmt mappings
-                migrationMappingUtility.migrateHelpTextToCustomMetadata();
+                Id metadataDeploymentId = advancedMappingEnablementService.enable();
 
-                Id deploymentId = CMT_MetadataAPI.deployMetadata(
-                    migrationMappingUtility.queuedMetadataTypesForDeploy,
-                    new BDI_MigrationMappingUtility.DeploymentCallback());
-
-                saveDeploymentId(deploymentId);
+                saveDeploymentId(metadataDeploymentId);
 
             } catch (Exception e) {
                 Database.rollback(sp);
@@ -363,16 +370,14 @@ public with sharing class STG_PanelDataImportAdvancedMapping_CTRL extends STG_Pa
     * @return null
     */
     public PageReference enableGiftEntry() {
-        Gift_Entry_Settings__c giftEntrySettings =
-                GE_GiftEntryController.getGiftEntrySettings();
-        if (!giftEntrySettings.Enable_Gift_Entry__c) {
-                giftEntrySettings.Enable_Gift_Entry__c = true;
+        GiftEntryEnablementService giftEntryEnablementService = new GiftEntryEnablementService();
+        if (!giftEntryEnablementService.isEnabled()) {
             try {
-                upsert giftEntrySettings;
+                giftEntryEnablementService.enable();
                 addPageMessage(ApexPages.Severity.CONFIRM, System.Label.geEnableGiftEntrySuccess);
-            } catch(DmlException e) {
+            } catch(Exception e) {
                 addPageMessage(ApexPages.Severity.ERROR,
-                        e.getDmlMessage(0));
+                        e.getMessage());
             }
         }
         return null;
