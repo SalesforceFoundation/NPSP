@@ -235,6 +235,10 @@ export default class rd2EntryForm extends LightningElement {
         registerListener(ELEVATE_WIDGET_EVENT_NAME, this.handleElevateWidgetDisplayState, this);
     }
 
+    perform(action) {
+        this.rd2State = this.rd2Service.dispatch(this.rd2State, action);
+    }
+
     /**
      * @description Set variable that informs the RD form when the
      *  credit card widget is displayed or hidden by a user
@@ -325,7 +329,7 @@ export default class rd2EntryForm extends LightningElement {
      */
     handleContactChange(event) {
         this._contactId = event.detail;
-        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+        this.perform({
             type: ACTIONS.SET_CONTACT_ID,
             payload: event.detail
         });
@@ -333,26 +337,24 @@ export default class rd2EntryForm extends LightningElement {
 
     handleAccountChange(event) {
         this._accountId = event.detail;
-        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+        this.perform({
             type: ACTIONS.SET_ACCOUNT_ID,
+            payload: event.detail
+        })
+    }
+
+    handleDonorTypeChange(event) {
+        this.perform({
+            type: ACTIONS.SET_DONOR_TYPE,
             payload: event.detail
         });
     }
 
-    handleDonorTypeChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_DONOR_TYPE,
-                payload: event.detail
-            });
-    }
-
     handleDateEstablishedChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_DATE_ESTABLISHED,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_DATE_ESTABLISHED,
+            payload: event.detail
+        });
     }
 
     /**
@@ -371,7 +373,7 @@ export default class rd2EntryForm extends LightningElement {
             const mailingCountry = getFieldValue(data, MAILING_COUNTRY_FIELD);
             const lastName = getFieldValue(data, CONTACT_LAST_NAME);
             const firstName = getFieldValue(data, CONTACT_FIRST_NAME);
-            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            this.perform({
                 type: ACTIONS.SET_CONTACT_DETAILS,
                 payload: { firstName, lastName, mailingCountry }
             });
@@ -389,7 +391,7 @@ export default class rd2EntryForm extends LightningElement {
         if (data) {
             const accountName = getFieldValue(data, ACCOUNT_NAME);
             const lastName = getFieldValue(data, ACCOUNT_PRIMARY_CONTACT_LAST_NAME);
-            this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+            this.perform({
                 type: ACTIONS.SET_ACCOUNT_DETAILS,
                 payload: { lastName, accountName }
             });
@@ -421,62 +423,55 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleRecurringTypeChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_RECURRING_TYPE,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_RECURRING_TYPE,
+            payload: event.detail
+        });
         this.handleElevateWidgetDisplay();
     }
 
     handleRecurringPeriodChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_RECURRING_PERIOD,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_RECURRING_PERIOD,
+            payload: event.detail
+        });
         this.handleElevateWidgetDisplay();
     }
 
     handleRecurringPeriodTypeChange(event) {
         this.handleElevateWidgetDisplay();
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_PERIOD_TYPE,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_PERIOD_TYPE,
+            payload: event.detail
+        });
     }
 
     handleDayOfMonthChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_DAY_OF_MONTH,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_DAY_OF_MONTH,
+            payload: event.detail
+        })
     }
 
     handleStartDateChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_START_DATE,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_START_DATE,
+            payload: event.detail
+        });
     }
 
     handleFrequencyChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_RECURRING_FREQUENCY,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_RECURRING_FREQUENCY,
+            payload: event.detail
+        });
     }
 
     handleInstallmentsChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State,
-            {
-                type: ACTIONS.SET_PLANNED_INSTALLMENTS,
-                payload: event.detail
-            });
+        this.perform({
+            type: ACTIONS.SET_PLANNED_INSTALLMENTS,
+            payload: event.detail
+        });
     }
 
 
@@ -485,7 +480,7 @@ export default class rd2EntryForm extends LightningElement {
      * @param event
      */
     handleCurrencyChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+        this.perform({
             type: ACTIONS.SET_CURRENCY,
             payload: event.target.value
         });
@@ -502,7 +497,7 @@ export default class rd2EntryForm extends LightningElement {
     }
 
     handleAmountChange(event) {
-        this.rd2State = this.rd2Service.dispatch(this.rd2State, {
+        this.perform({
             type: ACTIONS.SET_DONATION_AMOUNT,
             payload: event.target.value
         });
