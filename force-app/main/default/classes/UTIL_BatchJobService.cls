@@ -462,7 +462,6 @@ public without sharing class UTIL_BatchJobService {
     */
     public class JobSummary {
         public Id batchId;
-        public Integer total = 0;
         public Integer processed = 0;
         public Integer failed = 0;
         public Datetime completedDate;
@@ -473,16 +472,6 @@ public without sharing class UTIL_BatchJobService {
         */
         public JobSummary(Id batchId) {
             this.batchId = batchId;
-        }
-
-        /**
-        * @description Sets number of records selected
-        * @param total Number of records selected
-        * @return JobSummary
-        */
-        public JobSummary withTotalRecords(Integer total) {
-            this.total = total;
-            return this;
         }
 
         /**

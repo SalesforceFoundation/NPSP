@@ -398,6 +398,10 @@ public inherited sharing class RD2_OpportunityEvaluationService {
                 .reviseStatus(currentDate, scheduleService)
                 .reviseNextDonationDate(scheduleService);
 
+            if (isBatchContext) {
+                rdRecord.statusAutomationReviseStatus(scheduleService);
+            }
+
             //evaluate Opportunities
             if (rdRecord.isClosed()
                 || rdRecord.isElevateRecord() && RD2_ElevateIntegrationService.isIntegrationEnabled()) {
