@@ -64,14 +64,16 @@ public with sharing class RD2_StatusAutomationSettings_CTRL {
             }
 
             RD2_StatusAutomationService service = new RD2_StatusAutomationService();
+            npe03__Recurring_Donations_Settings__c automationSettings = 
+                service.buildStatusAutomationSettings(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
 
-            String errorString = service.validateSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
+            String errorString = service.validateSetting(automationSettings);
 
             if (String.isNotBlank(errorString)) {
                 throw new StatusAutomationException(errorString);
             }
 
-            service.saveSetting(daysForLapsed, daysForClosed, lapsedStatus, closedStatus);
+            service.saveSetting(automationSettings);
             return getAutomationSettings();
 
         } catch (Exception ex) {
