@@ -1,7 +1,7 @@
-import { isBlank } from 'c/util';
-import { format } from 'c/utilCommon';
+import { isBlank } from "c/util";
+import { format } from "c/utilCommon";
 import { nextState } from "./model";
-import * as ACTIONS from './actions';
+import * as ACTIONS from "./actions";
 import {
     RECURRING_PERIOD_ADVANCED,
     PERIOD,
@@ -10,29 +10,28 @@ import {
     ACCOUNT_DONOR_TYPE,
     CONTACT_DONOR_TYPE,
     CHANGE_TYPE_UPGRADE,
-    CHANGE_TYPE_DOWNGRADE
-} from './constants.js';
+    CHANGE_TYPE_DOWNGRADE,
+} from "./constants.js";
 
-import getInitialView from '@salesforce/apex/RD2_EntryFormController.getInitialView';
+import getInitialView from "@salesforce/apex/RD2_EntryFormController.getInitialView";
 
-import FIELD_ID from '@salesforce/schema/npe03__Recurring_Donation__c.Id';
-import FIELD_ACH_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c';
-import FIELD_INSTALLMENT_FREQUENCY from '@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c';
-import FIELD_COMMITMENT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c';
-import FIELD_CARD_LAST4 from '@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c';
-import FIELD_CARD_EXPIRY_MONTH from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c';
-import FIELD_CARD_EXPIRY_YEAR from '@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c';
-import FIELD_PAYMENT_METHOD from '@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c';
-import FIELD_CONTACT_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c';
-import FIELD_ORGANIZATION_ID from '@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c';
-import validatingCardMessage from '@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage';
-import validatingACHMessage from '@salesforce/label/c.RD2_EntryFormSaveACHMessage';
-import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from 'c/geConstants';
+import FIELD_ID from "@salesforce/schema/npe03__Recurring_Donation__c.Id";
+import FIELD_ACH_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.ACH_Last_4__c";
+import FIELD_INSTALLMENT_FREQUENCY from "@salesforce/schema/npe03__Recurring_Donation__c.InstallmentFrequency__c";
+import FIELD_COMMITMENT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.CommitmentId__c";
+import FIELD_CARD_LAST4 from "@salesforce/schema/npe03__Recurring_Donation__c.CardLast4__c";
+import FIELD_CARD_EXPIRY_MONTH from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationMonth__c";
+import FIELD_CARD_EXPIRY_YEAR from "@salesforce/schema/npe03__Recurring_Donation__c.CardExpirationYear__c";
+import FIELD_PAYMENT_METHOD from "@salesforce/schema/npe03__Recurring_Donation__c.PaymentMethod__c";
+import FIELD_CONTACT_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Contact__c";
+import FIELD_ORGANIZATION_ID from "@salesforce/schema/npe03__Recurring_Donation__c.npe03__Organization__c";
+import validatingCardMessage from "@salesforce/label/c.RD2_EntryFormSaveCreditCardValidationMessage";
+import validatingACHMessage from "@salesforce/label/c.RD2_EntryFormSaveACHMessage";
+import { ACCOUNT_HOLDER_TYPES, PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD } from "c/geConstants";
 
 const ELEVATE_PAYMENT_METHODS = [PAYMENT_METHOD_ACH, PAYMENT_METHOD_CREDIT_CARD];
 
 class Rd2Service {
-
     dispatch(state, action) {
         return nextState(state, action);
     }
@@ -42,9 +41,8 @@ class Rd2Service {
     }
 
     async loadInitialView(state, recordId, parentId) {
-
         try {
-            const initialView = await getInitialView({recordId, parentId});
+            const initialView = await getInitialView({ recordId, parentId });
             const action = { type: ACTIONS.INITIAL_VIEW_LOAD, payload: initialView };
             return this.dispatch(state, action);
         } catch (ex) {
@@ -67,18 +65,18 @@ class Rd2Service {
             // replacing \" with an empty string, otherwise the message content
             // will be misformatted.
             if (JSON.stringify(response.body).includes("'errors'")) {
-                response.body = response.body.replace(/\"/g, '').replace(/\'/g, '"');
+                response.body = response.body.replace(/\"/g, "").replace(/\'/g, '"');
             }
 
             //parse the error response
             try {
                 response.body = JSON.parse(response.body);
-            } catch (error) { }
+            } catch (error) {}
         }
 
         let errors = this.getErrors(response);
 
-        return format('{0}', [errors]);
+        return format("{0}", [errors]);
     }
 
     /***
@@ -88,18 +86,14 @@ class Rd2Service {
      */
     getErrors(response) {
         if (response.body && response.body.errors) {
-            return response.body.errors.map(error => error.message).join('\n ');
+            return response.body.errors.map((error) => error.message).join("\n ");
         }
 
         // For some reason the key in the body object for 'Message'
         // in the response we receive from Elevate is capitalized.
         // Also checking for lowercase M in message in case they fix it.
-        return response.body.Message
-            || response.body.message
-            || response.errorMessage
-            || JSON.stringify(response.body);
+        return response.body.Message || response.body.message || response.errorMessage || JSON.stringify(response.body);
     }
-
 
     /***
      * @description Convert LWC RD record into recognizable form and consume the api response if exist
@@ -122,9 +116,9 @@ class Rd2Service {
     }
 
     getPaymentProcessingMessage(paymentMethod) {
-        if(this.isCard(paymentMethod)) {
+        if (this.isCard(paymentMethod)) {
             return validatingCardMessage;
-        } else if(this.isACH(paymentMethod)) {
+        } else if (this.isACH(paymentMethod)) {
             return validatingACHMessage;
         }
     }
@@ -141,7 +135,6 @@ class Rd2Service {
         return paymentMethod === PAYMENT_METHOD_ACH;
     }
 }
-
 
 class RecurringDonation {
     record;
@@ -222,8 +215,6 @@ class RecurringDonation {
     }
 }
 
-
-
 export {
     Rd2Service,
     ACTIONS,
@@ -235,5 +226,5 @@ export {
     ACCOUNT_DONOR_TYPE,
     CONTACT_DONOR_TYPE,
     CHANGE_TYPE_DOWNGRADE,
-    CHANGE_TYPE_UPGRADE
+    CHANGE_TYPE_UPGRADE,
 };
