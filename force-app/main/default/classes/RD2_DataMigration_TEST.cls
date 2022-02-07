@@ -1847,7 +1847,6 @@ private class RD2_DataMigration_TEST {
 
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(2)
                 .withTotalRecordsProcessed(1)
                 .withTotalRecordsFailed(1);
 
@@ -2062,8 +2061,8 @@ private class RD2_DataMigration_TEST {
     }
 
     /**
- * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
- */
+     * @description Verifies that a Legacy Fixed Length RD is converted without metadata for Fixed type.
+     */
     @IsTest
     private static void shouldConvertFixedLengthRDWithoutFixedPicklistOption() {
         final Integer installments = 12;
@@ -2090,6 +2089,34 @@ private class RD2_DataMigration_TEST {
         }
     }
 
+    /**
+    * @description Verifies that Migration State can be set even when the number of records is high
+    */
+    @isTest
+    private static void shouldNotCauseErrorIfMigrationRecordCountIsVeryLarge() {
+        Integer totalRecordsFailed = 1000;
+        Integer totalRecordsProcessed = 100000000;
+
+        UTIL_BatchJobService.JobSummary summary = 
+            new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
+                .withTotalRecordsProcessed(totalRecordsProcessed)
+                .withTotalRecordsFailed(totalRecordsFailed)
+                .withCompletedDate(Datetime.now());
+    
+        Map<String, UTIL_BatchJobService.JobSummary> summaryByType = 
+            new Map<String, UTIL_BatchJobService.JobSummary> {
+                'dryRun' => summary,
+                'run' => summary
+            };
+
+        npe03__Recurring_Donations_Settings__c rdSettings = 
+            new npe03__Recurring_Donations_Settings__c (
+                RecurringDonations2MigrationState__c = JSON.serialize(summaryByType)
+            );
+
+        System.assert(rdSettings.RecurringDonations2MigrationState__c.length() <= 255,
+            'RD Migration State String should be less than or equal to 255');
+    }
 
 
     // HELPER METHODS
@@ -2399,7 +2426,6 @@ private class RD2_DataMigration_TEST {
     private static void assertBatchSummarySuccess(Id jobId, Integer totalProcessed) {
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(totalProcessed)
                 .withTotalRecordsProcessed(totalProcessed)
                 .withTotalRecordsFailed(0);
 
@@ -2415,7 +2441,6 @@ private class RD2_DataMigration_TEST {
     private static void assertBatchSummaryFailed(Id jobId, Integer totalFailed) {
         UTIL_BatchJobService.JobSummary expectedSummary =
             new UTIL_BatchJobService.JobSummary(jobId)
-                .withTotalRecords(totalFailed)
                 .withTotalRecordsProcessed(0)
                 .withTotalRecordsFailed(totalFailed);
 
@@ -2437,7 +2462,6 @@ private class RD2_DataMigration_TEST {
 
         UTIL_BatchJobService.JobSummary summary = summaryByType.values()[0];
         System.assertEquals(expectedSummary.batchId, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(expectedSummary.total, summary.total, 'Total Records should match: ' + summary);
         System.assertEquals(expectedSummary.processed, summary.processed, 'Total Records Processed should match: ' + summary);
         System.assertEquals(expectedSummary.failed, summary.failed, 'Total Records Failed should match: ' + summary);
     }

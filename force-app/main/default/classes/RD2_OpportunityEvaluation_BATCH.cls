@@ -209,7 +209,7 @@ public without sharing class RD2_OpportunityEvaluation_BATCH
     * @description Batch Finish Method
     */
     public void finish(Database.BatchableContext context) {
-        new RD2_Settings()
+        RD2_Settings.getInstance()
             .saveLatestBatchResults(context.getJobId(), recordsProcessed, recordsFailed);
     }
 
