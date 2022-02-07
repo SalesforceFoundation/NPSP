@@ -247,7 +247,7 @@ tasks:
                 outputdir: robot/Cumulus/results
 
     test_insert_performance:
-        description: Runs Robot Framework performance tests for BDI Complex Objects
+        description: Runs Robot Framework performance tests for Record Insertion
         class_path: cumulusci.tasks.robotframework.Robot
         group: Performance Tests
         options:
