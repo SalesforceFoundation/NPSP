@@ -63,7 +63,7 @@ public with sharing class RD2_EntryFormController {
     private static RD2_Settings settings {
         get {
             if (settings == null) {
-                settings = new RD2_Settings();
+                settings = RD2_Settings.getInstance();
             }
             return settings;
         }

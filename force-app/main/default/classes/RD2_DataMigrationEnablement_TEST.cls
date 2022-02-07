@@ -51,7 +51,6 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         Boolean isDryRunMode = false;
         UTIL_BatchJobService.JobSummary summary =
             new UTIL_BatchJobService.JobSummary(BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
         
         batchJob.saveSummary(summary, isDryRunMode);
@@ -59,7 +58,7 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         summary = batchJob.getSummary(BATCH_ID, MIGRATION_BATCH_CLASS);
         System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(2, summary.total, 'Total records should match: ' + summary);
+        System.assertEquals(2, summary.processed, 'Processed records should match: ' + summary);
 
         summary = batchJob.getSummary(BATCH_ID, DRY_RUN_MIGRATION_BATCH_CLASS);
         System.assertEquals(null, summary, 'Summary should not exist for dry run');
@@ -73,7 +72,6 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         Boolean isDryRunMode = true;
         UTIL_BatchJobService.JobSummary summary =
             new UTIL_BatchJobService.JobSummary(BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2)
             .withCompletedDate(MIGRATION_TIME);
         
@@ -82,7 +80,7 @@ private with sharing class RD2_DataMigrationEnablement_TEST {
         summary = batchJob.getSummary(BATCH_ID, DRY_RUN_MIGRATION_BATCH_CLASS);
         System.assertNotEquals(null, summary, 'Summary should be returned');
         System.assertEquals(BATCH_ID, summary.batchId, 'Batch Id should match: ' + summary);
-        System.assertEquals(2, summary.total, 'Total records should match: ' + summary);
+        System.assertEquals(2, summary.processed, 'Processed records should match: ' + summary);
         System.assertEquals(MIGRATION_TIME, summary.completedDate, 'Completed time shhould match: ' + summary);
 
         summary = batchJob.getSummary(BATCH_ID, MIGRATION_BATCH_CLASS);
