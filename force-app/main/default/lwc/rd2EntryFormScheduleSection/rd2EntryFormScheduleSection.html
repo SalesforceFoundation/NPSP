@@ -11,8 +11,9 @@
                     <lightning-layout-item padding="horizontal-small" size="6" large-device-size={_recurringTypeColumnSize}
                                            flexibility="shrink" if:true={fields.recurringType}>
                         <lightning-input-field field-name={fields.recurringType.apiName}
+                                               value={rd2State.recurringType}
                                                onchange={handleRecurringTypeChange}
-                                               data-id='{fields.recurringType.apiName}'
+                                               data-id={fields.recurringType.apiName}
                                                required>
                         </lightning-input-field>
                     </lightning-layout-item>
