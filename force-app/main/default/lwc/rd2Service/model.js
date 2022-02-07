@@ -14,7 +14,7 @@ import {
     SET_RECURRING_PERIOD,
     SET_RECURRING_FREQUENCY,
     SET_PLANNED_INSTALLMENTS,
-    INITIAL_VIEW_LOAD
+    INITIAL_VIEW_LOAD,
 } from "./actions";
 
 import {
@@ -23,7 +23,8 @@ import {
     RECURRING_TYPE_FIXED,
     RECURRING_TYPE_OPEN,
     CHANGE_TYPE_UPGRADE,
-    CHANGE_TYPE_DOWNGRADE, CONTACT_DONOR_TYPE
+    CHANGE_TYPE_DOWNGRADE,
+    CONTACT_DONOR_TYPE,
 } from "./constants";
 
 let initialViewState;
@@ -83,7 +84,7 @@ const DEFAULT_INITIAL_STATE = {
 
     //Permissions
     InstallmentPeriodPermissions: {},
-    InstallmentFrequencyPermissions: {}
+    InstallmentFrequencyPermissions: {},
 };
 
 const isRecurringTypeChanged = (state) => {
@@ -105,7 +106,7 @@ const getFixedValue = (state) => {
     const { donationValue, paidAmount, paidInstallments, plannedInstallments } = state;
     const remainingInstallments = plannedInstallments - paidInstallments;
 
-    return paidAmount + (remainingInstallments * donationValue);
+    return paidAmount + remainingInstallments * donationValue;
 };
 
 const getDonationValue = (state) => {
@@ -114,7 +115,7 @@ const getDonationValue = (state) => {
     } else if (state.recurringType === RECURRING_TYPE_FIXED) {
         return getFixedValue(state);
     }
-}
+};
 
 const getChangeType = (state) => {
     if (isRecurringTypeChanged(state) || isNewRecord(state)) {
@@ -131,24 +132,23 @@ const getChangeType = (state) => {
     }
 
     return "";
-}
+};
 
 const isAdvancedPeriod = (state) => {
-    return state.recurringPeriod !== PERIOD.MONTHLY
-        || state.recurringFrequency > 1;
+    return state.recurringPeriod !== PERIOD.MONTHLY || state.recurringFrequency > 1;
 };
 
 const setAccountId = (state, accountId) => {
     return {
         ...state,
-        accountId
+        accountId,
     };
 };
 
 const setContactId = (state, contactId) => {
     return {
         ...state,
-        contactId
+        contactId,
     };
 };
 
@@ -164,11 +164,11 @@ const setContactDetails = (state, { firstName, lastName, mailingCountry }) => {
 const setCurrency = (state, currencyIsoCode) => {
     return {
         ...state,
-        currencyIsoCode
+        currencyIsoCode,
     };
 };
 
-const setAccountDetails = (state, {accountName, lastName}) => {
+const setAccountDetails = (state, { accountName, lastName }) => {
     return {
         ...state,
         accountName,
@@ -180,21 +180,21 @@ const setDonationAmount = (state, donationValue) => {
     const newState = { ...state, donationValue };
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setDonorType = (state, donorType) => {
     return {
         ...state,
-        donorType
+        donorType,
     };
 };
 
 const setStartDate = (state, startDate) => {
     return {
         ...state,
-        startDate
+        startDate,
     };
 };
 
@@ -203,70 +203,70 @@ const setPeriodType = (state, periodType) => {
     const newState = {
         ...state,
         periodType,
-        recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod
+        recurringPeriod: isMonthly ? PERIOD.MONTHLY : state.recurringPeriod,
     };
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setPlannedInstallments = (state, plannedInstallments) => {
     const newState = {
         ...state,
-        plannedInstallments
+        plannedInstallments,
     };
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setRecurringPeriod = (state, recurringPeriod) => {
     const newState = {
         ...state,
-        recurringPeriod
+        recurringPeriod,
     };
 
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setRecurringFrequency = (state, recurringFrequency) => {
     const newState = {
         ...state,
-        recurringFrequency
+        recurringFrequency,
     };
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setRecurringType = (state, recurringType) => {
     const newState = {
         ...state,
-        recurringType
+        recurringType,
     };
     return {
         ...newState,
-        changeType: getChangeType(newState)
+        changeType: getChangeType(newState),
     };
 };
 
 const setDayOfMonth = (state, dayOfMonth) => {
     return {
         ...state,
-        dayOfMonth
+        dayOfMonth,
     };
 };
 
 const setDateEstablished = (state, dateEstablished) => {
     return {
         ...state,
-        dateEstablished
+        dateEstablished,
     };
 };
 
@@ -281,7 +281,7 @@ const loadInitialView = (state, payload) => {
 
     initialViewState = {
         ...state,
-        ...flattenedInitialState
+        ...flattenedInitialState,
     };
 
     return initialViewState;
@@ -324,4 +324,4 @@ export const nextState = (state = DEFAULT_INITIAL_STATE, action = {}) => {
         default:
             return state;
     }
-}
+};

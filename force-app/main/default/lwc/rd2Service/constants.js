@@ -1,10 +1,10 @@
 export const RECURRING_PERIOD_ADVANCED = "Advanced";
 export const PERIOD = {
-  MONTHLY: "Monthly",
-  YEARLY: "Yearly",
-  WEEKLY: "Weekly",
-  DAILY: "Daily",
-  FIRST_AND_FIFTEENTH: "1st and 15th",
+    MONTHLY: "Monthly",
+    YEARLY: "Yearly",
+    WEEKLY: "Weekly",
+    DAILY: "Daily",
+    FIRST_AND_FIFTEENTH: "1st and 15th",
 };
 
 export const RECURRING_TYPE_OPEN = "Open";
