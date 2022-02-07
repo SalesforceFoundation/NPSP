@@ -8875,6 +8875,14 @@ If preferred, you can disable Gift Entry and instead use older Batch Gift Entry 
         <value>This feature requires both Advanced Mapping and Gift Entry. Please enable them in NPSP Settings.</value>
     </labels>
     <labels>
+        <fullName>geServiceLevelErrorAdvancedMapping</fullName>
+        <categories>Gift Entry</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Service-level error message when advanced mapping is not enabled.</shortDescription>
+        <value>You must enable Advanced Mapping before you can enable Gift Entry.</value>
+    </labels>
+    <labels>
         <fullName>geErrorPageLevelAdvancedMappingHeader</fullName>
         <categories>Gift Entry</categories>
         <language>en_US</language>
