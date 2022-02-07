@@ -1961,7 +1961,6 @@ private with sharing class STG_SettingsManager_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
     
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
@@ -1990,7 +1989,6 @@ private with sharing class STG_SettingsManager_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
     
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
@@ -2023,7 +2021,6 @@ private with sharing class STG_SettingsManager_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
     
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {
@@ -2055,7 +2052,6 @@ private with sharing class STG_SettingsManager_TEST {
         RD2_EnablementService_TEST.setRecurringDonations2Enabled();
 
         UTIL_BatchJobService.JobSummary summary = new UTIL_BatchJobService.JobSummary(UTIL_BatchJobService_TEST.MOCK_BATCH_ID)
-            .withTotalRecords(2)
             .withTotalRecordsProcessed(2);
     
         Map<String, UTIL_BatchJobService.JobSummary> summaryByType = new Map<String, UTIL_BatchJobService.JobSummary> {

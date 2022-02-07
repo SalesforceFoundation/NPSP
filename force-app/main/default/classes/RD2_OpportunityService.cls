@@ -143,7 +143,7 @@ public with sharing class RD2_OpportunityService {
 
         for (npe03__Recurring_Donation__c rd : rds) {
             RD2_OpportunityMatcher.Record nextDonationDateRecord = scheduleService.getNextDonationDateRecord(
-                new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r
+                RD2_ScheduleService.currentDate, new RD2_RecurringDonation(rd), rd.RecurringDonationSchedules__r
             );
 
             if (nextDonationDateRecord == null
