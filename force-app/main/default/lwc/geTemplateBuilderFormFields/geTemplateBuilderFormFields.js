@@ -61,6 +61,11 @@ import RECURRING_DONATION_STATUS_FIELD from '@salesforce/schema/DataImport__c.Re
 import RECURRING_DONATION_STATUS_REASON_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Status_Reason__c';
 import RECURRING_DONATION_IMPORTED_FIELD from '@salesforce/schema/DataImport__c.RecurringDonationImported__c';
 import RECURRING_DONATION_CHANGE_TYPE_FIELD from '@salesforce/schema/DataImport__c.Recurring_Donation_Change_Type__c';
+import RECURRING_DONATION_ACH_LAST_4__C from '@salesforce/schema/DataImport__c.Recurring_Donation_ACH_Last_4__c';
+import RECURRING_DONATION_CARD_EXPIRATION_MONTH__C from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Month__c';
+import RECURRING_DONATION_CARD_EXPIRATION_YEAR__C from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Expiration_Year__c';
+import RECURRING_DONATION_CARD_LAST_4__C from '@salesforce/schema/DataImport__c.Recurring_Donation_Card_Last_4__c';
+import RECURRING_DONATION_ELEVATE_EVENT_VERSION__C from '@salesforce/schema/DataImport__c.Recurring_Donation_Elevate_Event_Version__c';
 
 const FIELD = 'field';
 const BOOLEAN_TYPE = 'BOOLEAN';
@@ -130,7 +135,12 @@ const EXCLUDED_FIELD_MAPPINGS_BY_SOURCE_API_NAME = [
     RECURRING_DONATION_STATUS_FIELD.fieldApiName,
     RECURRING_DONATION_STATUS_REASON_FIELD.fieldApiName,
     RECURRING_DONATION_IMPORTED_FIELD.fieldApiName,
-    RECURRING_DONATION_CHANGE_TYPE_FIELD.fieldApiName
+    RECURRING_DONATION_CHANGE_TYPE_FIELD.fieldApiName,
+    RECURRING_DONATION_ACH_LAST_4__C.fieldApiName,
+    RECURRING_DONATION_CARD_EXPIRATION_MONTH__C.fieldApiName,
+    RECURRING_DONATION_CARD_EXPIRATION_YEAR__C.fieldApiName,
+    RECURRING_DONATION_CARD_LAST_4__C.fieldApiName,
+    RECURRING_DONATION_ELEVATE_EVENT_VERSION__C.fieldApiName,
 ];
 
 const FIELD_BUNDLE_MASTER_NAMES = [
